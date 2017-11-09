@@ -1,4 +1,6 @@
 # pass-ember
+[![Build Status](https://travis-ci.org/DataConservancy/pass-ember.png?branch=master)](https://travis-ci.org/DataConservancy/pass-ember)
+
 
 This README outlines the details of collaborating on this Ember application.
 A short introduction of this app could easily go here.
