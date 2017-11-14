@@ -10,6 +10,12 @@ Router.map(function() {
   this.route('dashboard');
   this.route('about');
   this.route('contact');
+  this.route('grants', function() {
+    this.route('show', { path: '/:grant_id' });
+  });
+  this.route('submissions', function() {
+    this.route('show', { path: '/:grant_id' });
+  });
 });
 
 export default Router;

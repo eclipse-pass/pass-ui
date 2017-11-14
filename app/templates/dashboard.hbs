@@ -1,7 +1,10 @@
-<h2>Grants:</h2>
+<h2>Dashboard</h2>
 
-{{models-table
-  data=model
-  columns=columns
-  themeInstance=themeInstance
-}}
+  <div>
+    {{#link-to 'grants'}}Grants{{/link-to}}
+    {{#link-to 'submissions'}}Submissions{{/link-to}}
+  </div>
+
+  <div>
+  {{! View summary of whats happening? Actions: add grant? start submission? }}
+  </div>

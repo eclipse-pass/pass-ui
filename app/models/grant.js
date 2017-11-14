@@ -8,7 +8,6 @@ export default DS.Model.extend({
   end_date: DS.attr('date'),
   external_id: DS.attr('string'),
   status: DS.attr('string'),
-  pis: DS.hasMany('person'),
-  submissions: DS.hasMany('submission'),
-  creator: DS.belongsTo('user')
+  creator: DS.belongsTo('user'),
+  submissions: DS.hasMany('submission')
 });
