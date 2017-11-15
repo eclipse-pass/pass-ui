@@ -14,7 +14,7 @@ Router.map(function() {
     this.route('show', { path: '/:grant_id' });
   });
   this.route('submissions', function() {
-    this.route('show', { path: '/:grant_id' });
+    this.route('show', { path: '/:submission_id' });
   });
 });
 
