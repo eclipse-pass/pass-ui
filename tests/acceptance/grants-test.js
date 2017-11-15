@@ -8,5 +8,6 @@ test('visiting /grants', function(assert) {
 
   andThen(function() {
     assert.equal(currentURL(), '/grants');
+    server.shutdown()
   });
 });
