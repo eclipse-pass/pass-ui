@@ -9,5 +9,5 @@ export default DS.Model.extend({
   external_id: DS.attr('string'),
   status: DS.attr('string'),
   creator: DS.belongsTo('user'),
-  submissions: DS.hasMany('submission')
+  submissions: DS.hasMany('submission', { async: true })
 });

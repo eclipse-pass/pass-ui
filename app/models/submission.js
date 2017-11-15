@@ -6,5 +6,5 @@ export default DS.Model.extend({
   title: DS.attr('string'),
   creator: DS.belongsTo('user'),
   creation_date: DS.attr('date'),
-  grants: DS.hasMany('grant'),
+  grants: DS.hasMany('grant', { async: true }),
 });
