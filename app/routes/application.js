@@ -79,7 +79,7 @@ export default Route.extend({
 
     let objects = [user1, user2, user3, grant1, grant2, grant3, sub1, sub2, sub3, sub4];
     
-    RSVP.all(objects.map(o => o.save())).then(() => {
+    return RSVP.all(objects.map(o => o.save())).then(() => {
       grant1.set('creator', user1);
       grant2.set('creator', user2);
       grant3.set('creator', user3);
