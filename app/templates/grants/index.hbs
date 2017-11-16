@@ -8,3 +8,6 @@
   filteringIgnoreCase=true
   multipleColumnsSorting=false
 }}
+{{#resource-form as |form|}}
+    <button {{action 'newResource' 'grant' target=form}}>NEW GRANT</button>
+{{/resource-form}}
