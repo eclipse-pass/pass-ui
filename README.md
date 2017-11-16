@@ -1,9 +1,8 @@
 # pass-ember
 [![Build Status](https://travis-ci.org/DataConservancy/pass-ember.png?branch=master)](https://travis-ci.org/DataConservancy/pass-ember)
 
-
-This README outlines the details of collaborating on this Ember application.
-A short introduction of this app could easily go here.
+PASS is an ember application which provides a unified user interface that allow its users to deposit their manuscripts
+into multiple repositories as required by applicable funding agency's public access policies
 
 ## Prerequisites
 
@@ -25,10 +24,6 @@ You will need the following things properly installed on your computer.
 * `ember serve`
 * Visit your app at [http://localhost:4200](http://localhost:4200).
 * Visit your tests at [http://localhost:4200/tests](http://localhost:4200/tests).
-
-### Code Generators
-
-Make use of the many generators for code, try `ember help generate` for more details
 
 ### Running Tests
 
