@@ -6,7 +6,7 @@ export default Controller.extend({
     { propertyName: 'title', title: 'Title' },
     { propertyName: 'status', title: 'Status' },
     { propertyName: 'creator.username', title: 'Creator' },
-    { propertyName: 'creation_date', title: 'Created' },
+    { propertyName: 'creationDate', title: 'Created' },
     { component: "submissions-action-cell", title: 'Actions' }
   ],
 

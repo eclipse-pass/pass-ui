@@ -26,8 +26,8 @@ export default Route.extend({
       number: '0xDEADBEAF',
       agency: 'NIH',
       title: 'Better Ice Cream',
-      startDaate: '2015-03-25',
-      endDate: '2018-06-02',
+      startDate: new Date('2015-03-25'),
+      endDate: new Date('2018-06-02'),
       status: 'in progress'
     });
 
@@ -35,8 +35,8 @@ export default Route.extend({
       number: '1231asd23',
       title: 'Cow mythos realized',
       agency: 'NCA',
-      start_date: '2010-02-20',
-      end_date: '2019-11-01',
+      startDate: new Date('2010-02-20'),
+      endDate: new Date('2019-11-01'),
       status: 'in progress'
     });
 
@@ -44,34 +44,34 @@ export default Route.extend({
       title: 'Datanet: Conserving cow data',
       number: 'dash98765',
       agency: 'NSF',
-      start_date: '2010-03-12',
-      end_date: '2015-08-10',
+      startDate: new Date('2010-03-12'),
+      endDate: new Date('2015-08-10'),
       status: 'complete'
     });
 
     let sub1 = store.createRecord('submission', {
       title: 'Chocolate chip is the best',
-      creation_date: '2018-06-02',
+      creationDate: new Date('2018-06-02'),
       status: 'in progress'
     });
 
     let sub2 = store.createRecord('submission', {
       title: 'In defense of vanilla',
-      creation_date: '2018-06-02',
+      creationDate: new Date('2018-06-02'),
       status: 'in progress'
     });
 
 
     let sub3 = store.createRecord('submission', {
       title: 'Chocolate, how can you go wrong?',
-      creation_date: '2018-06-02',
+      creationDate: new Date('2018-06-02'),
       status: 'in progress'      
     });
 
 
     let sub4 = store.createRecord('submission', {
       title: 'Animal farm: The prophecy comes true.',
-      creation_date: '2018-06-02',
+      creationDate: new Date('2018-06-02'),
       status: 'complete'
     });
 
