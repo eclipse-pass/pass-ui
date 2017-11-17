@@ -52,14 +52,17 @@ export default Component.extend({
 
     /* Type of resource */
     type: null,
+
     actions: {
 
         newResource(type) {
             this.set('type', type);
             this.set('resource', this.get('store').createRecord(type, {
                 number: "createdViaForm",
-                title: "title",
-                agency: "moooo"
+                title: "Moo Trek " + Math.floor(Math.random() * 100),
+                agency: "MOO",
+                status: "dead",
+                copyright: "wrong"
             }));
             this.set('isShowingForm', true);
         },

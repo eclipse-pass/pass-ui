@@ -2,13 +2,7 @@ import Controller from '@ember/controller';
 import Bootstrap4Theme from 'ember-models-table/themes/bootstrap4';
 
 export default Controller.extend({
-  actions: {
-    
-        /** Create a new submission for the current grant */
-        newSubmission() {
-          return this.get('store').createRecord('submission');
-        },
-    
+  actions: {    
         /** Saves a new submission to the grant */
         addSubmission(submission) { 
           var grant = this.model;

@@ -9,5 +9,5 @@
   multipleColumnsSorting=false
 }}
 {{#resource-form saveAction=(action "addSubmission") as |form|}}
-    <button {{action 'editResource' (action "newSubmission") target=form}}>NEW SUBMISSION</button>
+    <button {{action 'newResource' 'submission' target=form}}>NEW SUBMISSION</button>
 {{/resource-form}}
