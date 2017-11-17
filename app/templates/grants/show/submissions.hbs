@@ -8,3 +8,6 @@
   filteringIgnoreCase=true
   multipleColumnsSorting=false
 }}
+{{#resource-form saveAction=(action "addSubmission") as |form|}}
+    <button {{action 'newResource' 'submission' target=form}}>NEW SUBMISSION</button>
+{{/resource-form}}
