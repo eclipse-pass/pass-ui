@@ -1,4 +1,10 @@
 {{#if isShowingForm}}
-<b>IS SHOWING</b>
+    {{#modal-dialog
+    onClose=(action (mut isShowingForm) false)
+    translucentOverlay=true}}
+      <h1>Click to persist resource!</h1>
+      <button onclick={{action "cancelAndClose"}}>Cancel</button>
+      <button onclick={{action "persistAndClose"}}>Save</button>
+   {{/modal-dialog}}
 {{/if}}
 {{yield this}}
