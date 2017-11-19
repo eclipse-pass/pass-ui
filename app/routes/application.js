@@ -7,7 +7,7 @@ export default Route.extend({
 
   model() {
     // Create the test objects without relationships
-    
+
     let store = this.get('store');
 
     let user1 = store.createRecord('user', {
@@ -65,7 +65,7 @@ export default Route.extend({
     let sub3 = store.createRecord('submission', {
       title: 'Chocolate, how can you go wrong?',
       creationDate: new Date('2018-06-02'),
-      status: 'in progress'      
+      status: 'in progress'
     });
 
 
@@ -78,7 +78,7 @@ export default Route.extend({
     // Persist the test objects, add relationships, and then persist again.
 
     let objects = [user1, user2, user3, grant1, grant2, grant3, sub1, sub2, sub3, sub4];
-    
+
     return RSVP.all(objects.map(o => o.save())).then(() => {
       grant1.set('creator', user1);
       grant2.set('creator', user2);
@@ -100,8 +100,8 @@ export default Route.extend({
 
       grant3.get('submissions').pushObject(sub4);
       sub4.get('grants').pushObject(grant3);
-      
-      RSVP.all(objects.map(o => o.save()));
+
+      return RSVP.all(objects.map(o => o.save()));
     });
   }
 });
