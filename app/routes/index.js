@@ -1,7 +1,11 @@
 import Route from '@ember/routing/route';
 
 export default Route.extend({
-    beforeModel() {
-        this.replaceWith('dashboard');
-    }
+  beforeModel() {
+    if (!this.get('session.authenticated')) {
+      this.transitionTo('login');
+    } else {
+      this.replaceWith('dashboard');
+     }
+   }
 });

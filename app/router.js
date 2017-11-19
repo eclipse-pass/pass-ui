@@ -18,6 +18,7 @@ Router.map(function() {
   this.route('submissions', function() {
     this.route('show', { path: '/:submission_id' });
   });
+  this.route('login');
 });
 
 export default Router;

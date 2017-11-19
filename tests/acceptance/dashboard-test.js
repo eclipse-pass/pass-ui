@@ -14,11 +14,12 @@ test('visiting /dashboard', function(assert) {
   });
 });
 
+// TODO Test all redirection behavior
 test('visiting /', function(assert) {
   visit('/');
 
   andThen(function() {
-    assert.equal(currentURL(), '/dashboard');
+    assert.equal(currentURL(), '/login');
     server.shutdown()
   });
 });
@@ -28,7 +29,7 @@ test('about link', function (assert) {
   click('a:contains("About")');
   andThen(function() {
     assert.equal(currentURL(), '/about', 'should navigate to about');
-    server.shutdown()    
+    server.shutdown()
   });
 });
 
