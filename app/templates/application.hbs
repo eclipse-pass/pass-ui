@@ -16,9 +16,13 @@
     </li>
   </ul>
 
-  <span class="navbar-text">
-    Logged in as: {{session.user.username}}
-  </span>
+  {{#if session.authenticated}}
+    <span class="navbar-text ml-5">
+      Logged in as: {{session.user.username}}
+    </span>
+
+     <button {{action 'logout'}} class="btn btn-warning btm-sm ml-2">Logout</button>
+   {{/if}}
 </nav>
 
 <div class='container text-center'>

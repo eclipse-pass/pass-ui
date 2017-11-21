@@ -13,3 +13,9 @@
 
   <button {{action 'login'}} class='btn btn-primary'>Login</button>
 </form>
+
+{{#if loginFailed}}
+<div class='alert alert-danger'>
+  Login failed.
+</div>
+{{/if}}
