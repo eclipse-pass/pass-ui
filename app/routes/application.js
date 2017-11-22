@@ -11,15 +11,18 @@ export default Route.extend({
     let store = this.get('store');
 
     let user1 = store.createRecord('user', {
-      username: 'admin'
+      username: 'admin',
+      role: 'admin'
     });
 
     let user2 = store.createRecord('user', {
-      username: 'bessie'
+      username: 'bessie',
+      role: 'pi'
     });
 
     let user3 = store.createRecord('user', {
-      username: 'farmerbob'
+      username: 'farmerbob',
+      role: 'pi'
     });
 
     let grant1 = store.createRecord('grant', {
@@ -101,7 +104,9 @@ export default Route.extend({
       grant3.get('submissions').pushObject(sub4);
       sub4.get('grants').pushObject(grant3);
 
-      return RSVP.all(objects.map(o => o.save()));
+      return RSVP.all(objects.map(o => o.save())).then(() => {
+        return this.controllerFor('application').get('session').login('admin');
+      })
     });
   }
 });
