@@ -1,5 +1,6 @@
 import Service from '@ember/service';
 import { inject as service } from '@ember/service';
+import { equal, notEmpty } from '@ember/object/computed';
 import RSVP from 'rsvp';
 
 // Fake service to authenticate a user that checks users in store
@@ -7,9 +8,9 @@ import RSVP from 'rsvp';
 // TODO Switch to user object.
 export default Service.extend({
   user: null,
-  authenticated: false,
-  canCreateGrant: false,
-  canMakeSubmission: false,
+  authenticated: notEmpty('user', null).readOnly(),
+  canCreateGrant: equal('user.role', 'admin').readOnly(),
+  canCreateSubmission: equal('user.role', 'pi').readOnly(),
 
   store: service(),
 
@@ -18,7 +19,6 @@ export default Service.extend({
   // and undefined if the user does not exist.
   login(username) {
     this.set('user', null);
-    this.set('authenticated', false);
 
     // Ensure that empty username matches nothing
     if (!username || username.trim().length == 0) {
@@ -32,7 +32,6 @@ export default Service.extend({
 
       if (user != undefined) {
         this.set('user', user);
-        this.set('authenticated', true);
       }
 
       return user;
@@ -41,6 +40,5 @@ export default Service.extend({
 
   logout() {
     this.set('user', null);
-    this.set('authenticated', false);
   }
 });
