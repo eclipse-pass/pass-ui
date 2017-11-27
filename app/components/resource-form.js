@@ -4,23 +4,23 @@ import Ember from 'ember';
 /* Displays a form/dialog for creating or editing resources.
  *
  * Usage:
- * 
- * Create a {{resource-form}} block in your .hbs template, then 
+ *
+ * Create a {{resource-form}} block in your .hbs template, then
  * fire a newResource or editResource action where appropriate (e.g. when clicking a button,
  * clicking on an icon, whatever).  Be sure to declare the component
- * as |something| and then send the action to that component 
+ * as |something| and then send the action to that component
  * via target=something
- * 
+ *
  * {{#resource-form as |form|}}
  *   <button {{action 'newResource' initialValues target=form}}>NEW GRANT</button>
  * {{/resource-form}}
- * 
- * or 
- * 
+ *
+ * or
+ *
  * {{#resource-form as |form|}}
  *   <button {{action 'editResource' resource target=form}}>NEW GRANT</button>
  * {{/resource-form}}
- * 
+ *
  * Where
  *  - 'type' is a String; the type of object to create
  *  - 'initialValues' is an object/hash containing initial values with keys that
@@ -28,10 +28,10 @@ import Ember from 'ember';
  *  -  'resource' is a DS.Model, or function that returns a DS.Model of the resource to be
  *     edited.  The form will mutate it, then save (or rollback) when finished
  *
- * It is possible to specify a custom save action if additional (context-specific) 
+ * It is possible to specify a custom save action if additional (context-specific)
  * things have to happen to the resource as part of the saving process; such as adding certain
  * relationships.  Do this via:
- * 
+ *
  * {{#resource-form saveAction=(action 'myAction' args) as |form|}}
  */
 export default Component.extend({
@@ -39,9 +39,9 @@ export default Component.extend({
 
     /* The default save action, which is just to save.
      * Can be overrided when declaring the component in the template.
-     * 
+     *
      * For example {{#resource-form saveAction=(action "mySaveAction") as |form|}}
-     */ 
+     */
     saveAction: (resource) => resource.save(),
 
     /* Whether the modal form is showing */
@@ -58,9 +58,8 @@ export default Component.extend({
         newResource(type) {
             this.set('type', type);
             this.set('resource', this.get('store').createRecord(type, {
-                number: "createdViaForm",
-                title: "Moo Trek " + Math.floor(Math.random() * 100),
-                agency: "MOO",
+                awardNumber: "createdViaForm",
+                projectName: "Moo Trek " + Math.floor(Math.random() * 100),
                 status: "dead",
                 copyright: "wrong"
             }));

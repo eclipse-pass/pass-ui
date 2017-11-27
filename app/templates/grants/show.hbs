@@ -1,14 +1,28 @@
 <h2>Grant details</h2>
 
 <ul>
-  <li>Agency: {{model.agency}}</li>
-  <li>Number: {{model.number}}</li>
-  <li>Title: {{model.title}}</li>
+  <li>Funder: {{model.funder.name}}</li>
+  <li>Award Number: {{model.awardNumber}}</li>
+  <li>Project Name: {{model.projectName}}</li>
   <li>Start: {{model.startDate}}</li>
   <li>End: {{model.endDate}}</li>
   <li>Status: {{model.status}}</li>
+  <li>Created by: {{model.creator.name}}</li>
 </ul>
 
-{{#link-to 'grants' class="btn btn-primary btn-small"}}Back to grants{{/link-to}}
+<h3>Submissions of grant</h3>
 
-{{outlet}}
+{{models-table
+  data=model.submissions
+  columns=columns
+  themeInstance=themeInstance
+  showColumnsDropdown=false
+  filteringIgnoreCase=true
+  multipleColumnsSorting=false
+}}
+
+{{#resource-form saveAction=(action "addSubmission") as |form|}}
+    <button {{action 'newResource' 'submission' target=form}}>NEW SUBMISSION</button>
+{{/resource-form}}
+
+{{#link-to 'grants' class="btn btn-primary btn-small"}}Back to grants{{/link-to}}

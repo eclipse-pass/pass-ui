@@ -25,31 +25,54 @@ export default Route.extend({
       role: 'pi'
     });
 
+    let funder1 = store.createRecord('funder', {
+        name: 'NIH'
+    });
+
+    let funder2 = store.createRecord('funder', {
+        name: 'NSF'
+    });
+
+    let coeus1 = store.createRecord('identifier', {
+        label: '120023',
+        uri: 'http://www.library.jhu.edu'
+    });
+
+    let coeus2 = store.createRecord('identifier', {
+        label: '298341',
+         uri: 'http://www.jhu.edu'
+    });
+
+    let coeus3 = store.createRecord('identifier', {
+        label: '123445',
+        uri: 'http://johnshopkins.edu'
+    });
+
     let grant1 = store.createRecord('grant', {
-      number: '0xDEADBEAF',
-      agency: 'NIH',
-      title: 'Better Ice Cream',
+      awardNumber: '0xDEADBEAF',
+      projectName: 'Better Ice Cream',
       startDate: new Date('2015-03-25'),
       endDate: new Date('2018-06-02'),
-      status: 'in progress'
+      status: 'in progress',
+      oapCompliance: "no"
     });
 
     let grant2 = store.createRecord('grant', {
-      number: '1231asd23',
-      title: 'Cow mythos realized',
-      agency: 'NCA',
+      awardNumber: '1231asd23',
+      projectName: 'Cow mythos realized',
       startDate: new Date('2010-02-20'),
       endDate: new Date('2019-11-01'),
-      status: 'in progress'
+      status: 'in progress',
+      oapCompliance: "no"
     });
 
     let grant3 = store.createRecord('grant', {
-      title: 'Datanet: Conserving cow data',
-      number: 'dash98765',
-      agency: 'NSF',
+      projectName: 'Datanet: Conserving cow data',
+      awardNumber: 'dash98765',
       startDate: new Date('2010-03-12'),
       endDate: new Date('2015-08-10'),
-      status: 'complete'
+      status: 'complete',
+      oapCompliance: "yes"
     });
 
     let sub1 = store.createRecord('submission', {
@@ -80,12 +103,21 @@ export default Route.extend({
 
     // Persist the test objects, add relationships, and then persist again.
 
-    let objects = [user1, user2, user3, grant1, grant2, grant3, sub1, sub2, sub3, sub4];
+    let objects = [user1, user2, user3, funder1, funder2, grant1, grant2, grant3,
+      sub1, sub2, sub3, sub4, coeus1, coeus2, coeus3];
 
     return RSVP.all(objects.map(o => o.save())).then(() => {
       grant1.set('creator', user1);
       grant2.set('creator', user2);
       grant3.set('creator', user3);
+
+      grant1.set('funder', funder1);
+      grant2.set('funder', funder1);
+      grant3.set('funder', funder2);
+
+      grant1.set('externalId', coeus1);
+      grant2.set('externalId', coeus2);
+      grant3.set('externalId', coeus3);
 
       sub1.set('creator', user1);
       sub2.set('creator', user2);
