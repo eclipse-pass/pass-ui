@@ -12,6 +12,6 @@ export default DS.Model.extend({
   creator: DS.belongsTo('user'),
   creationDate: DS.attr('date'),
   pi: DS.belongsTo('person'),
-  copis: DS.hasMany('person'),
+  copis: DS.hasMany('person', { async: true }),
   submissions: DS.hasMany('submission', { async: true })
 });

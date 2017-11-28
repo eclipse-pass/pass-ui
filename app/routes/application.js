@@ -48,6 +48,26 @@ export default Route.extend({
         uri: 'http://johnshopkins.edu'
     });
 
+    let person1 = store.createRecord('person', {
+        name: 'Yoda',
+        email: 'yoda@example.com'
+    });
+
+    let person2 = store.createRecord('person', {
+        name: 'Billy Bob',
+        email: 'billy@example.com'
+    });
+
+    let person3 = store.createRecord('person', {
+        name: 'Moo Moo',
+        email: 'moo@example.com'
+    });
+
+    let person4 = store.createRecord('person', {
+        name: 'Peanut',
+        email: 'peanut@example.com'
+    });
+
     let grant1 = store.createRecord('grant', {
       awardNumber: '0xDEADBEAF',
       projectName: 'Better Ice Cream',
@@ -104,7 +124,8 @@ export default Route.extend({
     // Persist the test objects, add relationships, and then persist again.
 
     let objects = [user1, user2, user3, funder1, funder2, grant1, grant2, grant3,
-      sub1, sub2, sub3, sub4, coeus1, coeus2, coeus3];
+      sub1, sub2, sub3, sub4, coeus1, coeus2, coeus3, person1, person2, person3,
+      person4];
 
     return RSVP.all(objects.map(o => o.save())).then(() => {
       grant1.set('creator', user1);
@@ -118,6 +139,15 @@ export default Route.extend({
       grant1.set('externalId', coeus1);
       grant2.set('externalId', coeus2);
       grant3.set('externalId', coeus3);
+
+      grant1.set('pi', person1);
+      grant1.get('copis').pushObject(person2);
+
+      grant2.set('pi', person2);
+
+      grant3.set('pi', person3);
+      grant3.get('copis').pushObject(person2);
+      grant3.get('copis').pushObject(person4);
 
       sub1.set('creator', user1);
       sub2.set('creator', user2);

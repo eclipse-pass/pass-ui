@@ -1,0 +1,6 @@
+{{! Format pi and copi list as pi / copi names}}
+
+{{! Jammed together to deal with spacing}}
+<b>{{record.pi.name}}</b>{{#if record.copis}}{{#each record.copis as |person|}},
+    {{person.name}}{{/each}}
+{{/if}}
