@@ -30,8 +30,23 @@
   multipleColumnsSorting=false
 }}
 
-{{#resource-form saveAction=(action "addSubmission") as |form|}}
-    <button {{action 'newResource' 'submission' target=form}}>NEW SUBMISSION</button>
-{{/resource-form}}
+{{#if isShowingForm}}
+    {{! This is a bit odd, but *by seting an arbitrary variable (exec_) on an arbitrary component*, 
+        we invoke 'newSubmission' to create a new submission resource, and set the 'submission'
+        property to contain it.  For whatever reason, this *doesn't* work as an onClick action
+        from the button.  ¯\_(ツ)_/¯
+    }}
+    {{#modal-dialog translucentOverlay=true exec_=(compute (action (mut submission) (compute (action newSubmission))))}}
+      {{#workflow-card
+            continue=(action createAndEditSubmission submission) 
+            cancel=(action cancelSubmission submission (action (mut isShowingForm) false)) 
+            save=(action saveAndCloseSubmission submission)}}
+        {{submission-overview submission=submission}}
+      {{/workflow-card}}
+   {{/modal-dialog}}
+{{/if}}
+<button class="btn btn-primary btn-small" onclick={{action (mut isShowingForm) true}}>
+  New Submission
+</button>
 
 {{#link-to 'grants' class="btn btn-primary btn-small"}}Back to grants{{/link-to}}
