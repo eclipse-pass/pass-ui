@@ -39,8 +39,14 @@
     {{#modal-dialog translucentOverlay=true exec_=(compute (action (mut submission) (compute (action newSubmission))))}}
       {{#workflow-card
             continue=(action createAndEditSubmission submission) 
-            cancel=(action cancelSubmission submission (action (mut isShowingForm) false)) 
-            save=(action saveAndCloseSubmission submission)}}
+            cancel=(action (queue 
+                (action "cancelSubmission" submission) 
+                (action (mut isShowingForm) false)
+            )) 
+            save=(action (queue
+              (action "saveSubmission" submission)
+              (action (mut isShowingForm) false)
+            ))}}
         {{submission-overview submission=submission}}
       {{/workflow-card}}
    {{/modal-dialog}}

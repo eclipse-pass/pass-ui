@@ -18,35 +18,31 @@ export default Controller.extend({
     this.saveWithGrant(submission);
   },
 
-  cancelSubmission(submission, action) {
-    submission.rollbackAttributes();
-
-    if (action) {
-      action();
-    }
-  },
 
   newSubmission() {
     console.log("new submission");
-    return this.get('store').createRecord('submission', {title: "yo"});
+    return this.get('store').createRecord('submission', { title: "yo " + Math.random() });
   },
 
   actions: {
-        
 
-        /** Saves a new submission to the grant */
-        addSubmission(submission) {
-          var grant = this.model;
+    cancelSubmission(submission) {
+      submission.rollbackAttributes();
+    },
 
-          submission.save().then(() => {
-            submission.get('grants').pushObject(grant);
-            submission.save();
+    saveSubmission(submission) {
+      var grant = this.model;
 
-            grant.get('submissions').pushObject(submission);
-            grant.save();
-          });
-        }
-      },
+      submission.save().then(() => {
+        submission.get('grants').pushObject(grant);
+        submission.save();
+
+        grant.get('submissions').pushObject(submission);
+        grant.save();
+      });
+    }
+  },
+
   columns: [
     { propertyName: 'title', title: 'Title' },
     { propertyName: 'status', title: 'Status' },
