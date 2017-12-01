@@ -9,8 +9,8 @@ import RSVP from 'rsvp';
 export default Service.extend({
   user: null,
   authenticated: notEmpty('user', null).readOnly(),
-  canCreateGrant: equal('user.role', 'admin').readOnly(),
-  canCreateSubmission: equal('user.role', 'pi').readOnly(),
+  isAdmin: equal('user.role', 'admin').readOnly(),
+  isPI: equal('user.role', 'pi').readOnly(),
 
   store: service(),
 
