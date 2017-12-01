@@ -6,25 +6,11 @@ export default Controller.extend({
 
   store: service('store'),
 
-  saveWithGrant(submission) {
-    console.log("Saved with " + submission);
-  },
-
-  createAndEditSubmission(submission) {
-    this.saveWithGrant(submission);
-  },
-
-  saveAndCloseSubmission(submission) {
-    this.saveWithGrant(submission);
-  },
-
-
-  newSubmission() {
-    console.log("new submission");
-    return this.get('store').createRecord('submission', { title: "yo " + Math.random() });
-  },
-
   actions: {
+
+    newSubmission() {
+      return this.get('store').createRecord('submission');
+    },
 
     cancelSubmission(submission) {
       submission.rollbackAttributes();
@@ -33,12 +19,14 @@ export default Controller.extend({
     saveSubmission(submission) {
       var grant = this.model;
 
-      submission.save().then(() => {
+      return submission.save().then(() => {
         submission.get('grants').pushObject(grant);
         submission.save();
 
         grant.get('submissions').pushObject(submission);
         grant.save();
+
+        return submission;
       });
     }
   },
