@@ -4,11 +4,20 @@
   <li>Funder: {{model.funder.name}}</li>
   <li>Award Number: {{model.awardNumber}}</li>
   <li>Project Name: {{model.projectName}}</li>
-  <li>Start: {{model.startDate}}</li>
-  <li>End: {{model.endDate}}</li>
+  <li>PI: <a href='mailto:{{model.pi.email}}'>{{model.pi.name}}</a></li>
+  <li>CoPIs:</li>
+    <ul>
+      {{#each model.copis as |person|}}
+        <li><a href='mailto:{{person.email}}'>{{person.name}}</a></li>
+      {{/each}}
+    </ul>
+  <li>Start: {{date-formatter model.startDate}}</li>
+  <li>End: {{date-formatter model.endDate}}</li>
   <li>Status: {{model.status}}</li>
-  <li>Created by: {{model.creator.name}}</li>
+  <li>OAP Compliance: {{model.oapCompliance}}</li>
+  <li>Created by: {{model.creator.username}} on {{date-formatter model.creationDate}}</li>
 </ul>
+
 
 <h3>Submissions of grant</h3>
 
