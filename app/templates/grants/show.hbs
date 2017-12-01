@@ -30,8 +30,31 @@
   multipleColumnsSorting=false
 }}
 
-{{#resource-form saveAction=(action "addSubmission") as |form|}}
-    <button {{action 'newResource' 'submission' target=form}}>NEW SUBMISSION</button>
-{{/resource-form}}
+{{#if isShowingForm}}
+    {{#modal-dialog translucentOverlay=true}}
+      {{#workflow-card
+            continue=(action (queue
+                (action "saveSubmission")
+                (action (mut isShowingForm) false)
+                (route-action "transitionTo" "submission.show.index" newSubmissionObject)
+            ))
+            cancel=(action (queue 
+                (action "cancelSubmission") 
+                (action (mut isShowingForm) false)
+            )) 
+            save=(action (queue
+              (action "saveSubmission")
+              (action (mut isShowingForm) false)
+            ))}}
+        {{submission-overview submission=newSubmissionObject}}
+      {{/workflow-card}}
+   {{/modal-dialog}}
+{{/if}}
+<button class="btn btn-primary btn-small" onclick={{action (queue
+      (action "newSubmission") 
+      (action (mut isShowingForm) true)
+      )}}>
+  New Submission
+</button>
 
 {{#link-to 'grants' class="btn btn-primary btn-small"}}Back to grants{{/link-to}}

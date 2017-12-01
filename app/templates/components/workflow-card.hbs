@@ -1,0 +1,19 @@
+<div class="container">
+    <div class="row">
+        <div class="col">
+            {{yield this}}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm">
+            <button class="btn btn-primary btn-small" onclick={{action cancel}}>Cancel</button>
+        </div>
+        <div class="col-sm">
+            <button class="btn btn-primary btn-small" onclick={{action save}}>Save</button>
+        </div>
+        <div class="col-sm">
+            <button class="btn btn-primary btn-small" onclick={{action continue}}>Save and Continue</button>
+        </div>
+    </div>
+</div>

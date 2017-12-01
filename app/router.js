@@ -22,6 +22,8 @@ Router.map(function() {
       this.route('metadata');
       this.route('attachments');
       this.route('submission');
+      this.route('repositories');
+      this.route('funding');
     });
   })
   this.route('login');
