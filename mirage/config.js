@@ -14,4 +14,9 @@ export default function() {
   this.get('/users', (schema, request) => {
     return schema.users.where(request.queryParams);
   });
+
+  // Enable query for grants
+  this.get('/grants', (schema, request) => {
+    return schema.grants.where(request.queryParams);
+  });
 }
