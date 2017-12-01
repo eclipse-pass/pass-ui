@@ -6,17 +6,23 @@ export default Controller.extend({
 
   store: service('store'),
 
+  /* For providing access to a newly created submission object */
+  newSubmissionObject: null,
+
   actions: {
 
     newSubmission() {
-      return this.get('store').createRecord('submission');
+      this.set('newSubmissionObject', this.get('store').createRecord('submission', { title: "All about " + Math.random()}));
     },
 
-    cancelSubmission(submission) {
+    cancelSubmission() {
+      var submission = this.get('newSubmissionObject');
       submission.rollbackAttributes();
+      this.set('newSubmissionObject', null);
     },
 
-    saveSubmission(submission) {
+    saveSubmission() {
+      var submission = this.get('newSubmissionObject');
       var grant = this.model;
 
       return submission.save().then(() => {

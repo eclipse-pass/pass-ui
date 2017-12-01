@@ -31,31 +31,29 @@
 }}
 
 {{#if isShowingForm}}
-    {{! This is a bit odd, but *by seting an arbitrary variable (exec_) on an arbitrary component*, 
-        we invoke 'newSubmission' to create a new submission resource, and set the 'submission'
-        property to contain it.  This happens anew every time the isShowingForm toggles to true.
-        For whatever reason, this *doesn't* work as an onClick action from the button.  In that context,
-        a new submission is immediately computed when the page loads, and is cached, which is NOT what we want.
-    }}
-    {{#modal-dialog translucentOverlay=true exec_=(compute (action (mut submission) (compute (action "newSubmission"))))}}
+    {{#modal-dialog translucentOverlay=true}}
       {{#workflow-card
             continue=(action (queue
-                (action "saveSubmission" submission)
-                (route-action "transitionTo" "submission.show.index" submission)
+                (action "saveSubmission")
+                (action (mut isShowingForm) false)
+                (route-action "transitionTo" "submission.show.index" newSubmissionObject)
             ))
             cancel=(action (queue 
-                (action "cancelSubmission" submission) 
+                (action "cancelSubmission") 
                 (action (mut isShowingForm) false)
             )) 
             save=(action (queue
-              (action "saveSubmission" submission)
+              (action "saveSubmission")
               (action (mut isShowingForm) false)
             ))}}
-        {{submission-overview submission=submission}}
+        {{submission-overview submission=newSubmissionObject}}
       {{/workflow-card}}
    {{/modal-dialog}}
 {{/if}}
-<button class="btn btn-primary btn-small" onclick={{action (mut isShowingForm) true}}>
+<button class="btn btn-primary btn-small" onclick={{action (queue
+      (action "newSubmission") 
+      (action (mut isShowingForm) true)
+      )}}>
   New Submission
 </button>
 
