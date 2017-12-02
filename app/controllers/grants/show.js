@@ -12,7 +12,7 @@ export default Controller.extend({
   actions: {
 
     newSubmission() {
-      this.set('newSubmissionObject', this.get('store').createRecord('submission', { title: "All about " + Math.random()}));
+      this.set('newSubmissionObject', this.get('store').createRecord('submission'));
     },
 
     cancelSubmission() {
