@@ -169,7 +169,7 @@ export default Route.extend({
       startDate: new Date('2015-03-25'),
       endDate: new Date('2018-06-02'),
       status: 'Active',
-      oapCompliance: "No"
+      oapCompliance: 'No'
     });
 
     let grant2 = store.createRecord('grant', {
@@ -178,7 +178,7 @@ export default Route.extend({
       startDate: new Date('2010-02-20'),
       endDate: new Date('2019-11-01'),
       status: 'Active',
-      oapCompliance: "No"
+      oapCompliance: 'No'
     });
 
     let grant3 = store.createRecord('grant', {
@@ -187,7 +187,7 @@ export default Route.extend({
       startDate: new Date('2010-03-12'),
       endDate: new Date('2015-08-10'),
       status: 'Ended',
-      oapCompliance: "No"
+      oapCompliance: 'No'
     });
 
     let grant4 = store.createRecord('grant', {
@@ -196,7 +196,7 @@ export default Route.extend({
       startDate: new Date('2010-03-04'),
       endDate: new Date('2019-09-10'),
       status: 'Active',
-      oapCompliance: "Yes"
+      oapCompliance: 'Yes'
     });
 
     let grant5 = store.createRecord('grant', {
@@ -205,7 +205,7 @@ export default Route.extend({
       startDate: new Date('2010-03-04'),
       endDate: new Date('2014-02-10'),
       status: 'Active',
-      oapCompliance: "Yes"
+      oapCompliance: 'Yes'
     });
 
     let grant6 = store.createRecord('grant', {
@@ -214,7 +214,7 @@ export default Route.extend({
       startDate: new Date('2010-03-04'),
       endDate: new Date('2015-08-10'),
       status: 'Active',
-      oapCompliance: "Yes"
+      oapCompliance: 'Yes'
     });
     let grant7 = store.createRecord('grant', {
       projectName: 'grant7',
@@ -222,7 +222,7 @@ export default Route.extend({
       startDate: new Date('2010-03-04'),
       endDate: new Date('2015-08-10'),
       status: 'Active',
-      oapCompliance: "Yes"
+      oapCompliance: 'Yes'
     });
     let grant8 = store.createRecord('grant', {
       projectName: 'grant8',
@@ -230,7 +230,7 @@ export default Route.extend({
       startDate: new Date('2010-03-04'),
       endDate: new Date('2015-08-10'),
       status: 'Active',
-      oapCompliance: "Yes"
+      oapCompliance: 'Yes'
     });
     let grant9 = store.createRecord('grant', {
       projectName: 'grant9',
@@ -238,7 +238,7 @@ export default Route.extend({
       startDate: new Date('2010-03-04'),
       endDate: new Date('2015-08-10'),
       status: 'Active',
-      oapCompliance: "Yes"
+      oapCompliance: 'Yes'
     });
     let grant10 = store.createRecord('grant', {
       projectName: 'grant 10',
@@ -246,7 +246,7 @@ export default Route.extend({
       startDate: new Date('2010-03-04'),
       endDate: new Date('2015-08-10'),
       status: 'Active',
-      oapCompliance: "Yes"
+      oapCompliance: 'Yes'
     });
     let grant11 = store.createRecord('grant', {
       projectName: 'grant11',
@@ -254,7 +254,7 @@ export default Route.extend({
       startDate: new Date('2010-03-04'),
       endDate: new Date('2015-08-10'),
       status: 'Active',
-      oapCompliance: "Yes"
+      oapCompliance: 'Yes'
     });
     let grant12 = store.createRecord('grant', {
       projectName: 'grant12',
@@ -262,7 +262,7 @@ export default Route.extend({
       startDate: new Date('2010-03-04'),
       endDate: new Date('2015-08-10'),
       status: 'Active',
-      oapCompliance: "Yes"
+      oapCompliance: 'Yes'
     });
     let grant13 = store.createRecord('grant', {
       projectName: 'grant13',
@@ -270,7 +270,7 @@ export default Route.extend({
       startDate: new Date('2010-03-04'),
       endDate: new Date('2015-08-10'),
       status: 'Active',
-      oapCompliance: "Yes"
+      oapCompliance: 'Yes'
     });
 
     let sub1 = store.createRecord('submission', {
@@ -311,7 +311,6 @@ export default Route.extend({
       name: 'Royal Society of Chemistry'
     })
 
-
     let journalID1 = store.createRecord('identifier', {
       type: 'epub',
       label: 'ISSN',
@@ -323,29 +322,77 @@ export default Route.extend({
       label: 'ISSN',
       uri: '1948-5875'
     })
+
     let journalID3 = store.createRecord('identifier', {
       type: 'epub',
       label: 'ISSN',
       uri: '1522-1059'
     })
 
+    let journalID4 = store.createRecord('identifier', {
+      type: 'ppub',
+      label: 'ISSN',
+      uri: '2042-6496'
+    })
+
+    let journalID5 = store.createRecord('identifier', {
+      type: 'epub',
+      label: 'ISSN',
+      uri: '2045-4538'
+    })
+
+    let journalID6 = store.createRecord('identifier', {
+      type: 'ppub',
+      label: 'ISSN',
+      uri: '0003-2654'
+    })
+
     let journalA1 = store.createRecord('journal', {
       name: 'AAPS Journal',
       nlmta: 'AAPS J',
-      pmcParticipation: "A"
+      pmcParticipation: 'A'
     });
 
     let journalA2 = store.createRecord('journal', {
       name: 'ACS Medicinal Chemistry Letters',
       nlmta: 'ACS Med Chem Lett',
-      pmcParticipation: "A"
+      pmcParticipation: 'A'
     });
+    //test DOIs for article that was published by this journal
+    // 10.1021/acsmedchemlett.7b00397
+    // 10.1021/acsmedchemlett.7b00376
 
     let journalA3 = store.createRecord('journal', {
       name: 'AAPS PharmSci',
       nlmta: 'AAPS PharmSci',
-      pmcParticipation: "A"
+      pmcParticipation: 'A'
     });
+
+    let journalB1 = store.createRecord('journal', {
+      name: 'Food & Function',
+      nlmta: 'Food Funct',
+      pmcParticipation: 'B'
+    });
+    //test DOIs for articles that were published by this journal
+    // 10.1039/c7fo01251a
+    // 10.1039/c7fo01382e
+
+
+    let journalB2 = store.createRecord('journal', {
+      name: 'Toxicology Research',
+      nlmta: 'Toxicol Res',
+      pmcParticipation: 'B'
+    });
+
+    let journalB3 = store.createRecord('journal', {
+      name: 'Analyst',
+      nlmta: 'Analyst',
+      pmcParticipation: 'B'
+    });
+    //test DOIs for articles that were published by this journal
+    // 10.1039/c7an01256j
+    // 10.1039/C7AN01617D
+
 
 
     // Persist the test objects, add relationships, and then persist again.
@@ -359,8 +406,8 @@ export default Route.extend({
       coeus7, coeus8, coeus9, coeus12, coeus10, coeus11, coeus14,
       person1, person2, person3, person4, person5, person6, person7, person8,
       person9, person10,person11, person12, person13,
-      journalA1, journalA2, journalA3,
-      journalID1, journalID2, journalID3,
+      journalA1, journalA2, journalA3, journalB1, journalB2, journalB3,
+      journalID1, journalID2, journalID3, journalID4, journalID5, journalID6,
       publisherA1, publisherA2, publisherB1
   ];
 
@@ -511,6 +558,18 @@ export default Route.extend({
       journalA2.get('ISSNs').pushObject(journalID2);
       journalA2.set('publisher', publisherA1);
       publisherA1.get('journals').pushObject(journalA2);
+
+      journalB1.get('ISSNs').pushObject(journalID4);
+      journalB1.set('publisher', publisherB1);
+      publisherB1.get('journals').pushObject(journalB1);
+
+      journalB2.get('ISSNs').pushObject(journalID5);
+      journalB2.set('publisher', publisherB1);
+      publisherB1.get('journals').pushObject(journalB2);
+
+      journalB3.get('ISSNs').pushObject(journalID6);
+      journalB3.set('publisher', publisherB1);
+      publisherB1.get('journals').pushObject(journalB3);
 
       return RSVP.all(objects.map(o => o.save())).then(() => {
         return this.controllerFor('application').get('session').login('admin');
