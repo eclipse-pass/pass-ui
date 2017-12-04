@@ -299,6 +299,55 @@ export default Route.extend({
       status: 'complete'
     });
 
+    let publisherA1 = store.createRecord('publisher', {
+      name: 'American Chemical Society'
+    })
+
+    let publisherA2 = store.createRecord('publisher', {
+      name: 'American Association of Pharmaceutical Scientists'
+    })
+
+    let publisherB1 = store.createRecord('publisher', {
+      name: 'Royal Society of Chemistry'
+    })
+
+
+    let journalID1 = store.createRecord('identifier', {
+      type: 'epub',
+      label: 'ISSN',
+      uri: '1550-7416'
+    })
+
+    let journalID2 = store.createRecord('identifier', {
+      type: 'epub',
+      label: 'ISSN',
+      uri: '1948-5875'
+    })
+    let journalID3 = store.createRecord('identifier', {
+      type: 'epub',
+      label: 'ISSN',
+      uri: '1522-1059'
+    })
+
+    let journalA1 = store.createRecord('journal', {
+      name: 'AAPS Journal',
+      nlmta: 'AAPS J',
+      pmcParticipation: "A"
+    });
+
+    let journalA2 = store.createRecord('journal', {
+      name: 'ACS Medicinal Chemistry Letters',
+      nlmta: 'ACS Med Chem Lett',
+      pmcParticipation: "A"
+    });
+
+    let journalA3 = store.createRecord('journal', {
+      name: 'AAPS PharmSci',
+      nlmta: 'AAPS PharmSci',
+      pmcParticipation: "A"
+    });
+
+
     // Persist the test objects, add relationships, and then persist again.
 
     let objects = [user1, user2, user3, user4,
@@ -309,7 +358,11 @@ export default Route.extend({
       coeus1, coeus2, coeus3, coeus4, coeus5, coeus6,
       coeus7, coeus8, coeus9, coeus12, coeus10, coeus11, coeus14,
       person1, person2, person3, person4, person5, person6, person7, person8,
-      person9, person10,person11, person12, person13];
+      person9, person10,person11, person12, person13,
+      journalA1, journalA2, journalA3,
+      journalID1, journalID2, journalID3,
+      publisherA1, publisherA2, publisherB1
+  ];
 
     return RSVP.all(objects.map(o => o.save())).then(() => {
       grant1.set('creator', user1);
@@ -446,6 +499,18 @@ export default Route.extend({
 
       grant11.get('submissions').pushObject(sub4);
       sub4.get('grants').pushObject(grant11);
+
+      journalA1.get('ISSNs').pushObject(journalID1);
+      journalA1.set('publisher', publisherA2);
+      publisherA2.get('journals').pushObject(journalA1);
+
+      journalA3.get('ISSNs').pushObject(journalID3);
+      journalA3.set('publisher', publisherA2);
+      publisherA2.get('journals').pushObject(journalA3);
+
+      journalA2.get('ISSNs').pushObject(journalID2);
+      journalA2.set('publisher', publisherA1);
+      publisherA1.get('journals').pushObject(journalA2);
 
       return RSVP.all(objects.map(o => o.save())).then(() => {
         return this.controllerFor('application').get('session').login('admin');

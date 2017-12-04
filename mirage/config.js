@@ -9,6 +9,8 @@ export default function() {
   this.resource('funders');
   this.resource('people');
   this.resource('identifiers');
+  this.resource('journals');
+  this.resource('publishers');
 
   // Enable query for users
   this.get('/users', (schema, request) => {
