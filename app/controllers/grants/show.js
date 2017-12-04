@@ -38,9 +38,14 @@ export default Controller.extend({
   },
 
   columns: [
-    { propertyName: 'title', title: 'Title' },
+    { propertyName: 'title', title: 'Article' },
+    { propertyName: '', title: 'Award Number (Funder)' },
+    { propertyName: 'author', title: 'Corr. Author' },
+    { propertyName: 'repo', title: 'Repo' },
+    { propertyName: 'updatedDate', title: 'Last Update Date' },
+    { propertyName: 'submittedDate', title: 'Submitted Date' },
     { propertyName: 'status', title: 'Status' },
-    { propertyName: 'creationDate', title: 'Created' }
+    { propertyName: 'creator.username', title: 'OAP Repo Id' }
   ],
 
   themeInstance: Bootstrap4Theme.create()
