@@ -1,8 +1,6 @@
 
-
 DOI: <input class="form-control" type="text" value={{submission.doi}} oninput={{action (mut submission.doi) value="target.value"}} />
 <button onclick={{action "resolveDoi"}}>Resolve DOI</button>
-<h3>Overview</h3>
 <ul>
   <li>Title: {{submission.title}}</li>
   <li>Copyright: {{submission.copyright}}</li>

@@ -32,12 +32,8 @@
 
 {{#if isShowingForm}}
     {{#modal-dialog translucentOverlay=true}}
-      {{#workflow-card
-            continue=(action (queue
-                (action "saveSubmission")
-                (action (mut isShowingForm) false)
-                (route-action "transitionTo" "submission.show.index" newSubmissionObject)
-            ))
+      {{#workflow-group as |group|}}
+        {{#workflow-card step="doi" group=group
             cancel=(action (queue 
                 (action "cancelSubmission") 
                 (action (mut isShowingForm) false)
@@ -45,9 +41,29 @@
             save=(action (queue
               (action "saveSubmission")
               (action (mut isShowingForm) false)
+            ))
+            continue=(action "advance" target=group)}}
+          {{submission-overview-doi submission=newSubmissionObject}}
+        {{/workflow-card}}
+      
+        {{#workflow-card step="details" group=group
+            cancel=(action (queue 
+                (action "cancelSubmission") 
+                (action (mut isShowingForm) false)
+            ))
+            save=(action (queue
+              (action "saveSubmission")
+              (action (mut isShowingForm) false)
+            ))
+            continue=(action (queue
+                (action "saveSubmission")
+                (action (mut isShowingForm) false)
+                (route-action "transitionTo" "submission.show.index" newSubmissionObject)
             ))}}
-        {{submission-overview submission=newSubmissionObject}}
-      {{/workflow-card}}
+          {{submission-overview-details submission=newSubmissionObject}}
+        {{/workflow-card}}
+
+      {{/workflow-group}}
    {{/modal-dialog}}
 {{/if}}
 <button class="btn btn-primary btn-small" onclick={{action (queue

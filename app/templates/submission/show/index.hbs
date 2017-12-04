@@ -1,2 +1,22 @@
-{{submission-overview submission=model}}
+<!-- Submission overview page -->
+      {{#workflow-group as |group|}}
+        {{#workflow-card step="doi" group=group
+            cancel=(action (queue 
+            )) 
+            save=(action (queue
+            ))
+            continue=(action "advance" target=group)}}
+          {{submission-overview-doi submission=model}}
+        {{/workflow-card}}
+      
+        {{#workflow-card step="details" group=group
+            cancel=(action (queue 
+            ))
+            save=(action (queue
+            ))
+            continue=(action "advance" target=group)}}
+          {{submission-overview-details submission=model}}
+        {{/workflow-card}}
+
+      {{/workflow-group}}
 {{outlet}}
