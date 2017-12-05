@@ -336,12 +336,16 @@ export default Route.extend({
     let sub1 = store.createRecord('submission', {
       title: 'Chocolate chip is the best',
       creationDate: new Date('2018-06-02'),
+      updatedDate: new Date('2018-06-02'),
+      submittedDate: new Date('2018-06-08'),
       status: 'in progress'
     });
 
     let sub2 = store.createRecord('submission', {
       title: 'In defense of vanilla',
       creationDate: new Date('2018-06-02'),
+      updatedDate: new Date('2018-06-02'),
+      submittedDate: new Date('2018-06-10'),
       status: 'in progress'
     });
 
@@ -349,6 +353,8 @@ export default Route.extend({
     let sub3 = store.createRecord('submission', {
       title: 'Chocolate, how can you go wrong?',
       creationDate: new Date('2018-06-02'),
+      updatedDate: new Date('2018-06-03'),
+      submittedDate: new Date('2018-07-01'),
       status: 'in progress'
     });
 
@@ -356,6 +362,8 @@ export default Route.extend({
     let sub4 = store.createRecord('submission', {
       title: 'Animal farm: The prophecy comes true.',
       creationDate: new Date('2018-06-02'),
+      updatedDate: new Date('2018-09-20'),
+      submittedDate: new Date('2018-10-18'),
       status: 'complete'
     });
 
@@ -574,6 +582,11 @@ export default Route.extend({
       sub2.set('creator', user2);
       sub3.set('creator', user3);
       sub4.set('creator', user1);
+
+      sub1.set('author', person9);
+      sub2.set('author', person10);
+      sub3.set('author', person11);
+      sub4.set('author', person12);
 
       sub1.get('deposits').pushObject(deposit1);
       sub1.get('deposits').pushObject(deposit2);

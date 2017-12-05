@@ -1,0 +1,3 @@
+{{#each record.grants as |grant index|}}
+{{if index ', '}}{{grant.awardNumber}} ({{grant.funder.name}})
+{{/each}}
