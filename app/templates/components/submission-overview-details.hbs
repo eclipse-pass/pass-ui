@@ -1,2 +1,18 @@
-Details!
+<h2>Submission Details</h2>
+<p>
+    Please provide some basic information about your work and the journal in which it is/will be published. This step will help
+    us determine the applicable
+</p>
+<div class="container">
+    <form>
+        <div class="form-group row">
+            <label for="title" class="col-sm-2 col-form-label">Title</label>
+
+            <div class="col-sm-10">
+                <textarea id="title" rows="2" class="form-control" value={{auto-fill submission "title" doiInfo.title}} oninput={{action (mut
+                    submission.title) value="target.value" }} />
+            </div>
+        </div>
+    </form>
+</div>
 {{yield}}

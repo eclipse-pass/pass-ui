@@ -12,9 +12,7 @@
           {{submission-overview-details submission=model}}
         {{/workflow-card}}
 
-        {{#workflow-card step="view" group=group
-            cancel=(route-action 'back')
-            continue=(action "advance" target=group)}}
+        {{#workflow-card step="view" group=group}}
           {{submission-overview-view submission=model}}
         {{/workflow-card}}
 

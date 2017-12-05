@@ -20,7 +20,7 @@ export default Service.extend({
         return fetch(this.get('base') + encodeURI(doi), {
             redirect: 'follow',
             headers: {
-                'Accept': '	application/vnd.citationstyles.csl+json'
+                'Accept': 'application/vnd.citationstyles.csl+json'
             }
         }).then((response) => {
             if (response.status >= 200 && response.status < 300) {

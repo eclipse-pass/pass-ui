@@ -1,13 +1,7 @@
-
+<h2>DOI</h2>
+<p>
+If the manuscript/article you are submitting has been assigned a DOI, please provide it now.  We will use it to help pre-populate submission
+forms from the metadata extracted from the DOI.  If the article has no DOI, please leave it blank.
+</p>
 DOI: <input class="form-control" type="text" value={{submission.doi}} oninput={{action (mut submission.doi) value="target.value"}} />
-<button onclick={{action "resolveDoi"}}>Resolve DOI</button>
-<ul>
-  <li>Title: {{submission.title}}</li>
-  <li>Copyright: {{submission.copyright}}</li>
-  <li>Creation date: {{submission.creationDate}}</li>  
-  <li>Status: {{submission.status}}</li>
-  <li>DOI: {{submission.doi}}</li>
-</ul>
-{{doiInfo}}
-{{doiError}}
 {{yield}}
