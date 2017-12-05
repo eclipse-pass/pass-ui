@@ -1,21 +1,21 @@
 <!-- Submission overview page -->
-      {{#workflow-group as |group|}}
+      {{#workflow-group name="overview" workflow=(workflow-for model "overview") as |group|}}
         {{#workflow-card step="doi" group=group
-            cancel=(action (queue 
-            )) 
-            save=(action (queue
-            ))
+            cancel=(route-action 'back')
             continue=(action "advance" target=group)}}
           {{submission-overview-doi submission=model}}
         {{/workflow-card}}
       
         {{#workflow-card step="details" group=group
-            cancel=(action (queue 
-            ))
-            save=(action (queue
-            ))
+            cancel=(route-action 'back')
             continue=(action "advance" target=group)}}
           {{submission-overview-details submission=model}}
+        {{/workflow-card}}
+
+        {{#workflow-card step="view" group=group
+            cancel=(route-action 'back')
+            continue=(action "advance" target=group)}}
+          {{submission-overview-view submission=model}}
         {{/workflow-card}}
 
       {{/workflow-group}}

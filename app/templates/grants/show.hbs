@@ -32,7 +32,7 @@
 
 {{#if isShowingForm}}
     {{#modal-dialog translucentOverlay=true}}
-      {{#workflow-group as |group|}}
+      {{#workflow-group name="overview" as |group|}}
         {{#workflow-card step="doi" group=group
             cancel=(action (queue 
                 (action "cancelSubmission") 
@@ -56,11 +56,18 @@
               (action (mut isShowingForm) false)
             ))
             continue=(action (queue
+                (action "advance" target=group)
+                (action "save" target=group)
+                (action "attachWorkflow" group.workflow)
                 (action "saveSubmission")
                 (action (mut isShowingForm) false)
                 (route-action "transitionTo" "submission.show.index" newSubmissionObject)
             ))}}
           {{submission-overview-details submission=newSubmissionObject}}
+        {{/workflow-card}}
+
+        {{#workflow-card step="view" group=group}}
+          Saving submission...
         {{/workflow-card}}
 
       {{/workflow-group}}

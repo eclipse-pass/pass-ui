@@ -21,6 +21,10 @@ export default Controller.extend({
       this.set('newSubmissionObject', null);
     },
 
+    attachWorkflow(workflow) {
+      this.get('newSubmissionObject').get('workflows').pushObject(workflow);
+    },
+
     saveSubmission() {
       var submission = this.get('newSubmissionObject');
       var grant = this.model;

@@ -12,6 +12,7 @@ export default function() {
   this.resource('journals');
   this.resource('publishers');
   this.resource('deposits');
+  this.resource('workflows');
 
   // Enable query for users
   this.get('/users', (schema, request) => {

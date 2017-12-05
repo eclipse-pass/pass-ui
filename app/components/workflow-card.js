@@ -8,7 +8,10 @@ export default Component.extend({
 
     isShowing: computed("group.step", function () {
         var group = this.get('group');
-        return this.get('step') === group != null ? group : null;
+        if (group) {
+            return this.get('step') === group.get('step');
+        } 
+        return false;
     }),
 
     didReceiveAttrs() {
@@ -19,8 +22,9 @@ export default Component.extend({
 
         var step = this.get('step');
         var group = this.get('group');
-
+        
         if (step && group) {
+
             this.set('didRegister', true);
             group.addStep(step);
         }

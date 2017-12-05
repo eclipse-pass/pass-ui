@@ -8,13 +8,19 @@
 
     <div class="row">
         <div class="col-sm">
+            {{#if cancel}}
             <button class="btn btn-primary btn-small" onclick={{action cancel}}>Cancel</button>
+            {{/if}}
         </div>
         <div class="col-sm">
+            {{#if save}}
             <button class="btn btn-primary btn-small" onclick={{action save}}>Save</button>
+            {{/if}}
         </div>
         <div class="col-sm">
+            {{#if continue}}
             <button class="btn btn-primary btn-small" onclick={{action continue}}>Save and Continue</button>
+            {{/if}}
         </div>
     </div>
 </div>
