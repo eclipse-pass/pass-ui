@@ -25,6 +25,7 @@ You will need the following things properly installed on your computer.
 * Visit your app at [http://localhost:4200](http://localhost:4200).
 * Visit your tests at [http://localhost:4200/tests](http://localhost:4200/tests).
 
+
 ### Running Tests
 
 * `ember test`
@@ -34,6 +35,7 @@ You will need the following things properly installed on your computer.
 
 * `ember build` (development)
 * `ember build --environment production` (production)
+* `PORTABLE=1 ember build` (demo that does not need web server)
 
 ### Deploying
 

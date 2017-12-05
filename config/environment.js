@@ -44,7 +44,14 @@ module.exports = function(environment) {
   }
 
   if (environment === 'production') {
-    // here you can enable a production-specific feature
+    // Application deployed as /pass
+    // ENV.rootURL = '/pass/';
+  }
+
+  // Optionally, make app work without web server
+  if (process.env.PORTABLE) {
+    ENV.rootURL = '';
+    ENV.locationType = 'hash';
   }
 
   return ENV;
