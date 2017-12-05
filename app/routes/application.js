@@ -184,8 +184,8 @@ export default Route.extend({
     let grant3 = store.createRecord('grant', {
       projectName: 'Datanet: Conserving cow data',
       awardNumber: 'P30 CD340212',
-      startDate: new Date('2010-03-12'),
-      endDate: new Date('2015-08-10'),
+      startDate: new Date('2017-03-12'),
+      endDate: new Date('2019-08-10'),
       status: 'Ended',
       oapCompliance: 'No'
     });
@@ -202,8 +202,8 @@ export default Route.extend({
     let grant5 = store.createRecord('grant', {
       projectName: 'Leafy trees',
       awardNumber: 'R21 DK098988',
-      startDate: new Date('2010-03-04'),
-      endDate: new Date('2014-02-10'),
+      startDate: new Date('2017-03-04'),
+      endDate: new Date('2019-02-10'),
       status: 'Active',
       oapCompliance: 'Yes'
     });
@@ -211,16 +211,16 @@ export default Route.extend({
     let grant6 = store.createRecord('grant', {
       projectName: 'Life on the beach: animal edition',
       awardNumber: 'R21 AI939322',
-      startDate: new Date('2010-03-04'),
-      endDate: new Date('2015-08-10'),
+      startDate: new Date('2017-03-04'),
+      endDate: new Date('2019-08-10'),
       status: 'Active',
       oapCompliance: 'Yes'
     });
     let grant7 = store.createRecord('grant', {
       projectName: 'grant7',
       awardNumber: 'R20 AI939212',
-      startDate: new Date('2010-03-04'),
-      endDate: new Date('2015-08-10'),
+      startDate: new Date('2017-03-14'),
+      endDate: new Date('2019-08-19'),
       status: 'Active',
       oapCompliance: 'Yes'
     });
@@ -235,40 +235,40 @@ export default Route.extend({
     let grant9 = store.createRecord('grant', {
       projectName: 'grant9',
       awardNumber: 'MX11-1131',
-      startDate: new Date('2010-03-04'),
-      endDate: new Date('2015-08-10'),
+      startDate: new Date('2018-03-04'),
+      endDate: new Date('2019-08-10'),
       status: 'Active',
       oapCompliance: 'Yes'
     });
     let grant10 = store.createRecord('grant', {
       projectName: 'grant 10',
       awardNumber: 'LIT-123123',
-      startDate: new Date('2010-03-04'),
-      endDate: new Date('2015-08-10'),
+      startDate: new Date('2017-03-04'),
+      endDate: new Date('2020-08-10'),
       status: 'Active',
       oapCompliance: 'Yes'
     });
     let grant11 = store.createRecord('grant', {
       projectName: 'grant11',
       awardNumber: 'AUX012121',
-      startDate: new Date('2010-03-04'),
-      endDate: new Date('2015-08-10'),
+      startDate: new Date('2018-03-04'),
+      endDate: new Date('2020-08-10'),
       status: 'Active',
       oapCompliance: 'Yes'
     });
     let grant12 = store.createRecord('grant', {
       projectName: 'grant12',
       awardNumber: 'NNI-2311',
-      startDate: new Date('2010-03-04'),
-      endDate: new Date('2015-08-10'),
+      startDate: new Date('2018-03-04'),
+      endDate: new Date('2021-08-10'),
       status: 'Active',
       oapCompliance: 'Yes'
     });
     let grant13 = store.createRecord('grant', {
       projectName: 'grant13',
       awardNumber: 'R21 AI939322',
-      startDate: new Date('2010-03-04'),
-      endDate: new Date('2015-08-10'),
+      startDate: new Date('2019-03-04'),
+      endDate: new Date('2021-08-10'),
       status: 'Active',
       oapCompliance: 'Yes'
     });

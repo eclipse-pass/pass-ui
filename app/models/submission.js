@@ -13,5 +13,6 @@ export default DS.Model.extend({
   journal: DS.belongsTo('journal'),
   volume: DS.attr('string'),
   issue: DS.attr('string'),
-  deposits: DS.hasMany('deposit', { async: true })
+  deposits: DS.hasMany('deposit', { async: true }),
+  grants: DS.hasMany('grant', {async: true})
 });
