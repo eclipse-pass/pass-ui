@@ -273,6 +273,66 @@ export default Route.extend({
       oapCompliance: 'Yes'
     });
 
+    let depositID1 = store.createRecord('identifier', {
+      type: 'NIHMS',
+      label: 'NIHMS-ID',
+      uri: '775054'
+    });
+
+    let deposit1 = store.createRecord('deposit', {
+      repo: 'NIHMS',
+      updatedDate: new Date('2016-04-02'),
+      status: 'submitted'
+    });
+
+    let depositID2 = store.createRecord('identifier', {
+      type: 'DOE-PAGES',
+      label: 'PAGES-ID',
+      uri: '32654'
+    });
+
+    let deposit2 = store.createRecord('deposit', {
+      repo: 'DOE-PAGES',
+      updatedDate: new Date('2015-05-02'),
+      status: 'submitted'
+    });
+
+    let depositID3 = store.createRecord('identifier', {
+      type: 'PMC',
+      label: 'PMC-ID',
+      uri: '659871'
+    });
+
+    let deposit3 = store.createRecord('deposit', {
+      repo: 'PMC',
+      updatedDate: new Date('2017-05-02'),
+      status: 'submitted'
+    });
+
+    let depositID4 = store.createRecord('identifier', {
+      type: 'PMC',
+      label: 'PMC-ID',
+      uri: '9201038'
+    });
+
+    let deposit4 = store.createRecord('deposit', {
+      repo: 'PMC',
+      updatedDate: new Date('2017-10-02'),
+      status: 'submitted'
+    });
+
+    let depositID5 = store.createRecord('identifier', {
+      type: 'PMC',
+      label: 'PMC-ID',
+      uri: '0982342'
+    });
+
+    let deposit5 = store.createRecord('deposit', {
+      repo: 'PMC',
+      updatedDate: new Date('2016-10-02'),
+      status: 'submitted'
+    });
+
     let sub1 = store.createRecord('submission', {
       title: 'Chocolate chip is the best',
       creationDate: new Date('2018-06-02'),
@@ -393,14 +453,14 @@ export default Route.extend({
     // 10.1039/c7an01256j
     // 10.1039/C7AN01617D
 
-
-
     // Persist the test objects, add relationships, and then persist again.
 
     let objects = [user1, user2, user3, user4,
       funder1, funder2, funder3,
       grant1, grant2, grant3, grant4, grant5, grant6,
       grant7, grant8, grant9, grant10, grant11, grant12,
+      depositID1, depositID2, depositID3, depositID4, depositID5,
+      deposit1, deposit2, deposit3, deposit4, deposit5,
       sub1, sub2, sub3, sub4,
       coeus1, coeus2, coeus3, coeus4, coeus5, coeus6,
       coeus7, coeus8, coeus9, coeus12, coeus10, coeus11, coeus14,
@@ -464,8 +524,8 @@ export default Route.extend({
 
       grant4.set('pi', person5);
       grant4.get('copis').pushObject(person6);
-      grant5.get('copis').pushObject(person12);
-      grant5.get('copis').pushObject(person13);
+      grant4.get('copis').pushObject(person12);
+      grant4.get('copis').pushObject(person13);
 
 
       grant5.set('pi', person7);
@@ -498,54 +558,29 @@ export default Route.extend({
       grant13.set('pi', person12);
       grant13.get('copis').pushObject(person13);
 
+      deposit1.set('assignedId', depositID1);
+      deposit1.set('grant', grant1);
+
+      deposit2.set('assignedId', depositID2);
+      deposit2.set('grant', grant3);
+
+      deposit3.set('assignedId', depositID3);
+      deposit3.set('grant', grant1);
+
+      deposit4.set('assignedId', depositID4);
+      deposit4.set('grant', grant2);
+
       sub1.set('creator', user1);
       sub2.set('creator', user2);
       sub3.set('creator', user3);
       sub4.set('creator', user1);
 
+      sub1.get('deposits').pushObject(deposit1);
+      sub1.get('deposits').pushObject(deposit2);
       grant1.get('submissions').pushObject(sub1);
+
+      sub2.get('deposits').pushObject(deposit3);
       grant1.get('submissions').pushObject(sub2);
-      sub1.get('grants').pushObject(grant1);
-
-      grant2.get('submissions').pushObject(sub2);
-      grant2.get('submissions').pushObject(sub3);
-      sub2.get('grants').pushObject(grant1);
-      sub2.get('grants').pushObject(grant2);
-
-      grant3.get('submissions').pushObject(sub4);
-      sub4.get('grants').pushObject(grant3);
-
-      grant4.get('submissions').pushObject(sub1);
-      grant4.get('submissions').pushObject(sub2);
-      sub1.get('grants').pushObject(grant4);
-
-      grant5.get('submissions').pushObject(sub2);
-      grant5.get('submissions').pushObject(sub3);
-      sub2.get('grants').pushObject(grant5);
-      sub2.get('grants').pushObject(grant5);
-
-      grant6.get('submissions').pushObject(sub4);
-      sub4.get('grants').pushObject(grant6);
-
-      grant7.get('submissions').pushObject(sub2);
-      grant7.get('submissions').pushObject(sub3);
-      sub2.get('grants').pushObject(grant7);
-      sub3.get('grants').pushObject(grant7);
-
-      grant8.get('submissions').pushObject(sub4);
-      sub4.get('grants').pushObject(grant8);
-
-      grant9.get('submissions').pushObject(sub1);
-      grant9.get('submissions').pushObject(sub2);
-      sub1.get('grants').pushObject(grant9);
-
-      grant10.get('submissions').pushObject(sub2);
-      grant10.get('submissions').pushObject(sub3);
-      sub2.get('grants').pushObject(grant10);
-      sub2.get('grants').pushObject(grant10);
-
-      grant11.get('submissions').pushObject(sub4);
-      sub4.get('grants').pushObject(grant11);
 
       journalA1.get('ISSNs').pushObject(journalID1);
       journalA1.set('publisher', publisherA2);

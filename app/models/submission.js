@@ -6,8 +6,6 @@ export default DS.Model.extend({
   status: DS.attr('string'),
   title: DS.attr('string'),
   abstract: DS.attr('string'),
-  repo: DS.attr('string'),
-  assignedId: DS.belongsTo('identifier'),
   creator: DS.belongsTo('user'),
   creationDate: DS.attr('date'),
   updatedDate: DS.attr('date'),
@@ -15,5 +13,5 @@ export default DS.Model.extend({
   journal: DS.belongsTo('journal'),
   volume: DS.attr('string'),
   issue: DS.attr('string'),
-  grants: DS.hasMany('grant', { async: true }),
+  deposits: DS.hasMany('deposit', { async: true })
 });
