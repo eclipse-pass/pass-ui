@@ -1,16 +1,34 @@
 <h2>Dashboard</h2>
 
-<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-   <ul class="navbar-nav">
-    <li class="nav-item">
-      {{#link-to 'grants' class='nav-link'}}Grants{{/link-to}}
-    </li>
-    <li class="nav-item">
-      {{#link-to 'submissions' class='nav-link'}}Submissions{{/link-to}}
-    </li>
-  </ul>
-</nav>
 
-  <div>
-  {{! View summary of whats happening? Actions: add grant? start submission? }}
+<div class='row row-eq-height'>
+  <div class='col-sm-1'>
   </div>
+  <div class='col-sm-5'>
+    <div class='card bg-light'>
+      <div class='card-body'>
+        <h4 class='card-title'>Grants</h4>
+        <p class='card-text'>The grant dashboard allows you to review your grant's compliance status
+          against institution's and funders' public access policies. You can also review submissions
+          associated with each grant and perform appropriate actions to move address compliance issues.
+        </p>
+        {{#link-to 'grants' class='btn btn-primary btn-lg'}}View Grants{{/link-to}}
+      </div>
+    </div>
+  </div>
+  <div class='col-sm-5'>
+    <div class='card bg-light'>
+      <div class='card-body'>
+        <h4 class='card-title'>Submissions</h4>
+        <p class='card-text'>
+          The submission dashboard allows you to create new submission to multiple repositories
+          as required by your funding agency. You can also review and manage deposit status of
+          your submissions into pertinent repositories.
+        </p>
+        {{#link-to 'submissions' class='btn btn-primary btn-lg'}}View Submissions{{/link-to}}
+      </div>
+    </div>
+  </div>
+  <div class='col-sm-1'>
+  </div>
+</div>
