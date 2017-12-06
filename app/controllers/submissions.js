@@ -13,8 +13,8 @@ export default Controller.extend({
     authorclick(submission) {
       this.set('messageShow', true);
       this.set('messageTo', submission.get('author.name'));
-      this.set('messageSubject', `Article submission: ${submission.get('title')}`)
-      this.set('messageText', '');
+      this.set('messageSubject', 'OAP Compliance')
+      this.set('messageText', `Concerning submission ${submission.get('title')}, the status is ${submission.get('status')}.\nPlease check your PASS dashboard.`);
     }
   },
 
