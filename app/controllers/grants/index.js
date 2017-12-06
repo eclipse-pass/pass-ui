@@ -13,8 +13,15 @@ export default Controller.extend({
     piclick(grant) {
       this.set('messageShow', true);
       this.set('messageTo', grant.get('pi.name'));
-      this.set('messageSubject', 'OAP Compliance')
-      this.set('messageText', grant.get('projectName'));
+      this.set('messageSubject', 'OAP Compliance');
+
+      let text = `Concerning project ${grant.get('projectName')}, one or more of the following submissions have issues:`
+      grant.get('submissions').forEach(s => {
+        text += `\n  Article: ${s.get('title')}, Status: ${s.get('status')}`
+      });
+      text += '\n\nPlease check your PASS dashboard.'
+
+      this.set('messageText', text);
     }
   },
 
