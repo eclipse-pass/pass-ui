@@ -10,15 +10,14 @@ test('it renders', function(assert) {
     propertyName: 'date'
   });
 
-  let date = new Date();
 
   this.set('record', {
-      date: date
+      date: new Date('2010-01-20')
   });
 
   this.render(hbs`{{date-cell record=record column=column}}`);
 
-  assert.equal(this.$().text().trim(), date.toDateString());
+  assert.equal(this.$().text().trim(), '1/20/2010');
 
   // Template block usage:
   this.render(hbs`
@@ -26,5 +25,5 @@ test('it renders', function(assert) {
     {{/date-cell}}
   `);
 
-  assert.equal(this.$().text().trim(), date.toDateString());
+  assert.equal(this.$().text().trim(), '1/20/2010');
 });
