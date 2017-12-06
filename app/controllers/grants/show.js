@@ -15,17 +15,7 @@ export default Controller.extend({
       this.set('newSubmissionObject', this.get('store').createRecord('submission'));
     },
 
-    cancelSubmission() {
-      var submission = this.get('newSubmissionObject');
-      submission.rollbackAttributes();
-      this.set('newSubmissionObject', null);
-    },
-
-    attachWorkflow(workflow) {
-      this.get('newSubmissionObject').get('workflows').pushObject(workflow);
-    },
-
-    saveSubmission() {
+    saveAndLinkGrant() {
       var submission = this.get('newSubmissionObject');
       var grant = this.model;
 
