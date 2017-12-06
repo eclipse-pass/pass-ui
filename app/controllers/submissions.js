@@ -38,7 +38,8 @@ export default Controller.extend({
     { title: 'Repo', component: 'submissions-repo-cell' },
     { propertyName: 'updatedDate', title: 'Last Update Date', component: 'date-cell' },
     { propertyName: 'submittedDate', title: 'Submitted Date', component: 'date-cell' },
-    { propertyName: 'status', title: 'Status' },
+    { propertyName: 'status', title: 'Status', filterWithSelect: true,
+      predefinedFilterOptions: ['In Progress', 'Complete']},
     { title: 'OAP Repo Id', component: 'submissions-repoid-cell' }
   ],
 
@@ -49,7 +50,8 @@ export default Controller.extend({
     { title: 'Repo', component: 'submissions-repo-cell' },
     { propertyName: 'updatedDate', title: 'Last Update Date', component: 'date-cell' },
     { propertyName: 'submittedDate', title: 'Submitted Date', component: 'date-cell' },
-    { propertyName: 'status', title: 'Status' },
+    { propertyName: 'status', title: 'Status', filterWithSelect: true,
+      predefinedFilterOptions: ['In Progress', 'Complete']},
     { title: 'OAP Repo Id', component: 'submissions-repoid-cell' }
   ],
 
