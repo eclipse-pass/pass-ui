@@ -2,3 +2,69 @@
 @import "ember-cli-bootstrap-4/bootstrap";
 @import "ember-modal-dialog/ember-modal-structure";
 @import "ember-modal-dialog/ember-modal-appearance";
+
+$jhu-grey: #E5E2E0;
+$jhu-grey2: #B4B2AD;
+$jhu-grey3: #7E7E7C;
+$jhu-grey4: #4A484C;
+
+$jhu-blue: #005EB8;
+$jhu-blue1: #418FDE;
+$jhu-blue2: #68ACE5;
+$jhu-weird-bluegreen: #6399AE;
+
+$color-bg-primary: #002D72;
+
+$color-text-primary: #fff;
+$color-text-secondary: $jhu-grey2;
+
+/* Override things with JHU rules */
+a {
+  color: $jhu-blue;
+}
+.navbar {
+  background-color: $color-bg-primary !important;
+}
+.navbar-brand img {
+  width: 250px;
+}
+.navbar .navbar-text {
+  color: $jhu-grey2;
+}
+.nav-link,
+.navbar-dark .navbar-nav .nav-link {
+  color: $color-text-primary;
+}
+.nav-link:hover {
+  color: $color-text-secondary;
+}
+.text-info {
+  color: $jhu-weird-bluegreen !important;
+}
+
+/* Buttons */
+.btn-outline-info {
+  color: $jhu-weird-bluegreen;
+  border-color: $jhu-weird-bluegreen;
+}
+.btn-outline-info:hover {
+  color: $color-text-primary;
+  background-color: $jhu-weird-bluegreen;
+  border-collapse: $jhu-weird-bluegreen;
+}
+.btn-primary {
+  background-color: $jhu-blue1;
+  border-color: $jhu-blue1;
+}
+.btn-primary:hover {
+  background-color: $jhu-blue;
+  border-color: $jhu-blue;
+}
+.btn-primary:note([disabled]):not(.disabled):active {
+  box-shadow: 0 0 0.2rem $jhu-blue2;
+}
+
+/* Tables */
+.table-bordered {
+  border-color: $jhu-grey;
+}
