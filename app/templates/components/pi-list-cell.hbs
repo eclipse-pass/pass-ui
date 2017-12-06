@@ -1,4 +1,4 @@
 {{! Format pi and copi list as pi / copi names. Click on PI to do something.}}
 
-<button class='btn btm-sm' {{action 'sendAction' 'piSelected' record}}>{{record.pi.name}}</button>
+<button class='btn btm-sm btn-outline-info' {{action 'sendAction' 'piSelected' record}}>{{record.pi.name}}</button>
 {{#each record.copis as |person index|}}{{if index ', '}}{{person.name}}{{/each}}
