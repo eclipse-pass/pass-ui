@@ -8,7 +8,7 @@ moduleForComponent('date-formatter', 'helper:date-formatter', {
 
 // Replace this with your real tests.
 test('it renders', function(assert) {
-  let date = new Date('2018-03-25');
+  let date = new Date('2018-03-25Z');
 
   this.set('inputValue', date);
 
