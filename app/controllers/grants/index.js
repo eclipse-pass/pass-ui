@@ -50,8 +50,8 @@ export default Controller.extend({
     { propertyName: 'status', title: 'Status', filterWithSelect: true,
       predefinedFilterOptions: ['Active', 'Ended']
     },
-    { propertyName: 'oapCompliance', title: 'OAP Compliance', filterWithSelect: true,
-      predefinedFilterOptions: ['No', 'Yes']
+    { propertyName: 'oapCompliance', title: 'OAP Compliance', component: 'oap-compliance-cell',
+      filterWithSelect: true, predefinedFilterOptions: ['No', 'Yes']
     }
   ],
 
