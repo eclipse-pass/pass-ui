@@ -1,23 +1,30 @@
 <h2>Grant details</h2>
 
-<ul>
-  <li>Funder: {{model.funder.name}}</li>
-  <li>Award Number: {{model.awardNumber}}</li>
-  <li>Project Name: {{model.projectName}}</li>
-  <li>PI: <a href='mailto:{{model.pi.email}}'>{{model.pi.name}}</a></li>
-  <li>CoPIs:</li>
-    <ul>
-      {{#each model.copis as |person|}}
-        <li><a href='mailto:{{person.email}}'>{{person.name}}</a></li>
-      {{/each}}
+<div class='container'>
+  <div class='row'>
+    <ul class='col-sm-6'>
+      <li><strong>Project Name:</strong> {{model.projectName}}</li>
+      <li><strong>Award Number:</strong> {{model.awardNumber}}</li>
+      <li><strong>Funder:</strong> {{model.funder.name}}</li>
+      <li><strong>Start:</strong> {{date-formatter model.startDate}}</li>
+      <li><strong>End:</strong> {{date-formatter model.endDate}}</li>
     </ul>
-  <li>Start: {{date-formatter model.startDate}}</li>
-  <li>End: {{date-formatter model.endDate}}</li>
-  <li>Status: {{model.status}}</li>
-  <li>OAP Compliance: {{model.oapCompliance}}</li>
-  <li>Created by: {{model.creator.username}} on {{date-formatter model.creationDate}}</li>
-</ul>
 
+    <ul class='col-sm-6'>
+      <li><strong>OAP Compliance:</strong> {{model.oapCompliance}}</li>
+      <li><strong>Status:</strong> {{model.status}}</li>
+      <li><strong>Created by:</strong> {{model.creator.username}} on {{date-formatter model.creationDate}}</li>
+      <li><strong>PI:</strong> <a href='mailto:{{model.pi.email}}'>{{model.pi.name}}</a></li>
+      <li><strong>CoPIs:</strong>
+        <ul>
+          {{#each model.copis as |person|}}
+            <li><a href='mailto:{{person.email}}'>{{person.name}}</a></li>
+          {{/each}}
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
 
 <h3>Submissions of grant</h3>
 
@@ -34,17 +41,17 @@
     {{#modal-dialog translucentOverlay=true}}
       {{#workflow-group name="overview" as |group|}}
         {{#workflow-card step="doi" group=group
-            cancel=(action (queue 
-                (action (invoke "rollbackAttributes" model)) 
+            cancel=(action (queue
+                (action (invoke "rollbackAttributes" model))
                 (action (mut isShowingForm) false)
-            )) 
+            ))
             next=(action "advance" target=group)}}
           {{submission-overview-doi submission=newSubmissionObject}}
         {{/workflow-card}}
-      
+
         {{#workflow-card step="details" group=group
-            cancel=(action (queue 
-                (action (invoke "rollbackAttributes" model)) 
+            cancel=(action (queue
+                (action (invoke "rollbackAttributes" model))
                 (action (mut isShowingForm) false)
             ))
             save=(action (queue
@@ -70,7 +77,7 @@
    {{/modal-dialog}}
 {{/if}}
 <button class="btn btn-primary btn-small" onclick={{action (queue
-      (action "newSubmission") 
+      (action "newSubmission")
       (action (mut isShowingForm) true)
       )}}>
   New Submission
