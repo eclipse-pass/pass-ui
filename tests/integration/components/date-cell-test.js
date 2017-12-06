@@ -11,8 +11,13 @@ test('it renders', function(assert) {
   });
 
 
+  let date = new Date();
+  date.setUTCMonth(0);
+  date.setUTCDate(20);
+  date.setUTCFullYear(2010);
+
   this.set('record', {
-      date: new Date('2010-01-20')
+      date: date
   });
 
   this.render(hbs`{{date-cell record=record column=column}}`);
