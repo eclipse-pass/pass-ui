@@ -18,6 +18,9 @@ export default Controller.extend({
     }
   },
 
+  tablePageSize: 5,
+  tablePageSizeValues: [5, 10, 25],
+
   // Columns displayed depend on the user role
   columns: computed('session.user', {
     get() {
@@ -31,29 +34,41 @@ export default Controller.extend({
     }
   }),
 
+  // TODO Reduce duplication in column definitions
+
   adminColumns: [
     { propertyName: 'projectName', title: 'Project Name' },
-    { propertyName: 'funder.name', title: 'Funder' },
-    { propertyName: 'awardNumber', title: 'Award Number' , routeName: 'grants.show'},
-    { propertyName: 'externalId', title: 'COEUS Id', component: 'identifier-cell' },
+    { propertyName: 'funder.name', title: 'Funder', filterWithSelect: true,
+      predefinedFilterOptions: ['NIH', 'DOE', 'NSF']
+    },
+    { propertyName: 'awardNumber', title: 'Award Number' , routeName: 'grants.show', disableFiltering: true},
+    { propertyName: 'externalId', title: 'COEUS', component: 'identifier-cell', disableFiltering: true },
     { propertyName: 'pi.name', title: 'PI / CO-PIs', component: 'pi-list-cell'},
-    { propertyName: 'startDate', title: 'Start Date', component: 'date-cell'},
-    { propertyName: 'endDate', title: 'End Date', component: 'date-cell'},
-    { propertyName: 'submissions.length', title: 'Submissions', routeName: 'grants.show'},
-    { propertyName: 'status', title: 'Status' },
-    { propertyName: 'oapCompliance', title: 'OAP Compliance' }
+    { propertyName: 'startDate', title: 'Start', component: 'date-cell', disableFiltering: true},
+    { propertyName: 'endDate', title: 'End', component: 'date-cell', disableFiltering: true},
+    { propertyName: 'submissions.length', title: '#', routeName: 'grants.show', disableFiltering: true},
+    { propertyName: 'status', title: 'Status', filterWithSelect: true,
+      predefinedFilterOptions: ['Active', 'Ended']
+    },
+    { propertyName: 'oapCompliance', title: 'OAP Compliance', filterWithSelect: true,
+      predefinedFilterOptions: ['No', 'Yes']
+    }
   ],
 
   piColumns: [
     { propertyName: 'projectName', title: 'Project Name' },
-    { propertyName: 'funder.name', title: 'Funder' },
-    { propertyName: 'awardNumber', title: 'Award Number' , routeName: 'grants.show'},
-    { propertyName: 'externalId', title: 'COEUS Id', component: 'identifier-cell' },
+    { propertyName: 'funder.name', title: 'Funder', filterWithSelect: true,
+      predefinedFilterOptions: ['NIH', 'DOE', 'NSF']
+    },
+    { propertyName: 'awardNumber', title: 'Award Number' , routeName: 'grants.show', disableFiltering: true},
+    { propertyName: 'externalId', title: 'COEUS', component: 'identifier-cell', disableFiltering: true},
     { title: 'PI / CO-PIs', component: 'pi-list-cell' },
-    { propertyName: 'startDate', title: 'Start Date', component: 'date-cell'},
-    { propertyName: 'endDate', title: 'End Date', component: 'date-cell'},
-    { propertyName: 'submissions.length', title: 'Submissions', routeName: 'grants.show'},
-    { propertyName: 'status', title: 'Status' }
+    { propertyName: 'startDate', title: 'Start', component: 'date-cell', disableFiltering: true},
+    { propertyName: 'endDate', title: 'End', component: 'date-cell', disableFiltering: true},
+    { propertyName: 'submissions.length', title: '#', routeName: 'grants.show', disableFiltering: true},
+    { propertyName: 'status', title: 'Status', filterWithSelect: true,
+      predefinedFilterOptions: ['Active', 'Ended']
+    }
   ],
 
   themeInstance: Bootstrap4Theme.create()
