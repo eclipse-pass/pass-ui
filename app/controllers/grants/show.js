@@ -33,13 +33,13 @@ export default Controller.extend({
 
   columns: [
     { propertyName: 'title', title: 'Article' },
-    { propertyName: '', title: 'Award Number (Funder)' },
-    { propertyName: 'author', title: 'Corr. Author' },
-    { propertyName: 'repo', title: 'Repo' },
-    { propertyName: 'updatedDate', title: 'Last Update Date' },
-    { propertyName: 'submittedDate', title: 'Submitted Date' },
+    { propertyName: 'funder', title: 'Funder' },
+    { propertyName: 'author.name', title: 'Corr. Author'},
+    { title: 'Repo', component: 'submissions-repo-cell' },
+    { propertyName: 'updatedDate', title: 'Last Update Date', component: 'date-cell' },
+    { propertyName: 'submittedDate', title: 'Submitted Date', component: 'date-cell' },
     { propertyName: 'status', title: 'Status' },
-    { propertyName: 'creator.username', title: 'OAP Repo Id' }
+    { title: 'OAP Repo Id', component: 'submissions-repoid-cell' }
   ],
 
   themeInstance: Bootstrap4Theme.create()
