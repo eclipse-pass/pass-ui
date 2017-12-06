@@ -7,19 +7,22 @@
     </div>
 
     <div class="row">
-        <div class="col-sm">
+        <div class="col-4">
             {{#if cancel}}
             <button class="btn btn-primary btn-small" onclick={{action cancel}}>Cancel</button>
             {{/if}}
         </div>
-        <div class="col-sm">
+        <div class="col-4">
             {{#if save}}
             <button class="btn btn-primary btn-small" onclick={{action save}}>Save</button>
             {{/if}}
         </div>
-        <div class="col-sm">
+        <div class="col-4">
             {{#if continue}}
             <button class="btn btn-primary btn-small" onclick={{action continue}}>Save and Continue</button>
+            {{/if}}
+            {{#if next}}
+            <button class="btn btn-primary btn-small" onclick={{action next}}>Next</button>
             {{/if}}
         </div>
     </div>

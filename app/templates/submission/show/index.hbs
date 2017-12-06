@@ -12,7 +12,8 @@
           {{submission-overview-details submission=model}}
         {{/workflow-card}}
 
-        {{#workflow-card step="view" group=group}}
+        {{#workflow-card step="view" group=group
+          next=(route-action "transitionTo" "submission.show.funding" model)}}
           {{submission-overview-view submission=model}}
         {{/workflow-card}}
 

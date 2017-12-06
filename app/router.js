@@ -25,6 +25,7 @@ Router.map(function() {
       this.route('repositories');
       this.route('funding');
     });
+    this.route('new');
   })
   this.route('login');
 });

@@ -43,6 +43,15 @@ export default Component.extend({
             workflow.set('step', this.get('step'));
             
             return workflow.save();
-        }
+        }, 
+
+        attachWorkflow(target, rel) {
+
+            if (typeof rel === 'string') {
+                target.get(rel).pushObject(this.get('workflow'));
+            } else {
+                target.get('workflows').pushObject(this.get('workflow'));
+            }
+        },
     }
 });

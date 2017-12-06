@@ -38,11 +38,7 @@
                 (action "cancelSubmission") 
                 (action (mut isShowingForm) false)
             )) 
-            save=(action (queue
-              (action "saveSubmission")
-              (action (mut isShowingForm) false)
-            ))
-            continue=(action "advance" target=group)}}
+            next=(action "advance" target=group)}}
           {{submission-overview-doi submission=newSubmissionObject}}
         {{/workflow-card}}
       
@@ -58,7 +54,7 @@
             continue=(action (queue
                 (action "advance" target=group)
                 (action "save" target=group)
-                (action "attachWorkflow" group.workflow)
+                (action "attachWorkflow" newSubmissionObject target=group)
                 (action "saveSubmission")
                 (action (mut isShowingForm) false)
                 (route-action "transitionTo" "submission.show.index" newSubmissionObject)
