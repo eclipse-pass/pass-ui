@@ -32,22 +32,41 @@
 
 {{#if isShowingForm}}
     {{#modal-dialog translucentOverlay=true}}
-      {{#workflow-card
-            continue=(action (queue
-                (action "saveSubmission")
-                (action (mut isShowingForm) false)
-                (route-action "transitionTo" "submission.show.index" newSubmissionObject)
-            ))
+      {{#workflow-group name="overview" as |group|}}
+        {{#workflow-card step="doi" group=group
             cancel=(action (queue 
-                (action "cancelSubmission") 
+                (action (invoke "rollbackAttributes" model)) 
                 (action (mut isShowingForm) false)
             )) 
+            next=(action "advance" target=group)}}
+          {{submission-overview-doi submission=newSubmissionObject}}
+        {{/workflow-card}}
+      
+        {{#workflow-card step="details" group=group
+            cancel=(action (queue 
+                (action (invoke "rollbackAttributes" model)) 
+                (action (mut isShowingForm) false)
+            ))
             save=(action (queue
-              (action "saveSubmission")
+              (action "saveAndLinkGrant")
               (action (mut isShowingForm) false)
+            ))
+            continue=(action (queue
+                (action "advance" target=group)
+                (action "save" target=group)
+                (action "attachWorkflow" newSubmissionObject target=group)
+                (action "saveAndLinkGrant")
+                (action (mut isShowingForm) false)
+                (route-action "transitionTo" "submission.show.index" newSubmissionObject)
             ))}}
-        {{submission-overview submission=newSubmissionObject}}
-      {{/workflow-card}}
+          {{submission-overview-details submission=newSubmissionObject}}
+        {{/workflow-card}}
+
+        {{#workflow-card step="view" group=group}}
+          Saving submission...
+        {{/workflow-card}}
+
+      {{/workflow-group}}
    {{/modal-dialog}}
 {{/if}}
 <button class="btn btn-primary btn-small" onclick={{action (queue

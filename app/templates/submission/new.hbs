@@ -1,0 +1,31 @@
+<h1>Create a new Submission</h1>
+{{#workflow-group name="overview" as |group|}}
+        {{#workflow-card step="doi" group=group
+            cancel=(action (queue 
+                (action (invoke "rollbackAttributes" model)) 
+                (route-action "back")
+            )) 
+            next=(action "advance" target=group)}}
+          {{submission-overview-doi submission=model}}
+        {{/workflow-card}}
+      
+        {{#workflow-card step="details" group=group
+            cancel=(action (queue 
+                (action (invoke "rollbackAttributes" model)) 
+                (route-action "back")
+            ))
+            continue=(action (queue
+                (action "advance" target=group)
+                (action "save" target=group)
+                (action "attachWorkflow" model target=group)
+                (action (invoke "save" model))
+                (route-action "transitionTo" "submission.show.index" model)
+            ))}}
+          {{submission-overview-details submission=model}}
+        {{/workflow-card}}
+
+        {{#workflow-card step="view" group=group}}
+          {{submission-overview-view submission=model}}
+        {{/workflow-card}}
+{{/workflow-group}}
+{{outlet}}

@@ -2,6 +2,7 @@ import DS from 'ember-data';
 
 export default DS.Model.extend({
   author: DS.belongsTo('person'),
+  doi: DS.attr('string'),
   copyright: DS.attr('string'),
   status: DS.attr('string'),
   title: DS.attr('string'),
@@ -14,5 +15,6 @@ export default DS.Model.extend({
   volume: DS.attr('string'),
   issue: DS.attr('string'),
   deposits: DS.hasMany('deposit', { async: true }),
-  grants: DS.hasMany('grant', {async: true})
+  grants: DS.hasMany('grant', { async: true }),
+  workflows: DS.hasMany('workflow', { async: true }),
 });

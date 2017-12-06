@@ -1,0 +1,18 @@
+<h2>DOI</h2>
+<p>
+If the manuscript/article you are submitting has been assigned a Digital Object Identifier (DOI), please provide it now.  We will use it to help pre-populate submission
+forms from the metadata extracted from the DOI.  If the article has no DOI, please leave it blank.
+</p>
+<div class="container">
+    <form>
+        <div class="form-group row">
+            <label for="doi" class="col-sm-2 col-form-label">DOI</label>
+
+            <div class="col-sm-10">
+                <input type="text" id="doi" class="form-control" value={{submission.doi}} oninput={{action (mut
+                    submission.doi) value="target.value" }} />
+            </div>
+        </div>
+    </form>
+</div>
+{{yield}}

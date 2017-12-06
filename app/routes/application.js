@@ -5,6 +5,15 @@ import RSVP from 'rsvp';
 
 export default Route.extend({
 
+  actions: {
+    back() {
+      history.back();
+    },
+    transitionTo(route, model) {
+      this.transitionTo(route, model);
+    }
+  },
+
   model() {
     // Create the test objects without relationships
 

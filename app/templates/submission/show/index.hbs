@@ -1,9 +1,21 @@
-<h3>Overview</h3>
+<!-- Submission overview page -->
+      {{#workflow-group name="overview" workflow=(workflow-for model "overview") as |group|}}
+        {{#workflow-card step="doi" group=group
+            cancel=(route-action 'back')
+            continue=(action "advance" target=group)}}
+          {{submission-overview-doi submission=model}}
+        {{/workflow-card}}
+      
+        {{#workflow-card step="details" group=group
+            cancel=(route-action 'back')
+            continue=(action "advance" target=group)}}
+          {{submission-overview-details submission=model}}
+        {{/workflow-card}}
 
-<ul>
-  <li>Title: {{model.title}}</li>
-  <li>Copyright: {{model.copyright}}</li>
-  <li>Creation date: {{model.creationDate}}</li>  
-  <li>Status: {{model.status}}</li>
-</ul>
+        {{#workflow-card step="view" group=group
+          next=(route-action "transitionTo" "submission.show.funding" model)}}
+          {{submission-overview-view submission=model}}
+        {{/workflow-card}}
+
+      {{/workflow-group}}
 {{outlet}}

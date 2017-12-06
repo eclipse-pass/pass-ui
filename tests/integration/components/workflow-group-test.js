@@ -1,7 +1,7 @@
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 
-moduleForComponent('submission-overview', 'Integration | Component | submission overview', {
+moduleForComponent('workflow-group', 'Integration | Component | workflow group', {
   integration: true
 });
 
@@ -9,16 +9,16 @@ test('it renders', function(assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
 
-  this.render(hbs`{{submission-overview}}`);
+  this.render(hbs`{{workflow-group}}`);
 
-  assert.ok(this.$());
+  assert.equal(this.$().text().trim(), '');
 
   // Template block usage:
   this.render(hbs`
-    {{#submission-overview}}
+    {{#workflow-group}}
       template block text
-    {{/submission-overview}}
+    {{/workflow-group}}
   `);
 
-  assert.ok(this.$());
+  assert.equal(this.$().text().trim(), 'template block text');
 });
