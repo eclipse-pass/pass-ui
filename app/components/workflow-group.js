@@ -7,7 +7,8 @@ export default Component.extend({
     step: null,
     steps: [],
 
-    didReceiveAttrs() {
+    init() {
+        this._super(...arguments)
         var workflow = this.get('workflow');
         if (!workflow) {
            this.set('workflow', this.get('store').createRecord('workflow'));

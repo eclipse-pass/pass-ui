@@ -1,2 +1,36 @@
-Funding
-{{outlet}}
+<h2>Funding</h2>
+
+{{#workflow-group name="funding" workflow=model.workflow as |group|}} 
+    {{#workflow-card step="select-funders" group=group
+        cancel=(route-action 'back') 
+        save=(action (invoke "save" model.submission))
+        continue=(action (queue
+            (action "advance" target=group)
+            (invoke "save" model.submission)
+        ))}}
+        
+        <p>
+            Review/Provide information about the grant(s)/award(s) that funded this work. This information will help determine which
+            public access policies are applicable to your work.
+        </p>
+        {{submission-funding-table grants=model.submission.grants}}
+
+        <div class="container">
+            <form>
+                <div class="form-group row">
+                    <label for="grant" class="col-sm-2 col-form-label">Add Grant:</label>
+
+                    <div class="col-sm-10">
+                        {{find-grant id="grant" class="form-control" onSelect=(route-action "pushInto" model.submission.grants)}}
+                    </div>
+                </div>
+            </form>
+        </div>
+    {{/workflow-card}} 
+
+    {{#workflow-card step="view" group=group 
+        next=(route-action "transitionTo" "submission.show.compliance"model)}}
+        {{submission-funding-table grants=model.submission.grants}}
+    {{/workflow-card}} 
+
+{{/workflow-group}}
