@@ -78,11 +78,14 @@
       {{/workflow-group}}
    {{/modal-dialog}}
 {{/if}}
-<button class="btn btn-primary btn-small" onclick={{action (queue
+
+{{#if session.isPI}}
+  <button class="btn btn-primary btn-small" onclick={{action (queue
       (action "newSubmission")
       (action (mut isShowingForm) true)
       )}}>
-  New Submission
-</button>
+    New Submission
+  </button>
+{{/if}}
 
 {{#link-to 'grants' class="btn btn-primary btn-small"}}Back to grants{{/link-to}}
