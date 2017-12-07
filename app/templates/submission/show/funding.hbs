@@ -2,15 +2,13 @@
 
 {{#workflow-group name="funding" workflow=(workflow-for model "funding") as |group|}} 
     {{#workflow-card step="select-funders" group=group
-        cancel=(action (queue 
-                (action (invoke "rollbackAttributes" model)) 
-        )) 
-        save=(action (invoke "save" model))
+        cancel=(action "rollback") 
+        save=(action "saveAll")
         continue=(action (queue
             (action "advance" target=group)
             (action "save" target=group)
             (action "attachWorkflow" model target=group)
-            (action (invoke "save" model))
+            (action "saveAll")
         ))}}
         
         <p>
@@ -25,7 +23,7 @@
                     <label for="grant" class="col-sm-2 col-form-label">Add Grant:</label>
 
                     <div class="col-sm-10">
-                        {{find-grant id="grant" class="form-control" onSelect=(route-action "pushInto" model.grants)}}
+                        {{find-grant id="grant" class="form-control" onSelect=(action "addGrant")}}
                     </div>
                 </div>
             </form>
