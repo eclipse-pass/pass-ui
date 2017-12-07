@@ -5,15 +5,6 @@ import RSVP from 'rsvp';
 
 export default Route.extend({
 
-  actions: {
-    back() {
-      history.back();
-    },
-    transitionTo(route, model) {
-      this.transitionTo(route, model);
-    }
-  },
-
   model() {
     // Create the test objects without relationships
 
@@ -283,97 +274,89 @@ export default Route.extend({
     });
 
     let depositID1 = store.createRecord('identifier', {
-      type: 'NIHMS',
-      label: 'NIHMS-ID',
-      uri: '775054'
+      type: 'NIHMSID',
+      label: '775054',
+      uri: ''
     });
 
     let deposit1 = store.createRecord('deposit', {
       repo: 'NIHMS',
       updatedDate: new Date('2016-04-02'),
-      status: 'submitted'
+      status: 'Submitted'
     });
 
     let depositID2 = store.createRecord('identifier', {
-      type: 'DOE-PAGES',
-      label: 'PAGES-ID',
-      uri: '32654'
+      type: 'PAGESID',
+      label: '32654',
+      uri: ''
     });
 
     let deposit2 = store.createRecord('deposit', {
       repo: 'DOE-PAGES',
       updatedDate: new Date('2015-05-02'),
-      status: 'submitted'
+      status: 'Submitted'
     });
 
     let depositID3 = store.createRecord('identifier', {
-      type: 'PMC',
-      label: 'PMC-ID',
-      uri: '659871'
+      type: 'PMCID',
+      label: '659871',
+      uri: ''
     });
 
     let deposit3 = store.createRecord('deposit', {
       repo: 'PMC',
       updatedDate: new Date('2017-05-02'),
-      status: 'submitted'
+      status: 'Submitted'
     });
 
     let depositID4 = store.createRecord('identifier', {
-      type: 'PMC',
-      label: 'PMC-ID',
-      uri: '9201038'
+      type: 'PMCID',
+      label: '9201038',
+      uri: ''
     });
 
     let deposit4 = store.createRecord('deposit', {
       repo: 'PMC',
       updatedDate: new Date('2017-10-02'),
-      status: 'submitted'
+      status: 'Submitted'
     });
 
     let depositID5 = store.createRecord('identifier', {
-      type: 'PMC',
-      label: 'PMC-ID',
-      uri: '0982342'
+      type: 'PMCID',
+      label: '0982342',
+      uri: ''
     });
 
     let deposit5 = store.createRecord('deposit', {
-      repo: 'PMC',
+      repo: 'PMCID',
       updatedDate: new Date('2016-10-02'),
-      status: 'submitted'
+      status: 'Submitted'
     });
 
     let sub1 = store.createRecord('submission', {
       title: 'Chocolate chip is the best',
       creationDate: new Date('2018-06-02'),
-      updatedDate: new Date('2018-06-02'),
-      submittedDate: new Date('2018-06-08'),
-      status: 'in progress'
+      status: 'In Progress'
     });
 
     let sub2 = store.createRecord('submission', {
       title: 'In defense of vanilla',
       creationDate: new Date('2018-06-02'),
-      updatedDate: new Date('2018-06-02'),
-      submittedDate: new Date('2018-06-10'),
-      status: 'in progress'
+      status: 'In Progress'
     });
 
 
     let sub3 = store.createRecord('submission', {
       title: 'Chocolate, how can you go wrong?',
       creationDate: new Date('2018-06-02'),
-      updatedDate: new Date('2018-06-03'),
-      submittedDate: new Date('2018-07-01'),
-      status: 'in progress'
+      status: 'In Progress'
     });
 
 
     let sub4 = store.createRecord('submission', {
       title: 'Animal farm: The prophecy comes true.',
       creationDate: new Date('2018-06-02'),
-      updatedDate: new Date('2018-09-20'),
-      submittedDate: new Date('2018-10-18'),
-      status: 'complete'
+      status: 'Complete'
     });
 
     let publisherA1 = store.createRecord('publisher', {
@@ -592,13 +575,10 @@ export default Route.extend({
       sub3.set('creator', user3);
       sub4.set('creator', user1);
 
-      sub1.set('author', person9);
-      sub2.set('author', person10);
-      sub3.set('author', person11);
-      sub4.set('author', person12);
-
       sub1.get('deposits').pushObject(deposit1);
       sub1.get('deposits').pushObject(deposit2);
+      sub1.get('grants').pushObject(grant1);
+      sub1.get('grants').pushObject(grant3);
       grant1.get('submissions').pushObject(sub1);
 
       sub2.get('deposits').pushObject(deposit3);
