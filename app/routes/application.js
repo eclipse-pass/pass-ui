@@ -629,7 +629,7 @@ export default Route.extend({
       publisherB1.get('journals').pushObject(journalB3);
 
       return RSVP.all(objects.map(o => o.save())).then(() => {
-        return this.controllerFor('application').get('session').login('admin');
+        return this.controllerFor('application').get('session').login('bessie');
       })
     });
   }

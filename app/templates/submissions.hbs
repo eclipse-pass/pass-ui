@@ -12,4 +12,7 @@
 
 {{#message-dialog show=messageShow to=messageTo subject=messageSubject message=messageText}}
 {{/message-dialog}}
-{{#link-to "submission.new" class="btn btn-primary btn-small"}}Create new Submission{{/link-to}}
+
+{{#if session.isPI}}
+  {{#link-to "submission.new" class="btn btn-primary btn-small"}}Create new Submission{{/link-to}}
+{{/if}}
