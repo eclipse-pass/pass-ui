@@ -29,7 +29,7 @@ a {
   width: 250px;
 }
 .navbar .navbar-text {
-  color: $jhu-grey2;
+  color: $color-text-primary;
 }
 .navbar-dark .navbar-nav .nav-link {
   color: $color-text-primary;
@@ -63,7 +63,7 @@ a {
   background-color: $jhu-blue;
   border-color: $jhu-blue;
 }
-.btn-primary:note([disabled]):not(.disabled):active {
+.btn-primary:not([disabled]):not(.disabled):active {
   box-shadow: 0 0 0.2rem $jhu-blue2;
 }
 
