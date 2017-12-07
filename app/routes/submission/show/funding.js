@@ -1,5 +1,4 @@
 import Route from '@ember/routing/route';
-import RSVP from 'rsvp';
 
 export default Route.extend({
 
@@ -7,9 +6,5 @@ export default Route.extend({
         pushInto(target, obj) {
             return target.pushObject(obj);
         } 
-    },
-
-    model() {
-        return this.modelFor("submission.show");
     }
 });
