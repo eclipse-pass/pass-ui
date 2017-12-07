@@ -31,12 +31,15 @@ a {
 .navbar .navbar-text {
   color: $jhu-grey2;
 }
-.nav-link,
 .navbar-dark .navbar-nav .nav-link {
   color: $color-text-primary;
 }
 .nav-link:hover {
   color: $color-text-secondary;
+}
+.nav-pills .nav-link.active {
+  color: $color-text-primary;
+  background-color: $jhu-blue1;
 }
 .text-info {
   color: $jhu-weird-bluegreen !important;
