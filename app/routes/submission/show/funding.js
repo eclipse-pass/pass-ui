@@ -10,11 +10,6 @@ export default Route.extend({
     },
 
     model() {
-        var submission = this.modelFor("submission.show");
-        return RSVP.hash({
-            submission: submission,
-            workflow: submission.get('workflows')
-            .then(workflows => workflows.find(workflow => workflow.get('name') === 'funding'))
-        })
+        return this.modelFor("submission.show");
     }
 });

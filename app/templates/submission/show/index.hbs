@@ -1,14 +1,34 @@
 <!-- Submission overview page -->
       {{#workflow-group name="overview" workflow=(workflow-for model "overview") as |group|}}
         {{#workflow-card step="doi" group=group
-            cancel=(route-action 'back')
-            continue=(action "advance" target=group)}}
+            cancel=(action (queue 
+                (action (invoke "rollbackAttributes" model)) 
+            )) 
+            save=(action (queue
+                (action "save" target=group)
+                (action (invoke "save" model))
+            ))
+            continue=(action (queue
+                (action "advance" target=group)
+                (action "save" target=group)
+                (action (invoke "save" model))
+            ))}}
           {{submission-overview-doi submission=model}}
         {{/workflow-card}}
       
         {{#workflow-card step="details" group=group
-            cancel=(route-action 'back')
-            continue=(action "advance" target=group)}}
+            cancel=(action (queue 
+                (action (invoke "rollbackAttributes" model)) 
+            )) 
+            save=(action (queue
+                (action "save" target=group)
+                (action (invoke "save" model))
+            ))
+            continue=(action (queue
+                (action "advance" target=group)
+                (action "save" target=group)
+                (action (invoke "save" model))
+            ))}}
           {{submission-overview-details submission=model}}
         {{/workflow-card}}
 
