@@ -1,0 +1,8 @@
+{{#power-select
+  search=(action "searchJournals")
+  selected=value
+  onchange=onSelect
+  as |journal|
+}}
+  {{journal.name}}
+{{/power-select}}
