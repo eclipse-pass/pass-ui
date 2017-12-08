@@ -12,7 +12,11 @@ test('it renders', function(assert) {
   date.setUTCMonth(0);
   date.setUTCDate(1);
   date.setUTCFullYear(2018);
-
+  date.setUTCHours(10);
+  date.setUTCMinutes(10)
+  date.setUTCSeconds(10);
+  date.setUTCMilliseconds(10000);
+  
   this.set('inputValue', date);
 
   this.render(hbs`{{date-formatter inputValue}}`);

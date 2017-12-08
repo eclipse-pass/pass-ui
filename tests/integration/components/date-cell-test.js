@@ -15,7 +15,11 @@ test('it renders', function(assert) {
   date.setUTCMonth(0);
   date.setUTCDate(20);
   date.setUTCFullYear(2010);
-
+  date.setUTCHours(10);
+  date.setUTCMinutes(10)
+  date.setUTCSeconds(10);
+  date.setUTCMilliseconds(10000);
+  
   this.set('record', {
       date: date
   });
