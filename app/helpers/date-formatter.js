@@ -4,7 +4,7 @@ import { helper } from '@ember/component/helper';
 
 export function dateFormatter([date]) {
   if (date) {
-    return (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
+    return (date.getUTCMonth() + 1) + '/' + date.getUTCDate() + '/' + date.getUTCFullYear();
   } else {
     return '';
   }
