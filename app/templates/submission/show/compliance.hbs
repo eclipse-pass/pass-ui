@@ -1,2 +1,18 @@
-Compliance
+<h2>Compliance</h2>
+
+{{#workflow-group name="compliance" workflow=(workflow-for model "compliance") as |group|}} 
+    {{#workflow-card step="select-compliance" group=group
+        continue=(action (queue
+            (action "saveAll")
+        ))}}
+
+        {{#each (value-of (action "agencies")) as |agency|}}
+            <p>{{agency}}</p>
+        {{/each}}
+    
+        
+
+    {{/workflow-card}} 
+
+{{/workflow-group}}
 {{outlet}}
