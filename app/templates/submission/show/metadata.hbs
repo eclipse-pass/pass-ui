@@ -1,2 +1,24 @@
-Metadata
-{{outlet}}
+<h2>Submission Metadata</h2>
+{{#workflow-group name="metadata" workflow=(workflow-for model "metadata") as |group|}} 
+    {{#workflow-card step="common" group=group 
+            next=(action "advance" target=group)}}
+        {{submission-metadata-common}}
+    {{/workflow-card}} 
+
+    {{#workflow-card step="nihms" group=group 
+            back=(action "back" target=group)
+            next=(action "advance" target=group)}}
+        {{submission-metadata-nihms}}
+    {{/workflow-card}} 
+
+    {{#workflow-card step="pages" group=group
+            back=(action "back" target=group)
+            next=(action "advance" target=group)}}
+        {{submission-metadata-pages}}
+    {{/workflow-card}} 
+
+    {{#workflow-card step="par" group=group 
+            back=(action "back" target=group)}}
+        {{submission-metadata-par}}
+    {{/workflow-card}} 
+{{/workflow-group}}
