@@ -37,6 +37,16 @@ export default Component.extend({
             }
         },
 
+        back() {
+            var steps = this.get('steps');
+            var step = this.get('step');
+            var i = steps.findIndex((e) => e === step);
+
+            if (i > 0) {
+                this.set('step', steps[i-1]);
+            }
+        },
+
         save() {
             var workflow = this.get('workflow');
             workflow.set('name', this.get('name'));
