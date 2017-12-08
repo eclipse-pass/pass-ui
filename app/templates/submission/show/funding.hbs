@@ -5,6 +5,7 @@
         cancel=(action "rollback") 
         save=(action "saveAll")
         continue=(action (queue
+            (route-action "transitionTo" "submission.show.compliance" model)
             (action "advance" target=group)
             (action "save" target=group)
             (action "attachWorkflow" model target=group)

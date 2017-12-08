@@ -25,6 +25,7 @@
                 (action (invoke "save" model))
             ))
             continue=(action (queue
+                (route-action "transitionTo" "submission.show.funding" model)
                 (action "advance" target=group)
                 (action "save" target=group)
                 (action (invoke "save" model))

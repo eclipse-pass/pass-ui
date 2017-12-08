@@ -15,11 +15,11 @@
                 (route-action "back")
             ))
             continue=(action (queue
+                (route-action "transitionTo" "submission.show.funding" model)
                 (action "advance" target=group)
                 (action "save" target=group)
                 (action "attachWorkflow" model target=group)
                 (action (invoke "save" model))
-                (route-action "transitionTo" "submission.show.index" model)
             ))}}
           {{submission-overview-details submission=model}}
         {{/workflow-card}}
