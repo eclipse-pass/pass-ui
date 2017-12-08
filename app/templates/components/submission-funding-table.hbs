@@ -1,0 +1,17 @@
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Award Number</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+{{#each grants as |grant|}}
+        <tr>
+            <td>{{#link-to "grants.show" grant}}{{grant.awardNumber}}{{/link-to}}</td>
+            <td>{{grant.projectName}}</td>
+        </tr>
+{{/each}}
+    </tbody>
+</table>
