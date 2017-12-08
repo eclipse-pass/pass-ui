@@ -1,2 +1,27 @@
-Submission
+{{#unless isSent}}
+
+    <p>
+        Your submission is ready to send to the desired repositories
+    </p>
+
+{{else}}
+
+    <p>
+        Your submission has been sent, have a nice day
+    </p>
+    
+{{/unless}}
+
+<p>
+    The template for this page is at
+    <code>app/templates/submission/show/submission.hbs</code>
+</p>
+
+<p>
+    The controller where the
+    <code>doSend</code> action is implemented at
+    <code>app/controllers/submission/show/submission.js</code>
+</p>
+
+<button class="btn btn-primary btn-small" onclick={{action "doSend"}}>Send</button>
 {{outlet}}
