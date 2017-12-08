@@ -17,7 +17,11 @@
             <label for="journal" class="col-sm-2 col-form-label">Journal:</label>
 
             <div class="col-sm-10">
+                {{#unless doiJournal}}
                 {{find-journal id="journal" class="form-control" onSelect=(action "selectJournal") value=submission.journal}}
+                {{else}}
+                <input type="text" class="form-control" readonly value={{doiJournalTitle}} />
+                {{/unless}}
             </div>
         </div>
     </form>
