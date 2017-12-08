@@ -26,7 +26,7 @@ export default Route.extend({
     });
 
     let user2 = store.createRecord('user', {
-      username: 'bessie',
+      username: 'agudzun',
       role: 'pi'
     });
 
@@ -40,45 +40,52 @@ export default Route.extend({
       role: 'pi'
     });
 
-
     let funder1 = store.createRecord('funder', {
-        name: 'NIH'
+        name: 'National Eye Institute'
     });
 
     let funder2 = store.createRecord('funder', {
-        name: 'NSF'
+        name: 'National Science Foundation'
     });
 
     let funder3 = store.createRecord('funder', {
-        name: 'DOE'
+        name: 'National Inst Of Diabetes And Digestion'
+    });
+
+    let funder4 = store.createRecord('funder', {
+        name: 'National Inst of Mental Health'
+    });
+
+    let funder5 = store.createRecord('funder', {
+        name: 'National Institute of Health'
     });
 
     let coeus1 = store.createRecord('identifier', {
-        label: '120023',
+        label: '16129769',
         uri: 'http://www.library.jhu.edu'
     });
 
     let coeus2 = store.createRecord('identifier', {
-        label: '298341',
+        label: '16120629',
          uri: 'http://www.jhu.edu'
     });
 
     let coeus3 = store.createRecord('identifier', {
-        label: '123445',
+        label: '16120539',
         uri: 'http://johnshopkins.edu'
     });
     let coeus4 = store.createRecord('identifier', {
-        label: '1200123',
+        label: '16120469',
         uri: 'http://www.library.jhu.edu'
     });
 
     let coeus5 = store.createRecord('identifier', {
-        label: '2982341',
+        label: '16120459',
          uri: 'http://www.jhu.edu'
     });
 
     let coeus6 = store.createRecord('identifier', {
-        label: '1235445',
+        label: '16120169',
         uri: 'http://johnshopkins.edu'
     });
     let coeus7 = store.createRecord('identifier', {
@@ -87,32 +94,38 @@ export default Route.extend({
     });
 
     let coeus8 = store.createRecord('identifier', {
-        label: '2987341',
-         uri: 'http://www.jhu.edu'
+        label: '16119319',
+        uri: 'http://www.jhu.edu'
     });
 
     let coeus9 = store.createRecord('identifier', {
-        label: '1232445',
+        label: '16119219',
         uri: 'http://johnshopkins.edu'
     });
     let coeus10 = store.createRecord('identifier', {
-        label: '1200523',
+        label: '16118979',
         uri: 'http://www.library.jhu.edu'
     });
 
     let coeus11 = store.createRecord('identifier', {
-        label: '2983441',
+        label: '16108389',
          uri: 'http://www.jhu.edu'
     });
 
     let coeus12 = store.createRecord('identifier', {
-        label: '1234456',
+        label: '16097079',
         uri: 'http://johnshopkins.edu'
     });
+    let coeus13 = store.createRecord('identifier', {
+        label: '16086889',
+        uri: 'http://johnshopkins.edu'
+    });
+
     let coeus14 = store.createRecord('identifier', {
-        label: '1234245',
+        label: '16075399',
         uri: 'http://johnshopkins.edu'
     });
+
 
     let person1 = store.createRecord('person', {
         name: 'Ernest Ford',
@@ -174,112 +187,113 @@ export default Route.extend({
     });
 
     let grant1 = store.createRecord('grant', {
-      awardNumber: 'UL1 RR239429',
-      projectName: 'Better Ice Cream',
-      startDate: new Date('2015-03-25'),
-      endDate: new Date('2018-06-02'),
+      awardNumber: 'R01EY027824',
+      projectName: 'Regulation of blood-retinal barrier by placental growth factor.',
+      startDate: new Date('2017-04-01'),
+      endDate: new Date('2022-03-31'),
       status: 'Active',
       oapCompliance: 'No'
     });
 
     let grant2 = store.createRecord('grant', {
-      awardNumber: 'K23 DK107932',
-      projectName: 'Cow mythos realized',
-      startDate: new Date('2010-02-20'),
-      endDate: new Date('2019-11-01'),
+      awardNumber: 'R01DK110366',
+      projectName: 'Identification and Activation Mechanisms of Vagal and Spinal Nociceptors in Esophageal Mucosa',
+      startDate: new Date('2017-08-01'),
+      endDate: new Date('2021-07-31'),
       status: 'Active',
       oapCompliance: 'No'
     });
 
     let grant3 = store.createRecord('grant', {
-      projectName: 'Datanet: Conserving cow data',
-      awardNumber: 'P30 CD340212',
-      startDate: new Date('2017-03-12'),
-      endDate: new Date('2019-08-10'),
-      status: 'Ended',
+      projectName: 'Optimal magnification and oculomotor strategies in low vision patients',
+      awardNumber: 'R01EY026617',
+      startDate: new Date('2017-06-01'),
+      endDate: new Date('2020-05-31'),
+      status: 'Active',
       oapCompliance: 'No'
     });
 
     let grant4 = store.createRecord('grant', {
-      projectName: 'Trees in the woods',
-      awardNumber: 'U01 CA130322',
-      startDate: new Date('2010-03-04'),
-      endDate: new Date('2019-09-10'),
+      projectName: 'UCure urethral strictures',
+      awardNumber: '1640778',
+      startDate: new Date('2016-06-01'),
+      endDate: new Date('2017-12-31'),
       status: 'Active',
       oapCompliance: 'Yes'
     });
 
     let grant5 = store.createRecord('grant', {
-      projectName: 'Leafy trees',
-      awardNumber: 'R21 DK098988',
-      startDate: new Date('2017-03-04'),
-      endDate: new Date('2019-02-10'),
-      status: 'Active',
+      projectName: 'Psychiatric Epidemiology Training Program',
+      awardNumber: 'T32MH014592',
+      startDate: new Date('2016-07-01'),
+      endDate: new Date('2017-06-30'),
+      status: 'Terminated',
       oapCompliance: 'Yes'
     });
 
     let grant6 = store.createRecord('grant', {
-      projectName: 'Life on the beach: animal edition',
-      awardNumber: 'R21 AI939322',
-      startDate: new Date('2017-03-04'),
-      endDate: new Date('2019-08-10'),
+      projectName: 'Neurologic Sequelae of HIV Subtype A and D Infection and ART Rakai Uganda',
+      awardNumber: 'T32MH019545',
+      startDate: new Date('2016-07-01'),
+      endDate: new Date('2018-06-30'),
       status: 'Active',
       oapCompliance: 'Yes'
     });
     let grant7 = store.createRecord('grant', {
-      projectName: 'grant7',
-      awardNumber: 'R20 AI939212',
-      startDate: new Date('2017-03-14'),
-      endDate: new Date('2019-08-19'),
+      projectName: 'GEM:  RESPONSE OF GLOBAL IONOSPHERIC CURRENTS TO SUBSTORMS:  IMPLICATION FOR THE ELECTRIC FIELD PENETRATION TO THE INNER MAGNETOSPHERE',
+      awardNumber: '1502700',
+      startDate: new Date('2016-05-15'),
+      endDate: new Date('2019-04-30'),
       status: 'Active',
       oapCompliance: 'Yes'
     });
+
     let grant8 = store.createRecord('grant', {
-      projectName: 'grant8',
-      awardNumber: 'AQ 11',
-      startDate: new Date('2010-03-04'),
-      endDate: new Date('2015-08-10'),
+      projectName: 'Fogarty African Bioethics Consortium Post-Doctoral Fellowship Program',
+      awardNumber: 'D43TW010512',
+      startDate: new Date('2017-06-01'),
+      endDate: new Date('2022-05-31'),
       status: 'Active',
       oapCompliance: 'Yes'
     });
     let grant9 = store.createRecord('grant', {
-      projectName: 'grant9',
-      awardNumber: 'MX11-1131',
-      startDate: new Date('2018-03-04'),
-      endDate: new Date('2019-08-10'),
+      projectName: 'CAREER: DNA-Templated Assembly of Nanoscale Circuit Interconnects',
+      awardNumber: 'CMMI-1253876',
+      startDate: new Date('2013-01-01'),
+      endDate: new Date('2017-12-31'),
       status: 'Active',
       oapCompliance: 'Yes'
     });
     let grant10 = store.createRecord('grant', {
-      projectName: 'grant 10',
-      awardNumber: 'LIT-123123',
-      startDate: new Date('2017-03-04'),
-      endDate: new Date('2020-08-10'),
+      projectName: 'Neurologic Sequelae of HIV Subtype A and D Infection and ART Rakai Uganda',
+      awardNumber: 'R01MH099733',
+      startDate: new Date('2016-03-01'),
+      endDate: new Date('2018-02-28'),
       status: 'Active',
       oapCompliance: 'Yes'
     });
     let grant11 = store.createRecord('grant', {
-      projectName: 'grant11',
-      awardNumber: 'AUX012121',
+      projectName: 'Telomere maintenance by the telomerase RNA-protein complex',
+      awardNumber: 'R01GM118757',
       startDate: new Date('2018-03-04'),
       endDate: new Date('2020-08-10'),
       status: 'Active',
       oapCompliance: 'Yes'
     });
     let grant12 = store.createRecord('grant', {
-      projectName: 'grant12',
-      awardNumber: 'NNI-2311',
-      startDate: new Date('2018-03-04'),
-      endDate: new Date('2021-08-10'),
+      projectName: 'Genetics of Fuchs Corneal Dystrophy',
+      awardNumber: 'R01EY016835',
+      startDate: new Date('2017-03-04'),
+      endDate: new Date('2018-08-10'),
       status: 'Active',
       oapCompliance: 'Yes'
     });
     let grant13 = store.createRecord('grant', {
-      projectName: 'grant13',
-      awardNumber: 'R21 AI939322',
-      startDate: new Date('2019-03-04'),
-      endDate: new Date('2021-08-10'),
-      status: 'Active',
+      projectName: 'P-Adic and Mod P Galois Representations',
+      awardNumber: '1564367',
+      startDate: new Date('2015-03-04'),
+      endDate: new Date('2017-08-10'),
+      status: 'Terminated',
       oapCompliance: 'Yes'
     });
 
@@ -482,32 +496,32 @@ export default Route.extend({
   ];
 
     return RSVP.all(objects.map(o => o.save())).then(() => {
-      grant1.set('creator', user1);
+      grant1.set('creator', user2);
       grant2.set('creator', user2);
       grant3.set('creator', user3);
       grant4.set('creator', user1);
-      grant5.set('creator', user2);
+      grant5.set('creator', user4);
       grant6.set('creator', user3);
       grant7.set('creator', user1);
       grant8.set('creator', user2);
       grant9.set('creator', user3);
       grant10.set('creator', user1);
-      grant11.set('creator', user2);
-      grant13.set('creator', user3);
+      grant11.set('creator', user3);
+      grant13.set('creator', user2);
       grant12.set('creator', user3);
 
       grant1.set('funder', funder1);
-      grant2.set('funder', funder1);
-      grant3.set('funder', funder2);
-      grant4.set('funder', funder1);
-      grant5.set('funder', funder3);
-      grant6.set('funder', funder2);
-      grant7.set('funder', funder1);
-      grant8.set('funder', funder3);
+      grant2.set('funder', funder3);
+      grant3.set('funder', funder1);
+      grant4.set('funder', funder2);
+      grant5.set('funder', funder4);
+      grant6.set('funder', funder5);
+      grant7.set('funder', funder2);
+      grant8.set('funder', funder5);
       grant9.set('funder', funder2);
-      grant10.set('funder', funder3);
-      grant11.set('funder', funder1);
-      grant12.set('funder', funder2);
+      grant10.set('funder', funder5);
+      grant11.set('funder', funder5);
+      grant12.set('funder', funder1);
       grant13.set('funder', funder2);
 
       grant1.set('externalId', coeus1);
@@ -522,10 +536,10 @@ export default Route.extend({
       grant10.set('externalId', coeus10);
       grant11.set('externalId', coeus11);
       grant12.set('externalId', coeus12);
-      grant13.set('externalId', coeus11);
+      grant13.set('externalId', coeus13);
 
-      grant1.set('pi', person1);
-      grant1.get('copis').pushObject(person2);
+      grant1.set('pi', person2);
+      grant1.get('copis').pushObject(person1);
 
       grant2.set('pi', person2);
 
@@ -565,7 +579,7 @@ export default Route.extend({
       grant12.set('pi', person9);
       grant12.get('copis').pushObject(person10);
 
-      grant13.set('pi', person12);
+      grant13.set('pi', person2);
       grant13.get('copis').pushObject(person13);
 
       deposit1.set('assignedId', depositID1);
@@ -580,7 +594,7 @@ export default Route.extend({
       deposit4.set('assignedId', depositID4);
       deposit4.set('grant', grant2);
 
-      sub1.set('creator', user1);
+      sub1.set('creator', user2);
       sub2.set('creator', user2);
       sub3.set('creator', user3);
       sub4.set('creator', user1);
@@ -619,7 +633,7 @@ export default Route.extend({
       publisherB1.get('journals').pushObject(journalB3);
 
       return RSVP.all(objects.map(o => o.save())).then(() => {
-        return this.controllerFor('application').get('session').login('bessie');
+        return this.controllerFor('application').get('session').login('agudzun');
       })
     });
   }
