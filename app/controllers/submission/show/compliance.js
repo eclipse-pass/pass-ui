@@ -18,7 +18,7 @@ export default Controller.extend({
            return this.get('model')
                 .get('grants')
                 .map(grant => grant.get('funder'))
-                .map(funder => funder.get('name'));
+                .map(funder => funder.get('repo'));
                 //.filter((e, i, self) => i === self.indexOf(e));
         }
 

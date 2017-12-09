@@ -10,7 +10,7 @@ export default DS.Model.extend({
    * be specified there.  For the 12/2017 demo, 'repo' will
    * stand in for policy.
    * 
-   * PMC, NIHMS, DOE-PAGES
+   * PMC, DOE-PAGES, NSF-PAR
    */
   repo: DS.attr('string')
 });
