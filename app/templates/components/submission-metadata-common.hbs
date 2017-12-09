@@ -1,9 +1,24 @@
+<hr>
 <h3>Common</h3>
 <p>
-    Here are some instructions
+    Please provide additional information about your article/manuscript below:
 </p>
 <div class="container">
     <form>
+        <div class="form-group row">
+            <label for="volume" class="col-sm-2 col-form-label"> Volume</label>
+
+            <div class="col-sm-10">
+                <input type="text" id="volume" class="form-control" />
+            </div>
+        </div>
+      <div class="form-group row">
+          <label for="issue" class="col-sm-2 col-form-label">Issue</label>
+
+          <div class="col-sm-10">
+              <input type="text" id="issue" rows="4" class="form-control" />
+          </div>
+      </div>
         <div class="form-group row">
             <label for="abstract" class="col-sm-2 col-form-label">Abstract</label>
 
@@ -12,12 +27,65 @@
             </div>
         </div>
         <div class="form-group row">
-            <label for="volume" class="col-sm-2 col-form-label">Volume</label>
+            <label for="final-url" class="col-sm-2 col-form-label">Final Article URL</label>
 
             <div class="col-sm-10">
-                <input id="volume" type="text" class="form-control" />
+                <input id="final-url" type="text" class="form-control" />
             </div>
         </div>
+        <hr>
+        <div class="form-group row">
+            <label for="author-name" class="col-sm-2 col-form-label">Author</label>
+
+            <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="first">First Name</label>
+                  <input id="first" type="text" class="form-control"/>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="middle">Middle Name</label>
+                  <input id="middle" type="text" class="form-control"/>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                  <label for="last">Last Name</label>
+                  <input id="last" type="text" class="form-control"/>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label"></label>
+
+          <div class="form-group col-sm-10">
+             <label for="orcid">ORCiD</label>
+             <input type="text" class="form-control" id="orcid">
+           </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label"></label>
+          <div class="form-group col-sm-10">
+             <label for="email">Email Address</label>
+             <input type="text" class="form-control" id="email">
+           </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label"></label>
+          <div class="form-group col-sm-10">
+             <label for="affiliation">Affiliation</label>
+             <input type="text" class="form-control" id="affiliation">
+           </div>
+        </div>
+        <div class="form-check row">
+            <label class="col-sm-2 col-form-label"></label>
+            <label class="form-check-label col-sm-7">
+               <input id="corr-author" class="form-check-input" type="checkbox"> Corresponding Author
+            </label>
+            <button type="button" class="btn btn-secondary col-sm-2 btn-sm">Add more author</button>
+        </div>
+        <hr>
     </form>
 </div>
 {{yield}}
