@@ -17,6 +17,7 @@
         {{/workflow-card}}
       
         {{#workflow-card step="details" group=group
+            back=(action "back" target=group)
             cancel=(action (queue 
                 (action (invoke "rollbackAttributes" model)) 
             )) 

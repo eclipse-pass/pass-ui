@@ -10,9 +10,17 @@
         {{/workflow-card}}
       
         {{#workflow-card step="details" group=group
+            back=(action "back" target=group)
             cancel=(action (queue 
                 (action (invoke "rollbackAttributes" model)) 
                 (route-action "back")
+            ))
+            save=(action (queue
+                (action (invoke "save" model))
+                (route-action "transitionTo" "submission.show.funding" model)
+                (action "save" target=group)
+                (action "attachWorkflow" model target=group)
+                (action (invoke "save" model))
             ))
             continue=(action (queue
                 (action (invoke "save" model))

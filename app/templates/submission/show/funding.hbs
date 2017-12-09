@@ -2,6 +2,7 @@
 
 {{#workflow-group name="funding" workflow=(workflow-for model "funding") as |group|}} 
     {{#workflow-card step="select-funders" group=group
+        back=(route-action "transitionTo" "submission.show.index" model)
         cancel=(action "rollback") 
         save=(action "saveAll")
         continue=(action (queue
@@ -31,7 +32,8 @@
         </div>
     {{/workflow-card}} 
 
-    {{#workflow-card step="view" group=group 
+    {{#workflow-card step="view" group=group
+        back=(route-action "transitionTo" "submission.show.index" model)
         next=(route-action "transitionTo" "submission.show.compliance" model)}}
         {{submission-funding-table grants=model.grants}}
     {{/workflow-card}} 
