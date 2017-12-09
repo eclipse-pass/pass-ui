@@ -52,6 +52,7 @@
         {{/workflow-card}}
 
         {{#workflow-card step="details" group=group
+            back=(action "back" target=group)
             cancel=(action (queue
                 (action (invoke "rollbackAttributes" model))
                 (action (mut isShowingForm) false)
@@ -66,7 +67,7 @@
                 (action "attachWorkflow" newSubmissionObject target=group)
                 (action "saveAndLinkGrant")
                 (action (mut isShowingForm) false)
-                (route-action "transitionTo" "submission.show.index" newSubmissionObject)
+                (route-action "transitionTo" "submission.show.funding" newSubmissionObject)
             ))}}
           {{submission-overview-details submission=newSubmissionObject}}
         {{/workflow-card}}
