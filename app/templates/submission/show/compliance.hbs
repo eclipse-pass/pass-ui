@@ -14,7 +14,7 @@
         <div class="container">
         {{#each (value-of (action "getPolicies")) as |repo|}}
             {{#if (eq "PMC" repo)}}
-                {{policy-compliance-nih method="B" submission=model register=(action "registerDeposit")}}
+                {{policy-compliance-nih submission=model register=(action "registerDeposit")}}
             {{/if}}
 
             {{#if (eq "NSF-PAR" repo)}}
