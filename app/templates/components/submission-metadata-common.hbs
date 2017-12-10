@@ -12,18 +12,39 @@
                 <input type="text" id="volume" class="form-control" />
             </div>
         </div>
-      <div class="form-group row">
-          <label for="issue" class="col-sm-2 col-form-label">Issue</label>
+        <div class="form-group row">
+            <label for="issue" class="col-sm-2 col-form-label">Issue</label>
 
-          <div class="col-sm-10">
-              <input type="text" id="issue" rows="4" class="form-control" />
-          </div>
-      </div>
+            <div class="col-sm-10">
+                <input type="text" id="issue" rows="4" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="publication" class="col-sm-2 col-form-label">Publication</label>
+            <div class="col-sm-3 form-group">
+                  <label for="date">Date</label>
+                  <input type='text' placeholder="mm/dd/yyyy" class="form-control" id="pubdate"/>
+            </div>
+            <div class="col-sm-7 form-group">
+                  <label for="pubtype">Publication Type</label>
+                  <select class="form-control" id="pubtype">
+                    <option>Electronic Publication</option>
+                    <option>Print Publication</option>
+                  </select>
+            </div>
+        </div>
         <div class="form-group row">
             <label for="abstract" class="col-sm-2 col-form-label">Abstract</label>
 
             <div class="col-sm-10">
                 <textarea id="abstract" rows="4" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="subjects" class="col-sm-2 col-form-label">Subjects (comma separated)</label>
+
+            <div class="col-sm-10">
+                <input type="text" id="subjects" class="form-control" />
             </div>
         </div>
         <div class="form-group row">
@@ -37,23 +58,17 @@
         <div class="form-group row">
             <label for="author-name" class="col-sm-2 col-form-label">Author</label>
 
-            <div class="col-sm-3">
-                <div class="form-group">
+            <div class="col-sm-3 form-group">
                   <label for="first">First Name</label>
                   <input id="first" type="text" class="form-control"/>
-                </div>
             </div>
-            <div class="col-sm-3">
-                <div class="form-group">
+            <div class="col-sm-3 form-group">
                   <label for="middle">Middle Name</label>
                   <input id="middle" type="text" class="form-control"/>
-                </div>
             </div>
-            <div class="col-sm-4">
-                <div class="form-group">
+            <div class="col-sm-4 form-group">
                   <label for="last">Last Name</label>
                   <input id="last" type="text" class="form-control"/>
-                </div>
             </div>
         </div>
         <div class="form-group row">
