@@ -95,27 +95,6 @@
                 </div>
             </div>
         </div>
-        <hr>
-        <div class="form-group row">
-            <label for="articleids" class="col-sm-5 col-form-label">Article IDs</label>
-            <div class="col-sm-3">
-                <div class="form-group">
-                  <label for="idtype">ID Type</label>
-                  <select class="form-control" id="idtype">
-                    <option>Publisher ID</option>
-                    <option>Institution ID</option>
-                  </select>
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="form-group">
-                  <label for="idstring">ID String</label>
-                  <input type='text' class="form-control" id="idstring"/>
-                </div>
-            </div>
-
-        </div>
-        <hr>
         <div class="form-group row">
             <label for="subjects" class="col-sm-5 col-form-label">Subjects (comma separated)</label>
 
@@ -128,6 +107,51 @@
 
             <div class="col-sm-7">
                 <input type="text" id="selfuri" class="form-control" />
+            </div>
+        </div>
+        <hr>
+        <div class="form-group row">
+            <label for="articleids" class="col-sm-5 col-form-label">Article IDs</label>
+            <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="idtype">ID Type</label>
+                  <select class="form-control" id="idtype">
+                    <option>Publisher ID</option>
+                    <option>Institution ID</option>
+                  </select>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                  <label for="idstring">ID String</label>
+                  <input type='text' class="form-control" id="idstring"/>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-9 col-form-label"></label>
+          <div class="col-sm-3">
+            <button type="button" class="btn btn-secondary btn-sm float-right">
+              Add ID</button>
+          </div>
+        </div>
+        <hr>
+        <div class="form-group row">
+            <label for="permission" class="col-sm-2 col-form-label">Permissions</label>
+            <div class="col-sm-5">
+                <div class="form-group">
+                  <label for="date">Copyright statement</label>
+                  <textarea class="form-control" rows="4" id="copyright"/>
+                </div>
+            </div>
+            <div class="col-sm-5">
+                <div class="form-group">
+                    <label for="licensetype">License type</label>
+                    <input id="licensetype" type="text" class="form-control"/>
+                    <label for="licenselink">License link</label>
+                    <input id="licenselink" type="text" class="form-control"/>
+
+                </div>
             </div>
         </div>
         <hr>
