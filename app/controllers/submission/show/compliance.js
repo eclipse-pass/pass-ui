@@ -10,11 +10,25 @@ export default Controller.extend({
         saveAll() {
             var submission = this.get('model');
             var deposits = submission.get('deposits');
-            var depositGenerators = submission.get('depositGenerators');
+            var depositGenerators = this.get('depositGenerators');
 
             /* TODO:  Do something more elegant. We just delete prior content, and replace */
+            
+            /* TODO;  Figure out how the hell to find lengths of the
+             * PromiseArrays returned by ember-data.  length is supposed to be 
+             * a property.  What it contains is a mystery.  It's not a number, 
+             * it's some sort of object ¯\_(ツ)_/¯
+             * 
+             * So this simple loop is more complicated than it has to be.
+             */
             while (deposits.length) {
-                deposits.popObject().destroyRecord();
+                let deposit = deposits.popObject();
+
+                if (deposit) {
+                    deposit.destroyRecord();
+                } else {
+                    break;
+                }
             }
 
             while (depositGenerators.length) {
