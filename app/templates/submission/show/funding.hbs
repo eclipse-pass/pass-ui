@@ -1,9 +1,9 @@
-<h2>Funding</h2>
+<h2>Awards</h2>
 
-{{#workflow-group name="funding" workflow=(workflow-for model "funding") as |group|}} 
+{{#workflow-group name="funding" workflow=(workflow-for model "funding") as |group|}}
     {{#workflow-card step="select-funders" group=group
         back=(route-action "transitionTo" "submission.show.index" model)
-        cancel=(action "rollback") 
+        cancel=(action "rollback")
         save=(action "saveAll")
         continue=(action (queue
             (route-action "transitionTo" "submission.show.compliance" model)
@@ -12,7 +12,7 @@
             (action "attachWorkflow" model target=group)
             (action "saveAll")
         ))}}
-        
+
         <p>
             Review/Provide information about the grant(s)/award(s) that funded this work. This information will help determine which
             public access policies are applicable to your work.
@@ -30,12 +30,12 @@
                 </div>
             </form>
         </div>
-    {{/workflow-card}} 
+    {{/workflow-card}}
 
     {{#workflow-card step="view" group=group
         back=(route-action "transitionTo" "submission.show.index" model)
         next=(route-action "transitionTo" "submission.show.compliance" model)}}
         {{submission-funding-table grants=model.grants}}
-    {{/workflow-card}} 
+    {{/workflow-card}}
 
 {{/workflow-group}}
