@@ -53,8 +53,10 @@ export default Controller.extend({
          * 
          * @param generateDeposit {function<DS.Model::deposit>}
         */
-        registerDeposit(generateDeposit) {
-            this.get('registeredDeposits').push(generateDeposit);
+        registerDeposit(depositGenerator) {
+            if (depositGenerator) {
+                this.get('depositGenerators').push(depositGenerator);
+            }
         }
 
     }

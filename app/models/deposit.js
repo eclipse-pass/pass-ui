@@ -5,5 +5,7 @@ export default DS.Model.extend({
   assignedId: DS.belongsTo('identifier'),
   grant: DS.belongsTo('grant'),
   updatedDate: DS.attr('date'),
+
+  /* Deposit status {new, in-progress, accepted} */
   status: DS.attr('string')
 });
