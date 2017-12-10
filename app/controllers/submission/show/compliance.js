@@ -2,7 +2,7 @@ import Controller from '@ember/controller';
 
 export default Controller.extend({
 
-    registeredDeposits: [],
+    depositGenerators: [],
 
     actions: {
 
@@ -10,15 +10,15 @@ export default Controller.extend({
         saveAll() {
             var submission = this.get('model');
             var deposits = submission.get('deposits');
-            var registered = submission.get('registeredDeposits');
+            var depositGenerators = submission.get('depositGenerators');
 
             /* TODO:  Do something more elegant. We just delete prior content, and replace */
             while (deposits.length) {
                 deposits.popObject().destroyRecord();
             }
 
-            while (registered.length) {
-                var deposit = registered.pop();
+            while (depositGenerators.length) {
+                var deposit = (depositGenerators.pop())();
                 deposits.pushObject(deposit);
                 deposit.save();
             }
@@ -51,10 +51,10 @@ export default Controller.extend({
          * 
          * Upon "save", these deposits are attached to the submission.
          * 
-         * @param deposit {DS.Model::deposit}
+         * @param generateDeposit {function<DS.Model::deposit>}
         */
-        registerDeposit(deposit) {
-            this.get('registeredDeposits').push(deposit)
+        registerDeposit(generateDeposit) {
+            this.get('registeredDeposits').push(generateDeposit);
         }
 
     }
