@@ -6,8 +6,10 @@ at this time.
 {{#workflow-group name="repositories" workflow=(workflow-for model "repositories") as |group|}}
     {{#workflow-card step="repos" group=group
         back=(route-action "transitionTo" "submission.show.compliance" model)
+        cancel=(action "rollback")
         continue=(action (queue
             (route-action "transitionTo" "submission.show.metadata" model)
+            (action "saveAll")
             (action "save" target=group)
             (action "attachWorkflow" model target=group)
         ))}}
@@ -19,5 +21,19 @@ at this time.
                 </li>
             {{/each}}
             </ul>
+            <div class="dropdown">
+                {{#remaining-repos pendingDeposits=addedDeposits linkedDeposits=model.deposits as |remainingRepos|}}
+                    {{#if remainingRepos.length}}
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="addRepo" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Add additional repositories
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="addRepo">
+                    {{#each remainingRepos as |repo|}}
+                        <button class="dropdown-item" type="button" {{action "addRepo" repo}}>{{repo}}</button>
+                    {{/each}}
+                    </div>
+                    {{/if}}
+                {{/remaining-repos}}
+            </div>
     {{/workflow-card}}
 {{/workflow-group}}
