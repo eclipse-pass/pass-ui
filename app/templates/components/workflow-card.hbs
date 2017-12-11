@@ -6,28 +6,22 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-3">
-            {{#if back}}
-            <button class="btn btn-primary btn-small" onclick={{action back}}>Back</button>
-            {{/if}}
-        </div>
-        <div class="col-3">
-            {{#if cancel}}
-            <button class="btn btn-primary btn-small" onclick={{action cancel}}>Cancel</button>
-            {{/if}}
-        </div>
-        <div class="col-3">
-            {{#if save}}
-            <button class="btn btn-primary btn-small" onclick={{action save}}>Save</button>
-            {{/if}}
-        </div>
-        <div class="col-3">
+    <div class="btn-toolbar float-right">
+        {{#if back}}
+        <button class="btn btn-primary btn-small mr-3 my-1" onclick={{action back}}>Back</button>
+        {{/if}}
+        {{#if cancel}}
+        <button class="btn btn-primary btn-small mr-3 my-1" onclick={{action cancel}}>Cancel</button>
+        {{/if}}
+        {{#if save}}
+        <button class="btn btn-primary btn-small mr-3 my-1" onclick={{action save}}>Save</button>
+        {{/if}}
+        <div class="btn-group" role="group" aria-label="Proceed button group">
             {{#if continue}}
-            <button class="btn btn-primary btn-small" onclick={{action continue}}>Save and Continue</button>
+            <button class="btn btn-primary btn-small my-1" onclick={{action continue}}>Save and Continue</button>
             {{/if}}
             {{#if next}}
-            <button class="btn btn-primary btn-small" onclick={{action next}}>Next</button>
+            <button class="btn btn-primary btn-small my-1" onclick={{action next}}>Next</button>
             {{/if}}
         </div>
     </div>
