@@ -30,7 +30,7 @@ export default Component.extend({
             // A never needs deposit, C, D does.  B depends on user input.
             if (pmcMethod === 'A') {
                 self.set('needsDeposit', false);
-            } else if (pmcMetod === 'C' || pmcMethod === 'D') {
+            } else if (pmcMethod === 'C' || pmcMethod === 'D') {
                 self.set('needsDeposit', true);
             }
 
