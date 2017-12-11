@@ -1,26 +1,29 @@
 <h2>Submission Metadata</h2>
-{{#workflow-group name="metadata" workflow=(workflow-for model "metadata") as |group|}} 
+{{#workflow-group name="metadata" workflow=(workflow-for model "metadata")
+        up=(route-action "transitionTo" "submission.show.repositories" model)
+        down=(route-action "transitionTo" "submission.show.attachments" model)
+        as |group|}} 
     {{#workflow-card step="common" group=group
-            back=(route-action "transitionTo" "submission.show.repositories" model)
-            next=(action "advance" target=group)}}
+            back=(action "backActionFor" "common" target=group)
+            next=(action "nextActionFor" "common" target=group)}}
         {{submission-metadata-common}}
     {{/workflow-card}} 
 
     {{#workflow-card step="nihms" group=group 
-            back=(action "back" target=group)
-            next=(action "advance" target=group)}}
+            back=(action "backActionFor" "common" target=group)
+            next=(action "nextActionFor" "common" target=group)}}
         {{submission-metadata-nihms}}
     {{/workflow-card}} 
 
     {{#workflow-card step="pages" group=group
-            back=(action "back" target=group)
-            next=(action "advance" target=group)}}
+            back=(action "backActionFor" "common" target=group)
+            next=(action "nextActionFor" "common" target=group)}}
         {{submission-metadata-pages}}
     {{/workflow-card}} 
 
     {{#workflow-card step="par" group=group 
-            back=(action "back" target=group)
-            next=(route-action "transitionTo" "submission.show.attachments" model)}}
+            back=(action "backActionFor" "common" target=group)
+            next=(action "nextActionFor" "common" target=group)}}
         {{submission-metadata-par}}
     {{/workflow-card}} 
 {{/workflow-group}}

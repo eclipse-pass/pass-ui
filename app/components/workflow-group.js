@@ -37,7 +37,7 @@ export default Component.extend({
             }
         },
 
-        back() {
+        back(self) {
             var steps = this.get('steps');
             var step = this.get('step');
             var i = steps.findIndex((e) => e === step);
@@ -63,6 +63,14 @@ export default Component.extend({
             } else {
                 target.get('workflows').pushObject(this.get('workflow'));
             }
+        },
+
+        nextActionFor(step) {
+            this.get('actions').advance.call(this);
+        },
+
+        backActionFor(step) {
+            this.get('actions').advance.call(this);
         },
     }
 });
