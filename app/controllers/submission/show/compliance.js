@@ -12,6 +12,8 @@ export default Controller.extend({
             var deposits = submission.get('deposits');
             var depositGenerators = this.get('depositGenerators');
 
+            
+
             /* TODO:  Do something more elegant. We just delete prior content, and replace */
             
             /* TODO;  Figure out how the hell to find lengths of the
