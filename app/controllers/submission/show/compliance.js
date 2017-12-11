@@ -33,11 +33,15 @@ export default Controller.extend({
 
             while (depositGenerators.length) {
                 var deposit = (depositGenerators.pop())();
-                deposits.pushObject(deposit);
-                deposit.save();
+                if (deposit) {
+                    deposits.pushObject(deposit);
+                    deposit.save();
+                }
             }
 
-            submission.save();
+            //TODO: This fails for some reason.  No idea why.  Something is null or undefined
+            //somewhere.  No idea what. 
+            //submission.save();
         }, 
 
         /** Generate the list of policies implied by the awards that funded this submission.
@@ -60,8 +64,9 @@ export default Controller.extend({
 
         /** Register a deposit in order to comply with a policy 
          * 
-         * This is called by compliance components; they generate a deposit
-         * entity for any repositories that will result in compliance.
+         * This is called by compliance components; they generate a _function_
+         * which, when invoked, produces a deposit for any repositories that
+         * will result in compliance; or null if no such deposit is necessary.
          * 
          * Upon "save", these deposits are attached to the submission.
          * 
