@@ -35,7 +35,11 @@ export default Component.extend({
             this.set('method', pmcMethod);
         }
 
-        this.set('needsDeposit', submission.get('deposits').map(deposit => deposit.get('repo')).includes("PMC"));
+        // If we're method B, we can use use the presence of PMC to determine whether we generate
+        // a deposit when our deposit-registering-function is invoked.
+        if (pmcMethod ==='B' ) {
+            this.set('needsDeposit', submission.get('deposits').map(deposit => deposit.get('repo')).includes("PMC"));
+        }
 
         var self = this;
         register(function () {
@@ -48,6 +52,7 @@ export default Component.extend({
             }
 
             if (self.get('needsDeposit')) {
+                console.log("Needs deposit, offering PMC");
                 return self.get('store').createRecord('deposit', {
                     repo: 'PMC',
                     status: 'new'
