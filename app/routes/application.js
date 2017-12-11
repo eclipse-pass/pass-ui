@@ -315,13 +315,13 @@ export default Route.extend({
     });
 
     let depositID2 = store.createRecord('identifier', {
-      type: 'PAGESID',
+      type: 'PARID',
       label: '32654',
       uri: ''
     });
 
     let deposit2 = store.createRecord('deposit', {
-      repo: 'DOE-PAGES',
+      repo: 'NSF-PAR',
       updatedDate: new Date('2015-05-02'),
       status: 'Submitted'
     });
@@ -363,29 +363,35 @@ export default Route.extend({
     });
 
     let sub1 = store.createRecord('submission', {
-      title: 'Chocolate chip is the best',
-      creationDate: new Date('2018-06-02'),
-      status: 'In Progress'
+      title: 'Evaluating the Role of Interdigitated Neoadjuvant Chemotherapy and Radiation in the Management of High-Grade Soft-Tissue Sarcoma: The Johns Hopkins Experience.',
+      creationDate: new Date('2016-04-04'),
+      updatedDate: new Date('2016-05-04'),
+      submittedDate: new Date('2017-07-04'),
+      status: 'Submitted'
     });
 
     let sub2 = store.createRecord('submission', {
-      title: 'In defense of vanilla',
-      creationDate: new Date('2018-06-02'),
-      status: 'In Progress'
+      title: 'Micropattern size-dependent endothelial differentiation from a human induced pluripotent stem cell line.',
+      creationDate: new Date('2017-06-02'),
+      updatedDate: new Date('2017-12-04'),
+      submittedDate: new Date('2017-12-04'),
+      status: 'Submitted'
     });
 
 
     let sub3 = store.createRecord('submission', {
-      title: 'Chocolate, how can you go wrong?',
-      creationDate: new Date('2018-06-02'),
+      title: 'Immunomodulatory Drugs: Immune Checkpoint Agents in Acute Leukemia.',
+      creationDate: new Date('2017-06-02'),
+      updatedDate: new Date('2017-11-04'),
       status: 'In Progress'
     });
 
 
     let sub4 = store.createRecord('submission', {
-      title: 'Animal farm: The prophecy comes true.',
-      creationDate: new Date('2018-06-02'),
-      status: 'Complete'
+      title: 'Family history of alcoholism is related to increased D2 /D3 receptor binding potential: a marker of resilience or risk?',
+      creationDate: new Date('2017-06-02'),
+      updatedDate: new Date('2017-11-22'),
+      status: 'In Progress'
     });
 
     let publisherA1 = store.createRecord('publisher', {
@@ -604,15 +610,22 @@ export default Route.extend({
       sub3.set('creator', user3);
       sub4.set('creator', user1);
 
+      sub1.set('author', person1);
+      sub2.set('author', person2);
+      sub3.set('author', person3);
+      sub4.set('author', person4);
+
       sub1.get('deposits').pushObject(deposit1);
       sub1.get('deposits').pushObject(deposit2);
       sub1.get('grants').pushObject(grant1);
-      sub1.get('grants').pushObject(grant3);
+      sub1.get('grants').pushObject(grant4);
       grant1.get('submissions').pushObject(sub1);
 
       sub2.get('deposits').pushObject(deposit3);
       grant1.get('submissions').pushObject(sub2);
 
+      grant3.get('submissions').pushObject(sub3);
+      grant4.get('submissions').pushObject(sub4);
       journalA1.get('ISSNs').pushObject(journalID1);
       journalA1.set('publisher', publisherA2);
       publisherA2.get('journals').pushObject(journalA1);
