@@ -23,8 +23,9 @@ export default Controller.extend({
             var newRepos = newDeposits.map(deposit => deposit.get('repo'));
             console.log("saveAll: got " + newRepos.length + " new repos")
 
-            //  Remove linked deposits whose repos are not in the 'new' list.
-            var toRemoveFromLinked = linkedDeposits.filter(deposit => !(newRepos.includes(deposit.get('repo'))));
+            // Remove linked deposits whose repos are not in the 'new' list,
+            // and are not requested
+            var toRemoveFromLinked = linkedDeposits.filter(deposit => !newRepos.includes(deposit.get('repo')) && !deposit.get('requested'));
             console.log("saveAll: " + toRemoveFromLinked.length + "deposits to remove");
 
             for (var deposit of toRemoveFromLinked) {

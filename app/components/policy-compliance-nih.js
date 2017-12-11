@@ -67,8 +67,10 @@ export default Component.extend({
         /** Specify whether a deposit is necessary */
         setNeedsDeposit(val) {
             console.log("setNeedsDeposit: " + val);
-            this.set('willPay', val);
+            this.set('willPay', !val);
+            console.log("willPay is " + this.get('willPay'));
             this.set('needsDeposit', val);
+            console.log("noPay is " + this.get('noPay'));
         }
     }
 

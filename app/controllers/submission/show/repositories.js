@@ -40,7 +40,8 @@ export default Controller.extend({
 
             let deposit = this.get('store').createRecord('deposit', {
                 repo: repoName,
-                status: 'new'
+                status: 'new',
+                requested: true
             });
 
             submission.get('deposits').pushObject(deposit);
@@ -53,12 +54,12 @@ export default Controller.extend({
          */
         isPresent(repo) {
             let savedDeposits = this.get('model').get('deposits');
-            let pendingDeposits = this.get('addedDeposits');
-            
+            let addedDeposits = this.get('addedDeposits');
+
             // Ugh, can't think of a better way to do this with the PromiseArrays
             // we get back from relationships.  Concat doesn't work with them. 
             return savedDeposits.map(deposit => deposit.get('repo')).includes(repo)
-                || pendingDeposits.map(deposit => deposit.get('repo')).includes(repo);
+                || addedDeposits.map(deposit => deposit.get('repo')).includes(repo);
         },
 
         /** Saves the submission and updates all newly-added deposits to link back to this submission */
