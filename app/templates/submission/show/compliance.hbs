@@ -4,7 +4,10 @@
 </p>
 {{#workflow-group name="compliance" workflow=(workflow-for model "compliance") as |group|}} 
     {{#workflow-card step="select-compliance" group=group
+        back=(route-action "transitionTo" "submission.show.funding" model)
         continue=(action (queue
+            (route-action "transitionTo" "submission.show.repositories" model)
+            (action "attachWorkflow" model target=group)
             (action "saveAll")
         ))}}
 
