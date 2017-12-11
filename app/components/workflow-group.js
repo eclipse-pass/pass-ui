@@ -9,6 +9,7 @@ export default Component.extend({
 
     init() {
         this._super(...arguments)
+        this.set('steps', []);
         var workflow = this.get('workflow');
         if (!workflow) {
            this.set('workflow', this.get('store').createRecord('workflow'));
@@ -19,6 +20,14 @@ export default Component.extend({
     },
 
     addStep(step) {
+        let filter = this.get('stepFilter');
+        
+        if (filter) {
+            if (!filter(step)) {
+                return;
+            }
+        }
+
         this.get('steps').push(step);
 
         if (!this.get('step')) {
@@ -62,6 +71,23 @@ export default Component.extend({
                 target.get(rel).pushObject(this.get('workflow'));
             } else {
                 target.get('workflows').pushObject(this.get('workflow'));
+            }
+        },
+
+        nextActionFor(step) {
+            var steps = this.get('steps');
+            if (steps.indexOf(step) === (steps.length - 1)) {
+                this.get('last')();
+            } else {
+                this.get('actions').advance.call(this);
+            }
+        },
+
+        backActionFor(step) {
+            if (this.get('steps').indexOf(step) === 0) {
+                this.get('first')();
+            } else {
+                this.get('actions').back.call(this);
             }
         },
     }
