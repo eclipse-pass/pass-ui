@@ -21,12 +21,10 @@ export default Controller.extend({
             }
 
             var newRepos = newDeposits.map(deposit => deposit.get('repo'));
-            console.log("saveAll: got " + newRepos.length + " new repos")
 
             // Remove linked deposits whose repos are not in the 'new' list,
             // and are not requested
             var toRemoveFromLinked = linkedDeposits.filter(deposit => !newRepos.includes(deposit.get('repo')) && !deposit.get('requested'));
-            console.log("saveAll: " + toRemoveFromLinked.length + "deposits to remove");
 
             for (var deposit of toRemoveFromLinked) {
                 linkedDeposits.removeObject(deposit);
@@ -34,17 +32,14 @@ export default Controller.extend({
             }
 
             var linkedRepos = linkedDeposits.map(deposit => deposit.get('repo'));
-            console.log("saveAll: got " + newRepos.length + " linked repos")
 
             var toLink = newDeposits.filter(deposit => !(linkedRepos.includes(deposit.get('repo'))));
 
             for (var deposit of newDeposits) {
                 if (toLink.includes(deposit)) {
-                    console.log("Linking new repo " + deposit.get('repo'));
                     linkedDeposits.pushObject(deposit);
                     deposit.save().then(submission.save());
                 } else {
-                    console.log("Destroying offered deposit to " + deposit.get('repo'))
                     deposit.rollbackAttributes();
                 }
             }

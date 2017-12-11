@@ -43,13 +43,10 @@ export default Component.extend({
             }
 
             if (self.get('needsDeposit')) {
-                console.log("Needs deposit, so offering PMC");
                 return self.get('store').createRecord('deposit', {
                     repo: 'PMC',
                     status: 'new'
                 });
-            } else {
-                console.log("No deposit needed");
             }
         });
     },
@@ -66,11 +63,8 @@ export default Component.extend({
     actions: {
         /** Specify whether a deposit is necessary */
         setNeedsDeposit(val) {
-            console.log("setNeedsDeposit: " + val);
             this.set('willPay', !val);
-            console.log("willPay is " + this.get('willPay'));
             this.set('needsDeposit', val);
-            console.log("noPay is " + this.get('noPay'));
         }
     }
 

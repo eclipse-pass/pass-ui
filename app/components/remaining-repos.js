@@ -10,11 +10,6 @@ export default Component.extend({
         let addedRepos = this.get('addedDeposits').map(deposit => deposit.get('repo'));
         let linkedRepos = this.get('linkedDeposits').map(deposit => deposit.get('repo'));
 
-        console.log('Added repos: ' + addedRepos);
-        console.log('linked repos: ' + linkedRepos);
-
-        console.log("Compited remaining repos as " + this.get('allRepos').filter(repo => !addedRepos.includes(repo) && !linkedRepos.includes(repo)));
-
         return this.get('allRepos').filter(repo => !addedRepos.includes(repo) && !linkedRepos.includes(repo));
     }),
 
