@@ -47,7 +47,7 @@ export default Component.extend({
 
             if (pmcMethod === 'A') {
                 self.set('needsDeposit', false);
-            } else if (pmcMethod === 'C' || pmcMethod === 'D') {
+            } else if (!pmcMethod || pmcMethod === 'C' || pmcMethod === 'D') {
                 self.set('needsDeposit', true);
             }
 
