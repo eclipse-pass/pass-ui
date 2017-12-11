@@ -1,0 +1,44 @@
+<div class="row">
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title"><a href="#">National Institutes of Health (NIH) Open Access Policy</a></h4>
+        <h6 class="card-subtitle">Requires deposit into PubMed Central (PMC)</h6>
+            {{#if (eq method "A")}}
+            <p class="card-text">
+                The journal you published in participates in the PMC Method A program, and will submit
+                the published article to PMC on your behalf.  <em>You do not need to submit a manuscript to NIHMS
+                as a part of this process</em>
+            </p>
+            {{else if (eq method "B")}}
+            <p class="card-text">
+                The journal you published in participates in the PMC Method B program, and they <em>may</em> submit 
+                an article to PMC on your behalf, for a fee. 
+            </p>
+
+                <p class="card-text">
+                Please indicate wheather you have made an arrangement 
+                with the publisher to have your article deposited.
+                </p>
+
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" type="radio" name="choice" id="willPay" value="" checked={{willPay}} onchange={{action "setNeedsDeposit" 0}}/>
+                         I have made (or intend to make) an arrangement with the publisher to deposit my article
+                         directly to PMC.  <em>(You <span class="font-weight-bold">will not</span> need to submit your manuscript to NIHMS as part of this process)</em>
+                    </label>
+                </div>
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" type="radio" name="choice" id="willNotPay" checked={{noPay}} value="noPay" onchange={{action "setNeedsDeposit" 1}}/>
+                         I will not make an arrangement with the publisher to deposit my article
+                         directly to PMC.  <em>(You <span class="font-weight-bold">will</span> need to submit your manuscript to NIHMS as part of this process)</em>
+                    </label>
+                </div>
+        
+            {{else}}
+                The journal you published in does not automatically deposit an article in NIHMS. <em>You will need to submit the manuscript NIHMS.  We will
+                collect some additional information from you in order to submit NIHMS on your behalf</em>
+            {{/if}}
+    </div>
+</div>
+</div>

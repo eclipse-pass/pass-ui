@@ -5,5 +5,12 @@ export default DS.Model.extend({
   assignedId: DS.belongsTo('identifier'),
   grant: DS.belongsTo('grant'),
   updatedDate: DS.attr('date'),
-  status: DS.attr('string')
+
+  /* Deposit status {new, in-progress, accepted} */
+  status: DS.attr('string'),
+
+  /* Whether this deposit is specifically requested by the user,
+   * rather than implicit by policy.
+   */
+  requested: DS.attr('boolean')
 });

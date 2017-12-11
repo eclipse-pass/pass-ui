@@ -1,2 +1,39 @@
-Repositories
-{{outlet}}
+<h2>Repositories</h2>
+<p>
+When complete, your submission will be sent to the following repositories.  You may optionally add additional repositories
+at this time.
+</p>
+{{#workflow-group name="repositories" workflow=(workflow-for model "repositories") as |group|}}
+    {{#workflow-card step="repos" group=group
+        back=(route-action "transitionTo" "submission.show.compliance" model)
+        cancel=(action "rollback")
+        continue=(action (queue
+            (route-action "transitionTo" "submission.show.metadata" model)
+            (action "saveAll")
+            (action "save" target=group)
+            (action "attachWorkflow" model target=group)
+        ))}}
+            <ul class="list-group">
+            {{#each model.deposits as |deposit|}}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{deposit.repo}}
+                    <span class="badge badge-primary badge-pill">{{deposit.status}}</span>
+                </li>
+            {{/each}}
+            </ul>
+            <div class="dropdown">
+                {{#remaining-repos addedDeposits=addedDeposits linkedDeposits=model.deposits as |remainingRepos|}}
+                    {{#if remainingRepos.length}}
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="addRepo" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Add additional repositories
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="addRepo">
+                    {{#each remainingRepos as |repo|}}
+                        <button class="dropdown-item" type="button" {{action "addRepo" repo}}>{{repo}}</button>
+                    {{/each}}
+                    </div>
+                    {{/if}}
+                {{/remaining-repos}}
+            </div>
+    {{/workflow-card}}
+{{/workflow-group}}

@@ -1,6 +1,7 @@
 <h2>Submission Metadata</h2>
 {{#workflow-group name="metadata" workflow=(workflow-for model "metadata") as |group|}} 
-    {{#workflow-card step="common" group=group 
+    {{#workflow-card step="common" group=group
+            back=(route-action "transitionTo" "submission.show.repositories" model)
             next=(action "advance" target=group)}}
         {{submission-metadata-common}}
     {{/workflow-card}} 
@@ -18,7 +19,8 @@
     {{/workflow-card}} 
 
     {{#workflow-card step="par" group=group 
-            back=(action "back" target=group)}}
+            back=(action "back" target=group)
+            next=(route-action "transitionTo" "submission.show.attachments" model)}}
         {{submission-metadata-par}}
     {{/workflow-card}} 
 {{/workflow-group}}

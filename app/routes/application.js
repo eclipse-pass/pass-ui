@@ -41,23 +41,28 @@ export default Route.extend({
     });
 
     let funder1 = store.createRecord('funder', {
-        name: 'National Eye Institute'
+        name: 'National Eye Institute',
+        repo: 'PMC'
     });
 
     let funder2 = store.createRecord('funder', {
-        name: 'National Science Foundation'
+        name: 'National Science Foundation',
+        repo: 'NSF-PAR'
     });
 
     let funder3 = store.createRecord('funder', {
-        name: 'National Inst Of Diabetes And Digestion'
+        name: 'National Inst Of Diabetes And Digestion',
+        repo: 'PMC'
     });
 
     let funder4 = store.createRecord('funder', {
-        name: 'National Inst of Mental Health'
+        name: 'National Inst of Mental Health',
+        repo: 'PMC'
     });
 
     let funder5 = store.createRecord('funder', {
-        name: 'National Institute of Health'
+        name: 'National Institute of Health',
+        repo: 'PMC'
     });
 
     let coeus1 = store.createRecord('identifier', {
@@ -304,7 +309,7 @@ export default Route.extend({
     });
 
     let deposit1 = store.createRecord('deposit', {
-      repo: 'NIHMS',
+      repo: 'PMC',
       updatedDate: new Date('2016-04-02'),
       status: 'Submitted'
     });
@@ -352,7 +357,7 @@ export default Route.extend({
     });
 
     let deposit5 = store.createRecord('deposit', {
-      repo: 'PMCID',
+      repo: 'PMC',
       updatedDate: new Date('2016-10-02'),
       status: 'Submitted'
     });

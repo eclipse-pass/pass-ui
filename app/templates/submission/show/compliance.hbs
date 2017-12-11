@@ -1,2 +1,36 @@
-Compliance
-{{outlet}}
+<h2>Compliance</h2>
+<p>
+    Based on the funding agencies you provided, these are the public access policies that are applicable to your work
+</p>
+{{#workflow-group name="compliance" workflow=(workflow-for model "compliance") as |group|}} 
+    {{#workflow-card step="select-compliance" group=group
+        back=(route-action "transitionTo" "submission.show.funding" model)
+        continue=(action (queue
+            (route-action "transitionTo" "submission.show.repositories" model)
+            (action "attachWorkflow" model target=group)
+            (action "saveAll")
+        ))}}
+
+        <!-- Yes, "getPolicies" returns repos ... repos in which deposit will 
+             result in compliance.  This is due to a lack of a policy object in the
+             model.  -->
+        <div class="container">
+        {{#each (value-of (action "getPolicies")) as |repo|}}
+            {{#if (eq "PMC" repo)}}
+                {{policy-compliance-nih submission=model register=(action "registerDeposit")}}
+            {{/if}}
+
+            {{#if (eq "NSF-PAR" repo)}}
+                {{policy-compliance-nsf submission=model register=(action "registerDeposit")}}
+            {{/if}}
+
+            {{#if (eq "DOE-PAGES" repo)}}
+                {{policy-compliance-doe submission=model register=(action "registerDeposit")}}
+            {{/if}}
+
+        {{/each}}
+        </div>
+
+    {{/workflow-card}} 
+
+{{/workflow-group}}
