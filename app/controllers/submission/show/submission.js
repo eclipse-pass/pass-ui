@@ -16,10 +16,8 @@ export default Controller.extend({
             }).then(function(response) {
                 if (response.ok) {
                     // Command succeeded
-                    console.log("command passed")
                 } else {
                     // Command failed
-                    console.log("command failed")
                 }
             });
                   
