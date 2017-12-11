@@ -9,41 +9,44 @@ export default Controller.extend({
         /** Saves the submission deposits that will establish compliance */
         saveAll() {
             var submission = this.get('model');
-            var deposits = submission.get('deposits');
+            var linkedDeposits = submission.get('deposits');
             var depositGenerators = this.get('depositGenerators');
-
-            
-
-            /* TODO:  Do something more elegant. We just delete prior content, and replace */
-            
-            /* TODO;  Figure out how the hell to find lengths of the
-             * PromiseArrays returned by ember-data.  length is supposed to be 
-             * a property.  What it contains is a mystery.  It's not a number, 
-             * it's some sort of object ¯\_(ツ)_/¯
-             * 
-             * So this simple loop is more complicated than it has to be.
-             */
-            while (deposits.length) {
-                let deposit = deposits.popObject();
-
-                if (deposit) {
-                    deposit.destroyRecord();
-                } else {
-                    break;
-                }
-            }
+            var newDeposits = [];
 
             while (depositGenerators.length) {
                 var deposit = (depositGenerators.pop())();
                 if (deposit) {
-                    deposits.pushObject(deposit);
-                    deposit.save();
+                    newDeposits.push(deposit);
                 }
             }
 
-            //TODO: This fails for some reason.  No idea why.  Something is null or undefined
-            //somewhere.  No idea what. 
-            //submission.save();
+            var newRepos = newDeposits.map(deposit => deposit.get('repo'));
+            console.log("saveAll: got " + newRepos.length + " new repos")
+
+            //  Remove linked deposits whose repos are not in the 'new' list.
+            var toRemoveFromLinked = linkedDeposits.filter(deposit => !(newRepos.includes(deposit.get('repo'))));
+            console.log("saveAll: " + toRemoveFromLinked.length + "deposits to remove");
+
+            for (var deposit of toRemoveFromLinked) {
+                linkedDeposits.removeObject(deposit);
+                deposit.destroy();
+            }
+
+            var linkedRepos = linkedDeposits.map(deposit => deposit.get('repo'));
+            console.log("saveAll: got " + newRepos.length + " linked repos")
+
+            var toLink = newDeposits.filter(deposit => !(linkedRepos.includes(deposit.get('repo'))));
+
+            for (var deposit of newDeposits) {
+                if (toLink.includes(deposit)) {
+                    console.log("Linking new repo " + deposit.get('repo'));
+                    linkedDeposits.pushObject(deposit);
+                    deposit.save().then(submission.save());
+                } else {
+                    console.log("Destroying offered deposit to " + deposit.get('repo'))
+                    deposit.rollbackAttributes();
+                }
+            }
         }, 
 
         /** Generate the list of policies implied by the awards that funded this submission.

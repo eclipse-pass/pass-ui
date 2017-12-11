@@ -22,14 +22,14 @@
 
                 <div class="form-check">
                     <label class="form-check-label">
-                        <input class="form-check-input" type="radio" name="choice" id="willPay" value="" checked={{willPay}} click={{action "setNeedsDeposit" 1}}/>
+                        <input class="form-check-input" type="radio" name="choice" id="willPay" value="" checked={{willPay}} onchange={{action "setNeedsDeposit" 0}}/>
                          I have made (or intend to make) an arrangement with the publisher to deposit my article
                          directly to PMC.  <em>(You <span class="font-weight-bold">will not</span> need to submit your manuscript to NIHMS as part of this process)</em>
                     </label>
                 </div>
                 <div class="form-check">
                     <label class="form-check-label">
-                        <input class="form-check-input" type="radio" name="choice" id="willNotPay" checked={{noPay}} value="noPay" click={{action "setNeedsDeposit" 0}}/>
+                        <input class="form-check-input" type="radio" name="choice" id="willNotPay" checked={{noPay}} value="noPay" onchange={{action "setNeedsDeposit" 1}}/>
                          I will not make an arrangement with the publisher to deposit my article
                          directly to PMC.  <em>(You <span class="font-weight-bold">will</span> need to submit your manuscript to NIHMS as part of this process)</em>
                     </label>

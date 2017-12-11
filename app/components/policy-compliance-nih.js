@@ -30,9 +30,7 @@ export default Component.extend({
             this.set('method', pmcMethod);
         }
 
-        this.set('needsDeposit', !(submission.get('deposits').map(deposit => deposit.get('repo')).includes("PMC")));
-        console.log("Init:  deposit repos are " + submission.get('deposits').map(deposit => deposit.get('repo')));
-        console.log("Init: needsDeposit: " + this.get('needsDeposit'));
+        this.set('needsDeposit', submission.get('deposits').map(deposit => deposit.get('repo')).includes("PMC"));
 
         var self = this;
         register(function () {
@@ -45,7 +43,7 @@ export default Component.extend({
             }
 
             if (self.get('needsDeposit')) {
-                console.log("deposit needed");
+                console.log("Needs deposit, so offering PMC");
                 return self.get('store').createRecord('deposit', {
                     repo: 'PMC',
                     status: 'new'
@@ -63,15 +61,13 @@ export default Component.extend({
         let deposits = submission.get('deposits');
 
         this.set('willPay', !(deposits.map(deposit => deposit.get('repo')).includes("PMC")));
-        console.log("didRecieveAttrs:  set willPay to " + this.get('willPay'));
     },
 
     actions: {
         /** Specify whether a deposit is necessary */
         setNeedsDeposit(val) {
+            console.log("setNeedsDeposit: " + val);
             this.set('willPay', val);
-            console.log("setNeedsDeposit:  set willPay to " + this.get('willPay'));
-
             this.set('needsDeposit', val);
         }
     }
