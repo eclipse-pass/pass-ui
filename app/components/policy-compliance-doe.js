@@ -10,9 +10,10 @@ export default Component.extend({
 
         let submission = this.get('submission');
         let register = this.get('register');
+        var self = this;
 
         register(function () {
-            return this.get('store').createRecord('deposit', {
+            return self.get('store').createRecord('deposit', {
                 repo: 'DOE-PAGES',
                 status: 'new'
             });

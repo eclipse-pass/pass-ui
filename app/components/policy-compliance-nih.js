@@ -25,17 +25,17 @@ export default Component.extend({
             this.set('method', pmcMethod);
         }
 
-        console.log("method: " + pmcMethod);
+        var self = this;
         register(function() {
             // A never needs deposit, C, D does.  B depends on user input.
             if (pmcMethod === 'A') {
-                this.set('needsDeposit', false);
+                self.set('needsDeposit', false);
             } else if (pmcMetod === 'C' || pmcMethod === 'D') {
-                this.set('needsDeposit', true);
+                self.set('needsDeposit', true);
             }
 
-            if (this.get('needsDeposit')) {
-                return this.get('store').createRecord('deposit', {
+            if (self.get('needsDeposit')) {
+                return self.get('store').createRecord('deposit', {
                     repo: 'PMC',
                     status: 'new'
                 });
