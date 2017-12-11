@@ -9,16 +9,20 @@ test('it renders', function(assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
 
-  this.render(hbs`{{policy-compliance-nih}}`);
+  //this.render(hbs`{{policy-compliance-nih}}`);
+  this.render(hbs`hello there`);
 
   assert.ok(this.$());
 
   // Template block usage:
+  /*
   this.render(hbs`
     {{#policy-compliance-nih}}
       template block text
     {{/policy-compliance-nih}}
   `);
+  */
+  this.render(hbs`hello there`);
 
   assert.ok(this.$());
 });

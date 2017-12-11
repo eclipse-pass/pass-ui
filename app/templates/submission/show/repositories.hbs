@@ -22,7 +22,7 @@ at this time.
             {{/each}}
             </ul>
             <div class="dropdown">
-                {{#remaining-repos addedDeposits=addedDeposits linkedDeposits=model.deposits submission=model as |remainingRepos|}}
+                {{#remaining-repos addedDeposits=addedDeposits linkedDeposits=model.deposits as |remainingRepos|}}
                     {{#if remainingRepos.length}}
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="addRepo" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Add additional repositories

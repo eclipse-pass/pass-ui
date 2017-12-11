@@ -16,7 +16,6 @@ export default Component.extend({
     init() {
         this._super(...arguments);
 
-        var submission = this.get('submission');
         var linkedDeposits = this.get('linkedDeposits');
 
         for (var deposit of this.get('addedDeposits')) {

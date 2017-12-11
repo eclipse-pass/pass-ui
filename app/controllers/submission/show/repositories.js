@@ -26,7 +26,7 @@ export default Controller.extend({
             var linkedDeposits = submission.get('deposits');
             while (addedDeposits.length) {
                 var deposit = addedDeposits.pop();
-                linkedDeposits.removeObject(grant);
+                linkedDeposits.removeObject(deposit);
                 deposit.rollbackAttributes();
             }
         },

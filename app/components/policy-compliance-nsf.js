@@ -8,7 +8,6 @@ export default Component.extend({
     init() {
         this._super(...arguments);
 
-        let submission = this.get('submission');
         let register = this.get('register');
         var self = this;
 

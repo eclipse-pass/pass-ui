@@ -14,7 +14,7 @@ export default Controller.extend({
             var newDeposits = [];
 
             while (depositGenerators.length) {
-                var deposit = (depositGenerators.pop())();
+                let deposit = (depositGenerators.pop())();
                 if (deposit) {
                     newDeposits.push(deposit);
                 }
@@ -26,21 +26,21 @@ export default Controller.extend({
             // and are not requested
             var toRemoveFromLinked = linkedDeposits.filter(deposit => !newRepos.includes(deposit.get('repo')) && !deposit.get('requested'));
 
-            for (var deposit of toRemoveFromLinked) {
-                linkedDeposits.removeObject(deposit);
-                deposit.destroy();
+            for (var linkedDeposit of toRemoveFromLinked) {
+                linkedDeposits.removeObject(linkedDeposit);
+                linkedDeposit.destroy();
             }
 
             var linkedRepos = linkedDeposits.map(deposit => deposit.get('repo'));
 
             var toLink = newDeposits.filter(deposit => !(linkedRepos.includes(deposit.get('repo'))));
 
-            for (var deposit of newDeposits) {
-                if (toLink.includes(deposit)) {
-                    linkedDeposits.pushObject(deposit);
-                    deposit.save().then(submission.save());
+            for (var newDeposit of newDeposits) {
+                if (toLink.includes(newDeposit)) {
+                    linkedDeposits.pushObject(newDeposit);
+                    newDeposit.save().then(submission.save());
                 } else {
-                    deposit.rollbackAttributes();
+                    newDeposit.rollbackAttributes();
                 }
             }
         }, 

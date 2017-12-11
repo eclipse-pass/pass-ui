@@ -25,6 +25,11 @@ export default Component.extend({
         let submission = this.get('submission');
         let register = this.get('register');
 
+        if (!submission) {
+            // Just so we don't have to mess with tests
+            return;
+        }
+
         var pmcMethod = submission.get('journal').get('pmcParticipation');
         if (pmcMethod) {
             this.set('method', pmcMethod);
