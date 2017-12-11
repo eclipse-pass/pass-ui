@@ -15,13 +15,13 @@ at this time.
         ))}}
             <ul class="list-group">
             {{#each model.deposits as |deposit|}}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
+                <li class="list-group-item d-flex justify-content-between align-items-center my-1">
                     {{deposit.repo}}
                     <span class="badge badge-primary badge-pill">{{deposit.status}}</span>
                 </li>
             {{/each}}
             </ul>
-            <div class="dropdown">
+            <div class="dropdown my-2">
                 {{#remaining-repos addedDeposits=addedDeposits linkedDeposits=model.deposits as |remainingRepos|}}
                     {{#if remainingRepos.length}}
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="addRepo" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
