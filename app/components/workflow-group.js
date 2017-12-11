@@ -22,7 +22,17 @@ export default Component.extend({
     },
 
     addStep(step) {
+        let filter = this.get('stepFilter');
+        
+        if (filter) {
+            if (!filter(step)) {
+                console.log('NOT adding step ' + name);
+                return;
+            }
+        }
+        
         console.log("Adding step " + step);
+
         this.get('steps').push(step);
 
         if (!this.get('step')) {
