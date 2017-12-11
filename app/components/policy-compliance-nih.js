@@ -52,7 +52,6 @@ export default Component.extend({
             }
 
             if (self.get('needsDeposit')) {
-                console.log("Needs deposit, offering PMC");
                 return self.get('store').createRecord('deposit', {
                     repo: 'PMC',
                     status: 'new'
