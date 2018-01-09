@@ -54,5 +54,9 @@ module.exports = function(environment) {
     ENV.locationType = 'hash';
   }
 
+  ENV['ember-cli-mirage'] = {
+    enabled: false
+  };
+
   return ENV;
 };
