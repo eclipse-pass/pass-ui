@@ -16,8 +16,28 @@ export default Route.extend({
   },
 
   model() {
-    // Create the test objects without relationships
+    let store = this.get('store');
 
+    // If test data does not exist, create it.
+
+    return store.findAll('user').then(users => {
+      if (users.get('length') == 0) {
+        return this.createTestData().then(() => {
+          return this.loginTestUser();
+        });
+      } else {
+        return this.loginTestUser();
+      }
+    });
+  },
+
+  // Return a promise to login as a test user.
+  loginTestUser() {
+    return this.controllerFor('application').get('session').login('agudzun');
+  },
+
+  // Return a promise to create the test data
+  createTestData() {
     let store = this.get('store');
 
     let user1 = store.createRecord('user', {
@@ -650,9 +670,7 @@ export default Route.extend({
       journalB3.set('publisher', publisherB1);
       publisherB1.get('journals').pushObject(journalB3);
 
-      return RSVP.all(objects.map(o => o.save())).then(() => {
-        return this.controllerFor('application').get('session').login('agudzun');
-      })
+      return RSVP.all(objects.map(o => o.save()));
     });
   }
 });
