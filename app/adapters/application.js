@@ -169,7 +169,12 @@ export default DS.RESTAdapter.extend({
       let kids = container['http://www.w3.org/ns/ldp#contains'];
 
       if (!kids) {
-        return null;
+        return new RSVP.Promise(resolve => {
+          let result = {};
+          result[type.modelName] = [];
+
+          resolve(result);
+        });
       }
 
       // Return a promise that waits for each child to be retrieved
