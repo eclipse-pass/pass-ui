@@ -139,7 +139,6 @@ export default DS.RESTAdapter.extend({
        query = this.sortQueryParams(query);
     }
 
-    // TODO For now just return everything. Could at least filter by query...
     return this.getFedoraObjectChildren(type, url, query);
   },
 
@@ -182,7 +181,26 @@ export default DS.RESTAdapter.extend({
         let result = {};
 
         // Unwrap fedora object JSON representation.
-        result[type.modelName] = objects.map(o => o[type.modelName]);
+        objects = objects.map(o => o[type.modelName]);
+
+        if (query) {
+          // Filter out objects not matching the query
+
+          objects = objects.filter(o => {
+            let result = true;
+
+            for (let [key, value] of Object.entries(query)) {
+              if (o[key] != value) {
+                result = false;
+                break;
+              }
+            }
+
+            return result;
+          });
+        }
+
+        result[type.modelName] = objects;
 
         return result;
       });
