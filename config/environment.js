@@ -21,6 +21,11 @@ module.exports = function(environment) {
     APP: {
       // Here you can pass flags/options to your application instance
       // when it is created
+    },
+
+    api: {
+      host: 'http://localhost:8080',
+      namespace: 'rest/pass'
     }
   };
 
@@ -30,6 +35,18 @@ module.exports = function(environment) {
     // ENV.APP.LOG_TRANSITIONS = true;
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
+
+    ENV['ember-cli-mirage'] = {
+      enabled: false
+    };
+  }
+
+  if (process.env.PASS_FEDORA_HOST) {
+    ENV.api.host = process.env.PASS_FEDORA_HOST;
+  }
+
+  if (process.env.PASS_FEDORA_PATH) {
+    ENV.api.namespace = process.env.PASS_FEDORA_PATH;
   }
 
   if (environment === 'test') {
@@ -53,10 +70,6 @@ module.exports = function(environment) {
     ENV.rootURL = '';
     ENV.locationType = 'hash';
   }
-
-  ENV['ember-cli-mirage'] = {
-    enabled: false
-  };
 
   return ENV;
 };

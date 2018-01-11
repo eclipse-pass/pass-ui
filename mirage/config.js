@@ -1,26 +1,7 @@
+import ENV from 'pass-ember/config/environment';
+
+// For the moment pass through all requests to a presumably running Fedora
 export default function() {
-  this.namespace = '/api';
-
-  // Back API by in memory database
-
-  this.resource('grants');
-  this.resource('submissions');
-  this.resource('users');
-  this.resource('funders');
-  this.resource('people');
-  this.resource('identifiers');
-  this.resource('journals');
-  this.resource('publishers');
-  this.resource('deposits');
-  this.resource('workflows');
-
-  // Enable query for users
-  this.get('/users', (schema, request) => {
-    return schema.users.where(request.queryParams);
-  });
-
-  // Enable query for grants
-  this.get('/grants', (schema, request) => {
-    return schema.grants.where(request.queryParams);
-  });
+  this.urlPrefix = `${ENV.api.host}/${ENV.api.namespace}`
+  this.passthrough();
 }
