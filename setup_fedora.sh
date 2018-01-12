@@ -2,6 +2,7 @@
 
 # Fedora 4 container to setup
 REPO="$1"
+CREDENTIALS="$2"
 LOG="setup_fedora.log"
 
 function create_binary {
@@ -19,7 +20,7 @@ function create_binary {
     echo $msg
     echo -e "\n$msg\n" &>> $LOG
     
-    curl -# -X PUT --upload-file "$file_path" -H "Content-Type: $content_type" "$repo_path" &>> $LOG
+    curl -u $CREDENTIALS -# -X PUT --upload-file "$file_path" -H "Content-Type: $content_type" "$repo_path" &>> $LOG
 
     if [ $? -ne 0 ]; then
 	echo "Failed"
@@ -40,7 +41,7 @@ function create_object {
     echo $msg
     echo -e "\n$msg\n" &>> $LOG
 
-    curl -# -X PUT -H "Content-Type: text/turtle" "$repo_path" &>> $LOG
+    curl -u $CREDENTIALS -# -X PUT -H "Content-Type: text/turtle" "$repo_path" &>> $LOG
 
     if [ $? -ne 0 ]; then
 	echo "Failed"
@@ -55,8 +56,8 @@ function delete_object {
     echo $msg
     echo -e "\n$msg\n" &>> $LOG
 
-    curl -X DELETE "$repo_path" &>> $LOG
-    curl -X DELETE "$repo_path/fcr:tombstone" &>> $LOG
+    curl -u $CREDENTIALS -X DELETE "$repo_path" &>> $LOG
+    curl -u $CREDENTIALS -X DELETE "$repo_path/fcr:tombstone" &>> $LOG
 }
 
 delete_object ""
