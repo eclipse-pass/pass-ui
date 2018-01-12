@@ -5,6 +5,22 @@ import RSVP from 'rsvp';
 // Persists Ember Data objects as JSON Fedora binaries with REST serializer.
 
 export default DS.RESTAdapter.extend({
+  username: null,
+  password: null,
+
+  // Merge standard headers into provided headesr and return the result.
+  // In particular, a basic authorization header is added if appropriate.
+  getHeaders(headers = {}) {
+    let user = this.get('username');
+    let pass = this.get('password');
+
+    if (user && pass) {
+      headers['Authorization'] = "Basic " + btoa(user + ':' + pass);
+    }
+
+    return headers;
+  },
+
   /**
     Called by the store when a newly created record is
     saved via the `save` method on a model record instance.
@@ -30,6 +46,7 @@ export default DS.RESTAdapter.extend({
 
       return this.ajax(url, "POST", {
         data: data,
+        headers: this.getHeaders(),
         dataFilter: function(resp) {
           // Fedora returned assigned URI as plain text.
           // Add id to data and return as JSON as required by serializer.
@@ -64,7 +81,10 @@ export default DS.RESTAdapter.extend({
 
       let url = snapshot.id;
 
-      return this.ajax(url, "PUT", { data: data });
+      return this.ajax(url, "PUT", {
+        headers: this.getHeaders(),
+        data: data
+      });
   },
 
   /**
@@ -145,6 +165,7 @@ export default DS.RESTAdapter.extend({
   // Return JSON stored in Fedora at url for an object
   getFedoraObject(type, url) {
     return this.ajax(url, 'GET', {
+      headers: this.getHeaders(),
     }).then(result => {
         result[type.modelName].id = url;
 
@@ -156,9 +177,7 @@ export default DS.RESTAdapter.extend({
   getFedoraObjectChildren(type, url, query) {
     return this.ajax(url, 'GET', {
       data: query,
-      headers: {
-        'Accept': 'application/ld+json'
-      }
+      headers: this.getHeaders({'Accept': 'application/ld+json'})
     }).then(response => {
       // Response is array with first element holding container representation
       let container = response[0];
