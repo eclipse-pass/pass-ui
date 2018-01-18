@@ -45,6 +45,10 @@ module.exports = function(environment) {
     ENV.api.host = process.env.PASS_FEDORA_HOST;
   }
 
+  if (process.env.PASS_FEDORA_PORT) {
+    ENV.api.port = process.env.PASS_FEDORA_PORT;
+  }
+
   if (process.env.PASS_FEDORA_PATH) {
     ENV.api.namespace = process.env.PASS_FEDORA_PATH;
   }
