@@ -15,18 +15,17 @@ export default Controller.extend({
       this.set('newSubmissionObject', this.get('store').createRecord('submission'));
     },
 
-    saveAndLinkGrant() {
+    saveAndLinkGrant() { // AUDIT
       var submission = this.get('newSubmissionObject');
+      this.set('newSubmissionObject', null);
       var grant = this.model;
 
-      return submission.save().then(() => {
+      return submission.save().then(() => { // AUDIT
         submission.get('grants').pushObject(grant);
-        submission.save();
-
+        return submission.save(); // AUDIT
+      }).then(() => {
         grant.get('submissions').pushObject(submission);
-        grant.save();
-
-        return submission;
+        return grant.save(); // AUDIT
       });
     }
   },

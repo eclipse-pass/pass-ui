@@ -4,11 +4,13 @@
     {{#workflow-card step="select-funders" group=group
         back=(route-action "transitionTo" "submission.show.index" model)
         cancel=(action "rollback")
-        save=(action "saveAll")
+        save=(action (queue
+            (action "saveWorkflow" model target=group)
+            (action "saveAll")
+        ))
         continue=(action (queue
             (route-action "transitionTo" "submission.show.compliance" model)
-            (action "save" target=group)
-            (action "attachWorkflow" model target=group)
+            (action "saveWorkflow" model target=group)
             (action "saveAll")
         ))}}
 

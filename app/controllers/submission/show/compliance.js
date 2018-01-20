@@ -35,14 +35,15 @@ export default Controller.extend({
 
             var toLink = newDeposits.filter(deposit => !(linkedRepos.includes(deposit.get('repo'))));
 
-            for (var newDeposit of newDeposits) {
+            return Promise.all(newDeposits.map(newDeposit => {
                 if (toLink.includes(newDeposit)) {
                     linkedDeposits.pushObject(newDeposit);
-                    newDeposit.save().then(submission.save());
+                    return newDeposit.save();
                 } else {
-                    newDeposit.rollbackAttributes();
+                    return new Promise(() => newDeposit.rollbackAttributes());
                 }
-            }
+            })).then(() => submission.save());
+
         }, 
 
         /** Generate the list of policies implied by the awards that funded this submission.

@@ -7,7 +7,7 @@
         back=(route-action "transitionTo" "submission.show.funding" model)
         continue=(action (queue
             (route-action "transitionTo" "submission.show.repositories" model)
-            (action "attachWorkflow" model target=group)
+            (action "saveWorkflow" model target=group)
             (action "saveAll")
         ))}}
 

@@ -65,15 +65,13 @@ export default Controller.extend({
         /** Saves the submission and updates all newly-added deposits to link back to this submission */
         saveAll() {
             var deposits = this.get('addedDeposits');
+            this.set('addedDeposits', []);
+
             var submission = this.get('model');
 
             //TODO: Might want to think of displaying some sort of warning any step fails?
-            submission.save().then(() => {
-                while (deposits.length) {
-                    var deposit = deposits.pop();
-                    deposit.save();
-                }
-            });
+            return Promise.all(deposits.map(deposit => deposit.save()))  // AUDIT
+                .then(() => submission.save());  //AUDIT
         }, 
     }
 });
