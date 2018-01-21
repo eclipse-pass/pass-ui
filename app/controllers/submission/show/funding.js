@@ -39,7 +39,10 @@ export default Controller.extend({
             this.get('addedGrants').push(grant);
         },
 
-        /** Saves the submission and updates all newly-added grants to link back to this submission */
+        /** Saves the submission and updates all newly-added grants to link back to this submission 
+         * 
+         * @returns {Promise} The Save promise for saving the submission and dependencies 
+         */
         saveAll() {
             var grants = this.get('addedGrants');
             this.set('addedGrants', []);
@@ -49,8 +52,8 @@ export default Controller.extend({
             //TODO: Might want to think of displaying some sort of warning any step fails?
             return Promise.all(grants.map(grant => {
                 grant.get('submissions').pushObject(submission);
-                return grant.save(); // AUDIT
-            })).then(() => submission.save()); // AUDIT
+                return grant.save();
+            })).then(() => submission.save());
         }
     }
 });

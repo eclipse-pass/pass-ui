@@ -11,21 +11,26 @@ export default Controller.extend({
 
   actions: {
 
+    /** Create a new submission object */
     newSubmission() {
       this.set('newSubmissionObject', this.get('store').createRecord('submission'));
     },
 
-    saveAndLinkGrant() { // AUDIT
+    /** Link to the contextual grant, and save the submission
+     * 
+     * @returns {Promise} Save promise
+     */
+    saveAndLinkGrant() {
       var submission = this.get('newSubmissionObject');
       this.set('newSubmissionObject', null);
       var grant = this.model;
 
-      return submission.save().then(() => { // AUDIT
+      return submission.save().then(() => {
         submission.get('grants').pushObject(grant);
-        return submission.save(); // AUDIT
+        return submission.save();
       }).then(() => {
         grant.get('submissions').pushObject(submission);
-        return grant.save(); // AUDIT
+        return grant.save();
       });
     }
   },

@@ -69,7 +69,7 @@ export default Component.extend({
          * @param {DS.Model} target DS.Model object to link to the workflow
          * @returns {Promise} ember-data save promise for the workflow saving action.
          */
-        saveWorkflow(target) { // AUDIT
+        saveWorkflow(target) {
             var workflow = this.get('workflow');
             let workflows = target.get('workflows');
 
@@ -81,7 +81,7 @@ export default Component.extend({
             workflow.set('steps', this.get('steps').join(','));
             workflow.set('step', this.get('step'));
             
-            return workflow.save(); // AUDIT
+            return workflow.save();
         }, 
 
         /** Invoke the 'next/advance' action associated with this workflow step.
