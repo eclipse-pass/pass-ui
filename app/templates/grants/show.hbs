@@ -58,12 +58,12 @@
                 (action (mut isShowingForm) false)
             ))
             save=(action (queue
+              (action "saveWorkflow" newSubmissionObject target=group)
               (action "saveAndLinkGrant")
               (action (mut isShowingForm) false)
             ))
             continue=(action (queue
-                (action "save" target=group)
-                (action "attachWorkflow" newSubmissionObject target=group)
+                (action "saveWorkflow" newSubmissionObject target=group)
                 (action "saveAndLinkGrant")
                 (action (mut isShowingForm) false)
                 (route-action "transitionTo" "submission.show.funding" newSubmissionObject)

@@ -6,7 +6,10 @@ export default Controller.extend({
 
     actions: {
 
-        /** Saves the submission deposits that will establish compliance */
+        /** Saves the submission deposits that will establish compliance 
+         * 
+         * @returns {Promise} Save promise for the submission and deposits.
+        */
         saveAll() {
             var submission = this.get('model');
             var linkedDeposits = submission.get('deposits');
@@ -35,14 +38,15 @@ export default Controller.extend({
 
             var toLink = newDeposits.filter(deposit => !(linkedRepos.includes(deposit.get('repo'))));
 
-            for (var newDeposit of newDeposits) {
+            return Promise.all(newDeposits.map(newDeposit => {
                 if (toLink.includes(newDeposit)) {
                     linkedDeposits.pushObject(newDeposit);
-                    newDeposit.save().then(submission.save());
+                    return newDeposit.save();
                 } else {
-                    newDeposit.rollbackAttributes();
+                    return new Promise(() => newDeposit.rollbackAttributes());
                 }
-            }
+            })).then(() => submission.save());
+
         }, 
 
         /** Generate the list of policies implied by the awards that funded this submission.
@@ -71,7 +75,7 @@ export default Controller.extend({
          * 
          * Upon "save", these deposits are attached to the submission.
          * 
-         * @param generateDeposit {function<DS.Model::deposit>}
+         * @param {Function} depositGenerator
         */
         registerDeposit(depositGenerator) {
             if (depositGenerator) {

@@ -1,4 +1,5 @@
 import Controller from '@ember/controller';
+import { Promise } from 'rsvp';
 
 export default Controller.extend({
 
@@ -38,19 +39,21 @@ export default Controller.extend({
             this.get('addedGrants').push(grant);
         },
 
-        /** Saves the submission and updates all newly-added grants to link back to this submission */
+        /** Saves the submission and updates all newly-added grants to link back to this submission 
+         * 
+         * @returns {Promise} The Save promise for saving the submission and dependencies 
+         */
         saveAll() {
             var grants = this.get('addedGrants');
+            this.set('addedGrants', []);
             var submission = this.get('model');
 
+
             //TODO: Might want to think of displaying some sort of warning any step fails?
-            submission.save().then(() => {
-                while (grants.length) {
-                    var grant = grants.pop();
-                    grant.get('submissions').pushObject(submission);
-                    grant.save();
-                }
-            });
+            return Promise.all(grants.map(grant => {
+                grant.get('submissions').pushObject(submission);
+                return grant.save();
+            })).then(() => submission.save());
         }
     }
 });

@@ -9,9 +9,8 @@ at this time.
         cancel=(action "rollback")
         continue=(action (queue
             (route-action "transitionTo" "submission.show.metadata" model)
+            (action "saveWorkflow" model target=group)
             (action "saveAll")
-            (action "save" target=group)
-            (action "attachWorkflow" model target=group)
         ))}}
             <ul class="list-group">
             {{#each model.deposits as |deposit|}}

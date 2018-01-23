@@ -33,7 +33,7 @@ export default Controller.extend({
 
         /** Creates and inks a deposit to the submission for the given repo
          * 
-         * @param repoName {string} Name of a repository to add a deposit for.
+         * @param {string} repoName Name of a repository to add a deposit for.
          */
         addRepo(repoName) {
             let submission = this.get('model');
@@ -50,7 +50,7 @@ export default Controller.extend({
 
         /** Determines if the given repo is among the deposits.
          * 
-         * @param repo {string} Repository name.
+         * @param {string} repo Repository name.
          */
         isPresent(repo) {
             let savedDeposits = this.get('model').get('deposits');
@@ -62,18 +62,19 @@ export default Controller.extend({
                 || addedDeposits.map(deposit => deposit.get('repo')).includes(repo);
         },
 
-        /** Saves the submission and updates all newly-added deposits to link back to this submission */
+        /** Saves the submission and updates all newly-added deposits to link back to this submission 
+         * 
+         * @returns {Promise} Save promise for the submission and deposits
+         */
         saveAll() {
             var deposits = this.get('addedDeposits');
+            this.set('addedDeposits', []);
+
             var submission = this.get('model');
 
             //TODO: Might want to think of displaying some sort of warning any step fails?
-            submission.save().then(() => {
-                while (deposits.length) {
-                    var deposit = deposits.pop();
-                    deposit.save();
-                }
-            });
+            return Promise.all(deposits.map(deposit => deposit.save()))
+                .then(() => submission.save());
         }, 
     }
 });
