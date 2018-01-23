@@ -29,10 +29,7 @@ export default Controller.extend({
             // and are not requested
             var toRemoveFromLinked = linkedDeposits.filter(deposit => !newRepos.includes(deposit.get('repo')) && !deposit.get('requested'));
 
-            for (var linkedDeposit of toRemoveFromLinked) {
-                linkedDeposits.removeObject(linkedDeposit);
-                linkedDeposit.destroy();
-            }
+            toRemoveFromLinked.forEach(deposit => linkedDeposits.removeObject(deposit))
 
             var linkedRepos = linkedDeposits.map(deposit => deposit.get('repo'));
 
@@ -45,9 +42,10 @@ export default Controller.extend({
                 } else {
                     return new Promise(() => newDeposit.rollbackAttributes());
                 }
-            })).then(() => submission.save());
+            })).then(() => submission.save())
+                .then(() => Promise.all(toRemoveFromLinked.map(deposit => deposit.destroyRecord())));
 
-        }, 
+        },
 
         /** Generate the list of policies implied by the awards that funded this submission.
          * 
@@ -58,14 +56,14 @@ export default Controller.extend({
          * @returns {Array<string>}
          */
         getPolicies() {
-           return this.get('model')
+            return this.get('model')
                 .get('grants')
                 .map(grant => grant.get('funder'))
                 .map(funder => funder.get('repo'))
                 .filter((e, i, arr) => {
                     return i === arr.indexOf(e)
                 });
-        }, 
+        },
 
         /** Register a deposit in order to comply with a policy 
          * 
