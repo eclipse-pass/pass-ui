@@ -2,7 +2,7 @@ import Component from '@ember/component';
 import { computed } from '@ember/object';
 
 export default Component.extend({
-    allRepos: ["PMC", "NSF-PAR", "DOE-PAGES", "JHU-IR"],
+    allRepos: ["PMC", "NSF-PAR", "DOE-PAGES", "JHU-IR", "JHU-AR"],
     addedDeposits: [],
     linkedDeposits: [],
 
