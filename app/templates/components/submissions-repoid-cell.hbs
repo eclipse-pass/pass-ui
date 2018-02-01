@@ -1,3 +1,3 @@
 {{#each record.deposits as |deposit index|}}
-{{if index ', '}}<a href='{{deposit.assignedId.uri}}'>{{deposit.assignedId.label}} ({{deposit.assignedId.type}})</a>
+{{if index ', '}}{{optional-link (concat deposit.assignedId.label ' (' deposit.assignedId.type ')') deposit.assignedId.uri}}
 {{/each}}
