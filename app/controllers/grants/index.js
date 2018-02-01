@@ -53,10 +53,10 @@ export default Controller.extend({
     { propertyName: 'pi.name', title: 'PI / CO-PIs', component: 'pi-list-cell'},
     { propertyName: 'startDate', title: 'Start', component: 'date-cell', disableFiltering: true},
     { propertyName: 'endDate', title: 'End', component: 'date-cell', disableFiltering: true},
-    { propertyName: 'submissions.length', title: '#', routeName: 'grants.show', disableFiltering: true},
     { propertyName: 'status', title: 'Status', filterWithSelect: true,
       predefinedFilterOptions: ['Active', 'Ended']
     },
+    { propertyName: 'submissions.length', title: '#', routeName: 'grants.show', disableFiltering: true},
     { propertyName: 'oapCompliance', title: 'OAP Compliance', component: 'oap-compliance-cell',
       filterWithSelect: true, predefinedFilterOptions: ['No', 'Yes']
     }
