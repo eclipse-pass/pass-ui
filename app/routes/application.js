@@ -66,69 +66,55 @@ export default Route.extend({
     });
 
     let coeus1 = store.createRecord('identifier', {
-        label: '16129769',
-        uri: 'http://www.library.jhu.edu'
+        label: '16129769'
     });
 
     let coeus2 = store.createRecord('identifier', {
-        label: '16120629',
-         uri: 'http://www.jhu.edu'
+        label: '16120629'
     });
 
     let coeus3 = store.createRecord('identifier', {
-        label: '16120539',
-        uri: 'http://johnshopkins.edu'
+        label: '16120539'
     });
     let coeus4 = store.createRecord('identifier', {
-        label: '16120469',
-        uri: 'http://www.library.jhu.edu'
+        label: '16120469'
     });
 
     let coeus5 = store.createRecord('identifier', {
-        label: '16120459',
-         uri: 'http://www.jhu.edu'
+        label: '16120459'
     });
 
     let coeus6 = store.createRecord('identifier', {
-        label: '16120169',
-        uri: 'http://johnshopkins.edu'
+        label: '16120169'
     });
     let coeus7 = store.createRecord('identifier', {
-        label: '1204023',
-        uri: 'http://www.library.jhu.edu'
+        label: '1204023'
     });
 
     let coeus8 = store.createRecord('identifier', {
-        label: '16119319',
-        uri: 'http://www.jhu.edu'
+        label: '16119319'
     });
 
     let coeus9 = store.createRecord('identifier', {
-        label: '16119219',
-        uri: 'http://johnshopkins.edu'
+        label: '16119219'
     });
     let coeus10 = store.createRecord('identifier', {
-        label: '16118979',
-        uri: 'http://www.library.jhu.edu'
+        label: '16118979'
     });
 
     let coeus11 = store.createRecord('identifier', {
-        label: '16108389',
-         uri: 'http://www.jhu.edu'
+        label: '16108389'
     });
 
     let coeus12 = store.createRecord('identifier', {
-        label: '16097079',
-        uri: 'http://johnshopkins.edu'
+        label: '16097079'
     });
     let coeus13 = store.createRecord('identifier', {
-        label: '16086889',
-        uri: 'http://johnshopkins.edu'
+        label: '16086889'
     });
 
     let coeus14 = store.createRecord('identifier', {
-        label: '16075399',
-        uri: 'http://johnshopkins.edu'
+        label: '16075399'
     });
 
 
