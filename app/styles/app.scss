@@ -46,6 +46,9 @@ a {
 }
 
 /* Buttons */
+.btn {
+  padding:0.15rem 0.3rem;
+}
 .btn-outline-info {
   color: $jhu-weird-bluegreen;
   border-color: $jhu-weird-bluegreen;
@@ -66,9 +69,54 @@ a {
 .btn-primary:not([disabled]):not(.disabled):active {
   box-shadow: 0 0 0.2rem $jhu-blue2;
 }
+.btn-sm, .btn-group-sm > .btn {
+  padding: 0rem 0.4rem;
+  line-height: 1.5rem;
+  margin: 0.15rem 0 0 0 ;
+}
 
 /* Tables */
 .table-bordered {
   border-color: $jhu-grey;
 }
+.table thead th {
+  vertical-align:middle;
+}
+.table {
+  margin-top:1rem;
+}
+.table th, .table td {
+  padding: 0.25rem;
+}
+
+/*form elements*/
+.input-group {
+  min-width:5.2rem;
+  line-height:1.75rem;
+}
+.form-control {
+  padding: 0rem 0.15rem;
+  margin: 0.2rem;
+  min-width: 3rem;
+  height: 1.75rem;
+}
+select.form-control:not([size]):not([multiple]) {
+  height: 1.75rem;
+  padding: 0rem;
+}
+button, select {
+  margin: 0.2rem 0.3rem;
+  padding: 0;
+}
+input, button, select, optgroup, textarea {
+  margin: 0;
+}
+textarea {
+  min-height:4.5rem;
+}
+
+span.input-group-addon {
+  line-height: 2rem;
+}
+
 @import "ember-power-select";
