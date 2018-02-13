@@ -8,6 +8,7 @@ $jhu-grey: #E5E2E0;
 $jhu-grey2: #B4B2AD;
 $jhu-grey3: #7E7E7C;
 $jhu-grey4: #4A484C;
+$jhu-grey5: #2C2C33;
 
 $jhu-blue: #005EB8;
 $jhu-blue1: #418FDE;
@@ -20,6 +21,9 @@ $color-text-primary: #fff;
 $color-text-secondary: $jhu-grey2;
 
 /* Override things with JHU rules */
+body {
+  background-color: #f5f4f3;
+}
 a {
   color: $jhu-blue;
 }
