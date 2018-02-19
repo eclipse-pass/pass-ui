@@ -1,32 +1,54 @@
 
-<div class='row row-eq-height'>
-  <div class='col-sm-1'>
-  </div>
-  <div class='col-sm-5'>
-    <div class='card bg-light'>
-      <div class='card-body'>
-        <h4 class='card-title'>Grants</h4>
-        <p class='card-text'>The grant dashboard allows you to review your grant's compliance status
-          against institution's and funders' public access policies. You can also review submissions
-          associated with each grant and perform appropriate actions to move address compliance issues.
+<div class="row justify-content-center">
+  <div class="col-sm-10">
+    <div class="card bg-light">
+      <div class="card-body">
+        <h2 class="card-title">About Public Access, Research Compliance and PASS</h2>
+        <p class="card-text">
+          &lt;Description of the system and what it does&gt;
         </p>
-        {{#link-to 'grants' class='btn btn-primary btn-lg'}}View Grants{{/link-to}}
       </div>
     </div>
   </div>
+</div>
+<div class='row row-eq-height justify-content-center my-4'>
   <div class='col-sm-5'>
     <div class='card bg-light'>
       <div class='card-body'>
-        <h4 class='card-title'>Submissions</h4>
+        <h2 class='card-title'>Manage Publication Submissions</h2>
         <p class='card-text'>
-          The submission dashboard allows you to create new submission to multiple repositories
-          as required by your funding agency. You can also review and manage deposit status of
-          your submissions into pertinent repositories.
+          The submissions dashboard allows you to create new submission to multiple repositories as required by 
+          your funding agency or in relation to your institution's policies. You can also review and manage 
+          deposit status of your submissions into pertinent repositories.
         </p>
-        {{#link-to 'submissions' class='btn btn-primary btn-lg'}}View Submissions{{/link-to}}
+        <div class="row px-4">
+          {{#link-to 'submissions' class='btn btn-primary mr-auto mt-1'}}View Submissions{{/link-to}}
+          {{#link-to 'submission.new' class='btn btn-primary mt-1'}}Add New Submission{{/link-to}}
+        </div>
       </div>
     </div>
   </div>
-  <div class='col-sm-1'>
+  <div class='col-sm-5'>
+    <div class='card bg-light'>
+      <div class='card-body'>
+        <h2 class='card-title'>Review Grant Compliance</h2>
+        <p class='card-text'>
+          The grant dashboard allows you to review information relating to your grants. You can also review 
+          submissions associated with each grant, their public access compliance statuses and perform 
+          appropriate actions to address compliance issues.
+        </p>
+        {{#link-to 'grants' class='btn btn-primary mt-1'}}View All Grants{{/link-to}}
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row justify-content-center">
+  <div class="col-sm-10">
+    <div class="card bg-light">
+      <div class="card-body">
+        <h2 class="card-title">Notifications</h2>
+        &lt;Placeholder for notifications area&gt;
+      </div>
+    </div>
   </div>
 </div>

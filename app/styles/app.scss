@@ -2,11 +2,13 @@
 @import "ember-cli-bootstrap-4/bootstrap";
 @import "ember-modal-dialog/ember-modal-structure";
 @import "ember-modal-dialog/ember-modal-appearance";
+@import "ember-power-select";
 
 $jhu-grey: #E5E2E0;
 $jhu-grey2: #B4B2AD;
 $jhu-grey3: #7E7E7C;
 $jhu-grey4: #4A484C;
+$jhu-grey5: #2C2C33;
 
 $jhu-blue: #005EB8;
 $jhu-blue1: #418FDE;
@@ -19,20 +21,48 @@ $color-text-primary: #fff;
 $color-text-secondary: $jhu-grey2;
 
 /* Override things with JHU rules */
+body {
+  background-color: #f5f4f3;
+}
 a {
   color: $jhu-blue;
 }
-.navbar {
-  background-color: $color-bg-primary !important;
-}
-.navbar-brand img {
-  width: 250px;
-}
-.navbar .navbar-text {
+
+header {
+  background-color: $color-bg-primary;
   color: $color-text-primary;
-}
-.navbar-dark .navbar-nav .nav-link {
-  color: $color-text-primary;
+  margin-bottom: 24px;
+  .pass-title {
+    padding: 12px 0 0 24px;
+    span {
+      font-size: 1.2em;
+    }
+  }
+  .navbar {
+    background-color: $color-bg-primary !important;
+    padding-top: 0;
+  
+    .navbar-text {
+      color: $color-text-primary;
+    }
+  }
+  .navbar-brand {
+    img {
+      width: 250px;
+      margin: 0 24px;
+    }
+  }
+  .navbar-dark .navbar-nav .nav-link {
+    padding: 0 1rem;
+    color: $jhu-blue2;
+    border-right: 1px solid $jhu-grey3;
+    &:hover {
+      color: $jhu-grey;
+    }
+    &.borderless {
+      border: 0;
+    }
+  }
 }
 .nav-link:hover {
   color: $color-text-secondary;
@@ -71,4 +101,3 @@ a {
 .table-bordered {
   border-color: $jhu-grey;
 }
-@import "ember-power-select";
