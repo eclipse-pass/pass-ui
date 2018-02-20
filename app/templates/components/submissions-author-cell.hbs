@@ -1,1 +1,3 @@
-<button class='btn btm-sm' {{action 'sendAction' 'authorSelected' record}}>{{record.author.name}}</button>
+<a href='javascript:;' {{action 'sendAction' 'authorSelected' record}} title='Click to contact corresponding author/PI'>
+  {{record.author.name}}
+</a>
