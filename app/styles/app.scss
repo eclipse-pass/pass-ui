@@ -41,7 +41,7 @@ header {
   .navbar {
     background-color: $color-bg-primary !important;
     padding-top: 0;
-  
+
     .navbar-text {
       color: $color-text-primary;
     }
@@ -100,4 +100,19 @@ header {
 /* Tables */
 .table-bordered {
   border-color: $jhu-grey;
+}
+th.table-header {
+  & > i {
+    display: inline-flex;
+    cursor: pointer;
+    float: right;
+    color: $jhu-grey3;
+  }
+  & > i:not(.fa-sort-asc):not(.fa-sort-desc) {
+    font: normal normal normal 14px/1 FontAwesome;
+    -webkit-font-smoothing: antialiased;
+    &:before {
+      content: "\f0dc" !important;
+    }
+  }
 }
