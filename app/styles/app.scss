@@ -41,7 +41,7 @@ header {
   .navbar {
     background-color: $color-bg-primary !important;
     padding-top: 0;
-  
+
     .navbar-text {
       color: $color-text-primary;
     }
@@ -100,4 +100,15 @@ header {
 /* Tables */
 .table-bordered {
   border-color: $jhu-grey;
+}
+.models-table-wrapper .globalSearch {
+  & span.input-group-addon {
+    margin-top: 0.2rem;
+  }
+  & .filterString {
+    height: 2rem;
+    width: 30rem;
+    max-width: 70%;
+    margin: 0 0 1em 12px;
+  }
 }
