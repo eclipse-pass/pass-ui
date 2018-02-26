@@ -39,6 +39,14 @@ export default Controller.extend({
             this.get('addedGrants').push(grant);
         },
 
+        removeGrant(grant) {
+            var submission = this.get('model');
+            submission.get('grants').removeObject(grant);
+
+            var index = this.get('addedGrants').indexOf(grant);
+            this.set('addedGrants', this.get('addedGrants').splice(index, 1));
+        },
+
         /** Saves the submission and updates all newly-added grants to link back to this submission 
          * 
          * @returns {Promise} The Save promise for saving the submission and dependencies 
