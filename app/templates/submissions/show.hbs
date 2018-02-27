@@ -1,4 +1,5 @@
-<h2>Submission Details</h2>
+<h2 class="mr-4">Submission Details</h2>
+{{#link-to "submission.show" model}}Edit{{/link-to}}
 
 <div class="submission-details row mx-2 my-4 justify-content-center">
   <div class="col-lg-5">
@@ -72,7 +73,7 @@
           </div>
           <div>
             <span class="mr-2">Preparer(s):</span>
-            <em>Do we track the users that touch the submission, other that creator?</em>
+            {{!-- <em>Do we track the users that touch the submission, other that creator?</em> --}}
           </div>
         </div>
         <div class="submission-deposits-info row">
