@@ -1,4 +1,6 @@
 {{! Format pi and copi list as pi / copi names. Click on PI to do something.}}
 
-<button class='btn btm-sm btn-outline-info' {{action 'sendAction' 'piSelected' record}}>{{record.pi.name}}</button>
+<a href='javascript:;' class='' {{action 'sendAction' 'piSelected' record}} title='Click to contact PI'>
+  {{record.pi.name}}
+</a>
 {{#each record.copis as |person index|}}{{if index ', '}}{{person.name}}{{/each}}
