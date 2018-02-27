@@ -1,0 +1,121 @@
+<h2>Submission Details</h2>
+
+<div class="submission-details row mx-2 my-4 justify-content-center">
+  <div class="col-lg-5">
+    <div class="card bg-light submission-overview">
+      <div class="card-header">Overview</div>
+      <div class="card-body">
+        <div class="row border-bottom">
+          <div class="col-lg-3">DOI:</div>
+          <div class="col-lg-9">{{model.doi}}</div>
+        </div>
+        <div class="row border-bottom">
+          <div class="col-lg-2">Title:</div>
+          <div class="col-lg-10">{{model.title}}</div>
+        </div>
+        <div class="row border-bottom">
+          <div class="col-lg-2">Author:</div>
+          <div class="col-lg-10">
+            {{model.author.name}}
+            {{#if model.author.orcid}} &lt;{{model.author.orcid}}&gt;{{/if}}
+            </div>
+        </div>
+        <div class="row border-bottom">
+          <div class="col-lg-2">Journal:</div>
+          <div class="col-lg-10">{{model.journal.name}}</div>
+        </div>
+        <div class="row border-bottom">
+          <div class="col-lg-2">Volume:</div>
+          <div class="col-lg-10">{{model.volume}}</div>
+        </div>
+        <div class="row border-bottom">
+          <div class="col-lg-2">Issue:</div>
+          <div class="col-lg-10">{{model.issue}}</div>
+        </div>
+        <div class="row">
+          <div class="col-lg-3">Publication Date:</div>
+          <div class="col-lg-10"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="card bg-light">
+      <div class="card-header">Funding</div>
+      <div class="card-body">
+        {{#if model.grants}}
+          {{#each model.grants as |grant|}}
+            <p>
+              <div>
+                <span>Funder:</span> {{grant.funder.name}}
+              </div>
+              <div>
+                <span>Award Number:</span> {{grant.awardNumber}}
+              </div>
+            </p>
+          {{/each}}
+        {{else}}
+          Not applicable
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row mx-2 my-4 justify-content-center">
+  <div class="col-lg-10">
+    <div class="card bg-light">
+      <div class="card-header">Submission(s)</div>
+      <div class="card-body">
+        <div class="mb-4">
+          <div>
+            <span class="mr-2">Submitter:</span>{{model.creator.username}}
+          </div>
+          <div>
+            <span class="mr-2">Preparer(s):</span>
+            <em>Do we track the users that touch the submission, other that creator?</em>
+          </div>
+        </div>
+        <div class="submission-deposits-info row">
+          {{#each model.deposits as |deposit|}}
+            <div class="deposit-info-container col-lg-4">
+              <div class="row">
+                <div class="col-lg-3">Submitted to:</div>
+                <div class="col">{{deposit.repo}}</div>
+              </div>
+              <div class="row">
+                <div class="col-lg-3">On:</div>
+                <div class="col">{{date-formatter deposit.updatedDate}}</div>
+              </div>
+              <div class="row">
+                <div class="col-lg-3">Status:</div>
+                <div class="col">{{deposit.status}}</div>
+              </div>
+              <div class="row">
+                <div class="col-lg-3">Repo ID:</div>
+                <div class="col">
+                  {{#if deposit.assignedId.uri}}
+                    <a href="{{deposit.assignedId.uri}}" target="_blank">
+                      {{deposit.assignedId.label}}
+                    </a>
+                  {{else}}
+                    {{deposit.assignedId.label}}
+                  {{/if}}
+                </div>
+              </div>
+            </div>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{!-- <div class="row mx-2 my-4 justify-content-center">
+  <div class="col-lg-10">
+    <div class="card bg-light">
+      <div class="card-header">Files</div>
+      <div class="card-body">
+        
+      </div>
+    </div>
+  </div>
+</div> --}}

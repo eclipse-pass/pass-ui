@@ -13,6 +13,7 @@ $jhu-grey5: #2C2C33;
 $jhu-blue: #005EB8;
 $jhu-blue1: #418FDE;
 $jhu-blue2: #68ACE5;
+$jhu-blue3: #A7BCD6;
 $jhu-weird-bluegreen: #6399AE;
 
 $color-bg-primary: #002D72;
@@ -126,4 +127,11 @@ th.table-header {
     max-width: 70%;
     margin: 0 0 1em 12px;
   }
+}
+
+// .submission-overview.card > .card-body .row:nth-child(odd) {
+//   background-color: $jhu-grey;
+// }
+.submission-details .row {
+  padding: 6px 0;
 }
