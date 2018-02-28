@@ -2,6 +2,7 @@
 
 # editors
 *~
+.idea
 
 # compiled output
 /dist
@@ -20,6 +21,7 @@ npm-debug.log*
 yarn-error.log
 testem.log
 jsconfig.json
+.DS_Store
 
 # ember-try
 .node_modules.ember-try/
