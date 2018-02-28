@@ -46,12 +46,14 @@
       <div class="card-body">
         {{#if model.grants}}
           {{#each model.grants as |grant|}}
-            <p>
-              <div>
-                <span>Funder:</span> {{grant.funder.name}}
+            <p class="submission-funders">
+              <div class="row">
+                <div class="col-lg-3">Funder:</div>
+                <div class="col-lg">{{grant.funder.name}}</div>
               </div>
-              <div>
-                <span>Award Number:</span> {{grant.awardNumber}}
+              <div class="row">
+                <div class="col-lg-3">Award Number:</div>
+                <div class="col-lg">{{grant.awardNumber}}</div>
               </div>
             </p>
           {{/each}}
@@ -80,19 +82,19 @@
           {{#each model.deposits as |deposit|}}
             <div class="deposit-info-container col-lg-4">
               <div class="row">
-                <div class="col-lg-3">Submitted to:</div>
+                <div class="col-lg-4">Submitted to:</div>
                 <div class="col">{{deposit.repo}}</div>
               </div>
               <div class="row">
-                <div class="col-lg-3">On:</div>
+                <div class="col-lg-4">On:</div>
                 <div class="col">{{date-formatter deposit.updatedDate}}</div>
               </div>
               <div class="row">
-                <div class="col-lg-3">Status:</div>
+                <div class="col-lg-4">Status:</div>
                 <div class="col">{{deposit.status}}</div>
               </div>
               <div class="row">
-                <div class="col-lg-3">Repo ID:</div>
+                <div class="col-lg-4">Repo ID:</div>
                 <div class="col">
                   {{#if deposit.assignedId.uri}}
                     <a href="{{deposit.assignedId.uri}}" target="_blank">
