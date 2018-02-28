@@ -13,12 +13,8 @@ test('it renders', function(assert) {
 
   assert.equal(this.$().text().trim(), '');
 
-  // Template block usage:
-  this.render(hbs`
-    {{#submissions-article-cell}}
-      template block text
-    {{/submissions-article-cell}}
-  `);
+  this.set('record', { "id": "1", "title": "Moo" });
 
-  assert.equal(this.$().text().trim(), 'template block text');
+  this.render(hbs`{{submissions-article-cell record=record}}`);
+  assert.equal(this.$().text().trim(), 'Moo');
 });
