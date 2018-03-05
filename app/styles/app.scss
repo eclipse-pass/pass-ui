@@ -16,10 +16,16 @@ $jhu-blue2: #68ACE5;
 $jhu-blue3: #A7BCD6;
 $jhu-weird-bluegreen: #6399AE;
 
+$jhu-red: #E03C31;
+$jhu-red1: #CF4520;
+$jhu-red2:#E8927C;
+
 $color-bg-primary: #002D72;
 
 $color-text-primary: #fff;
 $color-text-secondary: $jhu-grey2;
+
+$transition-duration: 0.3s;
 
 /* Override things with JHU rules */
 body {
@@ -128,13 +134,24 @@ th.table-header {
     margin: 0 0 1em 12px;
   }
 }
-
-// .submission-overview.card > .card-body .row:nth-child(odd) {
-//   background-color: $jhu-grey;
-// }
 .submission-details .row {
   padding: 6px 0;
 }
 .submission-funders .row {
   padding: 0;
+}
+.btn-remove {
+  // transition-duration: $transition-duration; // Adding this transition introduces some odd (and temporary) column resizing
+  cursor: pointer;
+  padding: 0.65em;
+  border-radius: 5px;
+  margin: 0 2px;
+  color: $jhu-red;
+  &:hover {
+    transition-duration: $transition-duration;
+    border: 1px solid;
+    margin: 0;
+    background-color: $jhu-red;
+    color: white;
+  }
 }

@@ -39,6 +39,19 @@ export default Controller.extend({
             this.get('addedGrants').push(grant);
         },
 
+        /**
+         * Remove a grant from the submission.
+         * 
+         * @param {DS.Model} grant Grant to remove from the submission
+         */
+        removeGrant(grant) {
+            var submission = this.get('model');
+            submission.get('grants').removeObject(grant);
+
+            var index = this.get('addedGrants').indexOf(grant);
+            this.get('addedGrants').splice(index, 1);
+        },
+
         /** Saves the submission and updates all newly-added grants to link back to this submission 
          * 
          * @returns {Promise} The Save promise for saving the submission and dependencies 

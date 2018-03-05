@@ -18,12 +18,12 @@
             Review/Provide information about the grant(s)/award(s) that funded this work. This information will help determine which
             public access policies are applicable to your work.
         </p>
-        {{submission-funding-table grants=model.grants}}
+        {{submission-funding-table grants=model.grants remove=(action "removeGrant")}}
 
         <div class="container">
             <form>
                 <div class="form-group row">
-                    <label for="grant" class="col-sm-2 col-form-label">Add Grant:</label>
+                    <label for="grant" class="col-sm-2 col-form-label">Add Award:</label>
 
                     <div class="col-sm-10">
                         {{find-grant id="grant" class="form-control" onSelect=(action "addGrant")}}
