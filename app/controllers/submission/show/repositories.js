@@ -1,4 +1,5 @@
 import Controller from '@ember/controller';
+import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 
 export default Controller.extend({
@@ -6,6 +7,17 @@ export default Controller.extend({
     addedDeposits: [],
 
     store: service('store'),
+
+    localRepoName: "JHU-IR",
+    depositLocally: true,
+    /**
+     * If local repository is already a part of the submission before this step,
+     * make sure the user can't remove it (computed on init).
+     */
+    forceLocalDeposit: computed(function() {
+        let local = this.get('localRepoName');
+        return this.get('model').get('deposits').filter(d => d.get('repo') === local).length > 0;
+    }),
 
     actions: {
 
@@ -48,6 +60,10 @@ export default Controller.extend({
             this.get('addedDeposits').push(deposit);
         },
 
+        selectLocalDeposit() {
+            this.set('depositLocally', !this.get('depositLocally'));
+        },
+
         /** Determines if the given repo is among the deposits.
          * 
          * @param {string} repo Repository name.
@@ -67,6 +83,9 @@ export default Controller.extend({
          * @returns {Promise} Save promise for the submission and deposits
          */
         saveAll() {
+            if (this.get('localDepositChecked')) {
+                this.actions.addRepo(this.get('localRepoName'));
+            }
             var deposits = this.get('addedDeposits');
             this.set('addedDeposits', []);
 
