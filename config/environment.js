@@ -54,5 +54,28 @@ module.exports = function(environment) {
     ENV.locationType = 'hash';
   }
 
+  ENV.fedora = {
+    base: 'http://localhost:8080/rest/pass',
+    context: 'http://localhost/pass.jsonld',
+    username: 'admin',
+    password: 'admin'
+  }
+
+  if (process.env.FEDORA_ADAPTER_BASE) {
+    ENV.fedora.base = process.env.FEDORA_ADAPTER_BASE;
+  }
+
+  if (process.env.FEDORA_ADAPTER_CONTEXT) {
+    ENV.fedora.context = process.env.FEDORA_ADAPTER_CONTEXT;
+  }
+
+  if (process.env.FEDORA_ADAPTER_USER_NAME) {
+    ENV.fedora.username = process.env.FEDORA_ADAPTER_USER_NAME;
+  }
+
+  if (process.env.FEDORA_ADAPTER_PASSWORD) {
+    ENV.fedora.password = process.env.FEDORA_ADAPTER_PASSWORD;
+  }
+
   return ENV;
 };

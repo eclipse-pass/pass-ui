@@ -1,5 +1,6 @@
-import DS from 'ember-data';
+import ENV from 'pass-ember/config/environment';
+import FedoraJsonLdAdapter from './fedora-jsonld';
 
-export default DS.JSONAPIAdapter.extend({
-    namespace: 'api'
+export default FedoraJsonLdAdapter.extend({
+    baseURI: ENV.fedora.base
 });
