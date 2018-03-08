@@ -42,6 +42,8 @@ export default Service.extend({
         return users;
       }
     }).then(users => {
+      console.log('found users ' + users.get('length'));
+
       let match = users.find(user => user.get('username') === username);
 
       if (match) {
@@ -676,9 +678,7 @@ export default Service.extend({
       journalB3.set('publisher', publisherB1);
       publisherB1.get('journals').pushObject(journalB3);
 
-      return RSVP.all(objects.map(o => o.save())).then(() => {
-        return this.controllerFor('application').get('session').login('agudzun');
-      })
+      return RSVP.all(objects.map(o => o.save()));
     });
   }
 });
