@@ -57,6 +57,7 @@ module.exports = function(environment) {
   ENV.fedora = {
     base: 'http://localhost:8080/rest/pass',
     context: 'http://localhost/pass.jsonld',
+    data: 'http://example.org/pass/',
     username: 'admin',
     password: 'admin'
   }
