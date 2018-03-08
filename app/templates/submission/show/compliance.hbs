@@ -15,20 +15,20 @@
              result in compliance.  This is due to a lack of a policy object in the
              model.  -->
         <div class="container">
-        {{#each (value-of (action "getPolicies")) as |repo|}}
-            {{#if (eq "PMC" repo)}}
-                {{policy-compliance-nih submission=model register=(action "registerDeposit")}}
-            {{/if}}
-
-            {{#if (eq "NSF-PAR" repo)}}
-                {{policy-compliance-nsf submission=model register=(action "registerDeposit")}}
-            {{/if}}
-
-            {{#if (eq "DOE-PAGES" repo)}}
-                {{policy-compliance-doe submission=model register=(action "registerDeposit")}}
-            {{/if}}
-
-        {{/each}}
+            {{#each (value-of (action "getPolicies")) as |repo|}}
+                {{#if (eq "JHU-IR" repo)}}
+                    {{policy-compliance-jhu submission=model register=(action "registerDeposit")}}
+                {{/if}}
+                {{#if (eq "PMC" repo)}}
+                    {{policy-compliance-nih submission=model register=(action "registerDeposit")}}
+                {{/if}}
+                {{#if (eq "NSF-PAR" repo)}}
+                    {{policy-compliance-nsf submission=model register=(action "registerDeposit")}}
+                {{/if}}
+                {{#if (eq "DOE-PAGES" repo)}}
+                    {{policy-compliance-doe submission=model register=(action "registerDeposit")}}
+                {{/if}}
+            {{/each}}
         </div>
 
     {{/workflow-card}} 
