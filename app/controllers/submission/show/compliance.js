@@ -49,6 +49,10 @@ export default Controller.extend({
 
         /** Generate the list of policies implied by the awards that funded this submission.
          * 
+         * For now, all submissions that go throught this system must comply with the JHU
+         * policy, so this policy is always added to the list of policies returned by 
+         * this function.
+         * 
          * TODO It actually returns a list of _repository names_, which is easier to deal
          * with under time constraints for producing the 12/17 demo.  In reality, policy
          * should probably be modelled as an object.
@@ -56,13 +60,12 @@ export default Controller.extend({
          * @returns {Array<string>}
          */
         getPolicies() {
-            return this.get('model')
+            let repos = this.get('model')
                 .get('grants')
                 .map(grant => grant.get('funder'))
-                .map(funder => funder.get('repo'))
-                .filter((e, i, arr) => {
-                    return i === arr.indexOf(e)
-                });
+                .map(funder => funder.get('repo'));
+            repos.push("JHU-IR");   // Hard code JScholarship in for now
+            return repos;
         },
 
         /** Register a deposit in order to comply with a policy 
