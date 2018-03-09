@@ -5,6 +5,7 @@
         back=(route-action "transitionTo" "submission.show.compliance" model)
         cancel=(action "rollback")
         continue=(action (queue
+            (action "maybeDepositLocally")
             (route-action "transitionTo" "submission.show.metadata" model)
             (action "saveWorkflow" model target=group)
             (action "saveAll")
@@ -15,7 +16,7 @@
                 to deposit your manuscript/article into:
             </p>
             <ul class="list-group">
-            {{#each model.deposits as |deposit|}}
+            {{#each nonLocalRepos as |deposit|}}
                 <li class="list-group-item d-flex justify-content-between align-items-center my-1">
                     {{repo-name deposit.repo}}
                     <span class="badge badge-primary badge-pill">{{deposit.status}}</span>
@@ -32,7 +33,6 @@
                     <li class="list-group-item d-flex align-items-center my-1">
                         {{input type="checkbox" id="local-deposit-checkbox" name=localRepoName 
                                 checked=depositLocally
-                                disabled=forceLocalDeposit
                                 change=(action "selectLocalDeposit")}}
                         <label for="local-deposit-checkbox" class="mb-0 ml-2">{{repo-name localRepoName}}</label>
                     </li>

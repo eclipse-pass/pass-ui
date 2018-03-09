@@ -10,13 +10,10 @@ export default Controller.extend({
 
     localRepoName: "JHU-IR",
     depositLocally: true,
-    /**
-     * If local repository is already a part of the submission before this step,
-     * make sure the user can't remove it (computed on init).
-     */
-    forceLocalDeposit: computed(function() {
+
+    nonLocalRepos: computed(function() {
         let local = this.get('localRepoName');
-        return this.get('model').get('deposits').filter(d => d.get('repo') === local).length > 0;
+        return this.get('model').get('deposits').filter(d => d.get('repo') !== local);
     }),
 
     actions: {
@@ -40,6 +37,22 @@ export default Controller.extend({
                 var deposit = addedDeposits.pop();
                 linkedDeposits.removeObject(deposit);
                 deposit.rollbackAttributes();
+            }
+        },
+
+        maybeDepositLocally() {
+            let localName = this.get('localRepoName');
+            let alreadyDepositedLocally = this.get('model').get('deposits')
+                    .filter(d => d.get('repo') === localName).length > 0;
+            if (!alreadyDepositedLocally && this.get('depositLocally')) {
+                let submission = this.get('model');
+                let deposit = submission.get('store').createRecord('deposit', {
+                    repo: this.get('localRepoName'),
+                    status: 'new',
+                    requested: true
+                });
+                submission.get('deposits').pushObject(deposit);
+                this.get('addedDeposits').push(deposit);
             }
         },
 
@@ -83,9 +96,6 @@ export default Controller.extend({
          * @returns {Promise} Save promise for the submission and deposits
          */
         saveAll() {
-            if (this.get('localDepositChecked')) {
-                this.actions.addRepo(this.get('localRepoName'));
-            }
             var deposits = this.get('addedDeposits');
             this.set('addedDeposits', []);
 
