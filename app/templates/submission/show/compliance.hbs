@@ -14,7 +14,7 @@
         <!-- Yes, "getPolicies" returns repos ... repos in which deposit will 
              result in compliance.  This is due to a lack of a policy object in the
              model.  -->
-        <div class="container">
+        <div class="container policies-list">
             {{#each (value-of (action "getPolicies")) as |repo|}}
                 {{#if (eq "JHU-IR" repo)}}
                     {{policy-compliance-jhu submission=model register=(action "registerDeposit")}}
