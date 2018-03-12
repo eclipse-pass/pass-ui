@@ -19,8 +19,7 @@ export default Controller.extend({
             while (depositGenerators.length) {
                 let deposit = (depositGenerators.pop())();
                 // Don't add the deposit if it goes to a repository that is already present
-                let repoAlreadyHere = newDeposits.map(d => d.repo).includes(deposit.repo);
-                if (deposit && !repoAlreadyHere) {
+                if (deposit) {
                     newDeposits.push(deposit);
                 }
             }
@@ -45,7 +44,7 @@ export default Controller.extend({
                     return new Promise(() => newDeposit.rollbackAttributes());
                 }
             })).then(() => submission.save())
-                .then(() => Promise.all(toRemoveFromLinked.map(deposit => deposit.destroyRecord())));
+            .then(() => Promise.all(toRemoveFromLinked.map(deposit => deposit.destroyRecord())));
 
         },
 
