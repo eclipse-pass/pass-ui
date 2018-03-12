@@ -42,8 +42,6 @@ export default Service.extend({
         return users;
       }
     }).then(users => {
-      console.log('found users ' + users.get('length'));
-
       let match = users.find(user => user.get('username') === username);
 
       if (match) {
