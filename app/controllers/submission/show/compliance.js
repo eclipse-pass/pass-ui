@@ -18,7 +18,9 @@ export default Controller.extend({
 
             while (depositGenerators.length) {
                 let deposit = (depositGenerators.pop())();
-                if (deposit) {
+                // Don't add the deposit if it goes to a repository that is already present
+                let repoAlreadyHere = newDeposits.map(d => d.repo).includes(deposit.repo);
+                if (deposit && !repoAlreadyHere) {
                     newDeposits.push(deposit);
                 }
             }
@@ -65,6 +67,8 @@ export default Controller.extend({
                 .map(grant => grant.get('funder'))
                 .map(funder => funder.get('repo'));
             repos.push("JHU-IR");   // Hard code JScholarship in for now
+            // Remove duplicate entries, in case multiple awards go to the same repo
+            repos = repos.filter((el, i, arr) => arr.indexOf(el) == i);
             return repos;
         },
 
