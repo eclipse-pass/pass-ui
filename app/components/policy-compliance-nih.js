@@ -44,14 +44,10 @@ export default Component.extend({
         var self = this;
         register(function () {
             // A never needs deposit, C, D does.  B depends on user input.
-
-            if (pmcMethod === 'A') {
-                self.set('needsDeposit', false);
-            } else if (!pmcMethod || pmcMethod === 'C' || pmcMethod === 'D') {
-                self.set('needsDeposit', true);
-            }
-
-            if (self.get('needsDeposit')) {
+            let mustDeposit = !pmcMethod || pmcMethod === 'C' || pmcMethod === 'D';
+            let answerFromUser = pmcMethod === 'B' && self.get('needsDeposit');
+            
+            if (mustDeposit || answerFromUser) {
                 return self.get('store').createRecord('deposit', {
                     repo: 'PMC',
                     status: 'new'

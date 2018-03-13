@@ -1,5 +1,4 @@
 import Controller from '@ember/controller';
-import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 
 export default Controller.extend({
@@ -10,11 +9,6 @@ export default Controller.extend({
 
     localRepoName: "JHU-IR",
     depositLocally: true,
-
-    nonLocalRepos: computed(function() {
-        let local = this.get('localRepoName');
-        return this.get('model').get('deposits').filter(d => d.get('repo') !== local);
-    }),
 
     actions: {
 
@@ -42,9 +36,11 @@ export default Controller.extend({
 
         maybeDepositLocally() {
             let localName = this.get('localRepoName');
-            let alreadyDepositedLocally = this.get('model').get('deposits')
-                    .filter(d => d.get('repo') === localName).length > 0;
+            let currentLocalDeps = this.get('model').get('deposits').filter(d => d.get('repo') === localName);
+            let alreadyDepositedLocally = currentLocalDeps.length > 0;
+
             if (!alreadyDepositedLocally && this.get('depositLocally')) {
+                // No local deposit and we want to add it
                 let submission = this.get('model');
                 let deposit = submission.get('store').createRecord('deposit', {
                     repo: this.get('localRepoName'),
@@ -53,6 +49,11 @@ export default Controller.extend({
                 });
                 submission.get('deposits').pushObject(deposit);
                 this.get('addedDeposits').push(deposit);
+            } else if (alreadyDepositedLocally && !this.get('depositLocally')) {
+                // Already have local deposit and we want to remove it
+                return Promise.all(
+                    currentLocalDeps.map(depositToRemove => depositToRemove.destroyRecord())
+                );
             }
         },
 
