@@ -5,7 +5,7 @@ export default Controller.extend({
     depositGenerators: [],
 
     actions: {
-
+        
         /** Saves the submission deposits that will establish compliance 
          * 
          * @returns {Promise} Save promise for the submission and deposits.
@@ -61,6 +61,10 @@ export default Controller.extend({
          * @returns {Array<string>}
          */
         getPolicies() {
+            // TODO bad work-around that sort of clears 'depositGenerators' every time
+            // this step is rendered, so that it will always contain only information
+            // from the current render.
+            this.set('depositGenerators', []);
             let repos = this.get('model')
                 .get('grants')
                 .map(grant => grant.get('funder'))
