@@ -55,7 +55,7 @@ module.exports = function(environment) {
   }
 
   ENV.fedora = {
-    base: 'http://localhost:8080/rest/pass',
+    base: 'http://localhost:8080/fcrepo/rest',
     context: 'https://oa-pass.github.io/pass-data-model/src/main/resources/context.jsonld',
     data: 'http://example.org/pass/',
     username: 'admin',
