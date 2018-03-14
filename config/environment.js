@@ -56,10 +56,10 @@ module.exports = function(environment) {
 
   ENV.fedora = {
     base: 'http://localhost:8080/rest/pass',
-    context: 'http://localhost/pass.jsonld',
+    context: 'https://oa-pass.github.io/pass-data-model/src/main/resources/context.jsonld',
     data: 'http://example.org/pass/',
     username: 'admin',
-    password: 'admin'
+    password: 'moo'
   }
 
   if (process.env.FEDORA_ADAPTER_BASE) {
