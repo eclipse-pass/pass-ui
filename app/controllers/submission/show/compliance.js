@@ -5,7 +5,7 @@ export default Controller.extend({
     depositGenerators: [],
 
     actions: {
-
+        
         /** Saves the submission deposits that will establish compliance 
          * 
          * @returns {Promise} Save promise for the submission and deposits.
@@ -18,6 +18,7 @@ export default Controller.extend({
 
             while (depositGenerators.length) {
                 let deposit = (depositGenerators.pop())();
+                // Don't add the deposit if it goes to a repository that is already present
                 if (deposit) {
                     newDeposits.push(deposit);
                 }
@@ -43,11 +44,15 @@ export default Controller.extend({
                     return new Promise(() => newDeposit.rollbackAttributes());
                 }
             })).then(() => submission.save())
-                .then(() => Promise.all(toRemoveFromLinked.map(deposit => deposit.destroyRecord())));
+            .then(() => Promise.all(toRemoveFromLinked.map(deposit => deposit.destroyRecord())));
 
         },
 
         /** Generate the list of policies implied by the awards that funded this submission.
+         * 
+         * For now, all submissions that go throught this system must comply with the JHU
+         * policy, so this policy is always added to the list of policies returned by 
+         * this function.
          * 
          * TODO It actually returns a list of _repository names_, which is easier to deal
          * with under time constraints for producing the 12/17 demo.  In reality, policy
@@ -56,13 +61,18 @@ export default Controller.extend({
          * @returns {Array<string>}
          */
         getPolicies() {
-            return this.get('model')
+            // TODO bad work-around that sort of clears 'depositGenerators' every time
+            // this step is rendered, so that it will always contain only information
+            // from the current render.
+            this.set('depositGenerators', []);
+            let repos = this.get('model')
                 .get('grants')
                 .map(grant => grant.get('funder'))
-                .map(funder => funder.get('repo'))
-                .filter((e, i, arr) => {
-                    return i === arr.indexOf(e)
-                });
+                .map(funder => funder.get('repo'));
+            repos.push("JHU-IR");   // Hard code JScholarship in for now
+            // Remove duplicate entries, in case multiple awards go to the same repo
+            repos = repos.filter((el, i, arr) => arr.indexOf(el) == i);
+            return repos;
         },
 
         /** Register a deposit in order to comply with a policy 
