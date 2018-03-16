@@ -3948,7 +3948,8 @@ tbody.collapse.show {
   margin-right: 1rem;
   font-size: 1.09375rem;
   line-height: inherit;
-  white-space: nowrap; }
+  white-space: nowrap;
+  }
   .navbar-brand:hover, .navbar-brand:focus {
     text-decoration: none; }
 
@@ -10369,7 +10370,7 @@ base-chart.chart {
     height: 55px;
     padding: 0.5rem 1rem;
     margin-right: 0;
-    background-color: #fff;
+    background-color: transparent;
     background-image: url("../img/logo.png");
     background-repeat: no-repeat;
     background-position: center center;
@@ -12367,18 +12368,19 @@ app-root {
 
 @media (max-width: 991.98px) {
   .app-header.navbar {
-    position: fixed !important;
     z-index: 1020;
     width: 100%;
     text-align: center;
     background-color: #fff;
-    border-bottom: 1px solid #a4b7c1; }
+    border-bottom: 1px solid #a4b7c1;
+    }
     .app-header.navbar .navbar-toggler {
       color: #536c79; }
     .app-header.navbar .navbar-brand {
       position: absolute;
       left: 50%;
-      margin-left: -77.5px; }
+      margin-left: -155px;
+      top: -25px;}
   .app-body {
     margin-top: 55px; }
   .breadcrumb-fixed .main:nth-child(2) .breadcrumb {
