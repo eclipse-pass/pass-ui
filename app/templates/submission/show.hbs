@@ -1,10 +1,12 @@
-<h2>Submission details</h2>
 
-<div class="container-fluid">
-    <div class="row">
-        {{submission-nav submission=model class="col-3 bg-faded sidebar border border-left-0 border-top-0 border-bottom-0 border-primary"}}
-        <main class="col-9">
-            {{outlet}}
-        </main>
-    </div>
+<div class="container">
+  <div class="row justify-content-center mb-2">
+    <h2 class="font-weight-light col-12">Submission details</h2>
+  </div>
+  <div class="row justify-content-center">
+      {{submission-nav submission=model class="col-3 bg-faded border border-left-0 border-top-0 border-bottom-0 border-primary"}}
+      <main class="col-9">
+          {{outlet}}
+      </main>
+  </div>`
 </div>
