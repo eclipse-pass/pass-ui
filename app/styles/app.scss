@@ -160,7 +160,28 @@ th.table-header {
 .line-height-45 {
   line-height: 45px;
 }
-
-table tr {
-  border: none
+.unset-width {
+  width: unset!important;
+}
+.custome-color {
+  color:white!important;
+  border:none!important;
+}
+.transform-text {
+  -ms-transform: rotate(90deg); /* IE 9 */
+  -webkit-transform: rotate(90deg); /* Safari 3-8 */
+  transform: rotate(90deg);
+}
+.table-bordered {
+    border-bottom: 1px solid #a4b7c1!important;
+    border-left: none!important;
+    border-right: none!important;
+}
+th {
+  border-left: none!important;
+  border-right: none!important;  
+}
+td {
+  border: none!important;
+  border-bottom: 1px solid #a4b7c1!important;
 }
