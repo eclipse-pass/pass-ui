@@ -1,18 +1,20 @@
-<h1>Create a new Submission</h1>
+<div class="row justify-content-center mb-2">
+  <h2 class="font-weight-light col-12">Create a new Submission</h2>
+</div>
 {{#workflow-group name="overview" as |group|}}
         {{#workflow-card step="doi" group=group
-            cancel=(action (queue 
-                (action (invoke "rollbackAttributes" model)) 
+            cancel=(action (queue
+                (action (invoke "rollbackAttributes" model))
                 (route-action "back")
-            )) 
+            ))
             next=(action "advance" target=group)}}
           {{submission-overview-doi submission=model}}
         {{/workflow-card}}
-      
+
         {{#workflow-card step="details" group=group
             back=(action "back" target=group)
-            cancel=(action (queue 
-                (action (invoke "rollbackAttributes" model)) 
+            cancel=(action (queue
+                (action (invoke "rollbackAttributes" model))
                 (route-action "back")
             ))
             save=(action (queue

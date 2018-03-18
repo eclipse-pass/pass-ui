@@ -1,30 +1,30 @@
-<h2>Metadata</h2>
+<h2 class="font-weight-light ml-3">Metadata</h2>
 {{#workflow-group name="metadata" workflow=(workflow-for model "metadata")
         first=(route-action "transitionTo" "submission.show.repositories" model)
         last=(route-action "transitionTo" "submission.show.attachments" model)
         stepFilter=(action "filterWorkflowStep")
-        as |group|}} 
+        as |group|}}
     {{#workflow-card step="common" group=group
             back=(action "backActionFor" "common" target=group)
             next=(action "nextActionFor" "common" target=group)}}
         {{submission-metadata-common}}
-    {{/workflow-card}} 
+    {{/workflow-card}}
 
-    {{#workflow-card step="PMC" group=group 
+    {{#workflow-card step="PMC" group=group
             back=(action "backActionFor" "PMC" target=group)
             next=(action "nextActionFor" "PMC" target=group)}}
         {{submission-metadata-nihms}}
-    {{/workflow-card}} 
+    {{/workflow-card}}
 
     {{#workflow-card step="DOE-PAGES" group=group
             back=(action "backActionFor" "DOE-PAGES" target=group)
             next=(action "nextActionFor" "DOE-PAGES" target=group)}}
         {{submission-metadata-pages}}
-    {{/workflow-card}} 
+    {{/workflow-card}}
 
-    {{#workflow-card step="NSF-PAR" group=group 
+    {{#workflow-card step="NSF-PAR" group=group
             back=(action "backActionFor" "NSF-PAR" target=group)
             next=(action "nextActionFor" "NSF-PAR" target=group)}}
         {{submission-metadata-par}}
-    {{/workflow-card}} 
+    {{/workflow-card}}
 {{/workflow-group}}

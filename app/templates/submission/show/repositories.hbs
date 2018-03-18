@@ -1,4 +1,4 @@
-<h2>Repositories</h2>
+<h2 class="font-weight-light ml-3">Repositories</h2>
 
 {{#workflow-group name="repositories" workflow=(workflow-for model "repositories") as |group|}}
     {{#workflow-card step="repos" group=group
@@ -10,9 +10,9 @@
             (action "maybeDepositLocally")
             (action "saveAll")
         ))}}
-            <h4 class="mt-3">Required</h4>
+            <h4 class="mt-3 font-weight-light">Required</h4>
             <p>
-                Based on the information about the funders and journal you have provided, you are required 
+                Based on the information about the funders and journal you have provided, you are required
                 to deposit your manuscript/article into:
             </p>
             <ul class="list-group">
@@ -24,15 +24,15 @@
                 {{/if}}
             {{/each}}
             </ul>
-            <h4 class="mt-3">Local</h4>
+            <h4 class="mt-3 font-weight-light">Local</h4>
             <p>
-                If you wish to deposit your manuscript/article into other repository(-ies), please select from 
+                If you wish to deposit your manuscript/article into other repository(-ies), please select from
                 the following list of supported repositories:
             </p>
             <div id="local-deposit-list">
                 <ul class="list-group">
                     <li class="list-group-item d-flex align-items-center my-1">
-                        {{input type="checkbox" id="local-deposit-checkbox" name=localRepoName 
+                        {{input type="checkbox" id="local-deposit-checkbox" name=localRepoName
                                 checked=depositLocally
                                 change=(action "selectLocalDeposit")}}
                         <label for="local-deposit-checkbox" class="mb-0 ml-2">{{repo-name localRepoName}}</label>
