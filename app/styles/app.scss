@@ -185,3 +185,13 @@ td {
   border: none!important;
   border-bottom: 1px solid #a4b7c1!important;
 }
+
+.site {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.site-content {
+  flex: 1;
+}
