@@ -1,6 +1,9 @@
 <div class="row justify-content-center">
   <div class="col-sm-12">
     <h1 class="font-weight-light">Submissions:</h1>
+    {{#if session.isPI}}
+      {{#link-to "submission.new" class="btn btn-primary btn-small pull-right"}}Create new Submission{{/link-to}}
+    {{/if}}
     {{models-table
       data=model
       columns=columns
@@ -11,9 +14,6 @@
       multipleColumnsSorting=false
       authorSelected='authorclick'
     }}
-    {{#if session.isPI}}
-      {{#link-to "submission.new" class="btn btn-primary btn-small"}}Create new Submission{{/link-to}}
-    {{/if}}
   </div>
 </div>
 {{#message-dialog show=messageShow to=messageTo subject=messageSubject message=messageText}}
