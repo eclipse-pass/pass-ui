@@ -48,11 +48,10 @@ module.exports = function(environment) {
     // ENV.rootURL = '/pass/';
   }
 
-  // Optionally, make app work without web server
-  if (process.env.PORTABLE) {
-    ENV.rootURL = '';
-    ENV.locationType = 'hash';
-  }
+  // Disable mirage entirely.
+  ENV['ember-cli-mirage'] = {
+    enabled: false
+  };
 
   ENV.fedora = {
     base: 'http://localhost:8080/fcrepo/rest',
