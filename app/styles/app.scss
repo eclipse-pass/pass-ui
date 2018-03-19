@@ -1,5 +1,5 @@
 
-@import "ember-cli-bootstrap-4/bootstrap";
+// @import "ember-cli-bootstrap-4/bootstrap";
 @import "ember-modal-dialog/ember-modal-structure";
 @import "ember-modal-dialog/ember-modal-appearance";
 @import "ember-power-select";
@@ -13,7 +13,7 @@ $jhu-grey5: #2C2C33;
 $jhu-blue: #005EB8;
 $jhu-blue1: #418FDE;
 $jhu-blue2: #68ACE5;
-$jhu-weird-bluegreen: #6399AE;
+$jhu-weird-bluegreen: #6399AE; //nice
 
 $jhu-red: #E03C31;
 $jhu-red1: #CF4520;
@@ -47,10 +47,7 @@ header {
   .navbar {
     background-color: $color-bg-primary !important;
     padding-top: 0;
-
-    .navbar-text {
       color: $color-text-primary;
-    }
   }
   .navbar-brand {
     img {
@@ -91,17 +88,17 @@ header {
   background-color: $jhu-weird-bluegreen;
   border-collapse: $jhu-weird-bluegreen;
 }
-.btn-primary {
-  background-color: $jhu-blue1;
-  border-color: $jhu-blue1;
-}
-.btn-primary:hover {
-  background-color: $jhu-blue;
-  border-color: $jhu-blue;
-}
-.btn-primary:not([disabled]):not(.disabled):active {
-  box-shadow: 0 0 0.2rem $jhu-blue2;
-}
+// .btn-primary {
+//   background-color: $jhu-blue1;
+//   border-color: $jhu-blue1;
+// }
+// .btn-primary:hover {
+//   background-color: $jhu-blue;
+//   border-color: $jhu-blue;
+// }
+// .btn-primary:not([disabled]):not(.disabled):active {
+//   box-shadow: 0 0 0.2rem $jhu-blue2;
+// }
 
 /* Tables */
 .table-bordered {
@@ -163,7 +160,7 @@ th.table-header {
 .unset-width {
   width: unset!important;
 }
-.custome-color {
+.custom-color {
   color:white!important;
   border:none!important;
 }
@@ -194,4 +191,29 @@ td {
 
 .site-content {
   flex: 1;
+}
+
+.row-eq-height {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+body {
+  font-size: 1em;
+}
+
+.navbar-toggler {
+  width: 100%;
+  float: none;
+  margin-right: 0;
+  border: none;
+}
+
+@media (max-width: 760px) {
+  .navbar .navbar-brand {
+      justify-content: center;
+      margin: auto;
+  }
 }
