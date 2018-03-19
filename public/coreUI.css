@@ -12379,7 +12379,7 @@ app-root {
     .app-header.navbar .navbar-brand {
       position: absolute;
       left: 50%;
-      margin-left: -155px;
+      margin-left: -135px;
       top: -30px;}
   .app-body {
     margin-top: 55px; }
