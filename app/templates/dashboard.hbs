@@ -1,14 +1,18 @@
-
-<div class="row justify-content-center">
+<style>
+.card {
+  height: 100%;
+}
+</style>
+<!-- <div class="row justify-content-center">
   <div class="col-12 text-center">
         <h2 class="font-weight-light">About Public Access, Research Compliance and PASS</h2>
-        <p >
+        <p>
           &lt;Description of the system and what it does&gt;
         </p>
   </div>
-</div>
-<div class='row row-eq-height justify-content-center my-4'>
-  <div class='col-sm-6'>
+</div> -->
+<div class='row row-eq-height'>
+  <div class='col-md-6 mb-4 mt-4'>
     <div class='card'>
       <div class='card-body'>
         <h2 class='card-title font-weight-light'>Manage Publication Submissions</h2>
@@ -17,14 +21,14 @@
           your funding agency or in relation to your institution's policies. You can also review and manage
           deposit status of your submissions into pertinent repositories.
         </p>
-        <div class="row px-4">
+        <div class="text-center">
           {{#link-to 'submissions' class='btn btn-primary mr-auto mt-1'}}View Submissions{{/link-to}}
           {{#link-to 'submission.new' class='btn btn-primary mt-1'}}Add New Submission{{/link-to}}
         </div>
       </div>
     </div>
   </div>
-  <div class='col-sm-6'>
+  <div class='col-md-6 mb-4 mt-4'>
     <div class='card'>
       <div class='card-body'>
         <h2 class='card-title font-weight-light'>Review Grant Compliance</h2>
@@ -33,13 +37,15 @@
           submissions associated with each grant, their public access compliance statuses and perform
           appropriate actions to address compliance issues.
         </p>
-        {{#link-to 'grants' class='btn btn-primary mt-1'}}View All Grants{{/link-to}}
+        <div class="text-center">
+          {{#link-to 'grants' class='btn btn-primary mt-1'}}View All Grants{{/link-to}}
+        </div>
       </div>
     </div>
   </div>
 </div>
 <div class="row justify-content-center">
-  <div class="col-sm-12">
+  <div class="col-md-12">
     <div class="card ">
       <div class="card-body">
         <h2 class="card-title font-weight-light">Notifications</h2>
