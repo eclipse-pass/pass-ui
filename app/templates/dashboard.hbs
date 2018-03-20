@@ -23,7 +23,9 @@
         </p>
         <div class="text-center">
           {{#link-to 'submissions' class='btn btn-primary mr-auto mt-1'}}View Submissions{{/link-to}}
-          {{#link-to 'submission.new' class='btn btn-primary mt-1'}}Add New Submission{{/link-to}}
+          {{#if session.isPI}}
+            {{#link-to "submission.new" class='btn btn-primary mt-1'}}Create new Submission{{/link-to}}
+          {{/if}}
         </div>
       </div>
     </div>
