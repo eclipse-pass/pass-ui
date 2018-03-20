@@ -26,7 +26,7 @@ export default Route.extend({
         secondaryColor:'black',
         tertiaryColor: '#f7f7f2',
         logo: 'https://image.ibb.co/iWgHXx/university_logo_small_vertical_white_no_clear_space_29e2bdee83.png',
-        schema: []
+        repositories: []
     });
 
 
