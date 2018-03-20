@@ -1,4 +1,4 @@
-/*!
+﻿/*!
  * CoreUI - Open Source Bootstrap Admin Template
  * @version v1.0.10
  * @link http://coreui.io
@@ -12379,7 +12379,7 @@ app-root {
     .app-header.navbar .navbar-brand {
       position: absolute;
       left: 50%;
-      margin-left: -135px;
+      margin-left: -155px;
       top: -30px;}
   .app-body {
     margin-top: 55px; }
