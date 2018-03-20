@@ -12,5 +12,5 @@ export default Controller.extend({
       this.get('session').logout();
       this.transitionToRoute('login');
     }
-  }
+  },
 });
