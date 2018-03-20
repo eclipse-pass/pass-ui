@@ -147,7 +147,7 @@ let schema = {
           "type": "text",
           "label": "Last Name",
           "placeholder": "",
-          "fieldClass": "col-4 pull-left"
+          "fieldClass": "col-4 pull-left pr-0"
       },
       "orcid": {
           "type": "text",
@@ -208,7 +208,7 @@ export default Ember.Component.extend({
     //       }
     //     }
     //   }
-    //};
+    // };
 
     $(document).ready(function() {
       console.log($("#myAlpacaForm"))
