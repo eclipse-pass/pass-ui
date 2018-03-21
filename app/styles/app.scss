@@ -236,6 +236,9 @@ body {
 .no-wrap {
   white-space: nowrap;
 }
+.ember-modal-dialog {
+  border-radius: 0px;
+}
 
 @media (max-width: 760px) {
   .navbar .navbar-brand {
