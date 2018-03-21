@@ -226,16 +226,20 @@ body {
  background-size:cover;
 }
 
-@media (max-width: 760px) {
-  .navbar .navbar-brand {
-      justify-content: center;
-      margin: auto;
-  }
-}
-
 .sticky {
   position: fixed;
   top: 0;
   width: 100%;
   z-index: 100;
+}
+
+.no-wrap {
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .navbar .navbar-brand {
+      justify-content: center;
+      margin: auto;
+  }
 }
