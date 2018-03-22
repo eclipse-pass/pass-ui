@@ -20,6 +20,16 @@ export default Route.extend({
 
     let store = this.get('store');
 
+    let jhuInstitution = store.createRecord('institution', {
+        name: 'Johns Hopkins University',
+        primaryColor: "#002D72",
+        secondaryColor:'black',
+        tertiaryColor: '#f7f7f2',
+        logo: 'https://image.ibb.co/iWgHXx/university_logo_small_vertical_white_no_clear_space_29e2bdee83.png',
+        schema: []
+    });
+
+
     let user1 = store.createRecord('user', {
       username: 'admin',
       role: 'admin'

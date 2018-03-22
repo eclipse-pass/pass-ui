@@ -7,13 +7,13 @@
     {{#workflow-card step="common" group=group
             back=(action "backActionFor" "common" target=group)
             next=(action "nextActionFor" "common" target=group)}}
-        {{submission-metadata-common}}
+        {{metadata-form schema=schema.common title="Common" description="Please provide additional information about your article/manuscript below:"}}
     {{/workflow-card}}
 
     {{#workflow-card step="PMC" group=group
             back=(action "backActionFor" "PMC" target=group)
             next=(action "nextActionFor" "PMC" target=group)}}
-        {{submission-metadata-nihms}}
+          {{metadata-form schema=schema.nih title="NIH Manuscript Submission System (NIHMS)" description="The following metadata fields will be part of the NIHMS submission."}}
     {{/workflow-card}}
 
     {{#workflow-card step="DOE-PAGES" group=group

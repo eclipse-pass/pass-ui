@@ -3,14 +3,6 @@
   height: 100%;
 }
 </style>
-<!-- <div class="row justify-content-center">
-  <div class="col-12 text-center">
-        <h2 class="font-weight-light">About Public Access, Research Compliance and PASS</h2>
-        <p>
-          &lt;Description of the system and what it does&gt;
-        </p>
-  </div>
-</div> -->
 <div class='row row-eq-height'>
   <div class='col-md-6 mb-4 mt-4'>
     <div class='card'>
@@ -23,7 +15,9 @@
         </p>
         <div class="text-center">
           {{#link-to 'submissions' class='btn btn-primary mr-auto mt-1'}}View Submissions{{/link-to}}
-          {{#link-to 'submission.new' class='btn btn-primary mt-1'}}Add New Submission{{/link-to}}
+          {{#if session.isPI}}
+            {{#link-to "submission.new" class='btn btn-primary mt-1'}}Create New Submission{{/link-to}}
+          {{/if}}
         </div>
       </div>
     </div>
