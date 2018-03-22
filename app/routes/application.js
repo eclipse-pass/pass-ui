@@ -26,7 +26,7 @@ export default Route.extend({
     });
 
     let user2 = store.createRecord('user', {
-      username: 'agudzun',
+      username: 'gchoud2',
       role: 'pi'
     });
 
@@ -124,8 +124,8 @@ export default Route.extend({
     });
 
     let person2 = store.createRecord('person', {
-        name: 'Anne Gudzune',
-        email: 'anne@example.com'
+        name: 'Sayeed Choudhury',
+        email: 'schoud@example.com'
     });
 
     let person3 = store.createRecord('person', {
@@ -637,7 +637,7 @@ export default Route.extend({
       publisherB1.get('journals').pushObject(journalB3);
 
       return RSVP.all(objects.map(o => o.save())).then(() => {
-        return this.controllerFor('application').get('session').login('agudzun');
+        return this.controllerFor('application').get('session').login('gchoud2');
       })
     });
   }
