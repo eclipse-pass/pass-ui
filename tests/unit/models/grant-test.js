@@ -2,7 +2,7 @@ import { moduleForModel, test } from 'ember-qunit';
 
 moduleForModel('grant', 'Unit | Model | grant', {
   // Specify the other units that are required for this test.
-  needs: []
+  needs: ['model:funder', 'model:identifier', 'model:user', 'model:person', 'model:submission']
 });
 
 test('it exists', function(assert) {

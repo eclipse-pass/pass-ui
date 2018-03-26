@@ -13,7 +13,8 @@ $jhu-grey5: #2C2C33;
 $jhu-blue: #005EB8;
 $jhu-blue1: #418FDE;
 $jhu-blue2: #68ACE5;
-$jhu-weird-bluegreen: #6399AE; //nice
+$jhu-blue3: #A7BCD6;
+$jhu-weird-bluegreen: #6399AE;
 
 $jhu-red: #E03C31;
 $jhu-red1: #CF4520;
@@ -129,6 +130,12 @@ th.table-header {
     max-width: 70%;
     margin: 0 0 1em 12px;
   }
+}
+.submission-details .row {
+  padding: 6px 0;
+}
+.submission-funders .row {
+  padding: 0;
 }
 .btn-remove {
   // transition-duration: $transition-duration; // Adding this transition introduces some odd (and temporary) column resizing

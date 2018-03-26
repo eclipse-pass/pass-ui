@@ -32,7 +32,7 @@ export default Controller.extend({
   }),
 
   piColumns: [
-    { propertyName: 'title', title: 'Article' },
+    { propertyName: 'title', title: 'Article', component: 'submissions-article-cell' },
     { title: 'Award Number (Funder)', component: 'submissions-award-cell' },
     { propertyName: 'author.name', title: 'Corr. Author', component: 'submissions-author-cell' },
     { title: 'Repo', component: 'submissions-repo-cell' },
@@ -44,7 +44,7 @@ export default Controller.extend({
   ],
 
   adminColumns: [
-    { propertyName: 'title', title: 'Article' },
+    { propertyName: 'title', title: 'Article', component: 'submissions-article-cell' },
     { title: 'Award Number (Funder)', component: 'submissions-award-cell' },
     { propertyName: 'author.name', title: 'Corr. Author'},
     { title: 'Repo', component: 'submissions-repo-cell' },

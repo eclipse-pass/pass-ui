@@ -48,10 +48,33 @@ module.exports = function(environment) {
     // ENV.rootURL = '/pass/';
   }
 
-  // Optionally, make app work without web server
-  if (process.env.PORTABLE) {
-    ENV.rootURL = '';
-    ENV.locationType = 'hash';
+  // Disable mirage entirely.
+  ENV['ember-cli-mirage'] = {
+    enabled: false
+  };
+
+  ENV.fedora = {
+    base: 'http://localhost:8080/fcrepo/rest',
+    context: 'https://oa-pass.github.io/pass-data-model/src/main/resources/context.jsonld',
+    data: 'http://example.org/pass/',
+    username: 'admin',
+    password: 'moo'
+  }
+
+  if (process.env.FEDORA_ADAPTER_BASE) {
+    ENV.fedora.base = process.env.FEDORA_ADAPTER_BASE;
+  }
+
+  if (process.env.FEDORA_ADAPTER_CONTEXT) {
+    ENV.fedora.context = process.env.FEDORA_ADAPTER_CONTEXT;
+  }
+
+  if (process.env.FEDORA_ADAPTER_USER_NAME) {
+    ENV.fedora.username = process.env.FEDORA_ADAPTER_USER_NAME;
+  }
+
+  if (process.env.FEDORA_ADAPTER_PASSWORD) {
+    ENV.fedora.password = process.env.FEDORA_ADAPTER_PASSWORD;
   }
 
   return ENV;

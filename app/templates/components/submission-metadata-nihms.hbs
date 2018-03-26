@@ -1,0 +1,219 @@
+<hr>
+<h3>NIH Manuscript Submission System (NIHMS)</h3>
+<p>
+    The following metadata fields will be part of the NIHMS submission.
+</p>
+<div class="container">
+    <form>
+        <div class="form-group row">
+            <label for="nlmta" class="col-sm-5 col-form-label">NLM TA</label>
+
+            <div class="col-sm-7">
+                <input type="text" id="nlmta" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="pubpdf" class="col-sm-5 col-form-label">Publisher's PDF being submitted</label>
+            <div class="col-sm-3">
+              <select class="form-control" id="pubpdf">
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="pubvsnihms" class="col-sm-5 col-form-label">Display publisher's PDF instead of NIHMS-generated PDF</label>
+            <div class="col-sm-3">
+              <select class="form-control" id="pubvsnihms">
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="embargo" class="col-sm-5 col-form-label">Embargo Period (# of months)</label>
+            <div class="col-sm-3">
+              <select class="form-control" id="embargo">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+                <option>6</option>
+                <option>7</option>
+                <option>8</option>
+                <option>9</option>
+                <option>10</option>
+                <option>11</option>
+                <option>12</option>
+              </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="articleloc" class="col-sm-5 col-form-label">Article location</label>
+
+            <div class="col-sm-2">
+                <div class="form-group">
+                  <label for="elocation">E-Location ID</label>
+                  <input id="elocation" type="text" class="form-control"/>
+                </div>
+            </div>
+            <div class="col-sm-1">
+                <div class="form-group">
+                  <label for="space"> </label>
+                  <label for="or">OR</label>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="form-group">
+                  <label for="firstpage">First page</label>
+                  <input id="firstpage" type="text" class="form-control"/>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="form-group">
+                  <label for="lastpage">Last page</label>
+                  <input id="lastpage" type="text" class="form-control"/>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="selfuri" class="col-sm-5 col-form-label">Self - URI</label>
+
+            <div class="col-sm-7">
+                <input type="text" id="selfuri" class="form-control" />
+            </div>
+        </div>
+        <hr>
+        <div class="form-group row">
+            <label for="articleids" class="col-sm-5 col-form-label">Article IDs</label>
+            <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="idtype">ID Type</label>
+                  <select class="form-control" id="idtype">
+                    <option>Publisher ID</option>
+                    <option>Institution ID</option>
+                  </select>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                  <label for="idstring">ID String</label>
+                  <input type='text' class="form-control" id="idstring"/>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-9 col-form-label"></label>
+          <div class="col-sm-3">
+            <button type="button" class="btn btn-secondary btn-sm float-right">
+              Add ID</button>
+          </div>
+        </div>
+        <hr>
+        <div class="form-group row">
+            <label for="permission" class="col-sm-2 col-form-label">Permissions</label>
+            <div class="col-sm-5">
+                <div class="form-group">
+                  <label for="copyright">Copyright statement</label>
+                  <textarea class="form-control" rows="4" id="copyright"/>
+                </div>
+            </div>
+            <div class="col-sm-5">
+                <div class="form-group">
+                    <label for="licensetype">License type</label>
+                    <input id="licensetype" type="text" class="form-control"/>
+                    <label for="licenselink">License link</label>
+                    <input id="licenselink" type="text" class="form-control"/>
+
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="form-group row">
+            <label for="PI" class="col-sm-2 col-form-label">Principal Investigator(s)</label>
+
+            <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="first">First Name</label>
+                  <input id="first" type="text" class="form-control"/>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="middle">Middle Name</label>
+                  <input id="middle" type="text" class="form-control"/>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                  <label for="last">Last Name</label>
+                  <input id="last" type="text" class="form-control"/>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label"></label>
+
+          <div class="form-group col-sm-10">
+             <label for="orcid">ORCiD</label>
+             <input type="text" class="form-control" id="orcid">
+           </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label"></label>
+          <div class="form-group col-sm-5">
+             <label for="authoremail">Email Address</label>
+             <input type="text" class="form-control" id="authoremail">
+           </div>
+           <div class="form-group col-sm-5">
+              <label for="affiliation">Affiliation</label>
+              <input type="text" class="form-control" id="affiliation">
+            </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-9 col-form-label"></label>
+
+           <div class="col-sm-3">
+             <button type="button" class="btn btn-secondary btn-sm float-right">
+               Add Co-PI</button>
+           </div>
+        </div>
+        <hr>
+        <div class="form-group row">
+            <label for="contact" class="col-sm-2 col-form-label">Contact(s)</label>
+
+            <div class="col-sm-3 form-group">
+                  <label for="contactfirst">First Name</label>
+                  <input id="contactfirst" type="text" class="form-control"/>
+            </div>
+            <div class="col-sm-3 form-group">
+                  <label for="contactmiddle">Middle Name</label>
+                  <input id="contactmiddle" type="text" class="form-control"/>
+            </div>
+            <div class="col-sm-4 form-group">
+                  <label for="contactlast">Last Name</label>
+                  <input id="contactlast" type="text" class="form-control"/>
+            </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label"></label>
+          <div class="form-group col-sm-10">
+             <label for="contactemail">Email Address</label>
+             <input type="text" class="form-control" id="contactemail">
+           </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-9 col-form-label"></label>
+
+           <div class="col-sm-3">
+             <button type="button" class="btn btn-secondary btn-sm float-right">
+               Add contact</button>
+           </div>
+        </div>
+        <hr>
+
+    </form>
+</div>
+{{yield}}
