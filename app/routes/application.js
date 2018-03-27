@@ -353,7 +353,9 @@ export default Route.extend({
       creationDate: new Date('2016-04-04'),
       updatedDate: new Date('2016-05-04'),
       submittedDate: new Date('2017-07-04'),
-      status: 'Submitted'
+      status: 'Submitted',
+      corrAuthorName: 'Ernest Ford',
+      corrAuthorEmail: 'ford@example.com'
     });
 
     let sub2 = store.createRecord('submission', {
@@ -361,7 +363,9 @@ export default Route.extend({
       creationDate: new Date('2017-06-02'),
       updatedDate: new Date('2017-12-04'),
       submittedDate: new Date('2017-12-04'),
-      status: 'Submitted'
+      status: 'Submitted',
+      corrAuthorName: 'Anne Gudzune',
+      corrAuthorEmail: 'anne@example.com'
     });
 
 
@@ -369,7 +373,9 @@ export default Route.extend({
       title: 'Immunomodulatory Drugs: Immune Checkpoint Agents in Acute Leukemia.',
       creationDate: new Date('2017-06-02'),
       updatedDate: new Date('2017-11-04'),
-      status: 'In Progress'
+      status: 'In Progress',
+      corrAuthorName: 'Stephen Pillage',
+      corrAuthorEmail: 'illage@example.com'
     });
 
 
@@ -377,7 +383,9 @@ export default Route.extend({
       title: 'Family history of alcoholism is related to increased D2 /D3 receptor binding potential: a marker of resilience or risk?',
       creationDate: new Date('2017-06-02'),
       updatedDate: new Date('2017-11-22'),
-      status: 'In Progress'
+      status: 'In Progress',
+      corrAuthorName: 'Eric Frey',
+      corrAuthorEmail: 'frey@example.com'
     });
 
     let publisherA1 = store.createRecord('publisher', {
@@ -610,10 +618,10 @@ export default Route.extend({
       sub3.set('creator', user3);
       sub4.set('creator', user1);
 
-      sub1.set('author', person1);
-      sub2.set('author', person2);
-      sub3.set('author', person3);
-      sub4.set('author', person4);
+      // sub1.set('author', person1);
+      // sub2.set('author', person2);
+      // sub3.set('author', person3);
+      // sub4.set('author', person4);
 
       sub1.get('deposits').pushObject(deposit1);
       sub1.get('deposits').pushObject(deposit2);

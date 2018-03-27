@@ -38,7 +38,7 @@ export default Controller.extend({
   columns: [
     { propertyName: 'title', title: 'Article' },
     { propertyName: 'funder', title: 'Funder' },
-    { propertyName: 'author.displayName', title: 'Corr. Author'},
+    { propertyName: 'corrAuthorName', title: 'Corr. Author'},
     { title: 'Repo', component: 'submissions-repo-cell' },
     { propertyName: 'updatedDate', title: 'Last Update Date', component: 'date-cell' },
     { propertyName: 'submittedDate', title: 'Submitted Date', component: 'date-cell' },
