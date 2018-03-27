@@ -119,61 +119,61 @@ export default Route.extend({
 
 
     let person1 = store.createRecord('person', {
-        name: 'Ernest Ford',
+        displayName: 'Ernest Ford',
         email: 'ford@example.com'
     });
 
     let person2 = store.createRecord('person', {
-        name: 'Anne Gudzune',
+        displayName: 'Anne Gudzune',
         email: 'anne@example.com'
     });
 
     let person3 = store.createRecord('person', {
-        name: 'Stephen Pillage',
+        displayName: 'Stephen Pillage',
         email: 'illage@example.com'
     });
 
     let person4 = store.createRecord('person', {
-        name: 'Eric Frey',
+        displayName: 'Eric Frey',
         email: 'frey@example.com'
     });
 
     let person5 = store.createRecord('person', {
-      name: 'Michael Jacobs',
+      displayName: 'Michael Jacobs',
       email: 'mjacobe@example.com'
     });
 
     let person6 = store.createRecord('person', {
-      name: 'John Wong',
+      displayName: 'John Wong',
       email: 'wongj@jhu.edu'
     });
 
     let person7 = store.createRecord('person', {
-      name: 'Tiffany Brown',
+      displayName: 'Tiffany Brown',
       email: 'tbrown@jhu.edu'
     });
     let person8 = store.createRecord('person', {
-      name: 'Hillary Peek',
+      displayName: 'Hillary Peek',
       email: 'peek@jhu.edu'
     });
     let person9 = store.createRecord('person', {
-      name: 'Steve Plimpton',
+      displayName: 'Steve Plimpton',
       email: 'plimpton@jhu.edu'
     });
     let person10 = store.createRecord('person', {
-      name: 'Szu Wang',
+      displayName: 'Szu Wang',
       email: 'swang@jhu.edu'
     });
     let person11 = store.createRecord('person', {
-      name: 'Kurt Sanders',
+      displayName: 'Kurt Sanders',
       email: 'sanders@jhu.edu'
     });
     let person12 = store.createRecord('person', {
-      name: 'Robert Bradley',
+      displayName: 'Robert Bradley',
       email: 'bradley@jhu.edu'
     });
     let person13= store.createRecord('person', {
-      name: 'Erin Lewin',
+      displayName: 'Erin Lewin',
       email: 'elewin@jhu.edu'
     });
 
@@ -182,7 +182,7 @@ export default Route.extend({
       projectName: 'Regulation of blood-retinal barrier by placental growth factor.',
       startDate: new Date('2017-04-01'),
       endDate: new Date('2022-03-31'),
-      status: 'Active',
+      awardStatus: 'Active',
       oapCompliance: 'No'
     });
 
@@ -191,7 +191,7 @@ export default Route.extend({
       projectName: 'Identification and Activation Mechanisms of Vagal and Spinal Nociceptors in Esophageal Mucosa',
       startDate: new Date('2017-08-01'),
       endDate: new Date('2021-07-31'),
-      status: 'Active',
+      awardStatus: 'Active',
       oapCompliance: 'No'
     });
 
@@ -200,7 +200,7 @@ export default Route.extend({
       awardNumber: 'R01EY026617',
       startDate: new Date('2017-06-01'),
       endDate: new Date('2020-05-31'),
-      status: 'Active',
+      awardStatus: 'Active',
       oapCompliance: 'No'
     });
 
@@ -209,7 +209,7 @@ export default Route.extend({
       awardNumber: '1640778',
       startDate: new Date('2016-06-01'),
       endDate: new Date('2017-12-31'),
-      status: 'Active',
+      awardStatus: 'Active',
       oapCompliance: 'Yes'
     });
 
@@ -218,7 +218,7 @@ export default Route.extend({
       awardNumber: 'T32MH014592',
       startDate: new Date('2016-07-01'),
       endDate: new Date('2017-06-30'),
-      status: 'Terminated',
+      awardStatus: 'Terminated',
       oapCompliance: 'Yes'
     });
 
@@ -227,7 +227,7 @@ export default Route.extend({
       awardNumber: 'T32MH019545',
       startDate: new Date('2016-07-01'),
       endDate: new Date('2018-06-30'),
-      status: 'Active',
+      awardStatus: 'Active',
       oapCompliance: 'Yes'
     });
     let grant7 = store.createRecord('grant', {
@@ -235,7 +235,7 @@ export default Route.extend({
       awardNumber: '1502700',
       startDate: new Date('2016-05-15'),
       endDate: new Date('2019-04-30'),
-      status: 'Active',
+      awardStatus: 'Active',
       oapCompliance: 'Yes'
     });
 
@@ -244,7 +244,7 @@ export default Route.extend({
       awardNumber: 'D43TW010512',
       startDate: new Date('2017-06-01'),
       endDate: new Date('2022-05-31'),
-      status: 'Active',
+      awardStatus: 'Active',
       oapCompliance: 'Yes'
     });
     let grant9 = store.createRecord('grant', {
@@ -252,7 +252,7 @@ export default Route.extend({
       awardNumber: 'CMMI-1253876',
       startDate: new Date('2013-01-01'),
       endDate: new Date('2017-12-31'),
-      status: 'Active',
+      awardStatus: 'Active',
       oapCompliance: 'Yes'
     });
     let grant10 = store.createRecord('grant', {
@@ -260,7 +260,7 @@ export default Route.extend({
       awardNumber: 'R01MH099733',
       startDate: new Date('2016-03-01'),
       endDate: new Date('2018-02-28'),
-      status: 'Active',
+      awardStatus: 'Active',
       oapCompliance: 'Yes'
     });
     let grant11 = store.createRecord('grant', {
@@ -268,7 +268,7 @@ export default Route.extend({
       awardNumber: 'R01GM118757',
       startDate: new Date('2018-03-04'),
       endDate: new Date('2020-08-10'),
-      status: 'Active',
+      awardStatus: 'Active',
       oapCompliance: 'Yes'
     });
     let grant12 = store.createRecord('grant', {
@@ -276,7 +276,7 @@ export default Route.extend({
       awardNumber: 'R01EY016835',
       startDate: new Date('2017-03-04'),
       endDate: new Date('2018-08-10'),
-      status: 'Active',
+      awardStatus: 'Active',
       oapCompliance: 'Yes'
     });
     let grant13 = store.createRecord('grant', {
@@ -284,7 +284,7 @@ export default Route.extend({
       awardNumber: '1564367',
       startDate: new Date('2015-03-04'),
       endDate: new Date('2017-08-10'),
-      status: 'Terminated',
+      awardStatus: 'Terminated',
       oapCompliance: 'Yes'
     });
 
@@ -295,7 +295,7 @@ export default Route.extend({
     });
 
     let deposit1 = store.createRecord('deposit', {
-      repo: 'PMC',
+      repository: 'PMC',
       updatedDate: new Date('2016-04-02'),
       status: 'Submitted'
     });
@@ -307,7 +307,7 @@ export default Route.extend({
     });
 
     let deposit2 = store.createRecord('deposit', {
-      repo: 'NSF-PAR',
+      repository: 'NSF-PAR',
       updatedDate: new Date('2015-05-02'),
       status: 'Submitted'
     });
@@ -319,7 +319,7 @@ export default Route.extend({
     });
 
     let deposit3 = store.createRecord('deposit', {
-      repo: 'PMC',
+      repository: 'PMC',
       updatedDate: new Date('2017-05-02'),
       status: 'Submitted'
     });
@@ -331,7 +331,7 @@ export default Route.extend({
     });
 
     let deposit4 = store.createRecord('deposit', {
-      repo: 'PMC',
+      repository: 'PMC',
       updatedDate: new Date('2017-10-02'),
       status: 'Submitted'
     });
@@ -343,7 +343,7 @@ export default Route.extend({
     });
 
     let deposit5 = store.createRecord('deposit', {
-      repo: 'PMC',
+      repository: 'PMC',
       updatedDate: new Date('2016-10-02'),
       status: 'Submitted'
     });
@@ -507,77 +507,91 @@ export default Route.extend({
       grant13.set('creator', user2);
       grant12.set('creator', user3);
 
-      grant1.set('funder', funder1);
-      grant2.set('funder', funder3);
-      grant3.set('funder', funder1);
-      grant4.set('funder', funder2);
-      grant5.set('funder', funder4);
-      grant6.set('funder', funder5);
-      grant7.set('funder', funder2);
-      grant8.set('funder', funder5);
-      grant9.set('funder', funder2);
-      grant10.set('funder', funder5);
-      grant11.set('funder', funder5);
-      grant12.set('funder', funder1);
-      grant13.set('funder', funder2);
+      grant1.set('directFunder', funder1);
+      grant2.set('directFunder', funder3);
+      grant3.set('directFunder', funder1);
+      grant4.set('directFunder', funder2);
+      grant5.set('directFunder', funder4);
+      grant6.set('directFunder', funder5);
+      grant7.set('directFunder', funder2);
+      grant8.set('directFunder', funder5);
+      grant9.set('directFunder', funder2);
+      grant10.set('directFunder', funder5);
+      grant11.set('directFunder', funder5);
+      grant12.set('directFunder', funder1);
+      grant13.set('directFunder', funder2);
 
-      grant1.set('externalId', coeus1);
-      grant2.set('externalId', coeus2);
-      grant3.set('externalId', coeus3);
-      grant4.set('externalId', coeus4);
-      grant5.set('externalId', coeus5);
-      grant6.set('externalId', coeus6);
-      grant7.set('externalId', coeus7);
-      grant8.set('externalId', coeus8);
-      grant9.set('externalId', coeus9);
-      grant10.set('externalId', coeus10);
-      grant11.set('externalId', coeus11);
-      grant12.set('externalId', coeus12);
-      grant13.set('externalId', coeus13);
+      grant1.set('primaryFunder', funder1);
+      grant2.set('primaryFunder', funder3);
+      grant3.set('primaryFunder', funder1);
+      grant4.set('primaryFunder', funder2);
+      grant5.set('primaryFunder', funder4);
+      grant6.set('primaryFunder', funder5);
+      grant7.set('primaryFunder', funder2);
+      grant8.set('primaryFunder', funder5);
+      grant9.set('primaryFunder', funder2);
+      grant10.set('primaryFunder', funder5);
+      grant11.set('primaryFunder', funder5);
+      grant12.set('primaryFunder', funder1);
+      grant13.set('primaryFunder', funder2);
+
+      grant1.set('localAwardId', coeus1);
+      grant2.set('localAwardId', coeus2);
+      grant3.set('localAwardId', coeus3);
+      grant4.set('localAwardId', coeus4);
+      grant5.set('localAwardId', coeus5);
+      grant6.set('localAwardId', coeus6);
+      grant7.set('localAwardId', coeus7);
+      grant8.set('localAwardId', coeus8);
+      grant9.set('localAwardId', coeus9);
+      grant10.set('localAwardId', coeus10);
+      grant11.set('localAwardId', coeus11);
+      grant12.set('localAwardId', coeus12);
+      grant13.set('localAwardId', coeus13);
 
       grant1.set('pi', person2);
-      grant1.get('copis').pushObject(person1);
+      grant1.get('coPis').pushObject(person1);
 
       grant2.set('pi', person2);
 
       grant3.set('pi', person3);
-      grant3.get('copis').pushObject(person4);
+      grant3.get('coPis').pushObject(person4);
 
       grant4.set('pi', person5);
-      grant4.get('copis').pushObject(person6);
-      grant4.get('copis').pushObject(person12);
-      grant4.get('copis').pushObject(person13);
+      grant4.get('coPis').pushObject(person6);
+      grant4.get('coPis').pushObject(person12);
+      grant4.get('coPis').pushObject(person13);
 
 
       grant5.set('pi', person7);
-      grant5.get('copis').pushObject(person8);
-      grant5.get('copis').pushObject(person11);
+      grant5.get('coPis').pushObject(person8);
+      grant5.get('coPis').pushObject(person11);
 
       grant6.set('pi', person9);
-      grant6.get('copis').pushObject(person10);
+      grant6.get('coPis').pushObject(person10);
 
       grant7.set('pi', person12);
-      grant7.get('copis').pushObject(person2);
+      grant7.get('coPis').pushObject(person2);
 
       grant8.set('pi', person2);
 
       grant9.set('pi', person3);
-      grant9.get('copis').pushObject(person4);
+      grant9.get('coPis').pushObject(person4);
 
       grant10.set('pi', person5);
-      grant10.get('copis').pushObject(person6);
-      grant10.get('copis').pushObject(person12);
-      grant10.get('copis').pushObject(person13);
+      grant10.get('coPis').pushObject(person6);
+      grant10.get('coPis').pushObject(person12);
+      grant10.get('coPis').pushObject(person13);
 
       grant11.set('pi', person7);
-      grant11.get('copis').pushObject(person8);
-      grant11.get('copis').pushObject(person11);
+      grant11.get('coPis').pushObject(person8);
+      grant11.get('coPis').pushObject(person11);
 
       grant12.set('pi', person9);
-      grant12.get('copis').pushObject(person10);
+      grant12.get('coPis').pushObject(person10);
 
       grant13.set('pi', person2);
-      grant13.get('copis').pushObject(person13);
+      grant13.get('coPis').pushObject(person13);
 
       deposit1.set('assignedId', depositID1);
       deposit1.set('grant', grant1);

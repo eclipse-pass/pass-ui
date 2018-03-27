@@ -17,7 +17,7 @@ export default Controller.extend({
     },
 
     /** Link to the contextual grant, and save the submission
-     * 
+     *
      * @returns {Promise} Save promise
      */
     saveAndLinkGrant() {
@@ -38,7 +38,7 @@ export default Controller.extend({
   columns: [
     { propertyName: 'title', title: 'Article' },
     { propertyName: 'funder', title: 'Funder' },
-    { propertyName: 'author.name', title: 'Corr. Author'},
+    { propertyName: 'author.displayName', title: 'Corr. Author'},
     { title: 'Repo', component: 'submissions-repo-cell' },
     { propertyName: 'updatedDate', title: 'Last Update Date', component: 'date-cell' },
     { propertyName: 'submittedDate', title: 'Submitted Date', component: 'date-cell' },

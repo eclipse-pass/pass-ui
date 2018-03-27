@@ -12,7 +12,7 @@ export default Controller.extend({
   actions: {
     authorclick(submission) {
       this.set('messageShow', true);
-      this.set('messageTo', submission.get('author.name'));
+      this.set('messageTo', submission.get('author.displayName'));
       this.set('messageSubject', 'OAP Compliance')
       this.set('messageText', `Concerning submission ${submission.get('title')}, the status is ${submission.get('status')}.\nPlease check your PASS dashboard.`);
     }
@@ -34,7 +34,7 @@ export default Controller.extend({
   piColumns: [
     { propertyName: 'title', title: 'Article' },
     { title: 'Award Number (Funder)', component: 'submissions-award-cell' },
-    { propertyName: 'author.name', title: 'Corr. Author', component: 'submissions-author-cell' },
+    { propertyName: 'author.displayName', title: 'Corr. Author', component: 'submissions-author-cell' },
     { title: 'Repo', component: 'submissions-repo-cell' },
     { propertyName: 'updatedDate', title: 'Last Update Date', component: 'date-cell' },
     { propertyName: 'submittedDate', title: 'Submitted Date', component: 'date-cell' },
@@ -46,7 +46,7 @@ export default Controller.extend({
   adminColumns: [
     { propertyName: 'title', title: 'Article' },
     { title: 'Award Number (Funder)', component: 'submissions-award-cell' },
-    { propertyName: 'author.name', title: 'Corr. Author'},
+    { propertyName: 'author.displayName', title: 'Corr. Author'},
     { title: 'Repo', component: 'submissions-repo-cell' },
     { propertyName: 'updatedDate', title: 'Last Update Date', component: 'date-cell' },
     { propertyName: 'submittedDate', title: 'Submitted Date', component: 'date-cell' },

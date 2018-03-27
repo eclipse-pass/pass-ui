@@ -12,7 +12,7 @@ export default Controller.extend({
   actions: {
     piclick(grant) {
       this.set('messageShow', true);
-      this.set('messageTo', grant.get('pi.name'));
+      this.set('messageTo', grant.get('pi.displayName'));
       this.set('messageSubject', 'OAP Compliance');
 
       let text = `Concerning project ${grant.get('projectName')}, one or more of the following submissions have issues:`
@@ -45,12 +45,12 @@ export default Controller.extend({
 
   adminColumns: [
     { propertyName: 'projectName', title: 'Project Name' },
-    { propertyName: 'funder.name', title: 'Funder', filterWithSelect: true,
+    { propertyName: 'primaryFunder.name', title: 'Funder', filterWithSelect: true,
       predefinedFilterOptions: ['NIH', 'DOE', 'NSF']
     },
     { propertyName: 'awardNumber', title: 'Award Number' , routeName: 'grants.show', disableFiltering: true},
-    { propertyName: 'externalId', title: 'COEUS', component: 'identifier-cell', disableFiltering: true },
-    { propertyName: 'pi.name', title: 'PI / CO-PIs', component: 'pi-list-cell'},
+    { propertyName: 'localAwardId', title: 'COEUS', component: 'identifier-cell', disableFiltering: true },
+    { propertyName: 'pi.displayName', title: 'PI / CO-PIs', component: 'pi-list-cell'},
     { propertyName: 'startDate', title: 'Start', component: 'date-cell', disableFiltering: true},
     { propertyName: 'endDate', title: 'End', component: 'date-cell', disableFiltering: true},
     { propertyName: 'status', title: 'Status', filterWithSelect: true,
@@ -64,11 +64,11 @@ export default Controller.extend({
 
   piColumns: [
     { propertyName: 'projectName', title: 'Project Name' },
-    { propertyName: 'funder.name', title: 'Funder', filterWithSelect: true,
+    { propertyName: 'primaryFunder.name', title: 'Funder', filterWithSelect: true,
       predefinedFilterOptions: ['NIH', 'DOE', 'NSF']
     },
     { propertyName: 'awardNumber', title: 'Award Number' , routeName: 'grants.show', disableFiltering: true},
-    { propertyName: 'externalId', title: 'COEUS', component: 'identifier-cell', disableFiltering: true},
+    { propertyName: 'localAwardId', title: 'COEUS', component: 'identifier-cell', disableFiltering: true},
     { title: 'PI / CO-PIs', component: 'pi-list-cell' },
     { propertyName: 'startDate', title: 'Start', component: 'date-cell', disableFiltering: true},
     { propertyName: 'endDate', title: 'End', component: 'date-cell', disableFiltering: true},
