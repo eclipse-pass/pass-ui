@@ -17,14 +17,6 @@ Router.map(function() {
     this.route('show', { path: '/:submission_id' });
   });
   this.route('submission', function() {
-    this.route('show', { path: '/:submission_id' }, function() {
-      this.route('compliance');
-      this.route('metadata');
-      this.route('attachments');
-      this.route('submission');
-      this.route('repositories');
-      this.route('funding');
-    });
     this.route('new');
   })
   this.route('login');
