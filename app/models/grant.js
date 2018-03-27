@@ -1,20 +1,20 @@
 import DS from 'ember-data';
 
 export default DS.Model.extend({
-  /** Award number from a funder (Required) */
+  /** Award number from a funder (REQUIRED) */
   awardNumber: DS.attr('string'),
-  /** Title of the research project (Required) */
+  /** Title of the research project (REQUIRED) */
   projectName: DS.attr('string'),
   /**
-   * The sponsor that is the original source of the funds. (Required)
+   * The sponsor that is the original source of the funds. (REQUIRED)
    * Often the same as {@link #directFunder}
    */
   primaryFunder: DS.belongsTo('funder'),
-  /** The organization from which funds are directly received. (Required)
+  /** The organization from which funds are directly received. (REQUIRED)
    * Often the same as {@link #primaryFunder}
    */
   directFunder: DS.belongsTo('funder'),
-  /** Date the grant was awarded (Required) */
+  /** Date the grant was awarded (REQUIRED) */
   awardDate: DS.attr('date'),
   /** Date the grant started */
   startDate: DS.attr('date'),

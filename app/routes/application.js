@@ -594,16 +594,16 @@ export default Route.extend({
       grant13.get('coPis').pushObject(person13);
 
       deposit1.set('assignedId', depositID1);
-      deposit1.set('grant', grant1);
+      deposit1.set('submission', sub1);
 
       deposit2.set('assignedId', depositID2);
-      deposit2.set('grant', grant3);
+      deposit2.set('submission', sub1);
 
       deposit3.set('assignedId', depositID3);
-      deposit3.set('grant', grant1);
+      deposit3.set('submission', sub2);
 
       deposit4.set('assignedId', depositID4);
-      deposit4.set('grant', grant2);
+      deposit4.set('submission', sub4);
 
       sub1.set('creator', user2);
       sub2.set('creator', user2);

@@ -5,7 +5,6 @@ export default Controller.extend({
     depositGenerators: [],
 
     actions: {
-
         /** Saves the submission deposits that will establish compliance
          *
          * @returns {Promise} Save promise for the submission and deposits.
@@ -35,6 +34,7 @@ export default Controller.extend({
             var linkedRepos = linkedDeposits.map(deposit => deposit.get('repository'));
 
             var toLink = newDeposits.filter(deposit => !(linkedRepos.includes(deposit.get('repository'))));
+            toLink.forEach(deposit => deposit.set('submission', submission));
 
             return Promise.all(newDeposits.map(newDeposit => {
                 if (toLink.includes(newDeposit)) {
