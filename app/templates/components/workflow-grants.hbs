@@ -1,2 +1,11 @@
-{{input value=model.grants}}
+<p>
+    Review/Provide information about the grant(s)/award(s) that funded this work. This information will help determine which
+    public access policies are applicable to your work.
+</p>
+{{submission-funding-table grants=model.grants remove=(action "removeGrant")}}
+
+<label>Add Grants:</label>
+{{find-grant id="grant"  onSelect=(action "addGrant")}}
+
+<br>
 {{yield}}
