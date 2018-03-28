@@ -20,7 +20,6 @@ export default DS.Model.extend({
   status: DS.attr('string'),
   /** Title of work represented by this Submission (Ex title of article) (REQUIRED) */
   title: DS.attr('string'),
-  author: DS.belongsTo('person'),
   /** Contact name for corresponding author */
   corrAuthorName: DS.attr('string'),
   /** Contact email for the corresponding author */
