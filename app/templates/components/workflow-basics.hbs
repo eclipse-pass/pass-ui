@@ -21,6 +21,6 @@
   {{#unless doiJournal}}
     {{find-journal id="journal" onSelect=(action "selectJournal") value=model.journal}}
   {{else}}
-    <input type="text" class="form-control" readonly value={{model.journal}}  placeholder="Journal" />
+    <input type="text" class="form-control" readonly value={{model.journal}}  placeholder="Journal"/>
   {{/unless}}
 </div>
