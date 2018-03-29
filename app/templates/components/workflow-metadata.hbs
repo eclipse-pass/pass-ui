@@ -1,2 +1,10 @@
-{{metadata-form schema=commonSchema}}
+
+{{!-- {{#each schemas as || s }} --}}
+  {{!-- {{#if schema.id === s.id}} --}}
+    {{metadata-form  schema=schema title=schema.title description=schema.description identifier=schema.id}}
+  {{!-- {{/if}} --}}
+{{!-- {{#each}} --}}
+  <button type="button" class="btn btn-primary" {{action 'previousForm'}} hidden={{previousFormButton}}>Previous Form</button>
+  <button type="button" class="btn btn-primary pull-right" {{action 'nextForm'}} hidden={{nextFormButton}}>Next Form</button>
+
 {{yield}}

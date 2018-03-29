@@ -12,7 +12,10 @@ export default Ember.Component.extend({
   actions: {
 
   },
-  didRender() {
+  didInsertElement () {
+    // console.log('didUpdateAttrs ', this.get('schema'))
+    // $(".alpaca-form").alpaca(this.get('schema'));
+
     // const that = this;
     // let originalForm = this.get('input');
     // let newForm = JSON.parse(JSON.stringify(originalForm));
@@ -34,7 +37,7 @@ export default Ember.Component.extend({
     //   }
     // };
     $(document).ready(() => {
-      $("#myAlpacaForm").alpaca(this.get('schema'));
+      $("#form-"+this.get('identifier')).alpaca(this.get('schema'));
     });
   }
 });
