@@ -28,18 +28,17 @@ export default Component.extend({
                  self.get('store').findAll('journal')
                      .then((journals) => journals.find(function (journal) {
                          var title = journal.get('name');
-                         var doiTitle = doiInfo["container-title"];
+                         var doiTitle = doiInfo['container-title'];
                          return title.trim() === doiTitle.trim();
                      })).then(function (match) {
                          var doiInfo = self.get('doiInfo');
                          //self.set('doiJournal', match);
-                         console.log(doiInfo)
+                        console.log(doiInfo)
+                        submission.set('title', doiInfo['title']);
 
-                         //self.set('doiJournalTitle', doiInfo["container-title"]);
-                         submission.set('title', doiInfo["title"]);
-
-                         self.set('doiJournal', true)
-                         submission.set('journal', doiInfo["container-title"])
+                        self.set('doiJournal', true)
+                        self.send('selectJournal', doiInfo['container-title'])
+                        // self.store.findRecord('journal', params.post_id, {include: 'comments'});
                      })
              });
          }
