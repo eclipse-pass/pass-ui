@@ -1,7 +1,50 @@
-<p>Title: {{model.title}}</p>
-<p>Journal: {{model.journal}}</p>
-<p>DOI: {{model.doi}}</p>
-<p>Grants: {{model.grants}}</p>
-<p>Repositories: {{model.repositories}}</p>
-<p>Metadata: {{models.metadata}}</p>
-<p>Files: {{model.files}}</p>
+<div class="form-group row">
+  <div class="col-md-12">
+    <div class="list-group">
+      <div href="#" class="list-group-item flex-column align-items-start">
+        <div class="d-flex w-100 justify-content-between">
+          <h5 class="mb-1"> {{model.title}}</h5>
+          <small class="text-muted">{{model.submittedDate.date-time}}<br>{{model.creationDate.date-time}}</small>
+        </div>
+        <p class="mb-1">{{model.doi}}</p>
+        <small class="text-muted">Please review the information below</small>
+
+
+        <table class="table table-responsive-sm table-bordered">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Data</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Journal</td>
+              <td>{{model.journal}}</td>
+            </tr>
+            <tr>
+              <td>Grants</td>
+              <td>{{model.grants}}</td>
+            </tr>
+            <tr>
+              <td>Repositories</td>
+              <td>{{model.repositories}}</td>
+            </tr>
+            <tr>
+              <td>Metadata</td>
+              <td>{{model.metadata}}</td>
+            </tr>
+            <tr>
+              <td>Files</td>
+              <td>
+                {{#each model.files as |file|}}
+                  {{file.name}}
+                {{/each}}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

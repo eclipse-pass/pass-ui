@@ -12,7 +12,7 @@
   {{#unless doiJournal}}
     {{input value=model.title class="form-control" placeholder="Title"}}
   {{else}}
-    <input readonly value={{model.title}} class="form-control" placeholder="Title"/>
+    <input value={{model.title}} class="form-control" placeholder="Title"/>
   {{/unless}}
 </div>
 
@@ -21,6 +21,8 @@
   {{#unless doiJournal}}
     {{find-journal id="journal" onSelect=(action "selectJournal") value=model.journal}}
   {{else}}
-    <input type="text" class="form-control" readonly value={{model.journal}}  placeholder="Journal"/>
+    <input type="text" class="form-control" value={{model.journal}}  placeholder="Journal"/>
+  ddd  {{get (await model.journal) 'name'}}
+
   {{/unless}}
 </div>

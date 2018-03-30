@@ -36,6 +36,9 @@ export default Component.extend({
                         console.log(doiInfo)
                         submission.set('title', doiInfo['title']);
 
+                        submission.set('submittedDate', doiInfo['deposited']);
+                        submission.set('creationDate', doiInfo['created']);
+
                         self.set('doiJournal', true)
                         self.send('selectJournal', doiInfo['container-title'])
                         // self.store.findRecord('journal', params.post_id, {include: 'comments'});
