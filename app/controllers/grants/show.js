@@ -36,7 +36,7 @@ export default Controller.extend({
   },
 
   columns: [
-    { propertyName: 'title', title: 'Article' },
+    { propertyName: 'title', title: 'Article', component: 'submissions-article-cell' },
     { propertyName: 'funder', title: 'Funder' },
     { propertyName: 'corrAuthorName', title: 'Corr. Author'},
     { title: 'Repo', component: 'submissions-repo-cell' },

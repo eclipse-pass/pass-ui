@@ -36,6 +36,7 @@
     "ember-composable-helpers": "^2.1.0",
     "ember-data": "^2.18.0",
     "ember-export-application-global": "^2.0.0",
+    "ember-fedora-adapter": "git+https://github.com/OA-PASS/ember-fedora-adapter.git",
     "ember-font-awesome": "^4.0.0-rc.2",
     "ember-load-initializers": "^1.0.0",
     "ember-modal-dialog": "^2.4.1",
@@ -54,6 +55,8 @@
     "node": "^4.5 || 6.* || >= 7.*"
   },
   "dependencies": {
-    "@coreui/ajax": "1.0.10"
+    "@coreui/ajax": "1.0.10",
+    "alpaca": "^1.5.24",
+    "jquery": "^3.3.1"
   }
 }

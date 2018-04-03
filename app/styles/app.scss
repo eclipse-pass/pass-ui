@@ -13,7 +13,8 @@ $jhu-grey5: #2C2C33;
 $jhu-blue: #005EB8;
 $jhu-blue1: #418FDE;
 $jhu-blue2: #68ACE5;
-$jhu-weird-bluegreen: #6399AE; //nice
+$jhu-blue3: #A7BCD6;
+$jhu-weird-bluegreen: #6399AE;
 
 $jhu-red: #E03C31;
 $jhu-red1: #CF4520;
@@ -130,6 +131,12 @@ th.table-header {
     margin: 0 0 1em 12px;
   }
 }
+.submission-details .row {
+  padding: 6px 0;
+}
+.submission-funders .row {
+  padding: 0;
+}
 .btn-remove {
   // transition-duration: $transition-duration; // Adding this transition introduces some odd (and temporary) column resizing
   cursor: pointer;
@@ -211,11 +218,19 @@ body {
   border: none;
 }
 
-@media (max-width: 760px) {
-  .navbar .navbar-brand {
-      justify-content: center;
-      margin: auto;
-  }
+.border-none {
+  border: none!important;
+}
+.img-avatar {
+  width: 30px;
+}
+.custom-header {
+ background:url(https://image.ibb.co/gx84Uc/JHU.jpg) repeat-x 0 0;
+ text-align:center;
+ width:100%;
+ height:425px;
+ background-repeat:no-repeat;
+ background-size:cover;
 }
 
 .sticky {
@@ -223,4 +238,18 @@ body {
   top: 0;
   width: 100%;
   z-index: 100;
+}
+
+.no-wrap {
+  white-space: nowrap;
+}
+.ember-modal-dialog {
+  border-radius: 0px;
+}
+
+@media (max-width: 760px) {
+  .navbar .navbar-brand {
+      justify-content: center;
+      margin: auto;
+  }
 }

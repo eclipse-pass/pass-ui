@@ -8,7 +8,7 @@ export default DS.Model.extend({
   /**
    * Publisher of the journal
    */
-  publisher: DS.attr('string'),
+  publisher: DS.belongsTo('publisher'),
   /**
    * List of journal ISSN's (strings)
    */

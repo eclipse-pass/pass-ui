@@ -10,8 +10,9 @@ export default Route.extend({
     if (session.get('isAdmin')) {
       return store.findAll('grant');
     } else if (session.get('isPI')) {
-      // TODO This is a hack that works with mirage
-      return store.query('grant', {creatorId: session.get('user.id')});
+      let user_id = session.get('user.id');
+
+      return store.findAll('grant').then(grants => grants.filter(g => g.get('creator.id') === user_id));
     }
   }
 });

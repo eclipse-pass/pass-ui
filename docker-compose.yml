@@ -1,0 +1,11 @@
+version: '2'
+
+services:
+
+  fcrepo:
+    image: oapass/fcrepo
+    env_file: .env
+    ports: 
+      - "${FCREPO_PORT}:${FCREPO_PORT}"
+      - "${FCREPO_JMS_PORT}:${FCREPO_JMS_PORT}"
+      - "${FCREPO_STOMP_PORT}:${FCREPO_STOMP_PORT}"
