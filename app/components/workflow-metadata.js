@@ -445,7 +445,7 @@ export default Component.extend({
    } else if (repos.includes(name)) {
        return name;
    }
-   console.log('workflow meat5adata ', submission.get('deposits'))
+   console.log('workflow meatadata ', submission.get('deposits'))
 
    //this.set('hideWorkflowNext', true)
 

@@ -1,7 +1,7 @@
 
 {{!-- {{#each schemas as || s }} --}}
   {{!-- {{#if schema.id === s.id}} --}}
-    {{metadata-form  schema=schema title=schema.title description=schema.description identifier=schema.id}}
+    {{metadata-form  schemas=schemas schema=schema.schema title=schema.title description=schema.description}}
   {{!-- {{/if}} --}}
 {{!-- {{#each}} --}}
   <button type="button" class="btn btn-primary" {{action 'previousForm'}} hidden={{previousFormButton}}>Previous Form</button>
