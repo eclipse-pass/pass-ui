@@ -66,33 +66,11 @@ let commonSchema = {
      "volume": {
        "type": "text",
        "label": "Volume",
-       "helpers": [],
-       "validate": true,
-       "disabled": false,
-       "showMessages": true,
-       "renderButtons": true,
-       "data": {},
-       "attributes": {},
-       "allowOptionalEmpty": true,
-       "autocomplete": false,
-       "disallowEmptySpaces": false,
-       "disallowOnlyEmptySpaces": false,
        "placeholder": "Enter the volume"
      },
      "issue": {
        "type": "text",
        "label": "Issue",
-       "helpers": [],
-       "validate": true,
-       "disabled": false,
-       "showMessages": true,
-       "renderButtons": true,
-       "data": {},
-       "attributes": {},
-       "allowOptionalEmpty": true,
-       "autocomplete": false,
-       "disallowEmptySpaces": false,
-       "disallowOnlyEmptySpaces": false,
        "placeholder": "Enter issue"
      },
      "publicationDate": {
