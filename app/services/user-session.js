@@ -57,7 +57,7 @@ export default Service.extend({
   // Return a promise to create the test data
   createTestData() {
       // Create the test objects without relationships
-
+      
     let store = this.get('store');
 
     let user1 = store.createRecord('user', {
@@ -525,14 +525,14 @@ export default Service.extend({
     // Persist the test objects, add relationships, and then persist again.
 
     let objects = [user1, user2, user3, user4,
-      funder1, funder2, funder3,
+      funder1, funder2, funder3, funder4, funder5,
       grant1, grant2, grant3, grant4, grant5, grant6,
-      grant7, grant8, grant9, grant10, grant11, grant12,
+      grant7, grant8, grant9, grant10, grant11, grant12, grant13,
       depositID1, depositID2, depositID3, depositID4, depositID5,
       deposit1, deposit2, deposit3, deposit4, deposit5,
       sub1, sub2, sub3, sub4,
       coeus1, coeus2, coeus3, coeus4, coeus5, coeus6,
-      coeus7, coeus8, coeus9, coeus12, coeus10, coeus11, coeus14,
+      coeus7, coeus8, coeus9, coeus10, coeus11, coeus12, coeus13, coeus14,
       person1, person2, person3, person4, person5, person6, person7, person8,
       person9, person10,person11, person12, person13,
       journalA1, journalA2, journalA3, journalB1, journalB2, journalB3,
@@ -552,8 +552,8 @@ export default Service.extend({
       grant9.set('creator', user3);
       grant10.set('creator', user1);
       grant11.set('creator', user3);
-      grant13.set('creator', user2);
       grant12.set('creator', user3);
+      grant13.set('creator', user2);
 
       grant1.set('directFunder', funder1);
       grant2.set('directFunder', funder3);
