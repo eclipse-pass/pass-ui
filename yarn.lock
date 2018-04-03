@@ -143,6 +143,10 @@ align-text@^0.1.1, align-text@^0.1.3:
     longest "^1.0.1"
     repeat-string "^1.5.2"
 
+alpaca@^1.5.24:
+  version "1.5.24"
+  resolved "https://registry.yarnpkg.com/alpaca/-/alpaca-1.5.24.tgz#80969be521fed103c11c61e34ed61b703c2d79ec"
+
 amd-name-resolver@0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/amd-name-resolver/-/amd-name-resolver-0.0.7.tgz#814301adfe8a2f109f6e84d5e935196efb669615"
@@ -2592,6 +2596,12 @@ ember-factory-for-polyfill@^1.3.1:
   dependencies:
     ember-cli-version-checker "^2.1.0"
 
+"ember-fedora-adapter@git+https://github.com/OA-PASS/ember-fedora-adapter.git":
+  version "0.0.1"
+  resolved "git+https://github.com/OA-PASS/ember-fedora-adapter.git#cdfffd1010704f0529a44ed48aefb42eac671a5b"
+  dependencies:
+    ember-cli-babel "^6.6.0"
+
 ember-font-awesome@^4.0.0-rc.2:
   version "4.0.0-rc.2"
   resolved "https://registry.yarnpkg.com/ember-font-awesome/-/ember-font-awesome-4.0.0-rc.2.tgz#27735f57eb56509b51f2b5000da85e7fd84791df"
@@ -4363,7 +4373,7 @@ istextorbinary@2.1.0:
     editions "^1.1.1"
     textextensions "1 || 2"
 
-jquery@^3.2.1:
+jquery@^3.2.1, jquery@^3.3.1:
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.3.1.tgz#958ce29e81c9790f31be7792df5d4d95fc57fbca"
 
