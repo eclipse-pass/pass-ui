@@ -25,10 +25,14 @@
           {{workflow-files model=model}}
         {{/if}}
         {{#if (eq step 7)}}
-          {{workflow-review model=model}}
+          {{!--
+          we just want to validate the last step because up untill this point its okay not to have all the data
+          just let them fill out the forms then check that the data is right at the end
+           --}}
+        {{workflow-review model=model isValidated=isValidated validate=(action "validate") }}
         {{/if}}
-        <button class="btn btn-outline-primary" {{action "back"}}>Back</button>
-        <button class="btn btn-primary pull-right" {{action "next"}} hidden={{hideWorkflowNext}} >Next</button>
+        <button class="btn btn-outline-primary" {{action "back"}} >Back</button>
+        <button class="btn btn-primary pull-right" {{action "next"}} hidden={{hideWorkflowNext}}>Next</button>
       </main>
   </div>
 </div>

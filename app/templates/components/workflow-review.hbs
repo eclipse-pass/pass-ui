@@ -19,8 +19,8 @@
           </thead>
           <tbody>
             <tr>
-              <td>Journal</td>
-              <td>{{model.journal}}</td>
+              <td>Journal </td>
+              <td>{{model.journal}} </td>
             </tr>
             <tr>
               <td>Grants</td>
@@ -44,6 +44,15 @@
             </tr>
           </tbody>
         </table>
+      </div>
+      <div class="form-group row bg-gray-100 m-0">
+        <label class="col-md-10 col-form-label">I have read and varify that the information for this submission is valid and that the informatin provided is not in violation of any grants</label>
+        <div class="col-md-2 col-form-label">
+          <div class="form-check form-check-inline mr-1">
+            <input class="form-check-input" type="checkbox" id="userVarify" {{action 'checkValidate' on="change"}}>
+            <label class="form-check-label" for="userVarify">yes</label>
+          </div>
+        </div>
       </div>
     </div>
   </div>

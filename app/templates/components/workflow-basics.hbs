@@ -22,7 +22,5 @@
     {{find-journal id="journal" onSelect=(action "selectJournal") value=model.journal}}
   {{else}}
     <input type="text" class="form-control" value={{model.journal}}  placeholder="Journal"/>
-  ddd  {{get (await model.journal) 'name'}}
-
   {{/unless}}
 </div>
