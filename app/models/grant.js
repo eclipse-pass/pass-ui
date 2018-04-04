@@ -21,7 +21,7 @@ export default DS.Model.extend({
   /** Date the grant ended */
   endDate: DS.attr('date'),
   /** Award number or ID assigned to the grant within the researcher's institution */
-  localAwardId: DS.belongsTo('identifier'),
+  localAwardId: DS.attr('string'),
   /** Status of award. Possible values:
    *  - active (grant currently active)
    *  - pre_award (award not yet received)

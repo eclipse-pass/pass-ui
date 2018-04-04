@@ -20,10 +20,12 @@ export default DS.Model.extend({
   status: DS.attr('string'),
   /** Title of work represented by this Submission (Ex title of article) (REQUIRED) */
   title: DS.attr('string'),
+  /** List of authors associated with this submission */
+  authors: DS.hasMany('person', {async: true}),
   /** Contact name for corresponding author */
-  corrAuthorName: DS.attr('string'),
+  // corrAuthorName: DS.attr('string'),
   /** Contact email for the corresponding author */
-  corrAuthorEmail: DS.attr('string'),
+  // corrAuthorEmail: DS.attr('string'),
   /** Abstract for work represented by this submission */
   abstract: DS.attr('string'),
   /** DOI of item being submitted */

@@ -32,9 +32,9 @@ export default Controller.extend({
   columns: computed('session.user', {
     get() {
       if (this.get('session.isAdmin')) {
-            return this.get('adminColumns');
+        return this.get('adminColumns');
       } else if (this.get('session.isPI')) {
-            return this.get('piColumns');
+        return this.get('piColumns');
       } else {
         return [];
       }

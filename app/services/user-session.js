@@ -34,16 +34,17 @@ export default Service.extend({
     // First attempt to login with Basic auth.
     // If successfull and test objects are not loaded, load test objects
     // Finally check to make sure user is in store
-console.log(" >> Finding user");
+
     return store.findAll('user').then(users => {
       if (users.get('length') == 0) {
+        console.log(" > No data found, creating test data");
         return this.createTestData().then(() => store.findAll('user'));
       } else {
         return users;
       }
     }).then(users => {
       let match = users.find(user => user.get('username') === username);
-
+      console.log(" > Any matching users?");
       if (match) {
         this.set('user', match);
       }
@@ -57,9 +58,8 @@ console.log(" >> Finding user");
   // Return a promise to create the test data
   createTestData() {
       // Create the test objects without relationships
-console.log(" >> Creating test data");
     let store = this.get('store');
-
+console.log(" > Creating users");
     let user1 = store.createRecord('user', {
       username: 'admin',
       role: 'admin'
@@ -79,7 +79,7 @@ console.log(" >> Creating test data");
       username: 'CynthiaSears',
       role: 'pi'
     });
-
+console.log(" > Creating funders");
     let funder1 = store.createRecord('funder', {
         name: 'National Eye Institute'
     });
@@ -100,59 +100,11 @@ console.log(" >> Creating test data");
         name: 'National Institute of Health'
     });
 
-    let coeus1 = store.createRecord('identifier', {
-        label: '16129769'
-    });
+    // let coeus14 = store.createRecord('identifier', {
+    //     label: '16075399'
+    // });
 
-    let coeus2 = store.createRecord('identifier', {
-        label: '16120629'
-    });
-
-    let coeus3 = store.createRecord('identifier', {
-        label: '16120539'
-    });
-    let coeus4 = store.createRecord('identifier', {
-        label: '16120469'
-    });
-
-    let coeus5 = store.createRecord('identifier', {
-        label: '16120459'
-    });
-
-    let coeus6 = store.createRecord('identifier', {
-        label: '16120169'
-    });
-    let coeus7 = store.createRecord('identifier', {
-        label: '1204023'
-    });
-
-    let coeus8 = store.createRecord('identifier', {
-        label: '16119319'
-    });
-
-    let coeus9 = store.createRecord('identifier', {
-        label: '16119219'
-    });
-    let coeus10 = store.createRecord('identifier', {
-        label: '16118979'
-    });
-
-    let coeus11 = store.createRecord('identifier', {
-        label: '16108389'
-    });
-
-    let coeus12 = store.createRecord('identifier', {
-        label: '16097079'
-    });
-    let coeus13 = store.createRecord('identifier', {
-        label: '16086889'
-    });
-
-    let coeus14 = store.createRecord('identifier', {
-        label: '16075399'
-    });
-
-
+console.log(" > Creating people");
     let person1 = store.createRecord('person', {
         displayName: 'Ernest Ford',
         email: 'ford@example.com'
@@ -211,14 +163,15 @@ console.log(" >> Creating test data");
       displayName: 'Erin Lewin',
       email: 'elewin@jhu.edu'
     });
-
+console.log(" > Creating grants");
     let grant1 = store.createRecord('grant', {
       awardNumber: 'R01EY027824',
       projectName: 'Regulation of blood-retinal barrier by placental growth factor.',
       startDate: new Date('2017-04-01'),
       endDate: new Date('2022-03-31'),
       awardStatus: 'Active',
-      oapCompliance: 'No'
+      oapCompliance: 'No',
+      localAwardId: '16129769'
     });
 
     let grant2 = store.createRecord('grant', {
@@ -227,7 +180,8 @@ console.log(" >> Creating test data");
       startDate: new Date('2017-08-01'),
       endDate: new Date('2021-07-31'),
       awardStatus: 'Active',
-      oapCompliance: 'No'
+      oapCompliance: 'No',
+      localAwardId: '16120629'
     });
 
     let grant3 = store.createRecord('grant', {
@@ -236,7 +190,8 @@ console.log(" >> Creating test data");
       startDate: new Date('2017-06-01'),
       endDate: new Date('2020-05-31'),
       awardStatus: 'Active',
-      oapCompliance: 'No'
+      oapCompliance: 'No',
+      localAwardId: '16120539'
     });
 
     let grant4 = store.createRecord('grant', {
@@ -245,7 +200,8 @@ console.log(" >> Creating test data");
       startDate: new Date('2016-06-01'),
       endDate: new Date('2017-12-31'),
       awardStatus: 'Active',
-      oapCompliance: 'Yes'
+      oapCompliance: 'Yes',
+      localAwardId: '16120469'
     });
 
     let grant5 = store.createRecord('grant', {
@@ -254,7 +210,8 @@ console.log(" >> Creating test data");
       startDate: new Date('2016-07-01'),
       endDate: new Date('2017-06-30'),
       awardStatus: 'Terminated',
-      oapCompliance: 'Yes'
+      oapCompliance: 'Yes',
+      localAwardId: '16120459'
     });
 
     let grant6 = store.createRecord('grant', {
@@ -263,7 +220,8 @@ console.log(" >> Creating test data");
       startDate: new Date('2016-07-01'),
       endDate: new Date('2018-06-30'),
       awardStatus: 'Active',
-      oapCompliance: 'Yes'
+      oapCompliance: 'Yes',
+      localAwardId: '16120169'
     });
     let grant7 = store.createRecord('grant', {
       projectName: 'GEM:  RESPONSE OF GLOBAL IONOSPHERIC CURRENTS TO SUBSTORMS:  IMPLICATION FOR THE ELECTRIC FIELD PENETRATION TO THE INNER MAGNETOSPHERE',
@@ -271,7 +229,8 @@ console.log(" >> Creating test data");
       startDate: new Date('2016-05-15'),
       endDate: new Date('2019-04-30'),
       awardStatus: 'Active',
-      oapCompliance: 'Yes'
+      oapCompliance: 'Yes',
+      localAwardId: '1204023'
     });
 
     let grant8 = store.createRecord('grant', {
@@ -280,7 +239,8 @@ console.log(" >> Creating test data");
       startDate: new Date('2017-06-01'),
       endDate: new Date('2022-05-31'),
       awardStatus: 'Active',
-      oapCompliance: 'Yes'
+      oapCompliance: 'Yes',
+      localAwardId: '16119319'
     });
     let grant9 = store.createRecord('grant', {
       projectName: 'CAREER: DNA-Templated Assembly of Nanoscale Circuit Interconnects',
@@ -288,7 +248,8 @@ console.log(" >> Creating test data");
       startDate: new Date('2013-01-01'),
       endDate: new Date('2017-12-31'),
       awardStatus: 'Active',
-      oapCompliance: 'Yes'
+      oapCompliance: 'Yes',
+      localAwardId: '16119219'
     });
     let grant10 = store.createRecord('grant', {
       projectName: 'Neurologic Sequelae of HIV Subtype A and D Infection and ART Rakai Uganda',
@@ -296,7 +257,8 @@ console.log(" >> Creating test data");
       startDate: new Date('2016-03-01'),
       endDate: new Date('2018-02-28'),
       awardStatus: 'Active',
-      oapCompliance: 'Yes'
+      oapCompliance: 'Yes',
+      localAwardId: '16118979'
     });
     let grant11 = store.createRecord('grant', {
       projectName: 'Telomere maintenance by the telomerase RNA-protein complex',
@@ -304,7 +266,8 @@ console.log(" >> Creating test data");
       startDate: new Date('2018-03-04'),
       endDate: new Date('2020-08-10'),
       awardStatus: 'Active',
-      oapCompliance: 'Yes'
+      oapCompliance: 'Yes',
+      localAwardId: '16108389'
     });
     let grant12 = store.createRecord('grant', {
       projectName: 'Genetics of Fuchs Corneal Dystrophy',
@@ -312,7 +275,8 @@ console.log(" >> Creating test data");
       startDate: new Date('2017-03-04'),
       endDate: new Date('2018-08-10'),
       awardStatus: 'Active',
-      oapCompliance: 'Yes'
+      oapCompliance: 'Yes',
+      localAwardId: '16097079'
     });
     let grant13 = store.createRecord('grant', {
       projectName: 'P-Adic and Mod P Galois Representations',
@@ -320,77 +284,71 @@ console.log(" >> Creating test data");
       startDate: new Date('2015-03-04'),
       endDate: new Date('2017-08-10'),
       awardStatus: 'Terminated',
-      oapCompliance: 'Yes'
+      oapCompliance: 'Yes',
+      localAwardId: '16086889'
     });
-
-    let depositID1 = store.createRecord('identifier', {
-      type: 'NIHMSID',
-      label: '775054',
-      uri: ''
-    });
-
+console.log(" > Creating deposits");
     let deposit1 = store.createRecord('deposit', {
-      repository: 'PMC',
       updatedDate: new Date('2016-04-02'),
-      status: 'Submitted'
-    });
-
-    let depositID2 = store.createRecord('identifier', {
-      type: 'PARID',
-      label: '32654',
-      uri: ''
+      status: 'Submitted',
+      assignedId: '775054',
+      accessUrl: '',
     });
 
     let deposit2 = store.createRecord('deposit', {
-      repository: 'NSF-PAR',
       updatedDate: new Date('2015-05-02'),
-      status: 'Submitted'
-    });
-
-    let depositID3 = store.createRecord('identifier', {
-      type: 'PMCID',
-      label: '659871',
-      uri: ''
+      status: 'Submitted',
+      assignedId: '32654',
+      accessUrl: '',
     });
 
     let deposit3 = store.createRecord('deposit', {
-      repository: 'PMC',
       updatedDate: new Date('2017-05-02'),
-      status: 'Submitted'
-    });
-
-    let depositID4 = store.createRecord('identifier', {
-      type: 'PMCID',
-      label: '9201038',
-      uri: ''
+      status: 'Submitted',
+      assignedId: '659871',
+      accessUrl: '',
     });
 
     let deposit4 = store.createRecord('deposit', {
-      repository: 'PMC',
       updatedDate: new Date('2017-10-02'),
-      status: 'Submitted'
-    });
-
-    let depositID5 = store.createRecord('identifier', {
-      type: 'PMCID',
-      label: '0982342',
-      uri: ''
+      status: 'Submitted',
+      assignedId: '9201038',
+      accessUrl: '',
     });
 
     let deposit5 = store.createRecord('deposit', {
-      repository: 'PMC',
       updatedDate: new Date('2016-10-02'),
-      status: 'Submitted'
+      status: 'Submitted',
+      assignedId: '0982342',
+      accessUrl: '',
+    });
+console.log(" > Creating repos");
+    let repo1 = store.createRecord('repository', {
+      name: 'PubMed Central',
+      description: '',
+      url: 'https://www.ncbi.nlm.nih.gov/pmc/'
     });
 
+    let repo2 = store.createRecord('repository', {
+      name: 'National Science Foundation Public Access Repository',
+      description: '',
+      url: 'https://par.nsf.gov/'
+    });
+
+    let repo3 = store.createRecord('repository', {
+      name: "Johns Hopkins Open Access Repository",
+      description: '',
+      url: ''
+    });
+console.log(" > Creating submissions");
     let sub1 = store.createRecord('submission', {
       title: 'Evaluating the Role of Interdigitated Neoadjuvant Chemotherapy and Radiation in the Management of High-Grade Soft-Tissue Sarcoma: The Johns Hopkins Experience.',
       creationDate: new Date('2016-04-04'),
       updatedDate: new Date('2016-05-04'),
       submittedDate: new Date('2017-07-04'),
       status: 'Submitted',
-      corrAuthorName: 'Ernest Ford',
-      corrAuthorEmail: 'ford@example.com'
+      // corrAuthorName: 'Ernest Ford',
+      // corrAuthorEmail: 'ford@example.com'
     });
 
     let sub2 = store.createRecord('submission', {
@@ -399,8 +357,8 @@ console.log(" >> Creating test data");
       updatedDate: new Date('2017-12-04'),
       submittedDate: new Date('2017-12-04'),
       status: 'Submitted',
-      corrAuthorName: 'Anne Gudzune',
-      corrAuthorEmail: 'anne@example.com'
+      // corrAuthorName: 'Anne Gudzune',
+      // corrAuthorEmail: 'anne@example.com'
     });
 
 
@@ -409,8 +367,8 @@ console.log(" >> Creating test data");
       creationDate: new Date('2017-06-02'),
       updatedDate: new Date('2017-11-04'),
       status: 'In Progress',
-      corrAuthorName: 'Stephen Pillage',
-      corrAuthorEmail: 'illage@example.com'
+      // corrAuthorName: 'Stephen Pillage',
+      // corrAuthorEmail: 'illage@example.com'
     });
 
 
@@ -419,68 +377,70 @@ console.log(" >> Creating test data");
       creationDate: new Date('2017-06-02'),
       updatedDate: new Date('2017-11-22'),
       status: 'In Progress',
-      corrAuthorName: 'Eric Frey',
-      corrAuthorEmail: 'frey@example.com'
+      // corrAuthorName: 'Eric Frey',
+      // corrAuthorEmail: 'frey@example.com'
     });
-
+console.log(" > Creating publisher");
     let publisherA1 = store.createRecord('publisher', {
       name: 'American Chemical Society'
-    })
+    });
 
     let publisherA2 = store.createRecord('publisher', {
       name: 'American Association of Pharmaceutical Scientists'
-    })
+    });
 
     let publisherB1 = store.createRecord('publisher', {
       name: 'Royal Society of Chemistry'
-    })
+    });
+console.log(" > Creating journals");
+    // let journalID1 = store.createRecord('identifier', {
+    //   type: 'epub',
+    //   label: 'ISSN',
+    //   uri: '1550-7416'
+    // })
 
-    let journalID1 = store.createRecord('identifier', {
-      type: 'epub',
-      label: 'ISSN',
-      uri: '1550-7416'
-    })
+    // let journalID2 = store.createRecord('identifier', {
+    //   type: 'epub',
+    //   label: 'ISSN',
+    //   uri: '1948-5875'
+    // })
 
-    let journalID2 = store.createRecord('identifier', {
-      type: 'epub',
-      label: 'ISSN',
-      uri: '1948-5875'
-    })
+    // let journalID3 = store.createRecord('identifier', {
+    //   type: 'epub',
+    //   label: 'ISSN',
+    //   uri: '1522-1059'
+    // })
 
-    let journalID3 = store.createRecord('identifier', {
-      type: 'epub',
-      label: 'ISSN',
-      uri: '1522-1059'
-    })
+    // let journalID4 = store.createRecord('identifier', {
+    //   type: 'ppub',
+    //   label: 'ISSN',
+    //   uri: '2042-6496'
+    // })
 
-    let journalID4 = store.createRecord('identifier', {
-      type: 'ppub',
-      label: 'ISSN',
-      uri: '2042-6496'
-    })
+    // let journalID5 = store.createRecord('identifier', {
+    //   type: 'epub',
+    //   label: 'ISSN',
+    //   uri: '2045-4538'
+    // })
 
-    let journalID5 = store.createRecord('identifier', {
-      type: 'epub',
-      label: 'ISSN',
-      uri: '2045-4538'
-    })
-
-    let journalID6 = store.createRecord('identifier', {
-      type: 'ppub',
-      label: 'ISSN',
-      uri: '0003-2654'
-    })
+    // let journalID6 = store.createRecord('identifier', {
+    //   type: 'ppub',
+    //   label: 'ISSN',
+    //   uri: '0003-2654'
+    // })
 
     let journalA1 = store.createRecord('journal', {
       name: 'AAPS Journal',
       nlmta: 'AAPS J',
-      pmcParticipation: 'A'
+      pmcParticipation: 'A',
+      issns: ['1550-7416']
     });
 
     let journalA2 = store.createRecord('journal', {
       name: 'ACS Medicinal Chemistry Letters',
       nlmta: 'ACS Med Chem Lett',
-      pmcParticipation: 'A'
+      pmcParticipation: 'A',
+      issns: ['1948-5875']
     });
     //test DOIs for article that was published by this journal
     // 10.1021/acsmedchemlett.7b00397
@@ -489,13 +449,15 @@ console.log(" >> Creating test data");
     let journalA3 = store.createRecord('journal', {
       name: 'AAPS PharmSci',
       nlmta: 'AAPS PharmSci',
-      pmcParticipation: 'A'
+      pmcParticipation: 'A',
+      issns: ['1522-1059']
     });
 
     let journalB1 = store.createRecord('journal', {
       name: 'Food & Function',
       nlmta: 'Food Funct',
-      pmcParticipation: 'B'
+      pmcParticipation: 'B',
+      issns: ['2042-6496']
     });
     //test DOIs for articles that were published by this journal
     // 10.1039/c7fo01251a
@@ -505,13 +467,15 @@ console.log(" >> Creating test data");
     let journalB2 = store.createRecord('journal', {
       name: 'Toxicology Research',
       nlmta: 'Toxicol Res',
-      pmcParticipation: 'B'
+      pmcParticipation: 'B',
+      issns: ['2045-4538']
     });
 
     let journalB3 = store.createRecord('journal', {
       name: 'Analyst',
       nlmta: 'Analyst',
-      pmcParticipation: 'B'
+      pmcParticipation: 'B',
+      issns: ['0003-2654']
     });
     //test DOIs for articles that were published by this journal
     // 10.1039/c7an01256j
@@ -523,19 +487,17 @@ console.log(" >> Creating test data");
       funder1, funder2, funder3, funder4, funder5,
       grant1, grant2, grant3, grant4, grant5, grant6,
       grant7, grant8, grant9, grant10, grant11, grant12, grant13,
-      depositID1, depositID2, depositID3, depositID4, depositID5,
       deposit1, deposit2, deposit3, deposit4, deposit5,
       sub1, sub2, sub3, sub4,
-      coeus1, coeus2, coeus3, coeus4, coeus5, coeus6,
-      coeus7, coeus8, coeus9, coeus10, coeus11, coeus12, coeus13, coeus14,
       person1, person2, person3, person4, person5, person6, person7, person8,
       person9, person10,person11, person12, person13,
       journalA1, journalA2, journalA3, journalB1, journalB2, journalB3,
-      journalID1, journalID2, journalID3, journalID4, journalID5, journalID6,
       publisherA1, publisherA2, publisherB1,
+      repo1, repo2, repo3
   ];
 
     return RSVP.all(objects.map(o => o.save())).then(() => {
+console.log(" > Setting grant relationships");
       grant1.set('creator', user2);
       grant2.set('creator', user2);
       grant3.set('creator', user3);
@@ -577,20 +539,6 @@ console.log(" >> Creating test data");
       grant11.set('primaryFunder', funder5);
       grant12.set('primaryFunder', funder1);
       grant13.set('primaryFunder', funder2);
-
-      grant1.set('localAwardId', coeus1);
-      grant2.set('localAwardId', coeus2);
-      grant3.set('localAwardId', coeus3);
-      grant4.set('localAwardId', coeus4);
-      grant5.set('localAwardId', coeus5);
-      grant6.set('localAwardId', coeus6);
-      grant7.set('localAwardId', coeus7);
-      grant8.set('localAwardId', coeus8);
-      grant9.set('localAwardId', coeus9);
-      grant10.set('localAwardId', coeus10);
-      grant11.set('localAwardId', coeus11);
-      grant12.set('localAwardId', coeus12);
-      grant13.set('localAwardId', coeus13);
 
       grant1.set('pi', person2);
       grant1.get('coPis').pushObject(person1);
@@ -636,27 +584,29 @@ console.log(" >> Creating test data");
       grant13.set('pi', person2);
       grant13.get('coPis').pushObject(person13);
 
-      deposit1.set('assignedId', depositID1);
       deposit1.set('submission', sub1);
+      deposit1.set('repository', repo1);
 
-      deposit2.set('assignedId', depositID2);
       deposit2.set('submission', sub1);
+      deposit2.set('repository', repo2);
 
-      deposit3.set('assignedId', depositID3);
       deposit3.set('submission', sub2);
+      deposit3.set('repository', repo1);
 
-      deposit4.set('assignedId', depositID4);
       deposit4.set('submission', sub4);
+      deposit4.set('repository', repo1);
+
+      deposit5.set('repository', repo1);
 
       sub1.set('creator', user2);
       sub2.set('creator', user2);
       sub3.set('creator', user3);
       sub4.set('creator', user1);
 
-      // sub1.set('author', person1);
-      // sub2.set('author', person2);
-      // sub3.set('author', person3);
-      // sub4.set('author', person4);
+      sub1.get('authors').pushObject(person1);
+      sub2.get('authors').pushObject(person2);
+      sub3.get('authors').pushObject(person3);
+      sub4.get('authors').pushObject(person4);
 
       sub1.get('deposits').pushObject(deposit1);
       sub1.get('deposits').pushObject(deposit2);
@@ -669,31 +619,27 @@ console.log(" >> Creating test data");
 
       grant3.get('submissions').pushObject(sub3);
       grant4.get('submissions').pushObject(sub4);
-      journalA1.get('ISSNs').pushObject(journalID1);
+
       journalA1.set('publisher', publisherA2);
       publisherA2.get('journals').pushObject(journalA1);
 
-      journalA3.get('ISSNs').pushObject(journalID3);
       journalA3.set('publisher', publisherA2);
       publisherA2.get('journals').pushObject(journalA3);
 
-      journalA2.get('ISSNs').pushObject(journalID2);
       journalA2.set('publisher', publisherA1);
       publisherA1.get('journals').pushObject(journalA2);
 
-      journalB1.get('ISSNs').pushObject(journalID4);
       journalB1.set('publisher', publisherB1);
       publisherB1.get('journals').pushObject(journalB1);
 
-      journalB2.get('ISSNs').pushObject(journalID5);
       journalB2.set('publisher', publisherB1);
       publisherB1.get('journals').pushObject(journalB2);
 
-      journalB3.get('ISSNs').pushObject(journalID6);
       journalB3.set('publisher', publisherB1);
       publisherB1.get('journals').pushObject(journalB3);
 
-      return RSVP.all(objects.map(o => o.save()));
-    });
+      return RSVP.all(objects.map(o => o.save()))
+          .catch((reason) => console.log(" !!! Failed to save relationships: " + reason));
+    }).catch(reason => console.log(" !!! Failed to moo: " + reason));
   }
 });

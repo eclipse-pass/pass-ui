@@ -11,8 +11,10 @@ export default DS.Model.extend({
   publisher: DS.belongsTo('publisher'),
   /**
    * List of journal ISSN's (strings)
+   * TODO how to do string arrays for real...
    */
-  ISSNs: DS.hasMany('identifier', {async: true}),
+  issns: DS.attr('string-arr'),
+  // issns: DS.hasMany('string', {async: true}),
   /**
    * National Library of Medicine Title Abbreviation
    */
