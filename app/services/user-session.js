@@ -34,7 +34,7 @@ export default Service.extend({
     // First attempt to login with Basic auth.
     // If successfull and test objects are not loaded, load test objects
     // Finally check to make sure user is in store
-
+console.log(" >> Finding user");
     return store.findAll('user').then(users => {
       if (users.get('length') == 0) {
         return this.createTestData().then(() => store.findAll('user'));
@@ -57,7 +57,7 @@ export default Service.extend({
   // Return a promise to create the test data
   createTestData() {
       // Create the test objects without relationships
-      
+console.log(" >> Creating test data");
     let store = this.get('store');
 
     let user1 = store.createRecord('user', {
@@ -81,28 +81,23 @@ export default Service.extend({
     });
 
     let funder1 = store.createRecord('funder', {
-        name: 'National Eye Institute',
-        repo: 'PMC'
+        name: 'National Eye Institute'
     });
 
     let funder2 = store.createRecord('funder', {
-        name: 'National Science Foundation',
-        repo: 'NSF-PAR'
+        name: 'National Science Foundation'
     });
 
     let funder3 = store.createRecord('funder', {
-        name: 'National Inst Of Diabetes And Digestion',
-        repo: 'PMC'
+        name: 'National Inst Of Diabetes And Digestion'
     });
 
     let funder4 = store.createRecord('funder', {
-        name: 'National Inst of Mental Health',
-        repo: 'PMC'
+        name: 'National Inst of Mental Health'
     });
 
     let funder5 = store.createRecord('funder', {
-        name: 'National Institute of Health',
-        repo: 'PMC'
+        name: 'National Institute of Health'
     });
 
     let coeus1 = store.createRecord('identifier', {
@@ -537,7 +532,7 @@ export default Service.extend({
       person9, person10,person11, person12, person13,
       journalA1, journalA2, journalA3, journalB1, journalB2, journalB3,
       journalID1, journalID2, journalID3, journalID4, journalID5, journalID6,
-      publisherA1, publisherA2, publisherB1
+      publisherA1, publisherA2, publisherB1,
   ];
 
     return RSVP.all(objects.map(o => o.save())).then(() => {
