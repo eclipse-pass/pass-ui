@@ -79,23 +79,28 @@ export default Service.extend({
     });
 
     let funder1 = store.createRecord('funder', {
-        name: 'National Eye Institute'
+        name: 'National Eye Institute',
+        repo: 'PMC'
     });
 
     let funder2 = store.createRecord('funder', {
-        name: 'National Science Foundation'
+        name: 'National Science Foundation',
+        repo: 'NSF-PAR'
     });
 
     let funder3 = store.createRecord('funder', {
-        name: 'National Inst Of Diabetes And Digestion'
+        name: 'National Inst Of Diabetes And Digestion',
+        repo: 'PMC'
     });
 
     let funder4 = store.createRecord('funder', {
-        name: 'National Inst of Mental Health'
+        name: 'National Inst of Mental Health',
+        repo: 'PMC'
     });
 
     let funder5 = store.createRecord('funder', {
-        name: 'National Institute of Health'
+        name: 'National Institute of Health',
+        repo: 'PMC'
     });
 
     // let coeus14 = store.createRecord('identifier', {
@@ -478,6 +483,24 @@ export default Service.extend({
     // 10.1039/c7an01256j
     // 10.1039/C7AN01617D
 
+    let policy1 = store.createRecord('policy', {
+      title: 'National Institute of Health Public Access Policy',
+      description: '',
+      isDefault: false
+    });
+
+    let policy2 = store.createRecord('policy', {
+      title: 'National Science Foundation Public Access Policy',
+      description: '',
+      isDefault: false
+    });
+
+    let policy3 = store.createRecord('policy', {
+      title: 'Johns Hopkins Public Access Policy',
+      description: '',
+      isDefault: true
+    });
+
     // Persist the test objects, add relationships, and then persist again.
 
     let objects = [user1, user2, user3, user4,
@@ -490,10 +513,20 @@ export default Service.extend({
       person9, person10,person11, person12, person13,
       journalA1, journalA2, journalA3, journalB1, journalB2, journalB3,
       publisherA1, publisherA2, publisherB1,
-      repo1, repo2, repo3
-  ];
+      repo1, repo2, repo3,
+      policy1, policy2, policy3
+    ];
 
     return RSVP.all(objects.map(o => o.save())).then(() => {
+      policy1.get('repositories').pushObject(repo1);
+      policy2.get('repositories').pushObject(repo2);
+      policy3.get('repositories').pushObject(repo3);
+
+      funder1.set('policy', policy1);
+      funder2.set('policy', policy2);
+      funder3.set('policy', policy1);
+      funder4.set('policy', policy1);
+      funder5.set('policy', policy1);
 
       grant1.set('creator', user2);
       grant2.set('creator', user2);
