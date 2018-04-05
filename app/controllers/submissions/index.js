@@ -34,9 +34,9 @@ export default Controller.extend({
 
   piColumns: [
     { propertyName: 'title', title: 'Article' },
-    // { title: 'Award Number (Funder)', component: 'submissions-award-cell' },
+    { title: 'Award Number (Funder)', component: 'submissions-award-cell' },
     { propertyName: 'authors', title: 'Corr. Author', component: 'submissions-author-cell' },
-    // { title: 'Repo', component: 'submissions-repo-cell' },
+    { title: 'Repo', component: 'submissions-repo-cell' },
     { propertyName: 'updatedDate', title: 'Last Update Date', component: 'date-cell' },
     { propertyName: 'submittedDate', title: 'Submitted Date', component: 'date-cell' },
     { propertyName: 'status', title: 'Status', filterWithSelect: true,

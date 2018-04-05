@@ -37,14 +37,12 @@ export default Service.extend({
 
     return store.findAll('user').then(users => {
       if (users.get('length') == 0) {
-        console.log(" > No data found, creating test data");
         return this.createTestData().then(() => store.findAll('user'));
       } else {
         return users;
       }
     }).then(users => {
       let match = users.find(user => user.get('username') === username);
-      console.log(" > Any matching users?");
       if (match) {
         this.set('user', match);
       }
@@ -59,7 +57,7 @@ export default Service.extend({
   createTestData() {
       // Create the test objects without relationships
     let store = this.get('store');
-console.log(" > Creating users");
+
     let user1 = store.createRecord('user', {
       username: 'admin',
       role: 'admin'
@@ -79,7 +77,7 @@ console.log(" > Creating users");
       username: 'CynthiaSears',
       role: 'pi'
     });
-console.log(" > Creating funders");
+
     let funder1 = store.createRecord('funder', {
         name: 'National Eye Institute'
     });
@@ -104,7 +102,6 @@ console.log(" > Creating funders");
     //     label: '16075399'
     // });
 
-console.log(" > Creating people");
     let person1 = store.createRecord('person', {
         displayName: 'Ernest Ford',
         email: 'ford@example.com'
@@ -163,7 +160,7 @@ console.log(" > Creating people");
       displayName: 'Erin Lewin',
       email: 'elewin@jhu.edu'
     });
-console.log(" > Creating grants");
+
     let grant1 = store.createRecord('grant', {
       awardNumber: 'R01EY027824',
       projectName: 'Regulation of blood-retinal barrier by placental growth factor.',
@@ -287,7 +284,7 @@ console.log(" > Creating grants");
       oapCompliance: 'Yes',
       localAwardId: '16086889'
     });
-console.log(" > Creating deposits");
+
     let deposit1 = store.createRecord('deposit', {
       updatedDate: new Date('2016-04-02'),
       status: 'Submitted',
@@ -322,7 +319,7 @@ console.log(" > Creating deposits");
       assignedId: '0982342',
       accessUrl: '',
     });
-console.log(" > Creating repos");
+
     let repo1 = store.createRecord('repository', {
       name: 'PubMed Central',
       description: '',
@@ -340,7 +337,7 @@ console.log(" > Creating repos");
       description: '',
       url: ''
     });
-console.log(" > Creating submissions");
+
     let sub1 = store.createRecord('submission', {
       title: 'Evaluating the Role of Interdigitated Neoadjuvant Chemotherapy and Radiation in the Management of High-Grade Soft-Tissue Sarcoma: The Johns Hopkins Experience.',
       creationDate: new Date('2016-04-04'),
@@ -380,7 +377,7 @@ console.log(" > Creating submissions");
       // corrAuthorName: 'Eric Frey',
       // corrAuthorEmail: 'frey@example.com'
     });
-console.log(" > Creating publisher");
+
     let publisherA1 = store.createRecord('publisher', {
       name: 'American Chemical Society'
     });
@@ -392,7 +389,7 @@ console.log(" > Creating publisher");
     let publisherB1 = store.createRecord('publisher', {
       name: 'Royal Society of Chemistry'
     });
-console.log(" > Creating journals");
+
     // let journalID1 = store.createRecord('identifier', {
     //   type: 'epub',
     //   label: 'ISSN',
@@ -497,7 +494,7 @@ console.log(" > Creating journals");
   ];
 
     return RSVP.all(objects.map(o => o.save())).then(() => {
-console.log(" > Setting grant relationships");
+
       grant1.set('creator', user2);
       grant2.set('creator', user2);
       grant3.set('creator', user3);
