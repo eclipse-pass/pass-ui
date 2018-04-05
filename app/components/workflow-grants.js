@@ -7,7 +7,12 @@ export default Component.extend({
       addedGrants: [],
 
       actions: {
-
+          next() {
+            this.sendAction('next')
+          },
+          back() {
+            this.sendAction('back')
+          },
           /** Rollback the submission, clears the list of added grants
            *
            * There is no facility for rolling back relationships, so this has to be

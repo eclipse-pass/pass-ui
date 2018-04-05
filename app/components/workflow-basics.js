@@ -20,7 +20,12 @@ export default Component.extend({
 
   },
   actions: {
-
+    next() {
+      this.sendAction('next')
+    },
+    back() {
+      this.sendAction('back')
+    },
     /** looks up the DIO and returns title and journal if avaiable */
     lookupDOI() {
       var submission = this.get('model');
@@ -32,6 +37,10 @@ export default Component.extend({
           submission.set('title', doiInfo['title']);
           submission.set('submittedDate', doiInfo['deposited']);
           submission.set('creationDate', doiInfo['created']);
+
+          submission.set('issue', doiInfo['issue']);
+          submission.set('volume', doiInfo['volume']);
+
           // grab DOI info
           // find the journal that corresponds with the journal name
           // RETURN that journal and save it to the model

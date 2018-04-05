@@ -10,7 +10,12 @@ export default Component.extend({
   depositLocally: true,
 
   actions: {
-
+      next() {
+        this.sendAction('next')
+      },
+      back() {
+        this.sendAction('back')
+      },
       /** Rollback the submission, clears the list of added grants
        *
        * There is no facility for rolling back relationships, so this has to be
@@ -74,7 +79,10 @@ export default Component.extend({
       },
 
       selectLocalDeposit() {
+        console.log('selectLocalDeposit')
           this.set('depositLocally', !this.get('depositLocally'));
+          console.log('selectLocalDeposit',   this.get('depositLocally'))
+
       },
 
       /** Determines if the given repo is among the deposits.

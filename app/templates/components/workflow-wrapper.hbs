@@ -7,32 +7,30 @@
       {{submission-nav submission=model step=step class="col-lg-4 d-md-down-none bg-faded border border-left-0 border-top-0 border-bottom-0 border-primary "}}
       <main class="col-lg-8 col-md-12">
         {{#if (eq step 1)}}
-          {{workflow-basics model=model}}
+          {{workflow-basics model=model next=(action "next") back=(action "back")}}
         {{/if}}
         {{#if (eq step 2)}}
-          {{workflow-grants model=model}}
+          {{workflow-grants model=model next=(action "next") back=(action "back")}}
         {{/if}}
         {{#if (eq step 3)}}
-          {{workflow-repositories model=model}}
+          {{workflow-repositories model=model next=(action "next") back=(action "back")}}
         {{/if}}
         {{#if (eq step 4)}}
-          {{workflow-policies model=model}}
+          {{workflow-policies model=model next=(action "next") back=(action "back")}}
         {{/if}}
         {{#if (eq step 5)}}
-          {{workflow-metadata model=model hideWorkflowNext=hideWorkflowNext}}
+          {{workflow-metadata model=model next=(action "next") back=(action "back")}}
         {{/if}}
         {{#if (eq step 6)}}
-          {{workflow-files model=model}}
+          {{workflow-files model=model next=(action "next") back=(action "back")}}
         {{/if}}
         {{#if (eq step 7)}}
           {{!--
           we just want to validate the last step because up untill this point its okay not to have all the data
           just let them fill out the forms then check that the data is right at the end
            --}}
-        {{workflow-review model=model isValidated=isValidated validate=(action "validate") }}
+        {{workflow-review model=model isValidated=isValidated validate=(action "validate")  next=(action "next") back=(action "back")}}
         {{/if}}
-        <button class="btn btn-outline-primary" {{action "back"}} >Back</button>
-        <button class="btn btn-primary pull-right" {{action "next"}} hidden={{hideWorkflowNext}}>Next</button>
       </main>
   </div>
 </div>

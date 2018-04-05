@@ -2,7 +2,6 @@ import Component from '@ember/component';
 
 export default Component.extend({
   step: 1,
-  hideWorkflowNext: false,
   isValidated: Ember.A(),
   actions: {
     next() {

@@ -3,6 +3,12 @@ import Component from '@ember/component';
 export default Component.extend({
   files:[],
   actions: {
+    next() {
+      this.sendAction('next')
+    },
+    back() {
+      this.sendAction('back')
+    },
     getFiles(){
       let submission = this.get('model');
       var uploads = document.getElementById("file-multiple-input");
@@ -10,13 +16,15 @@ export default Component.extend({
           if (uploads.files.length !== 0) {
             for (var i = 0; i < uploads.files.length; i++) {
                 var file = uploads.files[i];
-                this.files.pushObject(file)
-                console.log(this.files)
+                // TODO this is weird refactor later down the road
+                this.files.pushObject({
+                  "file":file,
+                  "type":file.type.substring(file.type.indexOf("/") + 1),
+                  "description":file.description
+                })
             }
             submission.files = this.files
           }
-        //  submission.files = this.files
-          console.log(uploads, submission.files)
       }
     },
     removeFile(file) {

@@ -7,6 +7,12 @@ export default Component.extend({
 
   },
   actions: {
+    next() {
+      this.sendAction('next')
+    },
+    back() {
+      this.sendAction('back')
+    },
     checkValidate(){
       this.sendAction('validate')
     }
