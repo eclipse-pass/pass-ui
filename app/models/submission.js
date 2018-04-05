@@ -15,6 +15,7 @@ export default DS.Model.extend({
   volume: DS.attr('string'),
   issue: DS.attr('string'),
   files: DS.attr(),
+  metadata: DS.attr(),
   deposits: DS.hasMany('deposit', { async: true }),
   grants: DS.hasMany('grant', { async: true }),
   workflows: DS.hasMany('workflow', { async: true }),
