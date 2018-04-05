@@ -1,4 +1,4 @@
-import Component from '@ember/component';
+// import Component from '@ember/component';
 import Ember from 'ember';
 
 //parms: takes in a schema
@@ -33,8 +33,8 @@ export default Ember.Component.extend({
     //     }
     //   }
     // };
-    $(document).ready(() => {
-      $("#myAlpacaForm").alpaca(this.get('schema'));
-    });
+    // $(document).ready(() => {
+    //   $("#myAlpacaForm").alpaca(this.get('schema'));
+    // });
   }
 });

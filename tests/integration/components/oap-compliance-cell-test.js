@@ -12,12 +12,4 @@ test('it renders', function(assert) {
   this.render(hbs`{{oap-compliance-cell}}`);
 
   assert.equal(this.$().text().trim(), '');
-
-  // Template block usage:
-  this.render(hbs`
-    {{#oap-compliance-cell}}
-    {{/oap-compliance-cell}}
-  `);
-
-  assert.equal(this.$().text().trim(), '');
 });
