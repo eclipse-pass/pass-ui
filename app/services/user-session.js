@@ -430,14 +430,14 @@ export default Service.extend({
       name: 'AAPS Journal',
       nlmta: 'AAPS J',
       pmcParticipation: 'A',
-      issns: ['1550-7416']
+      // issns: ['1550-7416']
     });
 
     let journalA2 = store.createRecord('journal', {
       name: 'ACS Medicinal Chemistry Letters',
       nlmta: 'ACS Med Chem Lett',
       pmcParticipation: 'A',
-      issns: ['1948-5875']
+      // issns: ['1948-5875']
     });
     //test DOIs for article that was published by this journal
     // 10.1021/acsmedchemlett.7b00397
@@ -447,14 +447,14 @@ export default Service.extend({
       name: 'AAPS PharmSci',
       nlmta: 'AAPS PharmSci',
       pmcParticipation: 'A',
-      issns: ['1522-1059']
+      // issns: ['1522-1059']
     });
 
     let journalB1 = store.createRecord('journal', {
       name: 'Food & Function',
       nlmta: 'Food Funct',
       pmcParticipation: 'B',
-      issns: ['2042-6496']
+      // issns: ['2042-6496']
     });
     //test DOIs for articles that were published by this journal
     // 10.1039/c7fo01251a
@@ -465,14 +465,14 @@ export default Service.extend({
       name: 'Toxicology Research',
       nlmta: 'Toxicol Res',
       pmcParticipation: 'B',
-      issns: ['2045-4538']
+      // issns: ['2045-4538']
     });
 
     let journalB3 = store.createRecord('journal', {
       name: 'Analyst',
       nlmta: 'Analyst',
       pmcParticipation: 'B',
-      issns: ['0003-2654']
+      // issns: ['0003-2654']
     });
     //test DOIs for articles that were published by this journal
     // 10.1039/c7an01256j
@@ -611,6 +611,8 @@ export default Service.extend({
       sub1.get('grants').pushObject(grant4);
       grant1.get('submissions').pushObject(sub1);
 
+      sub1.set('journal', journalA1);
+
       sub2.get('deposits').pushObject(deposit3);
       grant1.get('submissions').pushObject(sub2);
 
@@ -635,8 +637,7 @@ export default Service.extend({
       journalB3.set('publisher', publisherB1);
       publisherB1.get('journals').pushObject(journalB3);
 
-      return RSVP.all(objects.map(o => o.save()))
-          .catch((reason) => console.log(" !!! Failed to save relationships: " + reason));
-    }).catch(reason => console.log(" !!! Failed to moo: " + reason));
+      return RSVP.all(objects.map(o => o.save()));
+    });
   }
 });

@@ -12,8 +12,9 @@ export default DS.Model.extend({
   /**
    * List of journal ISSN's (strings)
    * TODO how to do string arrays for real...
+   * TODO can be supported from the ember-fedora-adapter, but just don't use for now
    */
-  issns: DS.attr('string-arr'),
+  issns: DS.attr(),
   // issns: DS.hasMany('string', {async: true}),
   /**
    * National Library of Medicine Title Abbreviation
