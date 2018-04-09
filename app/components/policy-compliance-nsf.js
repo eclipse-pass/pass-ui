@@ -13,7 +13,7 @@ export default Component.extend({
 
         register(function () {
             return self.get('store').createRecord('deposit', {
-                repo: 'NSF-PAR',
+                repository: 'NSF-PAR',
                 status: 'new'
             });
         });

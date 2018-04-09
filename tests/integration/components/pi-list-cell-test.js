@@ -11,14 +11,13 @@ test('it renders', function(assert) {
 
   this.set('record', {
     pi: {
-      name: 'Bob'
-    }, copis: [
-      {
-        name: 'Yoda'
-      }, {
-        name: 'Luke'
-      }
-    ]
+      displayName: 'Bob'
+    },
+    coPis: [{
+      displayName: 'Yoda'
+    }, {
+      displayName: 'Luke'
+    }]
   });
 
   this.render(hbs`{{pi-list-cell record=record}}`);

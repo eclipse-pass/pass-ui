@@ -43,7 +43,6 @@ export default Service.extend({
       }
     }).then(users => {
       let match = users.find(user => user.get('username') === username);
-
       if (match) {
         this.set('user', match);
       }
@@ -57,7 +56,6 @@ export default Service.extend({
   // Return a promise to create the test data
   createTestData() {
       // Create the test objects without relationships
-
     let store = this.get('store');
 
     let user1 = store.createRecord('user', {
@@ -105,115 +103,66 @@ export default Service.extend({
         repo: 'PMC'
     });
 
-    let coeus1 = store.createRecord('identifier', {
-        label: '16129769'
-    });
-
-    let coeus2 = store.createRecord('identifier', {
-        label: '16120629'
-    });
-
-    let coeus3 = store.createRecord('identifier', {
-        label: '16120539'
-    });
-    let coeus4 = store.createRecord('identifier', {
-        label: '16120469'
-    });
-
-    let coeus5 = store.createRecord('identifier', {
-        label: '16120459'
-    });
-
-    let coeus6 = store.createRecord('identifier', {
-        label: '16120169'
-    });
-    let coeus7 = store.createRecord('identifier', {
-        label: '1204023'
-    });
-
-    let coeus8 = store.createRecord('identifier', {
-        label: '16119319'
-    });
-
-    let coeus9 = store.createRecord('identifier', {
-        label: '16119219'
-    });
-    let coeus10 = store.createRecord('identifier', {
-        label: '16118979'
-    });
-
-    let coeus11 = store.createRecord('identifier', {
-        label: '16108389'
-    });
-
-    let coeus12 = store.createRecord('identifier', {
-        label: '16097079'
-    });
-    let coeus13 = store.createRecord('identifier', {
-        label: '16086889'
-    });
-
-    let coeus14 = store.createRecord('identifier', {
-        label: '16075399'
-    });
-
+    // let coeus14 = store.createRecord('identifier', {
+    //     label: '16075399'
+    // });
 
     let person1 = store.createRecord('person', {
-        name: 'Ernest Ford',
+        displayName: 'Ernest Ford',
         email: 'ford@example.com'
     });
 
     let person2 = store.createRecord('person', {
-        name: 'Anne Gudzune',
+        displayName: 'Anne Gudzune',
         email: 'anne@example.com'
     });
 
     let person3 = store.createRecord('person', {
-        name: 'Stephen Pillage',
+        displayName: 'Stephen Pillage',
         email: 'illage@example.com'
     });
 
     let person4 = store.createRecord('person', {
-        name: 'Eric Frey',
+        displayName: 'Eric Frey',
         email: 'frey@example.com'
     });
 
     let person5 = store.createRecord('person', {
-      name: 'Michael Jacobs',
+      displayName: 'Michael Jacobs',
       email: 'mjacobe@example.com'
     });
 
     let person6 = store.createRecord('person', {
-      name: 'John Wong',
+      displayName: 'John Wong',
       email: 'wongj@jhu.edu'
     });
 
     let person7 = store.createRecord('person', {
-      name: 'Tiffany Brown',
+      displayName: 'Tiffany Brown',
       email: 'tbrown@jhu.edu'
     });
     let person8 = store.createRecord('person', {
-      name: 'Hillary Peek',
+      displayName: 'Hillary Peek',
       email: 'peek@jhu.edu'
     });
     let person9 = store.createRecord('person', {
-      name: 'Steve Plimpton',
+      displayName: 'Steve Plimpton',
       email: 'plimpton@jhu.edu'
     });
     let person10 = store.createRecord('person', {
-      name: 'Szu Wang',
+      displayName: 'Szu Wang',
       email: 'swang@jhu.edu'
     });
     let person11 = store.createRecord('person', {
-      name: 'Kurt Sanders',
+      displayName: 'Kurt Sanders',
       email: 'sanders@jhu.edu'
     });
     let person12 = store.createRecord('person', {
-      name: 'Robert Bradley',
+      displayName: 'Robert Bradley',
       email: 'bradley@jhu.edu'
     });
     let person13= store.createRecord('person', {
-      name: 'Erin Lewin',
+      displayName: 'Erin Lewin',
       email: 'elewin@jhu.edu'
     });
 
@@ -222,8 +171,9 @@ export default Service.extend({
       projectName: 'Regulation of blood-retinal barrier by placental growth factor.',
       startDate: new Date('2017-04-01'),
       endDate: new Date('2022-03-31'),
-      status: 'Active',
-      oapCompliance: 'No'
+      awardStatus: 'Active',
+      oapCompliance: 'No',
+      localAwardId: '16129769'
     });
 
     let grant2 = store.createRecord('grant', {
@@ -231,8 +181,9 @@ export default Service.extend({
       projectName: 'Identification and Activation Mechanisms of Vagal and Spinal Nociceptors in Esophageal Mucosa',
       startDate: new Date('2017-08-01'),
       endDate: new Date('2021-07-31'),
-      status: 'Active',
-      oapCompliance: 'No'
+      awardStatus: 'Active',
+      oapCompliance: 'No',
+      localAwardId: '16120629'
     });
 
     let grant3 = store.createRecord('grant', {
@@ -240,8 +191,9 @@ export default Service.extend({
       awardNumber: 'R01EY026617',
       startDate: new Date('2017-06-01'),
       endDate: new Date('2020-05-31'),
-      status: 'Active',
-      oapCompliance: 'No'
+      awardStatus: 'Active',
+      oapCompliance: 'No',
+      localAwardId: '16120539'
     });
 
     let grant4 = store.createRecord('grant', {
@@ -249,8 +201,9 @@ export default Service.extend({
       awardNumber: '1640778',
       startDate: new Date('2016-06-01'),
       endDate: new Date('2017-12-31'),
-      status: 'Active',
-      oapCompliance: 'Yes'
+      awardStatus: 'Active',
+      oapCompliance: 'Yes',
+      localAwardId: '16120469'
     });
 
     let grant5 = store.createRecord('grant', {
@@ -258,8 +211,9 @@ export default Service.extend({
       awardNumber: 'T32MH014592',
       startDate: new Date('2016-07-01'),
       endDate: new Date('2017-06-30'),
-      status: 'Terminated',
-      oapCompliance: 'Yes'
+      awardStatus: 'Terminated',
+      oapCompliance: 'Yes',
+      localAwardId: '16120459'
     });
 
     let grant6 = store.createRecord('grant', {
@@ -267,16 +221,18 @@ export default Service.extend({
       awardNumber: 'T32MH019545',
       startDate: new Date('2016-07-01'),
       endDate: new Date('2018-06-30'),
-      status: 'Active',
-      oapCompliance: 'Yes'
+      awardStatus: 'Active',
+      oapCompliance: 'Yes',
+      localAwardId: '16120169'
     });
     let grant7 = store.createRecord('grant', {
       projectName: 'GEM:  RESPONSE OF GLOBAL IONOSPHERIC CURRENTS TO SUBSTORMS:  IMPLICATION FOR THE ELECTRIC FIELD PENETRATION TO THE INNER MAGNETOSPHERE',
       awardNumber: '1502700',
       startDate: new Date('2016-05-15'),
       endDate: new Date('2019-04-30'),
-      status: 'Active',
-      oapCompliance: 'Yes'
+      awardStatus: 'Active',
+      oapCompliance: 'Yes',
+      localAwardId: '1204023'
     });
 
     let grant8 = store.createRecord('grant', {
@@ -284,108 +240,107 @@ export default Service.extend({
       awardNumber: 'D43TW010512',
       startDate: new Date('2017-06-01'),
       endDate: new Date('2022-05-31'),
-      status: 'Active',
-      oapCompliance: 'Yes'
+      awardStatus: 'Active',
+      oapCompliance: 'Yes',
+      localAwardId: '16119319'
     });
     let grant9 = store.createRecord('grant', {
       projectName: 'CAREER: DNA-Templated Assembly of Nanoscale Circuit Interconnects',
       awardNumber: 'CMMI-1253876',
       startDate: new Date('2013-01-01'),
       endDate: new Date('2017-12-31'),
-      status: 'Active',
-      oapCompliance: 'Yes'
+      awardStatus: 'Active',
+      oapCompliance: 'Yes',
+      localAwardId: '16119219'
     });
     let grant10 = store.createRecord('grant', {
       projectName: 'Neurologic Sequelae of HIV Subtype A and D Infection and ART Rakai Uganda',
       awardNumber: 'R01MH099733',
       startDate: new Date('2016-03-01'),
       endDate: new Date('2018-02-28'),
-      status: 'Active',
-      oapCompliance: 'Yes'
+      awardStatus: 'Active',
+      oapCompliance: 'Yes',
+      localAwardId: '16118979'
     });
     let grant11 = store.createRecord('grant', {
       projectName: 'Telomere maintenance by the telomerase RNA-protein complex',
       awardNumber: 'R01GM118757',
       startDate: new Date('2018-03-04'),
       endDate: new Date('2020-08-10'),
-      status: 'Active',
-      oapCompliance: 'Yes'
+      awardStatus: 'Active',
+      oapCompliance: 'Yes',
+      localAwardId: '16108389'
     });
     let grant12 = store.createRecord('grant', {
       projectName: 'Genetics of Fuchs Corneal Dystrophy',
       awardNumber: 'R01EY016835',
       startDate: new Date('2017-03-04'),
       endDate: new Date('2018-08-10'),
-      status: 'Active',
-      oapCompliance: 'Yes'
+      awardStatus: 'Active',
+      oapCompliance: 'Yes',
+      localAwardId: '16097079'
     });
     let grant13 = store.createRecord('grant', {
       projectName: 'P-Adic and Mod P Galois Representations',
       awardNumber: '1564367',
       startDate: new Date('2015-03-04'),
       endDate: new Date('2017-08-10'),
-      status: 'Terminated',
-      oapCompliance: 'Yes'
-    });
-
-    let depositID1 = store.createRecord('identifier', {
-      type: 'NIHMSID',
-      label: '775054',
-      uri: ''
+      awardStatus: 'Terminated',
+      oapCompliance: 'Yes',
+      localAwardId: '16086889'
     });
 
     let deposit1 = store.createRecord('deposit', {
-      repo: 'PMC',
       updatedDate: new Date('2016-04-02'),
-      status: 'Submitted'
-    });
-
-    let depositID2 = store.createRecord('identifier', {
-      type: 'PARID',
-      label: '32654',
-      uri: ''
+      status: 'Submitted',
+      assignedId: '775054',
+      accessUrl: '',
     });
 
     let deposit2 = store.createRecord('deposit', {
-      repo: 'NSF-PAR',
       updatedDate: new Date('2015-05-02'),
-      status: 'Submitted'
-    });
-
-    let depositID3 = store.createRecord('identifier', {
-      type: 'PMCID',
-      label: '659871',
-      uri: ''
+      status: 'Submitted',
+      assignedId: '32654',
+      accessUrl: '',
     });
 
     let deposit3 = store.createRecord('deposit', {
-      repo: 'PMC',
       updatedDate: new Date('2017-05-02'),
-      status: 'Submitted'
-    });
-
-    let depositID4 = store.createRecord('identifier', {
-      type: 'PMCID',
-      label: '9201038',
-      uri: ''
+      status: 'Submitted',
+      assignedId: '659871',
+      accessUrl: '',
     });
 
     let deposit4 = store.createRecord('deposit', {
-      repo: 'PMC',
       updatedDate: new Date('2017-10-02'),
-      status: 'Submitted'
-    });
-
-    let depositID5 = store.createRecord('identifier', {
-      type: 'PMCID',
-      label: '0982342',
-      uri: ''
+      status: 'Submitted',
+      assignedId: '9201038',
+      accessUrl: '',
     });
 
     let deposit5 = store.createRecord('deposit', {
-      repo: 'PMC',
       updatedDate: new Date('2016-10-02'),
-      status: 'Submitted'
+      status: 'Submitted',
+      assignedId: '0982342',
+      accessUrl: '',
+    });
+
+    let repo1 = store.createRecord('repository', {
+      name: 'PubMed Central',
+      description: '',
+      url: 'https://www.ncbi.nlm.nih.gov/pmc/'
+    });
+
+    let repo2 = store.createRecord('repository', {
+      name: 'National Science Foundation Public Access Repository',
+      description: '',
+      url: 'https://par.nsf.gov/'
+    });
+
+    let repo3 = store.createRecord('repository', {
+      name: "Johns Hopkins Open Access Repository",
+      description: '',
+      url: ''
     });
 
     let sub1 = store.createRecord('submission', {
@@ -393,7 +348,9 @@ export default Service.extend({
       creationDate: new Date('2016-04-04'),
       updatedDate: new Date('2016-05-04'),
       submittedDate: new Date('2017-07-04'),
-      status: 'Submitted'
+      status: 'Submitted',
+      // corrAuthorName: 'Ernest Ford',
+      // corrAuthorEmail: 'ford@example.com'
     });
 
     let sub2 = store.createRecord('submission', {
@@ -401,7 +358,9 @@ export default Service.extend({
       creationDate: new Date('2017-06-02'),
       updatedDate: new Date('2017-12-04'),
       submittedDate: new Date('2017-12-04'),
-      status: 'Submitted'
+      status: 'Submitted',
+      // corrAuthorName: 'Anne Gudzune',
+      // corrAuthorEmail: 'anne@example.com'
     });
 
 
@@ -409,7 +368,9 @@ export default Service.extend({
       title: 'Immunomodulatory Drugs: Immune Checkpoint Agents in Acute Leukemia.',
       creationDate: new Date('2017-06-02'),
       updatedDate: new Date('2017-11-04'),
-      status: 'In Progress'
+      status: 'In Progress',
+      // corrAuthorName: 'Stephen Pillage',
+      // corrAuthorEmail: 'illage@example.com'
     });
 
 
@@ -417,67 +378,71 @@ export default Service.extend({
       title: 'Family history of alcoholism is related to increased D2 /D3 receptor binding potential: a marker of resilience or risk?',
       creationDate: new Date('2017-06-02'),
       updatedDate: new Date('2017-11-22'),
-      status: 'In Progress'
+      status: 'In Progress',
+      // corrAuthorName: 'Eric Frey',
+      // corrAuthorEmail: 'frey@example.com'
     });
 
     let publisherA1 = store.createRecord('publisher', {
       name: 'American Chemical Society'
-    })
+    });
 
     let publisherA2 = store.createRecord('publisher', {
       name: 'American Association of Pharmaceutical Scientists'
-    })
+    });
 
     let publisherB1 = store.createRecord('publisher', {
       name: 'Royal Society of Chemistry'
-    })
+    });
 
-    let journalID1 = store.createRecord('identifier', {
-      type: 'epub',
-      label: 'ISSN',
-      uri: '1550-7416'
-    })
+    // let journalID1 = store.createRecord('identifier', {
+    //   type: 'epub',
+    //   label: 'ISSN',
+    //   uri: '1550-7416'
+    // })
 
-    let journalID2 = store.createRecord('identifier', {
-      type: 'epub',
-      label: 'ISSN',
-      uri: '1948-5875'
-    })
+    // let journalID2 = store.createRecord('identifier', {
+    //   type: 'epub',
+    //   label: 'ISSN',
+    //   uri: '1948-5875'
+    // })
 
-    let journalID3 = store.createRecord('identifier', {
-      type: 'epub',
-      label: 'ISSN',
-      uri: '1522-1059'
-    })
+    // let journalID3 = store.createRecord('identifier', {
+    //   type: 'epub',
+    //   label: 'ISSN',
+    //   uri: '1522-1059'
+    // })
 
-    let journalID4 = store.createRecord('identifier', {
-      type: 'ppub',
-      label: 'ISSN',
-      uri: '2042-6496'
-    })
+    // let journalID4 = store.createRecord('identifier', {
+    //   type: 'ppub',
+    //   label: 'ISSN',
+    //   uri: '2042-6496'
+    // })
 
-    let journalID5 = store.createRecord('identifier', {
-      type: 'epub',
-      label: 'ISSN',
-      uri: '2045-4538'
-    })
+    // let journalID5 = store.createRecord('identifier', {
+    //   type: 'epub',
+    //   label: 'ISSN',
+    //   uri: '2045-4538'
+    // })
 
-    let journalID6 = store.createRecord('identifier', {
-      type: 'ppub',
-      label: 'ISSN',
-      uri: '0003-2654'
-    })
+    // let journalID6 = store.createRecord('identifier', {
+    //   type: 'ppub',
+    //   label: 'ISSN',
+    //   uri: '0003-2654'
+    // })
 
     let journalA1 = store.createRecord('journal', {
       name: 'AAPS Journal',
       nlmta: 'AAPS J',
-      pmcParticipation: 'A'
+      pmcParticipation: 'A',
+      // issns: ['1550-7416']
     });
 
     let journalA2 = store.createRecord('journal', {
       name: 'ACS Medicinal Chemistry Letters',
       nlmta: 'ACS Med Chem Lett',
-      pmcParticipation: 'A'
+      pmcParticipation: 'A',
+      // issns: ['1948-5875']
     });
     //test DOIs for article that was published by this journal
     // 10.1021/acsmedchemlett.7b00397
@@ -486,13 +451,15 @@ export default Service.extend({
     let journalA3 = store.createRecord('journal', {
       name: 'AAPS PharmSci',
       nlmta: 'AAPS PharmSci',
-      pmcParticipation: 'A'
+      pmcParticipation: 'A',
+      // issns: ['1522-1059']
     });
 
     let journalB1 = store.createRecord('journal', {
       name: 'Food & Function',
       nlmta: 'Food Funct',
-      pmcParticipation: 'B'
+      pmcParticipation: 'B',
+      // issns: ['2042-6496']
     });
     //test DOIs for articles that were published by this journal
     // 10.1039/c7fo01251a
@@ -502,37 +469,65 @@ export default Service.extend({
     let journalB2 = store.createRecord('journal', {
       name: 'Toxicology Research',
       nlmta: 'Toxicol Res',
-      pmcParticipation: 'B'
+      pmcParticipation: 'B',
+      // issns: ['2045-4538']
     });
 
     let journalB3 = store.createRecord('journal', {
       name: 'Analyst',
       nlmta: 'Analyst',
-      pmcParticipation: 'B'
+      pmcParticipation: 'B',
+      // issns: ['0003-2654']
     });
     //test DOIs for articles that were published by this journal
     // 10.1039/c7an01256j
     // 10.1039/C7AN01617D
 
+    let policy1 = store.createRecord('policy', {
+      title: 'National Institute of Health Public Access Policy',
+      description: '',
+      isDefault: false
+    });
+
+    let policy2 = store.createRecord('policy', {
+      title: 'National Science Foundation Public Access Policy',
+      description: '',
+      isDefault: false
+    });
+
+    let policy3 = store.createRecord('policy', {
+      title: 'Johns Hopkins Public Access Policy',
+      description: '',
+      isDefault: true
+    });
+
     // Persist the test objects, add relationships, and then persist again.
 
     let objects = [user1, user2, user3, user4,
-      funder1, funder2, funder3,
+      funder1, funder2, funder3, funder4, funder5,
       grant1, grant2, grant3, grant4, grant5, grant6,
-      grant7, grant8, grant9, grant10, grant11, grant12,
-      depositID1, depositID2, depositID3, depositID4, depositID5,
+      grant7, grant8, grant9, grant10, grant11, grant12, grant13,
       deposit1, deposit2, deposit3, deposit4, deposit5,
       sub1, sub2, sub3, sub4,
-      coeus1, coeus2, coeus3, coeus4, coeus5, coeus6,
-      coeus7, coeus8, coeus9, coeus12, coeus10, coeus11, coeus14,
       person1, person2, person3, person4, person5, person6, person7, person8,
       person9, person10,person11, person12, person13,
       journalA1, journalA2, journalA3, journalB1, journalB2, journalB3,
-      journalID1, journalID2, journalID3, journalID4, journalID5, journalID6,
-      publisherA1, publisherA2, publisherB1
-  ];
+      publisherA1, publisherA2, publisherB1,
+      repo1, repo2, repo3,
+      policy1, policy2, policy3
+    ];
 
     return RSVP.all(objects.map(o => o.save())).then(() => {
+      policy1.get('repositories').pushObject(repo1);
+      policy2.get('repositories').pushObject(repo2);
+      policy3.get('repositories').pushObject(repo3);
+
+      funder1.set('policy', policy1);
+      funder2.set('policy', policy2);
+      funder3.set('policy', policy1);
+      funder4.set('policy', policy1);
+      funder5.set('policy', policy1);
+
       grant1.set('creator', user2);
       grant2.set('creator', user2);
       grant3.set('creator', user3);
@@ -544,102 +539,104 @@ export default Service.extend({
       grant9.set('creator', user3);
       grant10.set('creator', user1);
       grant11.set('creator', user3);
-      grant13.set('creator', user2);
       grant12.set('creator', user3);
+      grant13.set('creator', user2);
 
-      grant1.set('funder', funder1);
-      grant2.set('funder', funder3);
-      grant3.set('funder', funder1);
-      grant4.set('funder', funder2);
-      grant5.set('funder', funder4);
-      grant6.set('funder', funder5);
-      grant7.set('funder', funder2);
-      grant8.set('funder', funder5);
-      grant9.set('funder', funder2);
-      grant10.set('funder', funder5);
-      grant11.set('funder', funder5);
-      grant12.set('funder', funder1);
-      grant13.set('funder', funder2);
+      grant1.set('directFunder', funder1);
+      grant2.set('directFunder', funder3);
+      grant3.set('directFunder', funder1);
+      grant4.set('directFunder', funder2);
+      grant5.set('directFunder', funder4);
+      grant6.set('directFunder', funder5);
+      grant7.set('directFunder', funder2);
+      grant8.set('directFunder', funder5);
+      grant9.set('directFunder', funder2);
+      grant10.set('directFunder', funder5);
+      grant11.set('directFunder', funder5);
+      grant12.set('directFunder', funder1);
+      grant13.set('directFunder', funder2);
 
-      grant1.set('externalId', coeus1);
-      grant2.set('externalId', coeus2);
-      grant3.set('externalId', coeus3);
-      grant4.set('externalId', coeus4);
-      grant5.set('externalId', coeus5);
-      grant6.set('externalId', coeus6);
-      grant7.set('externalId', coeus7);
-      grant8.set('externalId', coeus8);
-      grant9.set('externalId', coeus9);
-      grant10.set('externalId', coeus10);
-      grant11.set('externalId', coeus11);
-      grant12.set('externalId', coeus12);
-      grant13.set('externalId', coeus13);
+      grant1.set('primaryFunder', funder1);
+      grant2.set('primaryFunder', funder3);
+      grant3.set('primaryFunder', funder1);
+      grant4.set('primaryFunder', funder2);
+      grant5.set('primaryFunder', funder4);
+      grant6.set('primaryFunder', funder5);
+      grant7.set('primaryFunder', funder2);
+      grant8.set('primaryFunder', funder5);
+      grant9.set('primaryFunder', funder2);
+      grant10.set('primaryFunder', funder5);
+      grant11.set('primaryFunder', funder5);
+      grant12.set('primaryFunder', funder1);
+      grant13.set('primaryFunder', funder2);
 
       grant1.set('pi', person2);
-      grant1.get('copis').pushObject(person1);
+      grant1.get('coPis').pushObject(person1);
 
       grant2.set('pi', person2);
 
       grant3.set('pi', person3);
-      grant3.get('copis').pushObject(person4);
+      grant3.get('coPis').pushObject(person4);
 
       grant4.set('pi', person5);
-      grant4.get('copis').pushObject(person6);
-      grant4.get('copis').pushObject(person12);
-      grant4.get('copis').pushObject(person13);
+      grant4.get('coPis').pushObject(person6);
+      grant4.get('coPis').pushObject(person12);
+      grant4.get('coPis').pushObject(person13);
 
 
       grant5.set('pi', person7);
-      grant5.get('copis').pushObject(person8);
-      grant5.get('copis').pushObject(person11);
+      grant5.get('coPis').pushObject(person8);
+      grant5.get('coPis').pushObject(person11);
 
       grant6.set('pi', person9);
-      grant6.get('copis').pushObject(person10);
+      grant6.get('coPis').pushObject(person10);
 
       grant7.set('pi', person12);
-      grant7.get('copis').pushObject(person2);
+      grant7.get('coPis').pushObject(person2);
 
       grant8.set('pi', person2);
 
       grant9.set('pi', person3);
-      grant9.get('copis').pushObject(person4);
+      grant9.get('coPis').pushObject(person4);
 
       grant10.set('pi', person5);
-      grant10.get('copis').pushObject(person6);
-      grant10.get('copis').pushObject(person12);
-      grant10.get('copis').pushObject(person13);
+      grant10.get('coPis').pushObject(person6);
+      grant10.get('coPis').pushObject(person12);
+      grant10.get('coPis').pushObject(person13);
 
       grant11.set('pi', person7);
-      grant11.get('copis').pushObject(person8);
-      grant11.get('copis').pushObject(person11);
+      grant11.get('coPis').pushObject(person8);
+      grant11.get('coPis').pushObject(person11);
 
       grant12.set('pi', person9);
-      grant12.get('copis').pushObject(person10);
+      grant12.get('coPis').pushObject(person10);
 
       grant13.set('pi', person2);
-      grant13.get('copis').pushObject(person13);
+      grant13.get('coPis').pushObject(person13);
 
-      deposit1.set('assignedId', depositID1);
-      deposit1.set('grant', grant1);
+      deposit1.set('submission', sub1);
+      deposit1.set('repository', repo1);
 
-      deposit2.set('assignedId', depositID2);
-      deposit2.set('grant', grant3);
+      deposit2.set('submission', sub1);
+      deposit2.set('repository', repo2);
 
-      deposit3.set('assignedId', depositID3);
-      deposit3.set('grant', grant1);
+      deposit3.set('submission', sub2);
+      deposit3.set('repository', repo1);
 
-      deposit4.set('assignedId', depositID4);
-      deposit4.set('grant', grant2);
+      deposit4.set('submission', sub4);
+      deposit4.set('repository', repo1);
+
+      deposit5.set('repository', repo1);
 
       sub1.set('creator', user2);
       sub2.set('creator', user2);
       sub3.set('creator', user3);
       sub4.set('creator', user1);
 
-      sub1.set('author', person1);
-      sub2.set('author', person2);
-      sub3.set('author', person3);
-      sub4.set('author', person4);
+      sub1.get('authors').pushObject(person1);
+      sub2.get('authors').pushObject(person2);
+      sub3.get('authors').pushObject(person3);
+      sub4.get('authors').pushObject(person4);
 
       sub1.get('deposits').pushObject(deposit1);
       sub1.get('deposits').pushObject(deposit2);
@@ -647,32 +644,29 @@ export default Service.extend({
       sub1.get('grants').pushObject(grant4);
       grant1.get('submissions').pushObject(sub1);
 
+      sub1.set('journal', journalA1);
+
       sub2.get('deposits').pushObject(deposit3);
       grant1.get('submissions').pushObject(sub2);
 
       grant3.get('submissions').pushObject(sub3);
       grant4.get('submissions').pushObject(sub4);
-      journalA1.get('ISSNs').pushObject(journalID1);
+
       journalA1.set('publisher', publisherA2);
       publisherA2.get('journals').pushObject(journalA1);
 
-      journalA3.get('ISSNs').pushObject(journalID3);
       journalA3.set('publisher', publisherA2);
       publisherA2.get('journals').pushObject(journalA3);
 
-      journalA2.get('ISSNs').pushObject(journalID2);
       journalA2.set('publisher', publisherA1);
       publisherA1.get('journals').pushObject(journalA2);
 
-      journalB1.get('ISSNs').pushObject(journalID4);
       journalB1.set('publisher', publisherB1);
       publisherB1.get('journals').pushObject(journalB1);
 
-      journalB2.get('ISSNs').pushObject(journalID5);
       journalB2.set('publisher', publisherB1);
       publisherB1.get('journals').pushObject(journalB2);
 
-      journalB3.get('ISSNs').pushObject(journalID6);
       journalB3.set('publisher', publisherB1);
       publisherB1.get('journals').pushObject(journalB3);
 

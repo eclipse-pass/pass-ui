@@ -7,8 +7,8 @@ export default Component.extend({
     linkedDeposits: [],
 
     remainingRepos: computed('addedDeposits.[]', 'linkedDeposits.[]', function() {
-        let addedRepos = this.get('addedDeposits').map(deposit => deposit.get('repo'));
-        let linkedRepos = this.get('linkedDeposits').map(deposit => deposit.get('repo'));
+        let addedRepos = this.get('addedDeposits').map(deposit => deposit.get('repository'));
+        let linkedRepos = this.get('linkedDeposits').map(deposit => deposit.get('repository'));
 
         return this.get('allRepos').filter(repo => !addedRepos.includes(repo) && !linkedRepos.includes(repo));
     }),

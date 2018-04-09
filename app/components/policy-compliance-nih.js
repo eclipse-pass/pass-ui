@@ -14,7 +14,7 @@ export default Component.extend({
     needsDeposit: false,
 
     /** When component initializes, create and register a deposit-generating function.
-     * 
+     *
      * The regisistered "deposit generating function" registered here
      * generates a Deposit entity necessary for compliance with the
      * NIH open access policy.
@@ -38,7 +38,7 @@ export default Component.extend({
         // If we're method B, we can use use the presence of PMC to determine whether we generate
         // a deposit when our deposit-registering-function is invoked.
         if (pmcMethod ==='B' ) {
-            this.set('needsDeposit', submission.get('deposits').map(deposit => deposit.get('repo')).includes("PMC"));
+            this.set('needsDeposit', submission.get('deposits').map(deposit => deposit.get('repository')).includes("PMC"));
         }
 
         var self = this;
@@ -46,10 +46,10 @@ export default Component.extend({
             // A never needs deposit, C, D does.  B depends on user input.
             let mustDeposit = !pmcMethod || pmcMethod === 'C' || pmcMethod === 'D';
             let answerFromUser = pmcMethod === 'B' && self.get('needsDeposit');
-            
+
             if (mustDeposit || answerFromUser) {
                 return self.get('store').createRecord('deposit', {
-                    repo: 'PMC',
+                    repository: 'PMC',
                     status: 'new'
                 });
             }
@@ -62,7 +62,7 @@ export default Component.extend({
         let submission = this.get('submission');
         let deposits = submission.get('deposits');
 
-        this.set('willPay', !(deposits.map(deposit => deposit.get('repo')).includes("PMC")));
+        this.set('willPay', !(deposits.map(deposit => deposit.get('repository')).includes("PMC")));
     },
 
     actions: {

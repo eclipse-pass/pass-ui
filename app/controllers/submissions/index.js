@@ -10,9 +10,10 @@ export default Controller.extend({
   messageText: '',
 
   actions: {
-    authorclick(submission) {
+    authorclick(submission, person) {
       this.set('messageShow', true);
-      this.set('messageTo', submission.get('author.name'));
+      // this.set('messageTo', submission.get('corrAuthorName'));
+      this.set('messageTo', person.get('displayName'));
       this.set('messageSubject', 'OAP Compliance')
       this.set('messageText', `Concerning submission ${submission.get('title')}, the status is ${submission.get('status')}.\nPlease check your PASS dashboard.`);
     }
@@ -22,9 +23,9 @@ export default Controller.extend({
   columns: computed('session.user', {
     get() {
       if (this.get('session.isAdmin')) {
-            return this.get('adminColumns');
+        return this.get('adminColumns');
       } else if (this.get('session.isPI')) {
-            return this.get('piColumns');
+        return this.get('piColumns');
       } else {
         return [];
       }
@@ -34,7 +35,7 @@ export default Controller.extend({
   piColumns: [
     { propertyName: 'title', title: 'Article', component: 'submissions-article-cell' },
     { title: 'Award Number (Funder)', component: 'submissions-award-cell' },
-    { propertyName: 'author.name', title: 'Corr. Author', component: 'submissions-author-cell' },
+    { propertyName: 'authors', title: 'Corr. Author', component: 'submissions-author-cell' },
     { title: 'Repo', component: 'submissions-repo-cell' },
     { propertyName: 'updatedDate', title: 'Last Update Date', component: 'date-cell' },
     { propertyName: 'submittedDate', title: 'Submitted Date', component: 'date-cell' },
@@ -46,7 +47,7 @@ export default Controller.extend({
   adminColumns: [
     { propertyName: 'title', title: 'Article', component: 'submissions-article-cell' },
     { title: 'Award Number (Funder)', component: 'submissions-award-cell' },
-    { propertyName: 'author.name', title: 'Corr. Author'},
+    { propertyName: 'authors', title: 'Corr. Author', component: 'submissions-author-cell' },
     { title: 'Repo', component: 'submissions-repo-cell' },
     { propertyName: 'updatedDate', title: 'Last Update Date', component: 'date-cell' },
     { propertyName: 'submittedDate', title: 'Submitted Date', component: 'date-cell' },

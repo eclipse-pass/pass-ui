@@ -12,11 +12,11 @@ export default Controller.extend({
 
     actions: {
 
-        /** Rollback the submission, clears the list of added grants 
-         * 
+        /** Rollback the submission, clears the list of added grants
+         *
          * There is no facility for rolling back relationships, so this has to be
          * accounted manually.
-         * 
+         *
         */
         rollback() {
             var submission = this.get('model');
@@ -43,7 +43,7 @@ export default Controller.extend({
                 // No local deposit and we want to add it
                 let submission = this.get('model');
                 let deposit = submission.get('store').createRecord('deposit', {
-                    repo: this.get('localRepoName'),
+                    repository: this.get('localRepoName'),
                     status: 'new',
                     requested: true
                 });
@@ -58,14 +58,14 @@ export default Controller.extend({
         },
 
         /** Creates and inks a deposit to the submission for the given repo
-         * 
+         *
          * @param {string} repoName Name of a repository to add a deposit for.
          */
         addRepo(repoName) {
             let submission = this.get('model');
 
             let deposit = this.get('store').createRecord('deposit', {
-                repo: repoName,
+                repository: repoName,
                 status: 'new',
                 requested: true
             });
@@ -79,7 +79,7 @@ export default Controller.extend({
         },
 
         /** Determines if the given repo is among the deposits.
-         * 
+         *
          * @param {string} repo Repository name.
          */
         isPresent(repo) {
@@ -87,13 +87,13 @@ export default Controller.extend({
             let addedDeposits = this.get('addedDeposits');
 
             // Ugh, can't think of a better way to do this with the PromiseArrays
-            // we get back from relationships.  Concat doesn't work with them. 
-            return savedDeposits.map(deposit => deposit.get('repo')).includes(repo)
-                || addedDeposits.map(deposit => deposit.get('repo')).includes(repo);
+            // we get back from relationships.  Concat doesn't work with them.
+            return savedDeposits.map(deposit => deposit.get('repository')).includes(repo)
+                || addedDeposits.map(deposit => deposit.get('repository')).includes(repo);
         },
 
-        /** Saves the submission and updates all newly-added deposits to link back to this submission 
-         * 
+        /** Saves the submission and updates all newly-added deposits to link back to this submission
+         *
          * @returns {Promise} Save promise for the submission and deposits
          */
         saveAll() {
@@ -105,6 +105,6 @@ export default Controller.extend({
             //TODO: Might want to think of displaying some sort of warning any step fails?
             return Promise.all(deposits.map(deposit => deposit.save()))
                 .then(() => submission.save());
-        }, 
+        },
     }
 });
