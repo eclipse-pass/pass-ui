@@ -7,6 +7,7 @@ const Router = EmberRouter.extend({
 });
 
 Router.map(function() {
+  this.route('login'); // this route must be first, since it's the default.
   this.route('dashboard');
   this.route('about');
   this.route('contact');
@@ -27,7 +28,6 @@ Router.map(function() {
     });
     this.route('new');
   })
-  this.route('login');
 });
 
 export default Router;

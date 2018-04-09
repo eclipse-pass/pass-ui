@@ -1,31 +1,13 @@
 import Controller from '@ember/controller';
 
 export default Controller.extend({
-  previousTransition: null,
-  loginFailed: false,
+  session: Ember.inject.service('session'),
 
   actions: {
-    login() {
-      this.set('loginFailed', false);
-
-      let user = this.get('username');
-      let pass = this.get('password');
-
-      this.get('session').login(user, pass).then(() => {
-        if (this.get('session.authenticated')) {
-          let previousTransition = this.get('previousTransition');
-
-          if (previousTransition) {
-            this.set('previousTransition', null);
-            previousTransition.retry();
-          } else {
-            this.transitionToRoute('index');
-          }
-        } else {
-          this.set('loginFailed', true);
-        }
-      }, () => {
-        this.set('loginFailed', true);
+    authenticate() {
+      let { identification, password } = this.getProperties('identification', 'password');
+      this.get('session').authenticate('authenticator:oauth2', identification, password).catch((reason) => {
+        this.set('errorMessage', reason.error || reason);
       });
     }
   }

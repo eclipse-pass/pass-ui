@@ -1,22 +1,18 @@
 <div class='col-sm-6 col-lg-3 mx-auto'>
   <h2 class="mb-4 font-weight-light">Login</h2>
-  <form>
+  <form {{action 'authenticate' on='submit'}}>
     <div class="form-group">
-      <label for='login-user'>Username:</label>
-      {{input id='login-user' class='form-control' value=username type='text'}}
+      <label for='identification'>Username</label>
+      {{input id='identification' placeholder='Enter Login' value=identification}}
     </div>
 
     <div class="form-group">
-      <label for='login-pass'>Password:</label>
-      {{input id='login-pass' class='form-control' value=password type='password'}}
+      <label for='password'>Password</label>
+      {{input id='password' placeholder='Enter Password' type='password' value=password}}
     </div>
-
-    <button {{action 'login'}} class='btn btn-primary'>Login</button>
+    <button class='btn btn-primary' type="submit">Login</button>
+    {{#if errorMessage}}
+      <p>{{errorMessage}}</p>
+    {{/if}}
   </form>
 </div>
-
-{{#if loginFailed}}
-<div class='alert alert-danger'>
-  Login failed.
-</div>
-{{/if}}

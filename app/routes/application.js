@@ -1,6 +1,7 @@
 import Route from '@ember/routing/route';
+import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
 
-export default Route.extend({
+export default Route.extend(ApplicationRouteMixin, {
   	/* Used as route-action in templates*/
 	actions: {
 	    back() {
@@ -11,7 +12,7 @@ export default Route.extend({
 	    }
 	},
   	model() {
-  	// temp jhuInstitution move out or remove later 
+  	// temp jhuInstitution move out or remove later
     let store = this.get('store');
     let jhuInstitution = store.createRecord('institution', {
         name: 'Johns Hopkins University',
