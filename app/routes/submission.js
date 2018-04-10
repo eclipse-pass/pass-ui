@@ -1,7 +1,7 @@
 import Route from '@ember/routing/route';
-import AuthenticateRouteMixin from '../mixins/authenticate-route-mixin';
+import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 
-export default Route.extend(AuthenticateRouteMixin, {
+export default Route.extend(AuthenticatedRouteMixin, {
   beforeModel() {
     this.transitionTo('submission.new'); // Implicitly aborts the on-going transition.
   }

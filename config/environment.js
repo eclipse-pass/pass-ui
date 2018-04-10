@@ -6,6 +6,7 @@ module.exports = function(environment) {
     modulePrefix: 'pass-ember',
     environment,
     rootURL: '/',
+    host: 'http://localhost:8000',
     locationType: 'auto',
     EmberENV: {
       FEATURES: {
