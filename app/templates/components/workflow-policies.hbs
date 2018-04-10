@@ -1,0 +1,26 @@
+ {{!-- TODO  We need to generlize the policy policy-compliance- component --}}
+ <div class="form-group row">
+   <div class="col-md-12">
+    <p>
+       Based on the funding agencies you provided, these are the public access policies that are applicable to your work
+    </p>
+    {{#each (value-of (action "getPolicies")) as |repo|}}
+        {{#if (eq "PMC" repo)}}
+            {{policy-compliance-nih submission=model register=(action "registerDeposit")}}
+        {{/if}}
+
+        {{#if (eq "NSF-PAR" repo)}}
+            {{policy-compliance-nsf submission=model register=(action "registerDeposit")}}
+        {{/if}}
+
+        {{#if (eq "DOE-PAGES" repo)}}
+            {{policy-compliance-doe submission=model register=(action "registerDeposit")}}
+        {{/if}}
+
+    {{/each}}
+    {{yield}}
+  </div>
+</div>
+
+<button class="btn btn-outline-primary" {{action "back"}}>Back</button>
+<button class="btn btn-primary pull-right" {{action "next"}}>Next</button>

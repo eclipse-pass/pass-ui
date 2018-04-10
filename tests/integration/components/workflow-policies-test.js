@@ -1,25 +1,24 @@
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 
-moduleForComponent('workflow-card', 'Integration | Component | workflow card', {
+moduleForComponent('workflow-policies', 'Integration | Component | workflow policies', {
   integration: true
 });
 
 test('it renders', function(assert) {
-  this.set("nothing", () => {});
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
 
-  this.render(hbs`{{workflow-card}}`);
+  this.render(hbs`{{workflow-policies}}`);
 
-  assert.ok(this.$());
+  assert.equal(this.$().text().trim(), '');
 
   // Template block usage:
   this.render(hbs`
-    {{#workflow-card}}
+    {{#workflow-policies}}
       template block text
-    {{/workflow-card}}
+    {{/workflow-policies}}
   `);
 
-  assert.ok(this.$());
+  assert.equal(this.$().text().trim(), 'template block text');
 });

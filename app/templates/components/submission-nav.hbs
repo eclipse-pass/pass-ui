@@ -1,130 +1,71 @@
-<div>
  <div class="card ">
-
    <div class="card-body p-2">
      <div class="list-group">
-       {{#link-to "submission.show.index" submission class="list-group-item list-group-item-action flex-column align-items-start " }}
-
+       <div {{action (mut step) 1}} class="{{if (eq step 1) 'active'}} list-group-item list-group-item-action flex-column align-items-start">
          <div class="d-flex w-100 justify-content-between">
-           <h5 class="mb-1 font-weight-light">Overview</h5>
+           <h5 class="mb-1 font-weight-light">Basics</h5>
          </div>
-       {{/link-to}}
-
+       </div>
      </div>
    </div>
 
    <div class="card-body p-2">
      <div class="list-group">
-       {{#link-to "submission.show.funding" submission class="list-group-item list-group-item-action flex-column align-items-start " }}
-
+       <div {{action (mut step) 2}} class="{{if (eq step 2) 'active'}} list-group-item list-group-item-action flex-column align-items-start">
          <div class="d-flex w-100 justify-content-between">
-           <h5 class="mb-1 font-weight-light">Awards (Optional)</h5>
+           <h5 class="mb-1 font-weight-light">Grants</h5>
          </div>
-       {{/link-to}}
-
+       </div>
      </div>
    </div>
 
    <div class="card-body p-2">
      <div class="list-group">
-       {{#link-to "submission.show.compliance" submission class="list-group-item list-group-item-action flex-column align-items-start " }}
-
-         <div class="d-flex w-100 justify-content-between">
-           <h5 class="mb-1 font-weight-light">Policies</h5>
-         </div>
-       {{/link-to}}
-
-     </div>
-   </div>
-
-   <div class="card-body p-2">
-     <div class="list-group">
-       {{#link-to "submission.show.repositories" submission class="list-group-item list-group-item-action flex-column align-items-start " }}
-
+       <div {{action (mut step) 3}} class="{{if (eq step 3) 'active'}} list-group-item list-group-item-action flex-column align-items-start">
          <div class="d-flex w-100 justify-content-between">
            <h5 class="mb-1 font-weight-light">Repositories</h5>
          </div>
-       {{/link-to}}
-
+       </div>
      </div>
    </div>
 
    <div class="card-body p-2">
      <div class="list-group">
-       {{#link-to "submission.show.metadata" submission class="list-group-item list-group-item-action flex-column align-items-start " }}
+       <div {{action (mut step) 4}} class="{{if (eq step 4) 'active'}} list-group-item list-group-item-action flex-column align-items-start">
+         <div class="d-flex w-100 justify-content-between">
+           <h5 class="mb-1 font-weight-light">Policies</h5>
+         </div>
+       </div>
+     </div>
+   </div>
 
+   <div class="card-body p-2">
+     <div class="list-group">
+       <div {{action (mut step) 5}} class="{{if (eq step 5) 'active'}} list-group-item list-group-item-action flex-column align-items-start">
          <div class="d-flex w-100 justify-content-between">
            <h5 class="mb-1 font-weight-light">Metadata</h5>
          </div>
-       {{/link-to}}
-
+       </div>
      </div>
    </div>
 
-
    <div class="card-body p-2">
      <div class="list-group">
-       {{#link-to "submission.show.attachments" submission class="list-group-item list-group-item-action flex-column align-items-start " }}
-
+       <div {{action (mut step) 6}} class="{{if (eq step 6) 'active'}} list-group-item list-group-item-action flex-column align-items-start">
          <div class="d-flex w-100 justify-content-between">
            <h5 class="mb-1 font-weight-light">Files</h5>
          </div>
-       {{/link-to}}
-
+       </div>
      </div>
    </div>
 
    <div class="card-body p-2">
      <div class="list-group">
-       {{#link-to "submission.show.submission" submission class="list-group-item list-group-item-action flex-column align-items-start " }}
-
+       <div {{action (mut step) 7}} class="{{if (eq step 7) 'active'}} list-group-item list-group-item-action flex-column align-items-start">
          <div class="d-flex w-100 justify-content-between">
-           <h5 class="mb-1 font-weight-light">Submission</h5>
+           <h5 class="mb-1 font-weight-light">Review</h5>
          </div>
-       {{/link-to}}
-
+       </div>
      </div>
    </div>
  </div>
-</div>
-
-{{!--
-<nav>
-    <ul class="nav nav-pills flex-column">
-        <li class="nav-item">
-            {{#link-to "submission.show.index" submission class="nav-link" }}
-                Overview
-            {{/link-to}}
-        </li>
-        <li class="nav-item">
-            {{#link-to "submission.show.funding" submission class="nav-link" }}
-                Awards (Optional)
-            {{/link-to}}
-        </li>
-        <li class="nav-item">
-            {{#link-to "submission.show.compliance" submission class="nav-link" }}
-                Policies
-            {{/link-to}}
-        </li>
-        <li class="nav-item">
-            {{#link-to "submission.show.repositories" submission class="nav-link" }}
-                Repositories
-            {{/link-to}}
-        </li>
-        <li class="nav-item">
-            {{#link-to "submission.show.metadata" submission class="nav-link" }}
-                Metadata
-            {{/link-to}}
-        </li>
-        <li class="nav-item">
-            {{#link-to "submission.show.attachments" submission class="nav-link" }}
-                Files
-            {{/link-to}}
-        </li>
-        <li class="nav-item">
-            {{#link-to "submission.show.submission" submission class="nav-link" }}
-                Submission
-            {{/link-to}}
-        </li>
-    </ul>
-</nav> --}}

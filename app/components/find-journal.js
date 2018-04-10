@@ -8,10 +8,10 @@ export default Component.extend({
 
     actions: {
 
-        /** Search for journals by matching a term 
-         * 
+        /** Search for journals by matching a term
+         *
          * @param term {string} The search term (regex)
-         * 
+         *
          * TODO:  This simply fetches all journals and iterates through the whole list.
          * It is not suitable for large numbers of journals.  Instead, the server should provide
          * a search API.
