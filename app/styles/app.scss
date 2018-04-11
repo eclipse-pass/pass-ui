@@ -247,6 +247,13 @@ body {
   border-radius: 0px;
 }
 
+.alpaca-invalid > input, .alpaca-invalid >textarea, .alpaca-invalid >select {
+  border-color: #f86c6b;
+}
+
+.alpaca-message-notOptional {
+  display:none;
+}
 @media (max-width: 760px) {
   .navbar .navbar-brand {
       justify-content: center;

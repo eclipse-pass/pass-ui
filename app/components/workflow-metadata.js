@@ -10,58 +10,58 @@ export default Component.extend({
      "properties": {
        "volume": {
          "type": "string",
-         "required": false
+        "required": true
        },
        "issue": {
          "type": "string",
-         "required": false
+        "required": true
        },
        "publicationDate": {
           "title": "Publication Date",
           "description": "Select your publication date",
-          "format": "datetime"
+          "format": "datetime",
+          "required": true
         },
         "publicationType": {
           "type":"string",
           "title":"Publication Type",
           "enum":["ElectronicPublication","PrintPublication"],
-          "required":false
+          "required":true
         },
         "abstract": {
           "type": "string",
-          "required": false
+         "required": true
         },
         "subjects": {
           "type": "string",
-          "required": false
+         "required": true
         },
         "articleURL": {
           "type": "string",
-          "required": false
+         "required": true
         },
         "fName": {
           "type": "string",
-          "required": false
+         "required": true
         },
         "mName": {
           "type": "string",
-          "required": false
         },
         "lName": {
           "type": "string",
-          "required": false
+         "required": true
         },
         "orcid": {
           "type": "string",
-          "required": false
+         "required": true
         },
         "email": {
           "type": "string",
-          "required": false
+         "required": true
         },
         "affiliation": {
           "type": "string",
-          "required": false
+         "required": true
         }
      }
    },
@@ -156,104 +156,104 @@ export default Component.extend({
      "type": "object",
      "properties": {
        "nlmTa": {
-         "type": "string",
-         "required": false
+        "type": "string",
+        "required": true
        },
        "publisherPDF": {
          "type":"string",
          "title":"Publisher's PDF",
          "enum":["yes","no"],
-         "required":false
+         "required":true
        },
        "displayPublisherPDF": {
          "type":"string",
          "title":"Display publisher's PDF instead of NIHMS-generated PDF",
          "enum":["yes","no"],
-         "required":false
+         "required":true
        },
         "embargoPeriod": {
          "type":"string",
          "title":"Embargo Period",
          "enum":[1,2,3,4,5,6,7,8,9,10,11,12],
-         "required":false
+         "required":true
        },
        "eLocationID": {
          "type": "string",
-         "required": false
+        "required": true
        },
        "firstPage": {
          "type": "string",
-         "required": false
+        "required": true
        },
        "lastPage": {
          "type": "string",
-         "required": false
+        "required": true
        },
        "selfURI": {
          "type": "string",
-         "required": false
+        "required": true
        },
        "articleIdType": {
          "type":"string",
          "title":"Article IDs <br> ID Type",
          "enum":["yes","no"],
-         "required":false
+         "required":true
        },
        "articleIdString": {
          "type": "string",
-         "required": false
+        "required": true
        },
        "permissionCopyrightStatement": {
          "type": "string",
-         "required": false
+        "required": true
        },
        "licenseType": {
          "type": "string",
-         "required": false
+        "required": true
        },
        "licenseLink": {
          "type": "string",
-         "required": false
+        "required": true
        },
        "principleFName": {
          "type": "string",
-         "required": false
+        "required": true
        },
        "principleMName": {
          "type": "string",
-         "required": false
+        "required": true
        },
        "principleLName": {
          "type": "string",
-         "required": false
+        "required": true
        },
        "principleOrcid": {
          "type": "string",
-         "required": false
+        "required": true
        },
        "principleEmail": {
          "type": "string",
-         "required": false
+        "required": true
        },
        "principleAffiliation": {
          "type": "string",
-         "required": false
+        "required": true
        },
        "fName": {
          "type": "string",
-         "required": false
+        "required": true
        },
        "mName": {
          "type": "string",
-         "required": false
+        "required": true
        },
        "lName": {
          "type": "string",
-         "required": false
+        "required": true
        },
        "email": {
          "type": "string",
-         "required": false
+        "required": true
        },
 
      }
