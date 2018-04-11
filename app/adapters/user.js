@@ -1,4 +1,3 @@
-// app/adapters/user.js
 import ApplicationAdapter from './application';
 
 export default ApplicationAdapter.extend({
@@ -7,6 +6,7 @@ export default ApplicationAdapter.extend({
       delete query.me;
       return `${this._super(...arguments)}/me/`;
     }
+
     return this._super(...arguments);
-  },
+  }
 });
