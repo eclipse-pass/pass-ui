@@ -2,7 +2,7 @@ import Component from '@ember/component';
 
 export default Component.extend({
   common: {
-  "id":0,
+  "id":'common',
   "data":{},
   "schema": {
      "title": "Common <br><p class='lead text-muted'>Please provide additional information about your article/manuscript below:</p>",
@@ -149,7 +149,7 @@ export default Component.extend({
  },
   // nlmTa
  nih: {
-  "id":1,
+  "id":"nih",
   "data":{},
   "schema": {
     "title": "NIH Manuscript Submission System (NIHMS) <br><p class='lead text-muted'>The following metadata fields will be part of the NIHMS submission.</p>",
@@ -218,10 +218,23 @@ export default Component.extend({
      }
    }
  },
+ ed: {
+   "id":'ed',
+   "schema": {
+     "title": "Department of Energy (ED) <br><p class='lead text-muted'>ED submissions can not be submitted through PASS. You will be prompted how to submit on the last step.</p>",
+      "type": "object",
+      "properties": {
+      }
+   },
+   "options": {
+     "fields": {
+     }
+   }
+ },
 
  Metadata:{},
  schema:{},
- schemas:['common', 'nih'],
+ schemas:['common', 'nih', 'ed'],
  currentFormStep: 0,
 
  didInsertElement(){

@@ -306,60 +306,61 @@ export default Ember.Component.extend({
 
     //Populate form with data if there is any to populate with.
     let metadata = this.get('model.metadata')
+    console.log(newForm)
     if(!metadata) {
        metadata = []
     }
     if(!metadata[newForm.id]) {
+      console.log('meata', metadata)
+      let prePopulateData = {};
+    //  if(metadata) {
+    //  Try to match the doiInfo to the form schema data to populate
+    // Predicts data with .61 accuracy
+      Promise.resolve(originalForm['schema']).then(schema => {
+        try{
+          let doiInfo = this.get( 'doiInfo' )
+            //// Fuzy Match here
+            let f = fuzzySet(  Object.keys( schema.properties ) )
+            for (let doiEntry in doiInfo) {
+              //Validate and check any doi data to make sure its close to the right field
+            if(f.get(doiEntry) !== null){
+              if(doiEntry == "author") {
+                let given = doiInfo[doiEntry][0].given;
+                prePopulateData[f.get(doiEntry)[0][1]] = given
 
-    console.log('meata', metadata)
-    let prePopulateData = {};
-  //  if(metadata) {
-  //  Try to match the doiInfo to the form schema data to populate
-  // Predicts data with .61 accuracy
-    Promise.resolve(originalForm['schema']).then(schema => {
-      try{
-        let doiInfo = this.get( 'doiInfo' )
-          //// Fuzy Match here
-          let f = fuzzySet(  Object.keys( schema.properties ) )
-          for (let doiEntry in doiInfo) {
-            //Validate and check any doi data to make sure its close to the right field
-          if(f.get(doiEntry) !== null){
-            if(doiEntry == "author") {
-              let given = doiInfo[doiEntry][0].given;
-              prePopulateData[f.get(doiEntry)[0][1]] = given
-
-              let family = doiInfo[doiEntry][0].family;
-              prePopulateData['family'] = family
-            }
-            else {
-              if(doiInfo[doiEntry].length > 0 ) {
-                if (f.get(doiEntry)[0][0] > .61) {
-                  console.log(doiEntry ,doiInfo[doiEntry], f.get(doiEntry)[0][0])
-                  //set the found record to the metadata
-                  prePopulateData[f.get(doiEntry)[0][1]] = doiInfo[doiEntry]
+                let family = doiInfo[doiEntry][0].family;
+                prePopulateData['family'] = family
+              }
+              else {
+                if(doiInfo[doiEntry].length > 0 ) {
+                  if (f.get(doiEntry)[0][0] > .61) {
+                    console.log(doiEntry ,doiInfo[doiEntry], f.get(doiEntry)[0][0])
+                    //set the found record to the metadata
+                    prePopulateData[f.get(doiEntry)[0][1]] = doiInfo[doiEntry]
+                  }
                 }
               }
             }
           }
-        }
-        // metadata[this.currentFormStep] = prePopulateData;
-          newForm.data = prePopulateData
-        //  that.set('model.metadata', metadata)
-          console.log('prePopulateData', prePopulateData)
-           // if( metadata[this.currentFormStep]){
-          metadata[this.currentFormStep] = ({
-            id: newForm.id,
-            data: prePopulateData
-          });
-          this.set('model.metadata', metadata)
-           //  newForm.data =  metadata[this.currentFormStep];
-           //  console.log(newForm)
-           // }
-         } catch(e){console.log(e)} 
-    });
-  } else {
-     newForm.data = metadata[this.currentFormStep].data
-  }
+          // metadata[this.currentFormStep] = prePopulateData;
+            newForm.data = prePopulateData
+          //  that.set('model.metadata', metadata)
+            console.log('prePopulateData', prePopulateData)
+             // if( metadata[this.currentFormStep]){
+            metadata[newForm.id] = ({
+              id: newForm.id,
+              data: prePopulateData
+            });
+            console.log('ADDDED A BNE RECXORD')
+            this.set('model.metadata', metadata)
+             //  newForm.data =  metadata[this.currentFormStep];
+             //  console.log(newForm)
+             // }
+           } catch(e){console.log(e)}
+      });
+    } else {
+       newForm.data = metadata[newForm.id].data
+    }
 
     // form ctrls
     newForm.options.form = {
@@ -371,6 +372,7 @@ export default Ember.Component.extend({
             let value = this.getValue();
             let formId = newForm.id
             console.log(formId)
+            metadata[formId] = []
             if(!metadata[formId]){
               metadata.push({
                 id: formId,
