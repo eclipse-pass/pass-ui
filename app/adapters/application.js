@@ -14,13 +14,4 @@ export default DS.JSONAPIAdapter.extend(DataAdapterMixin, {
   host: 'http://localhost:8000',
   namespace: '',
   authorizer: 'authorizer:drf-token-authorizer',
-
-  // buildURL: function(type, id, record) {
-  //   //call the default buildURL and then append a slash
-  //   let url = this._super(type, id, record);
-  //   if (url.slice(-1) != "/") {
-  //     url += "/"
-  //   }
-  //   return url;
-  // }
 });
