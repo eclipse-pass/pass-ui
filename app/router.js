@@ -14,10 +14,6 @@ Router.map(function() {
   this.route('grants', function() {
     this.route('show', { path: '/:grant_id' });
   });
-  this.route('submissions');
-  this.route('submission', function() {
-    this.route('new');
-  });
   this.route('login');
 });
 
