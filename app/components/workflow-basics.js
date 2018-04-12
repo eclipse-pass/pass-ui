@@ -14,10 +14,11 @@ export default Component.extend({
   doiService: service('doi'),
   store: service('store'),
   doiJournal: false,
+  validDOI: 'form-control',
+  validTitle: 'form-control',
 
   init() {
     this._super(...arguments);
-
   },
   actions: {
     next() {
@@ -26,20 +27,109 @@ export default Component.extend({
     back() {
       this.sendAction('back')
     },
+    validateDOI() {
+      // ref: https://www.crossref.org/blog/dois-and-matching-regular-expressions/
+      const doi = this.get('model.doi');
+      const newDOIRegExp = /^10.\d{4,9}\/[-._;()/:A-Z0-9]+$/i;
+      const ancientDOIRegExp = /^10.1002\/[^\s]+$/i;
+      // 0 = no value
+      if ( doi == null ) {
+        this.set('validDOI', 'form-control')
+      } else if ( newDOIRegExp.test(doi) === true || ancientDOIRegExp.test(doi) === true) { // 1 - Accepted
+        this.set('validDOI', 'form-control is-valid')
+        this.set('validTitle', 'form-control is-valid')
+      } else {
+        this.set('validDOI', 'form-control is-invalid')
+      }
+    },
+    validateTitle() {
+      const title = this.get('model.title');
+      this.set('validTitle', title == null || title.length > 5);
+      //if(validTitle)
+      if(title == null) {
+        this.set('validTitle', 'form-control')
+      } else if ( title.length > 5 ) {
+        this.set('validTitle', 'form-control is-valid')
+      } else {
+        this.set('validTitle', 'form-control is-invalid')
+      }
+    },
     /** looks up the DIO and returns title and journal if avaiable */
     lookupDOI() {
-      var submission = this.get('model');
-      var self = this;
+      let submission = this.get('model');
+      let self = this;
       if (submission) {
+        this.send('validateDOI');
         self.set('doiJournal', false)
         this.get('doiService').resolve(submission).then((doiInfo) => {
           self.set('doiInfo', doiInfo);
+          console.log(doiInfo)
+
           submission.set('title', doiInfo['title']);
+
           submission.set('submittedDate', doiInfo['deposited']);
           submission.set('creationDate', doiInfo['created']);
 
           submission.set('issue', doiInfo['issue']);
           submission.set('volume', doiInfo['volume']);
+
+          //Fill out metdata with any data from DOI
+
+          // // TODO: WE need to find a way to loop over how many forms there is going to be I.e common and NIH
+            this.set('doiInfo', doiInfo);
+          // let doiSubmissionData = {
+          //   volume: doiInfo['volume'],
+          //   issue: doiInfo['issue'],
+          //   publicationDate: doiInfo['deposited']['date-time'],
+          //   abstract: "",
+          //   subjects: "",
+          //   articleURL:doiInfo['link'][0]['URL'],
+          //   fName: doiInfo['author'][0]['given'],
+          //   mName: "",
+          //   lName: doiInfo['author'][0]['family'],
+          //   orcid: "",
+          //   email: "",
+          //   affiliation: doiInfo['publisher']
+          // }
+          //
+          //
+          //
+          // "nlmTa":
+          // "publisherPDF":
+          // "displayPublisherPDF":
+          // "embargoPeriod":
+          // "eLocationID":
+          // "firstPage":
+          // "lastPage":
+          // "selfURI":
+          // "articleIdType":
+          // "articleIdString":
+          // "permissionCopyrightStatement":
+          // "licenseType":
+          // "licenseLink":
+          // "principleFName":
+          // "principleMName":
+          // "principleLName":
+          // "principleOrcid":
+          // "principleEmail":
+          // "principleAffiliation":
+          // "fName":
+          // "mName":
+          // "lName":
+          // "email":
+          //
+
+
+          // submission.set('metadata', [
+          //   {
+          //     id: 0,
+          //     data: doiSubmissionData
+          //   },
+          //   {
+          //     id: 1,
+          //     data: doiSubmissionData
+          //   }
+          // ])
 
           // grab DOI info
           // find the journal that corresponds with the journal name

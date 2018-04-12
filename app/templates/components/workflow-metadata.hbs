@@ -1,5 +1,5 @@
 <h4 class="font-weight-light pull-right mr-3">Form {{currentFormStep}} of {{schemas.length}}</h4>
 {{!-- takes in a schema and the model to save the schema to--}}
-{{metadata-form input=schema model=model currentFormStep=currentFormStep nextForm=(action "nextForm") previousForm=(action "previousForm")}}
+{{metadata-form schema=schema model=model doiInfo=doiInfo currentFormStep=currentFormStep nextForm=(action "nextForm") previousForm=(action "previousForm")}}
 
 {{yield}}
