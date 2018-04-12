@@ -7,7 +7,7 @@ export default Route.extend(ApplicationRouteMixin, {
 	session: service(),
 	currentUser: service(),
 
-  	/* Used as route-action in templates*/
+	/* Used as route-action in templates*/
 	actions: {
 	    back() {
 	      history.back();

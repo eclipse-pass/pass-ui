@@ -39,47 +39,7 @@
   showGlobalFilter=false
 }}
 
-{{#if isShowingForm}}
-    {{#modal-dialog translucentOverlay=true}}
-      {{#workflow-group name="overview" as |group|}}
-        {{#workflow-card step="doi" group=group
-            cancel=(action (queue
-                (action (invoke "rollbackAttributes" model))
-                (action (mut isShowingForm) false)
-            ))
-            next=(action "advance" target=group)}}
-          {{submission-overview-doi submission=newSubmissionObject}}
-        {{/workflow-card}}
-
-        {{#workflow-card step="details" group=group
-            back=(action "back" target=group)
-            cancel=(action (queue
-                (action (invoke "rollbackAttributes" model))
-                (action (mut isShowingForm) false)
-            ))
-            save=(action (queue
-              (action "saveWorkflow" newSubmissionObject target=group)
-              (action "saveAndLinkGrant")
-              (action (mut isShowingForm) false)
-            ))
-            continue=(action (queue
-                (action "saveWorkflow" newSubmissionObject target=group)
-                (action "saveAndLinkGrant")
-                (action (mut isShowingForm) false)
-                (route-action "transitionTo" "submission.show.funding" newSubmissionObject)
-            ))}}
-          {{submission-overview-details submission=newSubmissionObject}}
-        {{/workflow-card}}
-
-        {{#workflow-card step="view" group=group}}
-          Saving submission...
-        {{/workflow-card}}
-
-      {{/workflow-group}}
-   {{/modal-dialog}}
-{{/if}}
-
-{{#if session.isPI}}
+{{#if (eq (get (await currentUser.user.person) 'role') 'PI')}}
   <button class="btn btn-primary btn-small" onclick={{action (queue
       (action "newSubmission")
       (action (mut isShowingForm) true)

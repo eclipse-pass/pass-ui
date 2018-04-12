@@ -11,8 +11,8 @@ export default DS.Model.extend({
   isVoluntary: DS.attr('boolean'),
   assignedId: DS.attr('string'),
   userActionRequired: DS.attr('boolean'),
+  accessUrl: DS.attr('string'),
 
-  // relationships
   submission: DS.belongsTo('submission'),
-  repository: DS.belongsTo('repository')
+  repository: DS.belongsTo('repository'),
 });

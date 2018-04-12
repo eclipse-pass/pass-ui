@@ -1,20 +1,19 @@
 import DS from 'ember-data';
 
 export default DS.Model.extend({
-  author: DS.belongsTo('person'),
-  doi: DS.attr('string'),
-  copyright: DS.attr('string'),
-  status: DS.attr('string'),
   title: DS.attr('string'),
   abstract: DS.attr('string'),
-  creator: DS.belongsTo('user'),
-  creationDate: DS.attr('date'),
-  updatedDate: DS.attr('date'),
-  submittedDate: DS.attr('date'),
-  journal: DS.belongsTo('journal'),
+  status: DS.attr('string'),
+  doi: DS.attr('string'),
+  dateSubmitted: DS.attr('date'),
   volume: DS.attr('string'),
   issue: DS.attr('string'),
+  source: DS.attr('string'),
   metadata: DS.attr(),
-  deposits: DS.hasMany('deposit', { async: true }),
+  pubmedId: DS.attr('string'),
+  
+  createdBy: DS.belongsTo('person'),
+  journal: DS.belongsTo('journal'),
+  deposits: DS.hasMany('deposit', { async: true }), // not on this model on API
   grants: DS.hasMany('grant', { async: true }),
 });
