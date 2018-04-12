@@ -1,7 +1,6 @@
 import Component from '@ember/component';
 import Ember from 'ember';
 
-//parms: takes in a schema
 
 function fuzzySet(arr, useLevenshtein, gramSizeLower, gramSizeUpper) {
     var fuzzyset = {
@@ -310,6 +309,8 @@ export default Ember.Component.extend({
     if(!metadata) {
        metadata = []
     }
+    if(!metadata[newForm.id]) {
+
     console.log('meata', metadata)
     let prePopulateData = {};
   //  if(metadata) {
@@ -346,37 +347,19 @@ export default Ember.Component.extend({
         //  that.set('model.metadata', metadata)
           console.log('prePopulateData', prePopulateData)
            // if( metadata[this.currentFormStep]){
-          metadata[this.currentFormStep] = prePopulateData;
+          metadata[this.currentFormStep] = ({
+            id: newForm.id,
+            data: prePopulateData
+          });
           this.set('model.metadata', metadata)
            //  newForm.data =  metadata[this.currentFormStep];
            //  console.log(newForm)
            // }
-         } catch(e){console.log(e)}
+         } catch(e){console.log(e)} 
     });
-
-
-
-  // var found = array1.find(function(element) {
-  //   return element > 10;
-  // });
-
-  ///  metadata = []
-        //newForm.data = this.get('metadata')
-  //  }else {
-      //if( metadata[this.currentFormStep]){
-      //  console.log(metadata[this.currentFormStep].data)
-      //  newForm.data = metadata[this.currentFormStep].data
-    //  }
-    //}
-
-    // TEMP: temp remove after testing
-    // if(!metadata) {
-    //     metadata = []
-    // }else {
-    //   if( metadata[this.currentFormStep]){
-    //     newForm.data = metadata[this.currentFormStep].data
-    //   }
-    // }
+  } else {
+     newForm.data = metadata[this.currentFormStep].data
+  }
 
     // form ctrls
     newForm.options.form = {
