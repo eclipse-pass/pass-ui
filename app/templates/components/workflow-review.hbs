@@ -87,8 +87,11 @@ table td {
                            {{#each-in model.metadata as |index value|}}
                              <li>
                                <br>
-                               <h5 class="font-weight-light">Form {{index}} metadata</h5>
+                               <h5 class="font-weight-light"><span class="text-uppercase">{{index}}</span> metadata</h5>
                                <hr class="mb-1 mt-1">
+                               {{#if (eq index 'ed')}}
+                                The Department of Education requires submission through their submission portal. <i>Pass can not submit for you.</i> You can submit to ED at <a href="https://eric.ed.gov/submit/" target="_blank">eric.ed.gov/submit/</a>
+                               {{/if}}
                                <ul class="list-unstyled">
                                {{#each-in value.data as |key data|}}
                                 <li><b>{{key}}</b>: {{data}}</li>
@@ -115,7 +118,7 @@ table td {
             </table>
          </div>
          <div class="form-group row bg-gray-100 m-0">
-            <label class="col-md-10 col-form-label">I have read and varify that the information for this submission is valid and that the informatin provided is not in violation of any grants</label>
+            <label class="col-md-10 col-form-label">I have read and varify that the information for this submission is valid and that the informatin provided is not in violation of any grants.</label>
             <div class="col-md-2 col-form-label">
                <div class="form-check form-check-inline mr-1">
                   <input class="form-check-input" type="checkbox" id="userVarify" {{action 'checkValidate' on="change" }}>
@@ -123,6 +126,19 @@ table td {
                </div>
             </div>
          </div>
+         {{#each-in model.metadata as |index value|}}
+         {{#if (eq index 'ed')}}
+           <div class="form-group row bg-gray-200 m-0">
+              <label class="col-md-10 col-form-label">I have submitted my manuscript through the <b>Department of Education (ED)</b> submission portal.</label>
+              <div class="col-md-2 col-form-label">
+                 <div class="form-check form-check-inline mr-1">
+                    <input class="form-check-input" type="checkbox" id="externalSubmission" {{action 'checkValidate' on="change" }}>
+                    <label class="form-check-label" for="externalSubmission">yes</label>
+                 </div>
+              </div>
+           </div>
+           {{/if}}
+         {{/each-in}}
       </div>
    </div>
 </div>
