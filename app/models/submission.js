@@ -3,7 +3,7 @@ import DS from 'ember-data';
 export default DS.Model.extend({
   /**
    * Status of the submission (REQUIRED). Possible values:
-   *  - non-compoliant-not-started (submission not yet in compliance with applicable policies.
+   *  - non-compliant-not-started (submission not yet in compliance with applicable policies.
    *      One or more deposits have not been initiated)
    *  - non-compliant-in-progress (all required Deposits for the Submission have been initiated,
    *      but at least one could not be completed and may require additional work by the user
