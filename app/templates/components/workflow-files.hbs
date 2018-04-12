@@ -29,7 +29,7 @@
              <thead>
                <tr>
                  <th>File Name</th>
-                 <th>Size</th>
+                 <th>Manuscript</th>
                  <th>Description</th>
                  <th>Action</th>
                </tr>
@@ -38,7 +38,9 @@
               {{#each files as |file|}}
                  <tr>
                    <td><p  class="table-text" >{{file.file.name}}</p></td>
-                   <td>  {{file.file.size}} bytes</td>
+                   <td class="text-center">
+                     {{input type="checkbox" checked=file.isManuscript}}
+                   </td>
                    <td>
                      {{input  class="form-control" value=file.description}}
                    </td>

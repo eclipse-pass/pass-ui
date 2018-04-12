@@ -20,7 +20,8 @@ export default Component.extend({
                 this.files.pushObject({
                   "file":file,
                   "type":file.type.substring(file.type.indexOf("/") + 1),
-                  "description":file.description
+                  "description":file.description,
+                  "isManuscript":false
                 })
             }
             submission.files = this.files

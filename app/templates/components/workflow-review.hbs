@@ -39,6 +39,12 @@ table td {
 .min-review-type-width {
     min-width: 100px;
 }
+
+.manuscriptTag {
+  position: absolute;
+  top: 22px;
+  right: 44%;
+}
 </style>
 <div class="form-group row">
    <div class="col-md-12">
@@ -87,7 +93,7 @@ table td {
                            {{#each-in model.metadata as |index value|}}
                              <li>
                                <br>
-                               <h5 class="font-weight-light"><span class="text-uppercase">{{index}}</span> metadata</h5>
+                               <h5 class="font-weight-light"><span class="text-uppercase">{{index}}</span></h5>
                                <hr class="mb-1 mt-1">
                                {{#if (eq index 'ed')}}
                                 The Department of Education requires submission through their submission portal. <i>Pass can not submit for you.</i> You can submit to ED at <a href="https://eric.ed.gov/submit/" target="_blank">eric.ed.gov/submit/</a>
@@ -107,9 +113,14 @@ table td {
                      <td>
                         {{#each model.files as |file|}}
                         <div class="card file-icon text-center">
-                           <i class="fa fa-file-o fa-30 pt-2"></i>
-                           <p class="text-overflow">{{file.file.name}}</p>
-                           <span class="document-item" filetype="{{file.type}}"></span>
+                          {{#if file.isManuscript}}
+                            <span>
+                              <i class="fa fa-star manuscriptTag"></i>
+                            </span>
+                          {{/if}}
+                          <i class="fa fa-file-o fa-30 pt-2"></i>
+                          <p class="text-overflow">{{file.file.name}}</p>
+                          <span class="document-item" filetype="{{file.type}}"></span>
                         </div>
                         {{/each}}
                      </td>
