@@ -7,14 +7,15 @@ export default Component.extend({
 
   },
   actions: {
-    next() {
-      this.sendAction('next')
+    submit() {
+      console.log('sending action from review page...');
+      this.sendAction('submit');
     },
     back() {
-      this.sendAction('back')
+      this.sendAction('back');
     },
     checkValidate(){
-      this.sendAction('validate')
+      this.sendAction('validate');
     }
   }
 });

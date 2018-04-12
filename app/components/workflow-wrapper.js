@@ -11,6 +11,10 @@ export default Component.extend({
     back() {
       this.set('step', this.get('step') - 1);
     },
+    submit() {
+      console.log('Received action. Sending to route from wrapper...');
+      this.sendAction('submit');
+    },
     validate() {
       let tempValidateArray = []
       this.set('isValidated', [])
