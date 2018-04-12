@@ -9,6 +9,10 @@ export default Component.extend({
   localRepoName: "JHU-IR",
   depositLocally: true,
 
+  requiredRepositories: Ember.computed('model.repositories', function() {
+    return this.get('model.repositories');
+  }),
+
   actions: {
       next() {
         this.sendAction('next')
@@ -16,28 +20,6 @@ export default Component.extend({
       back() {
         this.sendAction('back')
       },
-      /** Rollback the submission, clears the list of added grants
-       *
-       * There is no facility for rolling back relationships, so this has to be
-       * accounted manually.
-       *
-      */
-      rollback() {
-          var submission = this.get('model');
-
-          /* First, reset submission attributes */
-          submission.rollbackAttributes();
-
-          /* Next, remove added deposits */
-          var addedDeposits = this.get('addedDeposits');
-          var linkedDeposits = submission.get('deposits');
-          while (addedDeposits.length) {
-              var deposit = addedDeposits.pop();
-              linkedDeposits.removeObject(deposit);
-              deposit.rollbackAttributes();
-          }
-      },
-
       maybeDepositLocally() {
           let localName = this.get('localRepoName');
           let currentLocalDeps = this.get('model').get('deposits').filter(d => d.get('repo') === localName);

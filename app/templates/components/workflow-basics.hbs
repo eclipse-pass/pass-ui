@@ -7,7 +7,7 @@
   <label>DOI:</label> <div style="color:red">10.1103/PhysRevFluids.1.073604</div>
   {{input
     class=validDOI
-    value=model.doi
+    value=model.newSubmission.doi
     keyUp=(action "lookupDOI")
   }}
   <div class="text-danger">
@@ -20,19 +20,15 @@
 </div>
 <div class="form-group col-md-12">
   <label>Title:</label>
-  {{#unless doiJournal}}
-    {{input value=model.title class=validTitle placeholder="Title"   keyUp=(action "validateTitle")}}
-  {{else}}
-    <input value={{model.title}} class=validTitle placeholder="Title"   keyUp={{action "validateTitle"}}/>
-  {{/unless}}
+  {{input value=model.newSubmission.title class=validTitle placeholder="Title"   keyUp=(action "validateTitle")}}
 </div>
 
 <div class="form-group col-md-12">
   <label>Journal:</label>
   {{#unless doiJournal}}
-    {{find-journal id="journal" onSelect=(action "selectJournal") value=model.journal}}
+    {{find-journal id="journal" onSelect=(action "selectJournal") value=model.newSubmission.journal}}
   {{else}}
-    <input type="text" class="form-control" value={{model.journal}}  placeholder="Journal"/>
+    <input type="text" class="form-control" value={{model.newSubmission.journal}}  placeholder="Journal"/>
   {{/unless}}
 </div>
 

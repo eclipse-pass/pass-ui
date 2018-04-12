@@ -1,14 +1,17 @@
 import Component from '@ember/component';
 
 export default Component.extend({
+  currentUser: Ember.inject.service('current-user'),
   step: 1,
   isValidated: Ember.A(),
   doiInfo: [],
   actions: {
     next() {
+      this.set('currentUser.step', this.get('step') + 1);
       this.set('step', this.get('step') + 1);
     },
     back() {
+      this.set('currentUser.step', this.get('step') - 1);
       this.set('step', this.get('step') - 1);
     },
     submit() {

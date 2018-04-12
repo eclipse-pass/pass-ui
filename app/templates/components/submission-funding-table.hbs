@@ -9,12 +9,12 @@
     </thead>
     <tbody>
 {{#each grants as |grant|}}
-        <tr>
-            <td>{{#link-to "grants.show" grant}}{{grant.awardNumber}}{{/link-to}}</td>
+        <tr class="pr-0">
+            <td>{{#link-to "grants.detail" grant}}{{grant.awardNumber}}{{/link-to}}</td>
             <td>{{grant.projectName}}</td>
-            <td>
+            <td class="pr-0 mr-0">
                 {{#if remove}}
-                    <span class="btn btn-danger" onclick={{action remove grant}}>Remove</span>
+                    <span class="btn btn-outline-danger pull-right" onclick={{action remove grant}}>Remove</span>
                 {{/if}}
 
             </td>

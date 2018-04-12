@@ -2,14 +2,10 @@
     Review/Provide information about the grant(s)/award(s) that funded this work. This information will help determine which
     public access policies are applicable to your work.
 </p>
-{{submission-funding-table grants=model.grants remove=(action "removeGrant")}}
-
+{{submission-funding-table grants=model.newSubmission.grants remove=(action "removeGrant")}}
 <label>Add Grants:</label>
 {{find-grant id="grant"  onSelect=(action "addGrant")}}
-
 <br>
-
 <button class="btn btn-outline-primary" {{action "back"}}>Back</button>
 <button class="btn btn-primary pull-right" {{action "next"}}>Next</button>
-
 {{yield}}

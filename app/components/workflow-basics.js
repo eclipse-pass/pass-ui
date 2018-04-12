@@ -56,7 +56,7 @@ export default Component.extend({
     },
     /** looks up the DIO and returns title and journal if avaiable */
     lookupDOI() {
-      let submission = this.get('model');
+      let submission = this.get('model.newSubmission');
       let self = this;
       if (submission) {
         this.send('validateDOI');
@@ -160,7 +160,7 @@ export default Component.extend({
               //       set model.journal equal to that new journal
               journal = this.store.createRecord('journal', {'name': doiInfo['container-title']});
             }
-            self.set('model.journal', journal);
+            self.set('model.newSubmission.journal', journal);
           });
         });
       }
@@ -170,7 +170,7 @@ export default Component.extend({
      * @param journal {DS.Model} The journal
      */
     selectJournal(journal) {
-      var submission = this.get('model');
+      var submission = this.get('model.newSubmission');
       return submission.set('journal', journal);
     },
   }

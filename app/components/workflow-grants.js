@@ -1,77 +1,48 @@
 import Component from '@ember/component';
-import { Promise } from 'rsvp';
+import {
+  Promise
+} from 'rsvp';
 
 export default Component.extend({
 
-      /** Holds all newly-added grants */
-      addedGrants: [],
+  /** Holds all newly-added grants */
+  addedGrants: [],
+  optionalGrants: Ember.computed('model', function() {
+    return this.get('model.grants');
+  }),
 
-      actions: {
-          next() {
-            this.sendAction('next')
-          },
-          back() {
-            this.sendAction('back')
-          },
-          /** Rollback the submission, clears the list of added grants
-           *
-           * There is no facility for rolling back relationships, so this has to be
-           * accounted manually.
-           *
-          */
-          rollback() {
-              var submission = this.get('model');
+  submissionGrants: Ember.computed('model.newSubmission', function() {
+    return this.get('model.newSubmission.grants');
+  }),
 
-              /* First, reset submission attributes */
-              submission.rollbackAttributes();
+  actions: {
+    next() {
+      this.sendAction('next')
+    },
+    back() {
+      this.sendAction('back')
+    },
+    addGrant(grant) {
+      var submission = this.get('model.newSubmission');
+      submission.get('grants').pushObject(grant);
+      this.get('addedGrants').push(grant);
+    },
+    removeGrant(grant) {
+      var submission = this.get('model.newSubmission');
+      submission.get('grants').removeObject(grant);
 
-              /* Next, remove added grants */
-              var addedGrants = this.get('addedGrants');
-              var linkedGrants = submission.get('grants');
-              while (addedGrants.length) {
-                  var grant = addedGrants.pop();
-                  linkedGrants.removeObject(grant);
-              }
-          },
+      var index = this.get('addedGrants').indexOf(grant);
+      this.get('addedGrants').splice(index, 1);
+    },
+    saveAll() {
+      var grants = this.get('addedGrants');
+      this.set('addedGrants', []);
+      var submission = this.get('model.newSubmission');
 
-          /** Links a grant to the submission
-           *
-           * @param grant {DS.Model} Grant to link to the submission.
-           */
-          addGrant(grant) {
-              var submission = this.get('model');
-              submission.get('grants').pushObject(grant);
-              this.get('addedGrants').push(grant);
-          },
-
-          /**
-           * Remove a grant from the submission.
-           *
-           * @param {DS.Model} grant Grant to remove from the submission
-           */
-          removeGrant(grant) {
-              var submission = this.get('model');
-              submission.get('grants').removeObject(grant);
-
-              var index = this.get('addedGrants').indexOf(grant);
-              this.get('addedGrants').splice(index, 1);
-          },
-
-          /** Saves the submission and updates all newly-added grants to link back to this submission
-           *
-           * @returns {Promise} The Save promise for saving the submission and dependencies
-           */
-          saveAll() {
-              var grants = this.get('addedGrants');
-              this.set('addedGrants', []);
-              var submission = this.get('model');
-
-
-              //TODO: Might want to think of displaying some sort of warning any step fails?
-              return Promise.all(grants.map(grant => {
-                  grant.get('submissions').pushObject(submission);
-                  return grant.save();
-              })).then(() => submission.save());
-          }
-      }
-  });
+      return Promise.all(grants.map(grant => {
+        grant.get('submissions').pushObject(submission);
+        return grant.save();
+      })).then(() => submission.save());
+    }
+  },
+});

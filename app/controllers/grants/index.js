@@ -49,7 +49,7 @@ export default Controller.extend({
     { propertyName: 'funder.name', title: 'Funder', filterWithSelect: true,
       predefinedFilterOptions: ['NIH', 'DOE', 'NSF']
     },
-    { propertyName: 'awardNumber', title: 'Award Number' , routeName: 'grants.show', disableFiltering: true},
+    { propertyName: 'awardNumber', title: 'Award Number' , routeName: 'grants.detail', disableFiltering: true},
     { propertyName: 'externalId', title: 'COEUS', component: 'identifier-cell', disableFiltering: true },
     { propertyName: 'pi.name', title: 'PI / CO-PIs', component: 'pi-list-cell'},
     { propertyName: 'startDate', title: 'Start', component: 'date-cell', disableFiltering: true},
@@ -57,7 +57,7 @@ export default Controller.extend({
     { propertyName: 'status', title: 'Status', filterWithSelect: true,
       predefinedFilterOptions: ['Active', 'Ended']
     },
-    { propertyName: 'submissions.length', title: '#', routeName: 'grants.show', disableFiltering: true},
+    { propertyName: 'submissions.length', title: '#', routeName: 'grants.detail', disableFiltering: true},
     { propertyName: 'oapCompliance', title: 'OAP Compliance', component: 'oap-compliance-cell',
       filterWithSelect: true, predefinedFilterOptions: ['No', 'Yes']
     }
@@ -68,12 +68,12 @@ export default Controller.extend({
     { propertyName: 'funder.name', title: 'Funder', filterWithSelect: true,
       predefinedFilterOptions: ['NIH', 'DOE', 'NSF']
     },
-    { propertyName: 'awardNumber', title: 'Award Number' , routeName: 'grants.show', disableFiltering: true},
+    { propertyName: 'awardNumber', title: 'Award Number' , routeName: 'grants.detail', disableFiltering: true},
     { propertyName: 'externalId', title: 'COEUS', component: 'identifier-cell', disableFiltering: true},
     { title: 'PI / CO-PIs', component: 'pi-list-cell' },
     { propertyName: 'startDate', title: 'Start', component: 'date-cell', disableFiltering: true},
     { propertyName: 'endDate', title: 'End', component: 'date-cell', disableFiltering: true},
-    { propertyName: 'submissions.length', title: '#', routeName: 'grants.show', disableFiltering: true},
+    { propertyName: 'submissions.length', title: '#', routeName: 'grants.detail', disableFiltering: true},
     { propertyName: 'status', title: 'Status', filterWithSelect: true,
       predefinedFilterOptions: ['Active', 'Ended']
     }

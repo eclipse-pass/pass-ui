@@ -28,13 +28,11 @@
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-              {{!-- <img src="https://image.ibb.co/emCsFH/123.jpg" class="img-avatar" alt="admin@bootstrapmaster.com"> --}}
               {{gravatar-image email=currentUser.user.email
-                title='John Otander'
-                alt='John Otander gravatar'
+                title=currentUser.user.email
+                alt=currentUser.user.email
                 defaultImage='identicon'
                 class='img-avatar'
-                secure=false
                 size=30
                 retina=true}}
               {{currentUser.user.person.firstName}} {{currentUser.user.person.lastName}} ({{currentUser.user.person.role}})
