@@ -7,18 +7,13 @@
 $jhu-grey: #E5E2E0;
 $jhu-grey2: #B4B2AD;
 $jhu-grey3: #7E7E7C;
-$jhu-grey4: #4A484C;
-$jhu-grey5: #2C2C33;
 
 $jhu-blue: #005EB8;
 $jhu-blue1: #418FDE;
 $jhu-blue2: #68ACE5;
-$jhu-blue3: #A7BCD6;
 $jhu-weird-bluegreen: #6399AE;
 
 $jhu-red: #E03C31;
-$jhu-red1: #CF4520;
-$jhu-red2:#E8927C;
 
 $color-bg-primary: #002D72;
 
@@ -35,9 +30,11 @@ a {
   color: $jhu-blue;
 }
 
+primary-skin {
+  background-color: $color-bg-primary !important;
+  color: $color-text-primary !important;
+}
 header {
-  background-color: $color-bg-primary;
-  color: $color-text-primary;
   margin-bottom: 24px;
   .pass-title {
     padding:0;
@@ -46,9 +43,7 @@ header {
     }
   }
   .navbar {
-    background-color: $color-bg-primary !important;
     padding-top: 0;
-      color: $color-text-primary;
   }
   .navbar-brand {
     img {
@@ -71,10 +66,6 @@ header {
 .nav-link:hover {
   color: $color-text-secondary;
 }
-.nav-pills .nav-link.active {
-  color: $color-text-primary;
-  background-color: $jhu-blue1;
-}
 .text-info {
   color: $jhu-weird-bluegreen !important;
 }
@@ -83,23 +74,12 @@ header {
 .btn-outline-info {
   color: $jhu-weird-bluegreen;
   border-color: $jhu-weird-bluegreen;
+  &:hover {
+    color: $color-text-primary;
+    background-color: $jhu-weird-bluegreen;
+    border-collapse: $jhu-weird-bluegreen;
+  }
 }
-.btn-outline-info:hover {
-  color: $color-text-primary;
-  background-color: $jhu-weird-bluegreen;
-  border-collapse: $jhu-weird-bluegreen;
-}
-// .btn-primary {
-//   background-color: $jhu-blue1;
-//   border-color: $jhu-blue1;
-// }
-// .btn-primary:hover {
-//   background-color: $jhu-blue;
-//   border-color: $jhu-blue;
-// }
-// .btn-primary:not([disabled]):not(.disabled):active {
-//   box-shadow: 0 0 0.2rem $jhu-blue2;
-// }
 
 /* Tables */
 .table-bordered {
@@ -171,11 +151,6 @@ th.table-header {
   color:white!important;
   border:none!important;
 }
-.transform-text {
-  -ms-transform: rotate(90deg); /* IE 9 */
-  -webkit-transform: rotate(90deg); /* Safari 3-8 */
-  transform: rotate(90deg);
-}
 .table-bordered {
     border-bottom: 1px solid #a4b7c1!important;
     border-left: none!important;
@@ -211,6 +186,7 @@ body {
   font-size: 1em;
 }
 
+// overrides bootstrap4
 .navbar-toggler {
   width: 100%;
   float: none;
@@ -221,9 +197,11 @@ body {
 .border-none {
   border: none!important;
 }
+
 .img-avatar {
   width: 30px;
 }
+
 .custom-header {
  background:url(https://image.ibb.co/gx84Uc/JHU.jpg) repeat-x 0 0;
  text-align:center;
@@ -233,27 +211,31 @@ body {
  background-size:cover;
 }
 
+// for use with ember sticky component addon
 .sticky {
   position: fixed;
   top: 0;
   width: 100%;
-  z-index: 100;
 }
 
 .no-wrap {
   white-space: nowrap;
 }
+
 .ember-modal-dialog {
   border-radius: 0px;
 }
 
-.alpaca-invalid > input, .alpaca-invalid >textarea, .alpaca-invalid >select {
-  border-color: #f86c6b;
+.alpaca-invalid {
+  &>input, &>textarea, &>select {
+    border-color: #f86c6b;
+  }
 }
 
 .alpaca-message-notOptional {
   display:none;
 }
+
 @media (max-width: 760px) {
   .navbar .navbar-brand {
       justify-content: center;
