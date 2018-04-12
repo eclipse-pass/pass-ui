@@ -1,5 +1,10 @@
-<h4 class="font-weight-light pull-right mr-3">Form {{currentFormStep}} of {{schemas.length}}</h4>
 {{!-- takes in a schema and the model to save the schema to--}}
-{{metadata-form schema=schema model=model doiInfo=doiInfo currentFormStep=currentFormStep nextForm=(action "nextForm") previousForm=(action "previousForm")}}
-
+{{#if doiInfo}}
+  <h4 class="font-weight-light pull-right mr-3">Form {{currentFormStep}} of {{schemas.length}}</h4>
+  {{metadata-form schema=schema model=model doiInfo=doiInfo currentFormStep=currentFormStep nextForm=(action "nextForm") previousForm=(action "previousForm")}}
+{{else}}
+  <h4 class="font-weight-light text-center mt-4">No form found, did you enter a DOI?</h4>
+  <button class="btn btn-outline-primary" {{action "previousForm"}}>Back</button>
+  <button class="btn btn-primary pull-right disabled" >Next</button>
+{{/if}}
 {{yield}}
