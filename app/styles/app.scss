@@ -117,21 +117,7 @@ th.table-header {
 .submission-funders .row {
   padding: 0;
 }
-.btn-remove {
-  // transition-duration: $transition-duration; // Adding this transition introduces some odd (and temporary) column resizing
-  cursor: pointer;
-  padding: 0.65em;
-  border-radius: 5px;
-  margin: 0 2px;
-  color: $jhu-red;
-  &:hover {
-    transition-duration: $transition-duration;
-    border: 1px solid;
-    margin: 0;
-    background-color: $jhu-red;
-    color: white;
-  }
-}
+
 .policies-list {
   h6 {
     margin-bottom: .5em;
@@ -227,7 +213,7 @@ body {
 }
 
 .alpaca-invalid {
-  &>input, &>textarea, &>select {
+  & > input, & > textarea, & > select {
     border-color: #f86c6b;
   }
 }
