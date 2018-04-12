@@ -7,7 +7,7 @@
       {{submission-nav submission=model step=step class="col-lg-4 d-md-down-none bg-faded border border-left-0 border-top-0 border-bottom-0 border-primary "}}
       <main class="col-lg-8 col-md-12">
         {{#if (eq step 1)}}
-          {{workflow-basics model=model next=(action "next") back=(action "back")}}
+          {{workflow-basics model=model doiInfo=doiInfo next=(action "next") back=(action "back")}}
         {{/if}}
         {{#if (eq step 2)}}
           {{workflow-grants model=model next=(action "next") back=(action "back")}}
@@ -19,7 +19,7 @@
           {{workflow-policies model=model next=(action "next") back=(action "back")}}
         {{/if}}
         {{#if (eq step 5)}}
-          {{workflow-metadata model=model next=(action "next") back=(action "back")}}
+          {{workflow-metadata model=model doiInfo=doiInfo  next=(action "next") back=(action "back")}}
         {{/if}}
         {{#if (eq step 6)}}
           {{workflow-files model=model next=(action "next") back=(action "back")}}

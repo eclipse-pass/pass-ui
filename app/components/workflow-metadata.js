@@ -36,21 +36,21 @@ export default Component.extend({
           "type": "string",
          "required": true
         },
-        "articleURL": {
+        "URL": {
           "type": "string",
          "required": true
         },
-        "fName": {
+        "auothor": {
           "type": "string",
          "required": true
         },
         "mName": {
           "type": "string",
         },
-        "lName": {
+        "family": {
           "type": "string",
          "required": true
-        },
+       },
         "orcid": {
           "type": "string",
          "required": true
@@ -104,13 +104,13 @@ export default Component.extend({
             "placeholder": "subject, subject",
             "fieldClass": "clearfix"
         },
-        "articleURL": {
+        "URL": {
             "type": "text",
             "label": "Final article URL",
             "placeholder": "",
             "fieldClass": "clearfix"
         },
-        "fName": {
+        "auothor": {
             "type": "text",
             "label": "First Name",
             "placeholder": "",
@@ -122,7 +122,7 @@ export default Component.extend({
             "placeholder": "",
             "fieldClass": "col-4 pull-left"
         },
-        "lName": {
+        "family": {
             "type": "text",
             "label": "Last Name",
             "placeholder": "",
@@ -155,231 +155,66 @@ export default Component.extend({
     "title": "NIH Manuscript Submission System (NIHMS) <br><p class='lead text-muted'>The following metadata fields will be part of the NIHMS submission.</p>",
      "type": "object",
      "properties": {
-       "nlmTa": {
+       "journal-title-short": {
+         "type": "string",
+        "required": true
+       },
+       "title": {
         "type": "string",
         "required": true
        },
-       "publisherPDF": {
-         "type":"string",
-         "title":"Publisher's PDF",
-         "enum":["yes","no"],
-         "required":true
+        "auothor": {
+          "type": "string",
+         "required": true
+        },
+        "mName": {
+          "type": "string",
+        },
+        "family": {
+          "type": "string",
+         "required": true
        },
-       "displayPublisherPDF": {
-         "type":"string",
-         "title":"Display publisher's PDF instead of NIHMS-generated PDF",
-         "enum":["yes","no"],
-         "required":true
-       },
-        "embargoPeriod": {
-         "type":"string",
-         "title":"Embargo Period",
-         "enum":[1,2,3,4,5,6,7,8,9,10,11,12],
-         "required":true
-       },
-       "eLocationID": {
-         "type": "string",
-        "required": true
-       },
-       "firstPage": {
-         "type": "string",
-        "required": true
-       },
-       "lastPage": {
-         "type": "string",
-        "required": true
-       },
-       "selfURI": {
-         "type": "string",
-        "required": true
-       },
-       "articleIdType": {
-         "type":"string",
-         "title":"Article IDs <br> ID Type",
-         "enum":["yes","no"],
-         "required":true
-       },
-       "articleIdString": {
-         "type": "string",
-        "required": true
-       },
-       "permissionCopyrightStatement": {
-         "type": "string",
-        "required": true
-       },
-       "licenseType": {
-         "type": "string",
-        "required": true
-       },
-       "licenseLink": {
-         "type": "string",
-        "required": true
-       },
-       "principleFName": {
-         "type": "string",
-        "required": true
-       },
-       "principleMName": {
-         "type": "string",
-        "required": true
-       },
-       "principleLName": {
-         "type": "string",
-        "required": true
-       },
-       "principleOrcid": {
-         "type": "string",
-        "required": true
-       },
-       "principleEmail": {
-         "type": "string",
-        "required": true
-       },
-       "principleAffiliation": {
-         "type": "string",
-        "required": true
-       },
-       "fName": {
-         "type": "string",
-        "required": true
-       },
-       "mName": {
-         "type": "string",
-        "required": true
-       },
-       "lName": {
-         "type": "string",
-        "required": true
-       },
-       "email": {
-         "type": "string",
-        "required": true
-       },
-
+        "email": {
+          "type": "string",
+         "required": true
+        }
      }
    },
    "options": {
      "fields": {
-       "nlmTa": {
+       "journal-title-short": {
          "type": "text",
-         "label": "NLM TA",
-         "placeholder": "Enter the NLM TA"
+         "label": "Journal Title",
+         "placeholder": "Enter the journal title"
        },
-       "publisherPDF": {
-           "type": "select",
-           "helper": "Is the publisher's PDF being submitted?",
-           "optionLabels": [
-             "Yes",
-             "No"
-             ]
-       },
-       "displayPublisherPDF": {
-           "type": "select",
-           "optionLabels": [
-             "Yes",
-             "No"
-             ]
-       },
-       "embargoPeriod": {
-           "type": "select",
-           "helper": "# of months",
-           "optionLabels":["1 month","2 month","3 month","4 month","5 month","6 month","7 month","8 month","9 month","10 month","11 month","12 month"]
-       },
-       "eLocationID": {
+       "title": {
          "type": "text",
-         "label": "Article Location <br> E-Location ID",
+         "label": "Manuscript Title",
+         "placeholder": "Enter the manuscript title",
        },
-       "firstPage": {
-         "type": "text",
-         "label": "OR <br> First Page",
-       },
-       "lastPage": {
-         "type": "text",
-         "label": "Last Page",
-       },
-       "selfURI": {
-         "type": "text",
-         "label": "Self-URI",
-       },
-       "articleIdType": {
-           "type": "select",
-           "optionLabels":["Publisher ID","Institution ID"]
-       },
-       "articleIdString": {
-         "type": "text",
-         "label": "Article Id String",
-       },
-       "permissionCopyrightStatement": {
-         "type": "textarea",
-         "label": "Permission <br> Copyright Statement",
-         "placeholder": "Enter Copyright statement...",
-         "fieldClass": "clearfix"
-       },
-       "licenseType": {
-         "type": "text",
-         "label": "License Type",
-       },
-       "licenseLink": {
-         "type": "text",
-         "label": "License Link",
-       },
-       "principleFName": {
-           "type": "text",
-           "label": "Principle Investigator(s)<br>First Name",
-           "placeholder": "",
-           "fieldClass": "col-4 pull-left pl-0 no-wrap"
-       },
-       "principleMName": {
-           "type": "text",
-           "label": "<br>Middle Name",
-           "placeholder": "",
-           "fieldClass": "col-4 pull-left no-wrap"
-       },
-       "principleLName": {
-           "type": "text",
-           "label": "<br>Last Name",
-           "placeholder": "",
-           "fieldClass": "col-4 pull-left pr-0 no-wrap"
-       },
-       "principleOrcid": {
-           "type": "text",
-           "label": "ORCiD",
-           "placeholder": "",
-           "fieldClass": "clearfix"
-       },
-       "principleEmail": {
-           "type": "text",
-           "label": "Email Address",
-           "placeholder": ""
-       },
-       "principleAffiliation": {
-           "type": "text",
-           "label": "Affiliation",
-           "placeholder": ""
-       },
-       "fName": {
-           "type": "text",
-           "label": "Contact(s)<br>First Name",
-           "placeholder": "",
-           "fieldClass": "col-4 pull-left pl-0 no-wrap"
-       },
-       "mName": {
-           "type": "text",
-           "label": "<br>Middle Name",
-           "placeholder": "",
-           "fieldClass": "col-4 pull-left no-wrap"
-       },
-       "lName": {
-           "type": "text",
-           "label": "<br>Last Name",
-           "placeholder": "",
-           "fieldClass": "col-4 pull-left pr-0 no-wrap"
-       },
-       "email": {
-           "type": "text",
-           "label": "Email Address",
-           "placeholder": ""
-       },
+        "auothor": {
+            "type": "text",
+            "label": "First Name",
+            "placeholder": "",
+            "fieldClass": "col-4 pull-left pl-0"
+        },
+        "mName": {
+            "type": "text",
+            "label": "Middle Name",
+            "placeholder": "",
+            "fieldClass": "col-4 pull-left"
+        },
+        "family": {
+            "type": "text",
+            "label": "Last Name",
+            "placeholder": "",
+            "fieldClass": "col-4 pull-left pr-0"
+        },
+        "email": {
+            "type": "text",
+            "label": "Email Address",
+            "placeholder": ""
+        }
      }
    }
  },
@@ -412,7 +247,7 @@ export default Component.extend({
       if(this.get('currentFormStep') < this.get('schemas').length - 1) {
         this.set('schema', this.get(this.schemas[this.set('currentFormStep', this.get('currentFormStep') + 1)]))
       } else {
-        // TODO: incriment the STEP counter on the workflow-wrapper
+        // TODO: increment the STEP counter on the workflow-wrapper
         this.sendAction('next')
       }
    },
@@ -420,7 +255,7 @@ export default Component.extend({
      if(this.get('currentFormStep') !== 0) {
       this.set('schema', this.get(this.schemas[this.set('currentFormStep', this.get('currentFormStep') - 1)]))
     } else {
-      // TODO: incriment the STEP counter on the workflow-wrapper
+      // TODO: increment the STEP counter on the workflow-wrapper
       this.sendAction('back')
     }
    }

@@ -3,6 +3,7 @@ import Component from '@ember/component';
 export default Component.extend({
   step: 1,
   isValidated: Ember.A(),
+  doiInfo: [],
   actions: {
     next() {
       this.set('step', this.get('step') + 1);

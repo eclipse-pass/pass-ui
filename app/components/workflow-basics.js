@@ -63,12 +63,73 @@ export default Component.extend({
         self.set('doiJournal', false)
         this.get('doiService').resolve(submission).then((doiInfo) => {
           self.set('doiInfo', doiInfo);
+          console.log(doiInfo)
+
           submission.set('title', doiInfo['title']);
+
           submission.set('submittedDate', doiInfo['deposited']);
           submission.set('creationDate', doiInfo['created']);
 
           submission.set('issue', doiInfo['issue']);
           submission.set('volume', doiInfo['volume']);
+
+          //Fill out metdata with any data from DOI
+
+          // // TODO: WE need to find a way to loop over how many forms there is going to be I.e common and NIH
+            this.set('doiInfo', doiInfo);
+          // let doiSubmissionData = {
+          //   volume: doiInfo['volume'],
+          //   issue: doiInfo['issue'],
+          //   publicationDate: doiInfo['deposited']['date-time'],
+          //   abstract: "",
+          //   subjects: "",
+          //   articleURL:doiInfo['link'][0]['URL'],
+          //   fName: doiInfo['author'][0]['given'],
+          //   mName: "",
+          //   lName: doiInfo['author'][0]['family'],
+          //   orcid: "",
+          //   email: "",
+          //   affiliation: doiInfo['publisher']
+          // }
+          //
+          //
+          //
+          // "nlmTa":
+          // "publisherPDF":
+          // "displayPublisherPDF":
+          // "embargoPeriod":
+          // "eLocationID":
+          // "firstPage":
+          // "lastPage":
+          // "selfURI":
+          // "articleIdType":
+          // "articleIdString":
+          // "permissionCopyrightStatement":
+          // "licenseType":
+          // "licenseLink":
+          // "principleFName":
+          // "principleMName":
+          // "principleLName":
+          // "principleOrcid":
+          // "principleEmail":
+          // "principleAffiliation":
+          // "fName":
+          // "mName":
+          // "lName":
+          // "email":
+          //
+
+
+          // submission.set('metadata', [
+          //   {
+          //     id: 0,
+          //     data: doiSubmissionData
+          //   },
+          //   {
+          //     id: 1,
+          //     data: doiSubmissionData
+          //   }
+          // ])
 
           // grab DOI info
           // find the journal that corresponds with the journal name
