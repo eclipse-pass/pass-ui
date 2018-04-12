@@ -32,14 +32,14 @@ export default Route.extend(ApplicationRouteMixin, {
 	},
 	model() {
   	// temp jhuInstitution move out or remove later
-    const jhuInstitution = this.get('store').createRecord('institution', {
+    const jhuInstitution = {
         name: 'Johns Hopkins University',
         primaryColor: "#002D72",
         secondaryColor:'black',
         tertiaryColor: '#f7f7f2',
         logo: 'https://image.ibb.co/iWgHXx/university_logo_small_vertical_white_no_clear_space_29e2bdee83.png',
         schema: []
-    });
+    };
 		return jhuInstitution;
   }
 });
