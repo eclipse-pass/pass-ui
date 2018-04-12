@@ -36,9 +36,11 @@ export default Service.extend({
     // Finally check to make sure user is in store
 
     return store.findAll('user').then(users => {
+
       if (users.get('length') == 0) {
         return this.createTestData().then(() => store.findAll('user'));
       } else {
+
         return users;
       }
     }).then(users => {
@@ -55,6 +57,7 @@ export default Service.extend({
 
   // Return a promise to create the test data
   createTestData() {
+
       // Create the test objects without relationships
     let store = this.get('store');
 
@@ -501,6 +504,161 @@ export default Service.extend({
       isDefault: true
     });
 
+    // ###################################################################
+    // Dept of Education test stuffs
+    let user_sayeed = store.createRecord('user', {
+      username: '',
+      role: 'pi'
+    });
+
+    let person_sayeed = store.createRecord('person', {
+      displayName: 'Sayeed Choudhury',
+      email: 'sayeed@jhu.edu',  // Should I use a fake email?
+      affiliation: 'Johns Hopkins University',
+      orcid: 'https://orcid.org/0000-0003-2891-0543'
+    });
+
+    let funder_edu = store.createRecord('funder', {
+      name: 'US Department of Education',
+      url: 'https://www.ed.gov/',
+    });
+
+    let policy_edu = store.createRecord('policy', {
+      title: "Department of Education Public Access Policy",
+      description: '',
+      isDefault: false,
+      // url: 'https://ies.ed.gov/funding/researchaccess.asp',
+    });
+
+    let repo_edu = store.createRecord('repository', {
+      name: 'Education Resources Information Center',
+      url: 'https://eric.ed.gov/',
+      description: `ERIC is an internet-based digital library of education research and information sponsored by 
+        the Institute of Education Sciences (IES) of the U.S. Department of Education. ERIC provides access to 
+        bibliographic records of journal and non-journal literature from 1966 to the present. ERIC's mission is 
+        to provide a comprehensive, easy-to-use, searchable Internet-based bibliographic and full-text database 
+        of education research and information for educators, researchers, and the general public. `,
+    });
+
+    let journal_edu1 = store.createRecord('journal', {
+      name: "Advances in Engineering Education"
+    });
+
+    let person_edu1 = store.createRecord('person', {
+      displayName: 'Kelly R Fisher',
+      email: 'r.kelly@example.com'
+    });
+
+    let person_edu2 = store.createRecord('person', {
+      displayName: 'Thomas McDermott',
+      email: 'mcdott@example.com'
+    });
+
+    let person_edu3 = store.createRecord('person', {
+      displayName: 'Sharon Tsui',
+      email: 'sharon.tsui@example.com'
+    });
+
+    let person_edu4 = store.createRecord('person', {
+      displayName: 'Martha Mac Iver',
+      email: 'martha.mac@example.com'
+    });
+
+    let person_edu5 = store.createRecord('person', {
+      displayName: 'Michael Rosenberg',
+      email: 'michael.rosenberg@example.com'
+    });
+
+    let person_edu6 = store.createRecord('person', {
+      displayName: 'James Fauerbach',
+      email: 'jfauerbach@example.com'
+    });
+
+    // ----- Dept of Ed grants -------------------------------------------
+    let grant_edu1 = store.createRecord('grant', {
+      awardNumber: 'R305A170411',
+      localAwardId: '126699',
+      projectName: 'Developing a Spacially-enhanced Elementary Curriculum and Teacher Training Series to Improve Science Advancement',
+      startDate: new Date('2017-07-01'),
+      endDate: new Date('2021-06-30'),
+      awardStatus: 'active'
+    });
+
+    let grant_edu2 = store.createRecord('grant', {
+      awardNumber: '90073719',
+      localAwardId: '126257',
+      projectName: 'FY18 Title IV Award',
+      startDate: new Date('2017-07-01'),
+      endDate: new Date('2018-06-30'),
+      awardStatus: 'active'
+    });
+
+    let grant_edu3 = store.createRecord('grant', {
+      awardNumber: '',
+      localAwardId: '122761',
+      projectName: 'FY17 Federal Work Study',
+      startDate: new Date('2016-06-30'),
+      endDate: new Date('2017-06-30'),
+      awardStatus: 'terminated'
+    });
+
+    let grant_edu4 = store.createRecord('grant', {
+      awardNumber: 'P022A150076',
+      localAwardId: '123526',
+      projectName: 'How Do We Provide High Quality HIV Care and Treatment When THere Are Too Few Health Care Providers in Uganda',
+      startDate: new Date('2015-09-30'),
+      endDate: new Date('2017-05-31'),
+      awardStatus: 'terminated'
+    });
+
+    let grant_edu5 = store.createRecord('grant', {
+      awardNumber: 'R305H150081',
+      localAwardId: '120443',
+      projectName: 'Continuous Improvement in Schools Equipping Families to Support Students in the Transition to High School',
+      startDate: new Date('2015-07-01'),
+      endDate: new Date('2019-06-30'),
+      awardStatus: 'active'
+    });
+
+    let grant_edu6 = store.createRecord('grant', {
+      awardNumber: 'H325T090027',
+      localAwardId: '105336',
+      projectName: 'The Johns Hopkins Universtiy Secondary Support Initiative (JHUSSI)',  // Misspelling in 'university' comes from COEUS
+      startDate: new Date('2009-01-01'),
+      endDate: new Date('2016-06-30'),
+      awardStatus: 'terminated'
+    });
+
+    let grant_edu7 = store.createRecord('grant', {
+      awardNumber: 'H133A070045',
+      localAwardId: '101950',
+      projectName: 'Johns Hopkins University Burn Injury Model System',
+      startDate: new Date('2010-10-01'),
+      endDate: new Date('2014-03-31'),
+      awardStatus: 'terminated'
+    });
+
+    // let grant_edu8 = store.createRecord('grant', {
+    //   awardNumber: 'ZZ109Y1465551',
+    //   localAwardId: '996330',
+    //   projectName: 'Johns Hopkins University - Managing Observer Obscurity (JHU-MOO)',
+    //   startDate: new Date('2015-06-01'),
+    //   endDate: new Date('2020-06-30'),
+    //   awardStatus: 'active'
+    // });
+    // -------------------------------------------------------------------
+    let sub_edu1 = store.createRecord('submission', {
+      // status: 'non-compliant-not-started',
+      title: 'The Johns Hopkins Universtiy Secondary Support Initiative (JHUSSI)',
+      status: 'compliant-complete',
+      source: 'pass',
+      creationDate: new Date('2016-03-01'),
+      submittedDate: new Date('2016-03-01'),
+      updatedDate: new Date('2016-04-12')
+    });
+
+    // ###################################################################
+
     // Persist the test objects, add relationships, and then persist again.
 
     let objects = [user1, user2, user3, user4,
@@ -514,7 +672,12 @@ export default Service.extend({
       journalA1, journalA2, journalA3, journalB1, journalB2, journalB3,
       publisherA1, publisherA2, publisherB1,
       repo1, repo2, repo3,
-      policy1, policy2, policy3
+      policy1, policy2, policy3,
+      // Add Dept of Edu here to save them to Fedora
+      user_sayeed, person_sayeed, funder_edu, policy_edu, repo_edu,
+      person_edu1, person_edu2, person_edu3, person_edu4, person_edu5, person_edu6,
+      grant_edu1, grant_edu2, grant_edu3, grant_edu4, grant_edu5, grant_edu6, grant_edu7, //grant_edu8
+      sub_edu1, journal_edu1
     ];
 
     return RSVP.all(objects.map(o => o.save())).then(() => {
@@ -669,6 +832,26 @@ export default Service.extend({
 
       journalB3.set('publisher', publisherB1);
       publisherB1.get('journals').pushObject(journalB3);
+
+      // ##################################################
+      // Setting Dept of Edu relationships
+      funder_edu.set('policy', policy_edu);
+      policy_edu.get('repositories').pushObject(repo_edu);
+
+      const edu_people = [person_edu1, person_edu2, person_edu2, person_edu3, person_edu4, person_edu5, person_edu6];
+      [grant_edu1, grant_edu2, grant_edu3, grant_edu4, grant_edu5, grant_edu6, grant_edu7]
+      .forEach((grant, index) => {
+        grant.set('primaryFunder', funder_edu);
+        grant.set('directFunder', funder_edu);
+        grant.set('pi', edu_people[index]);
+        // grant.get('coPi').pushObject(person_sayeed);
+      });
+
+      sub_edu1.get('grants').pushObject(grant_edu6);
+      sub_edu1.get('authors').pushObject(person_sayeed);
+      sub_edu1.set('journal', journal_edu1);
+
+      // ##################################################
 
       return RSVP.all(objects.map(o => o.save()));
     });
