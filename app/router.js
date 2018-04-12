@@ -7,14 +7,18 @@ const Router = EmberRouter.extend({
 });
 
 Router.map(function() {
+  this.route('login');
   this.route('index', {path: '/welcome'})
   this.route('dashboard', {path: '/'});
   this.route('about');
   this.route('contact');
-  this.route('grants', function() {
-    this.route('show', { path: '/:grant_id' });
+  this.route('submissions', function() {
+    this.route('detail', { path: '/:submission_id' });
+    this.route('new');
   });
-  this.route('login');
+  this.route('grants', function() {
+    this.route('detail', { path: '/:grant_id' });
+  });
 });
 
 export default Router;

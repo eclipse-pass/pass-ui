@@ -14,6 +14,6 @@
 {{#message-dialog show=messageShow to=messageTo subject=messageSubject message=messageText}}
 {{/message-dialog}}
 
-{{#if (eq currentUser.user.person.role "PI")}}
-  {{#link-to "submission.new" class="btn btn-primary btn-small"}}Create new Submission{{/link-to}}
+{{#if (eq (get (await currentUser.user.person) 'role') 'PI')}}
+  {{#link-to "submissions.new" class="btn btn-primary btn-small"}}Create new Submission{{/link-to}}
 {{/if}}

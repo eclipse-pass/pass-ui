@@ -3,6 +3,7 @@ import Bootstrap4Theme from 'ember-models-table/themes/bootstrap4';
 import { computed } from '@ember/object';
 
 export default Controller.extend({
+  currentUser: Ember.inject.service('current-user'),
     // Bound to message dialog.
   messageShow: false,
   messageTo: '',
