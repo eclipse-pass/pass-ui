@@ -17,7 +17,7 @@ export default Component.extend({
          * @returns {Promise} Save promise for the submission and deposits.
         */
         saveAll() {
-            var submission = this.get('model');
+            var submission = this.get('model.newSubmission');
             var linkedDeposits = submission.get('deposits');
             var depositGenerators = this.get('depositGenerators');
             var newDeposits = [];
@@ -29,17 +29,17 @@ export default Component.extend({
                 }
             }
 
-            var newRepos = newDeposits.map(deposit => deposit.get('repo'));
+            var newRepos = newDeposits.map(deposit => deposit.get('repository'));
 
             // Remove linked deposits whose repos are not in the 'new' list,
             // and are not requested
-            var toRemoveFromLinked = linkedDeposits.filter(deposit => !newRepos.includes(deposit.get('repo')) && !deposit.get('requested'));
+            var toRemoveFromLinked = linkedDeposits.filter(deposit => !newRepos.includes(deposit.get('repository')) && !deposit.get('requested'));
 
             toRemoveFromLinked.forEach(deposit => linkedDeposits.removeObject(deposit))
 
-            var linkedRepos = linkedDeposits.map(deposit => deposit.get('repo'));
+            var linkedRepos = linkedDeposits.map(deposit => deposit.get('repository'));
 
-            var toLink = newDeposits.filter(deposit => !(linkedRepos.includes(deposit.get('repo'))));
+            var toLink = newDeposits.filter(deposit => !(linkedRepos.includes(deposit.get('repository'))));
 
             return Promise.all(newDeposits.map(newDeposit => {
                 if (toLink.includes(newDeposit)) {
@@ -62,10 +62,10 @@ export default Component.extend({
          * @returns {Array<string>}
          */
         getPolicies() {
-            return this.get('model')
+            return this.get('model.newSubmission')
                 .get('grants')
                 .map(grant => grant.get('funder'))
-                .map(funder => funder.get('repo'))
+                .map(funder => funder.get('repository'))
                 .filter((e, i, arr) => {
                     return i === arr.indexOf(e)
                 });

@@ -3,7 +3,7 @@ import Service from '@ember/service';
 const { inject: { service }, RSVP } = Ember;
 
 export default Service.extend({
-  session: service('session'),
+  session: service(),
   store: service(),
 
   load() {
@@ -14,11 +14,5 @@ export default Service.extend({
     } else {
       return RSVP.resolve();
     }
-  },
-  person: Ember.computed('user', function(){
-    return this.get('store').queryRecord('person', this.get('user.person')).then((person) => {
-      debugger;
-      this.set('person', person);
-    });
-  })
+  }
 });
