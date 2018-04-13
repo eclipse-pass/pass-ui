@@ -315,7 +315,6 @@ export default Ember.Component.extend({
       let prePopulateData = {};
     //  if(metadata) {
     //  Try to match the doiInfo to the form schema data to populate
-    // Predicts data with .61 accuracy
       Promise.resolve(originalForm['schema']).then(schema => {
         try{
           let doiInfo = this.get( 'doiInfo' )
@@ -333,6 +332,7 @@ export default Ember.Component.extend({
               }
               else {
                 if(doiInfo[doiEntry].length > 0 ) {
+                  // Predicts data with .61 accuracy
                   if (f.get(doiEntry)[0][0] > .61) {
                     console.log(doiEntry ,doiInfo[doiEntry], f.get(doiEntry)[0][0])
                     //set the found record to the metadata

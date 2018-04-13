@@ -149,75 +149,93 @@ export default Component.extend({
  },
   // nlmTa
  nih: {
-  "id":"nih",
-  "data":{},
-  "schema": {
-    "title": "NIH Manuscript Submission System (NIHMS) <br><p class='lead text-muted'>The following metadata fields will be part of the NIHMS submission.</p>",
-     "type": "object",
-     "properties": {
-       "journal-title-short": {
-         "type": "string",
-        "required": true
-       },
-       "title": {
-        "type": "string",
-        "required": true
-       },
-        "auothor": {
-          "type": "string",
-         "required": true
-        },
-        "mName": {
-          "type": "string",
-        },
-        "family": {
-          "type": "string",
-         "required": true
-       },
-        "email": {
-          "type": "string",
-         "required": true
+    "id": "nih",
+    "data": {},
+    "schema": {
+        "title": "NIH Manuscript Submission System (NIHMS) <br><p class='lead text-muted'>The following metadata fields will be part of the NIHMS submission.</p>",
+        "type": "object",
+        "properties": {
+            "title": {
+                "type": "string",
+                "required": true
+            },
+            "journal-title-short": {
+                "type": "string",
+                "required": true
+            },
+            "journal-NLMTA-ID": {
+                "type": "string",
+                "required": true
+            },
+            "ISSN": {
+                "type": "string",
+                "required": true
+            },
+            "auothor": {
+                "type": "string",
+                "required": true
+            },
+            "mName": {
+                "type": "string",
+            },
+            "family": {
+                "type": "string",
+                "required": true
+            },
+            "email": {
+                "type": "string",
+                "required": true
+            }
         }
-     }
-   },
-   "options": {
-     "fields": {
-       "journal-title-short": {
-         "type": "text",
-         "label": "Journal Title",
-         "placeholder": "Enter the journal title"
-       },
-       "title": {
-         "type": "text",
-         "label": "Manuscript Title",
-         "placeholder": "Enter the manuscript title",
-       },
-        "auothor": {
-            "type": "text",
-            "label": "First Name",
-            "placeholder": "",
-            "fieldClass": "col-4 pull-left pl-0"
-        },
-        "mName": {
-            "type": "text",
-            "label": "Middle Name",
-            "placeholder": "",
-            "fieldClass": "col-4 pull-left"
-        },
-        "family": {
-            "type": "text",
-            "label": "Last Name",
-            "placeholder": "",
-            "fieldClass": "col-4 pull-left pr-0"
-        },
-        "email": {
-            "type": "text",
-            "label": "Email Address",
-            "placeholder": ""
+    },
+    "options": {
+        "fields": {
+            "title": {
+                "type": "text",
+                "label": "Article / Manuscript Title",
+                "placeholder": "Enter the manuscript title",
+            },
+            "journal-title-short": {
+                "type": "text",
+                "label": "Journal Title",
+                "placeholder": "Enter the journal title"
+            },
+            "journal-NLMTA-ID": {
+                "type": "text",
+                "label": "Journal NLMTA ID",
+                "placeholder": ""
+            },
+            "ISSN": {
+                "type": "text",
+                "label": "ISSN",
+                "placeholder": ""
+            },
+            "auothor": {
+                "type": "text",
+                "label": "First Name",
+                "placeholder": "",
+                "fieldClass": "col-4 pull-left pl-0"
+            },
+            "mName": {
+                "type": "text",
+                "label": "Middle Name",
+                "placeholder": "",
+                "fieldClass": "col-4 pull-left"
+            },
+            "family": {
+                "type": "text",
+                "label": "Last Name",
+                "placeholder": "",
+                "fieldClass": "col-4 pull-left pr-0"
+            },
+            "email": {
+                "type": "text",
+                "label": "Email Address",
+                "placeholder": ""
+            }
         }
-     }
-   }
- },
+    }
+},
  ed: {
    "id":'ed',
    "schema": {
