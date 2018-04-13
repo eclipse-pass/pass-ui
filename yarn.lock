@@ -982,6 +982,10 @@ blank-object@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/blank-object/-/blank-object-1.0.2.tgz#f990793fbe9a8c8dd013fb3219420bec81d5f4b9"
 
+blob-polyfill@^2.0.20171115:
+  version "2.0.20171115"
+  resolved "https://registry.yarnpkg.com/blob-polyfill/-/blob-polyfill-2.0.20171115.tgz#8e5c2659dda443365fafd6dd421517653f1d5ffd"
+
 blob@0.0.4:
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/blob/-/blob-0.0.4.tgz#bcf13052ca54463f30f9fc7e95b9a47630a94921"
@@ -2654,6 +2658,19 @@ ember-load-initializers@^1.0.0:
   resolved "https://registry.yarnpkg.com/ember-load-initializers/-/ember-load-initializers-1.0.0.tgz#4919eaf06f6dfeca7e134633d8c05a6c9921e6e7"
   dependencies:
     ember-cli-babel "^6.0.0-beta.7"
+
+ember-local-storage@^1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/ember-local-storage/-/ember-local-storage-1.4.1.tgz#adb2058d4382d8c2742a824b4e505c84078c811c"
+  dependencies:
+    blob-polyfill "^2.0.20171115"
+    broccoli-funnel "^2.0.1"
+    broccoli-merge-trees "^2.0.0"
+    broccoli-stew "^1.5.0"
+    chalk "^2.3.0"
+    ember-cli-babel "^6.6.0"
+    ember-cli-string-utils "^1.1.0"
+    ember-cli-version-checker "^2.1.0"
 
 ember-maybe-import-regenerator@^0.1.5:
   version "0.1.6"

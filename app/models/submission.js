@@ -11,9 +11,9 @@ export default DS.Model.extend({
   source: DS.attr('string'),
   metadata: DS.attr(),
   pubmedId: DS.attr('string'),
-  
+
   createdBy: DS.belongsTo('person'),
-  journal: DS.belongsTo('journal'),
-  deposits: DS.hasMany('deposit', { async: true }), // not on this model on API
+  journal: DS.belongsTo('journal', {autoSave: true}),
+  deposits: DS.hasMany('deposit', { async: true}), // not on this model on API
   grants: DS.hasMany('grant', { async: true }),
 });

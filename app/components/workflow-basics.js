@@ -170,8 +170,9 @@ export default Component.extend({
      * @param journal {DS.Model} The journal
      */
     selectJournal(journal) {
+      debugger;
       var submission = this.get('model.newSubmission');
-      return submission.set('journal', journal);
+      submission.set('journal', journal);
     },
   }
 });

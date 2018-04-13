@@ -39,6 +39,7 @@
     "ember-fedora-adapter": "git+https://github.com/OA-PASS/ember-fedora-adapter.git",
     "ember-font-awesome": "^4.0.0-rc.2",
     "ember-load-initializers": "^1.0.0",
+    "ember-local-storage": "^1.4.1",
     "ember-modal-dialog": "^2.4.1",
     "ember-models-table": "^2.3.0",
     "ember-power-select": "^2.0.0-beta.0",

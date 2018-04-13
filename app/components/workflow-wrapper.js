@@ -1,21 +1,22 @@
 import Component from '@ember/component';
+import { storageFor } from 'ember-local-storage';
 
 export default Component.extend({
   currentUser: Ember.inject.service('current-user'),
+  localSubmission: storageFor('submission'),
   step: 1,
   isValidated: Ember.A(),
   doiInfo: [],
   actions: {
     next() {
-      this.set('currentUser.step', this.get('step') + 1);
-      this.set('step', this.get('step') + 1);
+      this.incrementProperty('localSubmission.step');
+      this.set('localSubmission.submission', this.get('model.newSubmission'));
     },
     back() {
-      this.set('currentUser.step', this.get('step') - 1);
-      this.set('step', this.get('step') - 1);
+      this.decrementProperty('localSubmission.step');
+      this.set('localSubmission.submission', this.get('model.newSubmission'));
     },
     submit() {
-      console.log('Received action. Sending to route from wrapper...');
       this.sendAction('submit');
     },
     validate() {
