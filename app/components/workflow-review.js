@@ -8,7 +8,6 @@ export default Component.extend({
   },
   actions: {
     submit() {
-      console.log('sending action from review page...');
       this.sendAction('submit');
     },
     back() {
