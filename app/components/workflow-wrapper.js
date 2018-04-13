@@ -1,7 +1,7 @@
 import Component from '@ember/component';
 
 export default Component.extend({
-  step: 1,
+  step: 0,
   isValidated: Ember.A(),
   doiInfo: [],
   actions: {
