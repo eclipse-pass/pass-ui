@@ -4,7 +4,7 @@ import { storageFor } from 'ember-local-storage';
 export default Component.extend({
   currentUser: Ember.inject.service('current-user'),
   localSubmission: storageFor('submission'),
-  step: 1,
+  step: 0,
   isValidated: Ember.A(),
   doiInfo: [],
   actions: {

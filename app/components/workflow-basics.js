@@ -25,7 +25,7 @@ export default Component.extend({
       this.sendAction('next')
     },
     back() {
-      this.sendAction('back')
+      // this.sendAction('back')
     },
     validateDOI() {
       // ref: https://www.crossref.org/blog/dois-and-matching-regular-expressions/
