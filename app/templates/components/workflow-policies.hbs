@@ -4,19 +4,8 @@
     <p>
        Based on the funding agencies you provided, these are the public access policies that are applicable to your work
     </p>
-    {{#each (value-of (action "getPolicies")) as |repo|}}
-        {{#if (eq "PMC" repo)}}
-            {{policy-compliance-nih submission=model register=(action "registerDeposit")}}
-        {{/if}}
-
-        {{#if (eq "NSF-PAR" repo)}}
-            {{policy-compliance-nsf submission=model register=(action "registerDeposit")}}
-        {{/if}}
-
-        {{#if (eq "DOE-PAGES" repo)}}
-            {{policy-compliance-doe submission=model register=(action "registerDeposit")}}
-        {{/if}}
-
+    {{#each model.policies as |policy|}}
+        {{policy-card policy=policy}}
     {{/each}}
     {{yield}}
   </div>
