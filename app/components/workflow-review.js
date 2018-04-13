@@ -8,7 +8,7 @@ export default Component.extend({
   },
   actions: {
     next() {
-      this.sendAction('next')
+      // this.sendAction('next')
     },
     back() {
       this.sendAction('back')
