@@ -10,7 +10,7 @@ export default Component.extend({
       this.sendAction('back')
     },
     getFiles(){
-      let submission = this.get('model');
+      let submission = this.get('model.newSubmission');
       var uploads = document.getElementById("file-multiple-input");
       if ('files' in uploads) {
           if (uploads.files.length !== 0) {
@@ -29,7 +29,7 @@ export default Component.extend({
       }
     },
     removeFile(file) {
-      let submission = this.get('model');
+      let submission = this.get('model.newSubmission');
       this.files.removeObject(file)
       submission.files = this.files
     }

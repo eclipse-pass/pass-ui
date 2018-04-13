@@ -5,4 +5,7 @@ export default DS.Model.extend({
   description: DS.attr('string'),
   url: DS.attr('string'),
   metadata: DS.attr(),
+
+  repository: DS.belongsTo('repository'),
+  funder: DS.belongsTo('funder'),
 });

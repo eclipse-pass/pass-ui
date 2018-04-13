@@ -11,6 +11,8 @@ export default DS.Model.extend({
   source: DS.attr('string'),
   metadata: DS.attr(),
   pubmedId: DS.attr('string'),
+  policyTermsAccepted: DS.attr('string'),
+  files: DS.attr(),
 
   createdBy: DS.belongsTo('person'),
   journal: DS.belongsTo('journal', {autoSave: true}),

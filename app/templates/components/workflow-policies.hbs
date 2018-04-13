@@ -7,6 +7,9 @@
     {{#each model.policies as |policy|}}
         {{policy-card policy=policy}}
     {{/each}}
+    <div class="">
+      {{input type="checkbox" checked=model.newSubmission.policyTermsAccepted}} I agree to the above policies.
+    </div>
     {{yield}}
   </div>
 </div>
