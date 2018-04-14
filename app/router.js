@@ -19,6 +19,7 @@ Router.map(function() {
   this.route('grants', function() {
     this.route('detail', { path: '/:grant_id' });
   });
+  this.route('thanks');
 });
 
 export default Router;

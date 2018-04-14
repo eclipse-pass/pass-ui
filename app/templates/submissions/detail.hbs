@@ -1,1 +1,25 @@
-{{outlet}}
+<ul>
+  <li>{{model.title}}</li>
+  <li>Status: {{model.status}}</li>
+  <li>{{model.abstract}}</li>
+  <li>DOI: {{model.doi}}</li>
+  <li>Submitted on {{model.dateSubmitted}}</li>
+  <li>Volume: {{model.volume}} / Issue: {{model.issue}}</li>
+  <li>{{model.source}}</li>
+  <li>Files</li>
+  <ul>
+    {{#each model.files as |file|}}
+    <li>YO</li>
+    {{/each}}
+  </ul>
+  <li>Deposits</li>
+  <ul>
+    {{#each (await model.deposits) as |deposit|}}
+      <li>{{get (await deposit.repository) 'name'}}</li>
+      <ul>
+        <li>Status: {{deposit.status}}</li>
+        <li>Required: {{deposit.isRequired}}</li>
+      </ul>
+    {{/each}}
+  </ul>
+</ul>
