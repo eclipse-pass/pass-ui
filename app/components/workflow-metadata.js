@@ -254,28 +254,19 @@ export default Component.extend({
   currentFormStep: 0,
 
   didInsertElement() {
-    // TODO: more logic here to decide if there are any forms that need filled out
     //set the first schema from schemas list to the page
-    this.set('schema', this.get(this.schemas[0]))
-
-    // this block is a temp var till we figure out how  to get the right form to display
-    /////
+    this.set('schema', this.get(this.schemas[0]));
     let submission = this.get('model.newSubmission');
-    var repos = submission.get('deposits').map(deposit => deposit.get('repo'));
-
-    if (name === 'common' && repos.length) {
-      return name;
-    } else if (repos.includes(name)) {
-      return name;
-    }
-
+    let repos = submission.get('deposits').map(deposit => deposit.get('repository'));
   },
+  displayFormStep: Ember.computed('currentFormStep', function() {
+    return this.get('currentFormStep') + 1;
+  }),
   actions: {
     nextForm() {
-      if (this.get('currentFormStep') < this.get('schemas').length - 1) {
+      if (this.get('currentFormStep') < this.get('schemas').length + 1) {
         this.set('schema', this.get(this.schemas[this.set('currentFormStep', this.get('currentFormStep') + 1)]))
       } else {
-        // TODO: increment the STEP counter on the workflow-wrapper
         this.sendAction('next')
       }
     },
@@ -283,7 +274,6 @@ export default Component.extend({
       if (this.get('currentFormStep') !== 0) {
         this.set('schema', this.get(this.schemas[this.set('currentFormStep', this.get('currentFormStep') - 1)]))
       } else {
-        // TODO: increment the STEP counter on the workflow-wrapper
         this.sendAction('back')
       }
     }

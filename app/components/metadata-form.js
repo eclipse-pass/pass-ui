@@ -286,24 +286,14 @@ function fuzzySet(arr, useLevenshtein, gramSizeLower, gramSizeUpper) {
 
 
 export default Ember.Component.extend({
-  // session: Ember.inject.service(),
-  // store: Ember.inject.service(),
-  // metaDataString: Ember.computed('output', function() {
-  //   return JSON.stringify(this.get('output'));
-  // }),
   didRender () {
     this._super(...arguments);
-
     const that = this;
     let originalForm = this.get('schema');
     let newForm = JSON.parse(JSON.stringify(originalForm));
     if (!originalForm.options) {
       newForm['options'] = {};
     }
-    if (!originalForm['view']) {
-    //  newForm['view'] = 'web-edit';
-    }
-
     //Populate form with data if there is any to populate with.
     let metadata = this.get('model.metadata')
     console.log(newForm)
@@ -313,17 +303,16 @@ export default Ember.Component.extend({
     if(!metadata[newForm.id]) {
       console.log('meata', metadata)
       let prePopulateData = {};
-    //  if(metadata) {
     //  Try to match the doiInfo to the form schema data to populate
       Promise.resolve(originalForm['schema']).then(schema => {
-        try{
+        try {
           let doiInfo = this.get( 'doiInfo' )
             //// Fuzy Match here
             let f = fuzzySet(  Object.keys( schema.properties ) )
             for (let doiEntry in doiInfo) {
               //Validate and check any doi data to make sure its close to the right field
             if(f.get(doiEntry) !== null){
-              if(doiEntry == "author") {
+              if (doiEntry == "author") {
                 let given = doiInfo[doiEntry][0].given;
                 prePopulateData[f.get(doiEntry)[0][1]] = given
 
@@ -342,20 +331,12 @@ export default Ember.Component.extend({
               }
             }
           }
-          // metadata[this.currentFormStep] = prePopulateData;
-            newForm.data = prePopulateData
-          //  that.set('model.metadata', metadata)
-            console.log('prePopulateData', prePopulateData)
-             // if( metadata[this.currentFormStep]){
+          newForm.data = prePopulateData
             metadata[newForm.id] = ({
               id: newForm.id,
               data: prePopulateData
             });
-            console.log('ADDDED A BNE RECXORD')
             this.set('model.metadata', metadata)
-             //  newForm.data =  metadata[this.currentFormStep];
-             //  console.log(newForm)
-             // }
            } catch(e){console.log(e)}
       });
     } else {

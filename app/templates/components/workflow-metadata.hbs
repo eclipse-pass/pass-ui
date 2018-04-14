@@ -1,6 +1,6 @@
 {{!-- takes in a schema and the model to save the schema to--}}
 {{#if doiInfo}}
-  <h4 class="font-weight-light pull-right mr-3">Form {{currentFormStep}} of {{schemas.length}}</h4>
+  <h4 class="font-weight-light pull-right mr-3">Form {{displayFormStep}} of {{schemas.length}}</h4>
   {{metadata-form schema=schema model=model.newSubmission doiInfo=doiInfo currentFormStep=currentFormStep nextForm=(action "nextForm") previousForm=(action "previousForm")}}
 {{else}}
   <h4 class="font-weight-light text-center mt-4">No form found, did you<a href {{action (mut step) 0}} > enter a DOI</a>?</h4>
