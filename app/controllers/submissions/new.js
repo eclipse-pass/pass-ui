@@ -9,6 +9,7 @@ export default Controller.extend({
       sub.status = 'PND'
       sub.abstract = "No Abstract"
       sub.dateSubmitted = new Date();
+      sub.submitted = true;
       let depositsSaved = 0;
       sub.save().then((submission) => {
         submission.get('deposits').forEach((deposit, index, arr) => {

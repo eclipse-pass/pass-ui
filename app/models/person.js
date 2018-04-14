@@ -10,6 +10,6 @@ export default DS.Model.extend({
     affiliation: DS.attr('string'),
     role: DS.attr('string'),
     shibbolethId: DS.attr('string'),
-    
+    submissionDraft: DS.belongsTo('submission'),
     user: DS.belongsTo('user'),
 });
