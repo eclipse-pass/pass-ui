@@ -22,14 +22,14 @@ export default Component.extend({
     validate() {
       let tempValidateArray = []
       this.set('isValidated', [])
-      Object.keys(this.model.toJSON()).forEach((property)=> {
+      Object.keys(this.get('model.newSubmission').toJSON()).forEach((property)=> {
         // TODO:  Add more logic here for better validation
-        if(this.model.get(property) !== undefined) {
+        if(this.get('model.newSubmission').get(property) !== undefined) {
           tempValidateArray[property] = true
         } else {
           tempValidateArray[property] = false
         }
-      })
+      });
       this.set('isValidated', tempValidateArray)
       console.log(this.get('isValidated'))
     }

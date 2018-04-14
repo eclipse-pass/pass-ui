@@ -12,6 +12,7 @@ export default DS.Model.extend({
   assignedId: DS.attr('string'),
   userActionRequired: DS.attr('boolean'),
   accessUrl: DS.attr('string'),
+  isRequired: DS.attr('boolean'),
 
   submission: DS.belongsTo('submission'),
   repository: DS.belongsTo('repository'),

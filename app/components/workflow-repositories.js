@@ -64,8 +64,8 @@ export default Component.extend({
 
       let deposit = this.get('store').createRecord('deposit', {
         repository,
-        status: 'new',
-        requested: true
+        status: 'NEW',
+        isRequired: true
       });
       this.get('addedDeposits').push(deposit);
       console.log("Added deposit:", deposit);
