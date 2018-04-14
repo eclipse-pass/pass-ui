@@ -1,16 +1,14 @@
- {{!-- TODO  We need to generlize the policy policy-compliance- component --}}
- <div class="form-group row">
-   <div class="col-md-12">
+<div class="form-group row">
+  <div class="col-md-12">
     <p>
-       Based on the funding agencies you provided, these are the public access policies that are applicable to your work
+      Based on the funding agencies you provided, these are the public access
+      policies that are applicable to your work:
     </p>
     {{#each model.policies as |policy|}}
-        {{policy-card policy=policy}}
+      {{policy-card policy=policy}}
     {{/each}}
-    <div class="">
-      {{input type="checkbox" checked=model.newSubmission.policyTermsAccepted}} I agree to the above policies.
-    </div>
-    {{yield}}
+    {{input type="checkbox" checked=model.newSubmission.policyTermsAccepted}}
+    I agree to the above policies.
   </div>
 </div>
 
