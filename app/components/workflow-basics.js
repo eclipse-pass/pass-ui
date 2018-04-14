@@ -24,9 +24,6 @@ export default Component.extend({
     next() {
       this.sendAction('next')
     },
-    back() {
-      // this.sendAction('back')
-    },
     validateDOI() {
       // ref: https://www.crossref.org/blog/dois-and-matching-regular-expressions/
       const doi = this.get('model.doi');
@@ -75,10 +72,6 @@ export default Component.extend({
 
           this.set('doiInfo', doiInfo);
 
-          // Search journals for a matching title, for pre-populating purposes
-          // If found, we set the submission's journal to it.
-          // We also set a property for the journal title, because the json format
-          // uses hyphens, and it's unclear how to access them from .hbs templates
           let journal = this.get('model.journals').findBy("name",
             doiInfo['container-title'].trim());
           if (!journal) {
@@ -87,6 +80,8 @@ export default Component.extend({
               nlmta: "UNKNOWN"
             })
             newJournal.save().then((j) => submission.set('journal', j));
+          } else {
+            submission.set('journal', journal);
           }
         });
       }

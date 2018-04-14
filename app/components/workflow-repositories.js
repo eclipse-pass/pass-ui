@@ -29,7 +29,7 @@ export default Component.extend({
     let grants = this.get('model.newSubmission.grants');
     let repos = []
     grants.forEach((grant) => {
-      reqRepos.addObject(grant.get('funder.repository'));
+      repos.addObject(grant.get('funder.repository'));
     });
 
     // STEP 2
