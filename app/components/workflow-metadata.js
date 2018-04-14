@@ -147,7 +147,6 @@ export default Component.extend({
       }
     }
   },
-  // nlmTa
   nih: {
     "id": "nih",
     "data": {},
@@ -248,33 +247,69 @@ export default Component.extend({
     }
   },
 
-  Metadata: {},
   schema: {},
   schemas: ['common', 'nih', 'ed'],
   currentFormStep: 0,
 
   didInsertElement() {
-    //set the first schema from schemas list to the page
-    this.set('schema', this.get(this.schemas[0]));
-    let submission = this.get('model.newSubmission');
-    let repos = submission.get('deposits').map(deposit => deposit.get('repository'));
+    this.set('schemas', [this.get('common'), this.get('nih'), this.get('ed')]);
+    this.get('metadataForms').forEach((form) => {
+      let schemas = this.get('schemas');
+      if (form) {
+        try {
+          let parsedForm = JSON.parse(form);
+          schemas.addObject(parsedForm);
+        } catch(e) {
+            console.log("ERROR:", e);
+        }
+      }
+    });
+    this.set('schema', this.schemas[0]);
   },
+
+  activePolicies: Ember.computed('model.newSubmission', function() {
+    // policies can come from repositories
+    let repos = [];
+    let policies = [];
+    this.get('model.newSubmission.deposits').forEach((deposit) => {
+      repos.addObject(deposit.get('repository'));
+    });
+    // policies can come from funders
+    this.get('model.newSubmission.grants').forEach((grant) => {
+      repos.addObject(grant.get('funder.repository'));
+      policies.addObject(grant.get('funder.policy'));
+    });
+    repos.forEach((repository) => {
+      policies.addObject(repository.get('policy'));
+    });
+    return policies;
+  }),
+
+  metadataForms: Ember.computed('activePolicies', function() {
+    const retVal = this.get('activePolicies').map((policy) => policy.get('metadata'));
+    return retVal;
+  }),
+
   displayFormStep: Ember.computed('currentFormStep', function() {
     return this.get('currentFormStep') + 1;
   }),
   actions: {
     nextForm() {
-      if (this.get('currentFormStep') < this.get('schemas').length + 1) {
-        this.set('schema', this.get(this.schemas[this.set('currentFormStep', this.get('currentFormStep') + 1)]))
+      let step = this.get('currentFormStep');
+      if (step + 1 < this.get('schemas').length) {
+        this.set('currentFormStep', step+1);
+        this.set('schema', this.schemas[step+1]);
       } else {
-        this.sendAction('next')
+        this.sendAction('next');
       }
     },
     previousForm() {
-      if (this.get('currentFormStep') !== 0) {
-        this.set('schema', this.get(this.schemas[this.set('currentFormStep', this.get('currentFormStep') - 1)]))
+      let step = this.get('currentFormStep');
+      if (step > 0) {
+        this.set('currentFormStep', step-1);
+        this.set('schema', this.schemas[step-1]);
       } else {
-        this.sendAction('back')
+        this.sendAction('back');
       }
     }
   }

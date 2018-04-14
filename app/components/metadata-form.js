@@ -296,12 +296,10 @@ export default Ember.Component.extend({
     }
     //Populate form with data if there is any to populate with.
     let metadata = this.get('model.metadata')
-    console.log(newForm)
     if(!metadata) {
        metadata = []
     }
     if(!metadata[newForm.id]) {
-      console.log('meata', metadata)
       let prePopulateData = {};
     //  Try to match the doiInfo to the form schema data to populate
       Promise.resolve(originalForm['schema']).then(schema => {

@@ -4,7 +4,7 @@
       Based on the funding agencies you provided, these are the public access
       policies that are applicable to your work:
     </p>
-    {{#each model.policies as |policy|}}
+    {{#each activePolicies as |policy|}}
       {{policy-card policy=policy}}
     {{/each}}
     {{input type="checkbox" checked=model.newSubmission.policyTermsAccepted}}
