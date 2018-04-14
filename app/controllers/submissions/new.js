@@ -6,5 +6,5 @@ export default Controller.extend({
       const sub = this.get('model');
       sub.save();
     }
-  }
+  },
 });

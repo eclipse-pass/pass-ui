@@ -30,11 +30,11 @@ export default Controller.extend({
   tablePageSizeValues: [5, 10, 25],
 
   // Columns displayed depend on the user role
-  columns: computed('session.user', {
+  columns: computed('currentUser', {
     get() {
-      if (this.get('session.isAdmin')) {
+      if (this.get('currentUser.user.person.role') === 'ADMIN') {
             return this.get('adminColumns');
-      } else if (this.get('session.isPI')) {
+      } else if (this.get('currentUser.user.person.role') === 'PI') {
             return this.get('piColumns');
       } else {
         return [];

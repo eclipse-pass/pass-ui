@@ -81,9 +81,13 @@
               </td>
             </tr>
             <tr>
-              <td>Repositories</td>
+              <td class="text-nowrap">Repositories</td>
               <td>
-                {{#each model.newSubmission.deposits as |deposit|}} {{deposit.id}} {{/each}}
+                <ul>
+                {{#each model.newSubmission.deposits as |deposit|}}
+                  <li>{{get (await deposit.repository) 'name'}}</li>
+                {{/each}}
+              </ul>
               </td>
             </tr>
             <tr>

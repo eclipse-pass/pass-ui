@@ -73,95 +73,21 @@ export default Component.extend({
           submission.set('issue', doiInfo['issue']);
           submission.set('volume', doiInfo['volume']);
 
-          //Fill out metdata with any data from DOI
-
-          // // TODO: WE need to find a way to loop over how many forms there is going to be I.e common and NIH
-            this.set('doiInfo', doiInfo);
-          // let doiSubmissionData = {
-          //   volume: doiInfo['volume'],
-          //   issue: doiInfo['issue'],
-          //   publicationDate: doiInfo['deposited']['date-time'],
-          //   abstract: "",
-          //   subjects: "",
-          //   articleURL:doiInfo['link'][0]['URL'],
-          //   fName: doiInfo['author'][0]['given'],
-          //   mName: "",
-          //   lName: doiInfo['author'][0]['family'],
-          //   orcid: "",
-          //   email: "",
-          //   affiliation: doiInfo['publisher']
-          // }
-          //
-          //
-          //
-          // "nlmTa":
-          // "publisherPDF":
-          // "displayPublisherPDF":
-          // "embargoPeriod":
-          // "eLocationID":
-          // "firstPage":
-          // "lastPage":
-          // "selfURI":
-          // "articleIdType":
-          // "articleIdString":
-          // "permissionCopyrightStatement":
-          // "licenseType":
-          // "licenseLink":
-          // "principleFName":
-          // "principleMName":
-          // "principleLName":
-          // "principleOrcid":
-          // "principleEmail":
-          // "principleAffiliation":
-          // "fName":
-          // "mName":
-          // "lName":
-          // "email":
-          //
-
-
-          // submission.set('metadata', [
-          //   {
-          //     id: 0,
-          //     data: doiSubmissionData
-          //   },
-          //   {
-          //     id: 1,
-          //     data: doiSubmissionData
-          //   }
-          // ])
-
-          // grab DOI info
-          // find the journal that corresponds with the journal name
-          // RETURN that journal and save it to the model
+          this.set('doiInfo', doiInfo);
 
           // Search journals for a matching title, for pre-populating purposes
           // If found, we set the submission's journal to it.
           // We also set a property for the journal title, because the json format
           // uses hyphens, and it's unclear how to access them from .hbs templates
-          // self.get('store').findAll('journal')
-          //   .then((journals) => journals.find(function(journal) {
-          //     if (journal.get('name').trim() === doiInfo['container-title'].trim()) {
-          //       var doiInfo = self.get('doiInfo');
-          //       self.set('doiJournal', true);
-          //       self.send('selectJournal', doiInfo['container-title']);
-          //     }
-          //   }));
-
-          this.get('store').findRecord('journal', {
-            filter: {
-              name: doiInfo['container-title']
-            }
-          }).then((journal) => {
-            if (!journal) {
-              alert('Journal not recognized by our system!');
-              // TODO: make a new record for this journal,
-              //       set name of journal based on DOI and then
-              //       set model.journal equal to that new journal
-              journal = this.store.createRecord('journal', {'name': doiInfo['container-title']});
-            }
-            self.set('model.newSubmission.journal', journal);
-          });
+          let journal = this.get('model.journals').findBy("name",
+            doiInfo['container-title'].trim());
+          if (!journal) {
+            let newJournal = this.get('store').createRecord('journal', {
+              name: doiInfo['container-title'].trim(),
+              nlmta: "UNKNOWN"
+            })
+            newJournal.save().then((j) => submission.set('journal', j));
+          }
         });
       }
     },

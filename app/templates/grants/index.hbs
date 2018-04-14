@@ -13,6 +13,9 @@
           pageSize=tablePageSize
           pageSizeValues=tablePageSizeValues
         }}
+        {{#each model as |grant|}}
+        {{grant.projectName}}
+        {{/each}}
   </div>
 </div>
 {{#message-dialog show=messageShow to=messageTo subject=messageSubject message=messageText}}

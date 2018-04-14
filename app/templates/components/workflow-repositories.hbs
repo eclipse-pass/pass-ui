@@ -20,7 +20,7 @@
 
 <div id="local-deposit-list">
   <ul class="list-group">
-    {{#each model.repositories as |repo|}}
+    {{#each optionalRepositories as |repo|}}
       <li class="list-group-item d-flex align-items-center my-1">
         {{input type="checkbox" change=(action "toggleRepository" repo) id=repo.name name=repo.name}}
         <label for="{{repo.name}}" class="mb-0 ml-2">{{repo.name}}</label>

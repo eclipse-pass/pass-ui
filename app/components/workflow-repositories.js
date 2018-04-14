@@ -2,7 +2,23 @@ import Component from '@ember/component';
 import {
   inject as service
 } from '@ember/service';
+import EmberArray from '@ember/array';
 
+function diff(array1, array2) {
+  let retArray = [];
+  array1.forEach((element1) => {
+    let flag = false;
+    array2.forEach((element2) => {
+      if (element1.get('id') === element2.get('id')) {
+        flag = true;
+      }
+    });
+    if (!flag) {
+      retArray.push(element1);
+    }
+  });
+  return retArray;
+}
 export default Component.extend({
   addedDeposits: [],
 
@@ -10,14 +26,29 @@ export default Component.extend({
   isFirstTime: true,
 
   requiredRepositories: Ember.computed('model.repositories', function() {
-    const repos = this.get('model.repositories');
-    // if (this.isFirstTime) {
-    //   repos.forEach((repo) => {
-    //     this.send('addRepo', repo);
-    //   });
-    //   this.isFirsTime = false;
-    // }
+    let grants = this.get('model.newSubmission.grants');
+    let repos = []
+    grants.forEach((grant) => {
+      reqRepos.addObject(grant.get('funder.repository'));
+    });
+
+    // STEP 2
+    if (this.isFirstTime) {
+      repos.forEach((repo) => {
+        this.send('addRepo', repo);
+      });
+      this.isFirsTime = false;
+    }
+
+    // STEP 3
     return repos;
+  }),
+
+  optionalRepositories: Ember.computed('requiredRepositories', function() {
+    let allRepos = this.get('model.repositories');
+    let reqRepos = this.get('requiredRepositories')
+    const ret = diff(allRepos, reqRepos).concat(diff(reqRepos, allRepos));
+    return ret;
   }),
 
   actions: {
