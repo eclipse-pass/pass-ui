@@ -22,4 +22,5 @@ deploy:
   provider: surge
   project: "./dist/"
   domain: ember-pass.surge.sh
+  on: deploy
   skip_cleanup: true
