@@ -8,7 +8,7 @@ export default DS.Model.extend({
   awardDate: DS.attr('date'),
   startDate: DS.attr('date'),
   endDate: DS.attr('date'),
-  
+
   funder: DS.belongsTo('funder'),
-  submissions: DS.hasMany('submission', { async: true })
+  submissions: DS.hasMany('submission', { async: true }),
 });

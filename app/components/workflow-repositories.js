@@ -1,11 +1,11 @@
 import Component from '@ember/component';
 import {
-  inject as service
+  inject as service,
 } from '@ember/service';
 import EmberArray from '@ember/array';
 
 function diff(array1, array2) {
-  let retArray = [];
+  const retArray = [];
   array1.forEach((element1) => {
     let flag = false;
     array2.forEach((element2) => {
@@ -25,9 +25,9 @@ export default Component.extend({
   store: service('store'),
   isFirstTime: true,
 
-  requiredRepositories: Ember.computed('model.repositories', function() {
-    let grants = this.get('model.newSubmission.grants');
-    let repos = Ember.A();
+  requiredRepositories: Ember.computed('model.repositories', function () {
+    const grants = this.get('model.newSubmission.grants');
+    const repos = Ember.A();
     grants.forEach((grant) => {
       repos.addObject(grant.get('funder.repository'));
     });
@@ -44,11 +44,11 @@ export default Component.extend({
     return repos;
   }),
 
-  optionalRepositories: Ember.computed('requiredRepositories', function() {
-    let allRepos = this.get('model.repositories');
-    let reqRepos = this.get('requiredRepositories')
+  optionalRepositories: Ember.computed('requiredRepositories', function () {
+    const allRepos = this.get('model.repositories');
+    const reqRepos = this.get('requiredRepositories');
     const ret = diff(allRepos, reqRepos).concat(diff(reqRepos, allRepos));
-    debugger;
+
     return ret;
   }),
 
@@ -61,20 +61,20 @@ export default Component.extend({
       this.sendAction('back');
     },
     addRepo(repository) {
-      let submission = this.get('model.newSubmission');
+      const submission = this.get('model.newSubmission');
 
-      let deposit = this.get('store').createRecord('deposit', {
+      const deposit = this.get('store').createRecord('deposit', {
         repository,
         status: 'NEW',
-        isRequired: true
+        isRequired: true,
       });
       this.get('addedDeposits').push(deposit);
-      console.log("Added deposit:", deposit);
-      console.log("Added deposit:", repository.name);
+      console.log('Added deposit:', deposit);
+      console.log('Added deposit:', repository.name);
     },
     removeRepo(repository) {
-      let deposits = this.get('addedDeposits');
-      let i = 0;
+      const deposits = this.get('addedDeposits');
+      const i = 0;
       deposits.forEach((deposit, index) => {
         if (deposit.get('repository.id') === repository.get('id')) {
           deposits.splice(index, 1);
@@ -83,8 +83,8 @@ export default Component.extend({
     },
     saveAll() {
       console.log('saving all deposits to the submission!');
-      var addedDeposits = this.get('addedDeposits');
-      var submission = this.get('model.newSubmission');
+      const addedDeposits = this.get('addedDeposits');
+      const submission = this.get('model.newSubmission');
       addedDeposits.forEach((depositToAdd) => {
         submission.get('deposits').addObject(depositToAdd);
       });
@@ -95,9 +95,9 @@ export default Component.extend({
       } else {
         this.send('removeRepo', repository);
       }
-    }
+    },
   },
   didReceiveAttrs() {
     this._super(...arguments);
-  }
+  },
 });

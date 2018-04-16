@@ -5,7 +5,7 @@ export default DS.Model.extend({
   status: DS.attr('string'),
   repo: DS.attr('string'),
   updatedDate: DS.attr('date'),
-   /* Whether this deposit is specifically requested by the user,
+  /* Whether this deposit is specifically requested by the user,
     * rather than implicit by policy.
     */
   isVoluntary: DS.attr('boolean'),
@@ -13,7 +13,7 @@ export default DS.Model.extend({
   userActionRequired: DS.attr('boolean'),
   accessUrl: DS.attr('string'),
   isRequired: DS.attr('boolean'),
-  submitted: DS.attr('boolean', {defaultValue: false}),
+  submitted: DS.attr('boolean', { defaultValue: false }),
 
   submission: DS.belongsTo('submission'),
   repository: DS.belongsTo('repository'),

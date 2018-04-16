@@ -4,19 +4,18 @@ import { helper } from '@ember/component/helper';
 // is one a link is created, if not it will just return the label
 
 function optionalLink(params) {
-  let label = params[0];
-  let url = params[1];
-  if (url!=null && url.trim().length>0) {
-	var a = document.createElement('a');
-	var linkText = document.createTextNode(label);
-	a.appendChild(linkText);
-	a.href = url;
-	a.title = url;
-	a.target = "_blank";
+  const label = params[0];
+  const url = params[1];
+  if (url != null && url.trim().length > 0) {
+    const a = document.createElement('a');
+    const linkText = document.createTextNode(label);
+    a.appendChild(linkText);
+    a.href = url;
+    a.title = url;
+    a.target = '_blank';
     return a;
-  } else {
-    return label;
   }
+  return label;
 }
 
 export default helper(optionalLink);

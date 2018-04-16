@@ -1,6 +1,6 @@
 import Component from '@ember/component';
 import {
-  storageFor
+  storageFor,
 } from 'ember-local-storage';
 
 export default Component.extend({
@@ -12,8 +12,8 @@ export default Component.extend({
   doiInfo: [],
   actions: {
     next() {
-      let currentUser = this.get('store').peekRecord('person', this.get('currentUser.user.person.id'));
-      let sub = this.get('model.newSubmission');
+      const currentUser = this.get('store').peekRecord('person', this.get('currentUser.user.person.id'));
+      const sub = this.get('model.newSubmission');
       sub.save().then((sub) => {
         if (this.get('step') === 2 && sub.get('deposits.length') == 0) { // if the user is leaving the repository section
           let depositsSaved = 0;
@@ -41,7 +41,7 @@ export default Component.extend({
       });
     },
     back() {
-      let sub = this.get('model.newSubmission');
+      const sub = this.get('model.newSubmission');
       sub.save().then(() => {
         this.decrementProperty('step');
       });
@@ -50,18 +50,18 @@ export default Component.extend({
       this.sendAction('submit');
     },
     validate() {
-      let tempValidateArray = []
-      this.set('isValidated', [])
+      const tempValidateArray = [];
+      this.set('isValidated', []);
       Object.keys(this.get('model.newSubmission').toJSON()).forEach((property) => {
         // TODO:  Add more logic here for better validation
         if (this.get('model.newSubmission').get(property) !== undefined) {
-          tempValidateArray[property] = true
+          tempValidateArray[property] = true;
         } else {
-          tempValidateArray[property] = false
+          tempValidateArray[property] = false;
         }
       });
-      this.set('isValidated', tempValidateArray)
-      console.log(this.get('isValidated'))
-    }
-  }
+      this.set('isValidated', tempValidateArray);
+      console.log(this.get('isValidated'));
+    },
+  },
 });

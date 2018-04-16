@@ -2,13 +2,13 @@ import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 
 export default Component.extend({
-    store: service('store'),
+  store: service('store'),
 
-    onSelect: () => { },
+  onSelect: () => { },
 
-    actions: {
+  actions: {
 
-        /** Search for journals by matching a term
+    /** Search for journals by matching a term
          *
          * @param term {string} The search term (regex)
          *
@@ -16,14 +16,11 @@ export default Component.extend({
          * It is not suitable for large numbers of journals.  Instead, the server should provide
          * a search API.
         */
-        searchJournals(term) {
+    searchJournals(term) {
+      const regex = new RegExp(term, 'i');
 
-            var regex = new RegExp(term, 'i');
-
-            return this.get('store').findAll('journal')
-                .then((journals) => journals.filter(journal => {
-                    return journal.get('name').match(regex);
-                }));
-        }
-    }
+      return this.get('store').findAll('journal')
+        .then(journals => journals.filter(journal => journal.get('name').match(regex)));
+    },
+  },
 });

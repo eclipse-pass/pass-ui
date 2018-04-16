@@ -44,14 +44,19 @@ module.exports = function(environment) {
     ENV.APP.rootElement = '#ember-testing';
   }
 
-  if (environment === 'production') {
+  if (environment === 'surge') {
     // Application deployed as /pass
     // ENV.rootURL = '/pass/';
+    ENV.contentSecurityPolicy = {
+      'style-src': "'self' 'unsafe-inline'",
+      'script-src': "'self' 'unsafe-eval' http://thirsty-cork.surge.sh",
+      'connect-src': "'self' http://thirsty-cork.surge.sh"
+    };
   }
 
   // Disable mirage entirely.
   ENV['ember-cli-mirage'] = {
-    enabled: true
+    enabled: false
   };
 
   ENV.fedora = {

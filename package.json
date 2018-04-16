@@ -16,6 +16,18 @@
     "test": "ember test"
   },
   "devDependencies": {
+  },
+  "engines": {
+    "node": "^4.5 || 6.* || >= 7.*"
+  },
+  "dependencies": {
+    "@coreui/ajax": "1.0.10",
+    "alpaca": "^1.5.24",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.7.0",
+    "jquery": "^3.3.1",
     "bootstrap": "^4.0.0",
     "broccoli-asset-rev": "^2.4.5",
     "ember-ajax": "^3.0.0",
@@ -52,15 +64,9 @@
     "ember-sticky-element": "^0.2.0",
     "ember-truth-helpers": "^2.0.0",
     "ember-welcome-page": "^3.0.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.11.0",
     "loader.js": "^4.2.3",
     "popper.js": "^1.13.0"
-  },
-  "engines": {
-    "node": "^4.5 || 6.* || >= 7.*"
-  },
-  "dependencies": {
-    "@coreui/ajax": "1.0.10",
-    "alpaca": "^1.5.24",
-    "jquery": "^3.3.1"
   }
 }

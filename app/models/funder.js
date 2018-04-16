@@ -6,5 +6,5 @@ export default DS.Model.extend({
   localId: DS.attr('string'),
 
   policy: DS.belongsTo('policy'),
-  repository: DS.belongsTo('repository')
+  repository: DS.belongsTo('repository'),
 });

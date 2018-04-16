@@ -1,11 +1,11 @@
 import { helper } from '@ember/component/helper';
 
 export function repoName([repo]) {
-  let repoMap = {
-    "PMC": "PubMed Central",
-    "NSF-PAR": "National Science Foundation Public Access Repository",
-    "JHU-IR": "JScholarship - JHU Publications Repository",
-    "JHU-AR": "JHU Data Archive"
+  const repoMap = {
+    PMC: 'PubMed Central',
+    'NSF-PAR': 'National Science Foundation Public Access Repository',
+    'JHU-IR': 'JScholarship - JHU Publications Repository',
+    'JHU-AR': 'JHU Data Archive',
   };
 
   if (typeof repo !== 'string') {

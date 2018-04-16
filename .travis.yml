@@ -17,7 +17,7 @@ install:
 script:
 - yarn test
 before_deploy:
-- yarn run build
+- ember build --environment=surge
 deploy:
   provider: surge
   project: "./dist/"

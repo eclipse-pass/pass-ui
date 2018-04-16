@@ -7,7 +7,7 @@ export default Component.extend({
   message: '',
 
   actions: {
-    toggleModal: function() {
+    toggleModal() {
       this.toggleProperty('show');
     },
 
@@ -17,6 +17,6 @@ export default Component.extend({
 
     send() {
       this.set('show', false);
-    }
-  }
+    },
+  },
 });
