@@ -18,4 +18,9 @@ export default DS.Model.extend({
   journal: DS.belongsTo('journal', {autoSave: true}),
   deposits: DS.hasMany('deposit', { async: true}), // not on this model on API
   grants: DS.hasMany('grant', { async: true }),
+  afterCreate(submission, server) {
+    server.create('deposit', { submission });
+    server.create('deposit', { submission });
+    server.create('deposit', { submission });
+  }
 });

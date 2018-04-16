@@ -51,7 +51,7 @@ module.exports = function(environment) {
 
   // Disable mirage entirely.
   ENV['ember-cli-mirage'] = {
-    enabled: false
+    enabled: true
   };
 
   ENV.fedora = {
