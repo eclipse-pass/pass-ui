@@ -1,7 +1,5 @@
 import Component from '@ember/component';
-import {
-  inject as service,
-} from '@ember/service';
+import { inject as service, } from '@ember/service';
 import EmberArray from '@ember/array';
 
 function diff(array1, array2) {

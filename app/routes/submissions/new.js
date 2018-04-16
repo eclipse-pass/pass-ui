@@ -1,7 +1,5 @@
 import Route from '@ember/routing/route';
-import {
-  storageFor,
-} from 'ember-local-storage';
+import { storageFor, } from 'ember-local-storage';
 
 const {
   service,

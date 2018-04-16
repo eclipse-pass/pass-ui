@@ -1,7 +1,5 @@
 import Component from '@ember/component';
-import {
-  Promise,
-} from 'rsvp';
+import { Promise, } from 'rsvp';
 
 export default Component.extend({
 
