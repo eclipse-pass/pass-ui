@@ -5,6 +5,6 @@ export default Factory.extend({
   url: 'http://example.com',
   localId: 'abc123',
   //
-  policy: association(),
-  repository: association()
+  // policy: association(),
+  // repository: association()
 });

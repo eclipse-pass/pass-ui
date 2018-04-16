@@ -13,5 +13,5 @@ export default Factory.extend({
     return Date();
   },
 
-  person: association(),
+  // person: association(),
 });

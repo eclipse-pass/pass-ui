@@ -27,7 +27,7 @@ export default Component.extend({
 
   requiredRepositories: Ember.computed('model.repositories', function() {
     let grants = this.get('model.newSubmission.grants');
-    let repos = []
+    let repos = Ember.A();
     grants.forEach((grant) => {
       repos.addObject(grant.get('funder.repository'));
     });
@@ -48,6 +48,7 @@ export default Component.extend({
     let allRepos = this.get('model.repositories');
     let reqRepos = this.get('requiredRepositories')
     const ret = diff(allRepos, reqRepos).concat(diff(reqRepos, allRepos));
+    debugger;
     return ret;
   }),
 

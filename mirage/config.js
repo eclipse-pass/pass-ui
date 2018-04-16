@@ -90,5 +90,5 @@ export default function() {
   this.patch('/users/:id'); // or this.patch
   this.del('/users/:id');
 
-  // this.passthrough();
+  this.passthrough();
 }
