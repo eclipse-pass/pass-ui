@@ -11,7 +11,7 @@ moduleForComponent('auto-fill', 'helper:auto-fill', {
 
 // Replace this with your real tests.
 test('has value test', function (assert) {
-  this.set('obj', Thing.create({ field: "1234" }));
+  this.set('obj', Thing.create({ field: '1234' }));
 
   this.render(hbs`{{auto-fill obj "field" "5678"}}`);
 

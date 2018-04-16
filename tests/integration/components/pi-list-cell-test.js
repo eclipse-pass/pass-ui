@@ -5,14 +5,15 @@ moduleForComponent('pi-list-cell', 'Integration | Component | pi list cell', {
   integration: true
 });
 
-test('it renders', function(assert) {
+test('it renders', function (assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
 
   this.set('record', {
     pi: {
       name: 'Bob'
-    }, copis: [
+    },
+    copis: [
       {
         name: 'Yoda'
       }, {

@@ -5,7 +5,7 @@ moduleForModel('grant', 'Unit | Model | grant', {
   needs: ['model:funder', 'model:user', 'model:person', 'model:submission']
 });
 
-test('it exists', function(assert) {
+test('it exists', function (assert) {
   let model = this.subject();
   // let store = this.store();
   assert.ok(!!model);

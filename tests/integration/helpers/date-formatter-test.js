@@ -7,16 +7,16 @@ moduleForComponent('date-formatter', 'helper:date-formatter', {
 });
 
 // Replace this with your real tests.
-test('it renders', function(assert) {
+test('it renders', function (assert) {
   let date = new Date();
   date.setUTCMonth(0);
   date.setUTCDate(1);
   date.setUTCFullYear(2018);
   date.setUTCHours(10);
-  date.setUTCMinutes(10)
+  date.setUTCMinutes(10);
   date.setUTCSeconds(10);
   date.setUTCMilliseconds(10000);
-  
+
   this.set('inputValue', date);
 
   this.render(hbs`{{date-formatter inputValue}}`);

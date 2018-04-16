@@ -5,7 +5,7 @@ moduleForComponent('date-cell', 'Integration | Component | date cell', {
   integration: true
 });
 
-test('it renders', function(assert) {
+test('it renders', function (assert) {
   this.set('column', {
     propertyName: 'date'
   });
@@ -16,12 +16,12 @@ test('it renders', function(assert) {
   date.setUTCDate(20);
   date.setUTCFullYear(2010);
   date.setUTCHours(10);
-  date.setUTCMinutes(10)
+  date.setUTCMinutes(10);
   date.setUTCSeconds(10);
   date.setUTCMilliseconds(10000);
-  
+
   this.set('record', {
-      date: date
+    date
   });
 
   this.render(hbs`{{date-cell record=record column=column}}`);

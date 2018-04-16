@@ -5,7 +5,7 @@ moduleFor('route:dashboard', 'Unit | Route | dashboard', {
   needs: ['service:session', 'service:currentUser']
 });
 
-test('it exists', function(assert) {
+test('it exists', function (assert) {
   let route = this.subject();
   assert.ok(route);
 });

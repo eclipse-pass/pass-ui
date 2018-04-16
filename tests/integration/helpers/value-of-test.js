@@ -7,7 +7,7 @@ moduleForComponent('value-of', 'helper:value-of', {
 });
 
 // Replace this with your real tests.
-test('it renders', function(assert) {
+test('it renders', function (assert) {
   this.set('inputValue', '1234');
 
   this.render(hbs`{{value-of inputValue}}`);

@@ -5,7 +5,7 @@ moduleFor('route:submissions/new', 'Unit | Route | submissions/new', {
   needs: ['service:currentUser']
 });
 
-test('it exists', function(assert) {
+test('it exists', function (assert) {
   let route = this.subject();
   assert.ok(route);
 });

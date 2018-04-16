@@ -5,16 +5,16 @@ moduleForComponent('identifier-cell', 'Integration | Component | identifier cell
   integration: true
 });
 
-test('it renders', function(assert) {
+test('it renders', function (assert) {
   this.set('column', {
     propertyName: 'id'
   });
 
   this.set('record', {
-      id: {
-        label: 'foo',
-        uri: 'http://example.com/'
-      }
+    id: {
+      label: 'foo',
+      uri: 'http://example.com/'
+    }
   });
 
   this.render(hbs`{{identifier-cell record=record column=column}}`);
