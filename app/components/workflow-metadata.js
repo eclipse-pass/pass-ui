@@ -288,14 +288,14 @@ export default Component.extend({
         },
         "agreement-to-embargo": {
           "type": "checkbox",
-          "rightLabel": "I <loggedin user's name> agree to the above statement on <current date>",
+          "rightLabel": "I agree to the above statement on todays date",
         },
       }
     }
   },
 
   schema: {},
-  schemas: ['embargo','common', 'nih', 'ed'],
+  schemas: ['common', 'nih', 'ed', 'embargo'],
   currentFormStep: 0,
 
   didInsertElement() {
