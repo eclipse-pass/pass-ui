@@ -6,6 +6,7 @@ module.exports = function(environment) {
     modulePrefix: 'pass-ember',
     environment,
     rootURL: '/',
+    host: 'http://localhost:8000',
     locationType: 'auto',
     EmberENV: {
       FEATURES: {
@@ -43,14 +44,19 @@ module.exports = function(environment) {
     ENV.APP.rootElement = '#ember-testing';
   }
 
-  if (environment === 'production') {
+  if (environment === 'surge') {
     // Application deployed as /pass
     // ENV.rootURL = '/pass/';
+    ENV.contentSecurityPolicy = {
+      'style-src': "'self' 'unsafe-inline'",
+      'script-src': "'self' 'unsafe-eval' http://pass-jhu.surge.sh",
+      'connect-src': "'self' http://pass-jhu.surge.sh"
+    };
   }
 
   // Disable mirage entirely.
   ENV['ember-cli-mirage'] = {
-    enabled: false
+    enabled: true
   };
 
   ENV.fedora = {

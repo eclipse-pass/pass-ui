@@ -1,3 +1,3 @@
 {{#each record.grants as |grant index|}}
-{{if index ', '}}{{#link-to 'grants.show' grant}}{{grant.awardNumber}}{{/link-to}} ({{grant.funder.name}})
+{{if index ', '}}{{#link-to 'grants.detail' grant}}{{grant.awardNumber}}{{/link-to}} ({{grant.funder.name}})
 {{/each}}

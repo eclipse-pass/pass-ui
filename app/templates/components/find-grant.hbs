@@ -1,7 +1,3 @@
-{{#power-select
-  search=(action "searchGrants")
-  onchange=onSelect
-  as |grant|
-}}
+{{#power-select search=(action "searchGrants") placeholder="Grant" onchange=onSelect as |grant|}}
   {{grant.awardNumber}}: {{grant.projectName}}
 {{/power-select}}

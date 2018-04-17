@@ -1,57 +1,35 @@
-
-<header class="container-fluid">
-  <div class="row align-items-center">
-    <div class="pass-title mr-auto">
-      <h1>PASS</h1>
-      <span>Public Access Submission System</span>
-    </div>
-    {{#link-to 'index' class='navbar-brand'}}
-      <img src='{{rootURL}}logo.png' alt='Logo' >
-    {{/link-to}}
+<div class="site" style="z-index:0;">
+  <header class="primary-skin navbar navbar-expand-xs justify-content-center mb-0" style="background:#002D72">
+    <div class="container">
+        {{#link-to "index" class="navbar-brand custom-color d-none d-sm-block"}}
+          <h3 class="font-weight-light" >
+            Public Access Submission System
+          </h3>
+        {{/link-to}}
+        {{#link-to "index" class="navbar-brand custom-color d-xs-block d-sm-none"}}<h2 class="font-weight-light">P.A.S.S.</h2>{{/link-to}}
+        <img src='{{rootURL}}logo.png' alt='Logo' class="nav-item d-sm-down-none pull-right">
   </div>
-  
-  <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item">
-        {{#link-to 'dashboard' class='nav-link'}}Home{{/link-to}}
-      </li>
-      <li class="nav-item">
-        {{#link-to 'grants' class="nav-link"}}Grants{{/link-to}}
-      </li>
-      <li class="nav-item">
-        {{#link-to 'submissions' class="nav-link"}}Submissions{{/link-to}}
-      </li>
-      <li class="nav-item">
-        {{#link-to 'about' class='nav-link'}}About{{/link-to}}
-      </li>
-      <li class="nav-item">
-        {{#link-to 'contact' class='nav-link borderless'}}Contact{{/link-to}}
-      </li>
-    </ul>
+  </header>
+  <div style="z-index:10000;">
+    {{#sticky-element}}
+      {{nav-bar}}
+    {{/sticky-element}}
+  </div>
+  <div class="container site-content">
+    {{institution}}
+    {{outlet}}
+  </div>
 
-    {{#if session.authenticated}}
-      <span class="navbar-text ml-5">
-        {{!-- Logged in as: --}}
-        <span class='text-info'>
-          {{session.user.username}} ({{session.user.role}})
-        </span>
-      </span>
+  {{! Footer}}
 
-      <button {{action 'logout'}} class="btn btn-warning btn-sm ml-2">Logout</button>
-    {{/if}}
-  </nav>
-</header>
 
-<div class='container-fluid'>
-  {{outlet}}
-</div>
-
-{{! Footer}}
-<div class='container mt-4'>
-  <p class='text-center'>
-    <small>Making Public Access Policy compliance easier.</small>
-  </p>
-  <p class='text-center'>
-    <small>rev. {{app-version hideVersion=true}}</small>
-  </p>
+  <footer class="app-footer justify-content-center mt-3">
+    {{!-- <span><a href="http://coreui.io">CoreUI</a> © 2018 creativeLabs.</span>
+    <span class="ml-auto">Powered by <a href="http://coreui.io">CoreUI</a></span> --}}
+    <div class='text-center p-1'>
+      <small>Making Public Access Policy compliance easier.</small>
+      <br>
+      <small>rev. {{app-version hideVersion=true}}</small>
+    </div>
+  </footer>
 </div>

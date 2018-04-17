@@ -1,39 +1,25 @@
-<nav>
-    <ul class="nav nav-pills flex-column">
-        <li class="nav-item">
-            {{#link-to "submission.show.index" submission class="nav-link" }}
-                Overview
-            {{/link-to}}
-        </li>
-        <li class="nav-item">
-            {{#link-to "submission.show.funding" submission class="nav-link" }}
-                Awards (Optional)
-            {{/link-to}}
-        </li>
-        <li class="nav-item">
-            {{#link-to "submission.show.compliance" submission class="nav-link" }}
-                Policies
-            {{/link-to}}
-        </li>
-        <li class="nav-item">
-            {{#link-to "submission.show.repositories" submission class="nav-link" }}
-                Repositories
-            {{/link-to}}
-        </li>
-        <li class="nav-item">
-            {{#link-to "submission.show.metadata" submission class="nav-link" }}
-                Metadata
-            {{/link-to}}
-        </li>
-        <li class="nav-item">
-            {{#link-to "submission.show.attachments" submission class="nav-link" }}
-                Files
-            {{/link-to}}
-        </li>
-        <li class="nav-item">
-            {{#link-to "submission.show.submission" submission class="nav-link" }}
-                Submission
-            {{/link-to}}
-        </li>
-    </ul>
-</nav>
+<div class="pb-2">
+ <div class="steps">
+    <div {{action (mut step) 1}} class="step {{if (eq step 1) 'active-step'}}" >
+      1. Basic
+    </div>
+    <div {{action (mut step) 2}} class="step {{if (eq step 2) 'active-step'}}" >
+      2. Grant
+    </div>
+    <div {{action (mut step) 3}} class="step {{if (eq step 3) 'active-step'}}" >
+      3. Repositories
+    </div>
+    <div {{action (mut step) 4}} class="step {{if (eq step 4) 'active-step'}}" >
+      4. Policy
+    </div>
+    <div {{action (mut step) 5}} class="step {{if (eq step 5) 'active-step'}}" >
+      5. Metadata
+    </div>
+    <div {{action (mut step) 6}} class="step {{if (eq step 6) 'active-step'}}" >
+      6. Files
+    </div>
+    <div {{action (mut step) 7}} class="step {{if (eq step 7) 'active-step'}}">
+      7. Review
+    </div>
+  </div>
+</div>

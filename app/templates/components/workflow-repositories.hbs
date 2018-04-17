@@ -1,0 +1,33 @@
+<h4 class="mt-3 font-weight-light">Required</h4>
+
+<p>
+  Based on the information about the funders and journal you have provided, you are required to deposit your manuscript/article into:
+</p>
+
+<ul class="list-group">
+  {{#each requiredRepositories as |repo|}}
+    <li class="list-group-item d-flex justify-content-between align-items-center my-1">
+      {{repo.name}}
+    </li>
+  {{/each}}
+</ul>
+
+<h4 class="mt-3 font-weight-light">Local</h4>
+
+<p>
+  If you wish to deposit your manuscript/article into other repositories, please select from the following list of supported repositories:
+</p>
+
+<div id="local-deposit-list">
+  <ul class="list-group">
+    {{#each optionalRepositories as |repo|}}
+      <li class="list-group-item d-flex align-items-center my-1">
+        {{input type="checkbox" change=(action "toggleRepository" repo) id=repo.name name=repo.name}}
+        <label for="{{repo.name}}" class="mb-0 ml-2">{{repo.name}}</label>
+      </li>
+    {{/each}}
+  </ul>
+</div>
+
+<button class="btn btn-outline-primary" {{action "back"}}>Back</button>
+<button class="btn btn-primary pull-right" {{action "next"}}>Next</button> {{yield}}
