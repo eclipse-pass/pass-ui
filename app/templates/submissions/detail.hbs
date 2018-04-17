@@ -138,7 +138,7 @@
               <td>
                 {{#each model.files as |file|}}
                   <div class="card file-icon text-center">
-                    {{#if file.isManuscript}}
+                    {{#if (eq model.files.isManuscript file.file.name)}}
                       <span>
                         <i class="fa fa-star manuscriptTag"></i>
                       </span>
