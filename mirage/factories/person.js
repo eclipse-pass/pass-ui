@@ -10,7 +10,4 @@ export default Factory.extend({
   affiliation: 'UVa',
   role: 'PI',
   shibbolethId: 'ABC123',
-
-  // submissionDraft: association(),
-  // user: association(),
 });

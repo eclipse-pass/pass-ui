@@ -12,6 +12,4 @@ export default Factory.extend({
   dateJoined() {
     return Date();
   },
-
-  // person: association(),
 });
