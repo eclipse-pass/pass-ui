@@ -3,10 +3,10 @@ import moduleForAcceptance from 'pass-ember/tests/helpers/module-for-acceptance'
 
 moduleForAcceptance('Acceptance | login');
 
-test('visiting /login', function(assert) {
+test('visiting /login', (assert) => {
   visit('/login');
 
-  andThen(function() {
+  andThen(() => {
     assert.equal(currentURL(), '/login');
   });
 });

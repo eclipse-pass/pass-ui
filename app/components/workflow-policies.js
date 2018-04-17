@@ -1,10 +1,10 @@
 import Component from '@ember/component';
 
 export default Component.extend({
-  activePolicies: Ember.computed('model.newSubmission', function() {
+  activePolicies: Ember.computed('model.newSubmission', function () {
     // policies can come from repositories
-    let repos = [];
-    let policies = [];
+    const repos = [];
+    const policies = [];
     this.get('model.newSubmission.deposits').forEach((deposit) => {
       repos.addObject(deposit.get('repository'));
     });
@@ -20,10 +20,10 @@ export default Component.extend({
   }),
   actions: {
     next() {
-      this.sendAction('next')
+      this.sendAction('next');
     },
     back() {
-      this.sendAction('back')
+      this.sendAction('back');
     },
-  }
+  },
 });

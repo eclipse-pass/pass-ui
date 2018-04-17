@@ -6,8 +6,8 @@ export default Controller.extend({
     submit() {
       const sub = this.get('model.newSubmission');
       const currentUser = this.get('currentUser.user.person');
-      sub.status = 'PND'
-      sub.abstract = "No Abstract"
+      sub.status = 'PND';
+      sub.abstract = 'No Abstract';
       sub.dateSubmitted = new Date();
       sub.submitted = true;
       let depositsSaved = 0;
@@ -22,6 +22,6 @@ export default Controller.extend({
           });
         });
       });
-    }
+    },
   },
 });

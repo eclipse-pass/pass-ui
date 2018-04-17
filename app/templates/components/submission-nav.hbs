@@ -1,5 +1,25 @@
- <div class="p-2">
-   <div class="progress">
-    <div class="progress-bar bg-success" role="progressbar" style="width: {{stepInPercent}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+<div class="p-2">
+ <div class="steps">
+    <div {{action (mut step) 1}} class="step {{if (eq step 1) 'active-step'}}" >
+      1. Basic
+    </div>
+    <div {{action (mut step) 2}} class="step {{if (eq step 2) 'active-step'}}" >
+      2. Grant
+    </div>
+    <div {{action (mut step) 3}} class="step {{if (eq step 3) 'active-step'}}" >
+      3. Repositories
+    </div>
+    <div {{action (mut step) 4}} class="step {{if (eq step 4) 'active-step'}}" >
+      4. Policy
+    </div>
+    <div {{action (mut step) 5}} class="step {{if (eq step 5) 'active-step'}}" >
+      5. Metadata
+    </div>
+    <div {{action (mut step) 6}} class="step {{if (eq step 6) 'active-step'}}" >
+      6. Files
+    </div>
+    <div {{action (mut step) 7}} class="step {{if (eq step 7) 'active-step'}}">
+      7. Review
+    </div>
   </div>
- </div>
+</div>

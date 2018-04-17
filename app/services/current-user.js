@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import Service from '@ember/service';
+
 const { inject: { service }, RSVP } = Ember;
 
 export default Service.extend({
@@ -11,8 +12,7 @@ export default Service.extend({
       return this.get('store').queryRecord('user', { me: true, include: 'person' }).then((user) => {
         this.set('user', user);
       });
-    } else {
-      return RSVP.resolve();
     }
-  }
+    return RSVP.resolve();
+  },
 });

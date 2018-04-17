@@ -3,7 +3,7 @@ import Component from '@ember/component';
 export default Component.extend({
   didRender() {
     // // TODO:  add validation step here that checks the model each rerender
-    //this.set('isValidated', false)
+    // this.set('isValidated', false)
 
   },
   actions: {
@@ -13,8 +13,8 @@ export default Component.extend({
     back() {
       this.sendAction('back');
     },
-    checkValidate(){
+    checkValidate() {
       this.sendAction('validate');
-    }
-  }
+    },
+  },
 });
