@@ -49,8 +49,8 @@ module.exports = function(environment) {
     // ENV.rootURL = '/pass/';
     ENV.contentSecurityPolicy = {
       'style-src': "'self' 'unsafe-inline'",
-      'script-src': "'self' 'unsafe-eval' http://thirsty-cork.surge.sh",
-      'connect-src': "'self' http://thirsty-cork.surge.sh"
+      'script-src': "'self' 'unsafe-eval' http://pass-jhu.surge.sh",
+      'connect-src': "'self' http://pass-jhu.surge.sh"
     };
   }
 
