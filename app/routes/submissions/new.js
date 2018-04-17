@@ -8,7 +8,6 @@ export default Route.extend({
   currentUser: service(),
 
   model() {
-    // debugger;
     let newSubmission = null;
     const submissionDraft = this.get('currentUser.user.person.submissionDraft');
     if (submissionDraft.content !== null) {
