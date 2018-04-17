@@ -20,8 +20,7 @@ export default Component.extend({
             this.files.pushObject({
               file,
               type: file.type.substring(file.type.indexOf('/') + 1),
-              description: file.description,
-              isManuscript: false,
+              description: file.description
             });
           }
           submission.files = this.files;
@@ -32,6 +31,6 @@ export default Component.extend({
       const submission = this.get('model.newSubmission');
       this.files.removeObject(file);
       submission.files = this.files;
-    },
+    }
   },
 });

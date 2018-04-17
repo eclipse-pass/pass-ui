@@ -15,19 +15,13 @@
     "start": "ember server",
     "test": "ember test"
   },
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "engines": {
     "node": "^4.5 || 6.* || >= 7.*"
   },
   "dependencies": {
     "@coreui/ajax": "1.0.10",
     "alpaca": "^1.5.24",
-    "eslint": "^4.19.1",
-    "eslint-config-airbnb": "^16.1.0",
-    "eslint-plugin-jsx-a11y": "^6.0.3",
-    "eslint-plugin-react": "^7.7.0",
-    "jquery": "^3.3.1",
     "bootstrap": "^4.0.0",
     "broccoli-asset-rev": "^2.4.5",
     "ember-ajax": "^3.0.0",
@@ -56,6 +50,7 @@
     "ember-models-table": "^2.3.0",
     "ember-power-select": "^2.0.0-beta.0",
     "ember-promise-helpers": "^1.0.6",
+    "ember-radio-buttons": "^4.1.0",
     "ember-resolver": "^4.0.0",
     "ember-route-action-helper": "^2.0.6",
     "ember-simple-auth": "^1.6.0",
@@ -63,8 +58,13 @@
     "ember-sticky-element": "^0.2.0",
     "ember-truth-helpers": "^2.0.0",
     "ember-welcome-page": "^3.0.0",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb": "^16.1.0",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.11.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.7.0",
+    "jquery": "^3.3.1",
     "loader.js": "^4.2.3",
     "popper.js": "^1.13.0"
   }
