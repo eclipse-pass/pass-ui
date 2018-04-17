@@ -7,7 +7,7 @@ export default Component.extend({
   currentUser: Ember.inject.service('current-user'),
   localSubmission: storageFor('submission'),
   store: Ember.inject.service('store'),
-  step: 0,
+  step: 1,
   isValidated: Ember.A(),
   doiInfo: [],
   actions: {

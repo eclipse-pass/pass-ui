@@ -223,6 +223,32 @@ body {
   display:none;
 }
 
+.steps {
+  height:35px;
+  display: flex;
+  overflow: hidden;
+  font-size: 0.65625rem;
+  background-color: #f0f3f5;
+}
+
+.step {
+  width: 14.2857%;
+  font-size: 18px;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 35px;
+  cursor: pointer;
+}
+
+.step:hover{
+  background: #e0e5e8;
+}
+
+.active-step {
+  background: #20a8d8;
+  color:white;
+}
+
 @media (max-width: 760px) {
   .navbar .navbar-brand {
       justify-content: center;
