@@ -14,7 +14,4 @@ export default Factory.extend({
   endDate() {
     return Date();
   },
-
-  // funder: association(),
-  // submissions: association()
 });

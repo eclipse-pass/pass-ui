@@ -11,7 +11,7 @@ export default Component.extend({
       const currentUser = this.get('store').peekRecord('person', this.get('currentUser.user.person.id'));
       const sub = this.get('model.newSubmission');
       sub.save().then((sub) => {
-        if (this.get('step') === 2 && sub.get('deposits.length') == 0) { // if the user is leaving the repository section
+        if (this.get('step') === 3 && sub.get('deposits.length') == 0) { // if the user is leaving the repository section
           let depositsSaved = 0;
           sub.get('deposits').forEach((deposit, index, arr) => {
             deposit.save().then((deposit) => {
@@ -22,7 +22,7 @@ export default Component.extend({
               }
             });
           });
-        } else if (this.get('step') === 0) { // if the current user doesn't have the submission saved to them yet
+        } else if (this.get('step') === 1) { // if the current user doesn't have the submission saved to them yet
           if (currentUser.get('submissionDraft.content') == null) {
             currentUser.set('submissionDraft', sub);
             currentUser.save().then(() => {
@@ -57,7 +57,6 @@ export default Component.extend({
         }
       });
       this.set('isValidated', tempValidateArray);
-      console.log(this.get('isValidated'));
     },
   },
 });
