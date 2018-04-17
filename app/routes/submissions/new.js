@@ -1,16 +1,13 @@
 import Route from '@ember/routing/route';
-import { storageFor, } from 'ember-local-storage';
 
 const {
   service,
 } = Ember.inject;
 
 export default Route.extend({
-  localSubmission: storageFor('submission'),
   currentUser: service(),
 
   model() {
-    // debugger;
     let newSubmission = null;
     const submissionDraft = this.get('currentUser.user.person.submissionDraft');
     if (submissionDraft.content !== null) {
