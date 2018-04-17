@@ -5,7 +5,7 @@ export default Controller.extend({
   actions: {
     submit() {
       const sub = this.get('model.newSubmission');
-      const currentUser = this.get('currentUser.user.person');
+      const currentUser = this.get('currentUser.user');
       sub.status = 'PND';
       sub.abstract = 'No Abstract';
       sub.dateSubmitted = new Date();

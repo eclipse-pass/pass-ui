@@ -6,7 +6,6 @@ export default function (server) {
 
   // server.createList('post', 10);
   let user = server.create('user');
-  let person = server.create('person', { user });
   let repository = server.create('repository', { name: 'DoE' });
   let policy = server.create('policy', { repository });
   let funder = server.create('funder', { repository });

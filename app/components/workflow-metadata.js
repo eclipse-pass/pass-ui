@@ -235,17 +235,6 @@ export default Component.extend({
       },
     },
   },
-  ed: {
-    id: 'ed',
-    schema: {
-      title: "Department of Education (ED) <br><p class='lead text-muted'>ED submissions can not be submitted through PASS. You will be prompted how to submit on the last step.</p>",
-      type: 'object',
-      properties: {},
-    },
-    options: {
-      fields: {},
-    },
-  },
   embargo: {
     "id": 'embargo',
     "schema": {
@@ -299,7 +288,7 @@ export default Component.extend({
   currentFormStep: 0,
 
   didInsertElement() {
-    this.set('schemas', [this.get('common'), this.get('nih'), this.get('ed'), this.get('embargo')]);
+    this.set('schemas', [this.get('common'), this.get('nih'), this.get('embargo')]);
     this.get('metadataForms').forEach((form) => {
       const schemas = this.get('schemas');
       if (form) {

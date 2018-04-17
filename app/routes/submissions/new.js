@@ -9,9 +9,9 @@ export default Route.extend({
 
   model() {
     let newSubmission = null;
-    const submissionDraft = this.get('currentUser.user.person.submissionDraft');
+    const submissionDraft = this.get('currentUser.user.submissionDraft');
     if (submissionDraft.content !== null) {
-      newSubmission = this.get('currentUser.user.person.submissionDraft');
+      newSubmission = this.get('currentUser.user.submissionDraft');
     } else {
       newSubmission = this.get('store').createRecord('submission');
     }
