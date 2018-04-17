@@ -1,12 +1,10 @@
 import Route from '@ember/routing/route';
-import { storageFor, } from 'ember-local-storage';
 
 const {
   service,
 } = Ember.inject;
 
 export default Route.extend({
-  localSubmission: storageFor('submission'),
   currentUser: service(),
 
   model() {

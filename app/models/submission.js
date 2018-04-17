@@ -11,7 +11,6 @@ export default DS.Model.extend({
   source: DS.attr('string'),
   metadata: DS.attr(),
   pubmedId: DS.attr('string'),
-  policyTermsAccepted: DS.attr('boolean', { defaultValue: false }),
   submitted: DS.attr('boolean', { defaultValue: false }),
   files: DS.attr(),
 
