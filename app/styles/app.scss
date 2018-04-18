@@ -233,8 +233,8 @@ body {
 }
 
 .step {
-  width: 14.2857%;
-  font-size: 18px;
+  width: 15.2857%;
+  font-size: 16px;
   text-align: center;
   vertical-align: middle;
   line-height: 35px;
@@ -248,6 +248,52 @@ body {
 .active-step {
   background: #20a8d8;
   color:white;
+}
+
+// Custom School Colors
+$primary-color: #418FDE;
+//not using JHUS Red its to dark
+$danger-color: #f86c6b;
+$navbar-color: #005EB8;
+.navbar {
+  background:$navbar-color;
+}
+.btn-default {
+
+}
+.btn-primary {
+  background-color: $primary-color!important;
+  border-color: $primary-color!important;
+  color:white!important;
+}
+.btn-outline-primary {
+  border-color: $primary-color!important;
+  color: $primary-color!important;
+}
+.btn-outline-primary:hover {
+  background-color: $primary-color!important;
+  color: white!important;
+}
+.btn-success{
+
+}
+.btn-info	{
+
+}
+.btn-warning {
+
+}
+.btn-danger	{
+  color: white!important;
+  background-color: $danger-color!important;
+}
+.badge-danger {
+  color: white!important;
+  background-color: $danger-color!important;
+}
+
+.btn-link {
+  color: $primary-color!important;
 }
 
 @media (max-width: 760px) {
