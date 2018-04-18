@@ -79,5 +79,11 @@ export default function () {
   this.patch('/users/:id'); // or this.patch
   this.del('/users/:id');
 
+  this.get('/publications');
+  this.post('/publications');
+  this.get('/publications/:id');
+  this.patch('/publications/:id'); // or this.patch
+  this.del('/publications/:id');
+
   this.passthrough();
 }
