@@ -9,5 +9,5 @@ export default DS.Model.extend({
   issue: DS.attr('string'),
 
   journal: DS.belongsTo('journal', { autoSave: true }),
-  submissions: DS.hasMany('submission', {async: true})
+  submissions: DS.hasMany('submission', { async: true })
 });

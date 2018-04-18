@@ -12,6 +12,6 @@ export default DS.Model.extend({
   user: DS.belongsTo('user'),
   publication: DS.belongsTo('publication'),
   repositories: DS.hasMany('repository', { async: true }), // not on this model on API
-  deposits: DS.hasMany('deposit', {async: true}),
+  deposits: DS.hasMany('deposit', { async: true }),
   grants: DS.hasMany('grant', { async: true }),
 });

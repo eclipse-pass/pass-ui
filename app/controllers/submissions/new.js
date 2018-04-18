@@ -14,7 +14,7 @@ export default Controller.extend({
         sub.save().then(() => {
           this.transitionToRoute('thanks');
         });
-      })
+      });
     },
   },
 });
