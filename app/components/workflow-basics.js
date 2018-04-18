@@ -2,12 +2,6 @@ import Component from '@ember/component';
 import { inject as service, } from '@ember/service';
 
 
-//
-// Sets the the Publication
-// - DOI
-// - Title
-// - journal - // TODO: need to get QueryRecord and createRecord working on adaptor
-
 export default Component.extend({
   doiService: service('doi'),
   store: service('store'),

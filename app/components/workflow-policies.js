@@ -10,8 +10,8 @@ export default Component.extend({
     });
     // policies can come from funders
     this.get('model.newSubmission.grants').forEach((grant) => {
-      repos.addObject(grant.get('funder.repository'));
-      if (grant.get('funder.policy.content')) {
+      repos.addObject(grant.get('primaryFunder.repository'));
+      if (grant.get('primaryFunder.policy.content')) {
         policies.addObject(grant.get('funder.policy'));
       }
     });

@@ -27,7 +27,7 @@ export default Component.extend({
     const grants = this.get('model.newSubmission.grants');
     const repos = Ember.A();
     grants.forEach((grant) => {
-      repos.addObject(grant.get('funder.repository'));
+      repos.addObject(grant.get('primaryFunder.repository'));
     });
 
     // STEP 2

@@ -20,7 +20,7 @@ export default Route.extend({
 
     const repositories = this.get('store').findAll('repository');
     const grants = this.get('store').findAll('grant', {
-      include: 'funder',
+      include: 'primaryFunder',
     });
     const policies = this.get('store').findAll('policy');
     const journals = this.get('store').findAll('journal');
