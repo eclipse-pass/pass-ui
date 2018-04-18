@@ -55,12 +55,6 @@ export default function () {
   this.patch('/journals/:id'); // or this.patch
   this.del('/journals/:id');
 
-  this.get('/people');
-  this.post('/people');
-  this.get('/people/:id');
-  this.patch('/people/:id'); // or this.patch
-  this.del('/people/:id');
-
   this.get('/policies');
   this.post('/policies');
   this.get('/policies/:id');
@@ -84,6 +78,12 @@ export default function () {
   this.get('/users/:id');
   this.patch('/users/:id'); // or this.patch
   this.del('/users/:id');
+
+  this.get('/publications');
+  this.post('/publications');
+  this.get('/publications/:id');
+  this.patch('/publications/:id'); // or this.patch
+  this.del('/publications/:id');
 
   this.passthrough();
 }

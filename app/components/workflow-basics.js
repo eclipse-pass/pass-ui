@@ -2,12 +2,6 @@ import Component from '@ember/component';
 import { inject as service, } from '@ember/service';
 
 
-//
-// Sets the the Submission
-// - DOI
-// - Title
-// - journal - // TODO: need to get QueryRecord and createRecord working on adaptor
-
 export default Component.extend({
   doiService: service('doi'),
   store: service('store'),
@@ -51,22 +45,21 @@ export default Component.extend({
     },
     /** looks up the DIO and returns title and journal if avaiable */
     lookupDOI() {
-      const submission = this.get('model.newSubmission');
-      const self = this;
-      if (submission) {
+      const publication = this.get('model.publication');
+      if (publication) {
         this.send('validateDOI');
-        self.set('doiJournal', false);
-        this.get('doiService').resolve(submission).then((doiInfo) => {
-          self.set('doiInfo', doiInfo);
+        this.set('doiJournal', false);
+        this.get('doiService').resolve(publication).then((doiInfo) => {
+          this.set('doiInfo', doiInfo);
           console.log(doiInfo);
 
-          submission.set('title', doiInfo.title);
+          publication.set('title', doiInfo.title);
 
-          submission.set('submittedDate', doiInfo.deposited);
-          submission.set('creationDate', doiInfo.created);
+          publication.set('submittedDate', doiInfo.deposited);
+          publication.set('creationDate', doiInfo.created);
 
-          submission.set('issue', doiInfo.issue);
-          submission.set('volume', doiInfo.volume);
+          publication.set('issue', doiInfo.issue);
+          publication.set('volume', doiInfo.volume);
 
           this.set('doiInfo', doiInfo);
 
@@ -79,20 +72,20 @@ export default Component.extend({
               name: doiInfo['container-title'].trim(),
               nlmta: 'UNKNOWN',
             });
-            newJournal.save().then(j => submission.set('journal', j));
+            newJournal.save().then(j => publication.set('journal', j));
           } else {
-            submission.set('journal', journal);
+            publication.set('journal', journal);
           }
         });
       }
     },
 
-    /** Sets the selected journal for the current submission.
+    /** Sets the selected journal for the current publication.
      * @param journal {DS.Model} The journal
      */
     selectJournal(journal) {
-      const submission = this.get('model.newSubmission');
-      submission.set('journal', journal);
+      const publication = this.get('model.publication');
+      publication.set('journal', journal);
     },
   },
 });

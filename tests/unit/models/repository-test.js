@@ -2,7 +2,7 @@ import { moduleForModel, test } from 'ember-qunit';
 
 moduleForModel('repository', 'Unit | Model | repository', {
   // Specify the other units that are required for this test.
-  needs: ['model:policy']
+  needs: ['model:policy', 'model:submission']
 });
 
 test('it exists', function (assert) {

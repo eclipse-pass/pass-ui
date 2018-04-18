@@ -18,7 +18,7 @@ function diff(array1, array2) {
   return retArray;
 }
 export default Component.extend({
-  addedDeposits: [],
+  addedRepositories: [],
 
   store: service('store'),
   isFirstTime: true,
@@ -27,7 +27,7 @@ export default Component.extend({
     const grants = this.get('model.newSubmission.grants');
     const repos = Ember.A();
     grants.forEach((grant) => {
-      repos.addObject(grant.get('funder.repository'));
+      repos.addObject(grant.get('primaryFunder.repository'));
     });
 
     // STEP 2
@@ -35,7 +35,7 @@ export default Component.extend({
       repos.forEach((repo) => {
         this.send('addRepo', repo);
       });
-      this.isFirsTime = false;
+      this.isFirstTime = false;
     }
 
     // STEP 3
@@ -59,32 +59,21 @@ export default Component.extend({
       this.sendAction('back');
     },
     addRepo(repository) {
-      const submission = this.get('model.newSubmission');
-
-      const deposit = this.get('store').createRecord('deposit', {
-        repository,
-        status: 'NEW',
-        isRequired: true,
-      });
-      this.get('addedDeposits').push(deposit);
-      console.log('Added deposit:', deposit);
-      console.log('Added deposit:', repository.name);
+      this.get('addedRepositories').push(repository);
     },
-    removeRepo(repository) {
-      const deposits = this.get('addedDeposits');
-      const i = 0;
-      deposits.forEach((deposit, index) => {
-        if (deposit.get('repository.id') === repository.get('id')) {
-          deposits.splice(index, 1);
+    removeRepo(targetRepository) {
+      const repositories = this.get('addedRepositories');
+      repositories.forEach((repository, index) => {
+        if (targetRepository.get('id') === repository.get('id')) {
+          repositories.splice(index, 1);
         }
       });
     },
     saveAll() {
-      console.log('saving all deposits to the submission!');
-      const addedDeposits = this.get('addedDeposits');
-      const submission = this.get('model.newSubmission');
-      addedDeposits.forEach((depositToAdd) => {
-        submission.get('deposits').addObject(depositToAdd);
+      this.get('addedRepositories').forEach((repositoryToAdd) => {
+        // unsure why you need to add ".content". Presumably because
+        // it's a returned promise?
+        this.get('model.newSubmission.repositories').addObject(repositoryToAdd.content);
       });
     },
     toggleRepository(repository) {

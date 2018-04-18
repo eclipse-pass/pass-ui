@@ -235,60 +235,49 @@ export default Component.extend({
       },
     },
   },
-  ed: {
-    id: 'ed',
-    schema: {
-      title: "Department of Education (ED) <br><p class='lead text-muted'>ED submissions can not be submitted through PASS. You will be prompted how to submit on the last step.</p>",
-      type: 'object',
-      properties: {},
-    },
-    options: {
-      fields: {},
-    },
-  },
   embargo: {
-    "id": 'embargo',
-    "schema": {
-      "title": "Embargo",
-      "type": "object",
-      "properties": {
-        "under-embargo": {
-          "type": "string",
+    id: 'embargo',
+    schema: {
+      title: 'Embargo',
+      type: 'object',
+      properties: {
+        'under-embargo': {
+          type: 'string',
         },
-        "Embargo-end-date:": {
-          "type": "string",
-          "format": "date"
+        'Embargo-end-date:': {
+          type: 'string',
+          format: 'date'
         },
-        "embargo": {
-          "type": "string",
-          "default":"NON-EXCLUSIVE LICENSE FOR USE OF MATERIALS This non-exclusive license defines the terms for the deposit of Materials in all formats into the digital repository of materials collected, preserved and made available through the Johns Hopkins Digital Repository, JScholarship. The Contributor hereby grants to Johns Hopkins a royalty free, non-exclusive worldwide license to use, re-use, display, distribute, transmit, publish, re-publish or copy the Materials, either digitally or in print, or in any other medium, now or hereafter known, for the purpose of including the Materials hereby licensed in the collection of materials in the Johns Hopkins Digital Repository for educational use worldwide. In some cases, access to content may be restricted according to provisions established in negotiation with the copyright holder. This license shall not authorize the commercial use of the Materials by Johns Hopkins or any other person or organization, but such Materials shall be restricted to non-profit educational use. Persons may apply for commercial use by contacting the copyright holder. Copyright and any other intellectual property right in or to the Materials shall not be transferred by this agreement and shall remain with the Contributor, or the Copyright holder if different from the Contributor. Other than this limited license, the Contributor or Copyright holder retains all rights, title, copyright and other interest in the images licensed. If the submission contains material for which the Contributor does not hold copyright, the Contributor represents that s/he has obtained the permission of the Copyright owner to grant Johns Hopkins the rights required by this license, and that such third-party owned material is clearly identified and acknowledged within the text or content of the submission. If the submission is based upon work that has been sponsored or supported by an agency or organization other than Johns Hopkins, the Contributor represents that s/he has fulfilled any right of review or other obligations required by such contract or agreement. Johns Hopkins will not make any alteration, other than as allowed by this license, to your submission. This agreement embodies the entire agreement of the parties. No modification of this agreement shall be of any effect unless it is made in writing and signed by all of the parties to the agreement."
+        embargo: {
+          type: 'string',
+          default: 'NON-EXCLUSIVE LICENSE FOR USE OF MATERIALS This non-exclusive license defines the terms for the deposit of Materials in all formats into the digital repository of materials collected, preserved and made available through the Johns Hopkins Digital Repository, JScholarship. The Contributor hereby grants to Johns Hopkins a royalty free, non-exclusive worldwide license to use, re-use, display, distribute, transmit, publish, re-publish or copy the Materials, either digitally or in print, or in any other medium, now or hereafter known, for the purpose of including the Materials hereby licensed in the collection of materials in the Johns Hopkins Digital Repository for educational use worldwide. In some cases, access to content may be restricted according to provisions established in negotiation with the copyright holder. This license shall not authorize the commercial use of the Materials by Johns Hopkins or any other person or organization, but such Materials shall be restricted to non-profit educational use. Persons may apply for commercial use by contacting the copyright holder. Copyright and any other intellectual property right in or to the Materials shall not be transferred by this agreement and shall remain with the Contributor, or the Copyright holder if different from the Contributor. Other than this limited license, the Contributor or Copyright holder retains all rights, title, copyright and other interest in the images licensed. If the submission contains material for which the Contributor does not hold copyright, the Contributor represents that s/he has obtained the permission of the Copyright owner to grant Johns Hopkins the rights required by this license, and that such third-party owned material is clearly identified and acknowledged within the text or content of the submission. If the submission is based upon work that has been sponsored or supported by an agency or organization other than Johns Hopkins, the Contributor represents that s/he has fulfilled any right of review or other obligations required by such contract or agreement. Johns Hopkins will not make any alteration, other than as allowed by this license, to your submission. This agreement embodies the entire agreement of the parties. No modification of this agreement shall be of any effect unless it is made in writing and signed by all of the parties to the agreement.'
         },
-        "agreement-to-embargo": {
-          "type": "string",
+        'agreement-to-embargo': {
+          type: 'string',
         },
       }
     },
-    "options": {
-      "fields": {
-        "under-embargo": {
-          "type": "checkbox",
-          "rightLabel": "The material being submitted is published under an embargo.",
-          "fieldClass": "col-8 pull-left pl-0"
+    options: {
+      fields: {
+        'under-embargo': {
+          type: 'checkbox',
+          rightLabel: 'The material being submitted is published under an embargo.',
+          fieldClass: 'col-8 pull-left pl-0'
         },
-        "Embargo-end-date:": {
-          "type": "date",
-          "placeholder": "mm/dd/yyyy",
-          "fieldClass": "col-4 pull-left pl-0"
+        'Embargo-end-date:': {
+          type: 'date',
+          placeholder: 'mm/dd/yyyy',
+          fieldClass: 'col-4 pull-left pl-0'
         },
-        "embargo": {
-          "type": "textarea",
-          "label": "Embargo information",
-          "disabled": true,
-          "rows": "16"
+        embargo: {
+          type: 'textarea',
+          label: 'Embargo information',
+          disabled: true,
+          rows: '16'
         },
-        "agreement-to-embargo": {
-          "type": "checkbox",
-          "rightLabel": "I agree to the above statement on todays date",
+        'agreement-to-embargo': {
+          type: 'checkbox',
+          rightLabel: 'I agree to the above statement on todays date',
         },
       }
     }
@@ -299,7 +288,7 @@ export default Component.extend({
   currentFormStep: 0,
 
   didInsertElement() {
-    this.set('schemas', [this.get('common'), this.get('nih'), this.get('ed'), this.get('embargo')]);
+    this.set('schemas', [this.get('common'), this.get('nih'), this.get('embargo')]);
     this.get('metadataForms').forEach((form) => {
       const schemas = this.get('schemas');
       if (form) {
@@ -318,13 +307,13 @@ export default Component.extend({
     // policies can come from repositories
     const repos = [];
     const policies = [];
-    this.get('model.newSubmission.deposits').forEach((deposit) => {
-      repos.addObject(deposit.get('repository'));
+    this.get('model.newSubmission.repositories').forEach((repository) => {
+      repos.addObject(repository);
     });
     // policies can come from funders
     this.get('model.newSubmission.grants').forEach((grant) => {
-      repos.addObject(grant.get('funder.repository'));
-      policies.addObject(grant.get('funder.policy'));
+      repos.addObject(grant.get('primaryFunder.repository'));
+      policies.addObject(grant.get('primaryFunder.policy'));
     });
     repos.forEach((repository) => {
       policies.addObject(repository.get('policy'));

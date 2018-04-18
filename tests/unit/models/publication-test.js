@@ -1,8 +1,8 @@
 import { moduleForModel, test } from 'ember-qunit';
 
-moduleForModel('file', 'Unit | Model | file', {
+moduleForModel('publication', 'Unit | Model | publication', {
   // Specify the other units that are required for this test.
-  needs: ['model:submission']
+  needs: ['model:journal', 'model:submission']
 });
 
 test('it exists', function (assert) {
