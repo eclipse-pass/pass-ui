@@ -4,6 +4,10 @@
 @import "ember-modal-dialog/ember-modal-appearance";
 @import "ember-power-select";
 
+@font-face {
+    font-family: "gentona-light";
+    src:url("/gentona/Gentona-Light.ttf");
+}
 $jhu-grey: #E5E2E0;
 $jhu-grey2: #B4B2AD;
 $jhu-grey3: #7E7E7C;
@@ -255,6 +259,10 @@ $primary-color: #418FDE;
 //not using JHUS Red its to dark
 $danger-color: #f86c6b;
 $navbar-color: #005EB8;
+// $font: ;'gentona', sans-serif
+body {
+  font-family:  gentona-light,"Helvetica Neue",Roboto,sans-serif!important;
+}
 .navbar {
   background:$navbar-color;
 }
