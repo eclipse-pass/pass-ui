@@ -8,21 +8,10 @@ export default Component.extend({
   doiInfo: [],
   actions: {
     next() {
-      const currentUser = this.get('store').peekRecord('person', this.get('currentUser.user.id'));
-      const sub = this.get('model.newSubmission');
-      sub.save().then((sub) => {
-        if (this.get('step') === 3 && sub.get('deposits.length') == 0) { // if the user is leaving the repository section
-          let depositsSaved = 0;
-          sub.get('deposits').forEach((deposit, index, arr) => {
-            deposit.save().then((deposit) => {
-              depositsSaved += 1;
-              console.log('deposits saved: ', depositsSaved);
-              if (depositsSaved === arr.get('length')) {
-                this.incrementProperty('step');
-              }
-            });
-          });
-        } else if (this.get('step') === 1) { // if the current user doesn't have the submission saved to them yet
+      let currentUser = this.get('currentUser.user');
+      const submission = this.get('model.newSubmission');
+      submission.save().then((sub) => {
+        if (this.get('step') === 1) { // if the current user doesn't have the submission saved to them yet
           if (currentUser.get('submissionDraft.content') == null) {
             currentUser.set('submissionDraft', sub);
             currentUser.save().then(() => {

@@ -84,8 +84,8 @@
               <td class="text-nowrap">Repositories</td>
               <td>
                 <ul>
-                {{#each model.newSubmission.deposits as |deposit|}}
-                  <li>{{get (await deposit.repository) 'name'}}</li>
+                {{#each model.newSubmission.repositories as |repository|}}
+                  <li>{{repository.name}}</li>
                 {{/each}}
               </ul>
               </td>

@@ -15,6 +15,7 @@ export default DS.Model.extend({
   files: DS.attr(),
 
   journal: DS.belongsTo('journal', { autoSave: true }),
-  deposits: DS.hasMany('deposit', { async: true }), // not on this model on API
+  repositories: DS.hasMany('repository', { async: true }), // not on this model on API
+  deposits: DS.hasMany('deposit', {async: true}),
   grants: DS.hasMany('grant', { async: true }),
 });

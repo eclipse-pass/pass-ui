@@ -55,12 +55,6 @@ export default function () {
   this.patch('/journals/:id'); // or this.patch
   this.del('/journals/:id');
 
-  this.get('/people');
-  this.post('/people');
-  this.get('/people/:id');
-  this.patch('/people/:id'); // or this.patch
-  this.del('/people/:id');
-
   this.get('/policies');
   this.post('/policies');
   this.get('/policies/:id');

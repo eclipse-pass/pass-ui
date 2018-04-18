@@ -10,17 +10,8 @@ export default Controller.extend({
       sub.abstract = 'No Abstract';
       sub.dateSubmitted = new Date();
       sub.submitted = true;
-      let depositsSaved = 0;
       sub.save().then((submission) => {
-        submission.get('deposits').forEach((deposit, index, arr) => {
-          deposit.save().then((deposit) => {
-            depositsSaved += 1;
-            console.log('deposits saved: ', depositsSaved);
-            if (depositsSaved === arr.get('length')) {
-              this.transitionToRoute('thanks');
-            }
-          });
-        });
+        this.transitionToRoute('thanks');
       });
     },
   },
