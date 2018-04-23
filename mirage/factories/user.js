@@ -1,7 +1,7 @@
 import { Factory, association } from 'ember-cli-mirage';
 
 export default Factory.extend({
-  username: '1',
+  username: 'jdoe',
   isStaff: false,
   isActive: true,
   isSuperuser: false,
