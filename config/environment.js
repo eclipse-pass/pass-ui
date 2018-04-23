@@ -5,8 +5,8 @@ module.exports = function(environment) {
   let ENV = {
     modulePrefix: 'pass-ember',
     environment,
-    rootURL: '/',
-    host: 'http://localhost:8000',
+    // rootURL: '/fcrepo/rest',
+    host: 'http://localhost:8080',
     locationType: 'auto',
     EmberENV: {
       FEATURES: {
@@ -61,7 +61,7 @@ module.exports = function(environment) {
 
   ENV.fedora = {
     base: 'http://localhost:8080/fcrepo/rest',
-    context: 'https://oa-pass.github.io/pass-data-model/src/main/resources/context.jsonld',
+    context: 'https://oa-pass.github.io/pass-data-model/src/main/resources/context-2.0.jsonld',
     data: 'http://example.org/pass/',
     username: 'admin',
     password: 'moo'

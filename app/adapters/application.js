@@ -11,7 +11,7 @@ import DataAdapterMixin from 'ember-simple-auth/mixins/data-adapter-mixin';
 import DS from 'ember-data';
 
 export default DS.JSONAPIAdapter.extend(DataAdapterMixin, {
-  host: 'http://localhost:8000',
+  host: 'http://localhost:8080',
   namespace: '',
   authorizer: 'authorizer:drf-token-authorizer',
 });
