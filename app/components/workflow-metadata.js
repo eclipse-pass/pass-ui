@@ -304,22 +304,23 @@ export default Component.extend({
   },
 
   activePolicies: Ember.computed('model.newSubmission', function () {
-    debugger;
     // policies can come from repositories
-    // const repos = [];
-    const policies = [];
-    // this.get('model.newSubmission.repositories').forEach((repository) => {
-    //   repos.addObject(repository);
-    // });
+    const repos = [];
+    const policies = Ember.A();
+    this.get('model.newSubmission.repositories').forEach((repository) => {
+      repos.addObject(repository);
+    });
     // policies can come from funders
     this.get('model.newSubmission.grants').forEach((grant) => {
-      // repos.addObject(grant.get('primaryFunder.repository'));
+      if (grant.get('primaryFunder.repository.policy')) {
+        repos.addObject(grant.get('primaryFunder.repository'));
+      }
       policies.addObject(grant.get('primaryFunder.policy'));
     });
-    // repos.forEach((repository) => {
-    //   policies.addObject(repository.get('policy'));
-    // });
-    return policies;
+    repos.forEach((repository) => {
+      policies.addObject(repository.get('policy'));
+    });
+    return policies.uniq('id');
   }),
 
   metadataForms: Ember.computed('activePolicies', function () {
