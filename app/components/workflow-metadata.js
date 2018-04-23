@@ -320,7 +320,7 @@ export default Component.extend({
     repos.forEach((repository) => {
       policies.addObject(repository.get('policy'));
     });
-    return policies.uniq('id');
+    return policies.uniqBy('id');
   }),
 
   metadataForms: Ember.computed('activePolicies', function () {
