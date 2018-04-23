@@ -1,6 +1,7 @@
 import ApplicationAdapter from './application';
+import DS from 'ember-data';
 
-export default ApplicationAdapter.extend({
+export default DS.JSONAPIAdapter.extend({
   urlForQueryRecord(query) {
     if (query.me) {
       delete query.me;
@@ -9,4 +10,7 @@ export default ApplicationAdapter.extend({
 
     return this._super(...arguments);
   },
+  host: 'http://localhost:8080',
+  // namespace: 'fcrepo/rest',
+  authorizer: 'authorizer:drf-token-authorizer',
 });
