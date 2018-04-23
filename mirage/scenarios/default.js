@@ -8,7 +8,8 @@ export default function (server) {
   let user = server.create('user');
   let repository = server.create('repository', { name: 'DoE' });
   let policy = server.create('policy', { repository });
-  let funder = server.create('funder', { repository });
+  let funder = server.create('funder', { policy });
+
   let grant = server.create('grant', { primaryFunder: funder });
   let journal = server.create('journal');
 }

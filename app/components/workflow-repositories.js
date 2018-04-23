@@ -27,7 +27,9 @@ export default Component.extend({
     const grants = this.get('model.newSubmission.grants');
     const repos = Ember.A();
     grants.forEach((grant) => {
-      repos.addObject(grant.get('primaryFunder.repository'));
+      if (grant.get('primaryFunder.policy.content') && grant.get('primaryFunder.policy.repository.content')) {
+        repos.addObject(grant.get('primaryFunder.policy.repository.content'));
+      }
     });
 
     // STEP 2
@@ -46,7 +48,6 @@ export default Component.extend({
     const allRepos = this.get('model.repositories');
     const reqRepos = this.get('requiredRepositories');
     const ret = diff(allRepos, reqRepos).concat(diff(reqRepos, allRepos));
-
     return ret;
   }),
 
@@ -71,9 +72,7 @@ export default Component.extend({
     },
     saveAll() {
       this.get('addedRepositories').forEach((repositoryToAdd) => {
-        // unsure why you need to add ".content". Presumably because
-        // it's a returned promise?
-        this.get('model.newSubmission.repositories').addObject(repositoryToAdd.content);
+        this.get('model.newSubmission.repositories').addObject(repositoryToAdd);
       });
     },
     toggleRepository(repository) {
