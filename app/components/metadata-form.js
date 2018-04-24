@@ -365,7 +365,6 @@ export default Ember.Component.extend({
             this.set('model.metadata', metadata);
           } catch (e) { console.log(e); }
         });
-      } else { // use data that has already been grabed
       }
     }
     // form ctrls

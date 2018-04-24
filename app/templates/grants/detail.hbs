@@ -6,14 +6,14 @@
       <li><strong>Project Name:</strong> {{model.projectName}}</li>
       <li><strong>Award Number:</strong> {{model.awardNumber}}</li>
       <li><strong>Funder:</strong> {{model.primaryFunder.name}}</li>
-      <li><strong>Start:</strong> {{date-formatter model.startDate}}</li>
-      <li><strong>End:</strong> {{date-formatter model.endDate}}</li>
+      <li><strong>Start:</strong> {{model.startDate}}</li>
+      <li><strong>End:</strong> {{model.endDate}}</li>
     </ul>
 
     <ul class='col-sm-6'>
       <li><strong>OAP Compliance:</strong> {{model.oapCompliance}}</li>
       <li><strong>Status:</strong> {{model.status}}</li>
-      <li><strong>Created by:</strong> {{model.creator.username}} on {{date-formatter model.creationDate}}</li>
+      <li><strong>Created by:</strong> {{model.creator.username}} on {{model.creationDate}}</li>
       <li><strong>PI:</strong> <a href='mailto:{{model.pi.email}}'>{{model.pi.name}}</a></li>
       <li><strong>CoPIs:</strong>
         <ul>
