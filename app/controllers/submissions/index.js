@@ -35,7 +35,7 @@ export default Controller.extend({
     { propertyName: 'publication', title: 'Article', component: 'submissions-article-cell' },
     { title: 'Award Number (Funder)', component: 'submissions-award-cell' },
     { propertyName: 'user.username', title: 'Corr. Author' },
-    { propertyName: 'deposits', title: 'Repo', component: 'submissions-repo-cell'},
+    { propertyName: 'deposits', title: 'Repo', component: 'submissions-repo-cell' },
     { propertyName: 'dateSubmitted', title: 'Last Update Date', component: 'date-cell' },
     { propertyName: 'dateSubmitted', title: 'Submitted Date', component: 'date-cell' },
     {
@@ -44,14 +44,14 @@ export default Controller.extend({
       filterWithSelect: true,
       predefinedFilterOptions: ['In Progress', 'Complete'],
     },
-    {  propertyName: 'deposits', title: 'OAP Repo Id', component: 'submissions-repoid-cell' },
+    { propertyName: 'deposits', title: 'OAP Repo Id', component: 'submissions-repoid-cell' },
   ],
 
   adminColumns: [
     { propertyName: 'publication', title: 'Article', component: 'submissions-article-cell' },
     { title: 'Award Number (Funder)', component: 'submissions-award-cell' },
     { propertyName: 'user.username', title: 'Corr. Author' },
-    { propertyName: 'deposits', title: 'Repo', component: 'submissions-repo-cell'},
+    { propertyName: 'deposits', title: 'Repo', component: 'submissions-repo-cell' },
     { propertyName: 'dateSubmitted', title: 'Last Update Date', component: 'date-cell' },
     { propertyName: 'dateSubmitted', title: 'Submitted Date', component: 'date-cell' },
     {
@@ -60,7 +60,7 @@ export default Controller.extend({
       filterWithSelect: true,
       predefinedFilterOptions: ['In Progress', 'Complete'],
     },
-    {  propertyName: 'deposits', title: 'OAP Repo Id', component: 'submissions-repoid-cell' },
+    { propertyName: 'deposits', title: 'OAP Repo Id', component: 'submissions-repoid-cell' },
   ],
 
   themeInstance: Bootstrap4Theme.create(),

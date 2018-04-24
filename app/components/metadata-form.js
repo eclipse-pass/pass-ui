@@ -283,23 +283,21 @@ function fuzzySet(arr, useLevenshtein, gramSizeLower, gramSizeUpper) {
 
 // Not related to fuzzy lookup
 function hasDuplicates(array) {
-    var hash = Object.create(null);
-    return array.some(function (a) {
-        return a.id && (hash[a.id] || !(hash[a.id] = true));
-    });
+  var hash = Object.create(null);
+  return array.some(a => a.id && (hash[a.id] || !(hash[a.id] = true)));
 }
 
 function removeDuplicates(json_all) {
-    var arr = [],
-        collection = [];
+  var arr = [],
+    collection = [];
 
-    $.each(json_all, function (index, value) {
-        if ($.inArray(value.id, arr) == -1) {
-            arr.push(value.id);
-            collection.push(value);
-        }
-    });
-    return collection;
+  $.each(json_all, (index, value) => {
+    if ($.inArray(value.id, arr) == -1) {
+      arr.push(value.id);
+      collection.push(value);
+    }
+  });
+  return collection;
 }
 
 export default Ember.Component.extend({
@@ -312,25 +310,25 @@ export default Ember.Component.extend({
       newForm.options = {};
     }
     let metadata = this.get('model.metadata');
-    if(newForm.id){
+    if (newForm.id) {
       // Populate form with data if there is any to populate with.
       if (!metadata) {
-        console.log('if', metadata)
+        console.log('if', metadata);
         metadata = [];
       }
-      console.log('metadata', metadata[0], newForm.id)
+      console.log('metadata', metadata[0], newForm.id);
 
       // if there has been no user input fuzzy match the keys
 
       let shouldFuzzyMatch = true;
-      metadata.forEach((data)=>{
-        if(data.id == newForm.id){
+      metadata.forEach((data) => {
+        if (data.id == newForm.id) {
           shouldFuzzyMatch = false;
-          newForm.data = data.data
+          newForm.data = data.data;
         }
-      })
+      });
 
-      if (shouldFuzzyMatch) {// need to fix This
+      if (shouldFuzzyMatch) { // need to fix This
         const prePopulateData = {};
         //  Try to match the doiInfo to the form schema data to populate
         Promise.resolve(originalForm.schema).then((schema) => {
@@ -426,7 +424,8 @@ export default Ember.Component.extend({
               data: value,
             });
             // remove any duplicates
-            let uniqIds = {}, source = metadata;
+            let uniqIds = {},
+              source = metadata;
             let filtered = source.reverse().filter(obj => !uniqIds[obj.id] && (uniqIds[obj.id] = true));
             console.log(filtered.reverse());
 
