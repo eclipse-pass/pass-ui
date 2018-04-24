@@ -311,50 +311,63 @@ export default Ember.Component.extend({
     if (!originalForm.options) {
       newForm.options = {};
     }
-    // Populate form with data if there is any to populate with.
     let metadata = this.get('model.metadata');
-    if (!metadata) {
-      metadata = [];
-    }
-    if (!metadata[newForm.id]) {
-      const prePopulateData = {};
-      //  Try to match the doiInfo to the form schema data to populate
-      Promise.resolve(originalForm.schema).then((schema) => {
-        try {
-          const doiInfo = this.get('doiInfo');
-          // // Fuzy Match here
-          const f = fuzzySet(Object.keys(schema.properties));
-          for (const doiEntry in doiInfo) {
-            // Validate and check any doi data to make sure its close to the right field
-            if (f.get(doiEntry) !== null) {
-              if (doiEntry == 'author') {
-                const given = doiInfo[doiEntry][0].given;
-                prePopulateData[f.get(doiEntry)[0][1]] = given;
+    if(newForm.id){
+      // Populate form with data if there is any to populate with.
+      if (!metadata) {
+        console.log('if', metadata)
+        metadata = [];
+      }
+      console.log('metadata', metadata[0], newForm.id)
 
-                const family = doiInfo[doiEntry][0].family;
-                prePopulateData.family = family;
-              } else if (doiInfo[doiEntry].length > 0) {
-                // Predicts data with .61 accuracy
-                if (f.get(doiEntry)[0][0] > 0.61) {
-                  console.log(doiEntry, doiInfo[doiEntry], f.get(doiEntry)[0][0]);
-                  // set the found record to the metadata
-                  prePopulateData[f.get(doiEntry)[0][1]] = doiInfo[doiEntry];
+      // if there has been no user input fuzzy match the keys
+
+      let shouldFuzzyMatch = true;
+      metadata.forEach((data)=>{
+        if(data.id == newForm.id){
+          shouldFuzzyMatch = false;
+          newForm.data = data.data
+        }
+      })
+
+      if (shouldFuzzyMatch) {// need to fix This
+        const prePopulateData = {};
+        //  Try to match the doiInfo to the form schema data to populate
+        Promise.resolve(originalForm.schema).then((schema) => {
+          try {
+            const doiInfo = this.get('doiInfo');
+            // // Fuzy Match here
+            const f = fuzzySet(Object.keys(schema.properties));
+            for (const doiEntry in doiInfo) {
+              // Validate and check any doi data to make sure its close to the right field
+              if (f.get(doiEntry) !== null) {
+                if (doiEntry == 'author') {
+                  const given = doiInfo[doiEntry][0].given;
+                  prePopulateData[f.get(doiEntry)[0][1]] = given;
+
+                  const family = doiInfo[doiEntry][0].family;
+                  prePopulateData.family = family;
+                } else if (doiInfo[doiEntry].length > 0) {
+                  // Predicts data with .61 accuracy
+                  if (f.get(doiEntry)[0][0] > 0.61) {
+                    console.log(doiEntry, doiInfo[doiEntry], f.get(doiEntry)[0][0]);
+                    // set the found record to the metadata
+                    prePopulateData[f.get(doiEntry)[0][1]] = doiInfo[doiEntry];
+                  }
                 }
               }
             }
-          }
-          newForm.data = prePopulateData;
-          metadata[newForm.id] = ({
-            id: newForm.id,
-            data: prePopulateData,
-          });
-          this.set('model.metadata', metadata);
-        } catch (e) { console.log(e); }
-      });
-    } else {
-      newForm.data = metadata[newForm.id].data;
+            newForm.data = prePopulateData;
+            metadata[newForm.id] = ({
+              id: newForm.id,
+              data: prePopulateData,
+            });
+            this.set('model.metadata', metadata);
+          } catch (e) { console.log(e); }
+        });
+      } else { // use data that has already been grabed
+      }
     }
-
     // form ctrls
     newForm.options.form = {
       buttons: {
