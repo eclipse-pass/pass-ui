@@ -281,6 +281,27 @@ function fuzzySet(arr, useLevenshtein, gramSizeLower, gramSizeUpper) {
 }
 
 
+// Not related to fuzzy lookup
+function hasDuplicates(array) {
+    var hash = Object.create(null);
+    return array.some(function (a) {
+        return a.id && (hash[a.id] || !(hash[a.id] = true));
+    });
+}
+
+function removeDuplicates(json_all) {
+    var arr = [],
+        collection = [];
+
+    $.each(json_all, function (index, value) {
+        if ($.inArray(value.id, arr) == -1) {
+            arr.push(value.id);
+            collection.push(value);
+        }
+    });
+    return collection;
+}
+
 export default Ember.Component.extend({
   didRender() {
     this._super(...arguments);
@@ -344,19 +365,60 @@ export default Ember.Component.extend({
             const value = this.getValue();
             const formId = newForm.id;
             console.log(formId);
-            metadata[formId] = [];
-            if (!metadata[formId]) {
-              metadata.push({
-                id: formId,
-                data: value,
-              });
-            } else {
-              metadata[formId] = ({
-                id: formId,
-                data: value,
-              });
-            }
-            that.set('model.metadata', metadata);
+            // metadata[formId] = [];
+            // if (!metadata[formId]) {
+            //   metadata.push({
+            //     id: formId,
+            //     data: value,
+            //   });
+            // } else {
+            //   metadata[formId] = ({
+            //     id: formId,
+            //     data: value,
+            //   });
+            // }
+            //
+            // // Save the metadata to the model
+            // let forEachCallBack = true;
+            // metadata.forEach((data)=>{
+            //   forEachCallBack = false;
+            //   console.log('IN FOREACH')
+            //   if(data.id == metadata[formId].id) { // duplicates found write over duplicate with new data
+            //     console.log(hasDuplicates(metadata))
+            //     console.log('heyyyy ohh we found a dup')
+            //     metadata[formId] = ({
+            //       id: formId,
+            //       data: value,
+            //     });
+            //   } else { // no duplicates found
+            //     console.log('no dups found')
+            //     metadata.push({
+            //       id: formId,
+            //       data: value,
+            //     });
+            //   }
+            // })
+            // if(forEachCallBack) { // for didnt run so push on to array
+            //   console.log('IN forEachCallBack')
+            //   metadata.push({
+            //     id: formId,
+            //     data: value,
+            //   });
+            // }
+
+
+            // console.log(hasDuplicates(metadata))
+            // metadata = removeDuplicates(metadata)
+            metadata.push({
+              id: formId,
+              data: value,
+            });
+            // remove any duplicates
+            let uniqIds = {}, source = metadata;
+            let filtered = source.reverse().filter(obj => !uniqIds[obj.id] && (uniqIds[obj.id] = true));
+            console.log(filtered.reverse());
+
+            that.set('model.metadata', filtered);
             that.nextForm();
           },
         },

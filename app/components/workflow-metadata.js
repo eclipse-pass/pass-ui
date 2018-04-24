@@ -238,7 +238,7 @@ export default Component.extend({
   embargo: {
     id: 'embargo',
     schema: {
-      title: 'Embargo',
+      title: 'Johns Hopkins - JScholarship, <br><p class="lead text-muted">Deposit requirements for JH`s institutional repository JScholarship.</p>',
       type: 'object',
       properties: {
         'under-embargo': {
