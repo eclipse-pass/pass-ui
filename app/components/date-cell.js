@@ -12,6 +12,6 @@ export default Component.extend({
       if (mm < 10) { mm = `0${mm}`; }
       this.set('date', `${dd}/${mm}/${yyyy}`);
     } catch (e) {}
-    //eslint-disable-line no-empty
+    // eslint-disable-line no-empty
   }
 });
