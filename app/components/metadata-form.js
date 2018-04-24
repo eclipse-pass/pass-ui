@@ -290,50 +290,59 @@ export default Ember.Component.extend({
     if (!originalForm.options) {
       newForm.options = {};
     }
-    // Populate form with data if there is any to populate with.
     let metadata = this.get('model.metadata');
-    if (!metadata) {
-      metadata = [];
-    }
-    if (!metadata[newForm.id]) {
-      const prePopulateData = {};
-      //  Try to match the doiInfo to the form schema data to populate
-      Promise.resolve(originalForm.schema).then((schema) => {
-        try {
-          const doiInfo = this.get('doiInfo');
-          // // Fuzy Match here
-          const f = fuzzySet(Object.keys(schema.properties));
-          for (const doiEntry in doiInfo) {
-            // Validate and check any doi data to make sure its close to the right field
-            if (f.get(doiEntry) !== null) {
-              if (doiEntry == 'author') {
-                const given = doiInfo[doiEntry][0].given;
-                prePopulateData[f.get(doiEntry)[0][1]] = given;
+    if (newForm.id) {
+      // Populate form with data if there is any to populate with.
+      if (!metadata) {
+        metadata = [];
+      }
+      // if there has been no user input fuzzy match the keys
 
-                const family = doiInfo[doiEntry][0].family;
-                prePopulateData.family = family;
-              } else if (doiInfo[doiEntry].length > 0) {
-                // Predicts data with .61 accuracy
-                if (f.get(doiEntry)[0][0] > 0.61) {
-                  console.log(doiEntry, doiInfo[doiEntry], f.get(doiEntry)[0][0]);
-                  // set the found record to the metadata
-                  prePopulateData[f.get(doiEntry)[0][1]] = doiInfo[doiEntry];
+      let shouldFuzzyMatch = true;
+      metadata.forEach((data) => {
+        if (data.id == newForm.id) {
+          shouldFuzzyMatch = false;
+          newForm.data = data.data;
+        }
+      });
+
+      if (shouldFuzzyMatch) { // need to fix This
+        const prePopulateData = {};
+        //  Try to match the doiInfo to the form schema data to populate
+        Promise.resolve(originalForm.schema).then((schema) => {
+          try {
+            const doiInfo = this.get('doiInfo');
+            // // Fuzy Match here
+            const f = fuzzySet(Object.keys(schema.properties));
+            for (const doiEntry in doiInfo) {
+              // Validate and check any doi data to make sure its close to the right field
+              if (f.get(doiEntry) !== null) {
+                if (doiEntry == 'author') {
+                  const given = doiInfo[doiEntry][0].given;
+                  prePopulateData[f.get(doiEntry)[0][1]] = given;
+
+                  const family = doiInfo[doiEntry][0].family;
+                  prePopulateData.family = family;
+                } else if (doiInfo[doiEntry].length > 0) {
+                  // Predicts data with .61 accuracy
+                  if (f.get(doiEntry)[0][0] > 0.61) {
+                    console.log(doiEntry, doiInfo[doiEntry], f.get(doiEntry)[0][0]);
+                    // set the found record to the metadata
+                    prePopulateData[f.get(doiEntry)[0][1]] = doiInfo[doiEntry];
+                  }
                 }
               }
             }
-          }
-          newForm.data = prePopulateData;
-          metadata[newForm.id] = ({
-            id: newForm.id,
-            data: prePopulateData,
-          });
-          this.set('model.metadata', metadata);
-        } catch (e) { console.log(e); }
-      });
-    } else {
-      newForm.data = metadata[newForm.id].data;
+            newForm.data = prePopulateData;
+            metadata[newForm.id] = ({
+              id: newForm.id,
+              data: prePopulateData,
+            });
+            this.set('model.metadata', metadata);
+          } catch (e) { console.log(e); }
+        });
+      }
     }
-
     // form ctrls
     newForm.options.form = {
       buttons: {
@@ -343,20 +352,60 @@ export default Ember.Component.extend({
           click() {
             const value = this.getValue();
             const formId = newForm.id;
-            console.log(formId);
-            metadata[formId] = [];
-            if (!metadata[formId]) {
-              metadata.push({
-                id: formId,
-                data: value,
-              });
-            } else {
-              metadata[formId] = ({
-                id: formId,
-                data: value,
-              });
-            }
-            that.set('model.metadata', metadata);
+            // metadata[formId] = [];
+            // if (!metadata[formId]) {
+            //   metadata.push({
+            //     id: formId,
+            //     data: value,
+            //   });
+            // } else {
+            //   metadata[formId] = ({
+            //     id: formId,
+            //     data: value,
+            //   });
+            // }
+            //
+            // // Save the metadata to the model
+            // let forEachCallBack = true;
+            // metadata.forEach((data)=>{
+            //   forEachCallBack = false;
+            //   console.log('IN FOREACH')
+            //   if(data.id == metadata[formId].id) { // duplicates found write over duplicate with new data
+            //     console.log(hasDuplicates(metadata))
+            //     console.log('heyyyy ohh we found a dup')
+            //     metadata[formId] = ({
+            //       id: formId,
+            //       data: value,
+            //     });
+            //   } else { // no duplicates found
+            //     console.log('no dups found')
+            //     metadata.push({
+            //       id: formId,
+            //       data: value,
+            //     });
+            //   }
+            // })
+            // if(forEachCallBack) { // for didnt run so push on to array
+            //   console.log('IN forEachCallBack')
+            //   metadata.push({
+            //     id: formId,
+            //     data: value,
+            //   });
+            // }
+
+
+            // console.log(hasDuplicates(metadata))
+            // metadata = removeDuplicates(metadata)
+            metadata.push({
+              id: formId,
+              data: value,
+            });
+            // remove any duplicates
+            let uniqIds = {},
+              source = metadata;
+            let filtered = source.reverse().filter(obj => !uniqIds[obj.id] && (uniqIds[obj.id] = true));
+
+            that.set('model.metadata', filtered);
             that.nextForm();
           },
         },
