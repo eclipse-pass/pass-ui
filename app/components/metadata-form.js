@@ -281,25 +281,6 @@ function fuzzySet(arr, useLevenshtein, gramSizeLower, gramSizeUpper) {
 }
 
 
-// Not related to fuzzy lookup
-function hasDuplicates(array) {
-  var hash = Object.create(null);
-  return array.some(a => a.id && (hash[a.id] || !(hash[a.id] = true)));
-}
-
-function removeDuplicates(json_all) {
-  var arr = [],
-    collection = [];
-
-  $.each(json_all, (index, value) => {
-    if ($.inArray(value.id, arr) == -1) {
-      arr.push(value.id);
-      collection.push(value);
-    }
-  });
-  return collection;
-}
-
 export default Ember.Component.extend({
   didRender() {
     this._super(...arguments);
@@ -313,7 +294,6 @@ export default Ember.Component.extend({
     if (newForm.id) {
       // Populate form with data if there is any to populate with.
       if (!metadata) {
-        console.log('if', metadata);
         metadata = [];
       }
       console.log('metadata', metadata[0], newForm.id);
@@ -374,7 +354,6 @@ export default Ember.Component.extend({
           click() {
             const value = this.getValue();
             const formId = newForm.id;
-            console.log(formId);
             // metadata[formId] = [];
             // if (!metadata[formId]) {
             //   metadata.push({
@@ -427,7 +406,6 @@ export default Ember.Component.extend({
             let uniqIds = {},
               source = metadata;
             let filtered = source.reverse().filter(obj => !uniqIds[obj.id] && (uniqIds[obj.id] = true));
-            console.log(filtered.reverse());
 
             that.set('model.metadata', filtered);
             that.nextForm();
