@@ -1,20 +1,8 @@
 import DS from 'ember-data';
 
 export default DS.Model.extend({
-  /* Deposit status {new, in-progress, accepted} */
-  status: DS.attr('string'),
-  repo: DS.attr('string'),
-  updatedDate: DS.attr('date'),
-  /* Whether this deposit is specifically requested by the user,
-    * rather than implicit by policy.
-    */
-  isVoluntary: DS.attr('boolean'),
-  assignedId: DS.attr('string'),
-  userActionRequired: DS.attr('boolean'),
-  accessUrl: DS.attr('string'),
-  isRequired: DS.attr('boolean'),
-  submitted: DS.attr('boolean', { defaultValue: false }),
-
+  depositStatus: DS.attr('string'),
+  repoCopy: DS.belongsTo('repo-copy'),
   submission: DS.belongsTo('submission'),
   repository: DS.belongsTo('repository'),
 });

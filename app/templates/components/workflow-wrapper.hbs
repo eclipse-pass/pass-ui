@@ -14,10 +14,10 @@
         {{workflow-grants model=model next=(action "next") back=(action "back")}}
       {{/if}}
       {{#if (eq step 3)}}
-        {{workflow-repositories model=model next=(action "next") back=(action "back")}}
+        {{workflow-policies model=model next=(action "next") back=(action "back")}}
       {{/if}}
       {{#if (eq step 4)}}
-        {{workflow-policies model=model next=(action "next") back=(action "back")}}
+        {{workflow-repositories model=model next=(action "next") back=(action "back")}}
       {{/if}}
       {{#if (eq step 5)}}
         {{workflow-metadata model=model doiInfo=doiInfo step=step next=(action "next") back=(action "back")}}
@@ -29,7 +29,7 @@
         {{!--
           we just want to validate the last step because up untill this point its okay not to have all the data
           just let them fill out the forms then check that the data is right at the end
-           --}}
+        --}}
         {{workflow-review model=model isValidated=isValidated validate=(action "validate") back=(action "back") submit=(action "submit")}}
       {{/if}}
     </main>

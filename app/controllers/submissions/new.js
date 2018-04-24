@@ -1,25 +1,18 @@
 import Controller from '@ember/controller';
 
 export default Controller.extend({
-  currentUser: Ember.inject.service('current-user'),
   actions: {
     submit() {
       const sub = this.get('model.newSubmission');
-      const currentUser = this.get('currentUser.user.person');
+      const pub = this.get('model.publication');
       sub.status = 'PND';
       sub.abstract = 'No Abstract';
       sub.dateSubmitted = new Date();
       sub.submitted = true;
-      let depositsSaved = 0;
-      sub.save().then((submission) => {
-        submission.get('deposits').forEach((deposit, index, arr) => {
-          deposit.save().then((deposit) => {
-            depositsSaved += 1;
-            console.log('deposits saved: ', depositsSaved);
-            if (depositsSaved === arr.get('length')) {
-              this.transitionToRoute('thanks');
-            }
-          });
+      pub.save().then((p) => {
+        sub.publication = p;
+        sub.save().then(() => {
+          this.transitionToRoute('thanks');
         });
       });
     },

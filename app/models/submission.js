@@ -1,21 +1,22 @@
 import DS from 'ember-data';
 
 export default DS.Model.extend({
-  title: DS.attr('string'),
-  abstract: DS.attr('string'),
-  status: DS.attr('string', { defaultValue: 'PND' }),
-  doi: DS.attr('string'),
-  dateSubmitted: DS.attr('date'),
-  volume: DS.attr('string'),
-  issue: DS.attr('string'),
+  depositStatus: DS.attr('string', { defaultValue: 'PND' }),
+  userSubmittedDate: DS.attr('date'),
   source: DS.attr('string'),
   metadata: DS.attr(),
   pubmedId: DS.attr('string'),
-  policyTermsAccepted: DS.attr('boolean', { defaultValue: false }),
   submitted: DS.attr('boolean', { defaultValue: false }),
   files: DS.attr(),
 
-  journal: DS.belongsTo('journal', { autoSave: true }),
-  deposits: DS.hasMany('deposit', { async: true }), // not on this model on API
+  user: DS.belongsTo('user'),
+  publication: DS.belongsTo('publication'),
+  repositories: DS.hasMany('repository', { async: true }), // not on this model on API
+  deposits: DS.hasMany('deposit', { async: true }),
+  /**
+   * List of grants related to the item being submitted. The grant PI determines who can perform
+   * the submission and in the case that there are mutliple associated grants, they all should
+   * have the same PI. If a grant has a different PI, it should be a separate submission.
+   */
   grants: DS.hasMany('grant', { async: true }),
 });

@@ -1,14 +1,12 @@
 <div class="form-group row">
   <div class="col-md-12">
     <p>
-      Based on the funding agencies you provided, these are the public access
+      Based on the information you provided so far, these are the public access
       policies that are applicable to your work:
     </p>
     {{#each activePolicies as |policy|}}
       {{policy-card policy=policy}}
     {{/each}}
-    {{input type="checkbox" checked=model.newSubmission.policyTermsAccepted}}
-    I agree to the above policies.
   </div>
 </div>
 

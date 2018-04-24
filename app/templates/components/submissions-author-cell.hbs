@@ -1,3 +1,5 @@
-<a href='javascript:;' {{action 'sendAction' 'authorSelected' record}} title='Click to contact corresponding author'>
-  {{record.author.name}}
-</a>
+{{#each (get record column.propertyName) as |person index|}}
+  <a href='javascript:;' {{action 'sendAction' 'authorSelected' record person}} title='Click to contact corresponding author'>
+    {{person.displayName}}
+  </a>
+{{/each}}

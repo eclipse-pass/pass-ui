@@ -13,7 +13,7 @@ export default Controller.extend({
   actions: {
     piclick(grant) {
       this.set('messageShow', true);
-      this.set('messageTo', grant.get('pi.name'));
+      this.set('messageTo', grant.get('pi.displayName'));
       this.set('messageSubject', 'OAP Compliance');
 
       let text = `Concerning project ${grant.get('projectName')}, one or more of the following submissions have issues:`;
@@ -32,9 +32,9 @@ export default Controller.extend({
   // Columns displayed depend on the user role
   columns: computed('currentUser', {
     get() {
-      if (this.get('currentUser.user.person.role') === 'ADMIN') {
+      if (this.get('currentUser.user.role') === 'ADMIN') {
         return this.get('adminColumns');
-      } else if (this.get('currentUser.user.person.role') === 'PI') {
+      } else if (this.get('currentUser.user.role') === 'PI') {
         return this.get('piColumns');
       }
       return [];
@@ -44,25 +44,43 @@ export default Controller.extend({
   // TODO Reduce duplication in column definitions
 
   adminColumns: [
-    { propertyName: 'projectName', title: 'Project Name' },
     {
-      propertyName: 'funder.name',
+      propertyName: 'projectName',
+      title: 'Project Name'
+    },
+    {
+      propertyName: 'primaryFunder.name',
       title: 'Funder',
       filterWithSelect: true,
       predefinedFilterOptions: ['NIH', 'DOE', 'NSF'],
     },
     {
-      propertyName: 'awardNumber', title: 'Award Number', routeName: 'grants.detail', disableFiltering: true,
+      propertyName: 'awardNumber',
+      title: 'Award Number',
+      routeName: 'grants.detail',
+      disableFiltering: true,
     },
     {
-      propertyName: 'externalId', title: 'COEUS', component: 'identifier-cell', disableFiltering: true,
-    },
-    { propertyName: 'pi.name', title: 'PI / CO-PIs', component: 'pi-list-cell' },
-    {
-      propertyName: 'startDate', title: 'Start', component: 'date-cell', disableFiltering: true,
+      propertyName: 'externalId',
+      title: 'COEUS',
+      disableFiltering: true,
     },
     {
-      propertyName: 'endDate', title: 'End', component: 'date-cell', disableFiltering: true,
+      title: 'PI / CO-PIs',
+      propertyName: 'pi',
+      component: 'pi-list-cell'
+    },
+    {
+      propertyName: 'startDate',
+      title: 'Start',
+      disableFiltering: true,
+      component: 'date-cell'
+    },
+    {
+      propertyName: 'endDate',
+      title: 'End',
+      disableFiltering: true,
+      component: 'date-cell'
     },
     {
       propertyName: 'status',
@@ -83,34 +101,51 @@ export default Controller.extend({
   ],
 
   piColumns: [
-    { propertyName: 'projectName', title: 'Project Name' },
     {
-      propertyName: 'funder.name',
+      propertyName: 'projectName',
+      title: 'Project Name'
+    },
+    {
+      propertyName: 'primaryFunder.name',
       title: 'Funder',
       filterWithSelect: true,
       predefinedFilterOptions: ['NIH', 'DOE', 'NSF'],
     },
     {
-      propertyName: 'awardNumber', title: 'Award Number', routeName: 'grants.detail', disableFiltering: true,
+      propertyName: 'awardNumber',
+      title: 'Award Number',
+      routeName: 'grants.detail',
+      disableFiltering: true,
     },
     {
-      propertyName: 'externalId', title: 'COEUS', component: 'identifier-cell', disableFiltering: true,
-    },
-    { title: 'PI / CO-PIs', component: 'pi-list-cell' },
-    {
-      propertyName: 'startDate', title: 'Start', component: 'date-cell', disableFiltering: true,
+      propertyName: 'externalId',
+      title: 'COEUS',
+      disableFiltering: true,
     },
     {
-      propertyName: 'endDate', title: 'End', component: 'date-cell', disableFiltering: true,
+      title: 'PI / CO-PIs',
+      propertyName: 'pi',
+      component: 'pi-list-cell'
+    },
+    {
+      propertyName: 'startDate',
+      title: 'Start',
+      disableFiltering: true,
+      component: 'date-cell'
+    },
+    {
+      propertyName: 'endDate',
+      title: 'End',
+      disableFiltering: true,
+      component: 'date-cell'
     },
     {
       propertyName: 'submissions.length', title: '#', routeName: 'grants.detail', disableFiltering: true,
     },
     {
-      propertyName: 'status',
+      propertyName: 'grant.awardStatus',
       title: 'Status',
       filterWithSelect: true,
-      predefinedFilterOptions: ['Active', 'Ended'],
     },
   ],
 

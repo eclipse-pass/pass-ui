@@ -1,3 +1,5 @@
-{{#each record.deposits as |deposit index|}}
-{{if index ', '}}{{deposit.repo}}
+{{#each record as |deposit index|}}
+  {{deposit.repository.name}}
+{{else}}
+  Loading...
 {{/each}}
