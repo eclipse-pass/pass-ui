@@ -238,7 +238,7 @@ export default Component.extend({
   embargo: {
     id: 'embargo',
     schema: {
-      title: 'Embargo',
+      title: 'Johns Hopkins - JScholarship, <br><p class="lead text-muted">Deposit requirements for JH`s institutional repository JScholarship.</p>',
       type: 'object',
       properties: {
         'under-embargo': {
@@ -287,7 +287,6 @@ export default Component.extend({
   currentFormStep: 0,
 
   didInsertElement() {
-    debugger;
     this.set('schemas', [this.get('common'), this.get('nih'), this.get('embargo')]);
     this.get('metadataForms').forEach((form) => {
       const schemas = this.get('schemas');
