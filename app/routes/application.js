@@ -424,39 +424,71 @@ export default Route.extend(ApplicationRouteMixin, {
         awardStatus: 'terminated',
       }
     ];
-    const publishers = [
+    const journals = [
       {
-        name: 'American Chemical Society'
+        journalName: 'AAPS Journal',
+        nlmta: 'AAPS J',
+        pmcParticipation: 'A'
       },
       {
-        name: 'American Association of Pharmeceutical Scientists'
+        name: 'ACS Medicinal Chemistry Letters',
+        nlmta: 'ACS Med Chem Lett',
+        pmcParticipation: 'A'
       },
       {
-        name: 'Royal Society of Chemistry'
+        name: 'AAPS PharmSci',
+        nlmta: 'AAPS PharmSci',
+        pmcParticipation: 'A'
       },
       {
-        name: 'American Society for Engineering Education'
+        name: 'Food & Function',
+        nlmta: 'Food Funct',
+        pmcParticipation: 'B'
+      },
+      {
+        name: 'Toxicology Research',
+        nlmta: 'Toxicol Res',
+        pmcParticipation: 'B'
+      },
+      {
+        name: 'Analyst',
+        nlmta: 'Analyst',
+        pmcParticipation: 'B'
+      },
+      {
+        name: 'Physical Review Fluids'
+      },
+      {
+        name: 'Advances in Engineering Education'
       }
     ];
-    const journals = [];
+    const submissions = [
+      {
+        
+      }
+    ];
 
     let userDB = [];
     let repoDB = [];
     let policyDB = [];
     let funderDB = [];
     let grantDB = [];
+    let journalDB = [];
+
     users.forEach(u => userDB.push(store.createRecord('user', u)));
     repos.forEach(r => repoDB.push(store.createRecord('repository', r)));
     policies.forEach(p => policyDB.push(store.createRecord('policy', p)));
     funders.forEach(f => funderDB.push(store.createRecord('funder', f)));
     grants.forEach(g => grantDB.push(store.createRecord('grant', g)));
+    journals.forEach(j => journalDB.push(store.createRecord('journal', j)));
 
     let moo = [
       ...userDB,
       ...repoDB,
       ...policyDB,
       ...funderDB,
-      ...grantDB
+      ...grantDB,
+      ...journalDB
     ];
 
     RSVP.all(moo.map(o => o.save())).then(() => {
