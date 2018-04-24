@@ -1,2 +1,3 @@
 {{! Create a link to the identifier uri anchored by the label}}
-{{optional-link (get record (concat column.propertyName '.label')) (get record (concat column.propertyName '.uri'))}}
+{{ get record (concat column.propertyName '.label') (get record (concat column.propertyName '.uri')) }}
+{{column.propertyName}}

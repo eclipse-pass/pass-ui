@@ -1,0 +1,36 @@
+{{yield}}
+<p>
+    Please provide some basic information about your work and the journal in which it is/will be published. This step will help
+    us determine the applicable repositories and grants.
+</p>
+<div class="form-group col-md-12">
+  <label>DOI:</label> <div style="color:red">10.1103/PhysRevFluids.1.073604</div>
+  {{input
+    class=validDOI
+    value=model.publication.doi
+    keyUp=(action "lookupDOI")
+  }}
+  <div class="text-danger">
+    {{if (eq validDOI 2) 'Please provide a valid DOI'}}
+  </div>
+
+
+
+
+</div>
+<div class="form-group col-md-12">
+  <label>Title:</label>
+  {{input value=model.publication.title class=validTitle placeholder="Title"   keyUp=(action "validateTitle")}}
+</div>
+
+<div class="form-group col-md-12">
+  <label>Journal:</label>
+  {{#unless doiJournal}}
+    {{find-journal id="journal" onSelect=(action "selectJournal") value=model.publication.journal}}
+  {{else}}
+    <input type="text" class="form-control" value={{model.publication.journal}}  placeholder="Journal"/>
+  {{/unless}}
+</div>
+
+<button class="btn btn-outline-primary" {{action "back"}}>Back</button>
+<button class="btn btn-primary pull-right" {{action "next"}}>Next</button>
