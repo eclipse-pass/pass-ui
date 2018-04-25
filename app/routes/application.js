@@ -49,127 +49,150 @@ export default Route.extend(ApplicationRouteMixin, {
         username: 'eford',
         displayName: 'Ernest Ford',
         email: 'ford@example.com',
-        roles: ['submitter']
+        roles: ['submitter'],
+        role: 'PI',
+        firstName: 'Ernest',
+        lastName: 'Ford'
       },
       {
         username: 'agudzun',
         displayName: 'Anne Gudzune',
         email: 'anne@example.com',
-        roles: ['sumbitter']
+        roles: ['sumbitter'],
+        role: 'PI'
       },
       {
         username: 'spillage',
         displayName: 'Stephen Pillage',
         email: 'illage@example.com',
-        roles: ['submitter']
+        roles: ['submitter'],
+        role: 'PI'
       },
       {
         username: 'efrey',
         displayName: 'Eric Frey',
         email: 'frey@example.com',
-        roles: ['submitter']
+        roles: ['submitter'],
+        role: 'PI'
       },
       {
         username: 'mjaco',
         displayName: 'Michael Jacobs',
         email: 'mjacob@example.com',
-        roles: ['submitter']
+        roles: ['submitter'],
+        role: 'PI'
       },
       {
         username: 'jwong',
         displayName: 'John Wong',
         email: 'jwong@example.com',
-        roles: ['submitter']
+        roles: ['submitter'],
+        role: 'PI'
       },
       {
         username: 'tbrown',
         displayName: 'Tiffany Brown',
         email: 'tbrown@example.com',
-        roles: ['submitter']
+        roles: ['submitter'],
+        role: 'PI'
       },
       {
         username: 'hpeek',
         displayName: 'Hillary Peek',
         email: 'peek@example.com',
-        roles: ['submitter']
+        roles: ['submitter'],
+        role: 'PI'
       },
       {
         username: 'plimo',
         displayName: 'Steve Plimpton',
         email: 'plimo@example.com',
-        roles: ['submitter']
+        roles: ['submitter'],
+        role: 'PI'
       },
       {
         username: 'zwang',
         displayName: 'Szu Wang',
         email: 'zwang@example.com',
-        roles: ['submitter']
+        roles: ['submitter'],
+        role: 'PI'
       },
       {
         username: 'ksand',
         displayName: 'Kurt Sanders',
         email: 'ksand@example.com',
-        roles: ['submitter']
+        roles: ['submitter'],
+        role: 'PI'
       },
       {
         username: 'bradley',
         displayName: 'Robert Bradley',
         email: 'bradley@example.com',
-        roles: ['submitter']
+        roles: ['submitter'],
+        role: 'PI'
       },
       {
         username: 'elewin',
         displayName: 'Erin Lewin',
         email: 'elewin@example.com',
-        roles: ['submitter']
+        roles: ['submitter'],
+        role: 'PI'
       },
       {
         username: 'sayeed.choudhury',
         displayName: 'Sayeed Choudhury',
         email: 'schou@example.com',
-        roles: ['admin']
+        roles: ['admin'],
+        role: 'admin'
       },
       {
         username: 'hvu',
         displayname: 'Hanh Vu',
         email: 'hvu@example.com',
-        roles: ['submitter']
+        roles: ['submitter'],
+        role: 'PI'
       },
       {
         username: 'rkelly',
         displayName: 'Kelly R Fisher',
         email: 'r.kelly@example.com',
-        roles: ['submitter']
+        roles: ['submitter'],
+        role: 'PI'
       },
       {
         username: 'tmac',
         displayName: 'Thomas McDermott',
         email: 'mcdott@example.com',
-        roles: ['submitter']
+        roles: ['submitter'],
+        role: 'PI'
       },
       {
         username: 'shatsu',
         displayName: 'Sharon Tsui',
         email: 'sharon.tsui@example.com',
-        roles: ['submitter']
+        roles: ['submitter'],
+        role: 'PI'
       },
       {
         username: 'maciver',
         displayName: 'Martha Mac Iver',
         email: 'martha.mac@example.com',
-        roles: ['submitter']
+        roles: ['submitter'],
+        role: 'PI'
       },
       {
         username: 'mirosen',
         displayName: 'Michael Rosenberg',
         email: 'michael.rosenberg@example.com',
-        roles: ['submitter']
+        roles: ['submitter'],
+        role: 'PI'
       },
       {
         username: 'jfauerbach',
         displayName: 'James Fauerbach',
         email: 'jfauerbach@example.com',
-        roles: ['sumbitter']
+        roles: ['sumbitter'],
+        role: 'PI'
       }
     ];
     const repos = [
@@ -194,11 +217,11 @@ export default Route.extend(ApplicationRouteMixin, {
       {
         title: 'National Institute of Health Pulic Access Policy',
         policyUrl: 'https://publicaccess.nih.gov/policy.htm',
-        description: `The Director of the National Institutes of Health requires that all 
-        investigators funded by the NIH submit or have submitted for them to the National 
-        Library of Medicine's PubMed Central an electronic version of their final, peer-reviewed 
-        manuscripts upon acceptance for publication, to be made publicly available no later 
-        than 12 months after the official date of publication: Provided, that the NIH shall 
+        description: `The Director of the National Institutes of Health requires that all
+        investigators funded by the NIH submit or have submitted for them to the National
+        Library of Medicine's PubMed Central an electronic version of their final, peer-reviewed
+        manuscripts upon acceptance for publication, to be made publicly available no later
+        than 12 months after the official date of publication: Provided, that the NIH shall
         implement the public access policy in a manner consistent with copyright law.`
       },
       {
@@ -215,136 +238,124 @@ export default Route.extend(ApplicationRouteMixin, {
       {
         name: 'National Eye Institute',
         url: 'https://nei.nih.gov/',
-        localKey: '1234lkj'
+        externalId: '1234lkj'
       },
       {
         name: 'National Science Foundation',
         url: 'https://www.nsf.gov/',
-        localKey: 'nsf'
+        externalId: 'nsf'
       },
       {
         name: 'National Institution of Diabetes and Digestion',
         url: 'https://www.niddk.nih.gov/',
-        localKey: 'niddk-nih'
+        externalId: 'niddk-nih'
       },
       {
         name: 'National Institute of Mental Health',
         url: 'https://www.nimh.nih.gov/index.shtml',
-        localKey: 'nimh-nih'
+        externalId: 'nimh-nih'
       },
       {
         name: 'National Institute of Health',
         url: 'https://www.nih.gov/',
-        localKey: 'nih'
+        externalId: 'nih'
       },
       {
         name: 'Institute of Education Sciences',
         url: 'https://ies.ed.gov/',
-        localKey: 'ies-ed'
+        externalId: 'ies-ed'
       }
     ];
     const grants = [
       {
-        id: 0,
         awardNumber: 'R01EY027824',
         projectName: 'Regulation of blood-retinal barrier by placental growth factor.',
         startDate: new Date('2017-04-01'),
         endDate: new Date('2022-03-31'),
         awardStatus: 'Active',
-        localKey: '16129769',
+        externalId: '16129769',
       },
       {
-        id: 1,
         awardNumber: 'R01DK110366',
         projectName: 'Identification and Activation Mechanisms of Vagal and Spinal Nociceptors in Esophageal Mucosa',
         startDate: new Date('2017-08-01'),
         endDate: new Date('2021-07-31'),
         awardStatus: 'Active',
-        localKey: '16120629',
+        externalId: '16120629',
       },
       {
-        id: 2,
         projectName: 'Optimal magnification and oculomotor strategies in low vision patients',
         awardNumber: 'R01EY026617',
         startDate: new Date('2017-06-01'),
         endDate: new Date('2020-05-31'),
         awardStatus: 'Active',
-        localKey: '16120539',
+        externalId: '16120539',
       },
       {
-        id: 3,
         projectName: 'UCure urethral strictures',
         awardNumber: '1640778',
         startDate: new Date('2016-06-01'),
         endDate: new Date('2017-12-31'),
         awardStatus: 'Active',
-        localKey: '16120469',
+        externalId: '16120469',
       },
       {
-        id: 4,
         projectName: 'Psychiatric Epidemiology Training Program',
         awardNumber: 'T32MH014592',
         startDate: new Date('2016-07-01'),
         endDate: new Date('2017-06-30'),
         awardStatus: 'Terminated',
-        localKey: '16120459',
+        externalId: '16120459',
       },
       {
-        id: 5,
         projectName: 'Neurologic Sequelae of HIV Subtype A and D Infection and ART Rakai Uganda',
         awardNumber: 'T32MH019545',
         startDate: new Date('2016-07-01'),
         endDate: new Date('2018-06-30'),
         awardStatus: 'Active',
-        localKey: '16120169',
+        externalId: '16120169',
       },
       {
-        id: 6,
         projectName: 'GEM:  RESPONSE OF GLOBAL IONOSPHERIC CURRENTS TO SUBSTORMS:  IMPLICATION FOR THE ELECTRIC FIELD PENETRATION TO THE INNER MAGNETOSPHERE',
         awardNumber: '1502700',
         startDate: new Date('2016-05-15'),
         endDate: new Date('2019-04-30'),
         awardStatus: 'Active',
-        localKey: '1204023',
+        externalId: '1204023',
       },
       {
-        id: 7,
         projectName: 'Fogarty African Bioethics Consortium Post-Doctoral Fellowship Program',
         awardNumber: 'D43TW010512',
         startDate: new Date('2017-06-01'),
         endDate: new Date('2022-05-31'),
         awardStatus: 'Active',
-        localKey: '16119319',
+        externalId: '16119319',
       },
       {
-        id: 8,
         projectName: 'CAREER: DNA-Templated Assembly of Nanoscale Circuit Interconnects',
         awardNumber: 'CMMI-1253876',
         startDate: new Date('2013-01-01'),
         endDate: new Date('2017-12-31'),
         awardStatus: 'Active',
-        localKey: '16119219',
+        externalId: '16119219',
       },
       {
-        id: 9,
         projectName: 'Neurologic Sequelae of HIV Subtype A and D Infection and ART Rakai Uganda',
         awardNumber: 'R01MH099733',
         startDate: new Date('2016-03-01'),
         endDate: new Date('2018-02-28'),
         awardStatus: 'Active',
-        localKey: '16118979',
+        externalId: '16118979',
       },
       {
-        id: 10,
         projectName: 'Telomere maintenance by the telomerase RNA-protein complex',
         awardNumber: 'R01GM118757',
         startDate: new Date('2018-03-04'),
         endDate: new Date('2020-08-10'),
         awardStatus: 'Active',
-        localKey: '16108389',
+        externalId: '16108389',
       },
       {
-        id: 11,
         projectName: 'Genetics of Fuchs Corneal Dystrophy',
         awardNumber: 'R01EY016835',
         startDate: new Date('2017-03-04'),
@@ -352,72 +363,64 @@ export default Route.extend(ApplicationRouteMixin, {
         awardStatus: 'Active',
       },
       {
-        id: 12,
         projectName: 'P-Adic and Mod P Galois Representations',
         awardNumber: '1564367',
         startDate: new Date('2015-03-04'),
         endDate: new Date('2017-08-10'),
         awardStatus: 'Terminated',
-        localKey: '16086889',
+        externalId: '16086889',
       },
       {
-        id: 13,
         awardNumber: 'R305A170411',
-        localKey: '126699',
+        externalId: '126699',
         projectName: 'Developing a Spacially-enhanced Elementary Curriculum and Teacher Training Series to Improve Science Advancement',
         startDate: new Date('2017-07-01'),
         endDate: new Date('2021-06-30'),
         awardStatus: 'active',
       },
       {
-        id: 14,
         awardNumber: '90073719',
-        localKey: '126257',
+        externalId: '126257',
         projectName: 'FY18 Title IV Award',
         startDate: new Date('2017-07-01'),
         endDate: new Date('2018-06-30'),
         awardStatus: 'active',
       },
       {
-        id: 15,
         awardNumber: '',
-        localKey: '122761',
+        externalId: '122761',
         projectName: 'FY17 Federal Work Study',
         startDate: new Date('2016-06-30'),
         endDate: new Date('2017-06-30'),
         awardStatus: 'terminated',
       },
       {
-        id: 16,
         awardNumber: 'P022A150076',
-        localKey: '123526',
+        externalId: '123526',
         projectName: 'How Do We Provide High Quality HIV Care and Treatment When THere Are Too Few Health Care Providers in Uganda',
         startDate: new Date('2015-09-30'),
         endDate: new Date('2017-05-31'),
         awardStatus: 'terminated',
       },
       {
-        id: 17,
         awardNumber: 'R305H150081',
-        localKey: '120443',
+        externalId: '120443',
         projectName: 'Continuous Improvement in Schools Equipping Families to Support Students in the Transition to High School',
         startDate: new Date('2015-07-01'),
         endDate: new Date('2019-06-30'),
         awardStatus: 'active',
       },
       {
-        id: 18,
         awardNumber: 'H325T090027',
-        localKey: '105336',
+        externalId: '105336',
         projectName: 'The Johns Hopkins Universtiy Secondary Support Initiative (JHUSSI)',
         startDate: new Date('2009-01-01'),
         endDate: new Date('2016-06-30'),
         awardStatus: 'terminated',
       },
       {
-        id: 19,
         awardNumber: 'H133A070045',
-        localKey: '101950',
+        externalId: '101950',
         projectName: 'Johns Hopkins University Burn Injury Model System',
         startDate: new Date('2010-10-01'),
         endDate: new Date('2014-03-31'),
@@ -462,9 +465,75 @@ export default Route.extend(ApplicationRouteMixin, {
         name: 'Advances in Engineering Education'
       }
     ];
+    const publications = [
+      {
+        title: `Evaluating the Role of Interdigitated Neoadjuvant Chemotherapy and Radiation in the Management of
+        High-Grade Soft-Tissue Sarcoma: The Johns Hopkins Experience`
+      },
+      {
+        title: 'Micropattern size-dependent endothelial differentiation from a human induced pluripotent stem cell line'
+      },
+      {
+        title: 'Immunomodulatory Drugs: Immune Checkpoint Agents in Acute Leukemia'
+      },
+      {
+        title: `Family history of alcoholism is related to increased D2 /D3 receptor binding potential:
+        a marker of resilience or risk?`
+      },
+      {
+        title: 'The Johns Hopkins University Secondary Support Initiative (JHUSSI)'
+      }
+    ];
     const submissions = [
       {
-        
+        status: 'accepted',
+        userSubmittedDate: new Date('2017-07-04')
+      },
+      {
+        status: 'accepted',
+        userSubmittedDate: new Date('2017-12-04')
+      },
+      {
+        status: 'in-progress',
+        userSubmittedDate: new Date('2017-08-30')
+      },
+      {
+        status: 'in-progress',
+        userSubmittedDate: new Date('2017-09-30')
+      },
+      {
+        status: 'accepted',
+        userSubmittedDate: new Date('2016-03-01')
+      }
+    ];
+    const deposits = [
+      { depositStatus: 'accepted' },
+      { depositStatus: 'accepted' },
+      { depositStatus: 'submitted' },
+      { depositStatus: 'submitted' },
+      { depositStatus: 'accepted' },
+    ];
+    const repoCopies = [
+      {
+        externalIds: 'asdf123',
+        accessUrl: 'http://example.com/here-is-your-deposited-publication',
+        status: 'complete'
+      },
+      {
+        externalIds: 'qwer654',
+        accessUrl: 'http://example.com/here-is-your-deposited-publication',
+        status: 'complete'
+      },
+      {
+        status: 'accepted'
+      },
+      {
+        status: 'in-progress'
+      },
+      {
+        externalIds: 'fghj809',
+        accessUrl: 'http://example.com/here-is-your-deposited-publication',
+        status: 'complete'
       }
     ];
 
@@ -474,6 +543,10 @@ export default Route.extend(ApplicationRouteMixin, {
     let funderDB = [];
     let grantDB = [];
     let journalDB = [];
+    let publicationDB = [];
+    let submissionDB = [];
+    let depositDB = [];
+    let repoCopyDB = [];
 
     users.forEach(u => userDB.push(store.createRecord('user', u)));
     repos.forEach(r => repoDB.push(store.createRecord('repository', r)));
@@ -481,15 +554,15 @@ export default Route.extend(ApplicationRouteMixin, {
     funders.forEach(f => funderDB.push(store.createRecord('funder', f)));
     grants.forEach(g => grantDB.push(store.createRecord('grant', g)));
     journals.forEach(j => journalDB.push(store.createRecord('journal', j)));
+    publications.forEach(p => publicationDB.push(store.createRecord('publication', p)));
+    submissions.forEach(s => submissionDB.push(store.createRecord('submission', s)));
+    deposits.forEach(d => depositDB.push(store.createRecord('deposit', d)));
+    repoCopies.forEach(r => repoCopyDB.push(store.createRecord('repo-copy', r)));
 
-    let moo = [
-      ...userDB,
-      ...repoDB,
-      ...policyDB,
-      ...funderDB,
-      ...grantDB,
-      ...journalDB
-    ];
+    let moo = [].concat(
+      userDB, repoDB, policyDB, funderDB, grantDB, journalDB, publicationDB, submissionDB,
+      depositDB, repoCopyDB
+    );
 
     RSVP.all(moo.map(o => o.save())).then(() => {
       policyDB[0].set('repository', repoDB[0]);
@@ -539,7 +612,7 @@ export default Route.extend(ApplicationRouteMixin, {
       grantDB[8].set('directFunder', funderDB[1]);
       grantDB[8].set('primaryFunder', funderDB[1]);
       grantDB[9].set('pi', userDB[4]);
-      [userDB[5], userDB[11], userDB[12]].forEach(u => grantDB[9].get('coPis'));
+      [userDB[5], userDB[11], userDB[12]].forEach(u => grantDB[9].get('coPis').pushObject(u));
       grantDB[9].set('directFunder', funderDB[4]);
       grantDB[9].set('primaryFunder', funderDB[4]);
       grantDB[10].set('pi', userDB[6]);
@@ -575,6 +648,70 @@ export default Route.extend(ApplicationRouteMixin, {
       grantDB[19].set('pi', userDB[20]);
       grantDB[19].set('directFunder', funderDB[5]);
       grantDB[19].set('primaryFunder', funderDB[5]);
+
+      publicationDB[0].set('journal', journalDB[2]);
+      publicationDB[1].set('journal', journalDB[0]);
+      publicationDB[2].set('journal', journalDB[1]);
+      publicationDB[3].set('journal', journalDB[4]);
+      publicationDB[4].set('journal', journalDB[7]);
+
+      repoCopyDB[0].set('publication', publicationDB[0]);
+      repoCopyDB[0].set('repository', repoDB[0]);
+      repoCopyDB[1].set('publication', publicationDB[1]);
+      repoCopyDB[1].set('repository', repoDB[0]);
+      repoCopyDB[2].set('publication', publicationDB[2]);
+      repoCopyDB[2].set('repository', repoDB[1]);
+      repoCopyDB[3].set('publication', publicationDB[3]);
+      repoCopyDB[3].set('repository', repoDB[0]);
+      repoCopyDB[4].set('publication', publicationDB[4]);
+      repoCopyDB[4].set('repository', repoDB[3]);
+
+      depositDB[0].set('repoCopy', repoCopyDB[0]);
+      depositDB[0].set('submission', submissionDB[0]);
+      depositDB[0].set('repository', repoDB[0]);
+      depositDB[1].set('repoCopy', repoCopyDB[1]);
+      depositDB[1].set('submission', submissionDB[1]);
+      depositDB[0].set('repository', repoDB[0]);
+      depositDB[2].set('repoCopy', repoCopyDB[2]);
+      depositDB[2].set('submission', submissionDB[2]);
+      depositDB[0].set('repository', repoDB[1]);
+      depositDB[3].set('repoCopy', repoCopyDB[3]);
+      depositDB[3].set('submission', submissionDB[3]);
+      depositDB[0].set('repository', repoDB[0]);
+      depositDB[4].set('repoCopy', repoCopyDB[4]);
+      depositDB[4].set('submission', submissionDB[4]);
+      depositDB[0].set('repository', repoDB[3]);
+
+      [grantDB[0], grantDB[3]].forEach(g => submissionDB[0].get('grants').pushObject(g));
+      submissionDB[0].get('repositories').pushObject(repoDB[0]);
+      submissionDB[0].set('publication', publicationDB[0]);
+      submissionDB[1].get('grants').pushObject(grantDB[0]);
+      submissionDB[1].get('repositories').pushObject(repoDB[0]);
+      submissionDB[1].set('publication', publicationDB[1]);
+      submissionDB[2].get('grants').pushObject(grantDB[2]);
+      submissionDB[2].get('repositories').pushObject(repoDB[1]);
+      submissionDB[2].set('publication', publicationDB[2]);
+      submissionDB[3].get('grants').pushObject(grantDB[3]);
+      submissionDB[3].get('repositories').pushObject(repoDB[0]);
+      submissionDB[3].set('publication', publicationDB[3]);
+      submissionDB[4].get('grants').pushObject(grantDB[18]);
+      submissionDB[4].get('repositories').pushObject(repoDB[3]);
+      submissionDB[4].set('publication', publicationDB[4]);
+
+      /*
+       * Following is not valid after updating to pass-data-model v2.0
+       */
+      repoDB[0].set('policy', policyDB[0]);
+      repoDB[1].set('policy', policyDB[1]);
+      repoDB[2].set('policy', policyDB[2]);
+      repoDB[3].set('policy', policyDB[3]);
+
+      funderDB[0].set('repository', repoDB[0]);
+      funderDB[1].set('repository', repoDB[1]);
+      funderDB[2].set('repository', repoDB[0]);
+      funderDB[3].set('repository', repoDB[0]);
+      funderDB[4].set('repository', repoDB[0]);
+      funderDB[5].set('repository', repoDB[3]);
 
       return RSVP.all(moo.map(o => o.save())).then(() => jhuInstitution);
     });
