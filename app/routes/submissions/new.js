@@ -8,8 +8,8 @@ export default Route.extend({
   currentUser: service(),
   model(params) {
     let preLoadedGrant = null;
-    if(params.grant) {
-       preLoadedGrant = this.get('store').findRecord('grant', params.grant)
+    if (params.grant) {
+      preLoadedGrant = this.get('store').findRecord('grant', params.grant);
     }
 
     let publication = this.get('store').createRecord('publication');

@@ -15,8 +15,8 @@ export default Component.extend({
     return this.get('model.newSubmission.grants');
   }),
   didRender() {
-    if(this.get('model.preLoadedGrant')) {
-      this.send('addGrant', this.get('model.preLoadedGrant'))
+    if (this.get('model.preLoadedGrant')) {
+      this.send('addGrant', this.get('model.preLoadedGrant'));
     }
   },
   actions: {
@@ -27,7 +27,6 @@ export default Component.extend({
       this.sendAction('back');
     },
     addGrant(grant) {
-      console.log('here')
       const submission = this.get('model.newSubmission');
       submission.get('grants').pushObject(grant);
       this.get('addedGrants').push(grant);
