@@ -40,7 +40,7 @@ export default Component.extend({
           type: 'string',
           required: true,
         },
-        auothor: {
+        author: {
           type: 'string',
           required: true,
         },
@@ -110,7 +110,7 @@ export default Component.extend({
           placeholder: '',
           fieldClass: 'clearfix',
         },
-        auothor: {
+        author: {
           type: 'text',
           label: 'First Name',
           placeholder: '',
@@ -170,7 +170,7 @@ export default Component.extend({
           type: 'string',
           required: true,
         },
-        auothor: {
+        author: {
           type: 'string',
           required: true,
         },
@@ -209,7 +209,7 @@ export default Component.extend({
           label: 'ISSN',
           placeholder: '',
         },
-        auothor: {
+        author: {
           type: 'text',
           label: 'First Name',
           placeholder: '',
@@ -265,13 +265,14 @@ export default Component.extend({
           fieldClass: 'col-8 pull-left pl-0'
         },
         'Embargo-end-date:': {
+          label: 'Embargo End Date',
           type: 'date',
           placeholder: 'mm/dd/yyyy',
           fieldClass: 'col-4 pull-left pl-0'
         },
         embargo: {
           type: 'textarea',
-          label: 'Embargo information',
+          label: 'Deposit Agreement',
           disabled: true,
           rows: '16'
         },
