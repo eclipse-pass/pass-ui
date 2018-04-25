@@ -10,58 +10,46 @@ export default Component.extend({
       properties: {
         volume: {
           type: 'string',
-          required: true,
         },
         issue: {
           type: 'string',
-          required: true,
         },
         publicationDate: {
           title: 'Publication Date',
           description: 'Select your publication date',
           format: 'datetime',
-          required: true,
         },
         publicationType: {
           type: 'string',
           title: 'Publication Type',
           enum: ['ElectronicPublication', 'PrintPublication'],
-          required: true,
         },
         abstract: {
           type: 'string',
-          required: true,
         },
         subjects: {
           type: 'string',
-          required: true,
         },
         URL: {
           type: 'string',
-          required: true,
         },
         author: {
           type: 'string',
-          required: true,
         },
         mName: {
           type: 'string',
         },
         family: {
           type: 'string',
-          required: true,
         },
         orcid: {
           type: 'string',
-          required: true,
         },
         email: {
           type: 'string',
-          required: true,
         },
         affiliation: {
           type: 'string',
-          required: true,
         },
       },
     },
