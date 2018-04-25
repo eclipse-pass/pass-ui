@@ -261,7 +261,53 @@ export default Route.extend(ApplicationRouteMixin, {
       {
         title: 'Johns Hopkins Open Access Policy',
         url: 'http://guides.library.jhu.edu/open-access', // placeholder
-        metadata: "{\"id\": \"jhu\",\"schema\": {\"title\": \"Example Policy (EP) <br><p class='lead text-muted'>This is filler text for where any kind of form you want can appear.</p>\",\"type\": \"object\",\"properties\": {}},\"options\": {\"fields\": {}}}"
+        metadata: `{
+          "id": "jhu",
+          "schema": {
+            "title": "Johns Hopkins - JScholarship, <br><p class='lead text-muted'>Deposit requirements for JH's institutional repository JScholarship.</p>",
+            "type": "object",
+            "properties": {
+              "under-embargo": {
+                "type": "string"
+              },
+              "Embargo-end-date": {
+                "type": "string",
+                "format": "date"
+              },
+              "embargo": {
+                "type": "string",
+                "default": "NON-EXCLUSIVE LICENSE FOR USE OF MATERIALS This non-exclusive license defines the terms for the deposit of Materials in all formats into the digital repository of materials collected, preserved and made available through the Johns Hopkins Digital Repository, JScholarship. The Contributor hereby grants to Johns Hopkins a royalty free, non-exclusive worldwide license to use, re-use, display, distribute, transmit, publish, re-publish or copy the Materials, either digitally or in print, or in any other medium, now or hereafter known, for the purpose of including the Materials hereby licensed in the collection of materials in the Johns Hopkins Digital Repository for educational use worldwide. In some cases, access to content may be restricted according to provisions established in negotiation with the copyright holder. This license shall not authorize the commercial use of the Materials by Johns Hopkins or any other person or organization, but such Materials shall be restricted to non-profit educational use. Persons may apply for commercial use by contacting the copyright holder. Copyright and any other intellectual property right in or to the Materials shall not be transferred by this agreement and shall remain with the Contributor, or the Copyright holder if different from the Contributor. Other than this limited license, the Contributor or Copyright holder retains all rights, title, copyright and other interest in the images licensed. If the submission contains material for which the Contributor does not hold copyright, the Contributor represents that s/he has obtained the permission of the Copyright owner to grant Johns Hopkins the rights required by this license, and that such third-party owned material is clearly identified and acknowledged within the text or content of the submission. If the submission is based upon work that has been sponsored or supported by an agency or organization other than Johns Hopkins, the Contributor represents that s/he has fulfilled any right of review or other obligations required by such contract or agreement. Johns Hopkins will not make any alteration, other than as allowed by this license, to your submission. This agreement embodies the entire agreement of the parties. No modification of this agreement shall be of any effect unless it is made in writing and signed by all of the parties to the agreement."
+              },
+              "agreement-to-embargo": {
+                "type": "string"
+              }
+            }
+          },
+          "options": {
+            "fields": {
+              "under-embargo": {
+                "type": "checkbox",
+                "rightLabel": "The material being submitted is published under an embargo.",
+                "fieldClass": "col-8 pull-left pl-0"
+              },
+              "Embargo-end-date": {
+                "type": "date",
+                "placeholder": "mm/dd/yyyy",
+                "fieldClass": "col-4 pull-left pl-0"
+              },
+              "embargo": {
+                "type": "textarea",
+                "label": "Embargo information",
+                "disabled": true,
+                "rows": "16"
+              },
+              "agreement-to-embargo": {
+                "type": "checkbox",
+                "rightLabel": "I agree to the above statement on todays date"
+              }
+            }
+          }
+        }`
       },
       {
         title: 'Department of Education IES Policy Regarding Public Access to Research',
