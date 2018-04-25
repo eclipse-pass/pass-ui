@@ -8,10 +8,9 @@ export default Component.extend({
   doiJournal: false,
   validDOI: 'form-control',
   validTitle: 'form-control',
-  nextDisabled: Ember.computed('model.publication.journal', 'model.publication.doi', 'model.publication.title', function () {
+  nextDisabled: Ember.computed('model.publication.journal', 'model.publication.title', function () {
     if (
       this.get('model.publication.journal') &&
-      this.get('model.publication.doi') &&
       this.get('model.publication.title')) {
       return false;
     }
