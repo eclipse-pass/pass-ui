@@ -7,5 +7,5 @@ export default DS.Model.extend({
   metadata: DS.attr(),
 
   repository: DS.belongsTo('repository'),
-  funder: DS.belongsTo('funder'),
+  funder: DS.hasMany('funder'),
 });

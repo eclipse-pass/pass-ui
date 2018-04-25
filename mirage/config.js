@@ -85,5 +85,11 @@ export default function () {
   this.patch('/publications/:id'); // or this.patch
   this.del('/publications/:id');
 
+  this.get('/repo-copies');
+  this.post('/repo-copies');
+  this.get('/repo-copies/:id');
+  this.patch('/repo-copies/:id'); // or this.patch
+  this.del('/repo-copies/:id');
+
   this.passthrough();
 }
