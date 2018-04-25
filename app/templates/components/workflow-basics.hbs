@@ -32,5 +32,5 @@
   {{/unless}}
 </div>
 
-<button class="btn btn-outline-primary" {{action "back"}}>Back</button>
-<button class="btn btn-primary pull-right" {{action "next"}}>Next</button>
+{{#link-to 'submissions.index' class="btn btn-outline-primary"}}Back{{/link-to}}
+<button class="btn btn-primary pull-right" disabled={{nextDisabled}} {{action "next"}}>Next</button>
