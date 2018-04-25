@@ -7,6 +7,7 @@ export default DS.Model.extend({
   abstract: DS.attr('string'),
   volume: DS.attr('string'),
   issue: DS.attr('string'),
+  pmid: DS.attr('string'),
 
   journal: DS.belongsTo('journal', { autoSave: true }),
   submissions: DS.hasMany('submission', { async: true })
