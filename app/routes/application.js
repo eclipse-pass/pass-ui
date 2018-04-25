@@ -43,7 +43,6 @@ export default Route.extend(ApplicationRouteMixin, {
       logo: 'https://image.ibb.co/iWgHXx/university_logo_small_vertical_white_no_clear_space_29e2bdee83.png',
       schema: [],
     };
-
     const users = [
       {
         username: 'eford',
@@ -223,33 +222,64 @@ export default Route.extend(ApplicationRouteMixin, {
         manuscripts upon acceptance for publication, to be made publicly available no later
         than 12 months after the official date of publication: Provided, that the NIH shall
         implement the public access policy in a manner consistent with copyright law.`,
-        metadata: "{\"id\": \"nih\",\"schema\": {\"title\": \"Example Policy (EP) <br><p class='lead text-muted'>This is filler text for where any kind of form you want can appear.</p>\",\"type\": \"object\",\"properties\": {}},\"options\": {\"fields\": {}}}"
-
+        metadata: `{
+          "id": "nih",
+          "data": {},
+          "schema": {
+            "title": "NIH Manuscript Submission System (NIHMS) <br><p class='lead text-muted'>The following metadata fields will be part of the NIHMS submission.</p>",
+            "type": "object",
+            "properties": {
+              "title": { "type": "string", "required": true },
+              "journal-title-short": { "type": "string", "required": true },
+              "journal-NLMTA-ID": { "type": "string", "required": true },
+              "ISSN": { "type": "string", "required": true },
+              "auothor": { "type": "string", "required": true },
+              "mName": { "type": "string" },
+              "family": { "type": "string", "required": true },
+              "email": { "type": "string", "required": true }
+            }
+          },
+          "options": {
+            "fields": {
+              "title": { "type": "text", "label": "Article / Manuscript Title", "placeholder": "Enter the manuscript title" },
+              "journal-title-short": { "type": "text", "label": "Journal Title", "placeholder": "Enter the journal title" },
+              "journal-NLMTA-ID": { "type": "text", "label": "Journal NLMTA ID", "placeholder": "" },
+              "ISSN": { "type": "text", "label": "ISSN", "placeholder": "" },
+              "auothor": { "type": "text", "label": "First Name", "placeholder": "", "fieldClass": "col-4 pull-left pl-0" },
+              "mName": { "type": "text", "label": "Middle Name", "placeholder": "", "fieldClass": "col-4 pull-left" },
+              "family": { "type": "text", "label": "Last Name", "placeholder": "", "fieldClass": "col-4 pull-left pr-0" },
+              "email": { "type": "text", "label": "Email Address", "placeholder": "" }
+            }
+          }
+        }`
       },
       {
         title: 'National Science Foundation Public Access Policy',
-        metadata: "{\"id\": \"nsf\",\"schema\": {\"title\": \"Example Policy (EP) <br><p class='lead text-muted'>This is filler text for where any kind of form you want can appear.</p>\",\"type\": \"object\",\"properties\": {}},\"options\": {\"fields\": {}}}"
+        url: 'https://www.research.gov/research-portal/appmanager/base/desktop?_nfpb=true&_pageLabel=research_node_display&_nodePath=/researchGov/Service/Desktop/AboutPublicAccess.html',
+        metadata: "{\"id\": \"nih\",\"schema\": {\"title\": \"Example Policy (EP) <br><p class='lead text-muted'>This is filler text for where any kind of form you want can appear.</p>\",\"type\": \"object\",\"properties\": {}},\"options\": {\"fields\": {}}}"
       },
       {
         title: 'Johns Hopkins Open Access Policy',
+        url: 'http://guides.library.jhu.edu/open-access', // placeholder
         metadata: "{\"id\": \"jhu\",\"schema\": {\"title\": \"Example Policy (EP) <br><p class='lead text-muted'>This is filler text for where any kind of form you want can appear.</p>\",\"type\": \"object\",\"properties\": {}},\"options\": {\"fields\": {}}}"
       },
       {
         title: 'Department of Education IES Policy Regarding Public Access to Research',
-        metadata: "{\"id\": \"ep\",\"schema\": {\"title\": \"Example Policy (EP) <br><p class='lead text-muted'>This is filler text for where any kind of form you want can appear.</p>\",\"type\": \"object\",\"properties\": {}},\"options\": {\"fields\": {}}}"
+        url: 'https://ies.ed.gov/funding/researchaccess.asp',
+        metadata: "{\"id\": \"edu\",\"schema\": {\"title\": \"Example Policy (EP) <br><p class='lead text-muted'>This is filler text for where any kind of form you want can appear.</p>\",\"type\": \"object\",\"properties\": {}},\"options\": {\"fields\": {}}}"
       },
-      {
-        title: 'National Eye Institute Public Access Policy',
-        metadata: "{\"id\": \"ep\",\"schema\": {\"title\": \"Example Policy (EP) <br><p class='lead text-muted'>This is filler text for where any kind of form you want can appear.</p>\",\"type\": \"object\",\"properties\": {}},\"options\": {\"fields\": {}}}"
-      },
-      {
-        title: 'National Institute of Diabetes and Digestion Public Access Policy',
-        metadata: "{\"id\": \"ep\",\"schema\": {\"title\": \"Example Policy (EP) <br><p class='lead text-muted'>This is filler text for where any kind of form you want can appear.</p>\",\"type\": \"object\",\"properties\": {}},\"options\": {\"fields\": {}}}"
-      },
-      {
-        title: 'National Institute of Mental Health Public Access Policy',
-        metadata: "{\"id\": \"ep\",\"schema\": {\"title\": \"Example Policy (EP) <br><p class='lead text-muted'>This is filler text for where any kind of form you want can appear.</p>\",\"type\": \"object\",\"properties\": {}},\"options\": {\"fields\": {}}}"
-      }
+      // {
+      //   title: 'National Eye Institute Public Access Policy',
+      //   metadata: "{\"id\": \"ep\",\"schema\": {\"title\": \"Example Policy (EP) <br><p class='lead text-muted'>This is filler text for where any kind of form you want can appear.</p>\",\"type\": \"object\",\"properties\": {}},\"options\": {\"fields\": {}}}"
+      // },
+      // {
+      //   title: 'National Institute of Diabetes and Digestion Public Access Policy',
+      //   metadata: "{\"id\": \"ep\",\"schema\": {\"title\": \"Example Policy (EP) <br><p class='lead text-muted'>This is filler text for where any kind of form you want can appear.</p>\",\"type\": \"object\",\"properties\": {}},\"options\": {\"fields\": {}}}"
+      // },
+      // {
+      //   title: 'National Institute of Mental Health Public Access Policy',
+      //   metadata: "{\"id\": \"ep\",\"schema\": {\"title\": \"Example Policy (EP) <br><p class='lead text-muted'>This is filler text for where any kind of form you want can appear.</p>\",\"type\": \"object\",\"properties\": {}},\"options\": {\"fields\": {}}}"
+      // }
     ];
     const funders = [
       {
@@ -730,12 +760,7 @@ export default Route.extend(ApplicationRouteMixin, {
       funderDB[4].set('repository', repoDB[0]);
       funderDB[5].set('repository', repoDB[3]);
 
-      return RSVP.all(moo.map(o => o.save())).then(() => {
-        console.log(' >> Repositories');
-        repoDB.forEach(r => console.log(r));
-        console.log(' >> Policies');
-        policyDB.forEach(p => console.log(p));
-      }).then(() => jhuInstitution);
+      return RSVP.all(moo.map(o => o.save())).then(() => jhuInstitution);
     });
   },
 });

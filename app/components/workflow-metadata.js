@@ -287,7 +287,8 @@ export default Component.extend({
   currentFormStep: 0,
 
   didInsertElement() {
-    this.set('schemas', [this.get('common'), this.get('nih'), this.get('embargo')]);
+    // this.set('schemas', [this.get('common'), this.get('nih'), this.get('embargo')]);
+    this.set('schemas', [this.get('common')]);
     this.get('metadataForms').forEach((form) => {
       const schemas = this.get('schemas');
       if (form) {
