@@ -1,4 +1,5 @@
-<h2 class="font-weight-light">Grant Details</h2>
+{{#link-to 'grants' class="btn btn-small back-arrow"}}<i class="fa fa-arrow-left fa-lg text-dark"></i>{{/link-to}}
+<h2 class="font-weight-light d-inline-block">Grant Details</h2>
 
 <div class='container'>
   <div class='row'>
@@ -39,13 +40,6 @@
   showGlobalFilter=false
 }}
 
-{{#if (eq (get (await currentUser.user) 'role') 'PI')}}
-  <button class="btn btn-primary btn-small" onclick={{action (queue
-      (action "newSubmission")
-      (action (mut isShowingForm) true)
-      )}}>
-    New Submission
-  </button>
+{{#if (eq currentUser.user.role 'PI')}}
+  {{#link-to 'submissions.new' (query-params grant=model.id) class="btn btn-primary"}}New Submission{{/link-to}}
 {{/if}}
-
-{{#link-to 'grants' class="btn btn-primary btn-small"}}Back to grants{{/link-to}}
