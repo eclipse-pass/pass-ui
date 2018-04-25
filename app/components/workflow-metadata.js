@@ -10,58 +10,46 @@ export default Component.extend({
       properties: {
         volume: {
           type: 'string',
-          required: true,
         },
         issue: {
           type: 'string',
-          required: true,
         },
         publicationDate: {
           title: 'Publication Date',
           description: 'Select your publication date',
           format: 'datetime',
-          required: true,
         },
         publicationType: {
           type: 'string',
           title: 'Publication Type',
           enum: ['ElectronicPublication', 'PrintPublication'],
-          required: true,
         },
         abstract: {
           type: 'string',
-          required: true,
         },
         subjects: {
           type: 'string',
-          required: true,
         },
         URL: {
           type: 'string',
-          required: true,
         },
-        auothor: {
+        author: {
           type: 'string',
-          required: true,
         },
         mName: {
           type: 'string',
         },
         family: {
           type: 'string',
-          required: true,
         },
         orcid: {
           type: 'string',
-          required: true,
         },
         email: {
           type: 'string',
-          required: true,
         },
         affiliation: {
           type: 'string',
-          required: true,
         },
       },
     },
@@ -110,7 +98,7 @@ export default Component.extend({
           placeholder: '',
           fieldClass: 'clearfix',
         },
-        auothor: {
+        author: {
           type: 'text',
           label: 'First Name',
           placeholder: '',
@@ -170,7 +158,7 @@ export default Component.extend({
           type: 'string',
           required: true,
         },
-        auothor: {
+        author: {
           type: 'string',
           required: true,
         },
@@ -209,7 +197,7 @@ export default Component.extend({
           label: 'ISSN',
           placeholder: '',
         },
-        auothor: {
+        author: {
           type: 'text',
           label: 'First Name',
           placeholder: '',
@@ -265,13 +253,14 @@ export default Component.extend({
           fieldClass: 'col-8 pull-left pl-0'
         },
         'Embargo-end-date:': {
+          label: 'Embargo End Date',
           type: 'date',
           placeholder: 'mm/dd/yyyy',
           fieldClass: 'col-4 pull-left pl-0'
         },
         embargo: {
           type: 'textarea',
-          label: 'Embargo information',
+          label: 'Deposit Agreement',
           disabled: true,
           rows: '16'
         },
