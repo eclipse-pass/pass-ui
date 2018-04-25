@@ -1,7 +1,9 @@
 import Component from '@ember/component';
 import { Promise, } from 'rsvp';
+import { inject as service } from '@ember/service';
 
 export default Component.extend({
+  store: service('store'),
 
   /** Holds all newly-added grants */
   addedGrants: [],
@@ -12,7 +14,11 @@ export default Component.extend({
   submissionGrants: Ember.computed('model.newSubmission', function () {
     return this.get('model.newSubmission.grants');
   }),
-
+  didRender() {
+    if (this.get('model.preLoadedGrant')) {
+      this.send('addGrant', this.get('model.preLoadedGrant'));
+    }
+  },
   actions: {
     next() {
       this.sendAction('next');

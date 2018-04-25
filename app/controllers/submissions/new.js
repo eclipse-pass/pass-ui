@@ -1,6 +1,7 @@
 import Controller from '@ember/controller';
 
 export default Controller.extend({
+  queryParams: ['grant'],
   actions: {
     submit() {
       const sub = this.get('model.newSubmission');
