@@ -1,4 +1,5 @@
-{{#each record.deposits as |deposit index|}}
-  {{#if index}}, {{/if}}
-  {{optional-link deposit.assignedId deposit.url}}
+{{#each record as |deposit index|}}
+  {{if index ', '}}{{optional-link (concat deposit.assignedId.label ' (' deposit.assignedId.type ')') deposit.assignedId.uri}}
+{{else}}
+  Loading...
 {{/each}}

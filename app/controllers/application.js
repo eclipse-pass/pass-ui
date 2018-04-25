@@ -1,16 +1,17 @@
 import Controller from '@ember/controller';
-import config from '../config/environment'
+import config from '../config/environment';
 
 export default Controller.extend({
+  session: Ember.inject.service('session'),
   rootURL: config.rootURL,
+  currentUser: Ember.inject.service('current-user'),
   institution: '',
   didRender() {
-    this.set('institution' , this.store.find('institution'));
+    this.set('institution', this.store.find('institution'));
   },
   actions: {
-    logout() {
-      this.get('session').logout();
-      this.transitionToRoute('login');
-    }
+    invalidateSession() {
+      this.get('session').invalidate();
+    },
   },
 });

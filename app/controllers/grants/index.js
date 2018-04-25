@@ -3,6 +3,7 @@ import Bootstrap4Theme from 'ember-models-table/themes/bootstrap4';
 import { computed } from '@ember/object';
 
 export default Controller.extend({
+  currentUser: Ember.inject.service('current-user'),
   // Bound to message dialog.
   messageShow: false,
   messageTo: '',
@@ -15,68 +16,138 @@ export default Controller.extend({
       this.set('messageTo', grant.get('pi.displayName'));
       this.set('messageSubject', 'OAP Compliance');
 
-      let text = `Concerning project ${grant.get('projectName')}, one or more of the following submissions have issues:`
-      grant.get('submissions').forEach(s => {
-        text += `\n  Article: ${s.get('title')}, Status: ${s.get('status')}`
+      let text = `Concerning project ${grant.get('projectName')}, one or more of the following submissions have issues:`;
+      grant.get('submissions').forEach((s) => {
+        text += `\n  Article: ${s.get('title')}, Status: ${s.get('status')}`;
       });
-      text += '\n\nPlease check your PASS dashboard.'
+      text += '\n\nPlease check your PASS dashboard.';
 
       this.set('messageText', text);
-    }
+    },
   },
 
   tablePageSize: 5,
   tablePageSizeValues: [5, 10, 25],
 
   // Columns displayed depend on the user role
-  columns: computed('session.user', {
+  columns: computed('currentUser', {
     get() {
-      if (this.get('session.isAdmin')) {
+      if (this.get('currentUser.user.role') === 'ADMIN') {
         return this.get('adminColumns');
-      } else if (this.get('session.isPI')) {
+      } else if (this.get('currentUser.user.role') === 'PI') {
         return this.get('piColumns');
-      } else {
-        return [];
       }
-    }
+      return [];
+    },
   }),
 
   // TODO Reduce duplication in column definitions
 
   adminColumns: [
-    { propertyName: 'projectName', title: 'Project Name' },
-    { propertyName: 'primaryFunder.name', title: 'Funder', filterWithSelect: true,
-      predefinedFilterOptions: ['NIH', 'DOE', 'NSF']
+    {
+      propertyName: 'projectName',
+      title: 'Project Name'
     },
-    { propertyName: 'awardNumber', title: 'Award Number' , routeName: 'grants.show', disableFiltering: true},
-    { propertyName: 'localAwardId', title: 'COEUS', component: 'identifier-cell', disableFiltering: true },
-    { propertyName: 'pi.displayName', title: 'PI / CO-PIs', component: 'pi-list-cell'},
-    { propertyName: 'startDate', title: 'Start', component: 'date-cell', disableFiltering: true},
-    { propertyName: 'endDate', title: 'End', component: 'date-cell', disableFiltering: true},
-    { propertyName: 'status', title: 'Status', filterWithSelect: true,
-      predefinedFilterOptions: ['Active', 'Ended']
+    {
+      propertyName: 'primaryFunder.name',
+      title: 'Funder',
+      filterWithSelect: true,
+      predefinedFilterOptions: ['NIH', 'DOE', 'NSF'],
     },
-    { propertyName: 'submissions.length', title: '#', routeName: 'grants.show', disableFiltering: true},
-    { propertyName: 'oapCompliance', title: 'OAP Compliance', component: 'oap-compliance-cell',
-      filterWithSelect: true, predefinedFilterOptions: ['No', 'Yes']
-    }
+    {
+      propertyName: 'awardNumber',
+      title: 'Award Number',
+      routeName: 'grants.detail',
+      disableFiltering: true,
+    },
+    {
+      propertyName: 'externalId',
+      title: 'COEUS',
+      disableFiltering: true,
+    },
+    {
+      title: 'PI / CO-PIs',
+      propertyName: 'pi',
+      component: 'pi-list-cell'
+    },
+    {
+      propertyName: 'startDate',
+      title: 'Start',
+      disableFiltering: true,
+      component: 'date-cell'
+    },
+    {
+      propertyName: 'endDate',
+      title: 'End',
+      disableFiltering: true,
+      component: 'date-cell'
+    },
+    {
+      propertyName: 'status',
+      title: 'Status',
+      filterWithSelect: true,
+      predefinedFilterOptions: ['Active', 'Ended'],
+    },
+    {
+      propertyName: 'submissions.length', title: '#', routeName: 'grants.detail', disableFiltering: true,
+    },
+    {
+      propertyName: 'oapCompliance',
+      title: 'OAP Compliance',
+      component: 'oap-compliance-cell',
+      filterWithSelect: true,
+      predefinedFilterOptions: ['No', 'Yes'],
+    },
   ],
 
   piColumns: [
-    { propertyName: 'projectName', title: 'Project Name' },
-    { propertyName: 'primaryFunder.name', title: 'Funder', filterWithSelect: true,
-      predefinedFilterOptions: ['NIH', 'DOE', 'NSF']
+    {
+      propertyName: 'projectName',
+      title: 'Project Name'
     },
-    { propertyName: 'awardNumber', title: 'Award Number' , routeName: 'grants.show', disableFiltering: true},
-    { propertyName: 'localAwardId', title: 'COEUS', component: 'identifier-cell', disableFiltering: true},
-    { title: 'PI / CO-PIs', component: 'pi-list-cell' },
-    { propertyName: 'startDate', title: 'Start', component: 'date-cell', disableFiltering: true},
-    { propertyName: 'endDate', title: 'End', component: 'date-cell', disableFiltering: true},
-    { propertyName: 'submissions.length', title: '#', routeName: 'grants.show', disableFiltering: true},
-    { propertyName: 'status', title: 'Status', filterWithSelect: true,
-      predefinedFilterOptions: ['Active', 'Ended']
-    }
+    {
+      propertyName: 'primaryFunder.name',
+      title: 'Funder',
+      filterWithSelect: true,
+      predefinedFilterOptions: ['NIH', 'DOE', 'NSF'],
+    },
+    {
+      propertyName: 'awardNumber',
+      title: 'Award Number',
+      routeName: 'grants.detail',
+      disableFiltering: true,
+    },
+    {
+      propertyName: 'externalId',
+      title: 'COEUS',
+      disableFiltering: true,
+    },
+    {
+      title: 'PI / CO-PIs',
+      propertyName: 'pi',
+      component: 'pi-list-cell'
+    },
+    {
+      propertyName: 'startDate',
+      title: 'Start',
+      disableFiltering: true,
+      component: 'date-cell'
+    },
+    {
+      propertyName: 'endDate',
+      title: 'End',
+      disableFiltering: true,
+      component: 'date-cell'
+    },
+    {
+      propertyName: 'submissions.length', title: '#', routeName: 'grants.detail', disableFiltering: true,
+    },
+    {
+      propertyName: 'grant.awardStatus',
+      title: 'Status',
+      filterWithSelect: true,
+    },
   ],
 
-  themeInstance: Bootstrap4Theme.create()
+  themeInstance: Bootstrap4Theme.create(),
 });

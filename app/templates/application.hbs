@@ -1,5 +1,5 @@
 <div class="site" style="z-index:0;">
-  <header class="navbar navbar-expand-xs justify-content-center mb-0" style="background:#002D72">
+  <header class="primary-skin navbar navbar-expand-xs justify-content-center mb-0">
     <div class="container">
         {{#link-to "index" class="navbar-brand custom-color d-none d-sm-block"}}
           <h3 class="font-weight-light" >
@@ -7,102 +7,14 @@
           </h3>
         {{/link-to}}
         {{#link-to "index" class="navbar-brand custom-color d-xs-block d-sm-none"}}<h2 class="font-weight-light">P.A.S.S.</h2>{{/link-to}}
-        <img src='{{rootURL}}logo.png' alt='Logo' class="nav-item d-sm-down-none pull-right">
+        <img src='{{rootURL}}fullSizeLogo.png' style="height: 55px;" alt='Logo' class="nav-item d-sm-down-none pull-right">
   </div>
   </header>
-  <!-- nav -->
   <div style="z-index:10000;">
-  {{#sticky-element}}
-  <nav class="navbar navbar-light navbar-expand-md" style="background: white;" id="myHeader">
-    <div class="container">
-      <button class="navbar-toggler text-center border-none" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav" style="width:100%">
-        <li class="nav-item">{{#link-to 'dashboard' class='nav-link pl-0'}}Home{{/link-to}}</li>
-        <li class="nav-item">{{#link-to 'grants' class="nav-link"}}Grants{{/link-to}}</li>
-        <li class="nav-item">{{#link-to 'submissions' class="nav-link"}}Submissions{{/link-to}}</li>
-        <li class="nav-item">{{#link-to 'about' class='nav-link'}}About{{/link-to}}</li>
-        <li class="nav-item pull-right">{{#link-to 'contact' class='nav-link borderless'}}Contact{{/link-to}}</li>
-
-
-        {{#if session.authenticated}}
-          <li class="nav-item dropdown ml-auto">
-            <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-              <img src="https://image.ibb.co/c8rxhx/bell_png_bell_icon_image_16624_512.png" style="width:20px" alt="admin@bootstrapmaster.com">
-              <span class="badge badge-pill badge-danger">3</span>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right">
-              <div class="dropdown-header text-center">
-                <strong>Notifications</strong>
-              </div>
-              <a class="dropdown-item" href="#"><span class="badge badge-pill badge-danger">1</span>submission</a>
-              <a class="dropdown-item" href="#"><span class="badge badge-pill badge-danger">1</span>submission</a>
-              <a class="dropdown-item" href="#"><span class="badge badge-pill badge-danger"></span>Change requirements</a>
-            </div>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-              <img src="https://image.ibb.co/emCsFH/123.jpg" class="img-avatar" alt="admin@bootstrapmaster.com">
-              {{session.user.username}} ({{session.user.role}})
-            </a>
-            <div class="dropdown-menu dropdown-menu-right">
-              <div class="dropdown-header text-center">
-                <strong>Account</strong>
-              </div>
-              <div class="divider"></div>
-              <a class="dropdown-item" href="#"  {{action 'logout'}}><i class="fa fa-lock"></i>Logout</a>
-            </div>
-          </li>
-        {{else}}
-        <li class="nav-item dropdown ml-auto">
-          <a class="dropdown-item" href="#"  {{action 'logout'}}><i class="fa fa-lock"></i>Login</a>
-        </li>
-        {{/if}}
-
-      </ul>
-    </div>
-    </div>
-  </nav>
-  {{/sticky-element}}
-</div>
-  {{!-- mobile nav --}}
-  {{!-- <nav class="navbar navbar-default bg-gray-100 d-lg-none d-md-down-block justify-content-center text-center bg-gray-100 mb-4">
-    <div class="container">
-      <div class="col-12">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed btn btn-link transform-text text-muted" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
-            |||
-          </button>
-        </div>
-
-        <div class="collapse navbar-collapse" id="navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li class="nav-item">{{#link-to 'dashboard' class='nav-link'}}Home{{/link-to}}</li>
-            <li class="nav-item">{{#link-to 'grants' class="nav-link"}}Grants{{/link-to}}</li>
-            <li class="nav-item">{{#link-to 'submissions' class="nav-link"}}Submissions{{/link-to}}</li>
-            <li class="nav-item">{{#link-to 'about' class='nav-link'}}About{{/link-to}}</li>
-            <li class="nav-item">{{#link-to 'contact' class='nav-link borderless'}}Contact{{/link-to}}</li>
-            <li class="nav-item">
-                {{#if session.authenticated}}
-                  <span class="navbar-text">
-                    {{!-- Logged in as: --}}
-                    {{!--
-                    <span class='text-info'>
-                      {{session.user.username}} ({{session.user.role}})
-                    </span>
-                  </span>
-                  <button {{action 'logout'}} class="btn btn-warning btn-sm ml-2">Logout</button>
-                {{/if}}
-            </li>
-          </ul>
-        </div><!-- /.navbar-collapse -->
-      </div>
-    </div>
-  </nav> --}}
-
-
+    {{#sticky-element}}
+      {{nav-bar}}
+    {{/sticky-element}}
+  </div>
   <div class="container site-content">
     {{institution}}
     {{outlet}}

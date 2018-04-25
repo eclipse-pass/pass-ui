@@ -1,0 +1,51 @@
+<h2 class="font-weight-light">Grant Details</h2>
+
+<div class='container'>
+  <div class='row'>
+    <ul class='col-sm-6'>
+      <li><strong>Project Name:</strong> {{model.projectName}}</li>
+      <li><strong>Award Number:</strong> {{model.awardNumber}}</li>
+      <li><strong>Funder:</strong> {{model.primaryFunder.name}}</li>
+      <li><strong>Start:</strong> {{model.startDate}}</li>
+      <li><strong>End:</strong> {{model.endDate}}</li>
+    </ul>
+
+    <ul class='col-sm-6'>
+      <li><strong>OAP Compliance:</strong> {{model.oapCompliance}}</li>
+      <li><strong>Status:</strong> {{model.status}}</li>
+      <li><strong>Created by:</strong> {{model.creator.username}} on {{model.creationDate}}</li>
+      <li><strong>PI:</strong> <a href='mailto:{{model.pi.email}}'>{{model.pi.name}}</a></li>
+      <li><strong>CoPIs:</strong>
+        <ul>
+          {{#each model.copis as |person|}}
+            <li><a href='mailto:{{person.email}}'>{{person.name}}</a></li>
+          {{/each}}
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<h3  class="font-weight-light">Submissions of grant</h3>
+
+{{models-table
+  data=model.submissions
+  columns=columns
+  themeInstance=themeInstance
+  showColumnsDropdown=false
+  filteringIgnoreCase=true
+  multipleColumnsSorting=false
+  useFilteringByColumns=false
+  showGlobalFilter=false
+}}
+
+{{#if (eq (get (await currentUser.user) 'role') 'PI')}}
+  <button class="btn btn-primary btn-small" onclick={{action (queue
+      (action "newSubmission")
+      (action (mut isShowingForm) true)
+      )}}>
+    New Submission
+  </button>
+{{/if}}
+
+{{#link-to 'grants' class="btn btn-primary btn-small"}}Back to grants{{/link-to}}
