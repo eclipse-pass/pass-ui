@@ -205,7 +205,7 @@ export default Route.extend(ApplicationRouteMixin, {
         url: 'https://par.nsf.gov/'
       },
       {
-        name: 'Johns Hopkins JScholarship',
+        name: 'JScholarship',
         url: 'https://jscholarship.library.jhu.edu/'
       },
       {
@@ -216,7 +216,7 @@ export default Route.extend(ApplicationRouteMixin, {
     const policies = [
       {
         title: 'National Institute of Health Pulic Access Policy',
-        policyUrl: 'https://publicaccess.nih.gov/policy.htm',
+        url: 'https://publicaccess.nih.gov/policy.htm',
         description: `The Director of the National Institutes of Health requires that all
         investigators funded by the NIH submit or have submitted for them to the National
         Library of Medicine's PubMed Central an electronic version of their final, peer-reviewed
@@ -232,6 +232,15 @@ export default Route.extend(ApplicationRouteMixin, {
       },
       {
         title: 'Department of Education IES Policy Regarding Public Access to Research'
+      },
+      {
+        title: 'National Eye Institute Public Access Policy'
+      },
+      {
+        title: 'National Institute of Diabetes and Digestion Public Access Policy'
+      },
+      {
+        title: 'National Institute of Mental Health Public Access Policy'
       }
     ];
     const funders = [
@@ -701,10 +710,10 @@ export default Route.extend(ApplicationRouteMixin, {
       /*
        * Following is not valid after updating to pass-data-model v2.0
        */
-      repoDB[0].set('policy', policyDB[0]);
-      repoDB[1].set('policy', policyDB[1]);
-      repoDB[2].set('policy', policyDB[2]);
-      repoDB[3].set('policy', policyDB[3]);
+      // repoDB[0].set('policy', policyDB[0]);
+      // repoDB[1].set('policy', policyDB[1]);
+      // repoDB[2].set('policy', policyDB[2]);
+      // repoDB[3].set('policy', policyDB[3]);
 
       funderDB[0].set('repository', repoDB[0]);
       funderDB[1].set('repository', repoDB[1]);
@@ -713,7 +722,12 @@ export default Route.extend(ApplicationRouteMixin, {
       funderDB[4].set('repository', repoDB[0]);
       funderDB[5].set('repository', repoDB[3]);
 
-      return RSVP.all(moo.map(o => o.save())).then(() => jhuInstitution);
+      return RSVP.all(moo.map(o => o.save())).then(() => {
+        console.log(' >> Repositories');
+        repoDB.forEach(r => console.log(r));
+        console.log(' >> Policies');
+        policyDB.forEach(p => console.log(p));
+      }).then(() => jhuInstitution);
     });
   },
 });
