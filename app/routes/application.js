@@ -222,25 +222,33 @@ export default Route.extend(ApplicationRouteMixin, {
         Library of Medicine's PubMed Central an electronic version of their final, peer-reviewed
         manuscripts upon acceptance for publication, to be made publicly available no later
         than 12 months after the official date of publication: Provided, that the NIH shall
-        implement the public access policy in a manner consistent with copyright law.`
+        implement the public access policy in a manner consistent with copyright law.`,
+        metadata: "{\"id\": \"nih\",\"schema\": {\"title\": \"Example Policy (EP) <br><p class='lead text-muted'>This is filler text for where any kind of form you want can appear.</p>\",\"type\": \"object\",\"properties\": {}},\"options\": {\"fields\": {}}}"
+
       },
       {
-        title: 'National Science Foundation Public Access Policy'
+        title: 'National Science Foundation Public Access Policy',
+        metadata: "{\"id\": \"nsf\",\"schema\": {\"title\": \"Example Policy (EP) <br><p class='lead text-muted'>This is filler text for where any kind of form you want can appear.</p>\",\"type\": \"object\",\"properties\": {}},\"options\": {\"fields\": {}}}"
       },
       {
-        title: 'Johns Hopkins Open Access Policy'
+        title: 'Johns Hopkins Open Access Policy',
+        metadata: "{\"id\": \"jhu\",\"schema\": {\"title\": \"Example Policy (EP) <br><p class='lead text-muted'>This is filler text for where any kind of form you want can appear.</p>\",\"type\": \"object\",\"properties\": {}},\"options\": {\"fields\": {}}}"
       },
       {
-        title: 'Department of Education IES Policy Regarding Public Access to Research'
+        title: 'Department of Education IES Policy Regarding Public Access to Research',
+        metadata: "{\"id\": \"ep\",\"schema\": {\"title\": \"Example Policy (EP) <br><p class='lead text-muted'>This is filler text for where any kind of form you want can appear.</p>\",\"type\": \"object\",\"properties\": {}},\"options\": {\"fields\": {}}}"
       },
       {
-        title: 'National Eye Institute Public Access Policy'
+        title: 'National Eye Institute Public Access Policy',
+        metadata: "{\"id\": \"ep\",\"schema\": {\"title\": \"Example Policy (EP) <br><p class='lead text-muted'>This is filler text for where any kind of form you want can appear.</p>\",\"type\": \"object\",\"properties\": {}},\"options\": {\"fields\": {}}}"
       },
       {
-        title: 'National Institute of Diabetes and Digestion Public Access Policy'
+        title: 'National Institute of Diabetes and Digestion Public Access Policy',
+        metadata: "{\"id\": \"ep\",\"schema\": {\"title\": \"Example Policy (EP) <br><p class='lead text-muted'>This is filler text for where any kind of form you want can appear.</p>\",\"type\": \"object\",\"properties\": {}},\"options\": {\"fields\": {}}}"
       },
       {
-        title: 'National Institute of Mental Health Public Access Policy'
+        title: 'National Institute of Mental Health Public Access Policy',
+        metadata: "{\"id\": \"ep\",\"schema\": {\"title\": \"Example Policy (EP) <br><p class='lead text-muted'>This is filler text for where any kind of form you want can appear.</p>\",\"type\": \"object\",\"properties\": {}},\"options\": {\"fields\": {}}}"
       }
     ];
     const funders = [
