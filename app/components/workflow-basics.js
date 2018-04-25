@@ -27,7 +27,7 @@ export default Component.extend({
     },
     validateDOI() {
       // ref: https://www.crossref.org/blog/dois-and-matching-regular-expressions/
-      const doi = this.get('model.newSubmission.doi');
+      const doi = this.get('model.publication.doi');
       const newDOIRegExp = /^10.\d{4,9}\/[-._;()/:A-Z0-9]+$/i;
       const ancientDOIRegExp = /^10.1002\/[^\s]+$/i;
       // 0 = no value
