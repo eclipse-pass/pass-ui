@@ -6,8 +6,12 @@ const {
 
 export default Route.extend({
   currentUser: service(),
+  model(params) {
+    let preLoadedGrant = null;
+    if(params.grant) {
+       preLoadedGrant = this.get('store').findRecord('grant', params.grant)
+    }
 
-  model() {
     let publication = this.get('store').createRecord('publication');
     // let newSubmission = null;
     // const submissionDraft = this.get('currentUser.user.submissionDraft');
@@ -31,6 +35,7 @@ export default Route.extend({
       grants,
       policies,
       journals,
+      preLoadedGrant
     });
     return h;
   },

@@ -3,6 +3,8 @@ import { inject as service } from '@ember/service';
 import Bootstrap4Theme from 'ember-models-table/themes/bootstrap4';
 
 export default Controller.extend({
+  currentUser: Ember.inject.service('current-user'),
+
   columns: [
     { propertyName: 'publication', title: 'Article', component: 'submissions-article-cell' },
     { title: 'Award Number (Funder)', component: 'submissions-award-cell' },
