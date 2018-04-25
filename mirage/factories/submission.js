@@ -2,13 +2,13 @@ import { Factory, association } from 'ember-cli-mirage';
 
 export default Factory.extend({
   depositStatus: 'PND',
-  userSubmittedDate: function() {
-    return Date()
+  userSubmittedDate() {
+    return Date();
   },
   source: 'JHU',
   metadata: '{someData:"data"}',
-  pubmedId: "ABC123",
-  submitted: "True",
+  pubmedId: 'ABC123',
+  submitted: 'True',
   files: {},
 
   user: association(),

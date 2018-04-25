@@ -1,6 +1,5 @@
-import Component from '@ember/component';
+// import Component from '@ember/component';
 import Ember from 'ember';
-
 
 function fuzzySet(arr, useLevenshtein, gramSizeLower, gramSizeUpper) {
   const fuzzyset = {
@@ -403,6 +402,7 @@ export default Ember.Component.extend({
             // remove any duplicates
             let uniqIds = {},
               source = metadata;
+            // eslint-disable-next-line no-return-assign
             let filtered = source.reverse().filter(obj => !uniqIds[obj.id] && (uniqIds[obj.id] = true));
 
             that.set('model.metadata', filtered);

@@ -13,7 +13,7 @@ export default Controller.extend({
   actions: {
     piclick(grant) {
       this.set('messageShow', true);
-      this.set('messageTo', grant.get('pi.name'));
+      this.set('messageTo', grant.get('pi.displayName'));
       this.set('messageSubject', 'OAP Compliance');
 
       let text = `Concerning project ${grant.get('projectName')}, one or more of the following submissions have issues:`;
