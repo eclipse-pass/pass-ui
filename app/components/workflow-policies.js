@@ -15,6 +15,13 @@ export default Component.extend({
         policies.addObject(grant.get('primaryFunder.policy'));
       }
     });
+
+    // Always add the JHU policy
+    let required = this.get('model.policies')
+      .filter(repo => repo.get('url') === 'http://guides.library.jhu.edu/open-access');
+    if (required.length > 0) {
+      policies.addObject(required[0]);
+    }
     // repos.forEach((repository) => {
     //   policies.addObject(repository.get('policy'));
     // });
