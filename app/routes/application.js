@@ -254,13 +254,15 @@ export default Route.extend(ApplicationRouteMixin, {
         }`
       },
       {
-        title: 'National Science Foundation Public Access Policy',
+        title: 'National Science Foundation (NSF) Public Access Policy',
         url: 'https://www.research.gov/research-portal/appmanager/base/desktop?_nfpb=true&_pageLabel=research_node_display&_nodePath=/researchGov/Service/Desktop/AboutPublicAccess.html',
-        metadata: "{\"id\": \"nih\",\"schema\": {\"title\": \"Example Policy (EP) <br><p class='lead text-muted'>This is filler text for where any kind of form you want can appear.</p>\",\"type\": \"object\",\"properties\": {}},\"options\": {\"fields\": {}}}"
+        // description: 'You will need to fill in additional required metadata and attach a copy of the manuscript in order to submit to the NSF Public Access Repository'
+        // metadata: "{\"id\": \"nih\",\"schema\": {\"title\": \"Example Policy (EP) <br><p class='lead text-muted'>This is filler text for where any kind of form you want can appear.</p>\",\"type\": \"object\",\"properties\": {}},\"options\": {\"fields\": {}}}"
       },
       {
-        title: 'Johns Hopkins Open Access Policy',
+        title: 'Johns Hopkins University (JHU) Open Access Policy',
         url: 'http://guides.library.jhu.edu/open-access', // placeholder
+        description: 'The university expects that every scholarly article produced by full-time faculty members be accessible in an open access repository. This can be achieved through deposits into existing public access repositories (such as PubMed Central, arXiv, etc.) and/or into Johns Hopkins institutional repository, JScholarship.',
         metadata: `{
           "id": "jhu",
           "schema": {
@@ -312,7 +314,7 @@ export default Route.extend(ApplicationRouteMixin, {
       {
         title: 'Department of Education IES Policy Regarding Public Access to Research',
         url: 'https://ies.ed.gov/funding/researchaccess.asp',
-        metadata: "{\"id\": \"edu\",\"schema\": {\"title\": \"Example Policy (EP) <br><p class='lead text-muted'>This is filler text for where any kind of form you want can appear.</p>\",\"type\": \"object\",\"properties\": {}},\"options\": {\"fields\": {}}}"
+        // metadata: "{\"id\": \"edu\",\"schema\": {\"title\": \"Example Policy (EP) <br><p class='lead text-muted'>This is filler text for where any kind of form you want can appear.</p>\",\"type\": \"object\",\"properties\": {}},\"options\": {\"fields\": {}}}"
       },
       // {
       //   title: 'National Eye Institute Public Access Policy',
