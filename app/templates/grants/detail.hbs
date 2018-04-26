@@ -14,12 +14,12 @@
     <ul class='col-sm-6'>
       <li><strong>OAP Compliance:</strong> {{model.oapCompliance}}</li>
       <li><strong>Status:</strong> {{model.status}}</li>
-      <li><strong>Created by:</strong> {{model.creator.username}} on {{model.creationDate}}</li>
-      <li><strong>PI:</strong> <a href='mailto:{{model.pi.email}}'>{{model.pi.name}}</a></li>
+      {{!-- <li><strong>Created by:</strong> {{model.creator.username}} on {{model.creationDate}}</li> --}}
+      <li><strong>PI:</strong> <a href='mailto:{{model.pi.email}}'>{{model.pi.displayName}}</a></li>
       <li><strong>CoPIs:</strong>
         <ul>
-          {{#each model.copis as |person|}}
-            <li><a href='mailto:{{person.email}}'>{{person.name}}</a></li>
+          {{#each model.coPis as |person|}}
+            <li><a href='mailto:{{person.email}}'>{{person.displayName}}</a></li>
           {{/each}}
         </ul>
       </li>
