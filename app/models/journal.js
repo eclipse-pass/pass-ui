@@ -6,7 +6,7 @@ export default DS.Model.extend({
    */
   name: DS.attr('string'),
   nlmta: DS.attr('string'),
-  pmcParticipation: DS.attr('string', { defaultValue: 'B' }),
+  pmcParticipation: DS.attr('string'/*, { defaultValue: 'B' }*/), // default value for debugging pmc mechanism
   isMethodA: Ember.computed('pmcParticipation', function () {
     return this.get('pmcParticipation').toLowerCase() === 'a';
   }),
