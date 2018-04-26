@@ -6,6 +6,9 @@ export default Component.extend({
     // this.set('isValidated', false)
 
   },
+  metadata: Ember.computed('model.newSubmission.metadata', function(){ // eslint-disable-line
+    return JSON.parse(this.get('model.newSubmission.metadata'));
+  }),
   actions: {
     submit() {
       this.sendAction('submit');
@@ -16,5 +19,5 @@ export default Component.extend({
     checkValidate() {
       this.sendAction('validate');
     },
-  },
+  }
 });

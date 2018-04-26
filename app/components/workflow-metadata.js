@@ -276,7 +276,6 @@ export default Component.extend({
   currentFormStep: 0,
 
   didInsertElement() {
-    // this.set('schemas', [this.get('common'), this.get('nih'), this.get('embargo')]);
     this.set('schemas', [this.get('common')]);
     this.get('metadataForms').forEach((form) => {
       const schemas = this.get('schemas');
@@ -292,28 +291,17 @@ export default Component.extend({
     this.set('schema', this.schemas[0]);
   },
 
-  activePolicies: Ember.computed('model.newSubmission', function () {
-    // policies can come from repositories
-    const repos = [];
+  activeRepositories: Ember.computed('model.newSubmission', function () {
+    const repos = Ember.A();
     const policies = Ember.A();
     this.get('model.newSubmission.repositories').forEach((repository) => {
       repos.addObject(repository);
     });
-    // policies can come from funders
-    this.get('model.newSubmission.grants').forEach((grant) => {
-      if (grant.get('primaryFunder.repository.policy')) {
-        repos.addObject(grant.get('primaryFunder.repository'));
-      }
-      policies.addObject(grant.get('primaryFunder.policy'));
-    });
-    repos.forEach((repository) => {
-      policies.addObject(repository.get('policy'));
-    });
-    return policies.uniqBy('id');
+    return repos.uniqBy('id');
   }),
 
-  metadataForms: Ember.computed('activePolicies', function () {
-    const retVal = this.get('activePolicies').map(policy => policy.get('metadata'));
+  metadataForms: Ember.computed('activeRepositories', function () {
+    const retVal = this.get('activeRepositories').map(repository => repository.get('formSchema'));
     return retVal;
   }),
 
