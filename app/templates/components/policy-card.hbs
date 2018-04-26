@@ -5,7 +5,7 @@
         <a href="#">{{policy.title}} <small>for {{policy.repository.name}}.</small></a>
       </h4>
       {{#if (eq policy.repository.name "JScholarship")}}
-        <h6>Expects deposit into an open access repository</h6>
+        <h6 class="card-subtitle">Expects deposit into an open access repository</h6>
       {{else}}
         <h6 class="card-subtitle">Requires deposit into {{policy.repository.name}}</h6>
       {{/if}}
