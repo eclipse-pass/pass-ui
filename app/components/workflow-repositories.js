@@ -54,6 +54,14 @@ export default Component.extend({
     return this.get('model.repositories').filter(repo => repo.get('name') === 'JScholarship');
   }),
 
+  didRender() {
+    this._super(...arguments);
+    this.get('model.repositories').filter((repo) => {
+      if (repo.get('name') === 'JScholarship') {
+        this.send('addRepo', repo);
+      }
+    });
+  },
   actions: {
     next() {
       this.send('saveAll');
