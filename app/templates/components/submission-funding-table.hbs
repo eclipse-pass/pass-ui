@@ -1,24 +1,24 @@
-
 <table class="table">
-    <thead>
-        <tr>
-            <th>Award Number</th>
-            <th>Description</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-{{#each grants as |grant|}}
-        <tr>
-            <td>{{#link-to "grants.show" grant}}{{grant.awardNumber}}{{/link-to}}</td>
-            <td>{{grant.projectName}}</td>
-            <td>
-                {{#if remove}}
-                    <span class="btn-remove" onclick={{action remove grant}}>Remove</span>
-                {{/if}}
-
-            </td>
-        </tr>
-{{/each}}
-    </tbody>
+  <thead>
+    <tr>
+      <th>Award Number</th>
+      <th>Description</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each grants as |grant|}}
+      <tr class="pr-0">
+        <td>
+          {{#link-to "grants.detail" grant}}{{grant.awardNumber}}{{/link-to}}
+        </td>
+        <td>{{grant.projectName}}</td>
+        <td class="pr-0 mr-0">
+          {{#if remove}}
+            <span class="btn btn-outline-danger pull-right" onclick= {{action remove grant}}>Remove</span>
+          {{/if}}
+        </td>
+      </tr>
+    {{/each}}
+  </tbody>
 </table>

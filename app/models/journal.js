@@ -1,9 +1,17 @@
 import DS from 'ember-data';
 
 export default DS.Model.extend({
+  /**
+   * Name of the journal (REQUIRED)
+   */
   name: DS.attr('string'),
-  publisher: DS.belongsTo('publisher'),
-  ISSNs: DS.hasMany('identifier', {async: true}),
   nlmta: DS.attr('string'),
-  pmcParticipation: DS.attr('string')
+  pmcParticipation: DS.attr('string', { defaultValue: 'B' }),
+  isMethodA: Ember.computed('pmcParticipation', function () {
+    return this.get('pmcParticipation').toLowerCase() === 'a';
+  }),
+  isMethodB: Ember.computed('pmcParticipation', function () {
+    return this.get('pmcParticipation').toLowerCase() === 'b';
+  })
+  // issns: ...     Need to support array of strings in fedora-adapter
 });

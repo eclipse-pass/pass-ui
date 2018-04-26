@@ -7,7 +7,7 @@ moduleForComponent('format-oap-compliance', 'helper:format-oap-compliance', {
 });
 
 // Replace this with your real tests.
-test('it renders', function(assert) {
+test('it renders', function (assert) {
   this.set('inputValue', 'Yes');
 
   this.render(hbs`{{format-oap-compliance inputValue}}`);

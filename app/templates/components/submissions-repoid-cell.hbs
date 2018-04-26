@@ -1,3 +1,4 @@
-{{#each record.deposits as |deposit index|}}
-{{if index ', '}}{{optional-link (concat deposit.assignedId.label ' (' deposit.assignedId.type ')') deposit.assignedId.uri}}
+{{#each record as |deposit index|}}
+  {{if index ', '}}
+    {{optional-link (concat deposit.repoCopy.externalIds ' (' deposit.repoCopy.copyStatus ')') deposit.repoCopy.accessUrl}}
 {{/each}}

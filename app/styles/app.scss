@@ -1,24 +1,23 @@
 
-@import "ember-cli-bootstrap-4/bootstrap";
+// @import "ember-cli-bootstrap-4/bootstrap";
 @import "ember-modal-dialog/ember-modal-structure";
 @import "ember-modal-dialog/ember-modal-appearance";
 @import "ember-power-select";
 
+@font-face {
+    font-family: "gentona-light";
+    src:url("/gentona/Gentona-Light.ttf");
+}
 $jhu-grey: #E5E2E0;
 $jhu-grey2: #B4B2AD;
 $jhu-grey3: #7E7E7C;
-$jhu-grey4: #4A484C;
-$jhu-grey5: #2C2C33;
 
 $jhu-blue: #005EB8;
 $jhu-blue1: #418FDE;
 $jhu-blue2: #68ACE5;
-$jhu-blue3: #A7BCD6;
 $jhu-weird-bluegreen: #6399AE;
 
 $jhu-red: #E03C31;
-$jhu-red1: #CF4520;
-$jhu-red2:#E8927C;
 
 $color-bg-primary: #002D72;
 
@@ -35,23 +34,20 @@ a {
   color: $jhu-blue;
 }
 
+primary-skin {
+  background-color: $color-bg-primary !important;
+  color: $color-text-primary !important;
+}
 header {
-  background-color: $color-bg-primary;
-  color: $color-text-primary;
   margin-bottom: 24px;
   .pass-title {
-    padding: 12px 0 0 24px;
+    padding:0;
     span {
       font-size: 1.2em;
     }
   }
   .navbar {
-    background-color: $color-bg-primary !important;
     padding-top: 0;
-
-    .navbar-text {
-      color: $color-text-primary;
-    }
   }
   .navbar-brand {
     img {
@@ -74,10 +70,6 @@ header {
 .nav-link:hover {
   color: $color-text-secondary;
 }
-.nav-pills .nav-link.active {
-  color: $color-text-primary;
-  background-color: $jhu-blue1;
-}
 .text-info {
   color: $jhu-weird-bluegreen !important;
 }
@@ -86,22 +78,11 @@ header {
 .btn-outline-info {
   color: $jhu-weird-bluegreen;
   border-color: $jhu-weird-bluegreen;
-}
-.btn-outline-info:hover {
-  color: $color-text-primary;
-  background-color: $jhu-weird-bluegreen;
-  border-collapse: $jhu-weird-bluegreen;
-}
-.btn-primary {
-  background-color: $jhu-blue1;
-  border-color: $jhu-blue1;
-}
-.btn-primary:hover {
-  background-color: $jhu-blue;
-  border-color: $jhu-blue;
-}
-.btn-primary:not([disabled]):not(.disabled):active {
-  box-shadow: 0 0 0.2rem $jhu-blue2;
+  &:hover {
+    color: $color-text-primary;
+    background-color: $jhu-weird-bluegreen;
+    border-collapse: $jhu-weird-bluegreen;
+  }
 }
 
 /* Tables */
@@ -140,24 +121,185 @@ th.table-header {
 .submission-funders .row {
   padding: 0;
 }
-.btn-remove {
-  // transition-duration: $transition-duration; // Adding this transition introduces some odd (and temporary) column resizing
-  cursor: pointer;
-  padding: 0.65em;
-  border-radius: 5px;
-  margin: 0 2px;
-  color: $jhu-red;
-  &:hover {
-    transition-duration: $transition-duration;
-    border: 1px solid;
-    margin: 0;
-    background-color: $jhu-red;
-    color: white;
-  }
-}
+
 .policies-list {
   h6 {
     margin-bottom: .5em;
     // font-weight: bold;
+  }
+}
+.clearFilterIcon {
+  height:32px;
+}
+.line-height-45 {
+  line-height: 45px;
+}
+.unset-width {
+  width: unset!important;
+}
+.custom-color {
+  color:white!important;
+  border:none!important;
+}
+.table-bordered {
+    border-bottom: 1px solid #a4b7c1!important;
+    border-left: none!important;
+    border-right: none!important;
+}
+th {
+  border-left: none!important;
+  border-right: none!important;
+}
+td {
+  border: none!important;
+  border-bottom: 1px solid #a4b7c1!important;
+}
+
+.site {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.site-content {
+  flex: 1;
+}
+
+.row-eq-height {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+body {
+  font-size: 1em;
+}
+
+// overrides bootstrap4
+.navbar-toggler {
+  width: 100%;
+  float: none;
+  margin-right: 0;
+  border: none;
+}
+
+.border-none {
+  border: none!important;
+}
+
+.img-avatar {
+  width: 30px;
+  height: auto;
+}
+
+.custom-header {
+ background:url(https://image.ibb.co/gx84Uc/JHU.jpg) repeat-x 0 0;
+ text-align:center;
+ width:100%;
+ height:425px;
+ background-repeat:no-repeat;
+ background-size:cover;
+}
+
+// for use with ember sticky component addon
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.no-wrap {
+  white-space: nowrap;
+}
+
+.ember-modal-dialog {
+  border-radius: 0px;
+}
+
+.alpaca-invalid {
+  & > input, & > textarea, & > select {
+    border-color: #f86c6b;
+  }
+}
+
+.alpaca-message-notOptional {
+  display:none;
+}
+
+.steps {
+  height:35px;
+  display: flex;
+  overflow: hidden;
+  font-size: 0.65625rem;
+  background-color: #f0f3f5;
+  border: solid #a4b7c1 1px;
+}
+
+.step {
+  width: 15.2857%;
+  font-size: 16px;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 35px;
+  cursor: pointer;
+}
+
+.step:hover{
+  background: #e0e5e8;
+}
+
+.active-step {
+  background: #20a8d8;
+  color:white;
+}
+.back-arrow {
+  margin: 0px;
+  padding: 1px!important;
+  padding-bottom: 11px!important;
+  box-sizing: border-box;
+}
+
+////////////////////////////
+// Custom JHU Colors
+////////////////////////////
+$primary-color: #418FDE;
+$danger-color: #f86c6b;
+$navbar-color: #005EB8;
+body {
+  font-family:  gentona-light,"Helvetica Neue",Roboto,sans-serif!important;
+}
+.navbar {
+  background:$navbar-color;
+}
+.btn-primary {
+  background-color: $primary-color!important;
+  border-color: $primary-color!important;
+  color:white!important;
+}
+.btn-outline-primary {
+  border-color: $primary-color!important;
+  color: $primary-color!important;
+}
+.btn-outline-primary:hover {
+  background-color: $primary-color!important;
+  color: white!important;
+}
+.btn-danger	{
+  color: white!important;
+  background-color: $danger-color!important;
+}
+.badge-danger {
+  color: white!important;
+  background-color: $danger-color!important;
+}
+.btn-link {
+  color: $primary-color!important;
+}
+
+@media (max-width: 760px) {
+  .navbar .navbar-brand {
+      justify-content: center;
+      margin: auto;
   }
 }
