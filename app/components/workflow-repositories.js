@@ -55,9 +55,22 @@ export default Component.extend({
     // const reqRepos = this.get('requiredRepositories');
     // const ret = diff(allRepos, reqRepos).concat(diff(reqRepos, allRepos));
     // return ret;
-    return this.get('model.repositories').filter(repo => repo.get('name') === 'JScholarship');
-  }),
 
+
+    return this.get('model.repositories').filter((repo)=> {
+      if(repo.get('name') === 'JScholarship') {
+        return repo
+      }
+    })
+  }),
+  didRender() {
+    this._super(...arguments);
+    this.get('model.repositories').filter((repo)=> {
+       if(repo.get('name') === 'JScholarship') {
+         this.send('addRepo', repo)
+       }
+     })
+  },
   actions: {
     next() {
       this.send('saveAll');
