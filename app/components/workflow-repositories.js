@@ -31,11 +31,9 @@ export default Component.extend({
       if (grant.get('primaryFunder.policy.content') && repo) {
         if (!(!this.get('includeNIHDeposit') && grant.get('primaryFunder.policy.title') === 'National Institute of Health Public Access Policy')) {
           repos.addObject(repo);
+        } else if (this.get('model.newSubmission.repositories').contains(repo)) {
+          this.get('model.newSubmission.repositories').removeObject(repo);
         }
-        // else if (this.get('model.newSubmission.repositories').contains(repo)) {
-        //   debugger;
-        //   this.get('model.newSubmission.repositories').removeObject(repo);
-        // }
       }
     });
 

@@ -289,14 +289,12 @@ export default Ember.Component.extend({
     if (!originalForm.options) {
       newForm.options = {};
     }
+    // Populate form with data if there is any to populate with.
+    if (!(this.get('model.metadata'))) {
+      this.set('model.metadata', '[]');
+    }
     let metadata = JSON.parse(this.get('model.metadata'));
     if (newForm.id) {
-      // Populate form with data if there is any to populate with.
-      if (!metadata) {
-        metadata = [];
-      }
-      // if there has been no user input fuzzy match the keys
-
       let shouldFuzzyMatch = true;
       metadata.forEach((data) => {
         if (data.id == newForm.id) {
@@ -337,7 +335,7 @@ export default Ember.Component.extend({
               id: newForm.id,
               data: prePopulateData,
             });
-            this.set('model.metadata', metadata);
+            this.set('model.metadata', JSON.stringify(metadata));
           } catch (e) { console.log(e); }
         });
       }
