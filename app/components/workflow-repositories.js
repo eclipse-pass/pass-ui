@@ -57,19 +57,19 @@ export default Component.extend({
     // return ret;
 
 
-    return this.get('model.repositories').filter((repo)=> {
-      if(repo.get('name') === 'JScholarship') {
-        return repo
+    return this.get('model.repositories').filter((repo) => {
+      if (repo.get('name') === 'JScholarship') {
+        return repo;
       }
-    })
+    });
   }),
   didRender() {
     this._super(...arguments);
-    this.get('model.repositories').filter((repo)=> {
-       if(repo.get('name') === 'JScholarship') {
-         this.send('addRepo', repo)
-       }
-     })
+    this.get('model.repositories').filter((repo) => {
+      if (repo.get('name') === 'JScholarship') {
+        this.send('addRepo', repo);
+      }
+    });
   },
   actions: {
     next() {
