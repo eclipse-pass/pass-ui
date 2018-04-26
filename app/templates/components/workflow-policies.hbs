@@ -5,19 +5,8 @@
       policies that are applicable to your work:
     </p>
     {{#each activePolicies as |policy|}}
-      {{policy-card policy=policy journal=model.publication.journal}}
+      {{policy-card policy=policy journal=model.publication.journal removeNIHDeposit=removeNIHDeposit}}
     {{/each}}
-    {{#if nihAndNotMethodAJournal}}
-      {{radio-button value=true name='removeNIHDeposit' checked=removeNIHDeposit}}
-      I have made (or intend to make) an arrangement with the publisher to
-      deposit my article directly to PMC. (You will not need to submit your
-      manuscript to NIHMS as part of this process.)
-      <br>
-      {{radio-button value=false name='removeNIHDeposit' checked=removeNIHDeposit}}
-      I will not make an arrangement with the publisher to deposit my article
-      directly to PMC. (You will need to submit your manuscript to NIHMS as
-      part of this process.)
-    {{/if}}
   </div>
 </div>
 
