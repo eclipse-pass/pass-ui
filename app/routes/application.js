@@ -563,10 +563,12 @@ export default Route.extend(ApplicationRouteMixin, {
     const publications = [
       {
         title: `Evaluating the Role of Interdigitated Neoadjuvant Chemotherapy and Radiation in the Management of
-        High-Grade Soft-Tissue Sarcoma: The Johns Hopkins Experience`
+        High-Grade Soft-Tissue Sarcoma: The Johns Hopkins Experience`,
+        pmid: '775054'
       },
       {
-        title: 'Micropattern size-dependent endothelial differentiation from a human induced pluripotent stem cell line'
+        title: 'Micropattern size-dependent endothelial differentiation from a human induced pluripotent stem cell line',
+        pmid: '659871'
       },
       {
         title: 'Immunomodulatory Drugs: Immune Checkpoint Agents in Acute Leukemia'
@@ -576,7 +578,8 @@ export default Route.extend(ApplicationRouteMixin, {
         a marker of resilience or risk?`
       },
       {
-        title: 'The Johns Hopkins University Secondary Support Initiative (JHUSSI)'
+        title: 'The Johns Hopkins University Secondary Support Initiative (JHUSSI)',
+        pmid: '32654'
       }
     ];
     const submissions = [
@@ -610,12 +613,12 @@ export default Route.extend(ApplicationRouteMixin, {
     ];
     const repoCopies = [
       {
-        externalIds: 'asdf123',
+        externalIds: '775054',
         accessUrl: 'http://example.com/here-is-your-deposited-publication',
         status: 'complete'
       },
       {
-        externalIds: 'qwer654',
+        externalIds: '65871',
         accessUrl: 'http://example.com/here-is-your-deposited-publication',
         status: 'complete'
       },
@@ -626,7 +629,7 @@ export default Route.extend(ApplicationRouteMixin, {
         status: 'in-progress'
       },
       {
-        externalIds: 'fghj809',
+        externalIds: '32654',
         accessUrl: 'http://example.com/here-is-your-deposited-publication',
         status: 'complete'
       }
@@ -781,22 +784,31 @@ export default Route.extend(ApplicationRouteMixin, {
       submissionDB[0].get('repositories').pushObject(repoDB[0]);
       submissionDB[0].set('publication', publicationDB[0]);
       submissionDB[0].set('user', userDB[0]);
+      submissionDB[0].get('deposits').pushObject(depositDB[0]);
+
       submissionDB[1].get('grants').pushObject(grantDB[0]);
       submissionDB[1].get('repositories').pushObject(repoDB[0]);
       submissionDB[1].set('publication', publicationDB[1]);
       submissionDB[1].set('user', userDB[2]);
+      submissionDB[1].get('deposits').pushObject(depositDB[1]);
+
       submissionDB[2].get('grants').pushObject(grantDB[2]);
       submissionDB[2].get('repositories').pushObject(repoDB[1]);
       submissionDB[2].set('publication', publicationDB[2]);
       submissionDB[2].set('user', userDB[13]);
+      submissionDB[3].get('deposits').pushObject(depositDB[2]);
+
       submissionDB[3].get('grants').pushObject(grantDB[3]);
       submissionDB[3].get('repositories').pushObject(repoDB[0]);
       submissionDB[3].set('publication', publicationDB[3]);
       submissionDB[3].set('user', userDB[20]);
+      submissionDB[3].get('deposits').pushObject(depositDB[3]);
+
       submissionDB[4].get('grants').pushObject(grantDB[18]);
       submissionDB[4].get('repositories').pushObject(repoDB[3]);
       submissionDB[4].set('publication', publicationDB[4]);
       submissionDB[4].set('user', userDB[14]);
+      submissionDB[4].get('deposits').pushObject(depositDB[4]);
 
       /*
        * Following is not valid after updating to pass-data-model v2.0
