@@ -209,7 +209,7 @@ export default Route.extend(ApplicationRouteMixin, {
               "journal-title-short": { "type": "string", "required": true },
               "journal-NLMTA-ID": { "type": "string", "required": true },
               "ISSN": { "type": "string", "required": true },
-              "auothor": { "type": "string", "required": true },
+              "author": { "type": "string", "required": true },
               "mName": { "type": "string" },
               "family": { "type": "string", "required": true },
               "email": { "type": "string", "required": true }
@@ -221,7 +221,7 @@ export default Route.extend(ApplicationRouteMixin, {
               "journal-title-short": { "type": "text", "label": "Journal Title", "placeholder": "Enter the journal title" },
               "journal-NLMTA-ID": { "type": "text", "label": "Journal NLMTA ID", "placeholder": "" },
               "ISSN": { "type": "text", "label": "ISSN", "placeholder": "" },
-              "auothor": { "type": "text", "label": "First Name", "placeholder": "", "fieldClass": "col-4 pull-left pl-0" },
+              "author": { "type": "text", "label": "First Name", "placeholder": "", "fieldClass": "col-4 pull-left pl-0" },
               "mName": { "type": "text", "label": "Middle Name", "placeholder": "", "fieldClass": "col-4 pull-left" },
               "family": { "type": "text", "label": "Last Name", "placeholder": "", "fieldClass": "col-4 pull-left pr-0" },
               "email": { "type": "text", "label": "Email Address", "placeholder": "" }
@@ -239,7 +239,7 @@ export default Route.extend(ApplicationRouteMixin, {
         name: 'JScholarship',
         url: 'https://jscholarship.library.jhu.edu/',
         formSchema: `{
-          "id": "jhu",
+          "id": "JScholarship",
           "schema": {
             "title": "Johns Hopkins - JScholarship, <br><p class='lead text-muted'>Deposit requirements for JH's institutional repository JScholarship.</p>",
             "type": "object",
@@ -269,12 +269,13 @@ export default Route.extend(ApplicationRouteMixin, {
               },
               "Embargo-end-date": {
                 "type": "date",
+                "label": "Embargo End Date",
                 "placeholder": "mm/dd/yyyy",
                 "fieldClass": "col-4 pull-left pl-0"
               },
               "embargo": {
                 "type": "textarea",
-                "label": "Embargo information",
+                "label": "Deposit Agreement",
                 "disabled": true,
                 "rows": "16"
               },

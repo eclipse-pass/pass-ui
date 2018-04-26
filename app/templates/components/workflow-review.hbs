@@ -96,20 +96,23 @@
                 <ul class="list-unstyled">
                   {{!-- TODO This could probably be done with fewer loops look back at it --}}
                   {{#each-in metadata as |index value|}}
-                    <li>
-                      <br>
-                      <h5 class="font-weight-light"><span class="text-uppercase">{{value.id}}</span></h5>
-                      <hr class="mb-1 mt-1">
-                      {{#if (eq index 'ed')}}
-                        The Department of Education requires submission through their submission portal. <i>Pass can not submit for you.</i> You can submit to ED at <a href="https://eric.ed.gov/submit/" target="_blank">eric.ed.gov/submit/</a>
-                      {{/if}}
-                      <ul class="list-unstyled">
-                        {{#each-in value.data as |key data|}}
-                          <li><b>{{key}}</b>: {{data}}</li>
-                        {{/each-in}}
-                      </ul>
-                    </li>
+                    {{#if (not-eq value.id 'JScholarship')}}
+                      <li>
+                        <br>
+                        <h5 class="font-weight-light"><span class="text-uppercase">{{value.id}}</span></h5>
+                        <hr class="mb-1 mt-1">
+                        {{#if (eq value.id 'ed')}}
+                          The Department of Education requires submission through their submission portal. <i>Pass can not submit for you.</i> You can submit to ED at <a href="https://eric.ed.gov/submit/" target="_blank">eric.ed.gov/submit/</a>
+                        {{/if}}
+                        <ul class="list-unstyled">
+                          {{#each-in value.data as |key data|}}
+                            <li><b>{{key}}</b>: {{data}}</li>
+                          {{/each-in}}
+                        </ul>
+                      </li>
+                    {{/if}}
                   {{/each-in}}
+
                 </ul>
               </td>
             </tr>
