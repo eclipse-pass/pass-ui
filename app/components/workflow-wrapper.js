@@ -13,27 +13,29 @@ export default Component.extend({
     },
     next() {
       let currentUser = this.get('currentUser.user');
-      const submission = this.get('model.newSubmission');
-      submission.save().then((sub) => {
-        if (this.get('step') === 1) { // if the current user doesn't have the submission saved to them yet
-          if (currentUser.get('submissionDraft.content') == null) {
-            currentUser.set('submissionDraft', sub);
-            currentUser.save().then(() => {
-              this.incrementProperty('step');
-            });
-          } else {
-            this.incrementProperty('step');
-          }
-        } else {
-          this.incrementProperty('step');
-        }
-      });
+      // const submission = this.get('model.newSubmission');
+      // submission.save().then((sub) => {
+      //   if (this.get('step') === 1) { // if the current user doesn't have the submission saved to them yet
+      //     if (currentUser.get('submissionDraft.content') == null) {
+      //       currentUser.set('submissionDraft', sub);
+      //       currentUser.save().then(() => {
+      //         this.incrementProperty('step');
+      //       });
+      //     } else {
+      //       this.incrementProperty('step');
+      //     }
+      //   } else {
+      //     this.incrementProperty('step');
+      //   }
+      // });
+      this.incrementProperty('step');
     },
     back() {
-      const sub = this.get('model.newSubmission');
-      sub.save().then(() => {
-        this.decrementProperty('step');
-      });
+      // const sub = this.get('model.newSubmission');
+      // sub.save().then(() => {
+      //   this.decrementProperty('step');
+      // });
+      this.decrementProperty('step');
     },
     submit() {
       this.sendAction('submit');
