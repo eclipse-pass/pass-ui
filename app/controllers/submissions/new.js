@@ -7,7 +7,7 @@ export default Controller.extend({
       const sub = this.get('model.newSubmission');
       const pub = this.get('model.publication');
       sub.status = 'not-started';
-      sub.dateSubmitted = new Date();
+      sub.userSubmittedDate = new Date();
       sub.submitted = true;
       pub.save().then((p) => {
         sub.publication = p;
