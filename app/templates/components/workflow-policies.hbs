@@ -5,7 +5,7 @@
       policies that are applicable to your work:
     </p>
     {{#each activePolicies as |policy|}}
-      {{policy-card policy=policy journal=model.publication.journal removeNIHDeposit=removeNIHDeposit}}
+      {{policy-card policy=policy journal=model.publication.journal removeNIHDeposit=removeNIHDeposit toggleRemoveNIHDeposit=(action 'toggleRemoveNIHDeposit')}}
     {{/each}}
   </div>
 </div>

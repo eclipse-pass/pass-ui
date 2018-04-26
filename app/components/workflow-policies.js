@@ -37,5 +37,8 @@ export default Component.extend({
     back() {
       this.sendAction('back');
     },
+    toggleRemoveNIHDeposit(bool) {
+      this.set('removeNIHDeposit', bool);
+    }
   },
 });
