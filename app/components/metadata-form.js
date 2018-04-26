@@ -289,7 +289,7 @@ export default Ember.Component.extend({
     if (!originalForm.options) {
       newForm.options = {};
     }
-    let metadata = this.get('model.metadata');
+    let metadata = JSON.parse(this.get('model.metadata'));
     if (newForm.id) {
       // Populate form with data if there is any to populate with.
       if (!metadata) {
@@ -406,7 +406,7 @@ export default Ember.Component.extend({
             // eslint-disable-next-line no-return-assign
             let filtered = source.reverse().filter(obj => !uniqIds[obj.id] && (uniqIds[obj.id] = true));
 
-            that.set('model.metadata', filtered);
+            that.set('model.metadata', JSON.stringify(filtered));
             that.nextForm();
           },
         },
