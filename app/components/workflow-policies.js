@@ -20,24 +20,6 @@ export default Component.extend({
     policies = policies.uniqBy('id');
     return policies;
   }),
-
-  hasPmcMethod: Ember.computed('model.publication.journal', function () {
-    return !!this.get('model.publication.journal.pmcParticipation');
-  }),
-  // checks if the radio buttons need to be displayed
-  nihAndNotMethodAJournal: Ember.computed('model.publication.journal', 'activePolicies', function () { // eslint-ignore-line
-    let nih = false;
-    let methodA = this.get('model.publication.journal.isMethodA');
-    if (methodA) {
-      return false;
-    }
-    this.get('activePolicies').forEach((policy) => {
-      if (policy.get('title') === 'National Institute of Health Public Access Policy') {
-        nih = true;
-      }
-    });
-    return nih && !methodA;
-  }),
   actions: {
     next() {
       this.sendAction('toggleNIHDeposit', !(this.get('removeNIHDeposit')));
@@ -46,5 +28,8 @@ export default Component.extend({
     back() {
       this.sendAction('back');
     },
+    toggleRemoveNIHDeposit(bool) {
+      this.set('removeNIHDeposit', bool);
+    }
   },
 });
