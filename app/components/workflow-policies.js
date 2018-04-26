@@ -30,9 +30,6 @@ export default Component.extend({
     return policies;
   }),
 
-  hasPmcMethod: Ember.computed('model.publication.journal', function () {
-    return !!this.get('model.publication.journal.pmcParticipation');
-  }),
   // checks if the radio buttons need to be displayed
   nihAndNotMethodAJournal: Ember.computed('model.publication.journal', 'activePolicies', function () { // eslint-ignore-line
     let nih = false;
