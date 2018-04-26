@@ -5,6 +5,7 @@ export default DS.Model.extend({
    * (Requried)
    */
   username: DS.attr('string'),
+  displayName: DS.attr('string'),
   firstName: DS.attr('string'),
   middleName: DS.attr('string'),
   lastName: DS.attr('string'),

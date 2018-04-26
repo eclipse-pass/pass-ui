@@ -8,10 +8,10 @@ export default Controller.extend({
   columns: [
     { propertyName: 'publication', title: 'Article', component: 'submissions-article-cell' },
     { title: 'Award Number (Funder)', component: 'submissions-award-cell' },
-    { propertyName: 'user.username', title: 'Corr. Author' },
-    { propertyName: 'deposits', title: 'Repo', component: 'submissions-repo-cell' },
-    { propertyName: 'dateSubmitted', title: 'Last Update Date', component: 'date-cell' },
-    { propertyName: 'dateSubmitted', title: 'Submitted Date', component: 'date-cell' },
+    { propertyName: 'user', title: 'Corr. Author', component: 'submissions-author-cell' },
+    { propertyName: 'repositories', title: 'Repo', component: 'submissions-repo-cell' },
+    { propertyName: 'userSubmittedDate', title: 'Last Update Date', component: 'date-cell' },
+    { propertyName: 'userSubmittedDate', title: 'Submitted Date', component: 'date-cell' },
     {
       propertyName: 'status',
       title: 'Status',

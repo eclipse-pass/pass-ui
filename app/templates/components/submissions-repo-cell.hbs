@@ -1,5 +1,5 @@
-{{#each record as |deposit index|}}
-  {{deposit.repository.name}}
+{{#each (get record column.propertyName) as |repo index|}}
+  {{repo.name}}
 {{else}}
   Loading...
 {{/each}}

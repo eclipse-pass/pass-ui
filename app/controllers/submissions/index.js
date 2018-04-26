@@ -13,7 +13,7 @@ export default Controller.extend({
   actions: {
     authorclick(submission) {
       this.set('messageShow', true);
-      this.set('messageTo', submission.get('author.name'));
+      this.set('messageTo', submission.get('user.displayName'));
       this.set('messageSubject', 'OAP Compliance');
       this.set('messageText', `Concerning submission ${submission.get('title')}, the status is ${submission.get('status')}.\nPlease check your PASS dashboard.`);
     },
@@ -34,10 +34,10 @@ export default Controller.extend({
   piColumns: [
     { propertyName: 'publication', title: 'Article', component: 'submissions-article-cell' },
     { title: 'Award Number (Funder)', component: 'submissions-award-cell' },
-    { propertyName: 'user.username', title: 'Corr. Author' },
-    { propertyName: 'deposits', title: 'Repo', component: 'submissions-repo-cell' },
-    { propertyName: 'dateSubmitted', title: 'Last Update Date', component: 'date-cell' },
-    { propertyName: 'dateSubmitted', title: 'Submitted Date', component: 'date-cell' },
+    { propertyName: 'user', title: 'Corr. Author', component: 'submissions-author-cell' },
+    { propertyName: 'repositories', title: 'Repo', component: 'submissions-repo-cell' },
+    { propertyName: 'userSubmittedDate', title: 'Last Update Date', component: 'date-cell' },
+    { propertyName: 'userSubmittedDate', title: 'Submitted Date', component: 'date-cell' },
     {
       propertyName: 'status',
       title: 'Status',
@@ -50,10 +50,10 @@ export default Controller.extend({
   adminColumns: [
     { propertyName: 'publication', title: 'Article', component: 'submissions-article-cell' },
     { title: 'Award Number (Funder)', component: 'submissions-award-cell' },
-    { propertyName: 'user.username', title: 'Corr. Author' },
-    { propertyName: 'deposits', title: 'Repo', component: 'submissions-repo-cell' },
-    { propertyName: 'dateSubmitted', title: 'Last Update Date', component: 'date-cell' },
-    { propertyName: 'dateSubmitted', title: 'Submitted Date', component: 'date-cell' },
+    { propertyName: 'user', title: 'Corr. Author', component: 'submissions-author-cell' },
+    { propertyName: 'repositories', title: 'Repo', component: 'submissions-repo-cell' },
+    { propertyName: 'userSubmittedDate', title: 'Last Update Date', component: 'date-cell' },
+    { propertyName: 'userSubmittedDate', title: 'Submitted Date', component: 'date-cell' },
     {
       propertyName: 'status',
       title: 'Status',
