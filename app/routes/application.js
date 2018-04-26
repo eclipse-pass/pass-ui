@@ -269,12 +269,13 @@ export default Route.extend(ApplicationRouteMixin, {
               },
               "Embargo-end-date": {
                 "type": "date",
+                "label": "Embargo End Date",
                 "placeholder": "mm/dd/yyyy",
                 "fieldClass": "col-4 pull-left pl-0"
               },
               "embargo": {
                 "type": "textarea",
-                "label": "Embargo information",
+                "label": "Deposit Agreement",
                 "disabled": true,
                 "rows": "16"
               },
