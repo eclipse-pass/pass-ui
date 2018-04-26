@@ -123,7 +123,7 @@ export default Controller.extend({
       disableFiltering: true,
     },
     {
-      title: 'PI / CO-PIs',
+      title: 'PI',
       propertyName: 'pi',
       component: 'pi-list-cell'
     },

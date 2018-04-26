@@ -4,6 +4,6 @@ import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-rout
 export default Route.extend(AuthenticatedRouteMixin, {
   model() {
     // TODO: change returned records based on role
-    return this.get('store').findAll('submission');
+    return this.store.findAll('submission');
   },
 });
