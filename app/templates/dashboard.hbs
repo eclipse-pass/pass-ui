@@ -4,7 +4,7 @@
 }
 </style>
 <div class='row row-eq-height'>
-  <div class='col-md-6 mb-4 mt-4'>
+  <div class='col-md-6 mt-4 mb-4'>
     <div class='card'>
       <div class='card-body'>
         <h2 class='card-title font-weight-light'>Manage Publication Submissions</h2>
@@ -15,8 +15,8 @@
         </p>
         <div class="text-center">
           {{#link-to 'submissions' class='btn btn-primary mr-auto mt-1'}}View Submissions{{/link-to}}
-          {{#if session.isPI}}
-            {{#link-to "submission.new" class='btn btn-primary mt-1'}}Create New Submission{{/link-to}}
+          {{#if (eq currentUser.user.role "PI")}}
+            {{#link-to "submissions.new" class='btn btn-primary mt-1'}}Create New Submission{{/link-to}}
           {{/if}}
         </div>
       </div>

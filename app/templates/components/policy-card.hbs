@@ -1,32 +1,35 @@
 <div class="row">
   <div class="card w-100 my-2">
     <div class="card-body">
-      <h4 class="card-title">
-        <a href="#">{{policy.title}} <small>for {{policy.repository.name}}.</small></a>
-      </h4>
-      <h6 class="card-subtitle">Requires deposit into {{policy.repository.name}}</h6>
+      {{#if (eq policy.repository.name "JScholarship")}}
+        <h4 class="card-title"><a href="#">{{policy.title}}</a></h4>
+        <h6 class="card-subtitle">Expects deposit into an open access repository</h6>
+      {{else}}
+        <h4 class="card-title">
+          <a href="#">{{policy.title}} <small>for {{policy.repository.name}}.</small></a>
+        </h4>
+        <h6 class="card-subtitle">Requires deposit into {{policy.repository.name}}</h6>
+      {{/if}}
       <p class="card-text mt-2">
         {{policy.description}}
         {{#if policy.url}}
           <br><br> For more information, see their official policy below.
-          <br><a href= {{policy.url}}>{{policy.url}}</a>
+          <br><a href= {{policy.url}} target="_blank">{{policy.url}}</a>
         {{/if}}
 
         <br><br>
         {{#if (or (eq policy.title 'National Institute of Health Public Access Policy') (eq policy.title 'NIH'))}}
           {{#if journal.isMethodA}}
             <div class="alert alert-success">
-              The journal you published in participates in the PMC Method A program,
-              and will submit the published article to PMC on your behalf.
+              The journal you published in participates in the PMC Method A program, and will submit the published article to PMC on your behalf.
               <em>You do not need to submit a manuscript to NIHMS as a part of this
               process.</em>
             </div>
           {{else}}
             <div class="alert alert-info">
-              <p>Some journals would submit your article to PMC on your behalf,
-                for a fee. Specific arrangements would be required. Please
-                indicate below whether or not you have made an arrangement with
-                the publisher to have your article deposited by your journal/publisher.</p>
+              <p>Some journals would submit your article to PMC on your behalf, for a fee. Specific arrangements would be required. Please indicate below whether or not you have made an arrangement with the publisher to have your article deposited by your
+                journal/publisher.
+              </p>
             </div>
           {{/if}}
         {{/if}}
