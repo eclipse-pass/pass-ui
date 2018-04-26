@@ -83,7 +83,7 @@ export default Controller.extend({
       component: 'date-cell'
     },
     {
-      propertyName: 'status',
+      propertyName: 'awardStatus',
       title: 'Status',
       filterWithSelect: true,
       predefinedFilterOptions: ['Active', 'Ended'],
@@ -143,7 +143,7 @@ export default Controller.extend({
       propertyName: 'submissions.length', title: '#', routeName: 'grants.detail', disableFiltering: true,
     },
     {
-      propertyName: 'grant.awardStatus',
+      propertyName: 'awardStatus',
       title: 'Status',
       filterWithSelect: true,
     },

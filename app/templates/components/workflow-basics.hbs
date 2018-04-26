@@ -6,7 +6,10 @@
     the article has no DOI, please leave it blank.
 </p>
 <div class="form-group col-md-12">
-  <label>DOI:</label> <div style="color:red">10.1103/PhysRevFluids.1.073604</div>
+  <label>DOI:</label>
+  <div style="color:red"><div style="font-style: italic">no pmc:</div>10.1103/PhysRevFluids.1.073604</div>
+  <div style="color:red"><div style="font-style: italic">method A:</div>10.1021/acsmedchemlett.7b00397</div>
+  <div style="color:red"><div style="font-style: italic">method B:</div>10.1039/c7fo01251a</div>
   {{input
     class=validDOI
     value=model.publication.doi
@@ -15,10 +18,6 @@
   <div class="text-danger">
     {{if (eq validDOI 2) 'Please provide a valid DOI'}}
   </div>
-
-
-
-
 </div>
 <div class="form-group col-md-12">
   <label>Title:</label>

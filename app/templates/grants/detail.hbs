@@ -7,8 +7,8 @@
       <li><strong>Project Name:</strong> {{model.projectName}}</li>
       <li><strong>Award Number:</strong> {{model.awardNumber}}</li>
       <li><strong>Funder:</strong> {{model.primaryFunder.name}}</li>
-      <li><strong>Start:</strong> {{model.startDate}}</li>
-      <li><strong>End:</strong> {{model.endDate}}</li>
+      <li><strong>Start:</strong> {{format-date model.startDate }}</li>
+      <li><strong>End:</strong> {{format-date model.endDate}}</li>
     </ul>
 
     <ul class='col-sm-6'>
