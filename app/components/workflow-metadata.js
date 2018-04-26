@@ -1,4 +1,5 @@
 import Component from '@ember/component';
+import _ from 'lodash';
 
 export default Component.extend({
   common: {
@@ -271,24 +272,22 @@ export default Component.extend({
       }
     }
   },
-
   schema: {},
   currentFormStep: 0,
-
-  didInsertElement() {
-    this.set('schemas', [this.get('common')]);
+  schemas: [],
+  willRender() {
+    let schemas = this.get('schemas');
     this.get('metadataForms').forEach((form) => {
-      const schemas = this.get('schemas');
       if (form) {
         try {
-          const parsedForm = JSON.parse(form);
-          schemas.addObject(parsedForm);
+          schemas.addObject(form);
         } catch (e) {
           console.log('ERROR:', e);
         }
       }
     });
-    this.set('schema', this.schemas[0]);
+    this.set('schemas', _.uniqBy(schemas, 'id'));
+    this.set('schema', this.get('metadataForms')[this.get('currentFormStep')]);
   },
 
   activeRepositories: Ember.computed('model.newSubmission', function () {
@@ -301,7 +300,8 @@ export default Component.extend({
   }),
 
   metadataForms: Ember.computed('activeRepositories', function () {
-    const retVal = this.get('activeRepositories').map(repository => repository.get('formSchema'));
+    const retVal = this.get('activeRepositories').map(repository => JSON.parse(repository.get('formSchema')));
+    retVal.unshift(this.get('common'));
     return retVal;
   }),
 
@@ -313,7 +313,7 @@ export default Component.extend({
       const step = this.get('currentFormStep');
       if (step + 1 < this.get('schemas').length) {
         this.set('currentFormStep', step + 1);
-        this.set('schema', this.schemas[step + 1]);
+        this.set('schema', this.get('schemas')[step + 1]);
       } else {
         this.sendAction('next');
       }
@@ -322,7 +322,7 @@ export default Component.extend({
       const step = this.get('currentFormStep');
       if (step > 0) {
         this.set('currentFormStep', step - 1);
-        this.set('schema', this.schemas[step - 1]);
+        this.set('schema', this.get('schemas')[step - 1]);
       } else {
         this.sendAction('back');
       }

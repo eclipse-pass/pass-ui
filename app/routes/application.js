@@ -232,7 +232,7 @@ export default Route.extend(ApplicationRouteMixin, {
       {
         name: 'National Science Foundation Public Access Repository',
         url: 'https://par.nsf.gov/',
-        // formSchema: "{\"id\": \"nih\",\"schema\": {\"title\": \"Example Policy (EP) <br><p class='lead text-muted'>This is filler text for where any kind of form you want can appear.</p>\",\"type\": \"object\",\"properties\": {}},\"options\": {\"fields\": {}}}"
+        formSchema: "{\"id\": \"nsf\",\"schema\": {\"title\": \"Example Policy (NSF) <br><p class='lead text-muted'>This is filler text for where any kind of form you want can appear.</p>\",\"type\": \"object\",\"properties\": {}},\"options\": {\"fields\": {}}}"
 
       },
       {
@@ -289,7 +289,7 @@ export default Route.extend(ApplicationRouteMixin, {
       {
         name: 'Educational Resources Information Center (ERIC)',
         url: 'https://eric.ed.gov/',
-        // formSchema: "{\"id\": \"nih\",\"schema\": {\"title\": \"Example Policy (EP) <br><p class='lead text-muted'>This is filler text for where any kind of form you want can appear.</p>\",\"type\": \"object\",\"properties\": {}},\"options\": {\"fields\": {}}}"
+        formSchema: "{\"id\": \"eric\",\"schema\": {\"title\": \"Example Policy (ERIC) <br><p class='lead text-muted'>This is filler text for where any kind of form you want can appear.</p>\",\"type\": \"object\",\"properties\": {}},\"options\": {\"fields\": {}}}"
 
       }
     ];
