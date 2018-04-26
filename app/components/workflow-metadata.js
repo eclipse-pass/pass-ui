@@ -290,7 +290,7 @@ export default Component.extend({
     this.set('schema', this.get('metadataForms')[this.get('currentFormStep')]);
   },
 
-  activeRepositories: Ember.computed('model.newSubmission', function() {
+  activeRepositories: Ember.computed('model.newSubmission', function () {
     const repos = Ember.A();
     const policies = Ember.A();
     this.get('model.newSubmission.repositories').forEach((repository) => {
