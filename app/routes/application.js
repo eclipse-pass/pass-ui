@@ -215,7 +215,7 @@ export default Route.extend(ApplicationRouteMixin, {
     ];
     const policies = [
       {
-        title: 'National Institute of Health Pulic Access Policy',
+        title: 'National Institute of Health Public Access Policy',
         url: 'https://publicaccess.nih.gov/policy.htm',
         description: `The Director of the National Institutes of Health requires that all
         investigators funded by the NIH submit or have submitted for them to the National

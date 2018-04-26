@@ -298,6 +298,7 @@ export default Ember.Component.extend({
       // if there has been no user input fuzzy match the keys
 
       let shouldFuzzyMatch = true;
+      debugger;
       metadata.forEach((data) => {
         if (data.id == newForm.id) {
           shouldFuzzyMatch = false;

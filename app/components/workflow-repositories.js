@@ -27,18 +27,24 @@ export default Component.extend({
     const grants = this.get('model.newSubmission.grants');
     const repos = Ember.A();
     grants.forEach((grant) => {
-      if (grant.get('primaryFunder.policy.content') && grant.get('primaryFunder.policy.repository.content')) {
-        repos.addObject(grant.get('primaryFunder.policy.repository.content'));
+      let repo = grant.get('primaryFunder.policy.repository.content');
+      if (grant.get('primaryFunder.policy.content') && repo) {
+        if (!(!this.get('includeNIHDeposit') && grant.get('primaryFunder.policy.title') === 'National Institute of Health Public Access Policy')) {
+          repos.addObject(repo);
+        }
+        // else if (this.get('model.newSubmission.repositories').contains(repo)) {
+        //   debugger;
+        //   this.get('model.newSubmission.repositories').removeObject(repo);
+        // }
       }
     });
 
     // STEP 2
-    if (this.isFirstTime) {
-      repos.forEach((repo) => {
+    repos.forEach((repo) => {
+      if (!(this.get('addedRepositories').contains(repo))) {
         this.send('addRepo', repo);
-      });
-      this.isFirstTime = false;
-    }
+      }
+    });
 
     // STEP 3
     return repos;
@@ -73,7 +79,9 @@ export default Component.extend({
     },
     saveAll() {
       this.get('addedRepositories').forEach((repositoryToAdd) => {
-        this.get('model.newSubmission.repositories').addObject(repositoryToAdd);
+        if (!((this.get('model.newSubmission.repositories').contains(repositoryToAdd)))) {
+          this.get('model.newSubmission.repositories').addObject(repositoryToAdd);
+        }
       });
     },
     toggleRepository(repository) {

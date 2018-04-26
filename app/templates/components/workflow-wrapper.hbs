@@ -14,10 +14,10 @@
         {{workflow-grants model=model next=(action "next") back=(action "back")}}
       {{/if}}
       {{#if (eq step 3)}}
-        {{workflow-policies model=model next=(action "next") back=(action "back")}}
+        {{workflow-policies model=model next=(action "next") back=(action "back") toggleNIHDeposit=(action "toggleNIHDeposit")}}
       {{/if}}
       {{#if (eq step 4)}}
-        {{workflow-repositories model=model next=(action "next") back=(action "back")}}
+        {{workflow-repositories model=model next=(action "next") back=(action "back") includeNIHDeposit=includeNIHDeposit}}
       {{/if}}
       {{#if (eq step 5)}}
         {{workflow-metadata model=model doiInfo=doiInfo step=step next=(action "next") back=(action "back")}}

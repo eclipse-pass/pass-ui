@@ -6,6 +6,12 @@ export default DS.Model.extend({
    */
   name: DS.attr('string'),
   nlmta: DS.attr('string'),
-  pmcParticipation: DS.attr('string'),
+  pmcParticipation: DS.attr('string', { defaultValue: 'B' }),
+  isMethodA: Ember.computed('pmcParticipation', function () {
+    return this.get('pmcParticipation').toLowerCase() === 'a';
+  }),
+  isMethodB: Ember.computed('pmcParticipation', function () {
+    return this.get('pmcParticipation').toLowerCase() === 'b';
+  })
   // issns: ...     Need to support array of strings in fedora-adapter
 });

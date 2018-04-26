@@ -6,7 +6,11 @@ export default Component.extend({
   step: 1,
   isValidated: Ember.A(),
   doiInfo: [],
+  includeNIHDeposit: true,
   actions: {
+    toggleNIHDeposit(bool) {
+      this.set('includeNIHDeposit', bool);
+    },
     next() {
       let currentUser = this.get('currentUser.user');
       const submission = this.get('model.newSubmission');
