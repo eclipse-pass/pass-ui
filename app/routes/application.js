@@ -190,39 +190,15 @@ export default Route.extend(ApplicationRouteMixin, {
         username: 'jfauerbach',
         displayName: 'James Fauerbach',
         email: 'jfauerbach@example.com',
-        roles: ['sumbitter'],
+        roles: ['submitter'],
         role: 'PI'
       }
     ];
     const repos = [
       {
         name: 'PubMed Central',
-        url: 'https://www.ncbi.nlm.nih.gov/pmc/'
-      },
-      {
-        name: 'National Science Foundation Public Access Repository',
-        url: 'https://par.nsf.gov/'
-      },
-      {
-        name: 'JScholarship',
-        url: 'https://jscholarship.library.jhu.edu/'
-      },
-      {
-        name: 'Educational Resources Information Center (ERIC)',
-        url: 'https://eric.ed.gov/'
-      }
-    ];
-    const policies = [
-      {
-        title: 'National Institute of Health Public Access Policy',
-        url: 'https://publicaccess.nih.gov/policy.htm',
-        description: `The Director of the National Institutes of Health requires that all
-        investigators funded by the NIH submit or have submitted for them to the National
-        Library of Medicine's PubMed Central an electronic version of their final, peer-reviewed
-        manuscripts upon acceptance for publication, to be made publicly available no later
-        than 12 months after the official date of publication: Provided, that the NIH shall
-        implement the public access policy in a manner consistent with copyright law.`,
-        metadata: `{
+        url: 'https://www.ncbi.nlm.nih.gov/pmc/',
+        formSchema: `{
           "id": "nih",
           "data": {},
           "schema": {
@@ -254,16 +230,15 @@ export default Route.extend(ApplicationRouteMixin, {
         }`
       },
       {
-        title: 'National Science Foundation (NSF) Public Access Policy',
-        url: 'https://www.research.gov/research-portal/appmanager/base/desktop?_nfpb=true&_pageLabel=research_node_display&_nodePath=/researchGov/Service/Desktop/AboutPublicAccess.html',
-        // description: 'You will need to fill in additional required metadata and attach a copy of the manuscript in order to submit to the NSF Public Access Repository'
-        // metadata: "{\"id\": \"nih\",\"schema\": {\"title\": \"Example Policy (EP) <br><p class='lead text-muted'>This is filler text for where any kind of form you want can appear.</p>\",\"type\": \"object\",\"properties\": {}},\"options\": {\"fields\": {}}}"
+        name: 'National Science Foundation Public Access Repository',
+        url: 'https://par.nsf.gov/',
+        // formSchema: "{\"id\": \"nih\",\"schema\": {\"title\": \"Example Policy (EP) <br><p class='lead text-muted'>This is filler text for where any kind of form you want can appear.</p>\",\"type\": \"object\",\"properties\": {}},\"options\": {\"fields\": {}}}"
+
       },
       {
-        title: 'Johns Hopkins University (JHU) Open Access Policy',
-        url: 'https://provost.jhu.edu/about/open-access/', // placeholder
-        description: 'The university expects that every scholarly article produced by full-time faculty members be accessible in an open access repository. This can be achieved through deposits into existing public access repositories (such as PubMed Central, arXiv, etc.) and/or into Johns Hopkins institutional repository, JScholarship.',
-        metadata: `{
+        name: 'JScholarship',
+        url: 'https://jscholarship.library.jhu.edu/',
+        formSchema: `{
           "id": "jhu",
           "schema": {
             "title": "Johns Hopkins - JScholarship, <br><p class='lead text-muted'>Deposit requirements for JH's institutional repository JScholarship.</p>",
@@ -312,22 +287,46 @@ export default Route.extend(ApplicationRouteMixin, {
         }`
       },
       {
+        name: 'Educational Resources Information Center (ERIC)',
+        url: 'https://eric.ed.gov/',
+        // formSchema: "{\"id\": \"nih\",\"schema\": {\"title\": \"Example Policy (EP) <br><p class='lead text-muted'>This is filler text for where any kind of form you want can appear.</p>\",\"type\": \"object\",\"properties\": {}},\"options\": {\"fields\": {}}}"
+
+      }
+    ];
+    const policies = [
+      {
+        title: 'National Institute of Health Public Access Policy',
+        url: 'https://publicaccess.nih.gov/policy.htm',
+        description: `The Director of the National Institutes of Health requires that all
+        investigators funded by the NIH submit or have submitted for them to the National
+        Library of Medicine's PubMed Central an electronic version of their final, peer-reviewed
+        manuscripts upon acceptance for publication, to be made publicly available no later
+        than 12 months after the official date of publication: Provided, that the NIH shall
+        implement the public access policy in a manner consistent with copyright law.`
+      },
+      {
+        title: 'National Science Foundation (NSF) Public Access Policy',
+        url: 'https://www.research.gov/research-portal/appmanager/base/desktop?_nfpb=true&_pageLabel=research_node_display&_nodePath=/researchGov/Service/Desktop/AboutPublicAccess.html',
+        // description: 'You will need to fill in additional required metadata and attach a copy of the manuscript in order to submit to the NSF Public Access Repository'
+      },
+      {
+        title: 'Johns Hopkins University (JHU) Open Access Policy',
+        url: 'https://provost.jhu.edu/about/open-access/', // placeholder
+        description: 'The university expects that every scholarly article produced by full-time faculty members be accessible in an open access repository. This can be achieved through deposits into existing public access repositories (such as PubMed Central, arXiv, etc.) and/or into Johns Hopkins institutional repository, JScholarship.',
+      },
+      {
         title: 'Department of Education IES Policy Regarding Public Access to Research',
         url: 'https://ies.ed.gov/funding/researchaccess.asp',
         description: 'Department of Education requires awardees - grantees or contractors - who are receiving ED funding to carry out research, as well as ED emmployees who produce peer-reviewed scholarly publications, to submit their final peer-reviewed manuscripts to ERIC (Education Resource Information Center) when accepted for publication. Programmatic integration between PASS and ERIC is not available at this time, but a link to ERIC submission portal, along with publication metadata we have collected so far can be found at the end of the submission steps to help you start an article/manuscript submission in ERIC.'
-        // metadata: "{\"id\": \"edu\",\"schema\": {\"title\": \"Example Policy (EP) <br><p class='lead text-muted'>This is filler text for where any kind of form you want can appear.</p>\",\"type\": \"object\",\"properties\": {}},\"options\": {\"fields\": {}}}"
       },
       // {
       //   title: 'National Eye Institute Public Access Policy',
-      //   metadata: "{\"id\": \"ep\",\"schema\": {\"title\": \"Example Policy (EP) <br><p class='lead text-muted'>This is filler text for where any kind of form you want can appear.</p>\",\"type\": \"object\",\"properties\": {}},\"options\": {\"fields\": {}}}"
       // },
       // {
       //   title: 'National Institute of Diabetes and Digestion Public Access Policy',
-      //   metadata: "{\"id\": \"ep\",\"schema\": {\"title\": \"Example Policy (EP) <br><p class='lead text-muted'>This is filler text for where any kind of form you want can appear.</p>\",\"type\": \"object\",\"properties\": {}},\"options\": {\"fields\": {}}}"
       // },
       // {
       //   title: 'National Institute of Mental Health Public Access Policy',
-      //   metadata: "{\"id\": \"ep\",\"schema\": {\"title\": \"Example Policy (EP) <br><p class='lead text-muted'>This is filler text for where any kind of form you want can appear.</p>\",\"type\": \"object\",\"properties\": {}},\"options\": {\"fields\": {}}}"
       // }
     ];
     const funders = [

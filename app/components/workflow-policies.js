@@ -3,15 +3,9 @@ import Component from '@ember/component';
 export default Component.extend({
   removeNIHDeposit: false,
   activePolicies: Ember.computed('model.newSubmission', function () {
-    // policies can come from repositories  // UPDATE: not anymore!
-    // const repos = [];
     let policies = Ember.A();
-    // this.get('model.newSubmission.repositories').forEach((repository) => {
-    //   repos.addObject(repository);
-    // });
     // policies can come from funders
     this.get('model.newSubmission.grants').forEach((grant) => {
-      // repos.addObject(grant.get('primaryFunder.repository'));
       if (grant.get('primaryFunder.policy.content')) {
         policies.addObject(grant.get('primaryFunder.policy'));
       }
@@ -23,9 +17,6 @@ export default Component.extend({
     if (required.length > 0) {
       policies.addObject(required[0]);
     }
-    // repos.forEach((repository) => {
-    //   policies.addObject(repository.get('policy'));
-    // });
     policies = policies.uniqBy('id');
     return policies;
   }),
