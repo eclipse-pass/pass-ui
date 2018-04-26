@@ -239,7 +239,7 @@ export default Route.extend(ApplicationRouteMixin, {
         name: 'JScholarship',
         url: 'https://jscholarship.library.jhu.edu/',
         formSchema: `{
-          "id": "jhu",
+          "id": "JScholarship",
           "schema": {
             "title": "Johns Hopkins - JScholarship, <br><p class='lead text-muted'>Deposit requirements for JH's institutional repository JScholarship.</p>",
             "type": "object",
