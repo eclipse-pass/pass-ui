@@ -6,8 +6,7 @@ export default Controller.extend({
     submit() {
       const sub = this.get('model.newSubmission');
       const pub = this.get('model.publication');
-      sub.status = 'PND';
-      sub.abstract = 'No Abstract';
+      sub.status = 'not-started';
       sub.dateSubmitted = new Date();
       sub.submitted = true;
       pub.save().then((p) => {
