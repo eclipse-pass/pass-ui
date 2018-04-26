@@ -261,7 +261,7 @@ export default Route.extend(ApplicationRouteMixin, {
       },
       {
         title: 'Johns Hopkins University (JHU) Open Access Policy',
-        url: 'http://guides.library.jhu.edu/open-access', // placeholder
+        url: 'https://provost.jhu.edu/about/open-access/', // placeholder
         description: 'The university expects that every scholarly article produced by full-time faculty members be accessible in an open access repository. This can be achieved through deposits into existing public access repositories (such as PubMed Central, arXiv, etc.) and/or into Johns Hopkins institutional repository, JScholarship.',
         metadata: `{
           "id": "jhu",
