@@ -2,6 +2,10 @@ import Component from '@ember/component';
 
 export default Component.extend({
   files: [],
+  init() {
+    this._super(...arguments);
+    this.set('files', []);
+  },
   actions: {
     next() {
       this.sendAction('next');
