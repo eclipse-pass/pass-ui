@@ -305,7 +305,11 @@ export default Component.extend({
   }),
 
   metadataForms: Ember.computed('activeRepositories', function () {
-    const retVal = this.get('activeRepositories').map(repository => JSON.parse(repository.get('formSchema')));
+    const retVal = this.get('activeRepositories').map((repository) => {
+      if (repository.get('formSchema')) {
+        JSON.parse(repository.get('formSchema'));
+      }
+    });
     retVal.unshift(this.get('common'));
     return retVal;
   }),
