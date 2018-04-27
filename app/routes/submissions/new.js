@@ -13,13 +13,6 @@ export default Route.extend({
     }
 
     let publication = this.get('store').createRecord('publication');
-    // let newSubmission = null;
-    // const submissionDraft = this.get('currentUser.user.submissionDraft');
-    // if (submissionDraft.content !== null) {
-    //   newSubmission = this.get('currentUser.user.submissionDraft');
-    // } else {
-    //   newSubmission = this.get('store').createRecord('submission');
-    // }
     let newSubmission = this.get('store').createRecord('submission');
 
     const repositories = this.get('store').findAll('repository');
@@ -39,4 +32,8 @@ export default Route.extend({
     });
     return h;
   },
+  // deactivate() {
+  //   debugger;
+  //   this.get('store').unloadAll();
+  // }
 });

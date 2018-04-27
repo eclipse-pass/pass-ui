@@ -277,6 +277,7 @@ export default Component.extend({
   schemas: [],
   willRender() {
     let schemas = this.get('schemas');
+    this.set('schemas', []);
     this.get('metadataForms').forEach((form) => {
       if (form) {
         try {
@@ -291,6 +292,7 @@ export default Component.extend({
   },
 
   activeRepositories: Ember.computed('model.newSubmission', function () {
+    // debugger;
     const repos = Ember.A();
     const policies = Ember.A();
     this.get('model.newSubmission.repositories').forEach((repository) => {
