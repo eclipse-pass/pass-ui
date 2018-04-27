@@ -1,7 +1,6 @@
 import Component from '@ember/component';
 
 export default Component.extend({
-  removeNIHDeposit: false,
   activePolicies: Ember.computed('model.newSubmission', function () {
     let policies = Ember.A();
     // policies can come from funders
@@ -22,14 +21,14 @@ export default Component.extend({
   }),
   actions: {
     next() {
-      this.sendAction('toggleNIHDeposit', !(this.get('removeNIHDeposit')));
+      this.sendAction('toggleNIHDeposit', !(this.get('model.newSubmission.removeNIHDeposit')));
       this.sendAction('next');
     },
     back() {
       this.sendAction('back');
     },
     toggleRemoveNIHDeposit(bool) {
-      this.set('removeNIHDeposit', bool);
+      this.set('model.newSubmission.removeNIHDeposit', bool);
     }
   },
 });

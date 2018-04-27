@@ -101,7 +101,7 @@
                         <br>
                         <h5 class="font-weight-light"><span class="text-uppercase">{{value.id}}</span></h5>
                         <hr class="mb-1 mt-1">
-                        {{#if (eq value.id 'ed')}}
+                        {{#if (eq value.id 'eric')}}
                           The Department of Education requires submission through their submission portal. <i>Pass can not submit for you.</i> You can submit to ED at <a href="https://eric.ed.gov/submit/" target="_blank">eric.ed.gov/submit/</a>
                         {{/if}}
                         <ul class="list-unstyled">
@@ -145,8 +145,8 @@
           </div>
         </div>
       </div> --}}
-      {{#each-in model.newSubmission.metadata as |index value|}}
-        {{#if (eq index 'ed')}}
+      {{#each-in metadata as |index value|}}
+        {{#if (eq value.id 'eric')}}
           <div class="form-group row bg-gray-200 m-0">
             <label class="col-md-10 col-form-label">I have submitted my manuscript through the <b>Department of Education (ED)</b> submission portal.</label>
             <div class="col-md-2 col-form-label">

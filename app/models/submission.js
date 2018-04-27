@@ -19,4 +19,7 @@ export default DS.Model.extend({
    * have the same PI. If a grant has a different PI, it should be a separate submission.
    */
   grants: DS.hasMany('grant', { async: true }),
+
+  // doesn't get saved to database
+  removeNIHDeposit: false,
 });

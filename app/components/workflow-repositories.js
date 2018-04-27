@@ -22,7 +22,10 @@ export default Component.extend({
 
   store: service('store'),
   isFirstTime: true,
-
+  init() {
+    this._super(...arguments);
+    this.set('addedRepositories', []);
+  },
   requiredRepositories: Ember.computed('model.repositories', function () {
     const grants = this.get('model.newSubmission.grants');
     const repos = Ember.A();
@@ -41,12 +44,9 @@ export default Component.extend({
         }
       }
     });
-
     // STEP 2
     repos.forEach((repo) => {
-      if (!(this.get('addedRepositories').contains(repo))) {
-        this.send('addRepo', repo);
-      }
+      this.send('addRepo', repo);
     });
 
     // STEP 3
@@ -56,7 +56,6 @@ export default Component.extend({
   optionalRepositories: Ember.computed('requiredRepositories', function () {
     return this.get('model.repositories').filter(repo => repo.get('name') === 'JScholarship');
   }),
-
   didRender() {
     this._super(...arguments);
     this.get('model.repositories').filter((repo) => {
@@ -98,8 +97,5 @@ export default Component.extend({
         this.send('removeRepo', repository);
       }
     },
-  },
-  didReceiveAttrs() {
-    this._super(...arguments);
   },
 });

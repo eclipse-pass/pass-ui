@@ -275,8 +275,13 @@ export default Component.extend({
   schema: {},
   currentFormStep: 0,
   schemas: [],
+  init() {
+    this._super(...arguments);
+    this.set('schemas', []);
+  },
   willRender() {
     let schemas = this.get('schemas');
+    this.set('schemas', []);
     this.get('metadataForms').forEach((form) => {
       if (form) {
         try {
