@@ -290,8 +290,7 @@ export default Route.extend(ApplicationRouteMixin, {
       {
         name: 'Educational Resources Information Center (ERIC)',
         url: 'https://eric.ed.gov/',
-        // formSchema: "{\"id\": \"eric\",\"schema\": {\"title\": \"Example Policy (ERIC) <br><p class='lead text-muted'>This is filler text for where any kind of form you want can appear.</p>\",\"type\": \"object\",\"properties\": {}},\"options\": {\"fields\": {}}}"
-
+        formSchema: "{\"id\": \"eric\",\"schema\": {\"title\": \"Department of Education - ERIC <br><small>Requires deposit to Education Resource Information Center (ERIC).</small><br><br><p class='lead text-muted'>Programmatic integration between PASS and ERIC is not available at this time, but a link to the ERIC submission portal, along with the publication metadata we have collected so far, can be found at the end of this submission workflow to help you start an article/manuscript submission in ERIC.</p>\",\"type\": \"object\",\"properties\": {}},\"options\": {\"fields\": {}}}"
       }
     ];
     const policies = [
