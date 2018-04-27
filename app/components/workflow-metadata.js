@@ -275,6 +275,10 @@ export default Component.extend({
   schema: {},
   currentFormStep: 0,
   schemas: [],
+  init() {
+    this._super(...arguments);
+    this.set('schemas', []);
+  },
   willRender() {
     let schemas = this.get('schemas');
     this.set('schemas', []);
@@ -292,7 +296,6 @@ export default Component.extend({
   },
 
   activeRepositories: Ember.computed('model.newSubmission', function () {
-    // debugger;
     const repos = Ember.A();
     const policies = Ember.A();
     this.get('model.newSubmission.repositories').forEach((repository) => {
