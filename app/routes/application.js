@@ -241,7 +241,7 @@ export default Route.extend(ApplicationRouteMixin, {
         formSchema: `{
           "id": "JScholarship",
           "schema": {
-            "title": "Johns Hopkins - JScholarship, <br><p class='lead text-muted'>Deposit requirements for JH's institutional repository JScholarship.</p>",
+            "title": "Johns Hopkins - JScholarship <br><p class='lead text-muted'>Deposit requirements for JH's institutional repository JScholarship.</p>",
             "type": "object",
             "properties": {
               "under-embargo": {
