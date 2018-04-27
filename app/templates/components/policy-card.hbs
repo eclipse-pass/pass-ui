@@ -31,12 +31,12 @@
                 journal/publisher.
               </p>
               {{#if nihAndNotMethodAJournal}}
-                {{radio-button value=true name='removeNIHDeposit' checked=removeNIHDeposit}}
+                {{radio-button value=true name='removeNIHDeposit' checked=model.newSubmission.removeNIHDeposit}}
                 I have made (or intend to make) an arrangement with the publisher to
                 deposit my article directly to PMC. (You will not need to submit your
                 manuscript to NIHMS as part of this process.)
                 <br>
-                {{radio-button value=false name='removeNIHDeposit' checked=removeNIHDeposit}}
+                {{radio-button value=false name='removeNIHDeposit' checked=model.newSubmission.removeNIHDeposit}}
                 I will not make an arrangement with the publisher to deposit my article
                 directly to PMC. (You will need to submit your manuscript to NIHMS as
                 part of this process.)
