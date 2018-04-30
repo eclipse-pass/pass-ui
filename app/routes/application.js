@@ -32,9 +32,7 @@ export default Route.extend(ApplicationRouteMixin, {
     });
   },
   model() {
-    const store = this.get('store');
     // temp jhuInstitution move out or remove later
-
     const jhuInstitution = {
       name: 'Johns Hopkins University',
       primaryColor: '#002D72',
@@ -43,6 +41,25 @@ export default Route.extend(ApplicationRouteMixin, {
       logo: 'https://image.ibb.co/iWgHXx/university_logo_small_vertical_white_no_clear_space_29e2bdee83.png',
       schema: [],
     };
+    const self = this;
+
+    return this.get('store').findAll('grant').then((grants) => {
+      if (!grants.content || !grants.content.length) {
+        // console.log(' >>> Adding test data.');
+        return self._add_test_data(jhuInstitution);
+      }
+      // console.log(' >>> Found test data already, moving on.');
+      return jhuInstitution;
+    }).catch((e) => {
+      // console.log(e);
+      // console.log(' >>> Store.findAll("grant") failed, trying to add data.');
+      return this._add_test_data(jhuInstitution);
+    });
+  },
+
+  _add_test_data(institution) {
+    const store = this.get('store');
+
     const users = [
       {
         username: 'eford',
@@ -811,8 +828,8 @@ export default Route.extend(ApplicationRouteMixin, {
       submissionDB[4].get('deposits').pushObject(depositDB[4]);
 
       /*
-       * Following is not valid after updating to pass-data-model v2.0
-       */
+      * Following is not valid after updating to pass-data-model v2.0
+      */
       // repoDB[0].set('policy', policyDB[0]);
       // repoDB[1].set('policy', policyDB[1]);
       // repoDB[2].set('policy', policyDB[2]);
@@ -825,7 +842,7 @@ export default Route.extend(ApplicationRouteMixin, {
       funderDB[4].set('repository', repoDB[0]);
       funderDB[5].set('repository', repoDB[3]);
 
-      return RSVP.all(moo.map(o => o.save())).then(() => jhuInstitution);
+      return RSVP.all(moo.map(o => o.save())).then(() => institution);
     });
-  },
+  }
 });
