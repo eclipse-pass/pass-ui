@@ -30,17 +30,18 @@ export default Component.extend({
     const grants = this.get('model.newSubmission.grants');
     const repos = Ember.A();
     grants.forEach((grant) => {
-      let repo = grant.get('primaryFunder.policy.repository.content');
-      if (grant.get('primaryFunder.policy.content') && repo) {
+      // let repo = grant.get('primaryFunder.policy.repositories.content');
+      let grepos = grant.get('primaryFunder.policy.repositories');
+      let anyInSubmission = grepos.any(grantRepo => this.get('model.newSubmission.repositories').contains(grantRepo));
+
+      if (grant.get('primaryFunder.policy.content') && grepos) {
+        // NOT( (Don't include NIH deposit) AND (funder policy IS the NIH policy) )
         if (!(!this.get('includeNIHDeposit') && grant.get('primaryFunder.policy.title') === 'National Institute of Health Public Access Policy')) {
-          repos.addObject(repo);
-        } else if (this.get('model.newSubmission.repositories').contains(repo)) {
-          let repoId = repo.get('id');
-          this.get('model.newSubmission.repositories').forEach((repository) => {
-            if (repository && repoId == repository.get('id')) {
-              this.get('model.newSubmission.repositories').removeObject(repository);
-            }
-          });
+          grepos.forEach(r => repos.addObject(r));
+        } else if (anyInSubmission) {
+          // If the new submission already has the repositories for this grant
+          // Remove those repositories (they are added back later)
+          this.get('model.newSubmission.repositories').removeObjects(grepos);
         }
       }
     });

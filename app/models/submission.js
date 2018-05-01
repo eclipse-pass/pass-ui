@@ -1,6 +1,7 @@
 import DS from 'ember-data';
 
 export default DS.Model.extend({
+  /** Possible values: not-started, in-progress, accepted */
   aggregatedDepositStatus: DS.attr('string', { defaultValue: 'not-started' }),
   userSubmittedDate: DS.attr('date'),
   source: DS.attr('string', { defaultValue: 'pass' }),

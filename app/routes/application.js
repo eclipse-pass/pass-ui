@@ -51,8 +51,8 @@ export default Route.extend(ApplicationRouteMixin, {
       // console.log(' >>> Found test data already, moving on.');
       return jhuInstitution;
     }).catch((e) => {
-      // console.log(e);
-      // console.log(' >>> Store.findAll("grant") failed, trying to add data.');
+      console.log(e);
+      console.log(' >>> Store.findAll("grant") failed, trying to add data.');
       return this._add_test_data(jhuInstitution);
     });
   },
@@ -66,7 +66,6 @@ export default Route.extend(ApplicationRouteMixin, {
         displayName: 'Ernest Ford',
         email: 'ford@example.com',
         roles: ['submitter'],
-        role: 'PI',
         firstName: 'Ernest',
         lastName: 'Ford'
       },
@@ -75,140 +74,120 @@ export default Route.extend(ApplicationRouteMixin, {
         displayName: 'Anne Gudzune',
         email: 'anne@example.com',
         roles: ['sumbitter'],
-        role: 'PI'
       },
       {
         username: 'spillage',
         displayName: 'Stephen Pillage',
         email: 'illage@example.com',
         roles: ['submitter'],
-        role: 'PI'
       },
       {
         username: 'efrey',
         displayName: 'Eric Frey',
         email: 'frey@example.com',
         roles: ['submitter'],
-        role: 'PI'
       },
       {
         username: 'mjaco',
         displayName: 'Michael Jacobs',
         email: 'mjacob@example.com',
         roles: ['submitter'],
-        role: 'PI'
       },
       {
         username: 'jwong',
         displayName: 'John Wong',
         email: 'jwong@example.com',
         roles: ['submitter'],
-        role: 'PI'
       },
       {
         username: 'tbrown',
         displayName: 'Tiffany Brown',
         email: 'tbrown@example.com',
         roles: ['submitter'],
-        role: 'PI'
       },
       {
         username: 'hpeek',
         displayName: 'Hillary Peek',
         email: 'peek@example.com',
         roles: ['submitter'],
-        role: 'PI'
       },
       {
         username: 'plimo',
         displayName: 'Steve Plimpton',
         email: 'plimo@example.com',
         roles: ['submitter'],
-        role: 'PI'
       },
       {
         username: 'zwang',
         displayName: 'Szu Wang',
         email: 'zwang@example.com',
         roles: ['submitter'],
-        role: 'PI'
       },
       {
         username: 'ksand',
         displayName: 'Kurt Sanders',
         email: 'ksand@example.com',
         roles: ['submitter'],
-        role: 'PI'
       },
       {
         username: 'bradley',
         displayName: 'Robert Bradley',
         email: 'bradley@example.com',
         roles: ['submitter'],
-        role: 'PI'
       },
       {
         username: 'elewin',
         displayName: 'Erin Lewin',
         email: 'elewin@example.com',
         roles: ['submitter'],
-        role: 'PI'
       },
       {
         username: 'sayeed.choudhury',
         displayName: 'Sayeed Choudhury',
         email: 'schou@example.com',
         roles: ['admin'],
-        role: 'admin'
       },
       {
         username: 'hvu',
         displayName: 'Hanh Vu',
         email: 'hvu@example.com',
         roles: ['submitter'],
-        role: 'PI'
       },
       {
         username: 'rkelly',
         displayName: 'Kelly R Fisher',
         email: 'r.kelly@example.com',
         roles: ['submitter'],
-        role: 'PI'
       },
       {
         username: 'tmac',
         displayName: 'Thomas McDermott',
         email: 'mcdott@example.com',
         roles: ['submitter'],
-        role: 'PI'
       },
       {
         username: 'shatsu',
         displayName: 'Sharon Tsui',
         email: 'sharon.tsui@example.com',
         roles: ['submitter'],
-        role: 'PI'
       },
       {
         username: 'maciver',
         displayName: 'Martha Mac Iver',
         email: 'martha.mac@example.com',
         roles: ['submitter'],
-        role: 'PI'
       },
       {
         username: 'mirosen',
         displayName: 'Michael Rosenberg',
         email: 'michael.rosenberg@example.com',
         roles: ['submitter'],
-        role: 'PI'
       },
       {
         username: 'jfauerbach',
         displayName: 'James Fauerbach',
         email: 'jfauerbach@example.com',
         roles: ['submitter'],
-        role: 'PI'
       }
     ];
     const repos = [
@@ -313,7 +292,7 @@ export default Route.extend(ApplicationRouteMixin, {
     const policies = [
       {
         title: 'National Institute of Health Public Access Policy',
-        url: 'https://publicaccess.nih.gov/policy.htm',
+        policyUrl: 'https://publicaccess.nih.gov/policy.htm',
         description: `The Director of the National Institutes of Health requires that all
         investigators funded by the NIH submit or have submitted for them to the National
         Library of Medicine's PubMed Central an electronic version of their final, peer-reviewed
@@ -323,17 +302,17 @@ export default Route.extend(ApplicationRouteMixin, {
       },
       {
         title: 'National Science Foundation (NSF) Public Access Policy',
-        url: 'https://www.research.gov/research-portal/appmanager/base/desktop?_nfpb=true&_pageLabel=research_node_display&_nodePath=/researchGov/Service/Desktop/AboutPublicAccess.html',
+        policyUrl: 'https://www.research.gov/research-portal/appmanager/base/desktop?_nfpb=true&_pageLabel=research_node_display&_nodePath=/researchGov/Service/Desktop/AboutPublicAccess.html',
         // description: 'You will need to fill in additional required metadata and attach a copy of the manuscript in order to submit to the NSF Public Access Repository'
       },
       {
         title: 'Johns Hopkins University (JHU) Open Access Policy',
-        url: 'https://provost.jhu.edu/about/open-access/', // placeholder
+        policyUrl: 'https://provost.jhu.edu/about/open-access/', // placeholder
         description: 'The university expects that every scholarly article produced by full-time faculty members be accessible in an open access repository. This can be achieved through deposits into existing public access repositories (such as PubMed Central, arXiv, etc.) and/or into Johns Hopkins institutional repository, JScholarship.',
       },
       {
         title: 'Department of Education IES Policy Regarding Public Access to Research',
-        url: 'https://ies.ed.gov/funding/researchaccess.asp',
+        policyUrl: 'https://ies.ed.gov/funding/researchaccess.asp',
         description: 'Department of Education requires awardees - grantees or contractors - who are receiving ED funding to carry out research, as well as ED emmployees who produce peer-reviewed scholarly publications, to submit their final peer-reviewed manuscripts to ERIC (Education Resource Information Center) when accepted for publication. Programmatic integration between PASS and ERIC is not available at this time, but a link to ERIC submission portal, along with publication metadata we have collected so far can be found at the end of the submission steps to help you start an article/manuscript submission in ERIC.'
       },
       // {
@@ -350,32 +329,32 @@ export default Route.extend(ApplicationRouteMixin, {
       {
         name: 'National Eye Institute',
         url: 'https://nei.nih.gov/',
-        externalId: '1234lkj'
+        localKey: '1234lkj'
       },
       {
         name: 'National Science Foundation',
         url: 'https://www.nsf.gov/',
-        externalId: 'nsf'
+        localKey: 'nsf'
       },
       {
         name: 'National Institution of Diabetes and Digestion',
         url: 'https://www.niddk.nih.gov/',
-        externalId: 'niddk-nih'
+        localKey: 'niddk-nih'
       },
       {
         name: 'National Institute of Mental Health',
         url: 'https://www.nimh.nih.gov/index.shtml',
-        externalId: 'nimh-nih'
+        localKey: 'nimh-nih'
       },
       {
         name: 'National Institute of Health',
         url: 'https://www.nih.gov/',
-        externalId: 'nih'
+        localKey: 'nih'
       },
       {
         name: 'Institute of Education Sciences',
         url: 'https://ies.ed.gov/',
-        externalId: 'ies-ed'
+        localKey: 'ies-ed'
       }
     ];
     const grants = [
@@ -385,7 +364,7 @@ export default Route.extend(ApplicationRouteMixin, {
         startDate: new Date('2017-04-01'),
         endDate: new Date('2022-03-31'),
         awardStatus: 'Active',
-        externalId: '16129769',
+        localKey: '16129769',
       },
       {
         awardNumber: 'R01DK110366',
@@ -393,7 +372,7 @@ export default Route.extend(ApplicationRouteMixin, {
         startDate: new Date('2017-08-01'),
         endDate: new Date('2021-07-31'),
         awardStatus: 'Active',
-        externalId: '16120629',
+        localKey: '16120629',
       },
       {
         projectName: 'Optimal magnification and oculomotor strategies in low vision patients',
@@ -401,7 +380,7 @@ export default Route.extend(ApplicationRouteMixin, {
         startDate: new Date('2017-06-01'),
         endDate: new Date('2020-05-31'),
         awardStatus: 'Active',
-        externalId: '16120539',
+        localKey: '16120539',
       },
       {
         projectName: 'UCure urethral strictures',
@@ -409,7 +388,7 @@ export default Route.extend(ApplicationRouteMixin, {
         startDate: new Date('2016-06-01'),
         endDate: new Date('2017-12-31'),
         awardStatus: 'Active',
-        externalId: '16120469',
+        localKey: '16120469',
       },
       {
         projectName: 'Psychiatric Epidemiology Training Program',
@@ -417,7 +396,7 @@ export default Route.extend(ApplicationRouteMixin, {
         startDate: new Date('2016-07-01'),
         endDate: new Date('2017-06-30'),
         awardStatus: 'Terminated',
-        externalId: '16120459',
+        localKey: '16120459',
       },
       {
         projectName: 'Neurologic Sequelae of HIV Subtype A and D Infection and ART Rakai Uganda',
@@ -425,7 +404,7 @@ export default Route.extend(ApplicationRouteMixin, {
         startDate: new Date('2016-07-01'),
         endDate: new Date('2018-06-30'),
         awardStatus: 'Active',
-        externalId: '16120169',
+        localKey: '16120169',
       },
       {
         projectName: 'GEM:  RESPONSE OF GLOBAL IONOSPHERIC CURRENTS TO SUBSTORMS:  IMPLICATION FOR THE ELECTRIC FIELD PENETRATION TO THE INNER MAGNETOSPHERE',
@@ -433,7 +412,7 @@ export default Route.extend(ApplicationRouteMixin, {
         startDate: new Date('2016-05-15'),
         endDate: new Date('2019-04-30'),
         awardStatus: 'Active',
-        externalId: '1204023',
+        localKey: '1204023',
       },
       {
         projectName: 'Fogarty African Bioethics Consortium Post-Doctoral Fellowship Program',
@@ -441,7 +420,7 @@ export default Route.extend(ApplicationRouteMixin, {
         startDate: new Date('2017-06-01'),
         endDate: new Date('2022-05-31'),
         awardStatus: 'Active',
-        externalId: '16119319',
+        localKey: '16119319',
       },
       {
         projectName: 'CAREER: DNA-Templated Assembly of Nanoscale Circuit Interconnects',
@@ -449,7 +428,7 @@ export default Route.extend(ApplicationRouteMixin, {
         startDate: new Date('2013-01-01'),
         endDate: new Date('2017-12-31'),
         awardStatus: 'Active',
-        externalId: '16119219',
+        localKey: '16119219',
       },
       {
         projectName: 'Neurologic Sequelae of HIV Subtype A and D Infection and ART Rakai Uganda',
@@ -457,7 +436,7 @@ export default Route.extend(ApplicationRouteMixin, {
         startDate: new Date('2016-03-01'),
         endDate: new Date('2018-02-28'),
         awardStatus: 'Active',
-        externalId: '16118979',
+        localKey: '16118979',
       },
       {
         projectName: 'Telomere maintenance by the telomerase RNA-protein complex',
@@ -465,7 +444,7 @@ export default Route.extend(ApplicationRouteMixin, {
         startDate: new Date('2018-03-04'),
         endDate: new Date('2020-08-10'),
         awardStatus: 'Active',
-        externalId: '16108389',
+        localKey: '16108389',
       },
       {
         projectName: 'Genetics of Fuchs Corneal Dystrophy',
@@ -480,11 +459,11 @@ export default Route.extend(ApplicationRouteMixin, {
         startDate: new Date('2015-03-04'),
         endDate: new Date('2017-08-10'),
         awardStatus: 'Terminated',
-        externalId: '16086889',
+        localKey: '16086889',
       },
       {
         awardNumber: 'R305A170411',
-        externalId: '126699',
+        localKey: '126699',
         projectName: 'Developing a Spacially-enhanced Elementary Curriculum and Teacher Training Series to Improve Science Advancement',
         startDate: new Date('2017-07-01'),
         endDate: new Date('2021-06-30'),
@@ -492,7 +471,7 @@ export default Route.extend(ApplicationRouteMixin, {
       },
       {
         awardNumber: '90073719',
-        externalId: '126257',
+        localKey: '126257',
         projectName: 'FY18 Title IV Award',
         startDate: new Date('2017-07-01'),
         endDate: new Date('2018-06-30'),
@@ -500,7 +479,7 @@ export default Route.extend(ApplicationRouteMixin, {
       },
       {
         awardNumber: '',
-        externalId: '122761',
+        localKey: '122761',
         projectName: 'FY17 Federal Work Study',
         startDate: new Date('2016-06-30'),
         endDate: new Date('2017-06-30'),
@@ -508,7 +487,7 @@ export default Route.extend(ApplicationRouteMixin, {
       },
       {
         awardNumber: 'P022A150076',
-        externalId: '123526',
+        localKey: '123526',
         projectName: 'How Do We Provide High Quality HIV Care and Treatment When THere Are Too Few Health Care Providers in Uganda',
         startDate: new Date('2015-09-30'),
         endDate: new Date('2017-05-31'),
@@ -516,7 +495,7 @@ export default Route.extend(ApplicationRouteMixin, {
       },
       {
         awardNumber: 'R305H150081',
-        externalId: '120443',
+        localKey: '120443',
         projectName: 'Continuous Improvement in Schools Equipping Families to Support Students in the Transition to High School',
         startDate: new Date('2015-07-01'),
         endDate: new Date('2019-06-30'),
@@ -524,7 +503,7 @@ export default Route.extend(ApplicationRouteMixin, {
       },
       {
         awardNumber: 'H325T090027',
-        externalId: '105336',
+        localKey: '105336',
         projectName: 'The Johns Hopkins Universtiy Secondary Support Initiative (JHUSSI)',
         startDate: new Date('2009-01-01'),
         endDate: new Date('2016-06-30'),
@@ -532,7 +511,7 @@ export default Route.extend(ApplicationRouteMixin, {
       },
       {
         awardNumber: 'H133A070045',
-        externalId: '101950',
+        localKey: '101950',
         projectName: 'Johns Hopkins University Burn Injury Model System',
         startDate: new Date('2010-10-01'),
         endDate: new Date('2014-03-31'),
@@ -546,35 +525,35 @@ export default Route.extend(ApplicationRouteMixin, {
         pmcParticipation: 'A'
       },
       {
-        name: 'ACS Medicinal Chemistry Letters',
+        journalName: 'ACS Medicinal Chemistry Letters',
         nlmta: 'ACS Med Chem Lett',
         pmcParticipation: 'A'
       },
       {
-        name: 'AAPS PharmSci',
+        journalName: 'AAPS PharmSci',
         nlmta: 'AAPS PharmSci',
         pmcParticipation: 'A'
       },
       {
-        name: 'Food & Function',
+        journalName: 'Food & Function',
         nlmta: 'Food Funct',
         pmcParticipation: 'B'
       },
       {
-        name: 'Toxicology Research',
+        journalName: 'Toxicology Research',
         nlmta: 'Toxicol Res',
         pmcParticipation: 'B'
       },
       {
-        name: 'Analyst',
+        journalName: 'Analyst',
         nlmta: 'Analyst',
         pmcParticipation: 'B'
       },
       {
-        name: 'Physical Review Fluids'
+        journalName: 'Physical Review Fluids'
       },
       {
-        name: 'Advances in Engineering Education'
+        journalName: 'Advances in Engineering Education'
       }
     ];
     const publications = [
@@ -630,25 +609,25 @@ export default Route.extend(ApplicationRouteMixin, {
     ];
     const repoCopies = [
       {
-        externalIds: '775054',
+        externalIds: ['775054'],
         accessUrl: 'http://example.com/here-is-your-deposited-publication',
-        status: 'complete'
+        copyStatus: 'complete'
       },
       {
-        externalIds: '65871',
+        externalIds: ['65871'],
         accessUrl: 'http://example.com/here-is-your-deposited-publication',
-        status: 'complete'
+        copyStatus: 'complete'
       },
       {
-        status: 'accepted'
+        copyStatus: 'accepted'
       },
       {
-        status: 'in-progress'
+        copyStatus: 'in-progress'
       },
       {
-        externalIds: '32654',
+        externalIds: ['32654'],
         accessUrl: 'http://example.com/here-is-your-deposited-publication',
-        status: 'complete'
+        copyStatus: 'complete'
       }
     ];
 
@@ -672,7 +651,7 @@ export default Route.extend(ApplicationRouteMixin, {
     publications.forEach(p => publicationDB.push(store.createRecord('publication', p)));
     submissions.forEach(s => submissionDB.push(store.createRecord('submission', s)));
     deposits.forEach(d => depositDB.push(store.createRecord('deposit', d)));
-    repoCopies.forEach(r => repoCopyDB.push(store.createRecord('repo-copy', r)));
+    repoCopies.forEach(r => repoCopyDB.push(store.createRecord('repository-copy', r)));
 
     let moo = [].concat(
       userDB, repoDB, policyDB, funderDB, grantDB, journalDB, publicationDB, submissionDB,
@@ -680,10 +659,10 @@ export default Route.extend(ApplicationRouteMixin, {
     );
 
     RSVP.all(moo.map(o => o.save())).then(() => {
-      policyDB[0].set('repository', repoDB[0]);
-      policyDB[1].set('repository', repoDB[1]);
-      policyDB[2].set('repository', repoDB[2]);
-      policyDB[3].set('repository', repoDB[3]);
+      policyDB[0].get('repositories').pushObject(repoDB[0]);
+      policyDB[1].get('repositories').pushObject(repoDB[1]);
+      policyDB[2].get('repositories').pushObject(repoDB[2]);
+      policyDB[3].get('repositories').pushObject(repoDB[3]);
 
       funderDB[0].set('policy', policyDB[0]);
       funderDB[1].set('policy', policyDB[1]);
@@ -781,19 +760,19 @@ export default Route.extend(ApplicationRouteMixin, {
       repoCopyDB[4].set('publication', publicationDB[4]);
       repoCopyDB[4].set('repository', repoDB[3]);
 
-      depositDB[0].set('repoCopy', repoCopyDB[0]);
+      depositDB[0].set('repositoryCopy', repoCopyDB[0]);
       depositDB[0].set('submission', submissionDB[0]);
       depositDB[0].set('repository', repoDB[0]);
-      depositDB[1].set('repoCopy', repoCopyDB[1]);
+      depositDB[1].set('repositoryCopy', repoCopyDB[1]);
       depositDB[1].set('submission', submissionDB[1]);
       depositDB[0].set('repository', repoDB[0]);
-      depositDB[2].set('repoCopy', repoCopyDB[2]);
+      depositDB[2].set('repositoryCopy', repoCopyDB[2]);
       depositDB[2].set('submission', submissionDB[2]);
       depositDB[0].set('repository', repoDB[1]);
-      depositDB[3].set('repoCopy', repoCopyDB[3]);
+      depositDB[3].set('repositoryCopy', repoCopyDB[3]);
       depositDB[3].set('submission', submissionDB[3]);
       depositDB[0].set('repository', repoDB[0]);
-      depositDB[4].set('repoCopy', repoCopyDB[4]);
+      depositDB[4].set('repositoryCopy', repoCopyDB[4]);
       depositDB[4].set('submission', submissionDB[4]);
       depositDB[0].set('repository', repoDB[3]);
 

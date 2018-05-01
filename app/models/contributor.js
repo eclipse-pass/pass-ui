@@ -5,10 +5,10 @@ export default DS.Model.extend({
   middleName: DS.attr('string'),
   lastName: DS.attr('string'),
   displayName: DS.attr('string'),
-  emailAddress: DS.attr('string'),
-  orcid: DS.attr('string'),
+  email: DS.attr('string'),
+  orcId: DS.attr('string'),
   affiliation: DS.attr('string'),
-  role: DS.attr('string'),
+  role: DS.attr('set'),
   publication: DS.belongsTo('publication'),
   user: DS.belongsTo('user'),
 });

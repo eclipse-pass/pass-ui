@@ -12,9 +12,9 @@ export default Factory.extend({
   lastName: 'Doe',
   email: 'jdoe@fake.io',
   institutionalId: 'ABC123',
-  orcid: 'XYZ789',
+  orcId: 'XYZ789',
   affiliation: 'UVa',
-  role: 'PI',
+  roles: ['submitter'],
   shibbolethId: 'ABC123',
 
   dateJoined() {
