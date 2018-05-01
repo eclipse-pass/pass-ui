@@ -36,8 +36,8 @@ export default Ember.Component.extend({
               // Validate and check any doi data to make sure its close to the right field
               if (f.get(doiEntry) !== null) {
                 if (doiEntry == 'author') {
-                  const given = doiInfo[doiEntry][0].given;
-                  prePopulateData[f.get(doiEntry)[0][1]] = given;
+                  const name = `${doiInfo[doiEntry][0].given} ${doiInfo[doiEntry][0].family}`;
+                  prePopulateData[f.get(doiEntry)[0][1]] = name;
 
                   const family = doiInfo[doiEntry][0].family;
                   prePopulateData.family = family;
