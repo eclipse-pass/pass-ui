@@ -55,6 +55,7 @@ export default Route.extend(ApplicationRouteMixin, {
       console.log(' >>> Store.findAll("grant") failed, trying to add data.');
       return this._add_test_data(jhuInstitution);
     });
+    // return this._add_test_data(jhuInstitution);
   },
 
   _add_test_data(institution) {
@@ -474,7 +475,7 @@ export default Route.extend(ApplicationRouteMixin, {
         awardStatus: 'active',
       },
       {
-        awardNumber: '',
+        awardNumber: 'P0451B99285',
         localKey: '122761',
         projectName: 'FY17 Federal Work Study',
         startDate: new Date('2016-06-30'),
@@ -576,24 +577,24 @@ export default Route.extend(ApplicationRouteMixin, {
     ];
     const submissions = [
       {
-        status: 'accepted',
-        userSubmittedDate: new Date('2017-07-04')
+        aggregatedDepositStatus: 'accepted',
+        submittedDate: new Date('2017-07-04')
       },
       {
-        status: 'accepted',
-        userSubmittedDate: new Date('2017-12-04')
+        aggregatedDepositStatus: 'accepted',
+        submittedDate: new Date('2017-12-04')
       },
       {
-        status: 'in-progress',
-        userSubmittedDate: new Date('2017-08-30')
+        aggregatedDepositStatus: 'in-progress',
+        submittedDate: new Date('2017-08-30')
       },
       {
-        status: 'in-progress',
-        userSubmittedDate: new Date('2017-09-30')
+        aggregatedDepositStatus: 'in-progress',
+        submittedDate: new Date('2017-09-30')
       },
       {
-        status: 'accepted',
-        userSubmittedDate: new Date('2016-03-01')
+        aggregatedDepositStatus: 'accepted',
+        submittedDate: new Date('2016-03-01')
       }
     ];
     const deposits = [
@@ -775,31 +776,31 @@ export default Route.extend(ApplicationRouteMixin, {
       [grantDB[0], grantDB[3]].forEach(g => submissionDB[0].get('grants').pushObject(g));
       submissionDB[0].get('repositories').pushObject(repoDB[0]);
       submissionDB[0].set('publication', publicationDB[0]);
-      submissionDB[0].set('user', userDB[0]);
+      // submissionDB[0].set('user', userDB[0]);
       submissionDB[0].get('deposits').pushObject(depositDB[0]);
 
       submissionDB[1].get('grants').pushObject(grantDB[0]);
       submissionDB[1].get('repositories').pushObject(repoDB[0]);
       submissionDB[1].set('publication', publicationDB[1]);
-      submissionDB[1].set('user', userDB[2]);
+      // submissionDB[1].set('user', userDB[2]);
       submissionDB[1].get('deposits').pushObject(depositDB[1]);
 
       submissionDB[2].get('grants').pushObject(grantDB[2]);
       submissionDB[2].get('repositories').pushObject(repoDB[1]);
       submissionDB[2].set('publication', publicationDB[2]);
-      submissionDB[2].set('user', userDB[13]);
+      // submissionDB[2].set('user', userDB[13]);
       submissionDB[3].get('deposits').pushObject(depositDB[2]);
 
       submissionDB[3].get('grants').pushObject(grantDB[3]);
       submissionDB[3].get('repositories').pushObject(repoDB[0]);
       submissionDB[3].set('publication', publicationDB[3]);
-      submissionDB[3].set('user', userDB[20]);
+      // submissionDB[3].set('user', userDB[20]);
       submissionDB[3].get('deposits').pushObject(depositDB[3]);
 
       submissionDB[4].get('grants').pushObject(grantDB[18]);
       submissionDB[4].get('repositories').pushObject(repoDB[3]);
       submissionDB[4].set('publication', publicationDB[4]);
-      submissionDB[4].set('user', userDB[14]);
+      // submissionDB[4].set('user', userDB[14]);
       submissionDB[4].get('deposits').pushObject(depositDB[4]);
 
       /*

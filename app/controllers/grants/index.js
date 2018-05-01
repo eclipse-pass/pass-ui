@@ -18,7 +18,7 @@ export default Controller.extend({
 
       let text = `Concerning project ${grant.get('projectName')}, one or more of the following submissions have issues:`;
       grant.get('submissions').forEach((s) => {
-        text += `\n  Article: ${s.get('title')}, Status: ${s.get('status')}`;
+        text += `\n  Article: ${s.get('title')}, Status: ${s.get('awardStatus')}`;
       });
       text += '\n\nPlease check your PASS dashboard.';
 
