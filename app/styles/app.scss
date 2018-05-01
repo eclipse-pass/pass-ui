@@ -261,6 +261,29 @@ body {
 }
 
 ////////////////////////////
+// Custom alpaca css for bs4
+////////////////////////////
+.glyphicon {
+  font-family: "FontAwesome";
+}
+.glyphicon-plus-sign:before{
+  content: "\f067";
+}
+.glyphicon-minus-sign:before{
+  content: "\f068";
+}
+.glyphicon-chevron-up:before{
+  content: "\f078";
+}
+.glyphicon-chevron-down:before{
+  content: "\f077";
+}
+
+.alpaca-container-label {
+  font-size: 0.875rem!important;
+}
+
+////////////////////////////
 // Custom JHU Colors
 ////////////////////////////
 $primary-color: #418FDE;
