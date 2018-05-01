@@ -12,6 +12,10 @@ before_install:
 - yarn config set spin false
 install:
 - yarn
+before_script:
+  - docker-compose pull
+  - docker-compose up -d
+  - bash .wait.sh
 script:
 - yarn test
 before_deploy:
