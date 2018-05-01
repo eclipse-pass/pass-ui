@@ -60,29 +60,38 @@ module.exports = function(environment) {
     enabled: true
   };
 
-  // ENV.fedora = {
-  //   base: 'http://localhost:8080/fcrepo/rest',
-  //   context: 'https://oa-pass.github.io/pass-data-model/src/main/resources/context-2.0.jsonld',
-  //   data: 'http://example.org/pass/',
-  //   username: 'admin',
-  //   password: 'moo'
-  // }
-  //
-  // if (process.env.FEDORA_ADAPTER_BASE) {
-  //   ENV.fedora.base = process.env.FEDORA_ADAPTER_BASE;
-  // }
-  //
-  // if (process.env.FEDORA_ADAPTER_CONTEXT) {
-  //   ENV.fedora.context = process.env.FEDORA_ADAPTER_CONTEXT;
-  // }
-  //
-  // if (process.env.FEDORA_ADAPTER_USER_NAME) {
-  //   ENV.fedora.username = process.env.FEDORA_ADAPTER_USER_NAME;
-  // }
-  //
-  // if (process.env.FEDORA_ADAPTER_PASSWORD) {
-  //   ENV.fedora.password = process.env.FEDORA_ADAPTER_PASSWORD;
-  // }
+  ENV.fedora = {
+    base: 'http://localhost:8080/fcrepo/rest',
+    context: 'http://example.org/pass/',
+    data: 'http://example.org/pass/',
+    elasticsearch: 'http://localhost:9200/pass/',    
+    username: 'admin',
+    password: 'moo'
+  }
+  
+  if (process.env.FEDORA_ADAPTER_BASE) {
+    ENV.fedora.base = process.env.FEDORA_ADAPTER_BASE;
+  }
+  
+  if (process.env.FEDORA_ADAPTER_CONTEXT) {
+    ENV.fedora.context = process.env.FEDORA_ADAPTER_CONTEXT;
+  }
+
+  if (process.env.FEDORA_ADAPTER_DATA) {
+    ENV.fedora.data = process.env.FEDORA_ADAPTER_DATA;
+  }
+
+  if (process.env.FEDORA_ADAPTER_ES) {
+    ENV.fedora.elasticsearch = process.env.FEDORA_ADAPTER_ES;
+  }
+  
+  if (process.env.FEDORA_ADAPTER_USER_NAME) {
+    ENV.fedora.username = process.env.FEDORA_ADAPTER_USER_NAME;
+  }
+  
+  if (process.env.FEDORA_ADAPTER_PASSWORD) {
+    ENV.fedora.password = process.env.FEDORA_ADAPTER_PASSWORD;
+  }
 
   return ENV;
 };
