@@ -102,7 +102,7 @@ export default Component.extend({
         },
         author: {
           type: 'array',
-          label: 'First Name',
+          label: 'Author Name(s)',
           placeholder: '',
           fieldClass: 'body-text',
         },
