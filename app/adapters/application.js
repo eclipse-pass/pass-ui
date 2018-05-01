@@ -4,6 +4,7 @@ import DataAdapterMixin from 'ember-simple-auth/mixins/data-adapter-mixin';
 
 export default FedoraJsonLdAdapter.extend({
   baseURI: ENV.fedora.base,
+  elasticsearchURI: ENV.fedora.elasticsearch,
   username: ENV.fedora.username,
   password: ENV.fedora.password
 });

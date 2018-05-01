@@ -61,24 +61,27 @@ module.exports = function (environment) {
 
   ENV.fedora = {
     base: 'http://localhost:8080/fcrepo/rest',
-    context: 'https://oa-pass.github.io/pass-data-model/src/main/resources/context-2.0.jsonld',
-    // context: 'http://example.org/pass/',
+    context: 'http://example.org/pass/',
     data: 'http://example.org/pass/',
+    elasticsearch: 'http://localhost:9200/pass/',    
     username: 'admin',
     password: 'moo'
   };
-  /*
-   * So we are supposed to set all the context related URLs to 'http://example.org/pass' (?)
-   * However the COMPACTION_URI (at least) has to be the 'real' context, or else the
-   * ember-fedora-adapter complains. I just don't know how to get the local copy of the
-   * context (should be deployed along side pass-docker stuff)
-   */
+
   if (process.env.FEDORA_ADAPTER_BASE) {
     ENV.fedora.base = process.env.FEDORA_ADAPTER_BASE;
   }
 
   if (process.env.FEDORA_ADAPTER_CONTEXT) {
     ENV.fedora.context = process.env.FEDORA_ADAPTER_CONTEXT;
+  }
+
+  if (process.env.FEDORA_ADAPTER_DATA) {
+    ENV.fedora.data = process.env.FEDORA_ADAPTER_DATA;
+  }
+
+  if (process.env.FEDORA_ADAPTER_ES) {
+    ENV.fedora.elasticsearch = process.env.FEDORA_ADAPTER_ES;
   }
 
   if (process.env.FEDORA_ADAPTER_USER_NAME) {
