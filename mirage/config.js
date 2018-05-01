@@ -85,11 +85,17 @@ export default function () {
   this.patch('/publications/:id'); // or this.patch
   this.del('/publications/:id');
 
-  this.get('/repo-copies');
-  this.post('/repo-copies');
-  this.get('/repo-copies/:id');
-  this.patch('/repo-copies/:id'); // or this.patch
-  this.del('/repo-copies/:id');
+  this.get('/repositoryCopies');
+  this.post('/repositoryCopies');
+  this.get('/repositoryCopies/:id');
+  this.patch('/repositoryCopies/:id'); // or this.patch
+  this.del('/repositoryCopies/:id');
+
+  this.get('/repository-copies');
+  this.post('/repository-copies');
+  this.get('/repository-copies/:id');
+  this.patch('/repository-copies/:id'); // or this.patch
+  this.del('/repository-copies/:id');
 
   this.passthrough();
 }

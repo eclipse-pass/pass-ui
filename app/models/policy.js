@@ -5,7 +5,7 @@ export default DS.Model.extend({
   description: DS.attr('string'),
   policyUrl: DS.attr('string'),
 
-  repositories: DS.belongsTo('repository'),
+  repositories: DS.hasMany('repository'),
   institution: DS.attr('string'),
   funder: DS.hasMany('funder'),
 });
