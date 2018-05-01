@@ -210,8 +210,6 @@ export default Route.extend(ApplicationRouteMixin, {
               "journal-NLMTA-ID": { "type": "string", "required": true },
               "ISSN": { "type": "string", "required": true },
               "author": { "type": "string", "required": true },
-              "mName": { "type": "string" },
-              "family": { "type": "string", "required": true },
               "email": { "type": "string", "required": true }
             }
           },
@@ -221,9 +219,7 @@ export default Route.extend(ApplicationRouteMixin, {
               "journal-title-short": { "type": "text", "label": "Journal Title", "placeholder": "Enter the journal title" },
               "journal-NLMTA-ID": { "type": "text", "label": "Journal NLMTA ID", "placeholder": "" },
               "ISSN": { "type": "text", "label": "ISSN", "placeholder": "" },
-              "author": { "type": "text", "label": "First Name", "placeholder": "", "fieldClass": "col-4 pull-left pl-0" },
-              "mName": { "type": "text", "label": "Middle Name", "placeholder": "", "fieldClass": "col-4 pull-left" },
-              "family": { "type": "text", "label": "Last Name", "placeholder": "", "fieldClass": "col-4 pull-left pr-0" },
+              "author": { "type": "array", "label": "Author Name(s)", "placeholder": "", "fieldClass": "body-text" },
               "email": { "type": "text", "label": "Email Address", "placeholder": "" }
             }
           }
