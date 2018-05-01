@@ -348,51 +348,10 @@ export default Ember.Component.extend({
           styles: 'pull-right btn btn-primary',
           click() {
             const value = this.getValue();
+            // concat auther + family together
+            // value.author = `${value.author} ${value.family}`;
+            // delete value.family;
             const formId = newForm.id;
-            // metadata[formId] = [];
-            // if (!metadata[formId]) {
-            //   metadata.push({
-            //     id: formId,
-            //     data: value,
-            //   });
-            // } else {
-            //   metadata[formId] = ({
-            //     id: formId,
-            //     data: value,
-            //   });
-            // }
-            //
-            // // Save the metadata to the model
-            // let forEachCallBack = true;
-            // metadata.forEach((data)=>{
-            //   forEachCallBack = false;
-            //   console.log('IN FOREACH')
-            //   if(data.id == metadata[formId].id) { // duplicates found write over duplicate with new data
-            //     console.log(hasDuplicates(metadata))
-            //     console.log('heyyyy ohh we found a dup')
-            //     metadata[formId] = ({
-            //       id: formId,
-            //       data: value,
-            //     });
-            //   } else { // no duplicates found
-            //     console.log('no dups found')
-            //     metadata.push({
-            //       id: formId,
-            //       data: value,
-            //     });
-            //   }
-            // })
-            // if(forEachCallBack) { // for didnt run so push on to array
-            //   console.log('IN forEachCallBack')
-            //   metadata.push({
-            //     id: formId,
-            //     data: value,
-            //   });
-            // }
-
-
-            // console.log(hasDuplicates(metadata))
-            // metadata = removeDuplicates(metadata)
             metadata.push({
               id: formId,
               data: value,
