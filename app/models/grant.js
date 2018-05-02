@@ -3,8 +3,9 @@ import DS from 'ember-data';
 export default DS.Model.extend({
   /** Award number from a funder (REQUIRED) */
   awardNumber: DS.attr('string'),
+  /** Possible values: active, pre_award, terminated */
   awardStatus: DS.attr('string'),
-  externalId: DS.attr('string'),
+  localKey: DS.attr('string'),
   projectName: DS.attr('string'),
   awardDate: DS.attr('date'),
   startDate: DS.attr('date'),
@@ -15,5 +16,5 @@ export default DS.Model.extend({
   coPis: DS.hasMany('user', { async: true }),
   primaryFunder: DS.belongsTo('funder'),
   directFunder: DS.belongsTo('funder'),
-  submissions: DS.hasMany('submission', { async: true }),
+  // submissions: DS.hasMany('submission', { async: true }), // TODO Not part of model
 });

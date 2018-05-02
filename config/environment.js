@@ -1,7 +1,6 @@
 /* eslint-env node */
-'use strict';
 
-module.exports = function(environment) {
+module.exports = function (environment) {
   let ENV = {
     modulePrefix: 'pass-ember',
     environment,
@@ -67,12 +66,12 @@ module.exports = function(environment) {
     elasticsearch: 'http://localhost:9200/pass/',    
     username: 'admin',
     password: 'moo'
-  }
-  
+  };
+
   if (process.env.FEDORA_ADAPTER_BASE) {
     ENV.fedora.base = process.env.FEDORA_ADAPTER_BASE;
   }
-  
+
   if (process.env.FEDORA_ADAPTER_CONTEXT) {
     ENV.fedora.context = process.env.FEDORA_ADAPTER_CONTEXT;
   }
@@ -84,11 +83,11 @@ module.exports = function(environment) {
   if (process.env.FEDORA_ADAPTER_ES) {
     ENV.fedora.elasticsearch = process.env.FEDORA_ADAPTER_ES;
   }
-  
+
   if (process.env.FEDORA_ADAPTER_USER_NAME) {
     ENV.fedora.username = process.env.FEDORA_ADAPTER_USER_NAME;
   }
-  
+
   if (process.env.FEDORA_ADAPTER_PASSWORD) {
     ENV.fedora.password = process.env.FEDORA_ADAPTER_PASSWORD;
   }

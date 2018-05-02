@@ -18,7 +18,7 @@ export default Controller.extend({
 
       let text = `Concerning project ${grant.get('projectName')}, one or more of the following submissions have issues:`;
       grant.get('submissions').forEach((s) => {
-        text += `\n  Article: ${s.get('title')}, Status: ${s.get('status')}`;
+        text += `\n  Article: ${s.get('title')}, Status: ${s.get('awardStatus')}`;
       });
       text += '\n\nPlease check your PASS dashboard.';
 
@@ -32,9 +32,10 @@ export default Controller.extend({
   // Columns displayed depend on the user role
   columns: computed('currentUser', {
     get() {
-      if (this.get('currentUser.user.role') === 'ADMIN') {
+      const userRoles = this.get('currentUser.user.roles');
+      if (userRoles.includes('admin')) {
         return this.get('adminColumns');
-      } else if (this.get('currentUser.user.role') === 'PI') {
+      } else if (userRoles.includes('submitter')) {
         return this.get('piColumns');
       }
       return [];
@@ -61,7 +62,7 @@ export default Controller.extend({
       disableFiltering: true,
     },
     {
-      propertyName: 'externalId',
+      propertyName: 'localKey',
       title: 'COEUS',
       disableFiltering: true,
     },
@@ -118,7 +119,7 @@ export default Controller.extend({
       disableFiltering: true,
     },
     {
-      propertyName: 'externalId',
+      propertyName: 'localKey',
       title: 'COEUS',
       disableFiltering: true,
     },

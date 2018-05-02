@@ -19,16 +19,16 @@ export default Controller.extend({
       this.set('messageShow', true);
       this.set('messageTo', submission.get('user.displayName'));
       this.set('messageSubject', 'OAP Compliance');
-      this.set('messageText', `Concerning submission ${submission.get('title')}, the status is ${submission.get('status')}.\nPlease check your PASS dashboard.`);
+      this.set('messageText', `Concerning submission ${submission.get('title')}, the status is ${submission.get('aggregatedDepositStatus')}.\nPlease check your PASS dashboard.`);
     },
   },
 
   // Columns displayed depend on the user role
   columns: computed('currentUser', {
     get() {
-      if (this.get('currentUser.user.role') === 'ADMIN') {
+      if (this.get('currentUser.user.roles').includes('admin')) {
         return this.get('adminColumns');
-      } else if (this.get('currentUser.user.role') === 'PI') {
+      } else if (this.get('currentUser.user.roles').includes('submitter')) {
         return this.get('piColumns');
       }
       return [];
@@ -55,17 +55,17 @@ export default Controller.extend({
     component: 'submissions-repo-cell'
   },
   {
-    propertyName: 'userSubmittedDate',
+    propertyName: 'submittedDate',
     title: 'Last Update Date',
     component: 'date-cell'
   },
   {
-    propertyName: 'userSubmittedDate',
+    propertyName: 'submittedDate',
     title: 'Submitted Date',
     component: 'date-cell'
   },
   {
-    propertyName: 'status',
+    propertyName: 'aggregatedDepositStatus',
     title: 'Status',
     filterWithSelect: true,
     predefinedFilterOptions: ['In Progress', 'Complete'],
@@ -97,17 +97,17 @@ export default Controller.extend({
     component: 'submissions-repo-cell'
   },
   {
-    propertyName: 'userSubmittedDate',
+    propertyName: 'submittedDate',
     title: 'Last Update Date',
     component: 'date-cell'
   },
   {
-    propertyName: 'userSubmittedDate',
+    propertyName: 'submittedDate',
     title: 'Submitted Date',
     component: 'date-cell'
   },
   {
-    propertyName: 'status',
+    propertyName: 'aggregatedDepositStatus',
     title: 'Status',
     filterWithSelect: true,
     predefinedFilterOptions: ['In Progress', 'Complete'],

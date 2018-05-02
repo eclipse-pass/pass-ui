@@ -1,6 +1,6 @@
 import { moduleForModel, test } from 'ember-qunit';
 
-moduleForModel('repo-copy', 'Unit | Model | repo copy', {
+moduleForModel('repository-copy', 'Unit | Model | repo copy', {
   // Specify the other units that are required for this test.
   needs: ['model:publication', 'model:repository']
 });
