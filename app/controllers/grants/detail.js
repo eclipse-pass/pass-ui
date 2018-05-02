@@ -13,7 +13,7 @@ export default Controller.extend({
     { propertyName: 'userSubmittedDate', title: 'Last Update Date', component: 'date-cell' },
     { propertyName: 'userSubmittedDate', title: 'Submitted Date', component: 'date-cell' },
     {
-      propertyName: 'status',
+      propertyName: 'awardStatus',
       title: 'Status',
       filterWithSelect: true,
       predefinedFilterOptions: ['In Progress', 'Complete'],

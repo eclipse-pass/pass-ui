@@ -20,7 +20,7 @@ export default Component.extend({
       const regex = new RegExp(term, 'i');
 
       return this.get('store').findAll('journal')
-        .then(journals => journals.filter(journal => journal.get('name').match(regex)));
+        .then(journals => journals.filter(journal => journal.get('journalName').match(regex)));
     },
   },
 });
