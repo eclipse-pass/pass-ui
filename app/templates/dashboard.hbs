@@ -15,7 +15,7 @@
         </p>
         <div class="text-center">
           {{#link-to 'submissions' class='btn btn-primary mr-auto mt-1'}}View Submissions{{/link-to}}
-          {{#if (eq currentUser.user.role "PI")}}
+          {{#if (get (await currentUser.user) 'isSubmitter')}}
             {{#link-to "submissions.new" class='btn btn-primary mt-1'}}Create New Submission{{/link-to}}
           {{/if}}
         </div>
