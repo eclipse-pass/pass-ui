@@ -11,19 +11,19 @@ export default Controller.extend({
   messageText: '',
 
   actions: {
-    piclick(grant) {
-      this.set('messageShow', true);
-      this.set('messageTo', grant.get('pi.displayName'));
-      this.set('messageSubject', 'OAP Compliance');
+    // piclick(grant) {
+    //   this.set('messageShow', true);
+    //   this.set('messageTo', grant.get('pi.displayName'));
+    //   this.set('messageSubject', 'OAP Compliance');
 
-      let text = `Concerning project ${grant.get('projectName')}, one or more of the following submissions have issues:`;
-      grant.get('submissions').forEach((s) => {
-        text += `\n  Article: ${s.get('title')}, Status: ${s.get('awardStatus')}`;
-      });
-      text += '\n\nPlease check your PASS dashboard.';
+    //   let text = `Concerning project ${grant.get('projectName')}, one or more of the following submissions have issues:`;
+    //   grant.get('submissions').forEach((s) => {
+    //     text += `\n  Article: ${s.get('title')}, Status: ${s.get('awardStatus')}`;
+    //   });
+    //   text += '\n\nPlease check your PASS dashboard.';
 
-      this.set('messageText', text);
-    },
+    //   this.set('messageText', text);
+    // },
   },
 
   tablePageSize: 5,
@@ -67,7 +67,7 @@ export default Controller.extend({
       disableFiltering: true,
     },
     {
-      title: 'PI / CO-PIs',
+      title: 'PI',
       propertyName: 'pi',
       component: 'pi-list-cell'
     },
