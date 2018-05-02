@@ -40,6 +40,6 @@
   showGlobalFilter=false
 }}
 
-{{#if (eq currentUser.user.role 'PI')}}
+{{#if (get (await currentUser.user) 'isSubmitter')}}
   {{#link-to 'submissions.new' (query-params grant=model.id) class="btn btn-primary"}}Create New Submission{{/link-to}}
 {{/if}}
