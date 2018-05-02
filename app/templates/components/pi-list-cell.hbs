@@ -1,9 +1,8 @@
 {{! Format pi and copi list as pi / copi names. Click on PI to do something.}}
-<a href='javascript:;' class='' {{action 'sendAction' 'piSelected' record}} title='Click to contact PI'>
+{{!-- <a href='javascript:;' class='' {{action 'sendAction' 'piSelected' record}} title='Click to contact PI'> --}}
   {{record.pi.displayName}}
-</a>
+{{!-- </a> --}}
 {{#each record.coPis as |person index|}}
   {{person.name}}
 {{else}}
-  loading...
 {{/each}}
