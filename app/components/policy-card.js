@@ -11,6 +11,9 @@ export default Component.extend({
   nihAndNotMethodAJournal: Ember.computed(function () { // eslint-ignore-line
     return this.get('policyIsNIH') && !this.get('methodAJournal');
   }),
+  policyIsJHU: Ember.computed(function () { // eslint-ignore-line
+    return this.get('repositories').any(repo => repo.get('name') === 'JScholarship');
+  }),
   didRender() {
     this._super(...arguments);
     if (this.get('methodAJournal') && !this.get('removeNIHDeposit')) {

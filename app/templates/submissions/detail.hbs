@@ -68,7 +68,7 @@
           <tbody>
             <tr>
               <td>Status</td>
-              <td>{{model.status}}
+              <td>{{model.aggregatedDepositStatus}}
               </td>
             </tr>
             <tr>
@@ -95,7 +95,7 @@
                   {{#each model.deposits as |deposit|}}
                   <li>{{get (await deposit.repository) 'name'}}</li>
                   <ul>
-                    <li>Status: {{deposit.status}}</li>
+                    <li>Status: {{deposit.depositStatus}}</li>
                     <li>Required: {{deposit.isRequired}}</li>
                   </ul>
                 {{else}}
