@@ -72,12 +72,12 @@ export default Component.extend({
           this.set('doiInfo', doiInfo);
 
           const journal = this.get('model.journals').findBy(
-            'name',
+            'journalName',
             doiInfo['container-title'].trim(),
           );
           if (!journal) {
             const newJournal = this.get('store').createRecord('journal', {
-              name: doiInfo['container-title'].trim(),
+              journalName: doiInfo['container-title'].trim(),
               nlmta: 'UNKNOWN',
             });
             newJournal.save().then(j => publication.set('journal', j));

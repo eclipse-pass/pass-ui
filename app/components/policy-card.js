@@ -12,7 +12,9 @@ export default Component.extend({
     return this.get('policyIsNIH') && !this.get('methodAJournal');
   }),
   policyIsJHU: Ember.computed(function () { // eslint-ignore-line
-    return this.get('repositories').any(repo => repo.get('name') === 'JScholarship');
+    if (this.get('repositories')) {
+      return this.get('repositories').any(repo => repo.get('name') === 'JScholarship');
+    }
   }),
   didRender() {
     this._super(...arguments);
