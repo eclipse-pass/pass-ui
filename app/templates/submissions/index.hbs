@@ -1,3 +1,7 @@
+{{#if (eq (get (await currentUser.user) 'role') 'PI')}}
+  {{#link-to "submissions.new" class="btn btn-primary btn-small pull-right mt-3"}}Create new Submission{{/link-to}}
+{{/if}}
+
 <h1 class="font-weight-light">Submissions</h1>
 
 {{models-table
@@ -13,7 +17,3 @@
 
 {{#message-dialog show=messageShow to=messageTo subject=messageSubject message=messageText}}
 {{/message-dialog}}
-
-{{#if (eq (get (await currentUser.user) 'role') 'PI')}}
-  {{#link-to "submissions.new" class="btn btn-primary btn-small"}}Create new Submission{{/link-to}}
-{{/if}}
