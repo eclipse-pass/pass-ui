@@ -1,4 +1,4 @@
-{{#if (eq (get (await currentUser.user) 'role') 'PI')}}
+{{#if (get (await currentUser.user) 'isSubmitter')}}
   {{#link-to "submissions.new" class="btn btn-primary btn-small pull-right mt-3"}}Create new Submission{{/link-to}}
 {{/if}}
 

@@ -25,4 +25,11 @@ export default DS.Model.extend({
   shibbolethId: DS.attr('string'),
 
   submissionDraft: DS.belongsTo('submission'),
+
+  isSubmitter: Ember.computed('roles', function () {
+    if (this.get('roles').contains('submitter')) {
+      return true;
+    }
+    return false;
+  })
 });
