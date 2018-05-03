@@ -314,7 +314,9 @@ h3 {
 }
 
 
-
+a {
+  color: $navbar-color !important;
+}
 .navbar {
   background:$navbar-color;
 }
