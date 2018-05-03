@@ -128,6 +128,25 @@
                 {{/each}}
               </td>
             </tr>
+            {{#if mustVisitEric}}
+              <tr>
+                <td class="text-nowrap">External Submission Portal</td>
+                <td>
+                  <label class="">
+                    Please visit the following web portal to submit your manuscript directly. Metadata displayed above
+                    could be used to aid your submission progress.
+                  </label>
+                  <ul class="m-0">
+                    <li>
+                      <a target="_blank" href="https://eric.ed.gov/submit/" {{action "clickEric" preventDefault=false}}>
+                        https://eric.ed.gov/submit/
+                      </a>
+                    </li>
+                  </ul>
+                </td>
+              </tr>
+            {{/if}}
+
           </tbody>
         </table>
       </div>
@@ -140,21 +159,6 @@
           </div>
         </div>
       </div> --}}
-      {{#if disableSubmit}}
-         <div class="form-group row bg-gray-200 m-0 p-4">
-            <label class="">
-              Please visit the following web portal to submit your manuscript directly. Metadata displayed above 
-              could be used to aid your submission progress.
-            </label>
-            <ul class="m-0">
-              <li>
-                <a target="_blank" href="https://eric.ed.gov/submit/" {{action "clickEric" preventDefault=false}}>
-                  https://eric.ed.gov/submit/
-                </a>
-              </li>
-            </ul>
-          </div>
-      {{/if}}
     </div>
   </div>
 </div>
