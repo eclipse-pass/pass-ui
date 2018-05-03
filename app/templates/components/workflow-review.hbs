@@ -67,7 +67,7 @@
           <tbody>
             <tr>
               <td>Journal</td>
-              <td>{{get (await model.publication.journal) 'name'}}
+              <td>{{get (await model.publication.journal) 'journalName'}}
               </td>
             </tr>
             <tr>
@@ -100,7 +100,7 @@
                     {{#if (not-eq key 'under-embargo')}}
                       {{#if (not-eq key 'Embargo-end-date')}}
                         {{#if (not-eq key 'agreement-to-embargo')}}
-                            <li><b>{{key}}</b>: {{data}}</li>
+                            <li><b>{{key}}</b>: {{{data}}}</li>
                         {{/if}}
                       {{/if}}
                     {{/if}}
