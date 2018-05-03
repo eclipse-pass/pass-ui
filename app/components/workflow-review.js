@@ -1,4 +1,5 @@
 import Component from '@ember/component';
+import _ from 'lodash';
 
 export default Component.extend({
   didRender() {
@@ -13,7 +14,15 @@ export default Component.extend({
     JSON.parse(this.get('model.newSubmission.metadata')).forEach((ele) => {
       for (var key in ele.data) {
         if (ele.data.hasOwnProperty(key)) {
-          metadataBlobNoKeys[key] = ele.data[key];
+          if (key === 'author') {
+            if (metadataBlobNoKeys['author(s)']) {
+              metadataBlobNoKeys['author(s)'] = _.uniq(metadataBlobNoKeys['author(s)'].concat(ele.data[key]));
+            } else {
+              metadataBlobNoKeys['author(s)'] = ele.data[key];
+            }
+          } else {
+            metadataBlobNoKeys[key] = ele.data[key];
+          }
         }
       }
     });
