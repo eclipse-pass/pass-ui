@@ -12,7 +12,7 @@ export default Component.extend({
 
     // Always add the JHU policy
     let required = this.get('model.policies')
-      .filter(repo => repo.get('url') === 'https://provost.jhu.edu/about/open-access/');
+      .filter(repo => repo.get('policyUrl') === 'https://provost.jhu.edu/about/open-access/');
     if (required.length > 0) {
       policies.addObject(required[0]);
     }
