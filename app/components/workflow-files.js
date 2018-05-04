@@ -11,14 +11,22 @@ function checkDisabled(files) {
 }
 
 export default Component.extend({
-  files: [],
+  store: Ember.inject.service('store'),
+  files: Ember.A(),
   init() {
     this._super(...arguments);
-    this.set('files', []);
+    this.set('files', Ember.A());
+    if (this.get('model.newSubmission.filesTemp') && JSON.parse(this.get('model.newSubmission.filesTemp')).length > 0) {
+      JSON.parse(this.get('model.newSubmission.filesTemp')).forEach((file) => {
+        this.get('files').pushObject(this.get('store').createRecord('file', file));
+      });
+      this.set('nextDisabled', false);
+    }
   },
   nextDisabled: true,
   actions: {
     next() {
+      this.get('model.newSubmission').set('filesTemp', JSON.stringify(this.get('files')));
       this.sendAction('next');
     },
     back() {
@@ -31,14 +39,18 @@ export default Component.extend({
         if (uploads.files.length !== 0) {
           for (let i = 0; i < uploads.files.length; i++) {
             const file = uploads.files[i];
-            // TODO this is weird refactor later down the road
-            this.get('files').pushObject({
-              file,
-              type: file.type.substring(file.type.indexOf('/') + 1),
-              description: file.description
+            const newFile = this.get('store').createRecord('file', {
+              name: file.name,
+              mimeType: file.type.substring(file.type.indexOf('/') + 1),
+              description: file.description,
+              fileRole: 'supplement',
+              uri: 'http://example.com',
             });
+            if (this.get('files').length === 0) {
+              newFile.set('fileRole', 'manuscript');
+            }
+            this.get('files').pushObject(newFile);
           }
-          submission.set('files', this.get('files'));
           this.set('nextDisabled', checkDisabled(this.get('files')));
         }
       }
@@ -47,7 +59,7 @@ export default Component.extend({
       let files = this.get('files');
       files.removeObject(file);
       this.set('files', files);
-      this.set('model.newSubmission.files', this.get('files'));
+      this.set('model.newSubmission.filesTemp', JSON.stringify(this.get('files')));
       this.set('nextDisabled', checkDisabled(this.get('files')));
     }
   },
