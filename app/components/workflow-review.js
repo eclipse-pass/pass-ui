@@ -14,14 +14,15 @@ export default Component.extend({
     JSON.parse(this.get('model.newSubmission.metadata')).forEach((ele) => {
       for (var key in ele.data) {
         if (ele.data.hasOwnProperty(key)) {
+          let strippedData = ele.data[key].replace(/(<([^>]+)>)/ig, '');
           if (key === 'author') {
             if (metadataBlobNoKeys['author(s)']) {
-              metadataBlobNoKeys['author(s)'] = _.uniq(metadataBlobNoKeys['author(s)'].concat(ele.data[key]));
+              metadataBlobNoKeys['author(s)'] = _.uniq(metadataBlobNoKeys['author(s)'].concat(strippedData));
             } else {
-              metadataBlobNoKeys['author(s)'] = ele.data[key];
+              metadataBlobNoKeys['author(s)'] = strippedData;
             }
           } else {
-            metadataBlobNoKeys[key] = ele.data[key];
+            metadataBlobNoKeys[key] = strippedData;
           }
         }
       }
