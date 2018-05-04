@@ -13,7 +13,7 @@ export default Component.extend({
     JSON.parse(this.get('model.newSubmission.metadata')).forEach((ele) => {
       for (var key in ele.data) {
         if (ele.data.hasOwnProperty(key)) {
-          metadataBlobNoKeys[key] = ele.data[key];
+          metadataBlobNoKeys[key] = ele.data[key].replace(/(<([^>]+)>)/ig, '');
         }
       }
     });
