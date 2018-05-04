@@ -39,7 +39,6 @@ export default Component.extend({
         if (uploads.files.length !== 0) {
           for (let i = 0; i < uploads.files.length; i++) {
             const file = uploads.files[i];
-            // this is where we add file objects
             const newFile = this.get('store').createRecord('file', {
               name: file.name,
               mimeType: file.type.substring(file.type.indexOf('/') + 1),
@@ -52,7 +51,6 @@ export default Component.extend({
             }
             this.get('files').pushObject(newFile);
           }
-          // submission.set('filesTemp', JSON.stringify(this.get('files')));
           this.set('nextDisabled', checkDisabled(this.get('files')));
         }
       }
