@@ -9,15 +9,14 @@ export default Controller.extend({
       sub.set('aggregatedDepositStatus', 'not-started');
       sub.set('submittedDate', new Date());
       sub.set('submitted', true);
-      debugger;
+
       pub.save().then((p) => {
         sub.set('publication', p);
-        debugger;
+
         let ctr = 0;
         let len = JSON.parse(sub.get('filesTemp')).length;
         sub.save().then((s) => {
           JSON.parse(sub.get('filesTemp')).forEach((file) => {
-            debugger;
             let newFile = this.get('store').createRecord('file', file);
             newFile.set('submission', s);
             newFile.save().then(() => {
