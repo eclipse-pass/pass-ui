@@ -43,7 +43,7 @@ export default Component.extend({
             });
             this.get('files').pushObject(newFile);
           }
-          submission.set('files', this.get('files'));
+          submission.set('filesTemp', JSON.stringify(this.get('files')));
           this.set('nextDisabled', checkDisabled(this.get('files')));
         }
       }
@@ -52,7 +52,7 @@ export default Component.extend({
       let files = this.get('files');
       files.removeObject(file);
       this.set('files', files);
-      this.set('model.newSubmission.files', this.get('files'));
+      this.set('model.newSubmission.filesTemp', JSON.stringify(this.get('files')));
       this.set('nextDisabled', checkDisabled(this.get('files')));
     }
   },

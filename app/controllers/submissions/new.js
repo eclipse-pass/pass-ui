@@ -6,13 +6,29 @@ export default Controller.extend({
     submit() {
       const sub = this.get('model.newSubmission');
       const pub = this.get('model.publication');
-      sub.aggregatedDepositStatus = 'not-started';
-      sub.userSubmittedDate = new Date();
-      sub.submitted = true;
+      sub.set('aggregatedDepositStatus', 'not-started');
+      sub.set('submittedDate', new Date());
+      sub.set('submitted', true);
+      debugger;
       pub.save().then((p) => {
-        sub.publication = p;
-        sub.save().then(() => {
-          this.transitionToRoute('thanks');
+        sub.set('publication', p);
+        debugger;
+        let ctr = 0;
+        let len = JSON.parse(sub.get('filesTemp')).length;
+        sub.save().then((s) => {
+          JSON.parse(sub.get('filesTemp')).forEach((file) => {
+            debugger;
+            let newFile = this.get('store').createRecord('file', file);
+            newFile.set('submission', s);
+            newFile.save().then(() => {
+              ctr += 1;
+              console.log(ctr);
+              console.log('saved file!');
+              if (ctr >= len) {
+                this.transitionToRoute('thanks');
+              }
+            });
+          });
         });
       });
     },

@@ -114,7 +114,7 @@
             <tr>
               <td>Files</td>
               <td>
-                {{#each model.newSubmission.files as |file|}}
+                {{#each parsedFiles as |file|}}
                   <div class="card file-icon text-center">
                     {{!-- {{#if (eq model.newSubmission.files.isManuscript file.name)}}
                       <span>

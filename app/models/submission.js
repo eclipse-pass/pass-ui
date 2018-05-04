@@ -8,12 +8,12 @@ export default DS.Model.extend({
   metadata: DS.attr('string', { defaultValue: '[]' }), // Stringified JSON
   // pubmedId: DS.attr('string'),
   submitted: DS.attr('boolean', { defaultValue: false }),
-  files: DS.attr(),
 
   user: DS.belongsTo('user'),
   publication: DS.belongsTo('publication'),
   repositories: DS.hasMany('repository', { async: true }), // not on this model on API
   deposits: DS.hasMany('deposit', { async: true }),
+  files: DS.hasMany('file', { async: true }),
   /**
    * List of grants related to the item being submitted. The grant PI determines who can perform
    * the submission and in the case that there are mutliple associated grants, they all should
@@ -21,6 +21,7 @@ export default DS.Model.extend({
    */
   grants: DS.hasMany('grant', { async: true }),
 
-  // doesn't get saved to database
+  // don't get saved to database
   removeNIHDeposit: false,
+  filesTemp: DS.attr('string'),
 });
