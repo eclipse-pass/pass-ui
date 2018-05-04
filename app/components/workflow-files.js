@@ -20,6 +20,7 @@ export default Component.extend({
   nextDisabled: true,
   actions: {
     next() {
+      this.get('model.newSubmission').set('filesTemp', JSON.stringify(this.get('files')));
       this.sendAction('next');
     },
     back() {
@@ -43,7 +44,7 @@ export default Component.extend({
             });
             this.get('files').pushObject(newFile);
           }
-          submission.set('filesTemp', JSON.stringify(this.get('files')));
+          // submission.set('filesTemp', JSON.stringify(this.get('files')));
           this.set('nextDisabled', checkDisabled(this.get('files')));
         }
       }

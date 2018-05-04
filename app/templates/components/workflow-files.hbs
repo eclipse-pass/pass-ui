@@ -39,7 +39,13 @@
                  <tr>
                    <td><p class="table-text" >{{file.name}}</p></td>
                    <td class="text-center">
-                     {{radio-button value=file.name name='isManuscript' checked=files.isManuscript}}
+                     {{!-- {{radio-button value=file.name name='isManuscript' checked=files.isManuscript}} --}}
+                     <select onchange={{action (mut file.fileRole) value="target.value"}}>
+                       <option value="supplement" selected={{eq file.fileRole "supplement"}}>Supplement</option>
+                       <option value="manuscript" selected={{eq file.fileRole "manuscript"}}>Manuscript</option>
+                       <option value="table" selected={{eq file.fileRole "table"}}>Table</option>
+                       <option value="figure" selected={{eq file.fileRole "figure"}}>Figure</option>
+                     </select>
                    </td>
                    <td>
                      {{input  class="form-control" value=file.description}}
