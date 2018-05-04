@@ -10,6 +10,9 @@ export default Controller.extend({
   messageSubject: '',
   messageText: '',
 
+  /**
+   * Crappy way to attach search results to a grant in the table
+   */
   tableModel: Ember.computed('model.grants', function () {
     const grants = this.get('model.grants');
     let result = [];
@@ -139,7 +142,10 @@ export default Controller.extend({
       component: 'date-cell'
     },
     {
-      title: '#', disableFiltering: true, component: 'grant-sub-number-cell'
+      propertyName: 'submissions.content.content.length',
+      title: '#',
+      disableFiltering: true,
+      component: 'grant-link-cell'
     },
     {
       propertyName: 'grant.awardStatus',
