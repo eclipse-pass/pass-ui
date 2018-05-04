@@ -12,17 +12,14 @@ export default Controller.extend({
 
       pub.save().then((p) => {
         sub.set('publication', p);
-
         let ctr = 0;
         let len = JSON.parse(sub.get('filesTemp')).length;
         sub.save().then((s) => {
           JSON.parse(sub.get('filesTemp')).forEach((file) => {
             let newFile = this.get('store').createRecord('file', file);
             newFile.set('submission', s);
-            newFile.save().then(() => {
+            newFile.save().then((f) => {
               ctr += 1;
-              console.log(ctr);
-              console.log('saved file!');
               if (ctr >= len) {
                 this.transitionToRoute('thanks');
               }
