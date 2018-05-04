@@ -75,7 +75,7 @@ export default Component.extend({
         },
         publicationType: {
           type: 'select',
-          helper: 'Select your Publication type.',
+          noneLabel: 'Select your Publication type.',
           fieldClass: 'pull-left col-8 pr-0',
           optionLabels: [
             'Electronic Publication',
