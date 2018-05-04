@@ -42,6 +42,9 @@ export default Component.extend({
               fileRole: 'supplement',
               uri: 'http://example.com',
             });
+            if (this.get('files').length === 0) {
+              newFile.set('fileRole', 'manuscript');
+            }
             this.get('files').pushObject(newFile);
           }
           // submission.set('filesTemp', JSON.stringify(this.get('files')));
