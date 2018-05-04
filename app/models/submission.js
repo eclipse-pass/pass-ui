@@ -5,7 +5,7 @@ export default DS.Model.extend({
   aggregatedDepositStatus: DS.attr('string', { defaultValue: 'not-started' }),
   submittedDate: DS.attr('date'),
   source: DS.attr('string', { defaultValue: 'pass' }),
-  metadata: DS.attr('string'), // Stringified JSON
+  metadata: DS.attr('string', { defaultValue: '[]' }), // Stringified JSON
   // pubmedId: DS.attr('string'),
   submitted: DS.attr('boolean', { defaultValue: false }),
   files: DS.attr(),

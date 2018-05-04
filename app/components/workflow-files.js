@@ -11,10 +11,11 @@ function checkDisabled(files) {
 }
 
 export default Component.extend({
-  files: [],
+  store: Ember.inject.service('store'),
+  files: Ember.A(),
   init() {
     this._super(...arguments);
-    this.set('files', []);
+    this.set('files', Ember.A());
   },
   nextDisabled: true,
   actions: {
@@ -31,12 +32,16 @@ export default Component.extend({
         if (uploads.files.length !== 0) {
           for (let i = 0; i < uploads.files.length; i++) {
             const file = uploads.files[i];
-            // TODO this is weird refactor later down the road
-            this.get('files').pushObject({
-              file,
-              type: file.type.substring(file.type.indexOf('/') + 1),
-              description: file.description
+            debugger;
+            // this is where we add file objects
+            const newFile = this.get('store').createRecord('file', {
+              name: file.name,
+              mimeType: file.type.substring(file.type.indexOf('/') + 1),
+              description: file.description,
+              fileRole: 'supplement',
+              uri: 'http://example.com',
             });
+            this.get('files').pushObject(newFile);
           }
           submission.set('files', this.get('files'));
           this.set('nextDisabled', checkDisabled(this.get('files')));

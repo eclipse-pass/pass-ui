@@ -37,9 +37,9 @@
              <tbody>
               {{#each files as |file|}}
                  <tr>
-                   <td><p class="table-text" >{{file.file.name}}</p></td>
+                   <td><p class="table-text" >{{file.name}}</p></td>
                    <td class="text-center">
-                     {{radio-button value=file.file.name name='isManuscript' checked=files.isManuscript}}
+                     {{radio-button value=file.name name='isManuscript' checked=files.isManuscript}}
                    </td>
                    <td>
                      {{input  class="form-control" value=file.description}}
