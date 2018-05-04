@@ -16,6 +16,12 @@ export default Component.extend({
   init() {
     this._super(...arguments);
     this.set('files', Ember.A());
+    if (this.get('model.newSubmission.filesTemp') && JSON.parse(this.get('model.newSubmission.filesTemp')).length > 0) {
+      JSON.parse(this.get('model.newSubmission.filesTemp')).forEach((file) => {
+        this.get('files').pushObject(this.get('store').createRecord('file', file));
+      });
+      this.set('nextDisabled', false);
+    }
   },
   nextDisabled: true,
   actions: {
@@ -33,7 +39,6 @@ export default Component.extend({
         if (uploads.files.length !== 0) {
           for (let i = 0; i < uploads.files.length; i++) {
             const file = uploads.files[i];
-            debugger;
             // this is where we add file objects
             const newFile = this.get('store').createRecord('file', {
               name: file.name,
