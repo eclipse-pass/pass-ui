@@ -285,8 +285,8 @@ body {
   content: "\f077";
 }
 
-.alpaca-container-label {
-  font-size: 0.875rem!important;
+.alpaca-field-array .alpaca-container-label {
+  font-size: 1em!important;
 }
 
 ////////////////////////////
@@ -314,7 +314,9 @@ h3 {
 }
 
 
-
+a {
+  color: $navbar-color !important;
+}
 .navbar {
   background:$navbar-color;
 }
