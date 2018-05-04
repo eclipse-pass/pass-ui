@@ -4,20 +4,20 @@
 <div class='container'>
   <div class='row'>
     <ul class='col-sm-6'>
-      <li><strong>Project Name:</strong> {{model.projectName}}</li>
-      <li><strong>Award Number:</strong> {{model.awardNumber}}</li>
-      <li><strong>Funder:</strong> {{model.primaryFunder.name}}</li>
-      <li><strong>Start:</strong> {{format-date model.startDate }}</li>
-      <li><strong>End:</strong> {{format-date model.endDate}}</li>
+      <li><strong>Project Name:</strong> {{model.grant.projectName}}</li>
+      <li><strong>Award Number:</strong> {{model.grant.awardNumber}}</li>
+      <li><strong>Funder:</strong> {{model.grant.primaryFunder.name}}</li>
+      <li><strong>Start:</strong> {{format-date model.grant.startDate }}</li>
+      <li><strong>End:</strong> {{format-date model.grant.endDate}}</li>
     </ul>
 
     <ul class='col-sm-6'>
-      <li><strong>Status:</strong> {{model.awardStatus}}</li>
+      <li><strong>Status:</strong> {{model.grant.awardStatus}}</li>
       {{!-- <li><strong>Created by:</strong> {{model.creator.username}} on {{model.creationDate}}</li> --}}
-      <li><strong>PI:</strong> <a href='mailto:{{model.pi.email}}'>{{model.pi.displayName}}</a></li>
+      <li><strong>PI:</strong> <a href='mailto:{{model.grant.pi.email}}'>{{model.grant.pi.displayName}}</a></li>
       <li><strong>CoPIs:</strong>
         <ul>
-          {{#each model.coPis as |person|}}
+          {{#each model.grant.coPis as |person|}}
             <li><a href='mailto:{{person.email}}'>{{person.displayName}}</a></li>
           {{/each}}
         </ul>
