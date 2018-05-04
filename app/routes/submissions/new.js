@@ -5,6 +5,13 @@ const {
 } = Ember.inject;
 
 export default Route.extend({
+  resetController(controller, isExiting, transition) {
+    // Explicitly clear the 'grant' query parameter when reloading this route
+    if (isExiting) {
+      controller.set('grant', undefined);
+    }
+  },
+
   currentUser: service(),
   model(params) {
     let preLoadedGrant = null;
