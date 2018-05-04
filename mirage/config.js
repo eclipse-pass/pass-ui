@@ -9,7 +9,7 @@ export default function () {
     Note: these only affect routes defined *after* them!
   */
 
-  this.urlPrefix = 'http://localhost:8080'; // make this `http://localhost:8080`, for example, if your API is on a different server
+  this.urlPrefix = ENV.host; // make this `http://localhost:8080`, for example, if your API is on a different server
   // this.namespace = '/fcrepo/rest';    // make this `/api`, for example, if your API is namespaced
   // this.timing = 400;      // delay for each request, automatically set to 0 during testing
 
@@ -34,5 +34,6 @@ export default function () {
   this.del('/users/:id');
 
   this.passthrough();
-  this.passthrough('http://localhost:9200/pass', 'http://localhost:9200/pass/_search');
+  // Separate passthrough because search is done on a different port
+  this.passthrough(ENV.fedora.elasticsearch); // Default will be something like: http://localhost:9200/pass/_search
 }
