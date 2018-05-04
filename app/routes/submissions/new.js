@@ -9,6 +9,7 @@ export default Route.extend({
     // Explicitly clear the 'grant' query parameter when reloading this route
     if (isExiting) {
       controller.set('grant', undefined);
+      this.get('store').peekAll('submission').forEach(s => s.rollbackAttributes());
     }
   },
 
