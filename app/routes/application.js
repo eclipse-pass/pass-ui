@@ -745,7 +745,6 @@ export default Route.extend(ApplicationRouteMixin, {
       grantDB[0].get('coPis').pushObject(userDB[0]);
       grantDB[0].set('directFunder', funderDB[0]);
       grantDB[0].set('primaryFunder', funderDB[0]);
-      [submissionDB[0], submissionDB[1]].forEach(g => grantDB[0].get('submissions').pushObject(g));
       grantDB[1].set('pi', userDB[1]);
       grantDB[1].set('directFunder', funderDB[2]);
       grantDB[1].set('primaryFunder', funderDB[2]);
@@ -753,12 +752,10 @@ export default Route.extend(ApplicationRouteMixin, {
       grantDB[2].get('coPis').pushObject(userDB[3]);
       grantDB[2].set('directFunder', funderDB[0]);
       grantDB[2].set('primaryFunder', funderDB[0]);
-      grantDB[2].get('submissions').pushObject(submissionDB[2]);
       grantDB[3].set('pi', userDB[4]);
       [userDB[5], userDB[11], userDB[12]].forEach(u => grantDB[3].get('coPis').pushObject(u));
       grantDB[3].set('directFunder', funderDB[1]);
       grantDB[3].set('primaryFunder', funderDB[1]);
-      [submissionDB[0], submissionDB[3]].forEach(s => grantDB[3].get('submissions').pushObject(s));
       grantDB[4].set('pi', userDB[6]);
       [userDB[7], userDB[10]].forEach(u => grantDB[4].get('coPis').pushObject(u));
       grantDB[4].set('directFunder', funderDB[3]);
@@ -812,7 +809,6 @@ export default Route.extend(ApplicationRouteMixin, {
       grantDB[18].set('pi', userDB[19]);
       grantDB[18].set('directFunder', funderDB[5]);
       grantDB[18].set('primaryFunder', funderDB[5]);
-      grantDB[18].get('submissions').pushObject(submissionDB[4]);
       grantDB[19].set('pi', userDB[20]);
       grantDB[19].set('directFunder', funderDB[5]);
       grantDB[19].set('primaryFunder', funderDB[5]);

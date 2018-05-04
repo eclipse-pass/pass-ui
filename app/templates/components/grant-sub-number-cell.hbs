@@ -1,0 +1,13 @@
+{{!--
+  Crappy hack to display number of search results
+
+  This component is designed for use in the Grants table. It will display the number
+  of submissions associated with a grant.
+  record: {
+    grant: {the grant object},
+    submissions:
+  }
+--}}
+{{#link-to "grants.detail" (get record "grant.id")}}
+  {{get record "submissions.content.content.length"}}
+{{/link-to}}
