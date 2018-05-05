@@ -376,7 +376,7 @@ export default Route.extend(ApplicationRouteMixin, {
         projectName: 'Regulation of blood-retinal barrier by placental growth factor.',
         startDate: new Date('2017-04-01'),
         endDate: new Date('2022-03-31'),
-        awardStatus: 'Active',
+        awardStatus: 'active',
         localKey: '16129769',
       },
       {
@@ -384,7 +384,7 @@ export default Route.extend(ApplicationRouteMixin, {
         projectName: 'Identification and Activation Mechanisms of Vagal and Spinal Nociceptors in Esophageal Mucosa',
         startDate: new Date('2017-08-01'),
         endDate: new Date('2021-07-31'),
-        awardStatus: 'Active',
+        awardStatus: 'active',
         localKey: '16120629',
       },
       {
@@ -392,7 +392,7 @@ export default Route.extend(ApplicationRouteMixin, {
         awardNumber: 'R01EY026617',
         startDate: new Date('2017-06-01'),
         endDate: new Date('2020-05-31'),
-        awardStatus: 'Active',
+        awardStatus: 'active',
         localKey: '16120539',
       },
       {
@@ -400,7 +400,7 @@ export default Route.extend(ApplicationRouteMixin, {
         awardNumber: '1640778',
         startDate: new Date('2016-06-01'),
         endDate: new Date('2017-12-31'),
-        awardStatus: 'Active',
+        awardStatus: 'active',
         localKey: '16120469',
       },
       {
@@ -408,7 +408,7 @@ export default Route.extend(ApplicationRouteMixin, {
         awardNumber: 'T32MH014592',
         startDate: new Date('2016-07-01'),
         endDate: new Date('2017-06-30'),
-        awardStatus: 'Terminated',
+        awardStatus: 'terminated',
         localKey: '16120459',
       },
       {
@@ -416,7 +416,7 @@ export default Route.extend(ApplicationRouteMixin, {
         awardNumber: 'T32MH019545',
         startDate: new Date('2016-07-01'),
         endDate: new Date('2018-06-30'),
-        awardStatus: 'Active',
+        awardStatus: 'active',
         localKey: '16120169',
       },
       {
@@ -424,7 +424,7 @@ export default Route.extend(ApplicationRouteMixin, {
         awardNumber: '1502700',
         startDate: new Date('2016-05-15'),
         endDate: new Date('2019-04-30'),
-        awardStatus: 'Active',
+        awardStatus: 'active',
         localKey: '1204023',
       },
       {
@@ -432,7 +432,7 @@ export default Route.extend(ApplicationRouteMixin, {
         awardNumber: 'D43TW010512',
         startDate: new Date('2017-06-01'),
         endDate: new Date('2022-05-31'),
-        awardStatus: 'Active',
+        awardStatus: 'active',
         localKey: '16119319',
       },
       {
@@ -440,7 +440,7 @@ export default Route.extend(ApplicationRouteMixin, {
         awardNumber: 'CMMI-1253876',
         startDate: new Date('2013-01-01'),
         endDate: new Date('2017-12-31'),
-        awardStatus: 'Active',
+        awardStatus: 'active',
         localKey: '16119219',
       },
       {
@@ -448,7 +448,7 @@ export default Route.extend(ApplicationRouteMixin, {
         awardNumber: 'R01MH099733',
         startDate: new Date('2016-03-01'),
         endDate: new Date('2018-02-28'),
-        awardStatus: 'Active',
+        awardStatus: 'active',
         localKey: '16118979',
       },
       {
@@ -456,7 +456,7 @@ export default Route.extend(ApplicationRouteMixin, {
         awardNumber: 'R01GM118757',
         startDate: new Date('2018-03-04'),
         endDate: new Date('2020-08-10'),
-        awardStatus: 'Active',
+        awardStatus: 'active',
         localKey: '16108389',
       },
       {
@@ -464,14 +464,14 @@ export default Route.extend(ApplicationRouteMixin, {
         awardNumber: 'R01EY016835',
         startDate: new Date('2017-03-04'),
         endDate: new Date('2018-08-10'),
-        awardStatus: 'Active',
+        awardStatus: 'active',
       },
       {
         projectName: 'P-Adic and Mod P Galois Representations',
         awardNumber: '1564367',
         startDate: new Date('2015-03-04'),
         endDate: new Date('2017-08-10'),
-        awardStatus: 'Terminated',
+        awardStatus: 'terminated',
         localKey: '16086889',
       },
       {

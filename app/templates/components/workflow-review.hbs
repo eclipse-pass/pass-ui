@@ -114,16 +114,16 @@
             <tr>
               <td>Files</td>
               <td>
-                {{#each model.newSubmission.files as |file|}}
+                {{#each parsedFiles as |file|}}
                   <div class="card file-icon text-center">
-                    {{#if (eq model.newSubmission.files.isManuscript file.file.name)}}
+                    {{!-- {{#if (eq model.newSubmission.files.isManuscript file.name)}}
                       <span>
                         <i class="fa fa-star manuscriptTag"></i>
                       </span>
-                    {{/if}}
+                    {{/if}} --}}
                     <i class="fa fa-file-o fa-30 pt-2"></i>
-                    <p class="text-overflow">{{file.file.name}}</p>
-                    <span class="document-item" filetype="{{file.type}}"></span>
+                    <p class="text-overflow">{{file.name}}</p>
+                    <span class="document-item" filetype="{{file.mimeType}}"></span>
                   </div>
                 {{/each}}
               </td>
