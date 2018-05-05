@@ -206,8 +206,26 @@ export default Route.extend(ApplicationRouteMixin, {
               "journal-title-short": { "type": "string", "required": true },
               "journal-NLMTA-ID": { "type": "string", "required": true },
               "ISSN": { "type": "string", "required": true },
-              "author": { "type": "string", "required": true },
-              "email": { "type": "string", "required": true }
+              "authors": {
+                "description": "My Favorite Ice Creams",
+                "type": "array",
+                "items": {
+                  "title": "Author(s)",
+                  "type": "object",
+                  "properties": {
+                    "author": {
+                      "title": "Name",
+                      "type": "string",
+                      "fieldClass": "body-text col-6 pull-left pl-0",
+                    },
+                    "orcid": {
+                      "title": "ORCiD",
+                      "type": "string",
+                      "fieldClass": "body-text col-6 pull-left pr-0",
+                    }
+                  }
+                }
+              }
             }
           },
           "options": {
@@ -215,9 +233,7 @@ export default Route.extend(ApplicationRouteMixin, {
               "title": { "type": "text", "label": "Article / Manuscript Title", "placeholder": "Enter the manuscript title" },
               "journal-title-short": { "type": "text", "label": "Journal Title", "placeholder": "Enter the journal title" },
               "journal-NLMTA-ID": { "type": "text", "label": "Journal NLMTA ID", "placeholder": "" },
-              "ISSN": { "type": "text", "label": "ISSN", "placeholder": "" },
-              "author": { "type": "array", "label": "Author Name(s)", "placeholder": "", "fieldClass": "body-text" },
-              "email": { "type": "text", "label": "Email Address", "placeholder": "" }
+              "ISSN": { "type": "text", "label": "ISSN", "placeholder": "" }
             }
           }
         }`

@@ -34,28 +34,29 @@ export default Component.extend({
         URL: {
           type: 'string',
         },
-        author: {
-          type: 'string',
-        },
-        orcid: {
-          type: 'string',
-        },
-        email: {
-          type: 'string',
-        },
-        affiliation: {
-          type: 'string',
-        },
+        authors: {
+          description: 'My Favorite Ice Creams',
+          type: 'array',
+          items: {
+            title: 'Author(s)',
+            type: 'object',
+            properties: {
+              author: {
+                title: 'Name',
+                type: 'string',
+                fieldClass: 'body-text col-6 pull-left pl-0',
+              },
+              orcid: {
+                title: 'ORCiD',
+                type: 'string',
+                fieldClass: 'body-text col-6 pull-left pr-0',
+              }
+            }
+          }
+        }
       },
     },
     options: {
-      hideToolbarWithChildren: false,
-      actionbar: {
-        actions: [{
-          action: 'add',
-          enabled: false
-        }]
-      },
       fields: {
         volume: {
           type: 'text',
@@ -99,28 +100,6 @@ export default Component.extend({
           label: 'Final article URL',
           placeholder: '',
           fieldClass: 'clearfix',
-        },
-        author: {
-          type: 'array',
-          label: 'Author Name(s)',
-          placeholder: '',
-          fieldClass: 'body-text',
-        },
-        orcid: {
-          type: 'text',
-          label: 'ORCiD',
-          placeholder: '',
-          fieldClass: 'clearfix',
-        },
-        email: {
-          type: 'text',
-          label: 'Email Address',
-          placeholder: '',
-        },
-        affiliation: {
-          type: 'text',
-          label: 'Affiliation',
-          placeholder: '',
         },
       },
     },
