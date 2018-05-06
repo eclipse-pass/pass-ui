@@ -207,10 +207,10 @@ export default Route.extend(ApplicationRouteMixin, {
               "journal-NLMTA-ID": { "type": "string", "required": true },
               "ISSN": { "type": "string", "required": true },
               "authors": {
-                "description": "My Favorite Ice Creams",
+                "description": "",
                 "type": "array",
                 "items": {
-                  "title": "Author(s)",
+                  "title": "Author",
                   "type": "object",
                   "properties": {
                     "author": {

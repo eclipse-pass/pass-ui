@@ -35,10 +35,10 @@ export default Component.extend({
           type: 'string',
         },
         authors: {
-          description: 'My Favorite Ice Creams',
+          description: '',
           type: 'array',
           items: {
-            title: 'Author(s)',
+            title: 'Author',
             type: 'object',
             properties: {
               author: {
