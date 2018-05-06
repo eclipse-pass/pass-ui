@@ -216,12 +216,12 @@ export default Route.extend(ApplicationRouteMixin, {
                     "author": {
                       "title": "Name",
                       "type": "string",
-                      "fieldClass": "body-text col-6 pull-left pl-0",
+                      "fieldClass": "body-text col-6 pull-left pl-0"
                     },
                     "orcid": {
                       "title": "ORCiD",
                       "type": "string",
-                      "fieldClass": "body-text col-6 pull-left pr-0",
+                      "fieldClass": "body-text col-6 pull-left pr-0"
                     }
                   }
                 }
