@@ -613,7 +613,7 @@ export default Route.extend(ApplicationRouteMixin, {
       {
         aggregatedDepositStatus: 'accepted',
         submittedDate: new Date('2017-07-04'),
-        metadata: `[{"id":"JScholarship","data":{
+        metadata: `[{"id":"","data":{
           "volume": "40",
           "issue": "2",
           "publicationDate": "04/01/2017",
@@ -628,7 +628,7 @@ export default Route.extend(ApplicationRouteMixin, {
       {
         aggregatedDepositStatus: 'accepted',
         submittedDate: new Date('2017-12-04'),
-        metadata: `[{"id":"JScholarship","data":{
+        metadata: `[{"id":"","data":{
           "volume": "11",
           "issue": "3",
           "publicationDate": "03/01/2017",
@@ -643,7 +643,7 @@ export default Route.extend(ApplicationRouteMixin, {
       {
         aggregatedDepositStatus: 'in-progress',
         submittedDate: new Date('2017-08-30'),
-        metadata: `[{"id":"JScholarship","data":{
+        metadata: `[{"id":"","data":{
           "volume": "18",
           "issue": "3",
           "publicationDate": "01/01/2017",
@@ -658,7 +658,7 @@ export default Route.extend(ApplicationRouteMixin, {
       {
         aggregatedDepositStatus: 'in-progress',
         submittedDate: new Date('2017-09-30'),
-        metadata: `"[{"id":"JScholarship","data":{
+        metadata: `"[{"id":"","data":{
           "volume": "18",
           "issue": "3",
           "publicationDate": "01/01/2017",
@@ -673,7 +673,7 @@ export default Route.extend(ApplicationRouteMixin, {
       {
         aggregatedDepositStatus: 'accepted',
         submittedDate: new Date('2016-03-01'),
-        metadata: `"[{"id":"JScholarship","data":{
+        metadata: `"[{"id":"","data":{
           "volume": "18",
           "issue": "3",
           "publicationDate": "01/01/2017",
