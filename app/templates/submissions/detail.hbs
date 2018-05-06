@@ -172,18 +172,11 @@
                 </ul>
               </td>
             </tr>
-
-
             <tr>
               <td>Files</td>
               <td>
                 {{#each parsedFiles as |file|}}
                   <div class="card file-icon text-center">
-                    {{!-- {{#if (eq model.newSubmission.files.isManuscript file.name)}}
-                      <span>
-                        <i class="fa fa-star manuscriptTag"></i>
-                      </span>
-                    {{/if}} --}}
                     <i class="fa fa-file-o fa-30 pt-2"></i>
                     <p class="text-overflow">{{file.name}}</p>
                     <span class="document-item" filetype="{{file.mimeType}}"></span>
@@ -191,37 +184,9 @@
                 {{/each}}
               </td>
             </tr>
-            {{#if mustVisitEric}}
-              <tr>
-                <td class="text-nowrap">External Submission Portal</td>
-                <td>
-                  <label class="">
-                    Please visit the following web portal to submit your manuscript directly. Metadata displayed above
-                    could be used to aid your submission progress.
-                  </label>
-                  <ul class="m-0">
-                    <li>
-                      <a target="_blank" href="https://eric.ed.gov/submit/" {{action "clickEric" preventDefault=false}}>
-                        https://eric.ed.gov/submit/
-                      </a>
-                    </li>
-                  </ul>
-                </td>
-              </tr>
-            {{/if}}
-
           </tbody>
         </table>
       </div>
-      {{!-- <div class="form-group row bg-gray-100 m-0">
-        <label class="col-md-10 col-form-label">I have read and verify that the information for this submission is valid and that the informatin provided is not in violation of any grants.</label>
-        <div class="col-md-2 col-form-label">
-          <div class="form-check form-check-inline mr-1">
-            <input class="form-check-input" type="checkbox" id="userVerify" {{action 'checkValidate' on="change" }}>
-            <label class="form-check-label" for="userVerify">yes</label>
-          </div>
-        </div>
-      </div> --}}
     </div>
   </div>
 </div>
