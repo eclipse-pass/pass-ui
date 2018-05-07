@@ -1,25 +1,30 @@
+<style>
+button {
+  border: none;
+}
+</style>
 <div class="pb-2">
   <div class="steps">
-    <div {{action (mut step) 1}} class="step {{if (eq step 1) 'btn-primary'}}">
+    <button {{action "changeStep" 1}} class="step {{if (eq step 1) 'btn-primary'}}" disabled={{if (gt 1 maxStep) 'disabled'}}>
       1. Basics
-    </div>
-    <div {{action (mut step) 2}} class="step {{if (eq step 2) 'btn-primary'}}">
+    </button>
+    <button {{action "changeStep" 2}} class="step {{if (eq step 2) 'btn-primary'}}" disabled={{if (gt 2 maxStep) 'disabled'}}>
       2. Grants
-    </div>
-    <div {{action (mut step) 3}} class="step {{if (eq step 3) 'btn-primary'}}">
+    </button>
+    <button {{action "changeStep" 3}} class="step {{if (eq step 3) 'btn-primary'}}" disabled={{if (gt 3 maxStep) 'disabled'}}>
       3. Policies
-    </div>
-    <div {{action (mut step) 4}} class="step {{if (eq step 4) 'btn-primary'}}">
+    </button>
+    <button {{action "changeStep" 4}} class="step {{if (eq step 4) 'btn-primary'}}" disabled={{if (gt 4 maxStep) 'disabled'}}>
       4. Repositories
-    </div>
-    <div {{action (mut step) 5}} class="step {{if (eq step 5) 'btn-primary'}}">
+    </button>
+    <button {{action "changeStep" 5}} class="step {{if (eq step 5) 'btn-primary'}}" disabled={{if (gt 5 maxStep) 'disabled'}}>
       5. Metadata
-    </div>
-    <div {{action (mut step) 6}} class="step {{if (eq step 6) 'btn-primary'}}">
+    </button>
+    <button {{action "changeStep" 6}} class="step {{if (eq step 6) 'btn-primary'}}" disabled={{if (gt 6 maxStep) 'disabled'}}>
       6. Files
-    </div>
-    <div {{action (mut step) 7}} class="step {{if (eq step 7) 'btn-primary'}}">
+    </button>
+    <button {{action "changeStep" 7}} class="step {{if (eq step 7) 'btn-primary'}}" disabled={{if (gt 7 maxStep) 'disabled'}}>
       7. Review
-    </div>
+    </button>
   </div>
 </div>
