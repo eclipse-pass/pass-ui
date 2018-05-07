@@ -272,9 +272,11 @@ td {
 .vertical-align-middle {
   vertical-align:middle !important;
 }
-
+.modal-dialog {
+  top: 30vh!important;
+}
 .file-description-width {
-  min-width: 250px !important; 
+  min-width: 250px !important;
 }
 ////////////////////////////
 // Custom alpaca css for bs4

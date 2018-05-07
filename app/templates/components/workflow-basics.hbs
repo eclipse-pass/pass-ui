@@ -14,6 +14,7 @@
     class=validDOI
     value=model.publication.doi
     keyUp=(action "lookupDOI")
+    placeholder="DOI"
   }}
   <div class="text-danger">
     {{if (eq validDOI 2) 'Please provide a valid DOI'}}
@@ -21,7 +22,7 @@
 </div>
 <div class="form-group col-md-12">
   <label>Title:</label>
-  {{input value=model.publication.title class=validTitle placeholder="Title"   keyUp=(action "validateTitle")}}
+  {{textarea value=model.publication.title cols="100%" rows="2" class=validTitle placeholder="Title" keyUp=(action "validateTitle") }}
 </div>
 
 <div class="form-group col-md-12">
