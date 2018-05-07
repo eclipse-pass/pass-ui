@@ -20,7 +20,7 @@ export default Component.extend({
           let strippedData = ele.data[key].replace(/(<([^>]+)>)/ig, '');
           if (key === 'authors') {
             if (metadataBlobNoKeys['author(s)']) {
-              metadataBlobNoKeys['author(s)'] = _.uniq(metadataBlobNoKeys['author(s)'].concat(strippedData));
+              metadataBlobNoKeys['author(s)'] = _.uniqBy(metadataBlobNoKeys['author(s)'].concat(strippedData), 'author');
             } else {
               metadataBlobNoKeys['author(s)'] = strippedData;
             }
