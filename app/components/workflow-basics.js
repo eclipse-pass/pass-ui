@@ -35,6 +35,7 @@ export default Component.extend({
       } else if (newDOIRegExp.test(doi) === true || ancientDOIRegExp.test(doi) === true) { // 1 - Accepted
         this.set('validDOI', 'form-control is-valid');
         this.set('validTitle', 'form-control is-valid');
+        this.set('model.newSubmission.metadata', '[]');
       } else {
         this.set('validDOI', 'form-control is-invalid');
       }
