@@ -35,7 +35,7 @@ export default Component.extend({
           type: 'string',
         },
         authors: {
-          description: '',
+          title: 'Author(s)',
           type: 'array',
           items: {
             title: 'Author',

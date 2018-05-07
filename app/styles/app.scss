@@ -297,6 +297,21 @@ body {
   margin-top:-25px;
 }
 
+[data-alpaca-container-item-name*="authors_"] {
+  width: 100%;
+}
+[data-alpaca-container-item-name*="authors_"] > div > div:nth-child(2) > div  {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+[data-alpaca-container-item-name*="authors_"] > div > div:nth-child(2) > div > div:nth-child(odd)   {
+  margin-right: 2px;
+}
+[data-alpaca-container-item-name*="authors_"] > div > div:nth-child(2) > div > div:nth-child(even)   {
+  margin-left: 2px;
+}
+
 ////////////////////////////
 // Custom JHU Colors
 ////////////////////////////
