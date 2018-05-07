@@ -30,7 +30,7 @@ export default Ember.Component.extend({
         Promise.resolve(originalForm.schema).then((schema) => {
           try {
             const doiInfo = this.get('doiInfo');
-            // // Fuzy Match here
+            // Fuzzy Match here
             const f = fuzzySet(Object.keys(schema.properties));
             for (const doiEntry in doiInfo) {
               // Validate and check any doi data to make sure its close to the right field
@@ -38,7 +38,7 @@ export default Ember.Component.extend({
                 doiInfo[doiEntry] = doiInfo[doiEntry].replace(/(<([^>]+)>)/ig, '');
                 if (doiEntry == 'author') {
                   doiInfo[doiEntry].forEach((author, index) => {
-                    console.log(author, index);
+                    // console.log(author, index);
                     const name = `${doiInfo[doiEntry][index].given} ${doiInfo[doiEntry][index].family}`;
                     const orcid = doiInfo[doiEntry][index].ORCID;
 
