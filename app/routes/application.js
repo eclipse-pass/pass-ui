@@ -658,7 +658,7 @@ export default Route.extend(ApplicationRouteMixin, {
       {
         aggregatedDepositStatus: 'in-progress',
         submittedDate: new Date('2017-09-30'),
-        metadata: `"[{"id":"","data":{
+        metadata: `[{"id":"","data":{
           "volume": "18",
           "issue": "3",
           "publicationDate": "01/01/2017",
@@ -673,7 +673,7 @@ export default Route.extend(ApplicationRouteMixin, {
       {
         aggregatedDepositStatus: 'accepted',
         submittedDate: new Date('2016-03-01'),
-        metadata: `"[{"id":"","data":{
+        metadata: `[{"id":"","data":{
           "volume": "18",
           "issue": "3",
           "publicationDate": "01/01/2017",
