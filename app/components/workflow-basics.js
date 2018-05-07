@@ -59,6 +59,9 @@ export default Component.extend({
         this.send('validateDOI');
         this.set('doiJournal', false);
         this.get('doiService').resolve(publication).then((doiInfo) => {
+          if (doiInfo.isDestroyed) {
+            return;
+          }
           this.set('doiInfo', doiInfo);
           console.log(doiInfo);
 
@@ -70,7 +73,7 @@ export default Component.extend({
           publication.set('issue', doiInfo.issue);
           publication.set('volume', doiInfo.volume);
 
-          this.set('doiInfo', doiInfo);
+          // this.set('doiInfo', doiInfo);
 
           const journal = this.get('model.journals').findBy(
             'journalName',

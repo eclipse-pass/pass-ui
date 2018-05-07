@@ -38,7 +38,6 @@ export default Ember.Component.extend({
                 doiInfo[doiEntry] = doiInfo[doiEntry].replace(/(<([^>]+)>)/ig, '');
                 if (doiEntry == 'author') {
                   doiInfo[doiEntry].forEach((author, index) => {
-                    // console.log(author, index);
                     const name = `${doiInfo[doiEntry][index].given} ${doiInfo[doiEntry][index].family}`;
                     const orcid = doiInfo[doiEntry][index].ORCID;
 
@@ -73,7 +72,7 @@ export default Ember.Component.extend({
       buttons: {
         Next: {
           label: 'Next',
-          styles: 'pull-right btn btn-primary',
+          styles: 'pull-right btn btn-primary next',
           click() {
             const value = this.getValue();
             // concat auther + family together
