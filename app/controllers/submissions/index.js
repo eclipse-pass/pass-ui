@@ -45,11 +45,6 @@ export default Controller.extend({
     component: 'submissions-award-cell'
   },
   {
-    propertyName: 'user',
-    title: 'Corr. Author',
-    component: 'submissions-author-cell'
-  },
-  {
     propertyName: 'repositories',
     title: 'Repo',
     component: 'submissions-repo-cell'
@@ -85,11 +80,6 @@ export default Controller.extend({
   {
     title: 'Award Number (Funder)',
     component: 'submissions-award-cell'
-  },
-  {
-    propertyName: 'user',
-    title: 'Corr. Author',
-    component: 'submissions-author-cell'
   },
   {
     propertyName: 'repositories',
