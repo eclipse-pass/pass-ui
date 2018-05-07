@@ -31,7 +31,7 @@ export default Component.extend({
       // });
       this.incrementProperty('step');
       if (this.get('maxStep') < this.get('step')) {
-        this.set('maxStep', this.get('step'))
+        this.set('maxStep', this.get('step'));
       }
     },
     back() {
