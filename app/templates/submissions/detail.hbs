@@ -56,34 +56,31 @@
         <div class="d-flex w-100 justify-content-between">
           <h5 class="mb-1"> {{model.publication.title}}</h5>
           <small class="text-muted">
-            {{#if model.dateSubmitted}}  <b>Submitted: </b>{{model.dateSubmitted}}<br>{{/if}}
-            {{#if model.dateCreated}}<b>Created: </b>{{model.dateCreated}}{{/if}}
+            {{#if model.submission.dateSubmitted}}  <b>Submitted: </b>{{model.submission.dateSubmitted}}<br>{{/if}}
+            {{#if model.submission.dateCreated}}<b>Created: </b>{{model.submission.dateCreated}}{{/if}}
           </small>
         </div>
-        <p class="mb-1">{{model.doi}}</p>
-        <small class="text-muted">{{get (await model.publication.journal) 'name'}}: Volume: {{model.publication.volume}} / Issue: {{model.publication.issue}}</small>
+        <p class="mb-1">{{model.submission.doi}}</p>
+        <small class="text-muted">{{get (await model.submission.publication.journal) 'name'}}: Volume: {{model.submission.publication.volume}} / Issue: {{model.submission.publication.issue}}</small>
         <table class="table table-responsive-sm table-bordered w-100">
           <thead>
           </thead>
           <tbody>
             <tr>
               <td>Status</td>
-              <td>{{model.aggregatedDepositStatus}}
+              <td>{{model.submission.aggregatedDepositStatus}}
               </td>
             </tr>
             <tr>
               <td>abstract</td>
-              <td>{{model.publication.abstract}}
-              </td>
+              <td>{{model.submission.publication.abstract}}</td>
             </tr>
             <tr>
               <td>Grants</td>
               <td>
                 <ul class="list-unstyled">
-                  {{#each model.grants as |grant|}}
+                  {{#each model.submission.grants as |grant|}}
                     <li><b>{{grant.awardNumber}}</b> : {{grant.projectName}}</li>
-                  {{else}}
-                    Loading...
                   {{/each}}
                 </ul>
               </td>
@@ -93,13 +90,11 @@
               <td>
                 <ul>
                   {{#each model.deposits as |deposit|}}
-                  <li>{{get (await deposit.repository) 'name'}}</li>
+                  <li>{{get deposit 'repository.name'}}</li>
                   <ul>
                     <li>Status: {{deposit.depositStatus}}</li>
                     <li>Required: {{deposit.isRequired}}</li>
                   </ul>
-                {{else}}
-                  Loading...
                 {{/each}}
               </ul>
               </td>
@@ -109,7 +104,7 @@
               <td>
                 <ul class="list-unstyled">
                   {{!-- TODO This could probably be done with less loops look back at it --}}
-                  {{#each-in model.metadata as |index value|}}
+                  {{#each-in model.submission.metadata as |index value|}}
                     <li>
                       <br>
                       <h5 class="font-weight-light"><span class="text-uppercase">{{value.id}}</span></h5>
@@ -130,9 +125,9 @@
             <tr>
               <td>Files</td>
               <td>
-                {{#each model.files as |file|}}
+                {{#each model.submission.files as |file|}}
                   <div class="card file-icon text-center">
-                    {{#if (eq model.files.isManuscript file.file.name)}}
+                    {{#if (eq model.submission.files.isManuscript file.file.name)}}
                       <span>
                         <i class="fa fa-star manuscriptTag"></i>
                       </span>

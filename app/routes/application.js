@@ -835,16 +835,16 @@ export default Route.extend(ApplicationRouteMixin, {
       depositDB[0].set('repository', repoDB[0]);
       depositDB[1].set('repositoryCopy', repoCopyDB[1]);
       depositDB[1].set('submission', submissionDB[1]);
-      depositDB[0].set('repository', repoDB[0]);
+      depositDB[1].set('repository', repoDB[0]);
       depositDB[2].set('repositoryCopy', repoCopyDB[2]);
       depositDB[2].set('submission', submissionDB[2]);
-      depositDB[0].set('repository', repoDB[1]);
+      depositDB[2].set('repository', repoDB[1]);
       depositDB[3].set('repositoryCopy', repoCopyDB[3]);
       depositDB[3].set('submission', submissionDB[3]);
-      depositDB[0].set('repository', repoDB[0]);
+      depositDB[3].set('repository', repoDB[0]);
       depositDB[4].set('repositoryCopy', repoCopyDB[4]);
       depositDB[4].set('submission', submissionDB[4]);
-      depositDB[0].set('repository', repoDB[3]);
+      depositDB[4].set('repository', repoDB[3]);
 
       [grantDB[0], grantDB[3]].forEach(g => submissionDB[0].get('grants').pushObject(g));
       submissionDB[0].get('repositories').pushObject(repoDB[0]);
@@ -884,12 +884,12 @@ export default Route.extend(ApplicationRouteMixin, {
       // repoDB[2].set('policy', policyDB[2]);
       // repoDB[3].set('policy', policyDB[3]);
 
-      funderDB[0].set('repository', repoDB[0]);
-      funderDB[1].set('repository', repoDB[1]);
-      funderDB[2].set('repository', repoDB[0]);
-      funderDB[3].set('repository', repoDB[0]);
-      funderDB[4].set('repository', repoDB[0]);
-      funderDB[5].set('repository', repoDB[3]);
+      // funderDB[0].set('repository', repoDB[0]);
+      // funderDB[1].set('repository', repoDB[1]);
+      // funderDB[2].set('repository', repoDB[0]);
+      // funderDB[3].set('repository', repoDB[0]);
+      // funderDB[4].set('repository', repoDB[0]);
+      // funderDB[5].set('repository', repoDB[3]);
 
       return RSVP.all(moo.map(o => o.save())).then(() => institution);
     });
