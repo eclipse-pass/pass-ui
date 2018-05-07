@@ -6,6 +6,9 @@ into multiple repositories as required by applicable funding agency's public acc
 
 PASS communicates with a Fedora repository on the backend using JSON-LD. See the
 [ember-fedora-adapter](https://github.com/OA-PASS/ember-fedora-adapter) for more information.
+Objects persisted to Fedora are automatically indexed by Elasticsearch. See
+[pass-indexer](https://github.com/OA-PASS/pass-indexer) for more information about how this works.
+Note that the indexing process is asynchronous. An object persisted to Fedora will not immediately be available in Elasticsearch.
 
 ## Prerequisites
 
@@ -24,19 +27,23 @@ You will need the following things properly installed on your computer.
 
 ## Running / Development
 
-* `docker-compose up` to start a fedora repository at http://localhost:8080/fcrepo
+* `docker-compose up`
+  * Fedora repository at http://localhost:8080/fcrepo/ (admin:moo)
+  * Elasticsearch index at http://localhost:9200/pass/
+  * Wait for indexer container to create the index.
+  * In order to remove persisted data, stop all the containers and `docker system prune -f`
 * `ember serve`
 * Visit your app at [http://localhost:4200](http://localhost:4200).
 * Visit your tests at [http://localhost:4200/tests](http://localhost:4200/tests).
 
 ### Configuration
 
-* FEDORA_ADAPTER_BASE: Location of Fedora
-* FEDORA_ADAPTER_CONTEXT: URI to use as JSON-LD context.
+The configuration for the docker environment occurs in .env. See documentation on the individual
+components for configuration options.
 
-Fedora must be configured to allow CORS including Accept, and Prefer headers.
-Containers for each type in the context must exist as per the
-[ember-fedora-adapter requirements](https://github.com/OA-PASS/ember-fedora-adapter).
+The pass-ember application configures the Fedora adapter uses these environment variables.
+There are also defaults specified in config/environment.js. They tell the adapter where Fedora
+and Elasticsearch are and generally will not need to be modified during development.
 
 ### Running Tests
 

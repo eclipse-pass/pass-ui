@@ -3,9 +3,44 @@ version: '2'
 services:
 
   fcrepo:
-    image: oapass/fcrepo
+    image: oapass/fcrepo:4.7.5-2.0-SNAPSHOT
+    container_name: fcrepo    
     env_file: .env
+    environment:
+      - FCREPO_JMS_BASEURL=http://localhost:8080/fcrepo/rest
     ports: 
       - "${FCREPO_PORT}:${FCREPO_PORT}"
       - "${FCREPO_JMS_PORT}:${FCREPO_JMS_PORT}"
       - "${FCREPO_STOMP_PORT}:${FCREPO_STOMP_PORT}"
+      - "${FCREPO_DEBUG_PORT}:${FCREPO_DEBUG_PORT}"
+
+  indexer:
+    image: oapass/indexer
+    container_name: indexer
+    env_file: .env
+    links:
+      - fcrepo:localhost
+    volumes:
+      - ./.hosts:/etc/hosts:Z
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.3
+    container_name: elasticsearch
+    env_file: .env
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+      - ./.elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:Z
+    ports:
+      - "${ES_PORT}:${ES_PORT}"
+
+volumes:
+  esdata:
+    driver: local

@@ -1,18 +1,20 @@
 import Route from '@ember/routing/route';
+import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
+import { hash } from 'rsvp';
 
-export default Route.extend({
+const { service } = Ember.inject;
+
+export default Route.extend(AuthenticatedRouteMixin, {
+
   model() {
-    // TODO Access control to grants data should be enforced on backend?
+    let submissions = this.get('store').findAll('submission');
+    let publications = this.get('store').findAll('publication');
+    let grants = this.get('store').findAll('grant');
 
-    let store = this.get('store');
-    let session = this.controllerFor('login').get('session');
-
-    if (session.get('isAdmin')) {
-      return store.findAll('grant');
-    } else if (session.get('isPI')) {
-      let user_id = session.get('user.id');
-
-      return store.findAll('grant').then(grants => grants.filter(g => g.get('creator.id') === user_id));
-    }
-  }
+    return hash({
+      submissions,
+      publications,
+      grants
+    });
+  },
 });

@@ -1,17 +1,19 @@
-<h2>Grants</h2>
-
-{{models-table
-  data=model
-  columns=columns
-  themeInstance=themeInstance
-  showColumnsDropdown=false
-  useFilteringByColumns=false
-  filteringIgnoreCase=true
-  multipleColumnsSorting=false
-  piSelected='piclick'
-  pageSize=tablePageSize
-  pageSizeValues=tablePageSizeValues
-}}
-
+<div class="row justify-content-center">
+  <div class="col-sm-12">
+        <h1 class="font-weight-light">Grants</h1>
+        {{models-table
+          data=model.grants
+          columns=columns
+          themeInstance=themeInstance
+          showColumnsDropdown=false
+          useFilteringByColumns=false
+          filteringIgnoreCase=true
+          multipleColumnsSorting=false
+          piSelected='piclick'
+          pageSize=tablePageSize
+          pageSizeValues=tablePageSizeValues
+        }}
+  </div>
+</div>
 {{#message-dialog show=messageShow to=messageTo subject=messageSubject message=messageText}}
 {{/message-dialog}}

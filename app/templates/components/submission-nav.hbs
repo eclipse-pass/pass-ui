@@ -1,39 +1,30 @@
-<nav>
-    <ul class="nav nav-pills flex-column">
-        <li class="nav-item">
-            {{#link-to "submission.show.index" submission class="nav-link" }}
-                Overview
-            {{/link-to}}
-        </li>
-        <li class="nav-item">
-            {{#link-to "submission.show.funding" submission class="nav-link" }}
-                Awards (Optional)
-            {{/link-to}}
-        </li>
-        <li class="nav-item">
-            {{#link-to "submission.show.compliance" submission class="nav-link" }}
-                Policies
-            {{/link-to}}
-        </li>
-        <li class="nav-item">
-            {{#link-to "submission.show.repositories" submission class="nav-link" }}
-                Repositories
-            {{/link-to}}
-        </li>
-        <li class="nav-item">
-            {{#link-to "submission.show.metadata" submission class="nav-link" }}
-                Metadata
-            {{/link-to}}
-        </li>
-        <li class="nav-item">
-            {{#link-to "submission.show.attachments" submission class="nav-link" }}
-                Files
-            {{/link-to}}
-        </li>
-        <li class="nav-item">
-            {{#link-to "submission.show.submission" submission class="nav-link" }}
-                Submission
-            {{/link-to}}
-        </li>
-    </ul>
-</nav>
+<style>
+button {
+  border: none;
+}
+</style>
+<div class="pb-2">
+  <div class="steps">
+    <button {{action "changeStep" 1}} class="step {{if (eq step 1) 'btn-primary'}}" disabled={{if (gt 1 maxStep) 'disabled'}}>
+      1. Basics
+    </button>
+    <button {{action "changeStep" 2}} class="step {{if (eq step 2) 'btn-primary'}}" disabled={{if (gt 2 maxStep) 'disabled'}}>
+      2. Grants
+    </button>
+    <button {{action "changeStep" 3}} class="step {{if (eq step 3) 'btn-primary'}}" disabled={{if (gt 3 maxStep) 'disabled'}}>
+      3. Policies
+    </button>
+    <button {{action "changeStep" 4}} class="step {{if (eq step 4) 'btn-primary'}}" disabled={{if (gt 4 maxStep) 'disabled'}}>
+      4. Repositories
+    </button>
+    <button {{action "changeStep" 5}} class="step {{if (eq step 5) 'btn-primary'}}" disabled={{if (gt 5 maxStep) 'disabled'}}>
+      5. Metadata
+    </button>
+    <button {{action "changeStep" 6}} class="step {{if (eq step 6) 'btn-primary'}}" disabled={{if (gt 6 maxStep) 'disabled'}}>
+      6. Files
+    </button>
+    <button {{action "changeStep" 7}} class="step {{if (eq step 7) 'btn-primary'}}" disabled={{if (gt 7 maxStep) 'disabled'}}>
+      7. Review
+    </button>
+  </div>
+</div>

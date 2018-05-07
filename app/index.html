@@ -8,10 +8,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     {{content-for "head"}}
-
     <link integrity="" rel="stylesheet" href="{{rootURL}}assets/vendor.css">
     <link integrity="" rel="stylesheet" href="{{rootURL}}assets/pass-ember.css">
     <link rel="icon" href="{{rootURL}}favicon.png">
+    <link rel="stylesheet" href="{{rootURL}}coreUI.css">
 
     {{content-for "head-footer"}}
   </head>
@@ -20,6 +20,11 @@
 
     <script src="{{rootURL}}assets/vendor.js"></script>
     <script src="{{rootURL}}assets/pass-ember.js"></script>
+    <script type="text/javascript" src="{{rootURL}}js/fuzzyset.js"></script>
+    <!-- <script type="text/javascript" src="//code.jquery.com/jquery-1.11.1.min.js"></script> -->
+    <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.js"></script>
+    <script type="text/javascript" src="//code.cloudcms.com/alpaca/1.5.24/bootstrap/alpaca.min.js"></script>
 
     {{content-for "body-footer"}}
   </body>
