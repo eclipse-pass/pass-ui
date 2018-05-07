@@ -183,10 +183,6 @@ td {
   display: flex;
 }
 
-body {
-  font-size: 1em;
-}
-
 // overrides bootstrap4
 .navbar-toggler {
   width: 100%;
@@ -270,9 +266,17 @@ body {
   padding-bottom: 11px!important;
   box-sizing: border-box;
 }
-
+.nav-item {
+  font-size: 18px;
+}
+.vertical-align-middle {
+  vertical-align:middle !important;
+}
 .modal-dialog {
   top: 30vh!important;
+}
+.file-description-width {
+  min-width: 250px !important;
 }
 ////////////////////////////
 // Custom alpaca css for bs4
@@ -325,6 +329,9 @@ body {
   font-family:  gentona-light,sans-serif!important;
   font-size: 1em !important;
   color:#2C2C33 !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-font-smoothing: antialiased;
+  -o-font-smoothing: antialiased;
 }
 h1, h2, h3, h4, h5 {
   font-family:  quadon-black,serif!important;
