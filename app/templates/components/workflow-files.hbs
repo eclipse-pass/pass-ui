@@ -20,7 +20,7 @@
       <thead>
         <tr class="text-center">
           <th>File Name</th>
-          <th>Manuscript</th>
+          <th>File Role</th>
           <th>Description</th>
           <th>Action</th>
         </tr>
@@ -28,10 +28,10 @@
       <tbody>
         {{#each files as |file|}}
           <tr>
-            <td>
-              <p class="table-text">{{file.name}}</p>
+            <td class="vertical-align-middle">
+              {{file.name}}
             </td>
-            <td class="text-center">
+            <td class="text-center vertical-align-middle">
               <select onchange= {{action (mut file.fileRole) value="target.value"}}>
                 <option value="supplement" selected={{eq file.fileRole "supplement"}}>Supplement</option>
                 <option value="manuscript" selected={{eq file.fileRole "manuscript"}}>Manuscript</option>
@@ -39,10 +39,10 @@
                 <option value="figure" selected={{eq file.fileRole "figure"}}>Figure</option>
               </select>
             </td>
-            <td>
+            <td class="vertical-align-middle">
               {{input  class="form-control" value=file.description}}
             </td>
-            <td class="text-center">
+            <td class="text-center vertical-align-middle">
               <button type="button" class="btn btn-outline-danger" {{action 'removeFile' file}}>remove</button>
             </td>
           </tr>
