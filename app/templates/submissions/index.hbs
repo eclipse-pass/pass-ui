@@ -1,9 +1,13 @@
-{{#if (get (await currentUser.user) 'isSubmitter')}}
-  {{#link-to "submissions.new" class="btn btn-primary btn-small pull-right mt-3"}}Create new Submission{{/link-to}}
-{{/if}}
-
-<h1 class="font-weight-light">Submissions</h1>
-
+<div class="row mt-3 mb-3">
+  <div class="col-6">
+    <h1 class="font-weight-light pt-1">Submissions</h1>
+  </div>
+  <div class="col-6">
+    {{#if (get (await currentUser.user) 'isSubmitter')}}
+      {{#link-to "submissions.new" class="btn btn-primary btn-small pull-right"}}Create new Submission{{/link-to}}
+    {{/if}}
+  </div>
+</div>
 {{models-table
   data=submissionsToShow
   columns=columns
