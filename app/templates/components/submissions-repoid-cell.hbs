@@ -1,4 +1,10 @@
-{{#each record as |deposit index|}}
+{{#each (search-associated 'deposit' 'submission' record.id) as |deposit index|}}
   {{if index ', '}}
-    {{optional-link (concat deposit.repositoryCopy.externalIds ' (' deposit.repositoryCopy.copyStatus ')') deposit.repositoryCopy.accessUrl}}
+  {{#if (get deposit "repositoryCopy.accessUrl")}}
+    <a href="{{get deposit "repositoryCopy.accessUrl"}}" target="_blank">
+      {{get deposit "repositoryCopy.externalIds"}} ({{get deposit "repositoryCopy.copyStatus"}})
+    </a>
+  {{else}}
+    {{get deposit "repositoryCopy.externalIds"}} ({{get deposit "repositoryCopy.copyStatus"}})
+  {{/if}}
 {{/each}}

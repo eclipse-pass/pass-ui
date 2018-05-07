@@ -684,7 +684,7 @@ export default Route.extend(ApplicationRouteMixin, {
         copyStatus: 'complete'
       },
       {
-        externalIds: ['65871'],
+        externalIds: ['65871', '11101'],
         accessUrl: 'http://example.com/here-is-your-deposited-publication',
         copyStatus: 'complete'
       },
@@ -850,46 +850,26 @@ export default Route.extend(ApplicationRouteMixin, {
       submissionDB[0].get('repositories').pushObject(repoDB[0]);
       submissionDB[0].set('publication', publicationDB[0]);
       // submissionDB[0].set('user', userDB[0]);
-      submissionDB[0].get('deposits').pushObject(depositDB[0]);
 
       submissionDB[1].get('grants').pushObject(grantDB[0]);
       submissionDB[1].get('repositories').pushObject(repoDB[0]);
       submissionDB[1].set('publication', publicationDB[1]);
       // submissionDB[1].set('user', userDB[2]);
-      submissionDB[1].get('deposits').pushObject(depositDB[1]);
 
       submissionDB[2].get('grants').pushObject(grantDB[2]);
       submissionDB[2].get('repositories').pushObject(repoDB[1]);
       submissionDB[2].set('publication', publicationDB[2]);
       // submissionDB[2].set('user', userDB[13]);
-      submissionDB[3].get('deposits').pushObject(depositDB[2]);
 
       submissionDB[3].get('grants').pushObject(grantDB[3]);
       submissionDB[3].get('repositories').pushObject(repoDB[0]);
       submissionDB[3].set('publication', publicationDB[3]);
       // submissionDB[3].set('user', userDB[20]);
-      submissionDB[3].get('deposits').pushObject(depositDB[3]);
 
       submissionDB[4].get('grants').pushObject(grantDB[18]);
       submissionDB[4].get('repositories').pushObject(repoDB[3]);
       submissionDB[4].set('publication', publicationDB[4]);
       // submissionDB[4].set('user', userDB[14]);
-      submissionDB[4].get('deposits').pushObject(depositDB[4]);
-
-      /*
-      * Following is not valid after updating to pass-data-model v2.0
-      */
-      // repoDB[0].set('policy', policyDB[0]);
-      // repoDB[1].set('policy', policyDB[1]);
-      // repoDB[2].set('policy', policyDB[2]);
-      // repoDB[3].set('policy', policyDB[3]);
-
-      // funderDB[0].set('repository', repoDB[0]);
-      // funderDB[1].set('repository', repoDB[1]);
-      // funderDB[2].set('repository', repoDB[0]);
-      // funderDB[3].set('repository', repoDB[0]);
-      // funderDB[4].set('repository', repoDB[0]);
-      // funderDB[5].set('repository', repoDB[3]);
 
       return RSVP.all(moo.map(o => o.save())).then(() => institution);
     });
