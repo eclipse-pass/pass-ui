@@ -1,3 +1,5 @@
 {{#each record.grants as |grant index|}}
 {{if index ', '}}{{#link-to 'grants.detail' grant}}{{grant.awardNumber}}{{/link-to}} ({{grant.primaryFunder.name}})
+{{else}}
+  Not Available
 {{/each}}
