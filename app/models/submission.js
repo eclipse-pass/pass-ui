@@ -23,5 +23,5 @@ export default DS.Model.extend({
 
   // don't get saved to database
   removeNIHDeposit: false,
-  filesTemp: DS.attr('string'),
+  filesTemp: DS.attr('string', { defaultValue: '[]' }), // Stringified JSON
 });

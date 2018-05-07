@@ -1,3 +1,7 @@
+{{#if (get (await currentUser.user) 'isSubmitter')}}
+  {{#link-to 'submissions.new' (query-params grant=model.id) class="btn btn-primary btn-small pull-right mt-3"}}Create new Submission{{/link-to}}
+{{/if}}
+
 {{#link-to 'grants' class="btn btn-small back-arrow"}}<i class="fa fa-arrow-left fa-lg text-dark"></i>{{/link-to}}
 <h2 class="font-weight-light d-inline-block">Grant Details</h2>
 
@@ -38,7 +42,3 @@
   useFilteringByColumns=false
   showGlobalFilter=false
 }}
-
-{{#if (get (await currentUser.user) 'isSubmitter')}}
-  {{#link-to 'submissions.new' (query-params grant=model.id) class="btn btn-primary"}}Create New Submission{{/link-to}}
-{{/if}}

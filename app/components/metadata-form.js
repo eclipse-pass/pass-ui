@@ -36,11 +36,16 @@ export default Ember.Component.extend({
               // Validate and check any doi data to make sure its close to the right field
               if (f.get(doiEntry) !== null) {
                 if (doiEntry == 'author') {
-                  const name = `${doiInfo[doiEntry][0].given} ${doiInfo[doiEntry][0].family}`;
-                  prePopulateData[f.get(doiEntry)[0][1]] = name;
+                  doiInfo[doiEntry].forEach((author, index) => {
+                    console.log(author, index);
+                    const name = `${doiInfo[doiEntry][index].given} ${doiInfo[doiEntry][index].family}`;
+                    const orcid = doiInfo[doiEntry][index].ORCID;
 
-                  const family = doiInfo[doiEntry][0].family;
-                  prePopulateData.family = family;
+                    if (!prePopulateData[f.get(doiEntry)[0][1]]) {
+                      prePopulateData[f.get(doiEntry)[0][1]] = [];
+                    }
+                    prePopulateData[f.get(doiEntry)[0][1]].push({ author: name, orcid });
+                  });
                 } else if (doiInfo[doiEntry].length > 0) {
                   // Predicts data with .61 accuracy
                   if (f.get(doiEntry)[0][0] > 0.61) {
@@ -51,6 +56,7 @@ export default Ember.Component.extend({
                 }
               }
             }
+            // set any data to the forms
             newForm.data = prePopulateData;
             metadata[newForm.id] = ({
               id: newForm.id,
