@@ -4,6 +4,7 @@ export default Component.extend({
   currentUser: Ember.inject.service('current-user'),
   store: Ember.inject.service('store'),
   step: 1,
+  maxStep: 1,
   isValidated: Ember.A(),
   doiInfo: [],
   includeNIHDeposit: true,
@@ -29,6 +30,9 @@ export default Component.extend({
       //   }
       // });
       this.incrementProperty('step');
+      if (this.get('maxStep') < this.get('step')) {
+        this.set('maxStep', this.get('step'))
+      }
     },
     back() {
       // const sub = this.get('model.newSubmission');

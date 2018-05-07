@@ -8,5 +8,10 @@ export default Component.extend({
     decStep() {
       this.decrementProperty('step');
     },
+    changeStep(step) {
+      if (step <= this.get('maxStep')) {
+        this.set('step', step);
+      }
+    }
   },
 });
