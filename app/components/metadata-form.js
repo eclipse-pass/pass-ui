@@ -35,9 +35,7 @@ export default Ember.Component.extend({
             for (const doiEntry in doiInfo) {
               // Validate and check any doi data to make sure its close to the right field
               if (f.get(doiEntry) !== null) {
-                if (doiEntry == 'abstract') {
-                  doiInfo[doiEntry] = doiInfo[doiEntry].replace(/(<([^>]+)>)/ig, '');
-                }
+                doiInfo[doiEntry] = doiInfo[doiEntry].replace(/(<([^>]+)>)/ig, '');
                 if (doiEntry == 'author') {
                   doiInfo[doiEntry].forEach((author, index) => {
                     console.log(author, index);
