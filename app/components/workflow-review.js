@@ -42,6 +42,7 @@ export default Component.extend({
   actions: {
     clickEric() {
       this.set('hasVisitedEric', true);
+      $('#externalSubmission').modal('hide');
     },
     submit() {
       // In case a crafty user edits the page HTML, don't submit when not allowed
