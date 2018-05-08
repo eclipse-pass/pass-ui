@@ -183,7 +183,7 @@
             <tr>
               <td>Files</td>
               <td>
-                {{#each (await model.sub.files) as |file|}}
+                {{#each (search-associated 'file' 'submission' model.sub.id) as |file|}}
                   <div class="card file-icon text-center">
                     <i class="fa fa-file-o fa-30 pt-2"></i>
                     <p class="text-overflow">{{file.name}}</p>
