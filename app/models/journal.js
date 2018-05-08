@@ -6,12 +6,14 @@ export default DS.Model.extend({
    */
   journalName: DS.attr('string'),
   nlmta: DS.attr('string'),
-  pmcParticipation: DS.attr('string'/* , { defaultValue: 'B' } */), // default value for debugging pmc mechanism
+  pmcParticipation: DS.attr('string'),
+  issns: DS.attr('set'),
+  publisher: DS.belongsTo('publisher'),
+
   isMethodA: Ember.computed('pmcParticipation', function () {
     return this.get('pmcParticipation') ? this.get('pmcParticipation').toLowerCase() === 'a' : false;
   }),
   isMethodB: Ember.computed('pmcParticipation', function () {
     return this.get('pmcParticipation') ? this.get('pmcParticipation').toLowerCase() === 'b' : false;
-  }),
-  issns: DS.attr('set')
+  })
 });

@@ -116,6 +116,10 @@
               </td>
             </tr>
             <tr>
+              <td>abstract</td>
+              <td>{{model.sub.publication.abstract}}</td>
+            </tr>
+            <tr>
               <td>Journal</td>
               <td>{{get (await model.sub.publication.journal) 'journalName'}}
               </td>
@@ -134,9 +138,13 @@
               <td class="text-nowrap">Repositories</td>
               <td>
                 <ul>
-                {{#each model.sub.repositories as |repository|}}
-                  <li>{{repository.name}}</li>
-                {{/each}}
+                  {{#each (search-associated "deposit" "submission" model.sub.id) as |deposit index|}}
+                    <li>{{get deposit 'repository.name'}}</li>
+                    {{!-- <ul>
+                      <li>Status: {{deposit.depositStatus}}</li>
+                      <li>Required: {{deposit.isRequired}}</li>
+                    </ul> --}}
+                  {{/each}}
               </ul>
               </td>
             </tr>
@@ -175,7 +183,7 @@
             <tr>
               <td>Files</td>
               <td>
-                {{#each (await model.sub.files) as |file|}}
+                {{#each (search-associated 'file' 'submission' model.sub.id) as |file|}}
                   <div class="card file-icon text-center">
                     <i class="fa fa-file-o fa-30 pt-2"></i>
                     <p class="text-overflow">{{file.name}}</p>

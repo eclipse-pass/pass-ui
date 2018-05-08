@@ -16,5 +16,4 @@ export default DS.Model.extend({
   coPis: DS.hasMany('user', { async: true }),
   primaryFunder: DS.belongsTo('funder'),
   directFunder: DS.belongsTo('funder'),
-  submissions: DS.hasMany('submission', { async: true }), // TODO Not part of model
 });

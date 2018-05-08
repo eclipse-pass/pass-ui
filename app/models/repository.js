@@ -6,6 +6,6 @@ export default DS.Model.extend({
   url: DS.attr('string'),
   formSchema: DS.attr('string'),
 
-  policy: DS.belongsTo('policy'),
-  submissions: DS.hasMany('submission', { async: true }),
+  // policy: DS.belongsTo('policy'),
+  // submissions: DS.hasMany('submission', { async: true }),
 });
