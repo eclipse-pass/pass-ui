@@ -7,12 +7,6 @@ const { service } = Ember.inject;
 export default Route.extend(AuthenticatedRouteMixin, {
 
   model() {
-    let publications = this.get('store').findAll('publication');
-    let grants = this.get('store').findAll('grant');
-
-    return hash({
-      publications,
-      grants
-    });
+    return this.get('store').findAll('grant');
   },
 });

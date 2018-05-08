@@ -13,10 +13,13 @@ export default Controller.extend({
   /**
    * Crappy way to attach search results to a grant in the table
    */
-  tableModel: Ember.computed('model.grants', function () {
-    const grants = this.get('model.grants');
+  tableModel: Ember.computed('model', function () {
+    const grants = this.get('model');
     let result = [];
 
+    // TODO should be optimized to use a SINGLE search with all IDs
+    // This big search will then be picked through to match the right submissions
+    // With the right grants after it returns.
     grants.forEach((grant) => {
       result.push({
         grant,
@@ -49,7 +52,7 @@ export default Controller.extend({
     {
       propertyName: 'grant.projectName',
       title: 'Project Name',
-      routeName: 'grants.detail',
+      component: 'grant-link-cell'
     },
     {
       propertyName: 'grant.primaryFunder.name',
@@ -60,8 +63,8 @@ export default Controller.extend({
     {
       propertyName: 'grant.awardNumber',
       title: 'Award Number',
-      routeName: 'grants.detail',
       disableFiltering: true,
+      component: 'grant-link-cell'
     },
     {
       propertyName: 'grant.localKey',
@@ -92,7 +95,10 @@ export default Controller.extend({
       predefinedFilterOptions: ['Active', 'Ended'],
     },
     {
-      title: '#', disableFiltering: true, component: 'grant-sub-number-cell'
+      propertyName: 'submissions.content.content.length',
+      title: '#',
+      disableFiltering: true,
+      component: 'grant-link-cell'
     },
     {
       propertyName: 'grant.oapCompliance',
@@ -107,7 +113,7 @@ export default Controller.extend({
     {
       propertyName: 'grant.projectName',
       title: 'Project Name',
-      routeName: 'grants.detail',
+      component: 'grant-link-cell'
     },
     {
       propertyName: 'grant.primaryFunder.name',
