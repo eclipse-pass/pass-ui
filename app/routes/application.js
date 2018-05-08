@@ -206,8 +206,26 @@ export default Route.extend(ApplicationRouteMixin, {
               "journal-title-short": { "type": "string", "required": true },
               "journal-NLMTA-ID": { "type": "string", "required": true },
               "ISSN": { "type": "string", "required": true },
-              "author": { "type": "string", "required": true },
-              "email": { "type": "string", "required": true }
+              "authors": {
+                "title": "Author(s)",
+                "type": "array",
+                "items": {
+                  "title": "Author",
+                  "type": "object",
+                  "properties": {
+                    "author": {
+                      "title": "Name",
+                      "type": "string",
+                      "fieldClass": "body-text col-6 pull-left pl-0"
+                    },
+                    "orcid": {
+                      "title": "ORCiD",
+                      "type": "string",
+                      "fieldClass": "body-text col-6 pull-left pr-0"
+                    }
+                  }
+                }
+              }
             }
           },
           "options": {
@@ -215,9 +233,7 @@ export default Route.extend(ApplicationRouteMixin, {
               "title": { "type": "text", "label": "Article / Manuscript Title", "placeholder": "Enter the manuscript title" },
               "journal-title-short": { "type": "text", "label": "Journal Title", "placeholder": "Enter the journal title" },
               "journal-NLMTA-ID": { "type": "text", "label": "Journal NLMTA ID", "placeholder": "" },
-              "ISSN": { "type": "text", "label": "ISSN", "placeholder": "" },
-              "author": { "type": "array", "label": "Author Name(s)", "placeholder": "", "fieldClass": "body-text" },
-              "email": { "type": "text", "label": "Email Address", "placeholder": "" }
+              "ISSN": { "type": "text", "label": "ISSN", "placeholder": "" }
             }
           }
         }`
@@ -360,7 +376,7 @@ export default Route.extend(ApplicationRouteMixin, {
         projectName: 'Regulation of blood-retinal barrier by placental growth factor.',
         startDate: new Date('2017-04-01'),
         endDate: new Date('2022-03-31'),
-        awardStatus: 'Active',
+        awardStatus: 'active',
         localKey: '16129769',
       },
       {
@@ -368,7 +384,7 @@ export default Route.extend(ApplicationRouteMixin, {
         projectName: 'Identification and Activation Mechanisms of Vagal and Spinal Nociceptors in Esophageal Mucosa',
         startDate: new Date('2017-08-01'),
         endDate: new Date('2021-07-31'),
-        awardStatus: 'Active',
+        awardStatus: 'active',
         localKey: '16120629',
       },
       {
@@ -376,7 +392,7 @@ export default Route.extend(ApplicationRouteMixin, {
         awardNumber: 'R01EY026617',
         startDate: new Date('2017-06-01'),
         endDate: new Date('2020-05-31'),
-        awardStatus: 'Active',
+        awardStatus: 'active',
         localKey: '16120539',
       },
       {
@@ -384,7 +400,7 @@ export default Route.extend(ApplicationRouteMixin, {
         awardNumber: '1640778',
         startDate: new Date('2016-06-01'),
         endDate: new Date('2017-12-31'),
-        awardStatus: 'Active',
+        awardStatus: 'active',
         localKey: '16120469',
       },
       {
@@ -392,7 +408,7 @@ export default Route.extend(ApplicationRouteMixin, {
         awardNumber: 'T32MH014592',
         startDate: new Date('2016-07-01'),
         endDate: new Date('2017-06-30'),
-        awardStatus: 'Terminated',
+        awardStatus: 'terminated',
         localKey: '16120459',
       },
       {
@@ -400,7 +416,7 @@ export default Route.extend(ApplicationRouteMixin, {
         awardNumber: 'T32MH019545',
         startDate: new Date('2016-07-01'),
         endDate: new Date('2018-06-30'),
-        awardStatus: 'Active',
+        awardStatus: 'active',
         localKey: '16120169',
       },
       {
@@ -408,7 +424,7 @@ export default Route.extend(ApplicationRouteMixin, {
         awardNumber: '1502700',
         startDate: new Date('2016-05-15'),
         endDate: new Date('2019-04-30'),
-        awardStatus: 'Active',
+        awardStatus: 'active',
         localKey: '1204023',
       },
       {
@@ -416,7 +432,7 @@ export default Route.extend(ApplicationRouteMixin, {
         awardNumber: 'D43TW010512',
         startDate: new Date('2017-06-01'),
         endDate: new Date('2022-05-31'),
-        awardStatus: 'Active',
+        awardStatus: 'active',
         localKey: '16119319',
       },
       {
@@ -424,7 +440,7 @@ export default Route.extend(ApplicationRouteMixin, {
         awardNumber: 'CMMI-1253876',
         startDate: new Date('2013-01-01'),
         endDate: new Date('2017-12-31'),
-        awardStatus: 'Active',
+        awardStatus: 'active',
         localKey: '16119219',
       },
       {
@@ -432,7 +448,7 @@ export default Route.extend(ApplicationRouteMixin, {
         awardNumber: 'R01MH099733',
         startDate: new Date('2016-03-01'),
         endDate: new Date('2018-02-28'),
-        awardStatus: 'Active',
+        awardStatus: 'active',
         localKey: '16118979',
       },
       {
@@ -440,7 +456,7 @@ export default Route.extend(ApplicationRouteMixin, {
         awardNumber: 'R01GM118757',
         startDate: new Date('2018-03-04'),
         endDate: new Date('2020-08-10'),
-        awardStatus: 'Active',
+        awardStatus: 'active',
         localKey: '16108389',
       },
       {
@@ -448,14 +464,14 @@ export default Route.extend(ApplicationRouteMixin, {
         awardNumber: 'R01EY016835',
         startDate: new Date('2017-03-04'),
         endDate: new Date('2018-08-10'),
-        awardStatus: 'Active',
+        awardStatus: 'active',
       },
       {
         projectName: 'P-Adic and Mod P Galois Representations',
         awardNumber: '1564367',
         startDate: new Date('2015-03-04'),
         endDate: new Date('2017-08-10'),
-        awardStatus: 'Terminated',
+        awardStatus: 'terminated',
         localKey: '16086889',
       },
       {
@@ -597,77 +613,77 @@ export default Route.extend(ApplicationRouteMixin, {
       {
         aggregatedDepositStatus: 'accepted',
         submittedDate: new Date('2017-07-04'),
-        metadata: `{
-          'volume': '40',
-          'issue': '2',
-          'publicationDate': '04/01/2017',
-          'publicationType': 'PrintPublication',
-          'abstract': 'OBJECTIVES: High-grade soft-tissue sarcoma (STS) has a poor prognosis. The goal of this study was to review treatment outcomes of patients with high-grade STS treated with interdigitated neoadjuvant chemotherapy (CT) and radiation at our institution. MATERIALS AND METHODS: Patients with high-grade STS (1997 to 2010) were planned for treatment with 3 cycles of neoadjuvant CT, interdigitated preoperative radiation therapy (44 Gy administered in split courses with a potential 16 Gy postoperative boost), and 3 cycles of postoperative CT. Cancer control outcomes at 3 years were analyzed. RESULTS: Sixteen patients with high-grade STS were evaluated. Median age was 53 years, the median longest tumor diameter was 14.6 cm, and median follow-up was 33 months. All 16 patients received 2 or 3 cycles of neoadjuvant CT and all patients completed neoadjuvant RT. The estimated 3-year rate for local control was 100%, disease-free survival 62.5%, and overall survival 73.4%. CONCLUSIONS: Patients with high-grade STS treated with interdigitated neoadjuvant CT and radiation before surgical resection had excellent rates of local control, along with disease-free survival and overall survival similar to previously published reports. This combined-modality approach continues to have a role in the treatment of patients with high-grade STS.',
-          'author': 'MooToo',
-          'title': 'Evaluating the Role of Interdigitated Neoadjuvant Chemotherapy and Radiation in the Management of High-Grade Soft-Tissue Sarcoma: The Johns Hopkins Experience',
-          'journal-title-short': 'Moo',
-          'ISSN': '0277-3732',
-        }`
+        metadata: `[{"id":"","data":{
+          "volume": "40",
+          "issue": "2",
+          "publicationDate": "04/01/2017",
+          "publicationType": "PrintPublication",
+          "abstract": "OBJECTIVES: High-grade soft-tissue sarcoma (STS) has a poor prognosis. The goal of this study was to review treatment outcomes of patients with high-grade STS treated with interdigitated neoadjuvant chemotherapy (CT) and radiation at our institution. MATERIALS AND METHODS: Patients with high-grade STS (1997 to 2010) were planned for treatment with 3 cycles of neoadjuvant CT, interdigitated preoperative radiation therapy (44 Gy administered in split courses with a potential 16 Gy postoperative boost), and 3 cycles of postoperative CT. Cancer control outcomes at 3 years were analyzed. RESULTS: Sixteen patients with high-grade STS were evaluated. Median age was 53 years, the median longest tumor diameter was 14.6 cm, and median follow-up was 33 months. All 16 patients received 2 or 3 cycles of neoadjuvant CT and all patients completed neoadjuvant RT. The estimated 3-year rate for local control was 100%, disease-free survival 62.5%, and overall survival 73.4%. CONCLUSIONS: Patients with high-grade STS treated with interdigitated neoadjuvant CT and radiation before surgical resection had excellent rates of local control, along with disease-free survival and overall survival similar to previously published reports. This combined-modality approach continues to have a role in the treatment of patients with high-grade STS.",
+          "author": "MooToo",
+          "title": "Evaluating the Role of Interdigitated Neoadjuvant Chemotherapy and Radiation in the Management of High-Grade Soft-Tissue Sarcoma: The Johns Hopkins Experience",
+          "journal-title-short": "Moo",
+          "ISSN": "0277-3732"
+        }}]`
       },
       {
         aggregatedDepositStatus: 'accepted',
         submittedDate: new Date('2017-12-04'),
-        metadata: `{
-          'volume': '11',
-          'issue': '3',
-          'publicationDate': '03/01/2017',
-          'publicationType': 'ElectronicPublication',
-          'abstract': 'The multifaceted extracellular milieu presents biochemical and biophysical stimuli that influence stem cell differentiation. Two-dimensional (2D) micropatterned substrates allow the presentation of these cues in spatially defined geometries that have been demonstrated to guide stem cell fate decisions. Leveraging stem cells to reconstruct microvasculature, made up of an inner lining of endothelial cells (ECs) supported by pericytes, is critical to tissue-engineering advances; thus, methods to improve endothelial differentiation efficiency are vital to these efforts. In this study, we examine the hypothesis that the diameter of micropatterned islands influences endothelial differentiation from human induced pluripotent stem cells (hiPSCs). Comparing island diameters of 80, 140, 225 and 500 µm, we found that co-cultures of control ECs and pericytes did not yield variable ratios of cell types; however, when hiPSCs were differentiated toward a bicellular population of ECs and pericytes on these varying micropattern feature sizes, we found that smaller islands promoted EC differentiation efficiency, yielding a derived population composed of 70% ECs, which exhibited a greater sprouting propensity. Differentiation on the largest feature size exhibited a smaller EC yield, similar to that on non-patterned substrates. Taken together, these data demonstrate that micropatterned islands of varying diameters can be used to modulate EC differentiation efficiency.',
-          'author': 'Kusrav',
-          'title': 'Micropattern size-dependent endothelial differentiation from a human induced pluripotent stem cell line',
-          'journal-title-short': 'Moo',
-          'ISSN': '1932-7005',
-        }`
+        metadata: `[{"id":"","data":{
+          "volume": "11",
+          "issue": "3",
+          "publicationDate": "03/01/2017",
+          "publicationType": "ElectronicPublication",
+          "abstract": "The multifaceted extracellular milieu presents biochemical and biophysical stimuli that influence stem cell differentiation. Two-dimensional (2D) micropatterned substrates allow the presentation of these cues in spatially defined geometries that have been demonstrated to guide stem cell fate decisions. Leveraging stem cells to reconstruct microvasculature, made up of an inner lining of endothelial cells (ECs) supported by pericytes, is critical to tissue-engineering advances; thus, methods to improve endothelial differentiation efficiency are vital to these efforts. In this study, we examine the hypothesis that the diameter of micropatterned islands influences endothelial differentiation from human induced pluripotent stem cells (hiPSCs). Comparing island diameters of 80, 140, 225 and 500 µm, we found that co-cultures of control ECs and pericytes did not yield variable ratios of cell types; however, when hiPSCs were differentiated toward a bicellular population of ECs and pericytes on these varying micropattern feature sizes, we found that smaller islands promoted EC differentiation efficiency, yielding a derived population composed of 70% ECs, which exhibited a greater sprouting propensity. Differentiation on the largest feature size exhibited a smaller EC yield, similar to that on non-patterned substrates. Taken together, these data demonstrate that micropatterned islands of varying diameters can be used to modulate EC differentiation efficiency.",
+          "author": "Kusrav",
+          "title": "Micropattern size-dependent endothelial differentiation from a human induced pluripotent stem cell line",
+          "journal-title-short": "Moo",
+          "ISSN": "1932-7005"
+        }}]`
       },
       {
         aggregatedDepositStatus: 'in-progress',
         submittedDate: new Date('2017-08-30'),
-        metadata: `{
-          'volume': '18',
-          'issue': '3',
-          'publicationDate': '01/01/2017',
-          'publicationType': 'PrintPublication',
-          'abstract': 'Intrinsic immune responses to acute leukemia are inhibited by a variety of mechanisms, such as aberrant antigen expression by leukemia cells, secretion of immunosuppressive cytokines and expression of inhibitory enzymes in the tumor microenvironment, expansion of immunoregulatory cells, and activation of immune checkpoint pathways, all leading to T cell dysfunction and/or exhaustion. Leukemic cells, similar to other tumor cells, hijack these inhibitory pathways to evade immune recognition and destruction by cytotoxic T lymphocytes. Thus, blockade of immune checkpoints has emerged as a highly promising approach to augment innate anti-tumor immunity in order to treat malignancies. Most evidence for the clinical efficacy of this immunotherapeutic strategy has been seen in patients with metastatic melanoma, where anti-CTLA-4 and anti-PD-1 antibodies have recently revolutionized treatment of this lethal disease with otherwise limited treatment options. To meet the high demand for new treatment strategies in acute leukemia, clinical testing of these promising therapies is commencing. Herein, we review the biology of multiple inhibitory checkpoints (including CTLA-4, PD-1, TIM-3, LAG-3, BTLA, and CD200R) and their contribution to immune evasion by acute leukemias. In addition, we discuss the current state of preclinical and clinical studies of immune checkpoint inhibition in acute leukemia, which seek to harness the bodys own immune system to fight leukemic cells.',
-          'author': '',
-          'title': 'Immunomodulatory Drugs: Immune Checkpoint Agents in Acute Leukemia',
-          'journal-title-short': 'Moo',
-          'ISSN': '1873-5592',
-        }`
+        metadata: `[{"id":"","data":{
+          "volume": "18",
+          "issue": "3",
+          "publicationDate": "01/01/2017",
+          "publicationType": "PrintPublication",
+          "abstract": "Intrinsic immune responses to acute leukemia are inhibited by a variety of mechanisms, such as aberrant antigen expression by leukemia cells, secretion of immunosuppressive cytokines and expression of inhibitory enzymes in the tumor microenvironment, expansion of immunoregulatory cells, and activation of immune checkpoint pathways, all leading to T cell dysfunction and/or exhaustion. Leukemic cells, similar to other tumor cells, hijack these inhibitory pathways to evade immune recognition and destruction by cytotoxic T lymphocytes. Thus, blockade of immune checkpoints has emerged as a highly promising approach to augment innate anti-tumor immunity in order to treat malignancies. Most evidence for the clinical efficacy of this immunotherapeutic strategy has been seen in patients with metastatic melanoma, where anti-CTLA-4 and anti-PD-1 antibodies have recently revolutionized treatment of this lethal disease with otherwise limited treatment options. To meet the high demand for new treatment strategies in acute leukemia, clinical testing of these promising therapies is commencing. Herein, we review the biology of multiple inhibitory checkpoints (including CTLA-4, PD-1, TIM-3, LAG-3, BTLA, and CD200R) and their contribution to immune evasion by acute leukemias. In addition, we discuss the current state of preclinical and clinical studies of immune checkpoint inhibition in acute leukemia, which seek to harness the bodys own immune system to fight leukemic cells.",
+          "author": "",
+          "title": "Immunomodulatory Drugs: Immune Checkpoint Agents in Acute Leukemia",
+          "journal-title-short": "Moo",
+          "ISSN": "1873-5592"
+        }}]`
       },
       {
         aggregatedDepositStatus: 'in-progress',
         submittedDate: new Date('2017-09-30'),
-        metadata: `{
-          'volume': '18',
-          'issue': '3',
-          'publicationDate': '01/01/2017',
-          'publicationType': 'PrintPublication',
-          'abstract': '',
-          'author': '',
-          'title': '',
-          'journal-title-short': 'Moo',
-          'ISSN': '1873-5592',
-        }`
+        metadata: `[{"id":"","data":{
+          "volume": "18",
+          "issue": "3",
+          "publicationDate": "01/01/2017",
+          "publicationType": "PrintPublication",
+          "abstract": "",
+          "author": "",
+          "title": "",
+          "journal-title-short": "Moo",
+          "ISSN": "1873-5592"
+        }}]`
       },
       {
         aggregatedDepositStatus: 'accepted',
         submittedDate: new Date('2016-03-01'),
-        metadata: `{
-          'volume': '18',
-          'issue': '3',
-          'publicationDate': '01/01/2017',
-          'publicationType': 'PrintPublication',
-          'abstract': '',
-          'author': '',
-          'title': '',
-          'journal-title-short': 'Moo',
-          'ISSN': '1873-5592',
-        }`
+        metadata: `[{"id":"","data":{
+          "volume": "18",
+          "issue": "3",
+          "publicationDate": "01/01/2017",
+          "publicationType": "PrintPublication",
+          "abstract": "",
+          "author": "",
+          "title": "",
+          "journal-title-short": "Moo",
+          "ISSN": "1873-5592"
+        }}]`
       }
     ];
     const deposits = [

@@ -1,4 +1,4 @@
-  <nav class="navbar navbar-light navbar-expand-md" style="background: white;" id="myHeader">
+  <nav class="navbar navbar-light navbar-expand-md" style="background: white; margin-right: -16px;" id="myHeader">
     <div class="container">
       <button class="navbar-toggler text-center border-none" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -12,7 +12,7 @@
         <li class="nav-item pull-right">{{#link-to 'contact' class='nav-link borderless'}}Contact{{/link-to}}</li>
 
         {{#if session.isAuthenticated}}
-          <li class="nav-item dropdown ml-auto">
+          {{!-- <li class="nav-item dropdown ml-auto">
             <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
               <img src="https://image.ibb.co/c8rxhx/bell_png_bell_icon_image_16624_512.png" style="width:20px" alt="admin@bootstrapmaster.com">
               <span class="badge badge-pill badge-danger">3</span>
@@ -25,9 +25,9 @@
               <a class="dropdown-item" href="#"><span class="badge badge-pill badge-danger">1</span>submission</a>
               <a class="dropdown-item" href="#"><span class="badge badge-pill badge-danger"></span>Change requirements</a>
             </div>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+          </li> --}}
+          <li class="nav-item dropdown ml-auto">
+            <a class="nav-link pr-0 accountInfo" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
               {{gravatar-image email=currentUser.user.email
                 title=currentUser.user.email
                 alt=currentUser.user.email

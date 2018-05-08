@@ -15,7 +15,9 @@
     "start": "ember server",
     "test": "ember test"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "qunit-dom": "^0.6.2"
+  },
   "engines": {
     "node": "^4.5 || 6.* || >= 7.*"
   },
@@ -43,7 +45,7 @@
     "ember-composable-helpers": "^2.1.0",
     "ember-data": "^2.18.0",
     "ember-export-application-global": "^2.0.0",
-    "ember-fedora-adapter": "git+https://github.com/OA-PASS/ember-fedora-adapter.git",
+    "ember-fedora-adapter": "git+https://github.com/OA-PASS/ember-fedora-adapter.git#master",
     "ember-font-awesome": "^4.0.0-rc.2",
     "ember-load-initializers": "^1.0.0",
     "ember-modal-dialog": "^2.4.1",

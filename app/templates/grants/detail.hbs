@@ -1,6 +1,20 @@
-{{#link-to 'grants' class="btn btn-small back-arrow"}}<i class="fa fa-arrow-left fa-lg text-dark"></i>{{/link-to}}
-<h2 class="font-weight-light d-inline-block">Grant Details</h2>
+{{!-- {{#if (get (await currentUser.user) 'isSubmitter')}}
+  {{#link-to 'submissions.new' (query-params grant=model.id) class="btn btn-primary btn-small pull-right mt-3"}}Create new Submission{{/link-to}}
+{{/if}}
 
+{{#link-to 'grants' class="btn btn-small back-arrow"}}<i class="fa fa-arrow-left fa-lg text-dark"></i>{{/link-to}}
+<h2 class="font-weight-light d-inline-block">Grant Details</h2> --}}
+<div class="row mt-3 mb-3">
+  <div class="col-6 pt-1">
+    {{#link-to 'grants' class="btn btn-small back-arrow"}}<i class="fa fa-arrow-left fa-lg"></i>{{/link-to}}
+    <h2 class="font-weight-light d-inline-block">Grant Details</h2>
+  </div>
+  <div class="col-6">
+    {{#if (get (await currentUser.user) 'isSubmitter')}}
+      {{#link-to "submissions.new" class="btn btn-primary btn-small pull-right"}}Create new Submission{{/link-to}}
+    {{/if}}
+  </div>
+</div>
 <div class='container'>
   <div class='row'>
     <ul class='col-sm-6'>
@@ -38,7 +52,3 @@
   useFilteringByColumns=false
   showGlobalFilter=false
 }}
-
-{{#if (get (await currentUser.user) 'isSubmitter')}}
-  {{#link-to 'submissions.new' (query-params grant=model.id) class="btn btn-primary"}}Create New Submission{{/link-to}}
-{{/if}}

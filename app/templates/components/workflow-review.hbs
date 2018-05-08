@@ -58,12 +58,7 @@
         <p class="mb-1">{{model.publication.doi}}</p>
         <small class="text-muted">Please review the information below</small>
         <table class="table table-responsive-sm table-bordered w-100">
-          <thead>
-            <tr>
-              <th class="min-review-type-width">Type</th>
-              <th>Data</th>
-            </tr>
-          </thead>
+
           <tbody>
             <tr>
               <td>Journal</td>
@@ -95,16 +90,29 @@
               <td>
                 <ul class="list-unstyled">
                   {{#each-in metadataBlobNoKeys as |key data|}}
-                  {{!-- TODO: Look in to making the ifs in to one if --}}
-                  {{#if (not-eq key 'embargo')}}
-                    {{#if (not-eq key 'under-embargo')}}
-                      {{#if (not-eq key 'Embargo-end-date')}}
-                        {{#if (not-eq key 'agreement-to-embargo')}}
-                            <li><b>{{key}}</b>: {{{data}}}</li>
+                    {{!-- TODO: Look in to making the ifs in to one if --}}
+                    {{#if (not-eq key 'embargo')}}
+                      {{#if (not-eq key 'under-embargo')}}
+                        {{#if (not-eq key 'Embargo-end-date')}}
+                          {{#if (not-eq key 'agreement-to-embargo')}}
+                            {{#if (eq key 'author(s)')}}
+                              <li><b>{{key}}</b>:
+                                <ul>
+                                  {{#each data as |author|}}
+                                    <li>{{author.author}}</li>
+                                    {{#if author.orcid}}
+                                      <li class="ml-4">{{author.orcid}}</li>
+                                    {{/if}}
+                                  {{/each}}
+                                </ul>
+                              </li>
+                            {{else}}
+                              <li><b>{{key}}</b>: {{{data}}}</li>
+                            {{/if}}
+                          {{/if}}
                         {{/if}}
                       {{/if}}
                     {{/if}}
-                  {{/if}}
                   {{/each-in}}
                 </ul>
               </td>
@@ -114,16 +122,16 @@
             <tr>
               <td>Files</td>
               <td>
-                {{#each model.newSubmission.files as |file|}}
+                {{#each parsedFiles as |file|}}
                   <div class="card file-icon text-center">
-                    {{#if (eq model.newSubmission.files.isManuscript file.file.name)}}
+                    {{!-- {{#if (eq model.newSubmission.files.isManuscript file.name)}}
                       <span>
                         <i class="fa fa-star manuscriptTag"></i>
                       </span>
-                    {{/if}}
+                    {{/if}} --}}
                     <i class="fa fa-file-o fa-30 pt-2"></i>
-                    <p class="text-overflow">{{file.file.name}}</p>
-                    <span class="document-item" filetype="{{file.type}}"></span>
+                    <p class="text-overflow">{{file.name}}</p>
+                    <span class="document-item" filetype="{{file.mimeType}}"></span>
                   </div>
                 {{/each}}
               </td>
@@ -138,9 +146,9 @@
                   </label>
                   <ul class="m-0">
                     <li>
-                      <a target="_blank" href="https://eric.ed.gov/submit/" {{action "clickEric" preventDefault=false}}>
+                      <button type="button" class="btn btn-link" data-toggle="modal" data-target="#externalSubmission">
                         https://eric.ed.gov/submit/
-                      </a>
+                      </button>
                     </li>
                   </ul>
                 </td>
@@ -164,3 +172,26 @@
 </div>
 <button class="btn btn-outline-primary" {{action "back"}}>Back</button>
 <button class="btn btn-primary pull-right" {{action "submit"}} disabled={{disableSubmit}}>Submit</button>
+
+<!-- Modal -->
+<div class="modal fade" id="externalSubmission" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Notice!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        You are being redirected to an external site. This will open in a new tab.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-primary mr-auto" data-dismiss="modal">Cancel</button>
+        <a target="_blank" class="btn btn-primary pull-right" href="https://eric.ed.gov/submit/" {{action "clickEric" preventDefault=false}}>
+          Redirect
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

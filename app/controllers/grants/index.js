@@ -48,7 +48,8 @@ export default Controller.extend({
   adminColumns: [
     {
       propertyName: 'grant.projectName',
-      title: 'Project Name'
+      title: 'Project Name',
+      routeName: 'grants.detail',
     },
     {
       propertyName: 'grant.primaryFunder.name',
@@ -105,7 +106,8 @@ export default Controller.extend({
   piColumns: [
     {
       propertyName: 'grant.projectName',
-      title: 'Project Name'
+      title: 'Project Name',
+      routeName: 'grants.detail',
     },
     {
       propertyName: 'grant.primaryFunder.name',

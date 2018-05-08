@@ -6,6 +6,9 @@ export default Component.extend({
     // // TODO:  add validation step here that checks the model each rerender
     // this.set('isValidated', false)
   },
+  parsedFiles: Ember.computed('model.newSubmission.filesTemp', function () {
+    return JSON.parse(this.get('model.newSubmission.filesTemp'));
+  }),
   metadata: Ember.computed('model.newSubmission.metadata', function () { // eslint-disable-line
     return JSON.parse(this.get('model.newSubmission.metadata'));
   }),
@@ -15,9 +18,9 @@ export default Component.extend({
       for (var key in ele.data) {
         if (ele.data.hasOwnProperty(key)) {
           let strippedData = ele.data[key].replace(/(<([^>]+)>)/ig, '');
-          if (key === 'author') {
+          if (key === 'authors') {
             if (metadataBlobNoKeys['author(s)']) {
-              metadataBlobNoKeys['author(s)'] = _.uniq(metadataBlobNoKeys['author(s)'].concat(strippedData));
+              metadataBlobNoKeys['author(s)'] = _.uniqBy(metadataBlobNoKeys['author(s)'].concat(strippedData), 'author');
             } else {
               metadataBlobNoKeys['author(s)'] = strippedData;
             }
@@ -39,6 +42,7 @@ export default Component.extend({
   actions: {
     clickEric() {
       this.set('hasVisitedEric', true);
+      $('#externalSubmission').modal('hide');
     },
     submit() {
       // In case a crafty user edits the page HTML, don't submit when not allowed
