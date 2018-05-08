@@ -35,7 +35,9 @@ export default Ember.Component.extend({
             for (const doiEntry in doiInfo) {
               // Validate and check any doi data to make sure its close to the right field
               if (f.get(doiEntry) !== null) {
-                doiInfo[doiEntry] = doiInfo[doiEntry].replace(/(<([^>]+)>)/ig, '');
+                try {
+                  doiInfo[doiEntry] = doiInfo[doiEntry].replace(/(<([^>]+)>)/ig, '');
+                } catch (e) { console.log(e); }
                 if (doiEntry == 'author') {
                   doiInfo[doiEntry].forEach((author, index) => {
                     // console.log(author, index);
@@ -68,6 +70,46 @@ export default Ember.Component.extend({
         });
       }
     }
+
+    // Validate Embargo page
+    let isValidated = true;
+    if (newForm.options.fields['Embargo-end-date']) {
+      newForm.options.fields['Embargo-end-date'].validator = function (callback) {
+        var value = this.getValue();
+        var underEmbargo = this.getParent().childrenByPropertyId['under-embargo'].getValue();
+        if (underEmbargo && !value) {
+          isValidated = false;
+          callback({
+            status: false,
+            message: 'This field is required'
+          });
+          return;
+        }
+        $('input[name=Embargo-end-date]').css('border-color', '#c2cfd6');
+        $('.alpaca-form-button-Next').css('opacity', '1');
+        isValidated = true;
+        callback({
+          status: true
+        });
+      }
+    }
+    if (newForm.options.fields['under-embargo']) {
+      newForm.options.fields['under-embargo'].validator = function (callback) {
+        var underEmbargo = this.getParent().childrenByPropertyId['under-embargo'].getValue();
+        var EmbargoEndDate = this.getParent().childrenByPropertyId['Embargo-end-date'].getValue();
+
+        if (underEmbargo && !EmbargoEndDate) {
+          isValidated = false;
+          $('input[name=Embargo-end-date]').css('border-color', '#f86c6b');
+          $('.alpaca-form-button-Next').css('opacity', '0.65');
+          return;
+        }
+        $('input[name=Embargo-end-date]').css('border-color', '#c2cfd6');
+        $('.alpaca-form-button-Next').css('opacity', '1');
+        isValidated = true;
+      }
+    }
+
     // form ctrls
     newForm.options.form = {
       buttons: {
@@ -75,23 +117,25 @@ export default Ember.Component.extend({
           label: 'Next',
           styles: 'pull-right btn btn-primary',
           click() {
-            const value = this.getValue();
-            // concat auther + family together
-            // value.author = `${value.author} ${value.family}`;
-            // delete value.family;
-            const formId = newForm.id;
-            metadata.push({
-              id: formId,
-              data: value,
-            });
-            // remove any duplicates
-            let uniqIds = {},
-              source = metadata;
-            // eslint-disable-next-line no-return-assign
-            let filtered = source.reverse().filter(obj => !uniqIds[obj.id] && (uniqIds[obj.id] = true));
+            if (isValidated) {
+              const value = this.getValue();
+              // concat auther + family together
+              // value.author = `${value.author} ${value.family}`;
+              // delete value.family;
+              const formId = newForm.id;
+              metadata.push({
+                id: formId,
+                data: value,
+              });
+              // remove any duplicates
+              let uniqIds = {},
+                source = metadata;
+              // eslint-disable-next-line no-return-assign
+              let filtered = source.reverse().filter(obj => !uniqIds[obj.id] && (uniqIds[obj.id] = true));
 
-            that.set('model.metadata', JSON.stringify(filtered));
-            that.nextForm();
+              that.set('model.metadata', JSON.stringify(filtered));
+              that.nextForm();
+            }
           },
         },
         Back: {
