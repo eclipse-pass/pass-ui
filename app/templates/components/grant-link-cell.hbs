@@ -1,0 +1,8 @@
+{{!--
+  This component is intended to be used in the ember-model-tabels component in
+  the Grants table to display cells containing grant-related data that should
+  also link to the grant details page
+--}}
+{{#link-to 'grants.detail' (get record 'grant.id')}}
+  {{get record column.propertyName}}
+{{/link-to}}

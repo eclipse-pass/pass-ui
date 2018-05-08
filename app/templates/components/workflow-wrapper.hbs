@@ -23,14 +23,14 @@
         {{workflow-metadata model=model doiInfo=doiInfo step=step next=(action "next") back=(action "back")}}
       {{/if}}
       {{#if (eq step 6)}}
-        {{workflow-files model=model next=(action "next") back=(action "back")}}
+        {{workflow-files model=model next=(action "next") back=(action "back") filesTemp=filesTemp}}
       {{/if}}
       {{#if (eq step 7)}}
         {{!--
           we just want to validate the last step because up untill this point its okay not to have all the data
           just let them fill out the forms then check that the data is right at the end
         --}}
-        {{workflow-review model=model isValidated=isValidated validate=(action "validate") back=(action "back") submit=(action "submit")}}
+        {{workflow-review model=model isValidated=isValidated validate=(action "validate") back=(action "back") submit=(action "submit") filesTemp=filesTemp}}
       {{/if}}
     </main>
   </div>
