@@ -138,8 +138,8 @@
               <td class="text-nowrap">Repositories</td>
               <td>
                 <ul>
-                  {{#each (search-associated "deposit" "submission" model.sub.id) as |deposit index|}}
-                    <li>{{get deposit 'repository.name'}}</li>
+                  {{#each (await model.sub.repositories) as |deposit index|}}
+                    <li>{{deposit.name}}</li>
                     {{!-- <ul>
                       <li>Status: {{deposit.depositStatus}}</li>
                       <li>Required: {{deposit.isRequired}}</li>
@@ -170,7 +170,7 @@
                               </ul>
                             </li>
                           {{else}}
-                            <li><b>{{key}}</b>: {{{data}}}</li>
+                            <li><b>{{key}}</b>: {{data}}</li>
                           {{/if}}
                         {{/if}}
                       {{/if}}
