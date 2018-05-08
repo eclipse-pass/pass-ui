@@ -96,6 +96,7 @@ export default Ember.Component.extend({
         },
         Back: {
           title: 'Back',
+          styles: 'pull-left btn btn-outline-primary',
           click() {
             that.previousForm();
           },

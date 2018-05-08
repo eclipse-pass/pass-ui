@@ -1,5 +1,4 @@
-<div class="form-group row">
-  <div class="col-md-12">
+<div class="form-group">
     <p>
       Based on the information you provided so far, these are the public access
       policies that are applicable to your work:
@@ -7,7 +6,6 @@
     {{#each activePolicies as |policy|}}
       {{policy-card model=model policy=policy journal=model.publication.journal removeNIHDeposit=removeNIHDeposit toggleRemoveNIHDeposit=(action 'toggleRemoveNIHDeposit')}}
     {{/each}}
-  </div>
 </div>
 
 <button class="btn btn-outline-primary" {{action "back"}}>Back</button>

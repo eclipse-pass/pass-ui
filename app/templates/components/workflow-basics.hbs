@@ -5,7 +5,7 @@
     pre-populate submission forms from the metadata extracted from the DOI. If
     the article has no DOI, please leave it blank.
 </p>
-<div class="form-group col-md-12">
+<div class="form-group">
   <label>DOI:</label>
   {{!-- <div style="color:red"><div style="font-style: italic">no pmc:</div>10.1103/PhysRevFluids.1.073604</div>
   <div style="color:red"><div style="font-style: italic">method A:</div>10.1021/acsmedchemlett.7b00397</div>
@@ -20,12 +20,12 @@
     {{if (eq validDOI 2) 'Please provide a valid DOI'}}
   </div>
 </div>
-<div class="form-group col-md-12">
+<div class="form-group">
   <label>Title:</label>
   {{textarea value=model.publication.title cols="100%" rows="2" class=validTitle placeholder="Title" keyUp=(action "validateTitle") }}
 </div>
 
-<div class="form-group col-md-12">
+<div class="form-group">
   <label>Journal:</label>
   {{#unless doiJournal}}
     {{find-journal id="journal" onSelect=(action "selectJournal") value=model.publication.journal}}
