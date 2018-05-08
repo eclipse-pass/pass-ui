@@ -6,8 +6,8 @@ export default Component.extend({
     // // TODO:  add validation step here that checks the model each rerender
     // this.set('isValidated', false)
   },
-  parsedFiles: Ember.computed('model.newSubmission.filesTemp', function () {
-    return JSON.parse(this.get('model.newSubmission.filesTemp'));
+  parsedFiles: Ember.computed('filesTemp', function () {
+    return JSON.parse(this.get('filesTemp'));
   }),
   metadata: Ember.computed('model.newSubmission.metadata', function () { // eslint-disable-line
     return JSON.parse(this.get('model.newSubmission.metadata'));
