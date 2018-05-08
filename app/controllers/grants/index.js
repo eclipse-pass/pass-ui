@@ -10,21 +10,25 @@ export default Controller.extend({
   messageSubject: '',
   messageText: '',
 
-  actions: {
-    // piclick(grant) {
-    //   this.set('messageShow', true);
-    //   this.set('messageTo', grant.get('pi.displayName'));
-    //   this.set('messageSubject', 'OAP Compliance');
+  /**
+   * Crappy way to attach search results to a grant in the table
+   */
+  tableModel: Ember.computed('model', function () {
+    const grants = this.get('model');
+    let result = [];
 
-    //   let text = `Concerning project ${grant.get('projectName')}, one or more of the following submissions have issues:`;
-    //   grant.get('submissions').forEach((s) => {
-    //     text += `\n  Article: ${s.get('title')}, Status: ${s.get('awardStatus')}`;
-    //   });
-    //   text += '\n\nPlease check your PASS dashboard.';
+    // TODO should be optimized to use a SINGLE search with all IDs
+    // This big search will then be picked through to match the right submissions
+    // With the right grants after it returns.
+    grants.forEach((grant) => {
+      result.push({
+        grant,
+        submissions: this.get('store').query('submission', { term: { grants: grant.get('id') } })
+      });
+    });
 
-    //   this.set('messageText', text);
-    // },
-  },
+    return result;
+  }),
 
   tablePageSize: 5,
   tablePageSizeValues: [5, 10, 25],
@@ -46,55 +50,58 @@ export default Controller.extend({
 
   adminColumns: [
     {
-      propertyName: 'projectName',
+      propertyName: 'grant.projectName',
       title: 'Project Name',
-      routeName: 'grants.detail',
+      component: 'grant-link-cell'
     },
     {
-      propertyName: 'primaryFunder.name',
+      propertyName: 'grant.primaryFunder.name',
       title: 'Funder',
       filterWithSelect: true,
       predefinedFilterOptions: ['NIH', 'DOE', 'NSF'],
     },
     {
-      propertyName: 'awardNumber',
+      propertyName: 'grant.awardNumber',
       title: 'Award Number',
-      routeName: 'grants.detail',
       disableFiltering: true,
+      component: 'grant-link-cell'
     },
     {
-      propertyName: 'localKey',
+      propertyName: 'grant.localKey',
       title: 'COEUS',
       disableFiltering: true,
     },
     {
       title: 'PI',
-      propertyName: 'pi',
+      propertyName: 'grant.pi',
       component: 'pi-list-cell'
     },
     {
-      propertyName: 'startDate',
+      propertyName: 'grant.startDate',
       title: 'Start',
       disableFiltering: true,
       component: 'date-cell'
     },
     {
-      propertyName: 'endDate',
+      propertyName: 'grant.endDate',
       title: 'End',
       disableFiltering: true,
       component: 'date-cell'
     },
     {
-      propertyName: 'awardStatus',
+      propertyName: 'grant.awardStatus',
       title: 'Status',
       filterWithSelect: true,
       predefinedFilterOptions: ['Active', 'Ended'],
     },
     {
-      propertyName: 'submissions.length', title: '#', routeName: 'grants.detail', disableFiltering: true,
+      propertyName: 'submissions.content.content.length',
+      title: '#',
+      disableFiltering: true,
+      component: 'grant-link-cell'
     },
     {
-      propertyName: 'oapCompliance',
+      propertyName: 'grant.oapCompliance',
       title: 'OAP Compliance',
       component: 'oap-compliance-cell',
       filterWithSelect: true,
@@ -104,49 +111,52 @@ export default Controller.extend({
 
   piColumns: [
     {
-      propertyName: 'projectName',
+      propertyName: 'grant.projectName',
       title: 'Project Name',
-      routeName: 'grants.detail',
+      component: 'grant-link-cell'
     },
     {
-      propertyName: 'primaryFunder.name',
+      propertyName: 'grant.primaryFunder.name',
       title: 'Funder',
       filterWithSelect: true,
       predefinedFilterOptions: ['NIH', 'DOE', 'NSF'],
     },
     {
-      propertyName: 'awardNumber',
+      propertyName: 'grant.awardNumber',
       title: 'Award Number',
-      routeName: 'grants.detail',
       disableFiltering: true,
+      component: 'grant-link-cell'
     },
     {
-      propertyName: 'localKey',
+      propertyName: 'grant.localKey',
       title: 'COEUS',
       disableFiltering: true,
     },
     {
       title: 'PI',
-      propertyName: 'pi',
+      propertyName: 'grant.pi',
       component: 'pi-list-cell'
     },
     {
-      propertyName: 'startDate',
+      propertyName: 'grant.startDate',
       title: 'Start',
       disableFiltering: true,
       component: 'date-cell'
     },
     {
-      propertyName: 'endDate',
+      propertyName: 'grant.endDate',
       title: 'End',
       disableFiltering: true,
       component: 'date-cell'
     },
     {
-      propertyName: 'submissions.length', title: '#', routeName: 'grants.detail', disableFiltering: true,
+      propertyName: 'submissions.content.content.length',
+      title: '#',
+      disableFiltering: true,
+      component: 'grant-link-cell'
     },
     {
-      propertyName: 'awardStatus',
+      propertyName: 'grant.awardStatus',
       title: 'Status',
       filterWithSelect: true,
     },

@@ -25,7 +25,7 @@
       <li class="list-group-item d-flex align-items-center my-1">
         {{!-- DEBUG: Bug here if the user goes back and tries to change the option after they move past this step  it wont update
         this may be due to how we are loading metadata forms --}}
-        {{input type="checkbox" change=(action "toggleRepository" repo) checked=true id=repo.name name=repo.name}}
+        {{input type="checkbox" change=(action "toggleRepository" repo) checked=true name=repo.name}}
         <label for="{{repo.name}}" class="mb-0 ml-2">{{repo.name}}</label>
 
       </li>
