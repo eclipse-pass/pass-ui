@@ -54,11 +54,18 @@ export default Ember.Component.extend({
                   if (f.get(doiEntry)[0][0] > 0.61) {
                     console.log(doiEntry, doiInfo[doiEntry], f.get(doiEntry)[0][0]);
                     // set the found record to the metadata
-                    prePopulateData[f.get(doiEntry)[0][1]] = doiInfo[doiEntry];
+
+                    // due to short title you have to call this
+
+                    if (doiEntry === 'container-title-short') {
+                    } else {
+                      prePopulateData[f.get(doiEntry)[0][1]] = doiInfo[doiEntry];
+                    }
                   }
                 }
               }
             }
+            debugger
             // set any data to the forms
             newForm.data = prePopulateData;
             metadata[newForm.id] = ({

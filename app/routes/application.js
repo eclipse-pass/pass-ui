@@ -202,36 +202,12 @@ export default Route.extend(ApplicationRouteMixin, {
             "title": "NIH Manuscript Submission System (NIHMS) <br><p class='lead text-muted'>The following metadata fields will be part of the NIHMS submission.</p>",
             "type": "object",
             "properties": {
-              "title": { "type": "string", "required": true },
-              "journal-title-short": { "type": "string", "required": true },
               "journal-NLMTA-ID": { "type": "string", "required": true },
-              "ISSN": { "type": "string", "required": true },
-              "authors": {
-                "title": "Author(s)",
-                "type": "array",
-                "items": {
-                  "title": "Author",
-                  "type": "object",
-                  "properties": {
-                    "author": {
-                      "title": "Name",
-                      "type": "string",
-                      "fieldClass": "body-text col-6 pull-left pl-0"
-                    },
-                    "orcid": {
-                      "title": "ORCiD",
-                      "type": "string",
-                      "fieldClass": "body-text col-6 pull-left pr-0"
-                    }
-                  }
-                }
-              }
+              "ISSN": { "type": "string", "required": true }
             }
           },
           "options": {
             "fields": {
-              "title": { "type": "text", "label": "Article / Manuscript Title", "placeholder": "Enter the manuscript title" },
-              "journal-title-short": { "type": "text", "label": "Journal Title", "placeholder": "Enter the journal title" },
               "journal-NLMTA-ID": { "type": "text", "label": "Journal NLMTA ID", "placeholder": "" },
               "ISSN": { "type": "text", "label": "ISSN", "placeholder": "" }
             }
