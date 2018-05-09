@@ -28,7 +28,7 @@
 <div class="form-group">
   <label>Journal:</label>
   {{#unless doiJournal}}
-    {{find-journal id="journal" onSelect=(action "selectJournal") value=model.publication.journal}}
+    {{find-journal id="journal" selectJournal=(action "selectJournal") value=model.publication.journal}}
   {{else}}
     <input type="text" class="form-control" value={{model.publication.journal}}  placeholder="Journal"/>
   {{/unless}}
