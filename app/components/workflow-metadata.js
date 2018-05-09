@@ -9,6 +9,14 @@ export default Component.extend({
       title: "Common <br><p class='lead text-muted'>Please provide additional information about your article/manuscript below:</p>",
       type: 'object',
       properties: {
+        title: {
+          type: 'string',
+          required: true
+        },
+        'container-title': {
+          type: 'string',
+          required: true
+        },
         volume: {
           type: 'string',
         },
@@ -58,6 +66,16 @@ export default Component.extend({
     },
     options: {
       fields: {
+        title: {
+          type: 'text',
+          label: 'Article / Manuscript Title',
+          placeholder: 'Enter the manuscript title'
+        },
+        'container-title': {
+          type: 'text',
+          label: 'Journal Title',
+          placeholder: 'Enter the journal title'
+        },
         volume: {
           type: 'text',
           label: 'Volume',
