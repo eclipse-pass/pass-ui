@@ -138,11 +138,16 @@
             </tr>
             {{#if mustVisitEric}}
               <tr>
-                <td class="text-nowrap">External Submission Portal</td>
+                <td class="text-nowrap text-center">External Submission Portal
+                  <br>
+                  {{#if disableSubmit}}
+                    <i class="fa fa-exclamation-triangle fa-2x mt-3 notice-triangle"></i>
+                  {{/if}}
+                </td>
                 <td>
                   <label class="">
                     Please visit the following web portal to submit your manuscript directly. Metadata displayed above
-                    could be used to aid your submission progress.
+                    could be used to aid in your submission progress.
                   </label>
                   <ul class="m-0">
                     <li>

@@ -16,8 +16,8 @@ export default Component.extend({
   init() {
     this._super(...arguments);
     this.set('files', Ember.A());
-    if (this.get('model.newSubmission.filesTemp') && JSON.parse(this.get('model.newSubmission.filesTemp')).length > 0) {
-      JSON.parse(this.get('model.newSubmission.filesTemp')).forEach((file) => {
+    if (this.get('filesTemp') && JSON.parse(this.get('filesTemp')).length > 0) {
+      JSON.parse(this.get('filesTemp')).forEach((file) => {
         this.get('files').pushObject(this.get('store').createRecord('file', file));
       });
       this.set('nextDisabled', false);
@@ -26,7 +26,7 @@ export default Component.extend({
   nextDisabled: true,
   actions: {
     next() {
-      this.get('model.newSubmission').set('filesTemp', JSON.stringify(this.get('files')));
+      this.set('filesTemp', JSON.stringify(this.get('files')));
       this.sendAction('next');
     },
     back() {
@@ -59,7 +59,7 @@ export default Component.extend({
       let files = this.get('files');
       files.removeObject(file);
       this.set('files', files);
-      this.set('model.newSubmission.filesTemp', JSON.stringify(this.get('files')));
+      this.set('filesTemp', JSON.stringify(this.get('files')));
       this.set('nextDisabled', checkDisabled(this.get('files')));
     }
   },

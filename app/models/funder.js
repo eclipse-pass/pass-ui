@@ -6,5 +6,4 @@ export default DS.Model.extend({
   localKey: DS.attr('string'),
 
   policy: DS.belongsTo('policy'),
-  repository: DS.belongsTo('repository'), // TODO not part of the model
 });

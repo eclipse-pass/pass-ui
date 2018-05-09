@@ -1,11 +1,12 @@
-  <nav class="navbar navbar-light navbar-expand-md" style="background: white; margin-right: -16px;" id="myHeader">
+  <nav class="navbar navbar-light navbar-expand-md w-100" style="background: white;" id="myHeader">
     <div class="container">
+      <div class="col-xs-12" style="width:100%;">
       <button class="navbar-toggler text-center border-none" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav" style="width:100%">
-        <li class="nav-item">{{#link-to 'dashboard' class='nav-link pl-0'}}Home{{/link-to}}</li>
+        <li class="nav-item">{{#link-to 'dashboard' class='nav-link pl-0 ml-0'}}Home{{/link-to}}</li>
         <li class="nav-item">{{#link-to 'grants' class="nav-link"}}Grants{{/link-to}}</li>
         <li class="nav-item">{{#link-to 'submissions' class="nav-link"}}Submissions{{/link-to}}</li>
         <li class="nav-item">{{#link-to 'about' class='nav-link'}}About{{/link-to}}</li>
@@ -27,7 +28,7 @@
             </div>
           </li> --}}
           <li class="nav-item dropdown ml-auto">
-            <a class="nav-link pr-0 accountInfo" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+            <a class="nav-link accountInfo pr-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
               {{gravatar-image email=currentUser.user.email
                 title=currentUser.user.email
                 alt=currentUser.user.email
@@ -52,5 +53,6 @@
         {{/if}}
       </ul>
     </div>
+  </div>
     </div>
   </nav>

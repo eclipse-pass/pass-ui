@@ -10,10 +10,6 @@ export default Controller.extend({
   messageSubject: '',
   messageText: '',
 
-  submissionsToShow: Ember.computed('model.@each.id', function () {
-    let ret = this.get('model').filterBy('id');
-    return ret;
-  }),
   actions: {
     authorclick(submission) {
       this.set('messageShow', true);

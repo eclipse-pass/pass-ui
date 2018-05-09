@@ -26,5 +26,5 @@ deploy:
   provider: surge
   project: "./dist/"
   domain: pass-jhu.surge.sh
-  on: deploy
+  on: master
   skip_cleanup: true
