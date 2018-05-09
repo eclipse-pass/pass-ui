@@ -96,7 +96,7 @@ export default Ember.Component.extend({
         callback({
           status: true
         });
-      }
+      };
     }
     if (newForm.options.fields['under-embargo']) {
       newForm.options.fields['under-embargo'].validator = function (callback) {
@@ -112,7 +112,7 @@ export default Ember.Component.extend({
         $('input[name=Embargo-end-date]').css('border-color', '#c2cfd6');
         $('.alpaca-form-button-Next').css('opacity', '1');
         isValidated = true;
-      }
+      };
     }
 
     // form ctrls
