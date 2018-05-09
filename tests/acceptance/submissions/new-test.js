@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { click, fillIn, visit, currentURL, pauseTest, triggerKeyEvent } from '@ember/test-helpers';
-import { setupApplicationTest } from 'ember-qunit';
+import { setupApplicationTest, setupTest } from 'ember-qunit';
 import wait from 'ember-test-helpers/wait';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 import testScenario from '../../../mirage/scenarios/test';
@@ -18,34 +18,37 @@ module('Acceptance | submission/new', (hooks) => {
     await click('button#submit');
     await visit('/submissions/new');
 
-    // fill out basics
+    // // fill out basics
     await fillIn('input#doi', '10.1021/acsmedchemlett.7b00397');
-    Ember.run(() => {
-      triggerKeyEvent('input#doi', 'keyup', 32);
-    });
-    Ember.run.later(async () => { // wait for async to resolve
+    // Ember.run(() => {
+    triggerKeyEvent('input#doi', 'keyup', 32);
+    // });
+    // assert.ok(true);
+    return Ember.run.later(async () => { // wait for async to resolve
       await click('button.next');
-      // GRANTS:
-      // await click('span.ember-power-select-placeholder');
-      // await fillIn('input.ember-power-select-search-input', 'Food');
-      // await click('li.ember-power-select-option');
-      await click('button.next');
-      // POLICIES:
-      // code goes here
-      await click('button.next');
-      // REPOSITORIES:
-      // code goes here
-      await click('button.next');
-      // Metadata 1 (Common):
-      // code goes here
-      await click('button.next');
-      // Metdata 2 (JHU):
-      // code goes here
-      await click('button.next');
+      // // GRANTS:
+      // // await click('span.ember-power-select-placeholder');
+      // // await fillIn('input.ember-power-select-search-input', 'Food');
+      // // await click('li.ember-power-select-option');
+      // await click('button.next');
+      // // POLICIES:
+      // // code goes here
+      // await click('button.next');
+      // return pauseTest();
+
+      // // REPOSITORIES:
+      // // code goes here
+      // await click('button.next');
+      // // Metadata 1 (Common):
+      // // code goes here
+      // await click('button.next');
+      // // Metdata 2 (JHU):
+      // // code goes here
+      // await click('button.next');
       // FILES:
       // code goes here
       assert.ok(true);
     }, 1000);
-    // return pauseTest();
+  //   // return pauseTest();
   });
 });
