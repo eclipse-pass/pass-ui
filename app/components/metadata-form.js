@@ -37,7 +37,7 @@ export default Ember.Component.extend({
               if (f.get(doiEntry) !== null) {
                 try {
                   doiInfo[doiEntry] = doiInfo[doiEntry].replace(/(<([^>]+)>)/ig, '');
-                } catch (e) { console.log(e); }
+                } catch (e) {} // eslint-disable-line no-empty
                 if (doiEntry == 'author') {
                   doiInfo[doiEntry].forEach((author, index) => {
                     // console.log(author, index);
@@ -57,15 +57,13 @@ export default Ember.Component.extend({
 
                     // due to short title you have to call this
 
-                    if (doiEntry === 'container-title-short') {
-                    } else {
+                    if (!(doiEntry === 'container-title-short')) {
                       prePopulateData[f.get(doiEntry)[0][1]] = doiInfo[doiEntry];
                     }
                   }
                 }
               }
             }
-            debugger
             // set any data to the forms
             newForm.data = prePopulateData;
             metadata[newForm.id] = ({
@@ -147,7 +145,6 @@ export default Ember.Component.extend({
         },
         Back: {
           title: 'Back',
-          styles: 'pull-left btn btn-outline-primary',
           click() {
             that.previousForm();
           },
