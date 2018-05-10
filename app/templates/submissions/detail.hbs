@@ -1,102 +1,54 @@
-<style>
-  .document-item::after {
-    content: 'file';
-    content: attr(filetype);
-    text-align: right;
-    padding: 2px;
-    background-color: #536c79;
-    color: #fff;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-
-  .fa-30 {
-    font-size: 30px;
-  }
-
-  .file-icon {
-    padding: 5px;
-    width: 100px;
-    height: 110px;
-    display: inline-block;
-    color: rgba(0, 0, 0, 0.5);
-  }
-
-  .text-overflow {
-    width: 100%;
-    display: inline-block;
-    overflow: hidden;
-    white-space: pre-wrap;
-    height: 25px;
-    margin-bottom: 3px;
-  }
-
-  table td {
-    border: 1px dotted silver;
-    word-break: break-all;
-  }
-
-  .min-review-type-width {
-    min-width: 100px;
-  }
-
-  .manuscriptTag {
-    position: absolute;
-    top: 22px;
-    right: 44%;
-  }
-</style>
 {{#link-to 'submissions' class="btn btn-small back-arrow"}}<i class="fa fa-arrow-left fa-lg"></i>{{/link-to}}
 <h2 class="font-weight-light d-inline-block">Submission Detail</h2>
 <style>
-  .document-item::after {
-    content: 'file';
-    content: attr(filetype);
-    text-align: right;
-    padding: 2px;
-    background-color: #536c79;
-    color: #fff;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
+.document-item::after {
+  content: 'file';
+  content: attr(filetype);
+  text-align: right;
+  padding: 2px;
+  background-color: #536c79;
+  color: #fff;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
 
-  .fa-30 {
-    font-size: 30px;
-  }
+.fa-30 {
+  font-size: 30px;
+  margin-top: 4px;
+}
 
-  .file-icon {
-    padding: 5px;
-    width: 100px;
-    height: 110px;
-    display: inline-block;
-    color: rgba(0, 0, 0, 0.5);
-  }
+.file-icon {
+  padding: 4px;
+  width: 100px;
+  height: 125px;
+  display: inline-block;
+  color: rgba(0, 0, 0, 0.5);
+}
 
-  .text-overflow {
-    width: 100%;
-    display: inline-block;
-    overflow: hidden;
-    white-space: pre-wrap;
-    height: 25px;
-    margin-bottom: 3px;
-  }
+.text-overflow {
+  width: 100%;
+  display: inline-block;
+  overflow: hidden;
+  white-space: pre-wrap;
+  height: 18px;
+  margin-bottom: 3px;
+}
 
-  table td {
-    border: 1px dotted silver;
-    word-break: break-all;
-  }
+table td {
+  border: 1px dotted silver;
+  word-break: break-all;
+}
 
-  .min-review-type-width {
-    min-width: 100px;
-  }
+.min-review-type-width {
+  min-width: 100px;
+}
 
-  .manuscriptTag {
-    position: absolute;
-    top: 22px;
-    right: 44%;
-  }
+.manuscriptTag {
+  position: absolute;
+  top: 22px;
+  right: 44%;
+}
 </style>
 <div class="form-group row">
   <div class="col-md-12">
@@ -153,30 +105,40 @@
               <td>
                 <ul class="list-unstyled">
                   {{#each-in metadataBlobNoKeys as |key data|}}
-                  {{!-- TODO: Look in to making the ifs in to one if --}}
-                  {{#if (not-eq key 'embargo')}}
-                    {{#if (not-eq key 'under-embargo')}}
-                      {{#if (not-eq key 'Embargo-end-date')}}
-                        {{#if (not-eq key 'agreement-to-embargo')}}
-                          {{#if (eq key 'author(s)')}}
-                            <li><b>{{key}}</b>:
-                              <ul>
-                                {{#each data as |author|}}
-                                  <li>{{author.author}}</li>
-                                  {{#if author.orcid}}
-                                    <li class="ml-4">{{author.orcid}}</li>
-                                  {{/if}}
-                                {{/each}}
-                              </ul>
-                            </li>
-                          {{else}}
-                            <li><b>{{key}}</b>: {{data}}</li>
+                    {{!-- TODO: Look in to making the ifs in to one if --}}
+                    {{#if (not-eq key 'embargo')}}
+                      {{#if (not-eq key 'under-embargo')}}
+                        {{#if (not-eq key 'Embargo-end-date')}}
+                          {{#if (not-eq key 'agreement-to-embargo')}}
+                            {{#if (eq key 'author(s)')}}
+                              <li><b>{{key}}</b>:
+                                <ul>
+                                  {{#each data as |author|}}
+                                    <li>{{author.author}}{{#if author.orcid}} (<a href={{author.orcid}}  target="_blank">{{author.orcid}}</a>){{/if}}</li>
+                                  {{/each}}
+                                </ul>
+                              </li>
+                            {{else}}
+                              {{#if data.[0]}}
+                                <li><b>{{key}}</b>:
+                                  <ul>
+                                    {{#each data as |arrayData|}}
+                                      <li>{{arrayData}}</li>
+                                    {{/each}}
+                                  </ul>
+                                </li>
+                              {{else}}
+                                {{#if (not-eq data.length 0)}}
+                                  <li><b>{{key}}</b>: {{{data}}}</li>
+                                {{/if}}
+                              {{/if}}
+                            {{/if}}
                           {{/if}}
                         {{/if}}
                       {{/if}}
                     {{/if}}
-                  {{/if}}
                   {{/each-in}}
+                  <li><b>Journal</b>: {{get (await model.publication.journal) 'journalName'}}</li>
                 </ul>
               </td>
             </tr>
@@ -184,11 +146,12 @@
               <td>Files</td>
               <td>
                 {{#each (search-associated 'file' 'submission' model.sub.id) as |file|}}
-                  <div class="card file-icon text-center">
-                    <i class="fa fa-file-o fa-30 pt-2"></i>
-                    <p class="text-overflow">{{file.name}}</p>
-                    <span class="document-item" filetype="{{file.mimeType}}"></span>
-                  </div>
+                <div class="card file-icon text-center">
+                  <span class="small">{{file.fileRole}}</span><br>
+                  <i class="fa fa-file-o fa-30"></i>
+                  <p class="text-overflow">{{file.name}}</p>
+                  <span class="document-item small" filetype="{{file.mimeType}}"></span>
+                </div>
                 {{/each}}
               </td>
             </tr>

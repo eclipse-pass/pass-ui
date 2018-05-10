@@ -175,6 +175,29 @@ export default Component.extend({
         this.set('currentFormStep', step + 1);
         this.set('schema', this.get('schemas')[step + 1]);
       } else {
+        // Add any crossref info that was not added through the metadata forms
+        const doiInfo = this.get('doiInfo');
+        let metadata = JSON.parse(this.get('model.newSubmission.metadata'));
+        let prunedMetaData = [];
+        metadata.push({
+          id: 'crossref',
+          data: doiInfo,
+        });
+        metadata.forEach((data, index) => {
+          if (index != metadata.length - 1) {
+            let crossrefMetadata = metadata[metadata.length - 1].data;
+            let thisMetadata = data.data;
+
+            for (var key in crossrefMetadata) {
+              if (thisMetadata[key]) {
+                delete crossrefMetadata[key];
+              }
+            }
+            delete crossrefMetadata.author;
+            metadata[metadata.length - 1].data = crossrefMetadata;
+          }
+        });
+        this.set('model.newSubmission.metadata', JSON.stringify(metadata));
         this.sendAction('next');
       }
     },

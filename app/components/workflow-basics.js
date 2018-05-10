@@ -63,8 +63,8 @@ export default Component.extend({
             return;
           }
           this.set('doiInfo', doiInfo);
+          // useful console.log
           console.log(doiInfo);
-
           publication.set('title', doiInfo.title);
 
           publication.set('submittedDate', doiInfo.deposited);
