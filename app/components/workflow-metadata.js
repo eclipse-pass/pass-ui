@@ -119,6 +119,10 @@ export default Component.extend({
           placeholder: '',
           fieldClass: 'clearfix',
         },
+        authors: {
+          type: 'array',
+          // actionbarStyle: 'bottom'
+        },
       },
     },
   },

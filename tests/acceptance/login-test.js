@@ -8,8 +8,6 @@ import testScenario from '../../mirage/scenarios/test';
 module('Acceptance | login', (hooks) => {
   setupApplicationTest(hooks);
   setupMirage(hooks);
-  // setupContext(hooks);
-  // setupRenderingTest(hooks);
   test('should be able to log in', async (assert) => {
     testScenario(server);
     await visit('/login');
@@ -17,12 +15,9 @@ module('Acceptance | login', (hooks) => {
     await fillIn('input#identification', 'a');
     await fillIn('input#password', 'a');
     await click('button#submit');
-    // return pauseTest();
-    // return pauseTest();
     return wait().then(() => {
       assert.equal(currentURL(), '/', 'Logged in user should be redirected to dashboard.');
       assert.ok(document.body.querySelector('.accountInfo'), 'User details should be available after logging in.');
     });
-    // assert.ok(true);
   });
 });
