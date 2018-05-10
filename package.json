@@ -16,6 +16,7 @@
     "test": "ember test"
   },
   "devDependencies": {
+    "ember-cli-code-coverage": "^0.4.2",
     "qunit-dom": "^0.6.2"
   },
   "engines": {
