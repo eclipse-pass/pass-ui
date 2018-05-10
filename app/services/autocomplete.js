@@ -23,14 +23,9 @@ export default Service.extend({
    * @param {string} suggestPrefix prefix term that will be autocompleted
    * @param {string} type (OPTIONAL) object type to return
    * @returns {array} array of objects
-   *                  {
-   *                    id: `string ID of the associated Journal model object`,
-   *                    field1: 'text',
-   *                    field2: 'text
-   *                  }
+   *
    * Each object in the returned array includes the model object ID that is associated with the
-   * suggestion. They objects will also include the full text values of each of the requested
-   * fields in 'fieldName'
+   * suggestion. They objects will also include the original source object from the index.
    *
    * For example, an autocomplete is requested for:
    *   fieldNames: ['awardNumber', 'projectName']
@@ -38,7 +33,7 @@ export default Service.extend({
    *
    * #suggest(fieldNames, term) will return an array that resembles:
    * [
-   *  { id: '...', awardNumber: '...', projectName: '...' },
+   *  { id: '...', awardNumber: '...', projectName: '...', ... }, // All Grant properties will be present
    *  ...
    * ]
    */
@@ -63,7 +58,7 @@ export default Service.extend({
     return this.get('ajax').post(this.get('base'), {
       data,
       headers: this._headers()
-    }).then(res => this._adaptResults(res, fieldName, type));
+    }).then(res => this._adaptResults(res, type));
   },
 
   _suggestQueryPart(fieldName, prefix) {
@@ -79,25 +74,28 @@ export default Service.extend({
   },
 
   /**
-   * Adapt Elasticsearch results to a flat array
+   * Adapt Elasticsearch results to a flat array.
+   *
+   * Impl note:
+   * 'response.suggest' is where Elasticsearch sticks the autocomplete suggestions.
+   * The request was crafted so that suggestions for each desired field has results
+   * keyed off of the field name. The results from each key is flattened.
+   *
+   * See this link for example request/response:
+   * https://gist.github.com/jabrah/594b3763592ba18813d6451f0022860f#autocomplete-across-multiple-fields
    *
    * @param {object} response response from Elasticsearch
    * @param {string} type (OPTIONAL) target source object type
    */
-  _adaptResults(response, fieldName, type) {
+  _adaptResults(response, type) {
     let results = [];
     Object.keys(response.suggest).forEach((field) => {
-      let moo = this._adapt(response.suggest[field][0], fieldName, type);
-      results = results.concat(moo);
+      results = results.concat(this._adapt(response.suggest[field][0], type));
     });
-    // Remove duplicates and return
     return results;
   },
 
-  _adapt(results, fieldName, type) {
-    if (!Array.isArray(fieldName)) {
-      fieldName = [fieldName];
-    }
+  _adapt(results, type) {
     let adapted = [];
     if (Array.isArray(results.options)) {
       // First, if 'type' is declared, filter options by given type
@@ -105,10 +103,7 @@ export default Service.extend({
       results.options
         .filter(option => !type || option._source['@type'] === type)
         .forEach((option) => {
-          let toAdd = { id: option._source['@id'] };
-          fieldName.forEach((name) => {
-            toAdd[name] = option._source[name];
-          });
+          let toAdd = Object.assign(option._source, { id: option._source['@id'] });
           adapted.push(toAdd);
         });
     }
