@@ -13,5 +13,5 @@ export default function (server) {
   // let funder = server.create('funder', { policy });
 
   // let grant = server.create('grant', { primaryFunder: funder });
-  // let journal = server.create('journal');
+  let journal = server.create('journal');
 }

@@ -40,7 +40,6 @@ export default Ember.Component.extend({
                 } catch (e) {} // eslint-disable-line no-empty
                 if (doiEntry == 'author') {
                   doiInfo[doiEntry].forEach((author, index) => {
-                    // console.log(author, index);
                     const name = `${doiInfo[doiEntry][index].given} ${doiInfo[doiEntry][index].family}`;
                     const orcid = doiInfo[doiEntry][index].ORCID;
 
@@ -120,7 +119,7 @@ export default Ember.Component.extend({
       buttons: {
         Next: {
           label: 'Next',
-          styles: 'pull-right btn btn-primary',
+          styles: 'pull-right btn btn-primary next',
           click() {
             if (isValidated) {
               const value = this.getValue();
