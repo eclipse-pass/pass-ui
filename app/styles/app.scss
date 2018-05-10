@@ -224,16 +224,6 @@ td {
   border-radius: 0px;
 }
 
-.alpaca-invalid {
-  & > input, & > textarea, & > select {
-    border-color: #f86c6b;
-  }
-}
-
-.alpaca-message-notOptional {
-  display:none;
-}
-
 .steps {
   height:35px;
   display: flex;
@@ -281,6 +271,22 @@ td {
 ////////////////////////////
 // Custom alpaca css for bs4
 ////////////////////////////
+
+.alpaca-invalid {
+  & > input, & > textarea, & > select {
+    border-color: #f86c6b;
+  }
+}
+
+.alpaca-message-notOptional {
+  display:none;
+}
+
+.alpaca-required-indicator {
+  margin-left: 5px;
+  color: #777;
+}
+
 .glyphicon {
   font-family: "FontAwesome";
 }
@@ -318,6 +324,11 @@ td {
 [data-alpaca-container-item-name*="authors_"] > div > div:nth-child(2) > div > div:nth-child(even)   {
   margin-left: 2px;
 }
+
+////////////////////////////
+// End Alpaca
+////////////////////////////
+
 
 ////////////////////////////
 // Custom JHU Colors
