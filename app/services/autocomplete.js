@@ -24,9 +24,23 @@ export default Service.extend({
    * @param {string} type (OPTIONAL) object type to return
    * @returns {array} array of objects
    *                  {
-   *                    suggestion: 'the autocompleted suggestion',
-   *                    id: `string ID of the associated Journal model object`
+   *                    id: `string ID of the associated Journal model object`,
+   *                    field1: 'text',
+   *                    field2: 'text
    *                  }
+   * Each object in the returned array includes the model object ID that is associated with the
+   * suggestion. They objects will also include the full text values of each of the requested
+   * fields in 'fieldName'
+   *
+   * For example, an autocomplete is requested for:
+   *   fieldNames: ['awardNumber', 'projectName']
+   *   term: 'r'
+   *
+   * #suggest(fieldNames, term) will return an array that resembles:
+   * [
+   *  { id: '...', awardNumber: '...', projectName: '...' },
+   *  ...
+   * ]
    */
   suggest(fieldName, suggestPrefix, type) {
     if (!fieldName || fieldName === '') {
@@ -49,11 +63,7 @@ export default Service.extend({
     return this.get('ajax').post(this.get('base'), {
       data,
       headers: this._headers()
-    }).then((res) => {
-      let moo = this._adaptResults(res, type);
-      // debugger
-      return moo;
-    });
+    }).then(res => this._adaptResults(res, fieldName, type));
   },
 
   _suggestQueryPart(fieldName, prefix) {
@@ -74,10 +84,10 @@ export default Service.extend({
    * @param {object} response response from Elasticsearch
    * @param {string} type (OPTIONAL) target source object type
    */
-  _adaptResults(response, type) {
+  _adaptResults(response, fieldName, type) {
     let results = [];
     Object.keys(response.suggest).forEach((field) => {
-      let moo = this._adapt(response.suggest[field][0], field, type);
+      let moo = this._adapt(response.suggest[field][0], fieldName, type);
       results = results.concat(moo);
     });
     // Remove duplicates and return
@@ -85,6 +95,9 @@ export default Service.extend({
   },
 
   _adapt(results, fieldName, type) {
+    if (!Array.isArray(fieldName)) {
+      fieldName = [fieldName];
+    }
     let adapted = [];
     if (Array.isArray(results.options)) {
       // First, if 'type' is declared, filter options by given type
@@ -92,10 +105,10 @@ export default Service.extend({
       results.options
         .filter(option => !type || option._source['@type'] === type)
         .forEach((option) => {
-          let toAdd = {
-            id: option._source['@id']
-          };
-          toAdd[fieldName] = option._source[fieldName];
+          let toAdd = { id: option._source['@id'] };
+          fieldName.forEach((name) => {
+            toAdd[name] = option._source[name];
+          });
           adapted.push(toAdd);
         });
     }

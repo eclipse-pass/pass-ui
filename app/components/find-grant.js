@@ -7,17 +7,11 @@ export default Component.extend({
 
   actions: {
     searchGrants(term) {
-      // const regex = new RegExp(term, 'i');
-
-      // return this.get('store').findAll('grant')
-      //   .then(grants => grants.filter(grant => grant.get('awardNumber').match(regex) ||
-      //                   grant.get('projectName').match(regex)));
-      return this.get('autocomplete').suggest(['projectName', 'awardNumber'], term);
+      return this.get('autocomplete').suggest(['awardNumber', 'projectName'], term);
     },
 
     onSelect(selected) {
-      debugger
-      this.sendAction('onSelect', moo);
+      this.get('store').findRecord('grant', selected.id).then(grant => this.sendAction('addGrant', grant));
     }
   },
 });
