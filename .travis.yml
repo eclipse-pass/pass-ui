@@ -19,9 +19,9 @@ before_script:
   - docker-compose up -d
   - bash .wait.sh
 script:
-- npm test
+  - npm test && cat coverage/lcov.info | node_modules/coveralls/bin/coveralls.js
 before_deploy:
-- ember build --environment=surge
+  - ember build --environment=surge
 deploy:
   provider: surge
   project: "./dist/"
