@@ -1,0 +1,23 @@
+{{outlet}}
+<style>
+.fourohfour {
+  font-size: 10em !important;
+  margin-bottom: 0;
+  height: auto;
+}
+.page-not-found {
+  font-size: 3em !important;
+  margin-top: -40px;
+}
+.helpful-text {
+  font-size: 1.5em !important;
+}
+</style>
+<div class="row text-center" style="padding-top:50px;">
+  <div class="col">
+    <h1 class="fourohfour">404</h1>
+    <h1 class="page-not-found"><small class="muted">Page Not Found</small></h1>
+    <p class="helpful-text"><br>Looks like the page you're looking for doesn't exist :(</p>
+    <p>If you think this might be a problem with the site itself, please {{#link-to 'contact'}}let us know{{/link-to}}.</p>
+  </div>
+</div>
