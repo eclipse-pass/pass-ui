@@ -24,7 +24,7 @@ export default Ember.Component.extend({
         }
       });
 
-      if (shouldFuzzyMatch) { // need to fix This
+      if (shouldFuzzyMatch) {
         const prePopulateData = {};
         //  Try to match the doiInfo to the form schema data to populate
         Promise.resolve(originalForm.schema).then((schema) => {

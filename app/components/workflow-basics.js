@@ -60,8 +60,8 @@ export default Component.extend({
         this.set('doiJournal', false);
         this.get('doiService').resolve(publication).then((doiInfo) => {
           this.set('doiInfo', doiInfo);
+          // useful console.log
           console.log(doiInfo);
-
           publication.set('title', doiInfo.title);
 
           publication.set('submittedDate', doiInfo.deposited);
