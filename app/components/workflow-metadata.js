@@ -173,12 +173,12 @@ export default Component.extend({
       } else {
         // Add any crossref info that was not added through the metadata forms
         const doiInfo = this.get('doiInfo');
-        let metadata = JSON.parse(this.get('model.newSubmission.metadata'))
+        let metadata = JSON.parse(this.get('model.newSubmission.metadata'));
         let prunedMetaData = [];
         metadata.push({
           id: 'crossref',
           data: doiInfo,
-        })
+        });
         metadata.forEach((data, index) => {
           if (index != metadata.length - 1) {
             let crossrefMetadata = metadata[metadata.length - 1].data;
@@ -189,7 +189,7 @@ export default Component.extend({
                 delete crossrefMetadata[key];
               }
             }
-            delete crossrefMetadata.author
+            delete crossrefMetadata.author;
             metadata[metadata.length - 1].data = crossrefMetadata;
           }
         });

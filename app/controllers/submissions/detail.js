@@ -8,7 +8,7 @@ export default Controller.extend({
       for (var key in ele.data) {
         if (ele.data.hasOwnProperty(key)) {
           let strippedData;
-          strippedData = ele.data[key]
+          strippedData = ele.data[key];
           if (key === 'authors') {
             if (metadataBlobNoKeys['author(s)']) {
               metadataBlobNoKeys['author(s)'] = _.uniqBy(metadataBlobNoKeys['author(s)'].concat(strippedData), 'author');
