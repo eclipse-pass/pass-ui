@@ -68,20 +68,15 @@ table td {
               </td>
             </tr>
             <tr>
-              <td>abstract</td>
-              <td>{{model.sub.publication.abstract}}</td>
-            </tr>
-            <tr>
-              <td>Journal</td>
-              <td>{{get (await model.sub.publication.journal) 'journalName'}}
-              </td>
-            </tr>
-            <tr>
               <td>Grants</td>
               <td>
                 <ul class="list-unstyled">
                   {{#each model.sub.grants as |grant|}}
                     <li><b>{{grant.awardNumber}}</b> : {{grant.projectName}}</li>
+                    <li><b>Funder</b> : {{grant.primaryFunder.name}}</li>
+                    {{#if (not-eq grant model.sub.grants.lastObject)}}
+                      <hr>
+                    {{/if}}
                   {{/each}}
                 </ul>
               </td>
@@ -114,23 +109,15 @@ table td {
                               <li><b>{{key}}</b>:
                                 <ul>
                                   {{#each data as |author|}}
-                                    <li>{{author.author}}{{#if author.orcid}} (<a href={{author.orcid}}  target="_blank">{{author.orcid}}</a>){{/if}}</li>
+                                    <li>{{author.author}}{{#if author.orcid}} (<a href={{author.orcid}} target="_blank">{{author.orcid}}</a>){{/if}}</li>
                                   {{/each}}
                                 </ul>
                               </li>
                             {{else}}
-                              {{#if data.[0]}}
-                                <li><b>{{key}}</b>:
-                                  <ul>
-                                    {{#each data as |arrayData|}}
-                                      <li>{{arrayData}}</li>
-                                    {{/each}}
-                                  </ul>
-                                </li>
+                              {{#if (eq key 'URL')}}
+                              <li><b>{{key}}</b>: <a href={{data}} target="_blank">{{data}}</a></li>
                               {{else}}
-                                {{#if (not-eq data.length 0)}}
-                                  <li><b>{{key}}</b>: {{{data}}}</li>
-                                {{/if}}
+                              <li><b>{{key}}</b>: {{{data}}}</li>
                               {{/if}}
                             {{/if}}
                           {{/if}}
@@ -138,7 +125,6 @@ table td {
                       {{/if}}
                     {{/if}}
                   {{/each-in}}
-                  <li><b>Journal</b>: {{get (await model.publication.journal) 'journalName'}}</li>
                 </ul>
               </td>
             </tr>
