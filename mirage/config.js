@@ -26,6 +26,7 @@ export default function () {
   */
 
   this.passthrough();
+  this.passthrough(`${ENV.fedora.base}**`);
   // Separate passthrough because search is done on a different port
   this.passthrough(ENV.fedora.elasticsearch); // Default will be something like: http://localhost:9200/pass/_search
   this.post('http://localhost:9999/api-auth-token/', (schema, request) => ({ token: 'f1e0e452b7ed034bdbd6bdcb877228d1d1c0c030' }));
