@@ -67,7 +67,9 @@ export default Component.extend({
     options: {
       fields: {
         title: {
-          type: 'text',
+          type: 'textarea',
+          rows: 2,
+          cols: 100,
           label: 'Article / Manuscript Title',
           placeholder: 'Enter the manuscript title'
         },
