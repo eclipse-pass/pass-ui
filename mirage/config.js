@@ -100,6 +100,7 @@ export default function () {
   // this.del('/repository-copies/:id');
 
   this.passthrough();
+  this.passthrough(`${ENV.fedora.base}**`);
   // Separate passthrough because search is done on a different port
   this.passthrough(ENV.fedora.elasticsearch); // Default will be something like: http://localhost:9200/pass/_search
 }
