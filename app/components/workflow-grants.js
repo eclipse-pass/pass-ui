@@ -32,6 +32,10 @@ export default Component.extend({
       this.get('addedGrants').push(grant);
     },
     removeGrant(grant) {
+      // if grant is grant passed in from grant detail page remove query parms
+      if (grant === this.get('model.preLoadedGrant')) {
+        this.set('model.preLoadedGrant', null);
+      }
       const submission = this.get('model.newSubmission');
       submission.get('grants').removeObject(grant);
 
