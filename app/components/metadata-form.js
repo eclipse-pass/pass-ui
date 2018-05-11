@@ -53,9 +53,7 @@ export default Ember.Component.extend({
                   if (f.get(doiEntry)[0][0] > 0.61) {
                     console.log(doiEntry, doiInfo[doiEntry], f.get(doiEntry)[0][0]);
                     // set the found record to the metadata
-
                     // due to short title you have to call this
-
                     if (!(doiEntry === 'container-title-short')) {
                       prePopulateData[f.get(doiEntry)[0][1]] = doiInfo[doiEntry];
                     }

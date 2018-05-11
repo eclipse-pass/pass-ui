@@ -77,6 +77,7 @@
                 <ul class="list-unstyled">
                   {{#each model.newSubmission.grants as |grant|}}
                     <li><b>{{grant.awardNumber}}</b> : {{grant.projectName}}</li>
+                    <li><b>Funder</b> : {{grant.primaryFunder.name}}</li>
                   {{/each}}
                 </ul>
               </td>
@@ -95,12 +96,16 @@
                               <li><b>{{key}}</b>:
                                 <ul>
                                   {{#each data as |author|}}
-                                    <li>{{author.author}}{{#if author.orcid}} (<a href={{author.orcid}}  target="_blank">{{author.orcid}}</a>){{/if}}</li>
+                                    <li>{{author.author}}{{#if author.orcid}} (<a href={{author.orcid}} target="_blank">{{author.orcid}}</a>){{/if}}</li>
                                   {{/each}}
                                 </ul>
                               </li>
                             {{else}}
+                              {{#if (eq key 'URL')}}
+                              <li><b>{{key}}</b>: <a href={{data}} target="_blank">{{data}}</a></li>
+                              {{else}}
                               <li><b>{{key}}</b>: {{{data}}}</li>
+                              {{/if}}
                             {{/if}}
                           {{/if}}
                         {{/if}}
