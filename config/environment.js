@@ -60,7 +60,7 @@ module.exports = function (environment) {
   };
 
   ENV.fedora = {
-    base: 'http://localhost:8080/fcrepo/rest',
+    base: 'http://localhost:8080/fcrepo/rest/',
     context: 'http://example.org/pass/',
     data: 'http://example.org/pass/',
     elasticsearch: 'http://localhost:9200/pass/_search',
