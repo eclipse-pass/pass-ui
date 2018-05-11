@@ -46,7 +46,6 @@ export default Component.extend({
           title: 'Author(s)',
           type: 'array',
           items: {
-            title: 'Author',
             type: 'object',
             properties: {
               author: {
@@ -180,25 +179,15 @@ export default Component.extend({
         // Add any crossref info that was not added through the metadata forms
         const doiInfo = this.get('doiInfo');
         let metadata = JSON.parse(this.get('model.newSubmission.metadata'));
-        let prunedMetaData = [];
         metadata.push({
           id: 'crossref',
-          data: doiInfo,
+          data: {
+            doi: doiInfo.DOI,
+            publisher: doiInfo.publisher,
+            'journal-title-short': doiInfo['container-title-short']
+          },
         });
-        metadata.forEach((data, index) => {
-          if (index != metadata.length - 1) {
-            let crossrefMetadata = metadata[metadata.length - 1].data;
-            let thisMetadata = data.data;
 
-            for (var key in crossrefMetadata) {
-              if (thisMetadata[key]) {
-                delete crossrefMetadata[key];
-              }
-            }
-            delete crossrefMetadata.author;
-            metadata[metadata.length - 1].data = crossrefMetadata;
-          }
-        });
         this.set('model.newSubmission.metadata', JSON.stringify(metadata));
         this.sendAction('next');
       }

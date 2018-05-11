@@ -100,26 +100,13 @@
                                 </ul>
                               </li>
                             {{else}}
-                              {{#if data.[0]}}
-                                <li><b>{{key}}</b>:
-                                  <ul>
-                                    {{#each data as |arrayData|}}
-                                      <li>{{arrayData}}</li>
-                                    {{/each}}
-                                  </ul>
-                                </li>
-                              {{else}}
-                                {{#if (not-eq data.length 0)}}
-                                  <li><b>{{key}}</b>: {{{data}}}</li>
-                                {{/if}}
-                              {{/if}}
+                              <li><b>{{key}}</b>: {{{data}}}</li>
                             {{/if}}
                           {{/if}}
                         {{/if}}
                       {{/if}}
                     {{/if}}
                   {{/each-in}}
-                  <li><b>Journal</b>: {{get (await model.publication.journal) 'journalName'}}</li>
                 </ul>
               </td>
             </tr>
