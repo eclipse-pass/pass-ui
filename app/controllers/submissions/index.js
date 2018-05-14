@@ -39,12 +39,14 @@ export default Controller.extend({
   {
     title: 'Award Number (Funder)',
     propertyName: 'grantInfo',
-    component: 'submissions-award-cell'
+    component: 'submissions-award-cell',
+    disableSorting: true
   },
   {
     propertyName: 'repositoryNames',
-    title: 'Repo',
-    component: 'submissions-repo-cell'
+    title: 'Repositories',
+    component: 'submissions-repo-cell',
+    disableSorting: true
   },
   {
     propertyName: 'submittedDate',
@@ -63,9 +65,10 @@ export default Controller.extend({
     predefinedFilterOptions: ['In Progress', 'Complete'],
   },
   {
-    propertyName: 'deposits',
+    propertyName: 'repoCopies',
     title: 'OAP Repo Id',
-    component: 'submissions-repoid-cell'
+    component: 'submissions-repoid-cell',
+    disableSorting: true
   },
   ],
 
@@ -100,7 +103,7 @@ export default Controller.extend({
     predefinedFilterOptions: ['In Progress', 'Complete'],
   },
   {
-    propertyName: 'deposits',
+    // propertyName: 'repoCopies',
     title: 'OAP Repo Id',
     component: 'submissions-repoid-cell'
   },

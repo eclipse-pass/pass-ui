@@ -5,6 +5,10 @@
       {{get deposit "repositoryCopy.externalIds"}} ({{get deposit "repositoryCopy.copyStatus"}})
     </a>
   {{else}}
-    {{get deposit "repositoryCopy.externalIds"}} ({{get deposit "repositoryCopy.copyStatus"}})
+    {{#if (get deposit "repositoryCopy.externalIds")}}
+      {{get deposit "repositoryCopy.externalIds"}} ({{get deposit "repositoryCopy.copyStatus"}})
+    {{else}}
+      {{get deposit "repositoryCopy.copyStatus"}}
+    {{/if}}
   {{/if}}
 {{/each}}
