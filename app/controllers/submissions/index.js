@@ -63,6 +63,7 @@ export default Controller.extend({
     title: 'Status',
     filterWithSelect: true,
     predefinedFilterOptions: ['In Progress', 'Complete'],
+    component: 'submission-status-cell'
   },
   {
     propertyName: 'repoCopies',

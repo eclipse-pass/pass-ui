@@ -1,0 +1,56 @@
+<style>
+  .accepted {
+    /* background-color: #4dbd74; */
+  }
+
+  .status {
+    /* padding: 3px 10px; */
+    /* color: white; */
+    font-weight: 700;
+    /* border-radius: 130px; */
+    /* width: 1.75em;
+    height: 1.75em; */
+  }
+  .wrapper {
+    position: absolute;
+    width: 115px;
+  }
+
+  .in-progress {
+    /* font-size: 0.85em; */
+    /* background-color: #ffc107; */
+  }
+
+  .not-started {
+    /* font-size: 0.8em; */
+    /* background-color: #c8ced3; */
+  }
+
+  .fas {
+    padding-left: 4px;
+  }
+  .fa-clock {
+    color: #ffc107;
+  }
+  .fa-pause-circle {
+    color: #c8ced3;
+  }
+  .fa-check-circle {
+    color: #4dbd74;
+  }
+  .fas {
+    font-size: 1.6em;
+  }
+  /* .float-right: {
+    width: 50%;
+  } */
+</style>
+
+<div class="px-1 wrapper">
+  <span class="pull-left text-center" style=" width:80%;">{{status}}</span>
+  <span class="pull-right status {{record.aggregatedDepositStatus}}" style="width:20%;">
+    {{#if (eq status "Accepted")}}<i class="fas fa-check-circle"></i>{{/if}}
+    {{#if (eq status "In Progress")}}<i class="fas fa-clock"></i>{{/if}}
+    {{#if (eq status "Not Started")}}<i class="fas fa-pause-circle"></i>{{/if}}
+  </span>
+</div>
