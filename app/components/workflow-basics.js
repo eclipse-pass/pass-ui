@@ -72,8 +72,7 @@ export default Component.extend({
 
           publication.set('issue', doiInfo.issue);
           publication.set('volume', doiInfo.volume);
-
-          // this.set('doiInfo', doiInfo);
+          publication.set('abstract', doiInfo.abstract);
 
           const journal = this.get('model.journals').findBy(
             'journalName',
