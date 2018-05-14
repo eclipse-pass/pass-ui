@@ -23,13 +23,12 @@ export default Ember.Component.extend({
           newForm.data = data.data;
         }
       });
-
-      if (shouldFuzzyMatch) {
+      const doiInfo = this.get('doiInfo');
+      if (shouldFuzzyMatch && doiInfo.length > 0) {
         const prePopulateData = {};
         //  Try to match the doiInfo to the form schema data to populate
         Promise.resolve(originalForm.schema).then((schema) => {
           try {
-            const doiInfo = this.get('doiInfo');
             // Fuzzy Match here
             const f = fuzzySet(Object.keys(schema.properties));
             for (const doiEntry in doiInfo) {
