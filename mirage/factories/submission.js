@@ -11,9 +11,9 @@ export default Factory.extend({
   submitted: 'True',
   files: {},
 
-  user: association(),
-  publication: association(),
-  repositories: [association()], // not on this model on API
-  deposits: [association()],
-  grants: [association()],
+  // user: association(),
+  // publication: association(),
+  // repositories: [association()], // not on this model on API
+  // deposits: [association()],
+  // grants: [association()],
 });

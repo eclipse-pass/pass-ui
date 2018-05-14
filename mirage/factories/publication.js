@@ -8,6 +8,6 @@ export default Factory.extend({
   volume: '12.4',
   issue: 'Spring 18',
 
-  journal: association(),
-  submissions: [association()]
+  // journal: association(),
+  // submissions: [association()]
 });
