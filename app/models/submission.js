@@ -6,14 +6,11 @@ export default DS.Model.extend({
   submittedDate: DS.attr('date'),
   source: DS.attr('string', { defaultValue: 'pass' }),
   metadata: DS.attr('string', { defaultValue: '[]' }), // Stringified JSON
-  // pubmedId: DS.attr('string'),
   submitted: DS.attr('boolean', { defaultValue: false }),
 
   user: DS.belongsTo('user'),
   publication: DS.belongsTo('publication'),
   repositories: DS.hasMany('repository', { async: true }), // not on this model on API
-  // deposits: DS.hasMany('deposit', { async: true }),
-  // files: DS.hasMany('file', { inverse: 'submission', async: false }),
   /**
    * List of grants related to the item being submitted. The grant PI determines who can perform
    * the submission and in the case that there are mutliple associated grants, they all should
@@ -34,21 +31,15 @@ export default DS.Model.extend({
     let repoNames = [];
     this.get('repositories').forEach((repo) => {
       repoNames.push(repo.get('name'));
-    })
+    });
     return repoNames;
   }),
   grantInfo: Ember.computed('grants', function () {
     let grants = [];
     this.get('grants').forEach((grant) => {
-      // grants.push({
-      //   id: grant.get('id'),
-      //   name: grant.get('projectName'),
-      //   funderName: grant.get('primaryFunder.name'),
-      //   awardNumber: grant.get('awardNumber')
-      // });
-      grants.push(grant.get('projectName'));
-      grants.push(grant.get('primaryFunder.name'));
       grants.push(grant.get('awardNumber'));
+      grants.push(grant.get('primaryFunder.name'));
+      grants.push(grant.get('projectName'));
     });
     return grants;
   }),
