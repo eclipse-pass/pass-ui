@@ -142,13 +142,12 @@ export default Component.extend({
         'under-embargo': {
           type: 'checkbox',
           rightLabel: 'The material being submitted is published under an embargo.',
-          fieldClass: 'col-6 pull-left pl-0 mt-4'
+          fieldClass: 'm-0 mt-4'
         },
         'Embargo-end-date': {
           type: 'date',
           label: 'Embargo End Date',
           placeholder: 'mm/dd/yyyy',
-          fieldClass: 'col-6 pull-left p-0 mt-4'
         },
       },
     },
