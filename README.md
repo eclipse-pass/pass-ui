@@ -1,5 +1,6 @@
 # pass-ember
 [![Build Status](https://travis-ci.org/OA-PASS/pass-ember.png?branch=master)](https://travis-ci.org/OA-PASS/pass-ember)
+[![Coverage Status](https://coveralls.io/repos/github/OA-PASS/pass-ember/badge.svg)](https://coveralls.io/github/OA-PASS/pass-ember)
 
 PASS is an ember application which provides a unified user interface that allow its users to deposit their manuscripts
 into multiple repositories as required by applicable funding agency's public access policies
