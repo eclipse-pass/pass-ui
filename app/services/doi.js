@@ -1,7 +1,7 @@
 import Service from '@ember/service';
 
 export default Service.extend({
-  base: 'http://doi.org/',
+  base: 'https://doi.org/',
 
   /** Resolve the DOI of a submission to return a promise for a CSL JSON object.
      *
@@ -11,10 +11,11 @@ export default Service.extend({
      * @returns Promise<object>
      */
   resolve(submission) {
-    const doi = submission.get('doi');
+    let doi = submission.get('doi');
     if (!doi) {
       return Promise.reject(new Error('No DOI present'));
     }
+    doi = doi.replace(/https?:\/\/doi\.org\//gi, '');
 
     return fetch(this.get('base') + encodeURI(doi), {
       redirect: 'follow',
