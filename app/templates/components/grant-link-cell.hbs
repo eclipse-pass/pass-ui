@@ -4,5 +4,5 @@
   also link to the grant details page
 --}}
 {{#link-to 'grants.detail' (get record 'grant.id')}}
-  {{get record column.propertyName}}
+  {{await (get record column.propertyName)}}
 {{/link-to}}

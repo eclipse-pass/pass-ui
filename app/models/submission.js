@@ -24,4 +24,33 @@ export default DS.Model.extend({
   // don't get saved to database
   removeNIHDeposit: false,
   // filesTemp: DS.attr('string', { defaultValue: '[]' }), // Stringified JSON
+
+  // attributes needed for tables
+  publicationTitle: Ember.computed('publication', function () {
+    return this.get('publication.title');
+  }),
+
+  repositoryNames: Ember.computed('repositories', function () {
+    let repoNames = [];
+    this.get('repositories').forEach((repo) => {
+      repoNames.push(repo.get('name'));
+    })
+    return repoNames;
+  }),
+  grantInfo: Ember.computed('grants', function () {
+    let grants = [];
+    this.get('grants').forEach((grant) => {
+      // grants.push({
+      //   id: grant.get('id'),
+      //   name: grant.get('projectName'),
+      //   funderName: grant.get('primaryFunder.name'),
+      //   awardNumber: grant.get('awardNumber')
+      // });
+      grants.push(grant.get('projectName'));
+      grants.push(grant.get('primaryFunder.name'));
+      grants.push(grant.get('awardNumber'));
+    });
+    return grants;
+  }),
+
 });

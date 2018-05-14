@@ -32,16 +32,17 @@ export default Controller.extend({
   }),
 
   piColumns: [{
-    propertyName: 'publication',
+    propertyName: 'publicationTitle',
     title: 'Article',
     component: 'submissions-article-cell'
   },
   {
     title: 'Award Number (Funder)',
+    propertyName: 'grantInfo',
     component: 'submissions-award-cell'
   },
   {
-    propertyName: 'repositories',
+    propertyName: 'repositoryNames',
     title: 'Repo',
     component: 'submissions-repo-cell'
   },
