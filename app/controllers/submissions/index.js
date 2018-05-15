@@ -67,7 +67,7 @@ export default Controller.extend({
   },
   {
     propertyName: 'repoCopies',
-    title: 'OAP Repo Id',
+    title: 'Ext. Repo Id',
     component: 'submissions-repoid-cell',
     disableSorting: true
   },
