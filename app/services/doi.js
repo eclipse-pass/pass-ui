@@ -15,7 +15,7 @@ export default Service.extend({
     if (!doi) {
       return Promise.reject(new Error('No DOI present'));
     }
-    doi = doi.replace(/https?:\/\/doi\.org\//gi, '');
+    doi = doi.replace(/https?:\/\/(dx\.)?doi\.org\//gi, '');
 
     return fetch(this.get('base') + encodeURI(doi), {
       redirect: 'follow',
