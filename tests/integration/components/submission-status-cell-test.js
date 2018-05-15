@@ -5,20 +5,13 @@ moduleForComponent('submission-status-cell', 'Integration | Component | submissi
   integration: true
 });
 
-test('it renders', function(assert) {
+test('it renders', function (assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
 
-  this.render(hbs`{{submission-status-cell}}`);
-
-  assert.equal(this.$().text().trim(), '');
+  this.render(hbs`{{submission-status-cell status="accepted"}}`);
+  assert.ok(true);
 
   // Template block usage:
-  this.render(hbs`
-    {{#submission-status-cell}}
-      template block text
-    {{/submission-status-cell}}
-  `);
-
-  assert.equal(this.$().text().trim(), 'template block text');
+  // this.render(hbs`{{submission-status-cell status=""}}`);
 });
