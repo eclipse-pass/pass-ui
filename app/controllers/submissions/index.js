@@ -36,18 +36,21 @@ export default Controller.extend({
   }),
 
   piColumns: [{
-    propertyName: 'publication',
+    propertyName: 'publicationTitle',
     title: 'Article',
     component: 'submissions-article-cell'
   },
   {
     title: 'Award Number (Funder)',
-    component: 'submissions-award-cell'
+    propertyName: 'grantInfo',
+    component: 'submissions-award-cell',
+    disableSorting: true
   },
   {
-    propertyName: 'repositories',
-    title: 'Repo',
-    component: 'submissions-repo-cell'
+    propertyName: 'repositoryNames',
+    title: 'Repositories',
+    component: 'submissions-repo-cell',
+    disableSorting: true
   },
   {
     propertyName: 'submittedDate',
@@ -64,11 +67,13 @@ export default Controller.extend({
     title: 'Status',
     filterWithSelect: true,
     predefinedFilterOptions: ['In Progress', 'Complete'],
+    component: 'submission-status-cell'
   },
   {
-    propertyName: 'deposits',
+    propertyName: 'repoCopies',
     title: 'OAP Repo Id',
-    component: 'submissions-repoid-cell'
+    component: 'submissions-repoid-cell',
+    disableSorting: true
   },
   ],
 
@@ -103,7 +108,7 @@ export default Controller.extend({
     predefinedFilterOptions: ['In Progress', 'Complete'],
   },
   {
-    propertyName: 'deposits',
+    // propertyName: 'repoCopies',
     title: 'OAP Repo Id',
     component: 'submissions-repoid-cell'
   },
