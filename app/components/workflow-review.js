@@ -25,6 +25,8 @@ export default Component.extend({
             } else {
               metadataBlobNoKeys['author(s)'] = strippedData;
             }
+          } else if (key === 'container-title') {
+            metadataBlobNoKeys['journal-title'] = strippedData;
           } else {
             metadataBlobNoKeys[key] = strippedData;
           }

@@ -23,6 +23,9 @@ export default Component.extend({
         issue: {
           type: 'string',
         },
+        ISSN: {
+          type: 'string'
+        },
         publicationDate: {
           title: 'Publication Date',
           description: 'Select your publication date',
@@ -46,7 +49,6 @@ export default Component.extend({
           title: 'Author(s)',
           type: 'array',
           items: {
-            title: 'Author',
             type: 'object',
             properties: {
               author: {
@@ -61,13 +63,22 @@ export default Component.extend({
               }
             }
           }
+        },
+        'under-embargo': {
+          type: 'string'
+        },
+        'Embargo-end-date': {
+          type: 'string',
+          format: 'date'
         }
-      },
+      }
     },
     options: {
       fields: {
         title: {
-          type: 'text',
+          type: 'textarea',
+          rows: 2,
+          cols: 100,
           label: 'Article / Manuscript Title',
           placeholder: 'Enter the manuscript title'
         },
@@ -85,6 +96,11 @@ export default Component.extend({
           type: 'text',
           label: 'Issue',
           placeholder: 'Enter issue',
+        },
+        ISSN: {
+          type: 'text',
+          label: 'ISSN',
+          placeholder: 'ISSN'
         },
         publicationDate: {
           type: 'text',
@@ -122,6 +138,16 @@ export default Component.extend({
         authors: {
           type: 'array',
           // actionbarStyle: 'bottom'
+        },
+        'under-embargo': {
+          type: 'checkbox',
+          rightLabel: 'The material being submitted is published under an embargo.',
+          fieldClass: 'm-0 mt-4'
+        },
+        'Embargo-end-date': {
+          type: 'date',
+          label: 'Embargo End Date',
+          placeholder: 'mm/dd/yyyy',
         },
       },
     },
@@ -178,25 +204,15 @@ export default Component.extend({
         // Add any crossref info that was not added through the metadata forms
         const doiInfo = this.get('doiInfo');
         let metadata = JSON.parse(this.get('model.newSubmission.metadata'));
-        let prunedMetaData = [];
         metadata.push({
           id: 'crossref',
-          data: doiInfo,
+          data: {
+            doi: doiInfo.DOI,
+            publisher: doiInfo.publisher,
+            'journal-title-short': doiInfo['container-title-short']
+          },
         });
-        metadata.forEach((data, index) => {
-          if (index != metadata.length - 1) {
-            let crossrefMetadata = metadata[metadata.length - 1].data;
-            let thisMetadata = data.data;
 
-            for (var key in crossrefMetadata) {
-              if (thisMetadata[key]) {
-                delete crossrefMetadata[key];
-              }
-            }
-            delete crossrefMetadata.author;
-            metadata[metadata.length - 1].data = crossrefMetadata;
-          }
-        });
         this.set('model.newSubmission.metadata', JSON.stringify(metadata));
         this.sendAction('next');
       }
