@@ -6,8 +6,7 @@ import { render } from '@ember/test-helpers';
 
 module('Integration | Component | grant-link-cell', (hooks) => {
   setupRenderingTest(hooks);
-  test('it renders', function (assert) {
-
+  test('it renders', async (assert) => {
     await render(hbs`{{grant-link-cell}}`);
     assert.ok(true);
   });
