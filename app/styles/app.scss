@@ -310,6 +310,10 @@ td {
   margin-top:-25px;
 }
 
+.alpaca-array-actionbar-top {
+  float: right;
+  margin-right: -130px;
+}
 [data-alpaca-container-item-name*="authors_"] {
   width: 100%;
 }
@@ -323,6 +327,23 @@ td {
 }
 [data-alpaca-container-item-name*="authors_"] > div > div:nth-child(2) > div > div:nth-child(even)   {
   margin-left: 2px;
+}
+
+
+[data-alpaca-container-item-name*="authors_"] label.alpaca-control-label:first-of-type {
+  display: block;
+}
+
+
+@media (max-width: 1200px) {
+  .alpaca-array-actionbar-top {
+    float: left;
+    margin-right: 0;
+    margin-bottom: 3px;
+  }
+  [data-alpaca-container-item-name*="authors_"] > div > div:nth-child(2) > div  {
+    width: 100%;
+  }
 }
 
 ////////////////////////////
