@@ -23,6 +23,9 @@ export default Component.extend({
         issue: {
           type: 'string',
         },
+        ISSN: {
+          type: 'string'
+        },
         publicationDate: {
           title: 'Publication Date',
           description: 'Select your publication date',
@@ -60,8 +63,15 @@ export default Component.extend({
               }
             }
           }
+        },
+        'under-embargo': {
+          type: 'string'
+        },
+        'Embargo-end-date': {
+          type: 'string',
+          format: 'date'
         }
-      },
+      }
     },
     options: {
       fields: {
@@ -86,6 +96,11 @@ export default Component.extend({
           type: 'text',
           label: 'Issue',
           placeholder: 'Enter issue',
+        },
+        ISSN: {
+          type: 'text',
+          label: 'ISSN',
+          placeholder: 'ISSN'
         },
         publicationDate: {
           type: 'text',
@@ -123,6 +138,16 @@ export default Component.extend({
         authors: {
           type: 'array',
           // actionbarStyle: 'bottom'
+        },
+        'under-embargo': {
+          type: 'checkbox',
+          rightLabel: 'The material being submitted is published under an embargo.',
+          fieldClass: 'm-0 mt-4'
+        },
+        'Embargo-end-date': {
+          type: 'date',
+          label: 'Embargo End Date',
+          placeholder: 'mm/dd/yyyy',
         },
       },
     },

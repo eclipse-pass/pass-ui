@@ -24,7 +24,7 @@ export default Ember.Component.extend({
         }
       });
       const doiInfo = this.get('doiInfo');
-      if (shouldFuzzyMatch && doiInfo.length > 0) {
+      if (shouldFuzzyMatch && Object.keys(doiInfo).length > 0) {
         const prePopulateData = {};
         //  Try to match the doiInfo to the form schema data to populate
         Promise.resolve(originalForm.schema).then((schema) => {
