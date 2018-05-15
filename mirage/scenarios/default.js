@@ -5,7 +5,7 @@ export default function (server) {
   */
 
   // server.createList('post', 10);
-  let user = server.create('user');
+  // let user = server.create('user');
   // let repository = server.create('repository', { name: 'DoE' });
   // let jscholarship = server.create('repository', { name: 'JScholarship' });
   // let jpolicy = server.create('policy', { repository: jscholarship });

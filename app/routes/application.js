@@ -75,120 +75,160 @@ export default Route.extend(ApplicationRouteMixin, {
         displayName: 'Anne Gudzune',
         email: 'anne@example.com',
         roles: ['sumbitter'],
+        firstName: 'Anne',
+        lastName: 'Gudzune'
       },
       {
         username: 'spillage',
         displayName: 'Stephen Pillage',
         email: 'illage@example.com',
         roles: ['submitter'],
+        firstName: 'Stephen',
+        lastName: 'Pillage'
       },
       {
         username: 'efrey',
         displayName: 'Eric Frey',
         email: 'frey@example.com',
         roles: ['submitter'],
+        firstName: 'Eric',
+        lastName: 'Frey'
       },
       {
         username: 'mjaco',
         displayName: 'Michael Jacobs',
         email: 'mjacob@example.com',
         roles: ['submitter'],
+        firstName: 'Michael',
+        lastName: 'Jacobs'
       },
       {
         username: 'jwong',
         displayName: 'John Wong',
         email: 'jwong@example.com',
         roles: ['submitter'],
+        firstName: 'John',
+        lastName: 'Wong'
       },
       {
         username: 'tbrown',
         displayName: 'Tiffany Brown',
         email: 'tbrown@example.com',
         roles: ['submitter'],
+        firstName: 'Tiffany',
+        lastName: 'Brown'
       },
       {
         username: 'hpeek',
         displayName: 'Hillary Peek',
         email: 'peek@example.com',
         roles: ['submitter'],
+        firstName: 'Hillary',
+        lastName: 'Peek'
       },
       {
         username: 'plimo',
         displayName: 'Steve Plimpton',
         email: 'plimo@example.com',
         roles: ['submitter'],
+        firstName: 'Steve',
+        lastName: 'Plimpton'
       },
       {
         username: 'zwang',
         displayName: 'Szu Wang',
         email: 'zwang@example.com',
         roles: ['submitter'],
+        firstName: 'Szu',
+        lastName: 'Want'
       },
       {
         username: 'ksand',
         displayName: 'Kurt Sanders',
         email: 'ksand@example.com',
         roles: ['submitter'],
+        firstName: 'Kurt',
+        lastName: 'Sanders'
       },
       {
         username: 'bradley',
         displayName: 'Robert Bradley',
         email: 'bradley@example.com',
         roles: ['submitter'],
+        firstName: 'Robert',
+        lastName: 'Bradley'
       },
       {
         username: 'elewin',
         displayName: 'Erin Lewin',
         email: 'elewin@example.com',
         roles: ['submitter'],
+        firstName: 'Erin',
+        lastName: 'Lewin'
       },
       {
         username: 'sayeed.choudhury',
         displayName: 'Sayeed Choudhury',
         email: 'schou@example.com',
         roles: ['admin'],
+        firstName: 'Sayeed',
+        lastName: 'Choudhury'
       },
       {
         username: 'hvu',
         displayName: 'Hanh Vu',
         email: 'hvu@example.com',
         roles: ['submitter'],
+        firstName: 'Hanh',
+        lastName: 'Vu'
       },
       {
         username: 'rkelly',
         displayName: 'Kelly R Fisher',
         email: 'r.kelly@example.com',
         roles: ['submitter'],
+        firstName: 'Kelly',
+        lastName: 'Fisher'
       },
       {
         username: 'tmac',
         displayName: 'Thomas McDermott',
         email: 'mcdott@example.com',
         roles: ['submitter'],
+        firstName: 'Thomas',
+        lastName: 'McDermott'
       },
       {
         username: 'shatsu',
         displayName: 'Sharon Tsui',
         email: 'sharon.tsui@example.com',
         roles: ['submitter'],
+        firstName: 'Sharon',
+        lastName: 'Tsui'
       },
       {
         username: 'maciver',
         displayName: 'Martha Mac Iver',
         email: 'martha.mac@example.com',
         roles: ['submitter'],
+        firstName: 'Martha',
+        lastName: 'Mac Iver'
       },
       {
         username: 'mirosen',
         displayName: 'Michael Rosenberg',
         email: 'michael.rosenberg@example.com',
         roles: ['submitter'],
+        firstName: 'Michael',
+        lastName: 'Rosenberg'
       },
       {
         username: 'jfauerbach',
         displayName: 'James Fauerbach',
         email: 'jfauerbach@example.com',
         roles: ['submitter'],
+        firstName: 'James',
+        lastName: 'Fauerbach'
       }
     ];
     const repos = [
@@ -823,27 +863,27 @@ export default Route.extend(ApplicationRouteMixin, {
       [grantDB[0], grantDB[3]].forEach(g => submissionDB[0].get('grants').pushObject(g));
       submissionDB[0].get('repositories').pushObject(repoDB[0]);
       submissionDB[0].set('publication', publicationDB[0]);
-      // submissionDB[0].set('user', userDB[0]);
+      submissionDB[0].set('user', userDB[0]);
 
       submissionDB[1].get('grants').pushObject(grantDB[0]);
       submissionDB[1].get('repositories').pushObject(repoDB[0]);
       submissionDB[1].set('publication', publicationDB[1]);
-      // submissionDB[1].set('user', userDB[2]);
+      submissionDB[1].set('user', userDB[2]);
 
       submissionDB[2].get('grants').pushObject(grantDB[2]);
       submissionDB[2].get('repositories').pushObject(repoDB[1]);
       submissionDB[2].set('publication', publicationDB[2]);
-      // submissionDB[2].set('user', userDB[13]);
+      submissionDB[2].set('user', userDB[13]);
 
       submissionDB[3].get('grants').pushObject(grantDB[3]);
       submissionDB[3].get('repositories').pushObject(repoDB[0]);
       submissionDB[3].set('publication', publicationDB[3]);
-      // submissionDB[3].set('user', userDB[20]);
+      submissionDB[3].set('user', userDB[20]);
 
       submissionDB[4].get('grants').pushObject(grantDB[18]);
       submissionDB[4].get('repositories').pushObject(repoDB[3]);
       submissionDB[4].set('publication', publicationDB[4]);
-      // submissionDB[4].set('user', userDB[14]);
+      submissionDB[4].set('user', userDB[14]);
 
       return RSVP.all(moo.map(o => o.save())).then(() => institution);
     });

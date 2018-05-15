@@ -10,6 +10,10 @@ export default Controller.extend({
   messageSubject: '',
   messageText: '',
 
+  // tableModel: computed('model', function () {
+  //   return '';
+  // }),
+
   actions: {
     authorclick(submission) {
       this.set('messageShow', true);
