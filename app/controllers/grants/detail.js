@@ -4,11 +4,10 @@ import Bootstrap4Theme from 'ember-models-table/themes/bootstrap4';
 
 export default Controller.extend({
   currentUser: Ember.inject.service('current-user'),
-
   columns: [
     { propertyName: 'publication', title: 'Article', component: 'submissions-article-cell' },
     { title: 'Award Number (Funder)', component: 'submissions-award-cell' },
-    { propertyName: 'repositories', title: 'Repo', component: 'submissions-repo-cell' },
+    { propertyName: 'repositories', title: 'Repositories', component: 'submissions-repo-cell' },
     { propertyName: 'submittedDate', title: 'Last Update Date', component: 'date-cell' },
     { propertyName: 'submittedDate', title: 'Submitted Date', component: 'date-cell' },
     {
