@@ -10,46 +10,6 @@ export default Controller.extend({
   messageSubject: '',
   messageText: '',
 
-  /**
-   * Updated way to populate the Grants table. Keys off of the logged in user,
-   * instead of using the route/grant/index#model() in order to do server side
-   * filtering of the visible Grants.
-   *
-   * Old way pulled in all Grants and did client side filtering.
-   */
-  tableModel: Ember.computed('currentUser.user', function () {
-    const user = this.get('currentUser.user');
-
-    if (!user) {
-      return;
-    }
-
-    let results = [];
-    // First search for all Grants associated with the current user
-    this.get('store').query('grant', { match: { pi: user.get('id') } }).then((grants) => {
-      let submissionQuery = { bool: { should: [] } };
-      grants.forEach((grant) => {
-        submissionQuery.bool.should.push({ match: { grants: grant.get('id') } });
-        results.push({
-          grant,
-          submissions: Ember.A()
-        });
-      });
-
-      // Then search for all Submissions associated with the returned Grants
-      this.get('store').query('submission', submissionQuery).then((subs) => {
-        subs.forEach((submission) => {
-          submission.get('grants').forEach((grant) => {
-            let match = results.find(res => res.grant.get('id') === grant.get('id'));
-            if (match) {
-              match.submissions.pushObject(submission);
-            }
-          });
-        });
-      }).then(() => results);
-    });
-  }),
-
   tablePageSize: 5,
   tablePageSizeValues: [5, 10, 25],
 
@@ -115,7 +75,7 @@ export default Controller.extend({
       predefinedFilterOptions: ['Active', 'Ended'],
     },
     {
-      propertyName: 'submissions.content.content.length',
+      propertyName: 'submissions.length',
       title: '#',
       disableFiltering: true,
       component: 'grant-link-cell'
@@ -170,7 +130,7 @@ export default Controller.extend({
       component: 'date-cell'
     },
     {
-      propertyName: 'submissions.content.content.length',
+      propertyName: 'submissions.length',
       title: '#',
       disableFiltering: true,
       component: 'grant-link-cell'

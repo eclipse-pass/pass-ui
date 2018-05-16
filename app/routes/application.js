@@ -771,7 +771,7 @@ export default Route.extend(ApplicationRouteMixin, {
       grantDB[3].set('directFunder', funderDB[1]);
       grantDB[3].set('primaryFunder', funderDB[1]);
       grantDB[4].set('pi', userDB[6]);
-      [userDB[7], userDB[10]].forEach(u => grantDB[4].get('coPis').pushObject(u));
+      [userDB[7], userDB[10], userDB[14]].forEach(u => grantDB[4].get('coPis').pushObject(u));
       grantDB[4].set('directFunder', funderDB[3]);
       grantDB[4].set('primaryFunder', funderDB[3]);
       grantDB[5].set('pi', userDB[8]);
