@@ -21,7 +21,7 @@ export default Route.extend(AuthenticatedRouteMixin, {
         bool: {
           should: [
             { term: { pi: user.get('id') } },
-            { term: { coPis: user.get('id') } }
+            // { term: { coPis: user.get('id') } }
           ]
         }
       }
