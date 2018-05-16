@@ -68,6 +68,13 @@
                 {{#each model.newSubmission.repositories as |repository|}}
                   <li>{{repository.name}}</li>
                 {{/each}}
+                {{#if didNotAgree}}
+                  <p class="text-danger">You added JHU but didn't agree to the deposit agreement,
+                    so JHU has been removed from your deposits list. To re-add it,
+                    go back to the repositories step and then fill out the agreement.</p>
+                {{/if}}
+
+
               </ul>
               </td>
             </tr>

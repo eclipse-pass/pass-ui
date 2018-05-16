@@ -94,28 +94,7 @@ export default Ember.Component.extend({
         });
       };
     }
-
-    // Validate embargo/jscholarship page
-    if (newForm.options.fields['agreement-to-deposit']) {
-      let that = this;
-      newForm.options.fields['agreement-to-deposit'].validator = function (callback) {
-        var value = this.getValue();
-        if (!value) {
-          // remove jshcholer  from sub
-          let jhuRepo = that.get('model.repositories').filter(repo => repo.get('name') === 'JScholarship');
-          if (jhuRepo.length > 0) {
-            jhuRepo = jhuRepo[0];
-            that.get('model.repositories').removeObject(jhuRepo);
-          }
-          return;
-        }
-        // keep it on submission
-        callback({
-          status: true
-        });
-      };
-    }
-
+    
     if (newForm.options.fields['under-embargo']) {
       newForm.options.fields['under-embargo'].validator = function (callback) {
         var underEmbargo = this.getParent().childrenByPropertyId['under-embargo'].getValue();
@@ -175,13 +154,5 @@ export default Ember.Component.extend({
       $('#schemaForm').empty();
       $('#schemaForm').alpaca(newForm);
     });
-  },
-  actions: {
-    nextForm() {
-      this.sendAction('nextForm');
-    },
-    previousForm() {
-      this.sendAction('previousForm');
-    },
-  },
+  }
 });

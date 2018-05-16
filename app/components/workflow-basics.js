@@ -2,8 +2,31 @@ import Component from '@ember/component';
 import { inject as service, } from '@ember/service';
 
 
+function resolve(submission) {
+  const base = 'https://doi.org/';
+
+  let doi = submission.get('doi');
+  if (!doi) {
+    return Promise.reject(new Error('No DOI present'));
+  }
+  doi = doi.replace(/https?:\/\/(dx\.)?doi\.org\//gi, '');
+
+  return fetch(base + encodeURI(doi), {
+    redirect: 'follow',
+    headers: {
+      Accept: 'application/vnd.citationstyles.csl+json',
+    },
+  }).then((response) => {
+    if (response.status >= 200 && response.status < 300) {
+      return response;
+    }
+    const error = new Error(response.statusText);
+    error.response = response;
+    throw error;
+  }).then(response => response.json());
+}
+
 export default Component.extend({
-  doiService: service('doi'),
   store: service('store'),
   doiJournal: false,
   validDOI: 'form-control',
@@ -59,11 +82,12 @@ export default Component.extend({
     },
     /** looks up the DIO and returns title and journal if avaiable */
     lookupDOI() {
+      this.set('model.publication.doi', this.get('model.publication.doi').replace(/https?:\/\/(dx\.)?doi\.org\//gi, ''));
       const publication = this.get('model.publication');
       if (publication) {
         this.send('validateDOI');
         this.set('doiJournal', false);
-        this.get('doiService').resolve(publication).then((doiInfo) => {
+        resolve(publication).then((doiInfo) => {
           if (doiInfo.isDestroyed) {
             return;
           }
