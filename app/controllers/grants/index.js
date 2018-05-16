@@ -47,7 +47,6 @@ export default Controller.extend({
   }),
 
   // TODO Reduce duplication in column definitions
-
   adminColumns: [
     {
       propertyName: 'grant.projectName',
