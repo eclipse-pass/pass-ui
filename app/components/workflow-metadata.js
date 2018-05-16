@@ -46,18 +46,17 @@ export default Component.extend({
           type: 'string',
         },
         authors: {
-          title: 'Author(s)',
+          title: '<div class="row"><div class="col-6">Author(s)</div><div class="col-6 p-0">ORCID(s)</div></div>',
           type: 'array',
+          uniqueItems: true,
           items: {
             type: 'object',
             properties: {
               author: {
-                title: 'Name',
                 type: 'string',
                 fieldClass: 'body-text col-6 pull-left pl-0',
               },
               orcid: {
-                title: 'ORCiD',
                 type: 'string',
                 fieldClass: 'body-text col-6 pull-left pr-0',
               }
@@ -136,8 +135,6 @@ export default Component.extend({
           fieldClass: 'clearfix',
         },
         authors: {
-          type: 'array',
-          // actionbarStyle: 'bottom'
         },
         'under-embargo': {
           type: 'checkbox',

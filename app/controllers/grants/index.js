@@ -27,7 +27,6 @@ export default Controller.extend({
   }),
 
   // TODO Reduce duplication in column definitions
-
   adminColumns: [
     {
       propertyName: 'grant.projectName',
@@ -76,7 +75,7 @@ export default Controller.extend({
     },
     {
       propertyName: 'submissions.length',
-      title: '#',
+      title: 'Submissions count',
       disableFiltering: true,
       component: 'grant-link-cell'
     },
@@ -131,7 +130,7 @@ export default Controller.extend({
     },
     {
       propertyName: 'submissions.length',
-      title: '#',
+      title: 'Submissions count',
       disableFiltering: true,
       component: 'grant-link-cell'
     },
