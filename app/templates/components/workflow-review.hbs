@@ -91,11 +91,11 @@
                 <ul class="list-unstyled">
                   {{#each-in metadataBlobNoKeys as |key data|}}
                     {{!-- TODO: Look in to making the ifs in to one if --}}
-                    {{#if (not-eq key 'embargo')}}
-                      {{#if (not-eq key 'under-embargo')}}
+                    {{#if (not-eq key 'Embargo')}}
+                      {{#if (not-eq key 'Under-embargo')}}
                         {{#if (not-eq key 'Embargo-end-date')}}
-                          {{#if (not-eq key 'agreement-to-embargo')}}
-                            {{#if (eq key 'author(s)')}}
+                          {{#if (not-eq key 'Agreement-to-embargo')}}
+                            {{#if (eq key 'Author(s)')}}
                               <li><b>{{key}}</b>:
                                 <ul>
                                   {{#each data as |author|}}

@@ -33,6 +33,12 @@ export default Component.extend({
         }
       }
     });
+    for (var key in metadataBlobNoKeys) {
+      if (metadataBlobNoKeys.hasOwnProperty(key)) {
+        metadataBlobNoKeys[_.capitalize(key)] = metadataBlobNoKeys[key];
+        delete metadataBlobNoKeys[key];
+      }
+    }
     return metadataBlobNoKeys;
   }),
   hasVisitedEric: false,
