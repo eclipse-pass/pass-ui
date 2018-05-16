@@ -6,6 +6,7 @@ const { inject: { service }, RSVP } = Ember;
 export default Service.extend({
   session: service(),
   store: service(),
+  user: null,
 
   load() {
     if (this.get('session.isAuthenticated')) {
