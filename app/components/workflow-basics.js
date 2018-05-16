@@ -22,6 +22,12 @@ export default Component.extend({
   },
   actions: {
     next() {
+      if (this.get('doiInfo').length === 0) {
+        this.set('doiInfo', {
+          'container-title': this.get('model.publication.journal.journalName'),
+          title: this.get('model.publication.title')
+        });
+      }
       this.sendAction('next');
     },
     validateDOI() {
