@@ -16,7 +16,6 @@ export default Component.extend({
     }
     return true;
   }),
-
   init() {
     this._super(...arguments);
   },
