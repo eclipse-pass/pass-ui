@@ -1,6 +1,10 @@
 {{#each (await (get record column.propertyName)) as |repo index|}}
 {{if index ', '}}
-  {{repo}}
+  {{#if repo.name}}
+    {{repo.name}}
+  {{else}}
+    {{repo}}
+  {{/if}}
 {{else}}
   Not Available
 {{/each}}
