@@ -11,23 +11,43 @@ export default Controller.extend({
   messageText: '',
 
   /**
-   * Crappy way to attach search results to a grant in the table
+   * Updated way to populate the Grants table. Keys off of the logged in user,
+   * instead of using the route/grant/index#model() in order to do server side
+   * filtering of the visible Grants.
+   *
+   * Old way pulled in all Grants and did client side filtering.
    */
-  tableModel: Ember.computed('model', function () {
-    const grants = this.get('model');
-    let result = [];
+  tableModel: Ember.computed('currentUser.user', function () {
+    const user = this.get('currentUser.user');
 
-    // TODO should be optimized to use a SINGLE search with all IDs
-    // This big search will then be picked through to match the right submissions
-    // With the right grants after it returns.
-    grants.forEach((grant) => {
-      result.push({
-        grant,
-        submissions: this.get('store').query('submission', { term: { grants: grant.get('id') } })
+    if (!user) {
+      return;
+    }
+
+    let results = [];
+    // First search for all Grants associated with the current user
+    this.get('store').query('grant', { match: { pi: user.get('id') } }).then((grants) => {
+      let submissionQuery = { bool: { should: [] } };
+      grants.forEach((grant) => {
+        submissionQuery.bool.should.push({ match: { grants: grant.get('id') } });
+        results.push({
+          grant,
+          submissions: Ember.A()
+        });
       });
-    });
 
-    return result;
+      // Then search for all Submissions associated with the returned Grants
+      this.get('store').query('submission', submissionQuery).then((subs) => {
+        subs.forEach((submission) => {
+          submission.get('grants').forEach((grant) => {
+            let match = results.find(res => res.grant.get('id') === grant.get('id'));
+            if (match) {
+              match.submissions.pushObject(submission);
+            }
+          });
+        });
+      }).then(() => results);
+    });
   }),
 
   tablePageSize: 5,

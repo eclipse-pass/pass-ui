@@ -7,6 +7,6 @@ const { service } = Ember.inject;
 export default Route.extend(AuthenticatedRouteMixin, {
 
   model() {
-    return this.get('store').findAll('grant');
+    // return this.get('store').findAll('grant');
   },
 });
