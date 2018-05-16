@@ -71,7 +71,7 @@ export default Controller.extend({
   },
   {
     propertyName: 'repoCopies',
-    title: 'OAP Repo Id',
+    title: 'Ext. Repo Id',
     component: 'submissions-repoid-cell',
     disableSorting: true
   },
@@ -88,7 +88,7 @@ export default Controller.extend({
   },
   {
     propertyName: 'repositories',
-    title: 'Repo',
+    title: 'Repositories',
     component: 'submissions-repo-cell'
   },
   {
@@ -109,7 +109,7 @@ export default Controller.extend({
   },
   {
     // propertyName: 'repoCopies',
-    title: 'OAP Repo Id',
+    title: 'Ext. Repo Id',
     component: 'submissions-repoid-cell'
   },
   ],
