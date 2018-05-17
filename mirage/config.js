@@ -34,7 +34,7 @@ export default function () {
 
 export function testConfig() {
   // test-only config, does not apply to development
-  this.post('/api-auth-token/', (schema, request) => ({ token: 'f1e0e452b7ed034bdbd6bdcb877228d1d1c0c030' }));
+  // this.post('/api-auth-token/', (schema, request) => ({ token: 'f1e0e452b7ed034bdbd6bdcb877228d1d1c0c030' }));
 
   // this.get('/deposits');
   // this.post('/deposits');
@@ -84,11 +84,11 @@ export function testConfig() {
   // this.patch('/submissions/:id'); // or this.patch
   // this.del('/submissions/:id');
 
-  this.get('/users');
-  this.post('/users');
-  this.get('/users/:id');
-  this.patch('/users/:id'); // or this.patch
-  this.del('/users/:id');
+  // this.get('/users');
+  // this.post('/users');
+  // this.get('/users/:id');
+  // this.patch('/users/:id'); // or this.patch
+  // this.del('/users/:id');
 
   // this.get('/publications');
   // this.post('/publications');
@@ -108,5 +108,10 @@ export function testConfig() {
   // this.patch('/repository-copies/:id'); // or this.patch
   // this.del('/repository-copies/:id');
 
+  this.urlPrefix = ENV.host;
   this.passthrough();
+  this.passthrough(`${ENV.fedora.base}**`);
+  // // Separate passthrough because search is done on a different port
+  this.passthrough(ENV.fedora.elasticsearch); // Default will be something like: http://localhost:9200/pass/_search
+  this.post('http://localhost:9999/api-auth-token/', (schema, request) => ({ token: 'f1e0e452b7ed034bdbd6bdcb877228d1d1c0c030' }));
 }
