@@ -94,7 +94,7 @@ export default Ember.Component.extend({
         });
       };
     }
-    
+
     if (newForm.options.fields['under-embargo']) {
       newForm.options.fields['under-embargo'].validator = function (callback) {
         var underEmbargo = this.getParent().childrenByPropertyId['under-embargo'].getValue();
