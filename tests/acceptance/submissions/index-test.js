@@ -36,7 +36,8 @@ module('Acceptance | submissions/index', (hooks) => {
     assert.equal(headers.length, 7, 'should be 7 columns in the table');
 
     const rows = document.querySelectorAll('.models-table-wrapper table tbody tr');
-    assert.equal(rows.length, 2, 'should be 2 submissions in the table');
+    // Don't do specific equality check becuase other tests may add submissions
+    assert.ok(rows.length > 0, 'should be more than 1 submission in the table');
   });
 
   test('submission article title is clickable', async (assert) => {
