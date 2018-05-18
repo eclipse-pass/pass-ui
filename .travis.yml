@@ -19,7 +19,7 @@ before_script:
   - docker-compose up -d
   - bash .wait.sh
 script:
-  - npm test --test-port=4200 && echo "Reporting coveralls" && cat coverage/lcov.info | node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage
+  - ember test --test-port=4200 && echo "Reporting coveralls" && cat coverage/lcov.info | node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage
 before_deploy:
   - ember build --environment=surge
 deploy:
