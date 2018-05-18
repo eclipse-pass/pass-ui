@@ -43,7 +43,7 @@ export default Component.extend({
               name: file.name,
               mimeType: file.type.substring(file.type.indexOf('/') + 1),
               description: file.description,
-              fileRole: 'supplement',
+              fileRole: 'supplemental',
               uri: 'http://example.com',
             });
             if (this.get('files').length === 0) {
