@@ -1,2 +1,3 @@
 {{#link-to "submissions.detail" record.id class="moo"}}
-{{await record.publicationTitle}}{{/link-to}}
+  {{get record 'publication.title'}}
+{{/link-to}}

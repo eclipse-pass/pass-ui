@@ -19,7 +19,7 @@ export default Route.extend(ApplicationRouteMixin, {
       this.transitionTo(route, model);
     },
   },
-  beforeModel() {
+  afterModel() {
     return this._loadCurrentUser();
   },
   sessionAuthenticated() {
@@ -53,7 +53,7 @@ export default Route.extend(ApplicationRouteMixin, {
     }).catch((e) => {
       console.log(e);
       console.log(' >>> Store.findAll("grant") failed, trying to add data.');
-      return this._add_test_data(jhuInstitution);
+      // return this._add_test_data(jhuInstitution);
     });
     // return this._add_test_data(jhuInstitution);
   },
@@ -62,7 +62,7 @@ export default Route.extend(ApplicationRouteMixin, {
     const store = this.get('store');
 
     const users = [
-      {
+      { // 0
         username: 'eford',
         displayName: 'Ernest Ford',
         email: 'ford@example.com',
@@ -70,7 +70,7 @@ export default Route.extend(ApplicationRouteMixin, {
         firstName: 'Ernest',
         lastName: 'Ford'
       },
-      {
+      { // 1
         username: 'agudzun',
         displayName: 'Anne Gudzune',
         email: 'anne@example.com',
@@ -78,7 +78,7 @@ export default Route.extend(ApplicationRouteMixin, {
         firstName: 'Anne',
         lastName: 'Gudzune'
       },
-      {
+      { // 2
         username: 'spillage',
         displayName: 'Stephen Pillage',
         email: 'illage@example.com',
@@ -86,7 +86,7 @@ export default Route.extend(ApplicationRouteMixin, {
         firstName: 'Stephen',
         lastName: 'Pillage'
       },
-      {
+      { // 3
         username: 'efrey',
         displayName: 'Eric Frey',
         email: 'frey@example.com',
@@ -94,7 +94,7 @@ export default Route.extend(ApplicationRouteMixin, {
         firstName: 'Eric',
         lastName: 'Frey'
       },
-      {
+      { // 4
         username: 'mjaco',
         displayName: 'Michael Jacobs',
         email: 'mjacob@example.com',
@@ -102,7 +102,7 @@ export default Route.extend(ApplicationRouteMixin, {
         firstName: 'Michael',
         lastName: 'Jacobs'
       },
-      {
+      { // 5
         username: 'jwong',
         displayName: 'John Wong',
         email: 'jwong@example.com',
@@ -110,7 +110,7 @@ export default Route.extend(ApplicationRouteMixin, {
         firstName: 'John',
         lastName: 'Wong'
       },
-      {
+      { // 6
         username: 'tbrown',
         displayName: 'Tiffany Brown',
         email: 'tbrown@example.com',
@@ -118,7 +118,7 @@ export default Route.extend(ApplicationRouteMixin, {
         firstName: 'Tiffany',
         lastName: 'Brown'
       },
-      {
+      { // 7
         username: 'hpeek',
         displayName: 'Hillary Peek',
         email: 'peek@example.com',
@@ -126,7 +126,7 @@ export default Route.extend(ApplicationRouteMixin, {
         firstName: 'Hillary',
         lastName: 'Peek'
       },
-      {
+      { // 8
         username: 'plimo',
         displayName: 'Steve Plimpton',
         email: 'plimo@example.com',
@@ -134,7 +134,7 @@ export default Route.extend(ApplicationRouteMixin, {
         firstName: 'Steve',
         lastName: 'Plimpton'
       },
-      {
+      { // 9
         username: 'zwang',
         displayName: 'Szu Wang',
         email: 'zwang@example.com',
@@ -142,7 +142,7 @@ export default Route.extend(ApplicationRouteMixin, {
         firstName: 'Szu',
         lastName: 'Want'
       },
-      {
+      { // 10
         username: 'ksand',
         displayName: 'Kurt Sanders',
         email: 'ksand@example.com',
@@ -150,7 +150,7 @@ export default Route.extend(ApplicationRouteMixin, {
         firstName: 'Kurt',
         lastName: 'Sanders'
       },
-      {
+      { // 11
         username: 'bradley',
         displayName: 'Robert Bradley',
         email: 'bradley@example.com',
@@ -158,7 +158,7 @@ export default Route.extend(ApplicationRouteMixin, {
         firstName: 'Robert',
         lastName: 'Bradley'
       },
-      {
+      { // 12
         username: 'elewin',
         displayName: 'Erin Lewin',
         email: 'elewin@example.com',
@@ -166,7 +166,7 @@ export default Route.extend(ApplicationRouteMixin, {
         firstName: 'Erin',
         lastName: 'Lewin'
       },
-      {
+      { // 13
         username: 'sayeed.choudhury',
         displayName: 'Sayeed Choudhury',
         email: 'schou@example.com',
@@ -174,7 +174,7 @@ export default Route.extend(ApplicationRouteMixin, {
         firstName: 'Sayeed',
         lastName: 'Choudhury'
       },
-      {
+      { // 14
         username: 'hvu',
         displayName: 'Hanh Vu',
         email: 'hvu@example.com',
@@ -182,7 +182,7 @@ export default Route.extend(ApplicationRouteMixin, {
         firstName: 'Hanh',
         lastName: 'Vu'
       },
-      {
+      { // 15
         username: 'rkelly',
         displayName: 'Kelly R Fisher',
         email: 'r.kelly@example.com',
@@ -190,7 +190,7 @@ export default Route.extend(ApplicationRouteMixin, {
         firstName: 'Kelly',
         lastName: 'Fisher'
       },
-      {
+      { // 16
         username: 'tmac',
         displayName: 'Thomas McDermott',
         email: 'mcdott@example.com',
@@ -198,7 +198,7 @@ export default Route.extend(ApplicationRouteMixin, {
         firstName: 'Thomas',
         lastName: 'McDermott'
       },
-      {
+      { // 17
         username: 'shatsu',
         displayName: 'Sharon Tsui',
         email: 'sharon.tsui@example.com',
@@ -206,7 +206,7 @@ export default Route.extend(ApplicationRouteMixin, {
         firstName: 'Sharon',
         lastName: 'Tsui'
       },
-      {
+      { // 18
         username: 'maciver',
         displayName: 'Martha Mac Iver',
         email: 'martha.mac@example.com',
@@ -214,7 +214,7 @@ export default Route.extend(ApplicationRouteMixin, {
         firstName: 'Martha',
         lastName: 'Mac Iver'
       },
-      {
+      { // 19
         username: 'mirosen',
         displayName: 'Michael Rosenberg',
         email: 'michael.rosenberg@example.com',
@@ -222,7 +222,7 @@ export default Route.extend(ApplicationRouteMixin, {
         firstName: 'Michael',
         lastName: 'Rosenberg'
       },
-      {
+      { // 20
         username: 'jfauerbach',
         displayName: 'James Fauerbach',
         email: 'jfauerbach@example.com',
@@ -369,7 +369,7 @@ export default Route.extend(ApplicationRouteMixin, {
       }
     ];
     const grants = [
-      {
+      { // 0
         awardNumber: 'R01EY027824',
         projectName: 'Regulation of blood-retinal barrier by placental growth factor.',
         startDate: new Date('2017-04-01'),
@@ -377,7 +377,7 @@ export default Route.extend(ApplicationRouteMixin, {
         awardStatus: 'active',
         localKey: '16129769',
       },
-      {
+      { // 1
         awardNumber: 'R01DK110366',
         projectName: 'Identification and Activation Mechanisms of Vagal and Spinal Nociceptors in Esophageal Mucosa',
         startDate: new Date('2017-08-01'),
@@ -385,7 +385,7 @@ export default Route.extend(ApplicationRouteMixin, {
         awardStatus: 'active',
         localKey: '16120629',
       },
-      {
+      { // 2
         projectName: 'Optimal magnification and oculomotor strategies in low vision patients',
         awardNumber: 'R01EY026617',
         startDate: new Date('2017-06-01'),
@@ -393,7 +393,7 @@ export default Route.extend(ApplicationRouteMixin, {
         awardStatus: 'active',
         localKey: '16120539',
       },
-      {
+      { // 3
         projectName: 'UCure urethral strictures',
         awardNumber: '1640778',
         startDate: new Date('2016-06-01'),
@@ -401,7 +401,7 @@ export default Route.extend(ApplicationRouteMixin, {
         awardStatus: 'active',
         localKey: '16120469',
       },
-      {
+      { // 4
         projectName: 'Psychiatric Epidemiology Training Program',
         awardNumber: 'T32MH014592',
         startDate: new Date('2016-07-01'),
@@ -409,7 +409,7 @@ export default Route.extend(ApplicationRouteMixin, {
         awardStatus: 'terminated',
         localKey: '16120459',
       },
-      {
+      { // 5
         projectName: 'Neurologic Sequelae of HIV Subtype A and D Infection and ART Rakai Uganda',
         awardNumber: 'T32MH019545',
         startDate: new Date('2016-07-01'),
@@ -417,7 +417,7 @@ export default Route.extend(ApplicationRouteMixin, {
         awardStatus: 'active',
         localKey: '16120169',
       },
-      {
+      { // 6
         projectName: 'GEM:  RESPONSE OF GLOBAL IONOSPHERIC CURRENTS TO SUBSTORMS:  IMPLICATION FOR THE ELECTRIC FIELD PENETRATION TO THE INNER MAGNETOSPHERE',
         awardNumber: '1502700',
         startDate: new Date('2016-05-15'),
@@ -425,7 +425,7 @@ export default Route.extend(ApplicationRouteMixin, {
         awardStatus: 'active',
         localKey: '1204023',
       },
-      {
+      { // 7
         projectName: 'Fogarty African Bioethics Consortium Post-Doctoral Fellowship Program',
         awardNumber: 'D43TW010512',
         startDate: new Date('2017-06-01'),
@@ -433,7 +433,7 @@ export default Route.extend(ApplicationRouteMixin, {
         awardStatus: 'active',
         localKey: '16119319',
       },
-      {
+      { // 8
         projectName: 'CAREER: DNA-Templated Assembly of Nanoscale Circuit Interconnects',
         awardNumber: 'CMMI-1253876',
         startDate: new Date('2013-01-01'),
@@ -441,7 +441,7 @@ export default Route.extend(ApplicationRouteMixin, {
         awardStatus: 'active',
         localKey: '16119219',
       },
-      {
+      { // 9
         projectName: 'Neurologic Sequelae of HIV Subtype A and D Infection and ART Rakai Uganda',
         awardNumber: 'R01MH099733',
         startDate: new Date('2016-03-01'),
@@ -449,7 +449,7 @@ export default Route.extend(ApplicationRouteMixin, {
         awardStatus: 'active',
         localKey: '16118979',
       },
-      {
+      { // 10
         projectName: 'Telomere maintenance by the telomerase RNA-protein complex',
         awardNumber: 'R01GM118757',
         startDate: new Date('2018-03-04'),
@@ -457,14 +457,14 @@ export default Route.extend(ApplicationRouteMixin, {
         awardStatus: 'active',
         localKey: '16108389',
       },
-      {
+      { // 11
         projectName: 'Genetics of Fuchs Corneal Dystrophy',
         awardNumber: 'R01EY016835',
         startDate: new Date('2017-03-04'),
         endDate: new Date('2018-08-10'),
         awardStatus: 'active',
       },
-      {
+      { // 12
         projectName: 'P-Adic and Mod P Galois Representations',
         awardNumber: '1564367',
         startDate: new Date('2015-03-04'),
@@ -472,7 +472,7 @@ export default Route.extend(ApplicationRouteMixin, {
         awardStatus: 'terminated',
         localKey: '16086889',
       },
-      {
+      { // 13
         awardNumber: 'R305A170411',
         localKey: '126699',
         projectName: 'Developing a Spacially-enhanced Elementary Curriculum and Teacher Training Series to Improve Science Advancement',
@@ -480,7 +480,7 @@ export default Route.extend(ApplicationRouteMixin, {
         endDate: new Date('2021-06-30'),
         awardStatus: 'active',
       },
-      {
+      { // 14
         awardNumber: '90073719',
         localKey: '126257',
         projectName: 'FY18 Title IV Award',
@@ -488,7 +488,7 @@ export default Route.extend(ApplicationRouteMixin, {
         endDate: new Date('2018-06-30'),
         awardStatus: 'active',
       },
-      {
+      { // 15
         awardNumber: 'P0451B99285',
         localKey: '122761',
         projectName: 'FY17 Federal Work Study',
@@ -496,7 +496,7 @@ export default Route.extend(ApplicationRouteMixin, {
         endDate: new Date('2017-06-30'),
         awardStatus: 'terminated',
       },
-      {
+      { // 16
         awardNumber: 'P022A150076',
         localKey: '123526',
         projectName: 'How Do We Provide High Quality HIV Care and Treatment When THere Are Too Few Health Care Providers in Uganda',
@@ -504,7 +504,7 @@ export default Route.extend(ApplicationRouteMixin, {
         endDate: new Date('2017-05-31'),
         awardStatus: 'terminated',
       },
-      {
+      { // 17
         awardNumber: 'R305H150081',
         localKey: '120443',
         projectName: 'Continuous Improvement in Schools Equipping Families to Support Students in the Transition to High School',
@@ -512,7 +512,7 @@ export default Route.extend(ApplicationRouteMixin, {
         endDate: new Date('2019-06-30'),
         awardStatus: 'active',
       },
-      {
+      { // 18
         awardNumber: 'H325T090027',
         localKey: '105336',
         projectName: 'The Johns Hopkins Universtiy Secondary Support Initiative (JHUSSI)',
@@ -520,7 +520,7 @@ export default Route.extend(ApplicationRouteMixin, {
         endDate: new Date('2016-06-30'),
         awardStatus: 'terminated',
       },
-      {
+      { // 19
         awardNumber: 'H133A070045',
         localKey: '101950',
         projectName: 'Johns Hopkins University Burn Injury Model System',
@@ -742,7 +742,7 @@ export default Route.extend(ApplicationRouteMixin, {
       depositDB, repoCopyDB
     );
 
-    RSVP.all(moo.map(o => o.save())).then(() => {
+    return RSVP.all(moo.map(o => o.save())).then(() => {
       policyDB[0].get('repositories').pushObject(repoDB[0]);
       policyDB[1].get('repositories').pushObject(repoDB[1]);
       policyDB[2].get('repositories').pushObject(repoDB[2]);
@@ -755,11 +755,11 @@ export default Route.extend(ApplicationRouteMixin, {
       funderDB[4].set('policy', policyDB[0]);
       funderDB[5].set('policy', policyDB[3]);
 
-      grantDB[0].set('pi', userDB[1]);
+      grantDB[0].set('pi', userDB[14]);
       grantDB[0].get('coPis').pushObject(userDB[0]);
       grantDB[0].set('directFunder', funderDB[0]);
       grantDB[0].set('primaryFunder', funderDB[0]);
-      grantDB[1].set('pi', userDB[1]);
+      grantDB[1].set('pi', userDB[14]);
       grantDB[1].set('directFunder', funderDB[2]);
       grantDB[1].set('primaryFunder', funderDB[2]);
       grantDB[2].set('pi', userDB[2]);
@@ -771,7 +771,7 @@ export default Route.extend(ApplicationRouteMixin, {
       grantDB[3].set('directFunder', funderDB[1]);
       grantDB[3].set('primaryFunder', funderDB[1]);
       grantDB[4].set('pi', userDB[6]);
-      [userDB[7], userDB[10]].forEach(u => grantDB[4].get('coPis').pushObject(u));
+      [userDB[7], userDB[10], userDB[14]].forEach(u => grantDB[4].get('coPis').pushObject(u));
       grantDB[4].set('directFunder', funderDB[3]);
       grantDB[4].set('primaryFunder', funderDB[3]);
       grantDB[5].set('pi', userDB[8]);
@@ -797,7 +797,7 @@ export default Route.extend(ApplicationRouteMixin, {
       [userDB[7], userDB[10]].forEach(u => grantDB[10].get('coPis').pushObject(u));
       grantDB[10].set('directFunder', funderDB[4]);
       grantDB[10].set('primaryFunder', funderDB[4]);
-      grantDB[11].set('pi', userDB[9]);
+      grantDB[11].set('pi', userDB[14]);
       grantDB[11].get('coPis').pushObject(userDB[9]);
       grantDB[11].set('directFunder', funderDB[0]);
       grantDB[11].set('primaryFunder', funderDB[0]);
@@ -817,10 +817,10 @@ export default Route.extend(ApplicationRouteMixin, {
       grantDB[16].set('pi', userDB[17]);
       grantDB[16].set('directFunder', funderDB[5]);
       grantDB[16].set('primaryFunder', funderDB[5]);
-      grantDB[17].set('pi', userDB[18]);
+      grantDB[17].set('pi', userDB[14]);
       grantDB[17].set('directFunder', funderDB[5]);
       grantDB[17].set('primaryFunder', funderDB[5]);
-      grantDB[18].set('pi', userDB[19]);
+      grantDB[18].set('pi', userDB[14]);
       grantDB[18].set('directFunder', funderDB[5]);
       grantDB[18].set('primaryFunder', funderDB[5]);
       grantDB[19].set('pi', userDB[20]);
@@ -863,7 +863,7 @@ export default Route.extend(ApplicationRouteMixin, {
       [grantDB[0], grantDB[3]].forEach(g => submissionDB[0].get('grants').pushObject(g));
       submissionDB[0].get('repositories').pushObject(repoDB[0]);
       submissionDB[0].set('publication', publicationDB[0]);
-      submissionDB[0].set('user', userDB[0]);
+      submissionDB[0].set('user', userDB[14]);
 
       submissionDB[1].get('grants').pushObject(grantDB[0]);
       submissionDB[1].get('repositories').pushObject(repoDB[0]);
