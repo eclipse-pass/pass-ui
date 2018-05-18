@@ -7,6 +7,16 @@ const { service } = Ember.inject;
 export default Route.extend(AuthenticatedRouteMixin, {
   currentUser: service('current-user'),
 
+  /**
+   * Returns model:
+   *  [
+   *    {
+   *      'grant': { ... },
+   *      'submissions': [ ... ]
+   *    },
+   *    ...
+   *  ]
+   */
   model() {
     const user = this.get('currentUser.user');
     if (!user) {

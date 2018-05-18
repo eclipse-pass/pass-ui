@@ -1,23 +1,27 @@
 import Route from '@ember/routing/route';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 import RSVP from 'rsvp';
+import _ from 'lodash';
 
 export default Route.extend(AuthenticatedRouteMixin, {
+  currentUser: Ember.inject.service('current-user'),
+
   model() {
-    // TODO: change returned records based on role
-    let submissions = this.store.findAll('submission', {
-      include: 'publication',
-    });
-    let publications = this.store.findAll('publication');
-    let repositories = this.store.findAll('repository');
-    let grants = this.store.findAll('grant');
-    let funders = this.store.findAll('funder');
-    return RSVP.hash({
-      submissions,
-      publications,
-      repositories,
-      grants,
-      funders
-    });
+    const user = this.get('currentUser.user');
+
+    if (user.get('isAdmin')) {
+    // if (true) { // Temp to manually try the 'admin' route
+      return this._doAdmin();
+    } else if (user.get('isSubmitter')) {
+      return this._doSubmitter(user);
+    }
+  },
+
+  _doAdmin() {
+    return this.store.findAll('submission');
+  },
+
+  _doSubmitter(user) {
+    return this.store.query('submission', { match: { user: user.get('id') } });
   },
 });

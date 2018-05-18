@@ -41,7 +41,7 @@ async function doRequests(defer, intervalTime, maxIterations) {
  * @param {number} intervalTime time to wait before stats requests
  * @param {number} maxIterations maximum number of tries before giving up
  */
-export default async function waitForIndexer(intervalTime = 500, maxIterations = 120) {
+export default async function waitForIndexer(intervalTime = 500, maxIterations = 240) {
   let end = Ember.RSVP.defer();
   doRequests(end, intervalTime, maxIterations);
   return end.promise;
