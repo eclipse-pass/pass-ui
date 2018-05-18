@@ -14,10 +14,10 @@
           deposit status of your submissions into pertinent repositories.
         </p>
         <div class="text-center">
-          {{#link-to 'submissions' class='btn btn-primary mr-auto mt-1'}}View Submissions{{/link-to}}
           {{#if (get (await currentUser.user) 'isSubmitter')}}
-            {{#link-to "submissions.new" class='btn btn-primary mt-1'}}Create New Submission{{/link-to}}
+            {{#link-to "submissions.new" class='btn btn-primary mt-1'}}Start new submission{{/link-to}}
           {{/if}}
+          {{#link-to 'submissions' class='btn btn-primary mr-auto mt-1'}}View Submissions{{/link-to}}
         </div>
       </div>
     </div>
@@ -32,7 +32,7 @@
           appropriate actions to address compliance issues.
         </p>
         <div class="text-center">
-          {{#link-to 'grants' class='btn btn-primary mt-1'}}View All Grants{{/link-to}}
+          {{#link-to 'grants' class='btn btn-primary mt-1'}}Start new submission from a grant{{/link-to}}
         </div>
       </div>
     </div>
