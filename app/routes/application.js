@@ -74,7 +74,7 @@ export default Route.extend(ApplicationRouteMixin, {
         username: 'agudzun',
         displayName: 'Anne Gudzune',
         email: 'anne@example.com',
-        roles: ['sumbitter'],
+        roles: ['submitter'],
         firstName: 'Anne',
         lastName: 'Gudzune'
       },
