@@ -19,14 +19,13 @@ async function doRequests(defer, intervalTime, maxIterations) {
   let indexingTime = -1;
 
   while (iteration++ < maxIterations) {
-    console.log(`> Checking index for activity: ${url}`);
-
+    // console.log(`> Checking index for activity: ${url}`);
     let newTime = await $.ajax(url, 'GET', { // eslint-disable-line
       headers: { 'Content-Type': 'application/json; charset=utf-8' }
     // }).then(result => result.indices.pass.total.indexing.index_time_in_millis);
     }).then(result => result.indices.pass.total.indexing.index_total);
-    console.log(`> Found time: ${newTime}`);
-    if (Math.abs(newTime - indexingTime) < 3) {
+    // console.log(`> Found time: ${newTime}`);
+    if (Math.abs(newTime - indexingTime) == 0) {
       defer.resolve(true);
       return;
     }
