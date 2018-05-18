@@ -19,7 +19,7 @@ export default Route.extend(ApplicationRouteMixin, {
       this.transitionTo(route, model);
     },
   },
-  beforeModel() {
+  afterModel() {
     return this._loadCurrentUser();
   },
   sessionAuthenticated() {
@@ -53,7 +53,7 @@ export default Route.extend(ApplicationRouteMixin, {
     }).catch((e) => {
       console.log(e);
       console.log(' >>> Store.findAll("grant") failed, trying to add data.');
-      return this._add_test_data(jhuInstitution);
+      // return this._add_test_data(jhuInstitution);
     });
     // return this._add_test_data(jhuInstitution);
   },
@@ -742,7 +742,7 @@ export default Route.extend(ApplicationRouteMixin, {
       depositDB, repoCopyDB
     );
 
-    RSVP.all(moo.map(o => o.save())).then(() => {
+    return RSVP.all(moo.map(o => o.save())).then(() => {
       policyDB[0].get('repositories').pushObject(repoDB[0]);
       policyDB[1].get('repositories').pushObject(repoDB[1]);
       policyDB[2].get('repositories').pushObject(repoDB[2]);

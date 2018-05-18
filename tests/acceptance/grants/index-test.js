@@ -3,6 +3,55 @@ import { currentURL, visit, fillIn, click } from '@ember/test-helpers';
 import { setupApplicationTest } from 'ember-qunit';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 import testScenario from '../../../mirage/scenarios/test';
+import ENV from 'pass-ember/config/environment';
+import $ from 'jquery';
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function doRequests(defer, intervalTime, maxIterations) {
+  let iteration = 0;
+  // See the Elasticsearch _stats API
+  // (https://www.elastic.co/guide/en/elasticsearch/reference/6.2/indices-stats.html)
+  // Example: curl 'http://localhost:9200/pass/_stats/indexing?pretty'
+  const url = ENV.fedora.elasticsearch.replace('_search', '_stats/indexing');
+  let indexingTime = -1;
+
+  while (iteration++ < maxIterations) {
+    console.log(`> Checking index for activity: ${url}`);
+
+    let newTime = await $.ajax(url, 'GET', { // eslint-disable-line
+      headers: { 'Content-Type': 'application/json; charset=utf-8' }
+    // }).then(result => result.indices.pass.total.indexing.index_time_in_millis);
+    }).then(result => result.indices.pass.total.indexing.index_total);
+    console.log(`> Found time: ${newTime}`);
+    if (Math.abs(newTime - indexingTime) < 3) {
+      defer.resolve(true);
+      return;
+    }
+    indexingTime = newTime;
+    await sleep(intervalTime); // eslint-disable-line
+  }
+  defer.reject(true);
+}
+
+/**
+ * Wait for the Elasticsearch indexer to settle by checking the indexer stats.
+ * If the 'index_time_in_millis' has not changed between requests, then proceed.
+ *
+ * This will require a minimum of 2 requests before resolving, if there is no
+ * indexer activity, meaning that 'interval_time' effects every test where
+ * this function is used.
+ *
+ * @param {number} intervalTime time to wait before stats requests
+ * @param {number} maxIterations maximum number of tries before giving up
+ */
+async function waitForIndexer(intervalTime = 500, maxIterations = 120) {
+  let end = Ember.RSVP.defer();
+  doRequests(end, intervalTime, maxIterations);
+  return end.promise;
+}
 
 module('Acceptance | grants/index', (hooks) => {
   setupApplicationTest(hooks);
@@ -10,14 +59,15 @@ module('Acceptance | grants/index', (hooks) => {
 
   hooks.beforeEach(async () => {
     // testScenario(server);
-
     await visit('/login');
+    await waitForIndexer();
     await fillIn('input#identification', 'Jane');
     await fillIn('input#password', 'j4n3s_p4$$w0rd!!');
     await click('button#submit');
 
     await visit('/grants');
   });
+
 
   test('Grants table renders correctly', async (assert) => {
     assert.equal(currentURL(), '/grants');
@@ -75,16 +125,15 @@ module('Acceptance | grants/index', (hooks) => {
     });
   });
 
-  test('Column sorting works', async (assert) => {
-    
-    async function checkSort(index) {
-      let state = [];
-      await click(`.models-table table thead tr:nth-child(${index})`);
-    }
+  // test('Column sorting works', async (assert) => {
+  //   async function checkSort(index) {
+  //     let state = [];
+  //     await click(`.models-table table thead tr:nth-child(${index})`);
+  //   }
 
-    const headers = document.querySelector('.models-table table thead tr');
-    for (let i = 0; i < headers.length; i++) {
-      checkSort(i);
-    }
-  });
+  //   const headers = document.querySelector('.models-table table thead tr');
+  //   for (let i = 0; i < headers.length; i++) {
+  //     checkSort(i);
+  //   }
+  // });
 });

@@ -20,7 +20,7 @@ export default Route.extend(AuthenticatedRouteMixin, {
       query: {
         bool: {
           should: [
-            { term: { pi: user.get('id') } },
+            { match: { pi: user.get('id') } },
             // { term: { coPis: user.get('id') } }
           ]
         }
