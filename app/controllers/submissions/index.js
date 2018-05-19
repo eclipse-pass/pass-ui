@@ -10,25 +10,22 @@ export default Controller.extend({
   messageSubject: '',
   messageText: '',
 
-  // tableModel: computed('model', function () {
-  //   return '';
-  // }),
-
   actions: {
-    authorclick(submission) {
-      this.set('messageShow', true);
-      this.set('messageTo', submission.get('user.displayName'));
-      this.set('messageSubject', 'OAP Compliance');
-      this.set('messageText', `Concerning submission ${submission.get('title')}, the status is ${submission.get('aggregatedDepositStatus')}.\nPlease check your PASS dashboard.`);
-    },
+    // PI/coPI Emailing on click - feature removed for release
+    // authorclick(submission) {
+    //   this.set('messageShow', true);
+    //   this.set('messageTo', submission.get('user.displayName'));
+    //   this.set('messageSubject', 'OAP Compliance');
+    //   this.set('messageText', `Concerning submission ${submission.get('title')}, the status is ${submission.get('aggregatedDepositStatus')}.\nPlease check your PASS dashboard.`);
+    // },
   },
 
   // Columns displayed depend on the user role
   columns: computed('currentUser', {
     get() {
-      if (this.get('currentUser.user.roles').includes('admin')) {
+      if (this.get('currentUser.user.isAdmin')) {
         return this.get('adminColumns');
-      } else if (this.get('currentUser.user.roles').includes('submitter')) {
+      } else if (this.get('currentUser.user.isSubmitter')) {
         return this.get('piColumns');
       }
       return [];

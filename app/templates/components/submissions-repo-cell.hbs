@@ -1,9 +1,7 @@
-{{#each (await (get record column.propertyName)) as |repo index|}}
+{{#each (await (get record 'repositories')) as |repo index|}}
 {{if index ', '}}
   {{#if repo.name}}
     {{repo.name}}
-  {{else}}
-    {{repo}}
   {{/if}}
 {{else}}
   Not Available

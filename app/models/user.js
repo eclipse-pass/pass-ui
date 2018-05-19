@@ -19,5 +19,8 @@ export default DS.Model.extend({
 
   isSubmitter: Ember.computed('roles', function () {
     return this.get('roles').includes('submitter');
+  }),
+  isAdmin: Ember.computed('roles', function () {
+    return this.get('roles').includes('admin');
   })
 });
