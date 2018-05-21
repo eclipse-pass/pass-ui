@@ -111,11 +111,11 @@ export default Controller.extend({
       title: 'COEUS',
       disableFiltering: true,
     },
-    {
-      title: 'PI',
-      propertyName: 'grant.pi',
-      component: 'pi-list-cell'
-    },
+    // {
+    //   title: 'PI',
+    //   propertyName: 'grant.pi',
+    //   component: 'pi-list-cell'
+    // },
     {
       propertyName: 'grant.startDate',
       title: 'Start',
@@ -138,6 +138,11 @@ export default Controller.extend({
       propertyName: 'grant.awardStatus',
       title: 'Status',
       filterWithSelect: true,
+    },
+    {
+      propertyName: 'grant.oapCompliance',
+      title: 'Policy Compliance',
+      component: 'oap-compliance-cell',
     },
   ],
 

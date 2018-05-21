@@ -1,1 +1,10 @@
-{{format-oap-compliance (get record column.propertyName)}}
+<style>
+  .fa-exclamation-triangle {
+    font-size: 1.6em;
+  }
+</style>
+{{#if isStalled}}
+  <div class="text-center">
+    <i class="fas fa-exclamation-triangle text-warning"></i>
+  </div>
+{{/if}}
