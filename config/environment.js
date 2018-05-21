@@ -63,9 +63,7 @@ module.exports = function (environment) {
     base: 'http://localhost:8080/fcrepo/rest/',
     context: 'http://example.org/pass/',
     data: 'http://example.org/pass/',
-    elasticsearch: 'http://localhost:9200/pass/_search',
-    username: 'admin',
-    password: 'moo'
+    elasticsearch: 'http://localhost:9200/pass/_search'
   };
 
   if (process.env.FEDORA_ADAPTER_BASE) {
@@ -84,13 +82,18 @@ module.exports = function (environment) {
     ENV.fedora.elasticsearch = process.env.FEDORA_ADAPTER_ES;
   }
 
-  if (process.env.FEDORA_ADAPTER_USER_NAME) {
+  if ('FEDORA_ADAPTER_USER_NAME' in process.env) {
     ENV.fedora.username = process.env.FEDORA_ADAPTER_USER_NAME;
+  } else {
+    ENV.fedora.username = 'admin';
   }
 
-  if (process.env.FEDORA_ADAPTER_PASSWORD) {
+  if ('FEDORA_ADAPTER_PASSWORD' in process.env) {
     ENV.fedora.password = process.env.FEDORA_ADAPTER_PASSWORD;
+  } else {
+    ENV.fedora.password = 'moo';
   }
+  
 
   return ENV;
 };
