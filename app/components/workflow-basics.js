@@ -16,19 +16,24 @@ export default Component.extend({
     }
     return true;
   }),
-
   init() {
     this._super(...arguments);
   },
   actions: {
     next() {
+      if (this.get('doiInfo').length === 0) {
+        this.set('doiInfo', {
+          'container-title': this.get('model.publication.journal.journalName'),
+          title: this.get('model.publication.title')
+        });
+      }
       this.sendAction('next');
     },
     validateDOI() {
       // ref: https://www.crossref.org/blog/dois-and-matching-regular-expressions/
       const doi = this.get('model.publication.doi');
-      const newDOIRegExp = /^10.\d{4,9}\/[-._;()/:A-Z0-9]+$/i;
-      const ancientDOIRegExp = /^10.1002\/[^\s]+$/i;
+      const newDOIRegExp = /^(https?:\/\/(dx\.)?doi\.org\/)?10.\d{4,9}\/[-._;()/:A-Z0-9]+$/i;
+      const ancientDOIRegExp = /^(https?:\/\/(dx\.)?doi\.org\/)?10.1002\/[^\s]+$/i;
       // 0 = no value
       if (doi == null) {
         this.set('validDOI', 'form-control');
@@ -59,9 +64,12 @@ export default Component.extend({
         this.send('validateDOI');
         this.set('doiJournal', false);
         this.get('doiService').resolve(publication).then((doiInfo) => {
+          if (doiInfo.isDestroyed) {
+            return;
+          }
           this.set('doiInfo', doiInfo);
+          // useful console.log
           console.log(doiInfo);
-
           publication.set('title', doiInfo.title);
 
           publication.set('submittedDate', doiInfo.deposited);
@@ -69,8 +77,7 @@ export default Component.extend({
 
           publication.set('issue', doiInfo.issue);
           publication.set('volume', doiInfo.volume);
-
-          this.set('doiInfo', doiInfo);
+          publication.set('abstract', doiInfo.abstract);
 
           const journal = this.get('model.journals').findBy(
             'journalName',

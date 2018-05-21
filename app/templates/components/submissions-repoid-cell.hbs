@@ -2,9 +2,12 @@
   {{if index ', '}}
   {{#if (get deposit "repositoryCopy.accessUrl")}}
     <a href="{{get deposit "repositoryCopy.accessUrl"}}" target="_blank">
-      {{get deposit "repositoryCopy.externalIds"}} ({{get deposit "repositoryCopy.copyStatus"}})
+      {{get deposit "repositoryCopy.externalIds"}}
     </a>
   {{else}}
-    {{get deposit "repositoryCopy.externalIds"}} ({{get deposit "repositoryCopy.copyStatus"}})
+    {{#if (get deposit "repositoryCopy.externalIds")}}
+      {{get deposit "repositoryCopy.externalIds"}}
+    {{else}}
+    {{/if}}
   {{/if}}
 {{/each}}

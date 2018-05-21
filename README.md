@@ -1,5 +1,6 @@
 # pass-ember
 [![Build Status](https://travis-ci.org/OA-PASS/pass-ember.png?branch=master)](https://travis-ci.org/OA-PASS/pass-ember)
+[![Coverage Status](https://coveralls.io/repos/github/OA-PASS/pass-ember/badge.svg)](https://coveralls.io/github/OA-PASS/pass-ember)
 
 PASS is an ember application which provides a unified user interface that allow its users to deposit their manuscripts
 into multiple repositories as required by applicable funding agency's public access policies
@@ -44,6 +45,9 @@ components for configuration options.
 The pass-ember application configures the Fedora adapter uses these environment variables.
 There are also defaults specified in config/environment.js. They tell the adapter where Fedora
 and Elasticsearch are and generally will not need to be modified during development.
+
+In order to prevent an Authorization header being sent to Fedora and Elasticsearch,
+set FEDORA_ADAPTER_USER and FEDORA_ADAPTER_PASSWORD to empty strings.
 
 ### Running Tests
 

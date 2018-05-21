@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
-import { click, fillIn, visit } from '@ember/test-helpers';
-import { setupApplicationTest } from 'ember-qunit';
+import { click, fillIn, visit, pauseTest, currentURL } from '@ember/test-helpers';
+import { setupApplicationTest, setupRenderingTest } from 'ember-qunit';
 import wait from 'ember-test-helpers/wait';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 import testScenario from '../../mirage/scenarios/test';
@@ -8,17 +8,16 @@ import testScenario from '../../mirage/scenarios/test';
 module('Acceptance | login', (hooks) => {
   setupApplicationTest(hooks);
   setupMirage(hooks);
-
   test('should be able to log in', async (assert) => {
-    // testScenario(server);
-    // await visit('/login');
-    // assert.notOk(document.body.querySelector('.accountInfo'), 'User details should not be available before logging in.');
-    // await fillIn('input#identification', 'Jane');
-    // await fillIn('input#password', 'j4n3s_p4$$w0rd!!');
-    // await click('button#submit');
-    // return wait().then(() => {
-    //   assert.ok(document.body.querySelector('.accountInfo'), 'User details should be available after logging in.');
-    // });
-    assert.ok(true);
+    testScenario(server);
+    await visit('/login');
+    assert.notOk(document.body.querySelector('.accountInfo'), 'User details should not be accessible before logging in.');
+    await fillIn('input#identification', 'a');
+    await fillIn('input#password', 'a');
+    await click('button#submit');
+    return wait().then(() => {
+      assert.equal(currentURL(), '/', 'Logged in user should be redirected to dashboard.');
+      assert.ok(document.body.querySelector('.accountInfo'), 'User details should be available after logging in.');
+    });
   });
 });

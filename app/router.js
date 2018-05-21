@@ -20,6 +20,8 @@ Router.map(function () {
     this.route('detail', { path: '/:grant_id' });
   });
   this.route('thanks');
+  this.route('404', { path: '/*path' });
+  this.route('faq');
 });
 
 export default Router;

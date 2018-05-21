@@ -1,4 +1,4 @@
-  <nav class="navbar navbar-light navbar-expand-md" style="background: white;" id="myHeader">
+  <nav class="navbar navbar-light navbar-expand-md w-100" style="background: white;" id="myHeader">
     <div class="container">
       <div class="col-xs-12" style="width:100%;">
       <button class="navbar-toggler text-center border-none" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -10,7 +10,8 @@
         <li class="nav-item">{{#link-to 'grants' class="nav-link"}}Grants{{/link-to}}</li>
         <li class="nav-item">{{#link-to 'submissions' class="nav-link"}}Submissions{{/link-to}}</li>
         <li class="nav-item">{{#link-to 'about' class='nav-link'}}About{{/link-to}}</li>
-        <li class="nav-item pull-right">{{#link-to 'contact' class='nav-link borderless'}}Contact{{/link-to}}</li>
+        <li class="nav-item">{{#link-to 'contact' class='nav-link'}}Contact{{/link-to}}</li>
+        <li class="nav-item">{{#link-to 'faq' class='nav-link'}}FAQ{{/link-to}}</li>
 
         {{#if session.isAuthenticated}}
           {{!-- <li class="nav-item dropdown ml-auto">
@@ -36,6 +37,7 @@
                 class='img-avatar'
                 size=30
                 retina=true}}
+                {{log currentUser}}
               {{currentUser.user.firstName}} {{currentUser.user.lastName}} ({{currentUser.user.roles}})
             </a>
             <div class="dropdown-menu dropdown-menu-right">

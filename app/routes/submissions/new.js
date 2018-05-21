@@ -24,6 +24,7 @@ export default Route.extend({
     let newSubmission = this.get('store').createRecord('submission');
 
     const repositories = this.get('store').findAll('repository');
+    const funders = this.get('store').findAll('funder');
     const grants = this.get('store').findAll('grant', {
       include: 'primaryFunder',
     });
@@ -36,6 +37,7 @@ export default Route.extend({
       grants,
       policies,
       journals,
+      funders,
       preLoadedGrant
     });
     return h;

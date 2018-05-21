@@ -23,22 +23,22 @@ export default Ember.Component.extend({
           newForm.data = data.data;
         }
       });
-
-      if (shouldFuzzyMatch) { // need to fix This
+      const doiInfo = this.get('doiInfo');
+      if (shouldFuzzyMatch && Object.keys(doiInfo).length > 0) {
         const prePopulateData = {};
         //  Try to match the doiInfo to the form schema data to populate
         Promise.resolve(originalForm.schema).then((schema) => {
           try {
-            const doiInfo = this.get('doiInfo');
             // Fuzzy Match here
             const f = fuzzySet(Object.keys(schema.properties));
             for (const doiEntry in doiInfo) {
               // Validate and check any doi data to make sure its close to the right field
               if (f.get(doiEntry) !== null) {
-                doiInfo[doiEntry] = doiInfo[doiEntry].replace(/(<([^>]+)>)/ig, '');
+                try {
+                  doiInfo[doiEntry] = doiInfo[doiEntry].replace(/(<([^>]+)>)/ig, '');
+                } catch (e) {} // eslint-disable-line no-empty
                 if (doiEntry == 'author') {
                   doiInfo[doiEntry].forEach((author, index) => {
-                    // console.log(author, index);
                     const name = `${doiInfo[doiEntry][index].given} ${doiInfo[doiEntry][index].family}`;
                     const orcid = doiInfo[doiEntry][index].ORCID;
 
@@ -52,7 +52,10 @@ export default Ember.Component.extend({
                   if (f.get(doiEntry)[0][0] > 0.61) {
                     console.log(doiEntry, doiInfo[doiEntry], f.get(doiEntry)[0][0]);
                     // set the found record to the metadata
-                    prePopulateData[f.get(doiEntry)[0][1]] = doiInfo[doiEntry];
+                    // due to short title you have to call this
+                    if (!(doiEntry === 'container-title-short')) {
+                      prePopulateData[f.get(doiEntry)[0][1]] = doiInfo[doiEntry];
+                    }
                   }
                 }
               }
@@ -68,30 +71,72 @@ export default Ember.Component.extend({
         });
       }
     }
+
+    // Validate Embargo page
+    let isValidated = true;
+    if (newForm.options.fields['Embargo-end-date']) {
+      newForm.options.fields['Embargo-end-date'].validator = function (callback) {
+        var value = this.getValue();
+        var underEmbargo = this.getParent().childrenByPropertyId['under-embargo'].getValue();
+        if (underEmbargo && !value) {
+          isValidated = false;
+          callback({
+            status: false,
+            message: 'This field is required'
+          });
+          return;
+        }
+        $('input[name=Embargo-end-date]').css('border-color', '#c2cfd6');
+        $('.alpaca-form-button-Next').css('opacity', '1');
+        isValidated = true;
+        callback({
+          status: true
+        });
+      };
+    }
+    if (newForm.options.fields['under-embargo']) {
+      newForm.options.fields['under-embargo'].validator = function (callback) {
+        var underEmbargo = this.getParent().childrenByPropertyId['under-embargo'].getValue();
+        var EmbargoEndDate = this.getParent().childrenByPropertyId['Embargo-end-date'].getValue();
+
+        if (underEmbargo && !EmbargoEndDate) {
+          isValidated = false;
+          $('input[name=Embargo-end-date]').css('border-color', '#f86c6b');
+          $('.alpaca-form-button-Next').css('opacity', '0.65');
+          return;
+        }
+        $('input[name=Embargo-end-date]').css('border-color', '#c2cfd6');
+        $('.alpaca-form-button-Next').css('opacity', '1');
+        isValidated = true;
+      };
+    }
+
     // form ctrls
     newForm.options.form = {
       buttons: {
         Next: {
           label: 'Next',
-          styles: 'pull-right btn btn-primary',
+          styles: 'pull-right btn btn-primary next',
           click() {
-            const value = this.getValue();
-            // concat auther + family together
-            // value.author = `${value.author} ${value.family}`;
-            // delete value.family;
-            const formId = newForm.id;
-            metadata.push({
-              id: formId,
-              data: value,
-            });
-            // remove any duplicates
-            let uniqIds = {},
-              source = metadata;
-            // eslint-disable-next-line no-return-assign
-            let filtered = source.reverse().filter(obj => !uniqIds[obj.id] && (uniqIds[obj.id] = true));
+            if (isValidated) {
+              const value = this.getValue();
+              // concat auther + family together
+              // value.author = `${value.author} ${value.family}`;
+              // delete value.family;
+              const formId = newForm.id;
+              metadata.push({
+                id: formId,
+                data: value,
+              });
+              // remove any duplicates
+              let uniqIds = {},
+                source = metadata;
+              // eslint-disable-next-line no-return-assign
+              let filtered = source.reverse().filter(obj => !uniqIds[obj.id] && (uniqIds[obj.id] = true));
 
-            that.set('model.metadata', JSON.stringify(filtered));
-            that.nextForm();
+              that.set('model.metadata', JSON.stringify(filtered));
+              that.nextForm();
+            }
           },
         },
         Back: {

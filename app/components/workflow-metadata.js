@@ -9,11 +9,22 @@ export default Component.extend({
       title: "Common <br><p class='lead text-muted'>Please provide additional information about your article/manuscript below:</p>",
       type: 'object',
       properties: {
+        title: {
+          type: 'string',
+          required: true
+        },
+        'container-title': {
+          type: 'string',
+          required: true
+        },
         volume: {
           type: 'string',
         },
         issue: {
           type: 'string',
+        },
+        ISSN: {
+          type: 'string'
         },
         publicationDate: {
           title: 'Publication Date',
@@ -35,29 +46,46 @@ export default Component.extend({
           type: 'string',
         },
         authors: {
-          title: 'Author(s)',
+          title: '<div class="row"><div class="col-6">Author(s)</div><div class="col-6 p-0">ORCID(s)</div></div>',
           type: 'array',
+          uniqueItems: true,
           items: {
-            title: 'Author',
             type: 'object',
             properties: {
               author: {
-                title: 'Name',
                 type: 'string',
                 fieldClass: 'body-text col-6 pull-left pl-0',
               },
               orcid: {
-                title: 'ORCiD',
                 type: 'string',
                 fieldClass: 'body-text col-6 pull-left pr-0',
               }
             }
           }
+        },
+        'under-embargo': {
+          type: 'string'
+        },
+        'Embargo-end-date': {
+          type: 'string',
+          format: 'date'
         }
-      },
+      }
     },
     options: {
       fields: {
+        title: {
+          type: 'textarea',
+          rows: 2,
+          cols: 100,
+          label: 'Article / Manuscript Title',
+          placeholder: 'Enter the manuscript title'
+        },
+        'container-title': {
+          type: 'text',
+          label: 'Journal Title',
+          placeholder: 'Enter the journal title'
+        },
         volume: {
           type: 'text',
           label: 'Volume',
@@ -67,6 +95,11 @@ export default Component.extend({
           type: 'text',
           label: 'Issue',
           placeholder: 'Enter issue',
+        },
+        ISSN: {
+          type: 'text',
+          label: 'ISSN',
+          placeholder: 'ISSN'
         },
         publicationDate: {
           type: 'text',
@@ -100,6 +133,18 @@ export default Component.extend({
           label: 'Final article URL',
           placeholder: '',
           fieldClass: 'clearfix',
+        },
+        authors: {
+        },
+        'under-embargo': {
+          type: 'checkbox',
+          rightLabel: 'The material being submitted is published under an embargo.',
+          fieldClass: 'm-0 mt-4'
+        },
+        'Embargo-end-date': {
+          type: 'date',
+          label: 'Embargo End Date',
+          placeholder: 'mm/dd/yyyy',
         },
       },
     },
@@ -153,6 +198,19 @@ export default Component.extend({
         this.set('currentFormStep', step + 1);
         this.set('schema', this.get('schemas')[step + 1]);
       } else {
+        // Add any crossref info that was not added through the metadata forms
+        const doiInfo = this.get('doiInfo');
+        let metadata = JSON.parse(this.get('model.newSubmission.metadata'));
+        metadata.push({
+          id: 'crossref',
+          data: {
+            doi: doiInfo.DOI,
+            publisher: doiInfo.publisher,
+            'journal-title-short': doiInfo['container-title-short']
+          },
+        });
+
+        this.set('model.newSubmission.metadata', JSON.stringify(metadata));
         this.sendAction('next');
       }
     },

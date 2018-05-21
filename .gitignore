@@ -22,6 +22,7 @@ yarn-error.log
 testem.log
 jsconfig.json
 .DS_Store
+.nyc_output/
 
 # ember-try
 .node_modules.ember-try/

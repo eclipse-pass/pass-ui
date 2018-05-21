@@ -11,20 +11,21 @@ export default Controller.extend({
   messageText: '',
 
   actions: {
-    authorclick(submission) {
-      this.set('messageShow', true);
-      this.set('messageTo', submission.get('user.displayName'));
-      this.set('messageSubject', 'OAP Compliance');
-      this.set('messageText', `Concerning submission ${submission.get('title')}, the status is ${submission.get('aggregatedDepositStatus')}.\nPlease check your PASS dashboard.`);
-    },
+    // PI/coPI Emailing on click - feature removed for release
+    // authorclick(submission) {
+    //   this.set('messageShow', true);
+    //   this.set('messageTo', submission.get('user.displayName'));
+    //   this.set('messageSubject', 'OAP Compliance');
+    //   this.set('messageText', `Concerning submission ${submission.get('title')}, the status is ${submission.get('aggregatedDepositStatus')}.\nPlease check your PASS dashboard.`);
+    // },
   },
 
   // Columns displayed depend on the user role
   columns: computed('currentUser', {
     get() {
-      if (this.get('currentUser.user.roles').includes('admin')) {
+      if (this.get('currentUser.user.isAdmin')) {
         return this.get('adminColumns');
-      } else if (this.get('currentUser.user.roles').includes('submitter')) {
+      } else if (this.get('currentUser.user.isSubmitter')) {
         return this.get('piColumns');
       }
       return [];
@@ -32,18 +33,21 @@ export default Controller.extend({
   }),
 
   piColumns: [{
-    propertyName: 'publication',
+    propertyName: 'publicationTitle',
     title: 'Article',
     component: 'submissions-article-cell'
   },
   {
     title: 'Award Number (Funder)',
-    component: 'submissions-award-cell'
+    propertyName: 'grantInfo',
+    component: 'submissions-award-cell',
+    disableSorting: true
   },
   {
-    propertyName: 'repositories',
-    title: 'Repo',
-    component: 'submissions-repo-cell'
+    propertyName: 'repositoryNames',
+    title: 'Repositories',
+    component: 'submissions-repo-cell',
+    disableSorting: true
   },
   {
     propertyName: 'submittedDate',
@@ -60,11 +64,13 @@ export default Controller.extend({
     title: 'Status',
     filterWithSelect: true,
     predefinedFilterOptions: ['In Progress', 'Complete'],
+    component: 'submission-status-cell'
   },
   {
-    propertyName: 'deposits',
-    title: 'OAP Repo Id',
-    component: 'submissions-repoid-cell'
+    propertyName: 'repoCopies',
+    title: 'Ext. Repo Id',
+    component: 'submissions-repoid-cell',
+    disableSorting: true
   },
   ],
 
@@ -79,7 +85,7 @@ export default Controller.extend({
   },
   {
     propertyName: 'repositories',
-    title: 'Repo',
+    title: 'Repositories',
     component: 'submissions-repo-cell'
   },
   {
@@ -99,8 +105,8 @@ export default Controller.extend({
     predefinedFilterOptions: ['In Progress', 'Complete'],
   },
   {
-    propertyName: 'deposits',
-    title: 'OAP Repo Id',
+    // propertyName: 'repoCopies',
+    title: 'Ext. Repo Id',
     component: 'submissions-repoid-cell'
   },
   ],

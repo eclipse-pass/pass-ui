@@ -10,26 +10,6 @@ export default Controller.extend({
   messageSubject: '',
   messageText: '',
 
-  /**
-   * Crappy way to attach search results to a grant in the table
-   */
-  tableModel: Ember.computed('model', function () {
-    const grants = this.get('model');
-    let result = [];
-
-    // TODO should be optimized to use a SINGLE search with all IDs
-    // This big search will then be picked through to match the right submissions
-    // With the right grants after it returns.
-    grants.forEach((grant) => {
-      result.push({
-        grant,
-        submissions: this.get('store').query('submission', { term: { grants: grant.get('id') } })
-      });
-    });
-
-    return result;
-  }),
-
   tablePageSize: 5,
   tablePageSizeValues: [5, 10, 25],
 
@@ -47,7 +27,6 @@ export default Controller.extend({
   }),
 
   // TODO Reduce duplication in column definitions
-
   adminColumns: [
     {
       propertyName: 'grant.projectName',
@@ -95,8 +74,8 @@ export default Controller.extend({
       predefinedFilterOptions: ['Active', 'Ended'],
     },
     {
-      propertyName: 'submissions.content.content.length',
-      title: '#',
+      propertyName: 'submissions.length',
+      title: 'Submissions count',
       disableFiltering: true,
       component: 'grant-link-cell'
     },
@@ -150,8 +129,8 @@ export default Controller.extend({
       component: 'date-cell'
     },
     {
-      propertyName: 'submissions.content.content.length',
-      title: '#',
+      propertyName: 'submissions.length',
+      title: 'Submissions count',
       disableFiltering: true,
       component: 'grant-link-cell'
     },

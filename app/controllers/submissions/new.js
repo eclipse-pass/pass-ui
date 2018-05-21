@@ -1,6 +1,7 @@
 import Controller from '@ember/controller';
 
 export default Controller.extend({
+  currentUser: Ember.inject.service('current-user'),
   queryParams: ['grant'],
   tempFiles: Ember.A(),
   actions: {
@@ -10,6 +11,7 @@ export default Controller.extend({
       sub.set('aggregatedDepositStatus', 'not-started');
       sub.set('submittedDate', new Date());
       sub.set('submitted', true);
+      sub.set('user', this.get('currentUser.user'));
       pub.save().then((p) => {
         sub.set('publication', p);
         let ctr = 0;

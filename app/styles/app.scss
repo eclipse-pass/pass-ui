@@ -224,16 +224,6 @@ td {
   border-radius: 0px;
 }
 
-.alpaca-invalid {
-  & > input, & > textarea, & > select {
-    border-color: #f86c6b;
-  }
-}
-
-.alpaca-message-notOptional {
-  display:none;
-}
-
 .steps {
   height:35px;
   display: flex;
@@ -281,6 +271,22 @@ td {
 ////////////////////////////
 // Custom alpaca css for bs4
 ////////////////////////////
+
+.alpaca-invalid {
+  & > input, & > textarea, & > select {
+    border-color: #f86c6b;
+  }
+}
+
+.alpaca-message-notOptional {
+  display:none;
+}
+
+.alpaca-required-indicator {
+  margin-left: 5px;
+  color: #777;
+}
+
 .glyphicon {
   font-family: "FontAwesome";
 }
@@ -291,10 +297,10 @@ td {
   content: "\f068";
 }
 .glyphicon-chevron-up:before{
-  content: "\f078";
+  content: "\f077";
 }
 .glyphicon-chevron-down:before{
-  content: "\f077";
+  content: "\f078";
 }
 
 .alpaca-field-array .alpaca-container-label {
@@ -304,6 +310,10 @@ td {
   margin-top:-25px;
 }
 
+.alpaca-array-actionbar-top {
+  float: right;
+  margin-right: -130px;
+}
 [data-alpaca-container-item-name*="authors_"] {
   width: 100%;
 }
@@ -318,6 +328,22 @@ td {
 [data-alpaca-container-item-name*="authors_"] > div > div:nth-child(2) > div > div:nth-child(even)   {
   margin-left: 2px;
 }
+
+@media (max-width: 1200px) {
+  .alpaca-array-actionbar-top {
+    float: left;
+    margin-right: 0;
+    margin-bottom: 3px;
+  }
+  [data-alpaca-container-item-name*="authors_"] > div > div:nth-child(2) > div  {
+    width: 100%;
+  }
+}
+
+////////////////////////////
+// End Alpaca
+////////////////////////////
+
 
 ////////////////////////////
 // Custom JHU Colors
@@ -402,6 +428,14 @@ a {
 h1, h2 {
   color: #4A484C !important
 }
+////////////////////////////
+// End Custom JHU Colors
+////////////////////////////
+
+.notice-triangle {
+  color: #b0b0b0;
+}
+
 @media (max-width: 760px) {
   .navbar .navbar-brand {
       justify-content: center;

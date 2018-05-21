@@ -25,6 +25,11 @@ export default Component.extend({
   init() {
     this._super(...arguments);
     this.set('addedRepositories', []);
+    if (!(this.get('addedRepositories').findBy('name', 'JScholarship'))
+    && !(this.get('model.newSubmission.repositories').filter(repo => repo.get('name') === 'JScholarship').length > 0)) {
+      let jScholarships = this.get('model.repositories').filter(repo => repo.get('name') === 'JScholarship');
+      this.get('addedRepositories').pushObject(jScholarships[0]);
+    }
   },
   requiredRepositories: Ember.computed('model.repositories', function () {
     const grants = this.get('model.newSubmission.grants');
@@ -57,15 +62,15 @@ export default Component.extend({
   }),
 
   optionalRepositories: Ember.computed('requiredRepositories', function () {
-    return this.get('model.repositories').filter(repo => repo.get('name') === 'JScholarship');
+    let repos = this.get('model.repositories').filter(repo => repo.get('name') === 'JScholarship');
+    // debugger;
+    if (repos.length > 1) {
+      repos = [repos[0]];
+    }
+    return repos;
   }),
   didRender() {
     this._super(...arguments);
-    this.get('model.repositories').filter((repo) => {
-      if (repo.get('name') === 'JScholarship') {
-        this.send('addRepo', repo);
-      }
-    });
   },
   actions: {
     next() {
@@ -87,6 +92,11 @@ export default Component.extend({
       });
     },
     saveAll() {
+      // remove all repos from submission
+      this.get('model.newSubmission.repositories').forEach((repo) => {
+        this.get('model.newSubmission.repositories').removeObject(repo);
+      });
+      // add back the ones the user selected
       this.get('addedRepositories').forEach((repositoryToAdd) => {
         if (!((this.get('model.newSubmission.repositories').contains(repositoryToAdd)))) {
           this.get('model.newSubmission.repositories').addObject(repositoryToAdd);

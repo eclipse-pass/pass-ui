@@ -6,11 +6,13 @@ const { inject: { service }, RSVP } = Ember;
 export default Service.extend({
   session: service(),
   store: service(),
+  user: null,
 
   load() {
     if (this.get('session.isAuthenticated')) {
-      return this.get('store').queryRecord('user', { me: true, include: 'person' }).then((user) => {
-        this.set('user', user);
+      // TODO hit the UserService here
+      return this.get('store').findAll('user').then((users) => {
+        this.set('user', users.findBy('username', 'hvu'));
       });
     }
     return RSVP.resolve();
