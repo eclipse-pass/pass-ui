@@ -19,8 +19,13 @@ export default Service.extend({
    * Get suggestions for autocomplete possibilities based on the given
    * prefix and property name.
    *
+   * Note about context: filtering by restricting results by some related ID will take some ID
+   * modification. The context object cannot handle full IDs that start with 'http(s)://',
+   * the Fedora base URL must be removed.
+   *
    * @param {array|string} fieldName model property to autocomplete from. Can be array of values
    * @param {string} suggestPrefix prefix term that will be autocompleted
+   * @param {object} context (OPTIONAL) contextual filters, e.g. { context: { pi: "user_id" } }
    * @param {string} type (OPTIONAL) object type to return
    * @returns {array} array of objects
    *
@@ -37,22 +42,28 @@ export default Service.extend({
    *  ...
    * ]
    */
-  suggest(fieldName, suggestPrefix, type) {
+  suggest(fieldName, suggestPrefix, context, type) {
     if (!fieldName || fieldName === '') {
       return Promise.reject(new Error('No \'fieldName\' was provided to the autocomplete service'));
     }
     if (!suggestPrefix) {
       return Promise.reject(new Error('No \'suggestPrefix\' was provided to the autocomplete service.'));
     }
+    if (context && context.pi && context.pi.startsWith(ENV.fedora.base)) {
+      context.pi = context.pi.slice(ENV.fedora.base.length - 1);
+    }
+    if (type) { // Make sure first letter is capitalized
+      type = type.charAt(0).toUpperCase() + type.slice(1);
+    }
 
     let data = { suggest: {} };
 
     if (Array.isArray(fieldName)) {
       fieldName.forEach((name) => {
-        data.suggest[name] = this._suggestQueryPart(name, suggestPrefix);
+        data.suggest[name] = this._suggestQueryPart(name, suggestPrefix, context);
       });
     } else {
-      data.suggest[fieldName] = this._suggestQueryPart(fieldName, suggestPrefix);
+      data.suggest[fieldName] = this._suggestQueryPart(fieldName, suggestPrefix, context);
     }
 
     return this.get('ajax').post(this.get('base'), {
@@ -61,16 +72,22 @@ export default Service.extend({
     }).then(res => this._adaptResults(res, type));
   },
 
-  _suggestQueryPart(fieldName, prefix) {
+  _suggestQueryPart(fieldName, prefix, context) {
     let esFieldName = fieldName;
     if (!esFieldName.endsWith(this.get('es_field_suffix'))) {
       esFieldName += this.get('es_field_suffix');
     }
 
-    return {
+    let query = {
       prefix,
       completion: { field: esFieldName }
     };
+
+    if (context) {
+      query.completion.context = context;
+      return query;
+    }
+    return query;
   },
 
   /**
