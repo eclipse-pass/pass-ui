@@ -120,6 +120,9 @@ export default Service.extend({
       results.options
         .filter(option => !type || option._source['@type'] === type)
         .forEach((option) => {
+          if (!Option._source || !option._source['@id']) {
+            return;
+          }
           let toAdd = Object.assign(option._source, { id: option._source['@id'] });
           adapted.push(toAdd);
         });
