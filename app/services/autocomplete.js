@@ -49,7 +49,13 @@ export default Service.extend({
     if (!suggestPrefix) {
       return Promise.reject(new Error('No \'suggestPrefix\' was provided to the autocomplete service.'));
     }
-    if (context && context.pi && context.pi.startsWith(ENV.fedora.base)) {
+    if (context && Array.isArray(context.pi)) {
+      context.pi = context.pi.map((id) => {
+        if (id.startsWith(ENV.fedora.base)) {
+          id.slice(ENV.fedora.base.length - 1);
+        }
+      });
+    } else if (context && context.pi && context.pi.startsWith(ENV.fedora.base)) {
       context.pi = context.pi.slice(ENV.fedora.base.length - 1);
     }
     if (type) { // Make sure first letter is capitalized
@@ -120,7 +126,7 @@ export default Service.extend({
       results.options
         .filter(option => !type || option._source['@type'] === type)
         .forEach((option) => {
-          if (!Option._source || !option._source['@id']) {
+          if (!option._source || !option._source['@id']) {
             return;
           }
           let toAdd = Object.assign(option._source, { id: option._source['@id'] });
