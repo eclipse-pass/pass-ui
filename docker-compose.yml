@@ -15,7 +15,7 @@ services:
       - "${FCREPO_DEBUG_PORT}:${FCREPO_DEBUG_PORT}"
 
   indexer:
-    image: oapass/indexer
+    image: oapass/indexer:0.0.7-2.0-SNAPSHOT
     container_name: indexer
     env_file: .env
     links:
