@@ -8,4 +8,8 @@ export default DS.Model.extend({
   uri: DS.attr('string'),
   mimeType: DS.attr('string'),
   submission: DS.belongsTo('submission'),
+
+
+  // not apart of backend
+  blob: null,
 });

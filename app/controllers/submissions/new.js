@@ -7,7 +7,7 @@ export default Controller.extend({
   didNotAgree: false, // JHU included as a repository but removed before review because deposit agreement wasn't accepted
   actions: {
     submit() {
-      if (didNotAgree) {
+      if (this.get('didNotAgree')) {
         let jhuRepo = that.get('model.newSubmission.repositories').filter(repo => repo.get('name') === 'JScholarship');
         if (jhuRepo.length > 0) {
           jhuRepo = jhuRepo[0];
@@ -27,15 +27,32 @@ export default Controller.extend({
         sub.set('removeNIHDeposit', false);
         sub.save().then((s) => {
           JSON.parse(this.get('filesTemp')).forEach((file) => {
-            let newFile = this.get('store').createRecord('file', file);
-            newFile.set('submission', s);
-            newFile.save().then(() => {
-              ctr += 1;
-              console.log(ctr);
-              console.log('saved file!');
-              if (ctr >= len) {
-                this.transitionToRoute('thanks');
+            let fileData = file.blob;
+            let contentType = file.mimeType ? file.mimeType : 'application/octet-stream';
+            $.ajaxSetup({
+              beforeSend(xhr) {
+                // Set the headers
+                xhr.setRequestHeader('Content-Disposition', `attachment; filename="${file.name}"`);
+                xhr.setRequestHeader('Content-Type', contentType);
+                xhr.setRequestHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+                xhr.setRequestHeader('Access-Control-Allow-Headers', 'x-requested-with, x-requested-by');
+
               }
+            });
+            $.post(`${s.id}`, {
+              data: fileData,
+            }).done((results) => {
+              debugger;
+              let newFile = this.get('store').createRecord('file', file);
+              newFile.set('submission', s);
+              newFile.save().then(() => {
+                ctr += 1;
+                console.log(ctr);
+                console.log('saved file!');
+                if (ctr >= len) {
+                  this.transitionToRoute('thanks');
+                }
+              });
             });
           });
         });
