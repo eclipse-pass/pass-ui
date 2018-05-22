@@ -624,7 +624,7 @@ export default Route.extend(ApplicationRouteMixin, {
         }}]`
       },
       {
-        aggregatedDepositStatus: 'accepted',
+        aggregatedDepositStatus: 'stalled',
         submittedDate: new Date('2017-12-04'),
         metadata: `[{"id":"","data":{
           "volume": "11",
@@ -686,7 +686,7 @@ export default Route.extend(ApplicationRouteMixin, {
     ];
     const deposits = [
       { depositStatus: 'accepted' },
-      { depositStatus: 'accepted' },
+      { depositStatus: 'stalled' },
       { depositStatus: 'submitted' },
       { depositStatus: 'submitted' },
       { depositStatus: 'accepted' },
@@ -868,17 +868,17 @@ export default Route.extend(ApplicationRouteMixin, {
       submissionDB[1].get('grants').pushObject(grantDB[0]);
       submissionDB[1].get('repositories').pushObject(repoDB[0]);
       submissionDB[1].set('publication', publicationDB[1]);
-      submissionDB[1].set('user', userDB[2]);
+      submissionDB[1].set('user', userDB[14]);
 
       submissionDB[2].get('grants').pushObject(grantDB[2]);
       submissionDB[2].get('repositories').pushObject(repoDB[1]);
       submissionDB[2].set('publication', publicationDB[2]);
-      submissionDB[2].set('user', userDB[13]);
+      submissionDB[2].set('user', userDB[14]);
 
       submissionDB[3].get('grants').pushObject(grantDB[3]);
       submissionDB[3].get('repositories').pushObject(repoDB[0]);
       submissionDB[3].set('publication', publicationDB[3]);
-      submissionDB[3].set('user', userDB[20]);
+      submissionDB[3].set('user', userDB[14]);
 
       submissionDB[4].get('grants').pushObject(grantDB[18]);
       submissionDB[4].get('repositories').pushObject(repoDB[3]);
