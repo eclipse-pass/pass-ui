@@ -84,17 +84,23 @@ table td {
             <tr>
               <td class="text-nowrap">Repositories</td>
               <td>
-                <ul>
                   {{#each (await model.sub.repositories) as |deposit index|}}
-                    <li>{{deposit.name}}</li>
+                    {{deposit.name}}<br>
                     {{!-- <ul>
                       <li>Status: {{deposit.depositStatus}}</li>
                       <li>Required: {{deposit.isRequired}}</li>
                     </ul> --}}
                   {{/each}}
-              </ul>
               </td>
             </tr>
+            <tr>
+            </tr>
+            <td class="text-nowrap">Submitter</td>
+            <td>{{get (await model.sub.user) 'displayName'}}
+              {{#if (get (await model.sub.user) 'institutionalId')}}
+                ({{get (await model.sub.user) 'institutionalId'}})
+              {{/if}}
+            </td>
             <tr>
               <td>Metadata</td>
               <td>

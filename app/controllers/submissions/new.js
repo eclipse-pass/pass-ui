@@ -4,8 +4,16 @@ export default Controller.extend({
   currentUser: Ember.inject.service('current-user'),
   queryParams: ['grant'],
   tempFiles: Ember.A(),
+  didNotAgree: false, // JHU included as a repository but removed before review because deposit agreement wasn't accepted
   actions: {
     submit() {
+      if (didNotAgree) {
+        let jhuRepo = that.get('model.newSubmission.repositories').filter(repo => repo.get('name') === 'JScholarship');
+        if (jhuRepo.length > 0) {
+          jhuRepo = jhuRepo[0];
+          that.get('model.newSubmission.repositories').removeObject(jhuRepo);
+        }
+      }
       const sub = this.get('model.newSubmission');
       const pub = this.get('model.publication');
       sub.set('aggregatedDepositStatus', 'not-started');
