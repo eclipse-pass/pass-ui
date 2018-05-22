@@ -72,7 +72,7 @@ export default Ember.Component.extend({
       }
     }
 
-    // Validate Embargo page
+    // Validate common page
     let isValidated = true;
     if (newForm.options.fields['Embargo-end-date']) {
       newForm.options.fields['Embargo-end-date'].validator = function (callback) {
@@ -94,6 +94,7 @@ export default Ember.Component.extend({
         });
       };
     }
+
     if (newForm.options.fields['under-embargo']) {
       newForm.options.fields['under-embargo'].validator = function (callback) {
         var underEmbargo = this.getParent().childrenByPropertyId['under-embargo'].getValue();
@@ -153,13 +154,5 @@ export default Ember.Component.extend({
       $('#schemaForm').empty();
       $('#schemaForm').alpaca(newForm);
     });
-  },
-  actions: {
-    nextForm() {
-      this.sendAction('nextForm');
-    },
-    previousForm() {
-      this.sendAction('previousForm');
-    },
-  },
+  }
 });
