@@ -6,6 +6,10 @@ export default Controller.extend({
   rootURL: config.rootURL,
   currentUser: Ember.inject.service('current-user'),
   institution: '',
+  wideRoutes: ['grants.index', 'grants.detail', 'submissions.index'],
+  fullWidth: Ember.computed('currentRouteName', function () {
+    return this.get('wideRoutes').contains(this.get('currentRouteName'));
+  }),
   didRender() {
     this.set('institution', this.store.find('institution'));
   },

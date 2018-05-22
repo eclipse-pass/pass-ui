@@ -1,6 +1,6 @@
 <div class="site" style="z-index:0;">
   <header class="primary-skin navbar navbar-expand-xs justify-content-center mb-0">
-    <div class="container">
+    <div class={{if fullWidth 'container-fluid' 'container'}}>
         {{#link-to "index" class="navbar-brand custom-color d-none d-sm-block"}}
           <h3 class="font-weight-light" >
             Public Access Submission System
@@ -14,10 +14,10 @@
   </header>
   <div style="z-index:10000;">
     {{#sticky-element}}
-      {{nav-bar}}
+      {{nav-bar fullWidth=fullWidth}}
     {{/sticky-element}}
   </div>
-  <div class="container site-content">
+  <div class="{{if fullWidth 'container-fluid' 'container'}} site-content">
     {{institution}}
     {{outlet}}
   </div>
