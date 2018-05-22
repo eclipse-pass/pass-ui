@@ -193,6 +193,17 @@ export default Component.extend({
   }),
   actions: {
     nextForm() {
+      if ($('[name="agreement-to-deposit"]').length == 2) {
+        let value = $('[name="agreement-to-deposit"]')[1].checked;
+        let jhuRepo = this.get('model.repositories').filter(repo => repo.get('name') === 'JScholarship');
+        if (jhuRepo.length > 0) {
+          if (!value) {
+            this.set('didNotAgree', true);
+          } else {
+            this.set('didNotAgree', false);
+          }
+        }
+      }
       const step = this.get('currentFormStep');
       if (step + 1 < this.get('schemas').length) {
         this.set('currentFormStep', step + 1);

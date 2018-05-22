@@ -71,6 +71,16 @@
               </ul>
               </td>
             </tr>
+            {{#if didNotAgree}}
+            <tr>
+              <td colspan=100%>
+                <div class="alert alert-danger" style="border-radius:5px; word-break:normal;">
+                  <p class="text-danger text-left"><strong>Warning:</strong> you added JScholarship as a repository but didn't agree to the deposit agreement,
+                    so your submission will not be submitted to JScholarship. To fix this, go back and agree to the deposit agreement.</p>
+                </div>
+              </td>
+            </tr>
+            {{/if}}
             <tr>
               <td>Grants</td>
               <td>
