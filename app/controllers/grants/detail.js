@@ -15,6 +15,7 @@ export default Controller.extend({
       title: 'Status',
       filterWithSelect: true,
       predefinedFilterOptions: ['In Progress', 'Complete'],
+      component: 'submission-status-cell'
     },
     { propertyName: 'deposits', title: 'Ext. Repo Id', component: 'submissions-repoid-cell' },
   ],
