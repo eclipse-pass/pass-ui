@@ -9,6 +9,8 @@ export default Component.extend({
       return 'In Progress';
     } else if (stat === 'accepted') {
       return 'Accepted';
+    } else if (stat === 'stalled') {
+      return 'Stalled';
     }
     return 'Undefined';
   })
