@@ -102,7 +102,7 @@ export default Controller.extend({
     },
     {
       propertyName: 'grant.awardNumber',
-      title: 'Award Number',
+      title: 'Award #',
       disableFiltering: true,
       component: 'grant-link-cell'
     },
@@ -116,23 +116,23 @@ export default Controller.extend({
     //   propertyName: 'grant.pi',
     //   component: 'pi-list-cell'
     // },
-    {
-      propertyName: 'grant.startDate',
-      title: 'Start',
-      disableFiltering: true,
-      component: 'date-cell'
-    },
+    // {
+    //   propertyName: 'grant.startDate',
+    //   title: 'Start',
+    //   disableFiltering: true,
+    //   component: 'date-cell'
+    // },
     {
       propertyName: 'grant.endDate',
-      title: 'End',
+      title: 'End Date',
       disableFiltering: true,
       component: 'date-cell'
     },
     {
       propertyName: 'submissions.length',
-      title: 'Submissions count',
+      title: 'Submissions',
       disableFiltering: true,
-      component: 'grant-link-cell'
+      component: 'grant-submission-cell'
     },
     {
       propertyName: 'grant.awardStatus',

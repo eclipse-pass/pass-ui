@@ -1,10 +1,18 @@
 <style>
   .fa-exclamation-triangle {
-    font-size: 1.6em;
+    font-size: 0.8em;
+  }
+  .fa-circle {
+    color: #f86c6b;
+    font-size: 0.8em;
   }
 </style>
 {{#if isStalled}}
   <div class="text-center">
-    <i class="fas fa-exclamation-triangle text-warning"></i>
+    <p><i class="fas fa-circle mr-1"></i> <span class="test">stalled (<a href="#">?</a>)</span></p>
   </div>
+{{else}}
+<div class="text-center">
+  <i class="fas fa-check text-success"></i>
+</div>
 {{/if}}
