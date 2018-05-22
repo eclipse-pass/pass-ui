@@ -7,7 +7,7 @@ export default Controller.extend({
   didNotAgree: false, // JHU included as a repository but removed before review because deposit agreement wasn't accepted
   actions: {
     submit() {
-      if (didNotAgree) {
+      if (this.get('didNotAgree')) {
         let jhuRepo = that.get('model.newSubmission.repositories').filter(repo => repo.get('name') === 'JScholarship');
         if (jhuRepo.length > 0) {
           jhuRepo = jhuRepo[0];
