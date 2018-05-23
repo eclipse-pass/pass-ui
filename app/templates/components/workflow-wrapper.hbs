@@ -10,7 +10,7 @@
       {{workflow-basics model=model doiInfo=doiInfo next=(action "next") back=(action "back")}}
     {{/if}}
     {{#if (eq step 2)}}
-      {{workflow-grants model=model next=(action "next") back=(action "back")}}
+      {{workflow-grants model=model next=(action "next") maxStep=maxStep back=(action "back")}}
     {{/if}}
     {{#if (eq step 3)}}
       {{workflow-policies model=model next=(action "next") back=(action "back") toggleNIHDeposit=(action "toggleNIHDeposit")}}
