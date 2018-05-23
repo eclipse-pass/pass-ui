@@ -119,7 +119,7 @@ export default Component.extend({
         abstract: {
           type: 'textarea',
           label: 'Abstract',
-          placeholder: 'Enter astract',
+          placeholder: 'Enter abstract',
           fieldClass: 'clearfix',
         },
         subjects: {

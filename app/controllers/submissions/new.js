@@ -29,31 +29,32 @@ export default Controller.extend({
           JSON.parse(this.get('filesTemp')).forEach((file) => {
             let fileData = file.blob;
             let contentType = file.mimeType ? file.mimeType : 'application/octet-stream';
-            $.ajaxSetup({
-              beforeSend(xhr) {
-                // Set the headers
-                xhr.setRequestHeader('Content-Disposition', `attachment; filename="${file.name}"`);
-                xhr.setRequestHeader('Content-Type', contentType);
-                xhr.setRequestHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
-                xhr.setRequestHeader('Access-Control-Allow-Headers', 'x-requested-with, x-requested-by');
-
+            // $.ajaxSetup({
+            //   beforeSend(xhr) {
+            //     // Set the headers
+            //     xhr.setRequestHeader('Content-Disposition', `attachment; filename="${file.name}"`);
+            //     xhr.setRequestHeader('Content-Type', contentType);
+            //     xhr.setRequestHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+            //     xhr.setRequestHeader('Access-Control-Allow-Headers', 'x-requested-with, x-requested-by');
+            //     xhr.setRequestHeader('Prefer', 'return=representation');
+            //     xhr.setRequestHeader('Origin', 'http://localhost:4200');
+            //   }
+            // });
+            // $.post(`${s.id}`, {
+            //   data: fileData,
+            // }).done((results) => {
+            //   debugger;
+            let newFile = this.get('store').createRecord('file', file);
+            newFile.set('submission', s);
+            newFile.save().then(() => {
+              ctr += 1;
+              console.log(ctr);
+              console.log('saved file!');
+              if (ctr >= len) {
+                this.transitionToRoute('thanks');
               }
             });
-            $.post(`${s.id}`, {
-              data: fileData,
-            }).done((results) => {
-              debugger;
-              let newFile = this.get('store').createRecord('file', file);
-              newFile.set('submission', s);
-              newFile.save().then(() => {
-                ctr += 1;
-                console.log(ctr);
-                console.log('saved file!');
-                if (ctr >= len) {
-                  this.transitionToRoute('thanks');
-                }
-              });
-            });
+            // });
           });
         });
       });

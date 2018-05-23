@@ -9,7 +9,6 @@ export default DS.Model.extend({
   mimeType: DS.attr('string'),
   submission: DS.belongsTo('submission'),
 
-
-  // not apart of backend
+  // not a part of backend
   blob: null,
 });
