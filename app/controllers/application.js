@@ -5,6 +5,7 @@ export default Controller.extend({
   session: Ember.inject.service('session'),
   rootURL: config.rootURL,
   currentUser: Ember.inject.service('current-user'),
+  notifications: Ember.inject.service('toast'),
   institution: '',
   didRender() {
     this.set('institution', this.store.find('institution'));
