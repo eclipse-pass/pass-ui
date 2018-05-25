@@ -1,13 +1,12 @@
 import Route from '@ember/routing/route';
-import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
 import RSVP from 'rsvp';
 
 const {
   service
 } = Ember.inject;
 
-export default Route.extend(ApplicationRouteMixin, {
-  session: service(),
+export default Route.extend({
+  // session: service(),
   currentUser: service(),
 
   /* Used as route-action in templates */
@@ -22,16 +21,12 @@ export default Route.extend(ApplicationRouteMixin, {
   afterModel() {
     return this._loadCurrentUser();
   },
-  sessionAuthenticated() {
-    this._super(...arguments);
-    this._loadCurrentUser();
-  },
   _loadCurrentUser() {
     return this.get('currentUser').load().catch((e) => {
-      this.get('session').invalidate();
+      // this.get('session').invalidate();
     });
   },
-  model() {
+  async model() {
     // temp jhuInstitution move out or remove later
     const jhuInstitution = {
       name: 'Johns Hopkins University',

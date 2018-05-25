@@ -2,7 +2,7 @@ import Controller from '@ember/controller';
 import config from '../config/environment';
 
 export default Controller.extend({
-  session: Ember.inject.service('session'),
+  // session: Ember.inject.service('session'),
   rootURL: config.rootURL,
   currentUser: Ember.inject.service('current-user'),
   institution: '',
@@ -11,7 +11,7 @@ export default Controller.extend({
   },
   actions: {
     invalidateSession() {
-      this.get('session').invalidate();
+      // this.get('session').invalidate();
     },
   },
 });
