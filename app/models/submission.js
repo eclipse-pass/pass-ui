@@ -42,26 +42,4 @@ export default DS.Model.extend({
     });
     return grants;
   }),
-  // repoCopies: Ember.computed('deposits', function () {
-  //   let repoCopyUrls = [];
-  //   return this.get('store').query('deposit', {
-  //     query: {
-  //       term: { submission: this.get('id') }
-  //     },
-  //     from: 0,
-  //     size: 100
-  //   }).then((results) => {
-  //     results.forEach((deposit) => {
-  //       // debugger;
-  //       repoCopyUrls.push(deposit.get('repositoryCopy.accessUrl'));
-  //       if (deposit.get('repositoryCopy.externalIds')) {
-  //         deposit.get('repositoryCopy.externalIds').forEach((extId) => {
-  //           repoCopyUrls.push(extId);
-  //         });
-  //       }
-  //     });
-  //     debugger;
-  //     return repoCopyUrls.join(" ");
-  //   });
-  // })
 });
