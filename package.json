@@ -27,7 +27,6 @@
   "dependencies": {
     "@coreui/ajax": "1.0.10",
     "alpaca": "^1.5.24",
-    "axios": "^0.18.0",
     "bootstrap": "^4.0.0",
     "broccoli-asset-rev": "^2.4.5",
     "ember-ajax": "^3.0.0",
