@@ -13,6 +13,6 @@ export default Service.extend({
   load() {
     return fetch(this.get('whoamiUrl', {
       credentials: 'include'
-    }));
+    })).then((data) => {debugger});
   },
 });
