@@ -9,7 +9,7 @@ const {
 export default Route.extend(ApplicationRouteMixin, {
   session: service(),
   currentUser: service(),
-  finder: service('find-all'),
+  finder: Ember.inject.service('find-all'),
 
   /* Used as route-action in templates */
   actions: {
