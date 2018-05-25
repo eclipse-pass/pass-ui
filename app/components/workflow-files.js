@@ -17,7 +17,7 @@ export default Component.extend({
     this._super(...arguments);
     this.set('files', Ember.A());
     if (this.get('filesTemp') && JSON.parse(this.get('filesTemp')).length > 0) {
-      JSON.parse(this.get('filesTemp')).forEach((file) => {
+      this.get('filesTemp').forEach((file) => {
         this.get('files').pushObject(this.get('store').createRecord('file', file));
       });
       this.set('nextDisabled', false);
@@ -28,7 +28,7 @@ export default Component.extend({
     next() {
       let isDisabled = checkDisabled(this.get('files'));
       if (!isDisabled) {
-        this.set('filesTemp', JSON.stringify(this.get('files')));
+        this.set('filesTemp', this.get('files'));
         this.sendAction('next');
       } else {
         toastr.warning('Attach manuscript/article files to this submission.');
@@ -44,19 +44,24 @@ export default Component.extend({
         if (uploads.files.length !== 0) {
           for (let i = 0; i < uploads.files.length; i++) {
             const file = uploads.files[i];
-            const newFile = this.get('store').createRecord('file', {
-              name: file.name,
-              mimeType: file.type.substring(file.type.indexOf('/') + 1),
-              description: file.description,
-              fileRole: 'supplemental',
-              uri: 'http://example.com',
-            });
-            if (this.get('files').length === 0) {
-              newFile.set('fileRole', 'manuscript');
+            if (file) {
+              const newFile = this.get('store').createRecord('file', {
+                name: file.name,
+                mimeType: file.type.substring(file.type.indexOf('/') + 1),
+                description: file.description,
+                fileRole: 'supplemental',
+                uri: 'http://example.com',
+                _file: file
+              });
+              if (this.get('files').length === 0) {
+                newFile.set('fileRole', 'manuscript');
+              }
+              this.get('files').pushObject(newFile);
+              if (this.get('files').length === uploads.files.length) {
+                this.set('nextDisabled', checkDisabled(this.get('files')));
+              }
             }
-            this.get('files').pushObject(newFile);
           }
-          this.set('nextDisabled', checkDisabled(this.get('files')));
         }
       }
     },
@@ -64,7 +69,7 @@ export default Component.extend({
       let files = this.get('files');
       files.removeObject(file);
       this.set('files', files);
-      this.set('filesTemp', JSON.stringify(this.get('files')));
+      this.set('filesTemp', this.get('files'));
       this.set('nextDisabled', checkDisabled(this.get('files')));
     }
   },

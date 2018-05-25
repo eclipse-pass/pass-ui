@@ -286,7 +286,7 @@ export default Route.extend(ApplicationRouteMixin, {
               },
               "agreement-to-deposit": {
                 "type": "checkbox",
-                "rightLabel": "I agree to the above statement on todays date",
+                "rightLabel": "I agree to the above statement on today's date",
                 "fieldClass": "col-12 text-right p-0"
 
               }
