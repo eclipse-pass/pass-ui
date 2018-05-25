@@ -137,15 +137,13 @@ table td {
             <tr>
               <td>Files</td>
               <td>
-                {{#each (search-associated 'file' 'submission' model.sub.id) as |file|}}
-                <div class="card file-icon text-center">
-                  <span class="small">{{file.fileRole}}</span><br>
-                  <i class="fa fa-file-o fa-30"></i>
-                  <p class="text-overflow">{{file.name}}</p>
-                  <span class="document-item small" filetype="{{file.mimeType}}"></span>
-                </div>
-                {{else}}
-                  Loading...
+                {{#each (get model 'files') as |file|}}
+                  <div class="card file-icon text-center">
+                    <span class="small">{{file.fileRole}}</span><br>
+                    <i class="fa fa-file-o fa-30"></i>
+                    <p class="text-overflow">{{file.name}}</p>
+                    <span class="document-item small" filetype="{{file.mimeType}}"></span>
+                  </div>
                 {{/each}}
               </td>
             </tr>
