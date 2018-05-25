@@ -152,8 +152,14 @@ th.table-header {
   color:white!important;
   border:none!important;
 }
+
+.table thead th {
+  border-bottom: 2px solid #dedede!important;
+  border-top: 1px solid #dedede!important;
+}
+
 .table-bordered {
-    border-bottom: 1px solid #a4b7c1!important;
+    border-bottom: 1px solid #dedede!important;
     border-left: none!important;
     border-right: none!important;
 }
@@ -163,7 +169,11 @@ th {
 }
 td {
   border: none!important;
-  border-bottom: 1px solid #a4b7c1!important;
+  border-bottom: 1px solid #dedede!important;
+}
+
+.models-table-wrapper tbody tr {
+  background:#fdfdfd;
 }
 
 .site {
@@ -436,6 +446,19 @@ h1, h2 {
   color: #b0b0b0;
 }
 
+.slide {
+  width:130px!important;
+  margin:auto;
+}
+
+#toast-container > div {
+  opacity: 0.9;
+  border-radius: 2px
+}
+.padding-lr-100 {
+  padding-left: 140px!important;
+  padding-right: 140px!important;
+}
 @media (max-width: 760px) {
   .navbar .navbar-brand {
       justify-content: center;

@@ -79,6 +79,7 @@ export default Ember.Component.extend({
         var value = this.getValue();
         var underEmbargo = this.getParent().childrenByPropertyId['under-embargo'].getValue();
         if (underEmbargo && !value) {
+          toastr.warning('The embargo end date must not be left blank');
           isValidated = false;
           callback({
             status: false,
