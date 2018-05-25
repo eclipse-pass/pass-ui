@@ -172,7 +172,7 @@ td {
   border-bottom: 1px solid #dedede!important;
 }
 
-tbody tr {
+.models-table-wrapper tbody tr {
   background:#fdfdfd;
 }
 
@@ -451,6 +451,10 @@ h1, h2 {
   margin:auto;
 }
 
+#toast-container > div {
+  opacity: 0.9;
+  border-radius: 2px
+}
 .padding-lr-100 {
   padding-left: 140px!important;
   padding-right: 140px!important;

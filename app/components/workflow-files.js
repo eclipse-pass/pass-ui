@@ -26,8 +26,13 @@ export default Component.extend({
   nextDisabled: true,
   actions: {
     next() {
-      this.set('filesTemp', this.get('files'));
-      this.sendAction('next');
+      let isDisabled = checkDisabled(this.get('files'));
+      if (!isDisabled) {
+        this.set('filesTemp', this.get('files'));
+        this.sendAction('next');
+      } else {
+        toastr.warning('Attach manuscript/article files to this submission.');
+      }
     },
     back() {
       this.sendAction('back');

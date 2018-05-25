@@ -43,6 +43,38 @@ export default Component.extend({
     this._super(...arguments);
   },
   actions: {
+    validateNext() {
+      const title = this.get('model.publication.title');
+      const journal = this.get('model.publication.journal');
+      let validTitle = false;
+      let validJournal = false;
+
+      if (journal.get('journalName') == null) {
+        toastr.warning('The journal must not be left blank');
+        validJournal = false;
+        $('.ember-power-select-trigger').css('border-color', '#f86c6b');
+      } else {
+        validJournal = true;
+        $('.ember-power-select-trigger').css('border-color', '#4dbd74');
+      }
+
+      if (title == null) {
+        toastr.warning('The title must not be left blank');
+        this.set('validTitle', 'form-control is-invalid');
+        validTitle = false;
+      } else if (title.length > 3) {
+        validTitle = true;
+        this.set('validTitle', 'form-control is-valid');
+      } else {
+        toastr.warning('Title must be longer then 3 characters');
+        validTitle = false;
+        this.set('validTitle', 'form-control is-invalid');
+      }
+
+      if (validTitle && validJournal) {
+        this.send('next');
+      }
+    },
     next() {
       if (this.get('doiInfo').length === 0) {
         this.set('doiInfo', {
@@ -58,10 +90,11 @@ export default Component.extend({
       const newDOIRegExp = /^(https?:\/\/(dx\.)?doi\.org\/)?10.\d{4,9}\/[-._;()/:A-Z0-9]+$/i;
       const ancientDOIRegExp = /^(https?:\/\/(dx\.)?doi\.org\/)?10.1002\/[^\s]+$/i;
       // 0 = no value
-      if (doi == null) {
+      if (doi == null || !doi) {
         this.set('validDOI', 'form-control');
       } else if (newDOIRegExp.test(doi) === true || ancientDOIRegExp.test(doi) === true) { // 1 - Accepted
         this.set('validDOI', 'form-control is-valid');
+        $('.ember-power-select-trigger').css('border-color', '#4dbd74');
         this.set('validTitle', 'form-control is-valid');
         this.set('model.newSubmission.metadata', '[]');
       } else {
@@ -69,12 +102,12 @@ export default Component.extend({
       }
     },
     validateTitle() {
-      const title = this.get('model.title');
+      const title = this.get('model.publication.title');
       this.set('validTitle', title == null || title.length > 5);
       // if(validTitle)
       if (title == null) {
         this.set('validTitle', 'form-control');
-      } else if (title.length > 5) {
+      } else if (title.length > 3) {
         this.set('validTitle', 'form-control is-valid');
       } else {
         this.set('validTitle', 'form-control is-invalid');
@@ -126,6 +159,7 @@ export default Component.extend({
     selectJournal(journal) {
       const publication = this.get('model.publication');
       publication.set('journal', journal);
+      $('.ember-power-select-trigger').css('border-color', '#4dbd74');
     },
   },
 });
