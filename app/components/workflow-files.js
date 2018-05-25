@@ -17,7 +17,7 @@ export default Component.extend({
     this._super(...arguments);
     this.set('files', Ember.A());
     if (this.get('filesTemp') && JSON.parse(this.get('filesTemp')).length > 0) {
-      JSON.parse(this.get('filesTemp')).forEach((file) => {
+      this.get('filesTemp').forEach((file) => {
         this.get('files').pushObject(this.get('store').createRecord('file', file));
       });
       this.set('nextDisabled', false);
@@ -26,7 +26,7 @@ export default Component.extend({
   nextDisabled: true,
   actions: {
     next() {
-      this.set('filesTemp', JSON.stringify(this.get('files')));
+      this.set('filesTemp', this.get('files'));
       this.sendAction('next');
     },
     back() {
@@ -40,30 +40,21 @@ export default Component.extend({
           for (let i = 0; i < uploads.files.length; i++) {
             const file = uploads.files[i];
             if (file) {
-              var reader = new FileReader();
-              reader.readAsText(file, 'UTF-8');
-              reader.onload = (evt) => { // eslint-disable-line no-loop-func
-                file.blob = evt.target.result;
-                const newFile = this.get('store').createRecord('file', {
-                  name: file.name,
-                  mimeType: file.type.substring(file.type.indexOf('/') + 1),
-                  description: file.description,
-                  fileRole: 'supplemental',
-                  uri: 'http://example.com',
-                  blob: file.blob,
-                });
-                if (this.get('files').length === 0) {
-                  newFile.set('fileRole', 'manuscript');
-                }
-                this.get('files').pushObject(newFile);
-                if (this.get('files').length === uploads.files.length) {
-                  this.set('nextDisabled', checkDisabled(this.get('files')));
-                }
-              };
-              reader.onerror = (evt) => { // eslint-disable-line no-loop-func
-                // document.getElementById('fileContents').innerHTML = 'error reading file';
-                alert('Error reading file');
-              };
+              const newFile = this.get('store').createRecord('file', {
+                name: file.name,
+                mimeType: file.type.substring(file.type.indexOf('/') + 1),
+                description: file.description,
+                fileRole: 'supplemental',
+                uri: 'http://example.com',
+                _file: file
+              });
+              if (this.get('files').length === 0) {
+                newFile.set('fileRole', 'manuscript');
+              }
+              this.get('files').pushObject(newFile);
+              if (this.get('files').length === uploads.files.length) {
+                this.set('nextDisabled', checkDisabled(this.get('files')));
+              }
             }
           }
         }
@@ -73,7 +64,7 @@ export default Component.extend({
       let files = this.get('files');
       files.removeObject(file);
       this.set('files', files);
-      this.set('filesTemp', JSON.stringify(this.get('files')));
+      this.set('filesTemp', this.get('files'));
       this.set('nextDisabled', checkDisabled(this.get('files')));
     }
   },
