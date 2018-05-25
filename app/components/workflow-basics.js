@@ -49,6 +49,15 @@ export default Component.extend({
       let validTitle = false;
       let validJournal = false;
 
+      if(journal.get('journalName') == null) {
+        toastr.warning('The journal must not be left blank');
+        validJournal = false;
+        $('.ember-power-select-trigger').css('border-color', '#f86c6b')
+      } else {
+        validJournal = true;
+        $('.ember-power-select-trigger').css('border-color', '#4dbd74')
+      }
+
       if (title == null) {
         toastr.warning('The title must not be left blank');
         this.set('validTitle', 'form-control is-invalid');
@@ -60,15 +69,6 @@ export default Component.extend({
         toastr.warning('Title must be longer then 3 characters');
         validTitle = false;
         this.set('validTitle', 'form-control is-invalid');
-      }
-
-      if(journal.get('journalName') == null) {
-        toastr.warning('The journal must not be left blank');
-        validJournal = false;
-        $('.ember-power-select-trigger').css('border-color', '#f86c6b')
-      } else {
-        validJournal = true;
-        $('.ember-power-select-trigger').css('border-color', '#4dbd74')
       }
 
       if(validTitle && validJournal) {
