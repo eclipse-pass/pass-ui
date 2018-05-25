@@ -28,7 +28,7 @@ module('Acceptance | grants/index', (hooks) => {
 
     // Check headers
     const headers = document.querySelectorAll('.models-table-wrapper table thead th');
-    assert.equal(headers.length, 9, `Should be 9 columns in the table, but found ${headers.length}`);
+    assert.equal(headers.length, 8, `Should be 8 columns in the table, but found ${headers.length}`);
 
     // Table has the right number of grants
     const rows = document.querySelectorAll('.models-table-wrapper table tbody tr');
@@ -41,7 +41,7 @@ module('Acceptance | grants/index', (hooks) => {
         case 1:
         case 2:
         case 4:
-        case 7:
+        case 6:
           assert.ok(td.innerText, `Grant table cell (${index}) must have content`);
           break;
         default:
@@ -59,7 +59,7 @@ module('Acceptance | grants/index', (hooks) => {
         switch (index) {
           case 0:
           case 2:
-          case 7: {
+          case 5: {
             const html = td.querySelector('a');
             assert.ok(html, 'Cell must contain an Anchor tag');
             assert.ok(html.href, 'Cell must have an href');
