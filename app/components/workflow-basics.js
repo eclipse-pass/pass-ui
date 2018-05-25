@@ -43,19 +43,19 @@ export default Component.extend({
     this._super(...arguments);
   },
   actions: {
-    validateNext(){
+    validateNext() {
       const title = this.get('model.publication.title');
       const journal = this.get('model.publication.journal');
       let validTitle = false;
       let validJournal = false;
 
-      if(journal.get('journalName') == null) {
+      if (journal.get('journalName') == null) {
         toastr.warning('The journal must not be left blank');
         validJournal = false;
-        $('.ember-power-select-trigger').css('border-color', '#f86c6b')
+        $('.ember-power-select-trigger').css('border-color', '#f86c6b');
       } else {
         validJournal = true;
-        $('.ember-power-select-trigger').css('border-color', '#4dbd74')
+        $('.ember-power-select-trigger').css('border-color', '#4dbd74');
       }
 
       if (title == null) {
@@ -71,7 +71,7 @@ export default Component.extend({
         this.set('validTitle', 'form-control is-invalid');
       }
 
-      if(validTitle && validJournal) {
+      if (validTitle && validJournal) {
         this.send('next');
       }
     },
@@ -94,7 +94,7 @@ export default Component.extend({
         this.set('validDOI', 'form-control');
       } else if (newDOIRegExp.test(doi) === true || ancientDOIRegExp.test(doi) === true) { // 1 - Accepted
         this.set('validDOI', 'form-control is-valid');
-        $('.ember-power-select-trigger').css('border-color', '#4dbd74')
+        $('.ember-power-select-trigger').css('border-color', '#4dbd74');
         this.set('validTitle', 'form-control is-valid');
         this.set('model.newSubmission.metadata', '[]');
       } else {
@@ -159,7 +159,7 @@ export default Component.extend({
     selectJournal(journal) {
       const publication = this.get('model.publication');
       publication.set('journal', journal);
-      $('.ember-power-select-trigger').css('border-color', '#4dbd74')
+      $('.ember-power-select-trigger').css('border-color', '#4dbd74');
     },
   },
 });

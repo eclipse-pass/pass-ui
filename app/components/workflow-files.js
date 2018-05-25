@@ -26,8 +26,8 @@ export default Component.extend({
   nextDisabled: true,
   actions: {
     next() {
-      let isDisabled = checkDisabled( this.get('files'));
-      if(!isDisabled) {
+      let isDisabled = checkDisabled(this.get('files'));
+      if (!isDisabled) {
         this.set('filesTemp', JSON.stringify(this.get('files')));
         this.sendAction('next');
       } else {
