@@ -6,6 +6,12 @@ export default Component.extend({
     // // TODO:  add validation step here that checks the model each rerender
     // this.set('isValidated', false)
   },
+  externalSubmission: Ember.computed('metadataBlobNoKeys', function () { // eslint-disable-line
+    if (this.get('metadataBlobNoKeys').Submission) {
+      return true;
+    }
+    return false;
+  }),
   parsedFiles: Ember.computed('filesTemp', function () {
     return JSON.parse(this.get('filesTemp'));
   }),
@@ -19,6 +25,7 @@ export default Component.extend({
         if (ele.data.hasOwnProperty(key)) {
           let strippedData;
           strippedData = ele.data[key];
+
           if (key === 'authors') {
             if (metadataBlobNoKeys['author(s)']) {
               metadataBlobNoKeys['author(s)'] = _.uniqBy(metadataBlobNoKeys['author(s)'].concat(strippedData), 'author');

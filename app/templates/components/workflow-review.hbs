@@ -59,14 +59,15 @@
         <p class="mb-1">{{model.publication.doi}}</p>
         <small class="text-muted">Please review the information below</small>
         <table class="table table-responsive-sm table-bordered w-100">
-
           <tbody>
             <tr>
               <td class="text-nowrap">Repositories</td>
               <td>
                 <ul>
                 {{#each model.newSubmission.repositories as |repository|}}
-                  <li>{{repository.name}}</li>
+                  {{#unless (eq repository.name 'Educational Resources Information Center (ERIC)')}}
+                    <li>{{repository.name}}</li>
+                  {{/unless}}
                 {{/each}}
               </ul>
               </td>
@@ -78,6 +79,16 @@
                   <p class="text-danger text-left"><strong>Warning:</strong> you added JScholarship as a repository but didn't agree to the deposit agreement,
                     so your submission will not be submitted to JScholarship. To fix this, go back and agree to the deposit agreement.</p>
                 </div>
+              </td>
+            </tr>
+            {{/if}}
+            {{#if externalSubmission}}
+            <tr>
+              <td class="text-nowrap">External Repositories</td>
+              <td>
+                <ul>
+                  <li>Educational Resources Information Center (ERIC)</li>
+              </ul>
               </td>
             </tr>
             {{/if}}
@@ -105,19 +116,21 @@
                       {{#if (not-eq key 'Under-embargo')}}
                         {{#if (not-eq key 'Embargo-end-date')}}
                           {{#if (not-eq key 'Agreement-to-embargo')}}
-                            {{#if (eq key 'Author(s)')}}
-                              <li><b>{{key}}</b>:
-                                <ul>
-                                  {{#each data as |author|}}
-                                    <li>{{author.author}}{{#if author.orcid}} (<a href={{author.orcid}} target="_blank">{{author.orcid}}</a>){{/if}}</li>
-                                  {{/each}}
-                                </ul>
-                              </li>
-                            {{else}}
-                              {{#if (eq key 'URL')}}
-                              <li><b>{{key}}</b>: <a href={{data}} target="_blank">{{data}}</a></li>
+                            {{#if (not-eq key 'Submission')}}
+                              {{#if (eq key 'Author(s)')}}
+                                <li><b>{{key}}</b>:
+                                  <ul>
+                                    {{#each data as |author|}}
+                                      <li>{{author.author}}{{#if author.orcid}} (<a href={{author.orcid}} target="_blank">{{author.orcid}}</a>){{/if}}</li>
+                                    {{/each}}
+                                  </ul>
+                                </li>
                               {{else}}
-                              <li><b>{{key}}</b>: {{{data}}}</li>
+                                {{#if (eq key 'URL')}}
+                                <li><b>{{key}}</b>: <a href={{data}} target="_blank">{{data}}</a></li>
+                                {{else}}
+                                <li><b>{{key}}</b>: {{{data}}}</li>
+                                {{/if}}
                               {{/if}}
                             {{/if}}
                           {{/if}}
