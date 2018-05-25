@@ -144,6 +144,8 @@ table td {
                   <p class="text-overflow">{{file.name}}</p>
                   <span class="document-item small" filetype="{{file.mimeType}}"></span>
                 </div>
+                {{else}}
+                  Loading...
                 {{/each}}
               </td>
             </tr>
