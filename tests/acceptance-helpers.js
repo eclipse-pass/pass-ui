@@ -1,27 +1,30 @@
 import ENV from 'pass-ember/config/environment';
 import $ from 'jquery';
 
-export function sleep(ms) {
+function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 async function doRequests(defer, intervalTime, maxIterations) {
   let iteration = 0;
-  // Issuing a search request with no query returns _all_ indexed objects
-  const url = ENV.fedora.elasticsearch;
-  let prevTotal = -1;
+  // See the Elasticsearch _stats API
+  // (https://www.elastic.co/guide/en/elasticsearch/reference/6.2/indices-stats.html)
+  // Example: curl 'http://localhost:9200/pass/_stats/indexing?pretty'
+  const url = ENV.fedora.elasticsearch.replace('_search', '_stats/indexing');
+  let indexingTime = -1;
 
   while (iteration++ < maxIterations) {
     // console.log(`> Checking index for activity: ${url}`);
-    let newTotal = await $.ajax(url, 'GET', { // eslint-disable-line
+    let newTime = await $.ajax(url, 'GET', { // eslint-disable-line
       headers: { 'Content-Type': 'application/json; charset=utf-8' }
-    }).then(result => result.hits.total);
-    // console.log(`> Found time: ${newTotal}`);
-    if (Math.abs(newTotal - prevTotal) == 0) {
+    // }).then(result => result.indices.pass.total.indexing.index_time_in_millis);
+    }).then(result => result.indices.pass.total.indexing.index_total);
+    // console.log(`> Found time: ${newTime}`);
+    if (Math.abs(newTime - indexingTime) == 0) {
       defer.resolve(true);
       return;
     }
-    prevTotal = newTotal;
+    indexingTime = newTime;
     await sleep(intervalTime); // eslint-disable-line
   }
   defer.reject(true);

@@ -5,6 +5,10 @@ import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 import ENV from 'pass-ember/config/environment';
 import waitForIndexer from 'pass-ember/tests/acceptance-helpers';
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 module('Acceptance | submissions/index', (hooks) => {
   setupApplicationTest(hooks);
   setupMirage(hooks);
@@ -43,6 +47,7 @@ module('Acceptance | submissions/index', (hooks) => {
 
   test('submission article title is clickable', async (assert) => {
     assert.equal(currentURL(), '/submissions');
+    // await sleep(5000);
 
     const rows = document.querySelectorAll('.models-table-wrapper table tbody tr');
     rows.forEach(row => row.querySelectorAll('td').forEach((td, index) => {
@@ -56,6 +61,8 @@ module('Acceptance | submissions/index', (hooks) => {
   });
 
   test('submission award number links go to grant details)', async (assert) => {
+    // await sleep(5000);
+
     const rows = document.querySelectorAll('.models-table-wrapper table tbody tr');
     rows.forEach(row => row.querySelectorAll('td').forEach((td, index) => {
       if (index === 1) {
@@ -71,6 +78,8 @@ module('Acceptance | submissions/index', (hooks) => {
   });
 
   test('table filter works', async (assert) => {
+    // await sleep(5000);
+
     const searchBoxSelector = '.models-table-wrapper .globalSearch input.filterString';
     await fillIn(searchBoxSelector, 'eval');
     await triggerKeyEvent(searchBoxSelector, 'keypress', 13); // Enter
