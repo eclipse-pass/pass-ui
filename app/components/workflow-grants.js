@@ -40,7 +40,6 @@ export default Component.extend({
       }
       const submission = this.get('model.newSubmission');
       submission.get('grants').removeObject(grant);
-
       const index = this.get('addedGrants').indexOf(grant);
       this.get('addedGrants').splice(index, 1);
       this.set('maxStep', 2);
