@@ -11,8 +11,10 @@ export default Service.extend({
   load() {
     if (this.get('session.isAuthenticated')) {
       // TODO hit the UserService here
-      return this.get('store').findAll('user').then((users) => {
-        this.set('user', users.findBy('username', 'hvu'));
+      return this.get('store').query('user', { match: { username: 'hvu' } }).then((users) => {
+        if (users.content.length > 0) {
+          this.set('user', users.get('firstObject'));
+        }
       });
     }
     return RSVP.resolve();
