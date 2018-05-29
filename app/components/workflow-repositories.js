@@ -59,7 +59,6 @@ export default Component.extend({
     // STEP 3
     return repos;
   }),
-
   optionalRepositories: Ember.computed('requiredRepositories', function () {
     let repos = this.get('model.repositories').filter(repo => repo.get('name') === 'JScholarship');
     if (repos.length > 1) {
