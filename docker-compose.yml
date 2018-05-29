@@ -2,6 +2,17 @@ version: '2'
 
 services:
 
+  emberdev:
+    build: ./.emberdev/
+    image: oapass/emberdev:0.0.1-2.0-SNAPSHOT
+    container_name: emberdev
+    env_file: .env
+    volumes:
+      - .:/app:Z
+      - /app/node_modules
+    ports:
+      - 4200:4200
+
   fcrepo:
     image: oapass/fcrepo:4.7.5-2.1-SNAPSHOT
     container_name: fcrepo
@@ -15,7 +26,7 @@ services:
       - "${FCREPO_DEBUG_PORT}:${FCREPO_DEBUG_PORT}"
 
   indexer:
-    image: oapass/indexer
+    image: oapass/indexer:0.0.7-2.0-SNAPSHOT
     container_name: indexer
     env_file: .env
     links:
