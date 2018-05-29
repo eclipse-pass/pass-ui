@@ -6,7 +6,7 @@ export default Component.extend({
     id: 'common',
     data: {},
     schema: {
-      title: "Common <br><p class='lead text-muted'>Please provide additional information about your article/manuscript below:</p>",
+      title: "Common <br><p class='lead text-muted'>Please provide additional information about your article/manuscript below. If DOI was provided in the initial step of the submission, the metadata associated with that DOI was looked up and used to prepopulate the form. </p>",
       type: 'object',
       properties: {
         title: {
