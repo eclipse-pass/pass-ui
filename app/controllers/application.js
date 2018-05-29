@@ -9,7 +9,7 @@ export default Controller.extend({
   institution: '',
   wideRoutes: ['grants.index', 'grants.detail', 'submissions.index'],
   fullWidth: Ember.computed('currentRouteName', function () {
-    return this.get('wideRoutes').contains(this.get('currentRouteName'));
+    return this.get('wideRoutes').includes(this.get('currentRouteName'));
   }),
   didRender() {
     this.set('institution', this.store.find('institution'));
