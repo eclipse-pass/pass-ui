@@ -8,6 +8,7 @@ const {
 export default Route.extend({
   // session: service(),
   currentUser: service(),
+  finder: Ember.inject.service('find-all'),
 
   /* Used as route-action in templates */
   actions: {
@@ -38,19 +39,15 @@ export default Route.extend({
     };
     const self = this;
 
-    return this.get('store').findAll('grant').then((grants) => {
-      if (!grants.content || !grants.content.length) {
-        // console.log(' >>> Adding test data.');
+    return this.get('finder').findAll().then((data) => {
+      if (!data.hits || data.hits.total === 0) {
+        console.log('%c No data found in the search index, adding test data!', 'color: #F08600');
         return self._add_test_data(jhuInstitution);
       }
-      // console.log(' >>> Found test data already, moving on.');
       return jhuInstitution;
     }).catch((e) => {
       console.log(e);
-      console.log(' >>> Store.findAll("grant") failed, trying to add data.');
-      // return this._add_test_data(jhuInstitution);
     });
-    // return this._add_test_data(jhuInstitution);
   },
 
   _add_test_data(institution) {
@@ -281,7 +278,7 @@ export default Route.extend({
               },
               "agreement-to-deposit": {
                 "type": "checkbox",
-                "rightLabel": "I agree to the above statement on todays date",
+                "rightLabel": "I agree to the above statement on today's date",
                 "fieldClass": "col-12 text-right p-0"
 
               }

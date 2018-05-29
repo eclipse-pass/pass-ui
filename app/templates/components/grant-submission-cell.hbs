@@ -1,0 +1,3 @@
+{{#link-to 'grants.detail' (get record 'grant.id')}}
+  {{await (get record column.propertyName)}} submissions
+{{/link-to}}<br>({{#link-to 'submissions.new'}}Create new{{/link-to}})

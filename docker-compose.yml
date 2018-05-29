@@ -3,7 +3,7 @@ version: '2'
 services:
 
   fcrepo:
-    image: oapass/fcrepo:4.7.5-2.0-SNAPSHOT-5
+    image: oapass/fcrepo:4.7.5-2.1-SNAPSHOT
     container_name: fcrepo
     env_file: .env
     environment:

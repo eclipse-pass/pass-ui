@@ -1,11 +1,12 @@
 import Ember from 'ember';
 import fetch from 'fetch';
 import Service from '@ember/service';
+import ENV from 'pass-ember/config/environment';
 
 const { inject: { service }, RSVP } = Ember;
 
 export default Service.extend({
-  whoamiUrl: 'http://pass/pass-user-service/whoami',
+  whoamiUrl: ENV.userService.url,
   store: service(),
   // ajax: service(),
   user: null,

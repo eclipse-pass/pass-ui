@@ -17,7 +17,7 @@ export default Route.extend({
   },
 
   _doAdmin() {
-    return this.store.findAll('submission');
+    return this.store.query('submission', { query: { match_all: {} }, size: 50 });
   },
 
   _doSubmitter(user) {

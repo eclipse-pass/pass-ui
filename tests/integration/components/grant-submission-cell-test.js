@@ -1,7 +1,7 @@
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 
-moduleForComponent('oap-compliance-cell', 'Integration | Component | oap compliance cell', {
+moduleForComponent('grant-submission-cell', 'Integration | Component | grant submission cell', {
   integration: true
 });
 
@@ -9,7 +9,8 @@ test('it renders', function (assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
 
-  this.render(hbs`{{oap-compliance-cell}}`);
-
+  // Template usage:
+  this.render(hbs`{{grant-submission-cell}}`);
   assert.ok(true);
+  // assert.equal(this.$().text().trim(), 'template block text');
 });

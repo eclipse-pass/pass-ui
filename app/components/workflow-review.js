@@ -7,7 +7,7 @@ export default Component.extend({
     // this.set('isValidated', false)
   },
   parsedFiles: Ember.computed('filesTemp', function () {
-    return JSON.parse(this.get('filesTemp'));
+    return this.get('filesTemp');
   }),
   metadata: Ember.computed('model.newSubmission.metadata', function () { // eslint-disable-line
     return JSON.parse(this.get('model.newSubmission.metadata'));

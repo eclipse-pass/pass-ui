@@ -23,20 +23,37 @@ export default Controller.extend({
       pub.save().then((p) => {
         sub.set('publication', p);
         let ctr = 0;
-        let len = JSON.parse(this.get('filesTemp')).length;
+        let len = this.get('filesTemp').length;
         sub.set('removeNIHDeposit', false);
         sub.save().then((s) => {
-          JSON.parse(this.get('filesTemp')).forEach((file) => {
-            let newFile = this.get('store').createRecord('file', file);
-            newFile.set('submission', s);
-            newFile.save().then(() => {
-              ctr += 1;
-              console.log(ctr);
-              console.log('saved file!');
-              if (ctr >= len) {
-                this.transitionToRoute('thanks');
-              }
-            });
+          this.get('filesTemp').forEach((file) => {
+            let contentType = file.get('_file.type') ? file.get('_file.type') : 'application/octet-stream';
+            var reader = new FileReader();
+            reader.readAsArrayBuffer(file.get('_file'));
+            reader.onload = (evt) => {
+              let data = evt.target.result;
+              let xhr = new XMLHttpRequest();
+              xhr.open('POST', `${s.id}`, true);
+              xhr.setRequestHeader('Content-Disposition', `attachment; filename="${file.get('name')}"`);
+              xhr.setRequestHeader('Content-Type', contentType);
+              xhr.setRequestHeader('Authorization', 'Basic YWRtaW46bW9v'); // TODO: should not be hardcoded
+              xhr.onload = (results) => {
+                file.set('submission', s);
+                file.set('uri', results.target.response);
+                file.save().then(() => {
+                  ctr += 1;
+                  console.log(ctr);
+                  console.log('saved file!');
+                  if (ctr >= len) {
+                    this.transitionToRoute('thanks');
+                  }
+                });
+              };
+              xhr.send(data);
+            };
+            reader.onerror = function (evt) {
+              alert('error reading file');
+            };
           });
         });
       });
