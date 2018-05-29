@@ -26,7 +26,7 @@ export default Route.extend({
       preLoadedGrant = this.get('store').findRecord('grant', params.grant);
     }
 
-    let publication = this.loadObjects('publication', 0, 50);
+    let publication = this.get('store').createRecord('publication');
     let newSubmission = this.get('store').createRecord('submission');
 
     const querySize = 100;
@@ -47,9 +47,5 @@ export default Route.extend({
       preLoadedGrant
     });
     return h;
-  },
-  // deactivate() {
-  //   debugger;
-  //   this.get('store').unloadAll();
-  // }
+  }
 });
