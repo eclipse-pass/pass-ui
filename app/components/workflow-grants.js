@@ -31,6 +31,7 @@ export default Component.extend({
       submission.get('grants').pushObject(grant);
       this.get('addedGrants').push(grant);
       this.set('maxStep', 2);
+      submission.set('metadata', '[]');
     },
     removeGrant(grant) {
       // if grant is grant passed in from grant detail page remove query parms
@@ -39,10 +40,10 @@ export default Component.extend({
       }
       const submission = this.get('model.newSubmission');
       submission.get('grants').removeObject(grant);
-
       const index = this.get('addedGrants').indexOf(grant);
       this.get('addedGrants').splice(index, 1);
       this.set('maxStep', 2);
+      submission.set('metadata', '[]');
     },
     saveAll() {
       const grants = this.get('addedGrants');

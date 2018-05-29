@@ -221,6 +221,17 @@ export default Component.extend({
           },
         });
 
+
+        JSON.parse(this.get('model.newSubmission.metadata')).map((m) => {
+          if (m.id.includes('eric')) {
+            metadata.push({
+              id: 'external-submissions',
+              data: {
+                submission: 'Prompted to deposit into Educational Resources Information Center (ERIC).'
+              },
+            });
+          }
+        });
         this.set('model.newSubmission.metadata', JSON.stringify(metadata));
         this.sendAction('next');
       }
