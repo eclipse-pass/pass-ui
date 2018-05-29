@@ -19,7 +19,6 @@ export default Route.extend({
     },
   },
   afterModel() {
-    console.log(' >> moo 2');
     return this._loadCurrentUser();
   },
   _loadCurrentUser() {
@@ -39,9 +38,7 @@ export default Route.extend({
       schema: [],
     };
     const self = this;
-    console.log(' >> moo');
     return this.get('finder').findAll().then((data) => {
-      console.log(` >> moo 1 :: ${data.hits.total}`);
       if (!data.hits || data.hits.total < 10) {
         console.log('%c No data found in the search index, adding test data!', 'color: #F08600');
         return self._add_test_data(jhuInstitution);
