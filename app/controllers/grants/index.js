@@ -46,11 +46,6 @@ export default Controller.extend({
       component: 'grant-link-cell'
     },
     {
-      propertyName: 'grant.localKey',
-      title: 'COEUS',
-      disableFiltering: true,
-    },
-    {
       title: 'PI',
       propertyName: 'grant.pi',
       component: 'pi-list-cell'
@@ -106,11 +101,11 @@ export default Controller.extend({
       disableFiltering: true,
       component: 'grant-link-cell'
     },
-    {
-      propertyName: 'grant.localKey',
-      title: 'COEUS',
-      disableFiltering: true,
-    },
+    // {
+    //   propertyName: 'grant.localKey',
+    //   title: 'COEUS',
+    //   disableFiltering: true,
+    // },
     // {
     //   title: 'PI',
     //   propertyName: 'grant.pi',
