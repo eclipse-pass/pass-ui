@@ -41,7 +41,7 @@ export default Controller.extend({
     },
     {
       propertyName: 'repoCopies',
-      title: 'Ext. Repo Id',
+      title: 'Manuscript ID',
       component: 'submissions-repoid-cell',
       disableSorting: true
     },
