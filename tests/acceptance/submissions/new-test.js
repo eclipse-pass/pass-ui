@@ -4,15 +4,17 @@ import { setupApplicationTest, setupTest } from 'ember-qunit';
 import wait from 'ember-test-helpers/wait';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 import testScenario from '../../../mirage/scenarios/test';
+import waitForIndexer from 'pass-ember/tests/acceptance-helpers';
 
 module('Acceptance | submission/new', (hooks) => {
   setupApplicationTest(hooks);
   setupMirage(hooks);
 
   test('should be able to create new submission', async (assert) => {
-    testScenario(server);
+    // testScenario(server);
     // log in
     await visit('/login');
+    waitForIndexer();
     await fillIn('input#identification', 'Jane');
     await fillIn('input#password', 'j4n3s_p4$$w0rd!!');
     await click('button#submit');
