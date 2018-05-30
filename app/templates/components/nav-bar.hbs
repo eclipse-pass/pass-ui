@@ -17,14 +17,15 @@
 
         {{#if session.isAuthenticated}}
           <li class="nav-item dropdown ml-auto">
-            <a class="nav-link accountInfo pr-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-              {{gravatar-image email=currentUser.user.email
+            <a class="nav-link accountInfo pr-1" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+              <span class="pr-1">{{gravatar-image email=currentUser.user.email
                 title=currentUser.user.email
                 alt=currentUser.user.email
                 defaultImage='identicon'
                 class='img-avatar'
                 size=30
                 retina=true}}
+              </span>
                 {{log currentUser}}
               {{currentUser.user.firstName}} {{currentUser.user.lastName}}
             </a>
