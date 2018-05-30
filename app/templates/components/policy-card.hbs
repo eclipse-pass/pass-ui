@@ -7,10 +7,10 @@
         <h4 class="card-title">
           <a href="#">{{policy.title}}</a>
         </h4>
-        <h6 class="card-subtitle">Requires deposit into
+        <h6 class="card-subtitle"><strong>Expects deposit into
           {{#each policy.repositories as |repo index|}}
             {{if index ', '}}{{repo.name}}
-          {{/each}}
+          {{/each}}</strong>
         </h6>
       {{/if}}
       <p class="card-text mt-2">
