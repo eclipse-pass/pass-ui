@@ -2,15 +2,15 @@
     <div class="card-body">
       {{#if policyIsJHU}}
         <h4 class="card-title"><a href="#">{{policy.title}}</a></h4>
-        <h6 class="card-subtitle">Expects deposit into an open access repository</h6>
+        <h4 class="card-subtitle">Expects deposit into an open access repository</h4>
       {{else}}
         <h4 class="card-title">
           <a href="#">{{policy.title}}</a>
         </h4>
-        <h6 class="card-subtitle"><strong>Expects deposit into
+        <h6 class="card-subtitle mb-2">Expects deposit into
           {{#each policy.repositories as |repo index|}}
             {{if index ', '}}{{repo.name}}
-          {{/each}}</strong>
+          {{/each}}
         </h6>
       {{/if}}
       <p class="card-text mt-2">

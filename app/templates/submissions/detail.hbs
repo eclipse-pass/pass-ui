@@ -101,7 +101,7 @@ table td {
               <td>
                 <ul class="list-unstyled">
                   {{#each-in metadataBlobNoKeys as |key data|}}
-                    {{!-- TODO: Look in to making the ifs in to one if --}}
+                    {{!-- TODO: Look in to making the ifs into one if --}}
                     {{#if (not-eq key 'Embargo')}}
                       {{#if (not-eq key 'Under-embargo')}}
                         {{#if (not-eq key 'Embargo-end-date')}}
