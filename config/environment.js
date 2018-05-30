@@ -24,6 +24,10 @@ module.exports = function (environment) {
       // when it is created
     }
   };
+  // Disable mirage entirely.
+  ENV['ember-cli-mirage'] = {
+    enabled: false
+  };
 
   if (environment === 'development') {
     // ENV.APP.LOG_RESOLVER = true;
@@ -42,6 +46,10 @@ module.exports = function (environment) {
     ENV.APP.LOG_VIEW_LOOKUPS = false;
 
     ENV.APP.rootElement = '#ember-testing';
+    // Disable mirage entirely.
+    ENV['ember-cli-mirage'] = {
+      enabled: true
+    };
   }
 
   if (environment === 'surge') {
@@ -53,11 +61,6 @@ module.exports = function (environment) {
       'connect-src': "'self' http://pass-jhu.surge.sh"
     };
   }
-
-  // Disable mirage entirely.
-  ENV['ember-cli-mirage'] = {
-    enabled: true
-  };
 
   ENV.fedora = {
     base: 'http://localhost:8080/fcrepo/rest/',
