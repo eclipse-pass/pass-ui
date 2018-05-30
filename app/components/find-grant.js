@@ -2,17 +2,18 @@ import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 
 export default Component.extend({
+  currentUser: service('current-user'),
   store: service('store'),
-
-  onSelect: () => {},
+  autocomplete: service('autocomplete'),
 
   actions: {
     searchGrants(term) {
-      const regex = new RegExp(term, 'i');
-
-      return this.get('store').findAll('grant')
-        .then(grants => grants.filter(grant => grant.get('awardNumber').match(regex) ||
-                        grant.get('projectName').match(regex)));
+      const user = this.get('currentUser.user');
+      return this.get('autocomplete').suggest(['awardNumber', 'projectName'], term, { pi: user.id }, 'grant');
     },
+
+    onSelect(selected) {
+      this.get('store').findRecord('grant', selected.id).then(grant => this.sendAction('addGrant', grant));
+    }
   },
 });

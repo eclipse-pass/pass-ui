@@ -3,24 +3,26 @@ import { inject as service } from '@ember/service';
 
 export default Component.extend({
   store: service('store'),
-
-  onSelect: () => { },
+  autocomplete: service('autocomplete'),
 
   actions: {
 
-    /** Search for journals by matching a term
-         *
-         * @param term {string} The search term (regex)
-         *
-         * TODO:  This simply fetches all journals and iterates through the whole list.
-         * It is not suitable for large numbers of journals.  Instead, the server should provide
-         * a search API.
-        */
+    /**
+     * Search for journals by autocompleting based on the term prefix.
+     *
+     * @param term {string} The search term
+     * @returns {array} array of objects
+     *                  {
+     *                    suggestion: 'the autocompleted suggestion',
+     *                    id: `string ID of the associated Journal model object`
+     *                  }
+     */
     searchJournals(term) {
-      const regex = new RegExp(term, 'i');
-
-      return this.get('store').findAll('journal')
-        .then(journals => journals.filter(journal => journal.get('journalName').match(regex)));
+      return this.get('autocomplete').suggest('journalName', term);
     },
+
+    onSelect(selected) {
+      this.get('store').findRecord('journal', selected.id).then(journal => this.sendAction('selectJournal', journal));
+    }
   },
 });
