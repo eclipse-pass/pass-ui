@@ -10,16 +10,6 @@ export default Controller.extend({
   messageSubject: '',
   messageText: '',
 
-  actions: {
-    // PI/coPI Emailing on click - feature removed for release
-    // authorclick(submission) {
-    //   this.set('messageShow', true);
-    //   this.set('messageTo', submission.get('user.displayName'));
-    //   this.set('messageSubject', 'OAP Compliance');
-    //   this.set('messageText', `Concerning submission ${submission.get('title')}, the status is ${submission.get('aggregatedDepositStatus')}.\nPlease check your PASS dashboard.`);
-    // },
-  },
-
   // Columns displayed depend on the user role
   columns: computed('currentUser', {
     get() {
