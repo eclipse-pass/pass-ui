@@ -1,38 +1,39 @@
-version: '2'
+version: '3.1'
 
 services:
 
-  emberdev:
-    build: ./.emberdev/
-    image: oapass/emberdev:0.0.1-2.0-SNAPSHOT
-    container_name: emberdev
+  ember:
+    build: ember-dev/
+    image: oapass/ember-dev
+    container_name: ember
     env_file: .env
     volumes:
       - .:/app:Z
       - /app/node_modules
     ports:
-      - 4200:4200
+      - "${EMBER_PORT}:${EMBER_PORT}"
+    networks:
+      - back
 
   fcrepo:
     image: oapass/fcrepo:4.7.5-2.1-SNAPSHOT
     container_name: fcrepo
     env_file: .env
-    environment:
-      - FCREPO_JMS_BASEURL=http://localhost:8080/fcrepo/rest
     ports:
       - "${FCREPO_PORT}:${FCREPO_PORT}"
       - "${FCREPO_JMS_PORT}:${FCREPO_JMS_PORT}"
       - "${FCREPO_STOMP_PORT}:${FCREPO_STOMP_PORT}"
       - "${FCREPO_DEBUG_PORT}:${FCREPO_DEBUG_PORT}"
+    networks:
+      - front
+      - back
 
   indexer:
-    image: oapass/indexer:0.0.7-2.0-SNAPSHOT
+    image: oapass/indexer:0.0.8-2.1-SNAPSHOT
     container_name: indexer
     env_file: .env
-    links:
-      - fcrepo:localhost
-    volumes:
-      - ./.hosts:/etc/hosts:Z
+    networks:
+      - back
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.3
@@ -47,11 +48,77 @@ services:
         soft: -1
         hard: -1
     volumes:
-      - esdata:/usr/share/elasticsearch/data
-      - ./.elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:Z
-    ports:
+      - esdata:/usr/share/elasticsearch/data   
+    ports: 
       - "${ES_PORT}:${ES_PORT}"
+    networks:
+      - front
+      - back
+
+  proxy:
+    image: oapass/httpd-proxy
+    container_name: proxy
+    networks:
+     - front
+     - back
+    ports:
+     - "80:80"
+     - "443:443"
+
+  idp:
+    image: oapass/idp
+    container_name: idp
+    depends_on:
+     - ldap
+    environment:
+     - JETTY_MAX_HEAP=64m
+     - JETTY_BROWSER_SSL_KEYSTORE_PASSWORD=password
+     - JETTY_BACKCHANNEL_SSL_KEYSTORE_PASSWORD=password
+    expose:
+     - "4443"
+    networks:
+     - back
+    secrets:
+     - source: idp_backchannel
+     - source: idp_browser
+     - source: idp_encryption
+     - source: idp_signing
+     - source: idp_sealer
+
+  ldap:
+    image: oapass/ldap
+    container_name: ldap
+    networks:
+     - back
+
+  sp:
+    image: oapass/sp
+    container_name: sp
+    networks:
+     - back
+    secrets:
+     - source: sp_key
 
 volumes:
   esdata:
     driver: local
+
+networks:
+  front:
+    driver: bridge
+  back:
+    driver: bridge
+
+secrets:
+  idp_backchannel:
+    file: ./secrets/idp/idp-backchannel.p12
+  idp_browser:
+    file: ./secrets/idp/idp-browser.p12
+  idp_encryption:
+    file: ./secrets/idp/idp-encryption.key
+  idp_signing:
+    file: ./secrets/idp/idp-signing.key
+  idp_sealer:
+    file: ./secrets/idp/sealer.jks
+  sp_key:
+    file: ./secrets/sp/sp-key.pem
