@@ -55,7 +55,7 @@ export default Controller.extend({
                   console.log(ctr);
                   console.log('saved file!');
                   if (ctr >= len) {
-                    this.transitionToRoute('thanks');
+                    this.transitionToRoute('thanks', { queryParams: { submission: s.id } });
                   }
                 });
               };

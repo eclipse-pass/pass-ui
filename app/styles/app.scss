@@ -455,7 +455,7 @@ h1, h2 {
 }
 table td {
   border: 1px dotted silver;
-  word-break: break-word;
+  word-break: break-word!important;
 }
 
 #toast-container > div {
@@ -500,8 +500,15 @@ table td {
 }
 
 .submission-table {
-  table tbody tr td:nth-of-type(6) div {
-    width: 130px;
+  table tbody tr td:nth-of-type(6) div,
+  table tbody tr td:nth-of-type(5) div,
+  table tbody tr td:nth-of-type(4) div {
+    // min-width: 100%;
+    width: 100px;
+  }
+  table tbody tr td:nth-of-type(1) div {
+    min-width: 200px;
+    max-width: 350px;
   }
 }
 
