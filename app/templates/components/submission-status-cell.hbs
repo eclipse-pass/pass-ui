@@ -2,6 +2,7 @@
   .fas {
     font-size: 0.8em;
     opacity: 0.9;
+    width: 15%;
   }
   .not-started>.fa-circle {
     color: #c8ced3;
@@ -17,8 +18,8 @@
   }
 </style>
 
-<div class="wrapper text-left">
-  <span class="status {{record.aggregatedDepositStatus}} pr-1" style="width:20%;">
+<div class="text-left">
+  <span class="status {{record.aggregatedDepositStatus}} pr-1">
     {{#if (eq status "Accepted")}}<i class="fas fa-circle"></i> {{status}}{{/if}}
     {{#if (eq status "In Progress")}}<i class="fas fa-circle"></i> {{status}}{{/if}}
     {{#if (eq status "Stalled")}}<i class="fas fa-circle"></i> {{status}} (<a href="#">?</a>){{/if}}
