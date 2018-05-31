@@ -453,6 +453,10 @@ h1, h2 {
   width:130px!important;
   margin:auto;
 }
+table td {
+  border: 1px dotted silver;
+  word-break: break-word;
+}
 
 #toast-container > div {
   opacity: 0.9;
