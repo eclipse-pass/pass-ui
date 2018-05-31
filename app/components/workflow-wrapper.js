@@ -10,7 +10,7 @@ export default Component.extend({
   includeNIHDeposit: true,
   init() {
     this._super(...arguments);
-    this.set('filesTemp', JSON.stringify(Ember.A()));
+    this.set('filesTemp', Ember.A());
   },
   actions: {
     toggleNIHDeposit(bool) {
