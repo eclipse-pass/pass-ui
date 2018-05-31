@@ -16,7 +16,7 @@ export default Component.extend({
   init() {
     this._super(...arguments);
     this.set('files', Ember.A());
-    if (this.get('filesTemp') && JSON.parse(this.get('filesTemp')).length > 0) {
+    if (this.get('filesTemp') && this.get('filesTemp').length > 0) {
       this.get('filesTemp').forEach((file) => {
         this.get('files').pushObject(this.get('store').createRecord('file', file));
       });
