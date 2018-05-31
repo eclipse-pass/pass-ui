@@ -133,12 +133,14 @@ table td {
               <td>Files</td>
               <td>
                 {{#each (get model 'files') as |file|}}
-                  <div class="card file-icon text-center">
-                    <span class="small">{{file.fileRole}}</span><br>
-                    <i class="fa fa-file-o fa-30"></i>
-                    <p class="text-overflow">{{file.name}}</p>
-                    <span class="document-item small" filetype="{{file.mimeType}}"></span>
-                  </div>
+                  <a href={{file.uri}}>
+                    <div class="card file-icon text-center">
+                      <span class="small">{{file.fileRole}}</span><br>
+                      <i class="fa fa-file-o fa-30"></i>
+                      <p class="text-overflow">{{file.name}}</p>
+                      <span class="document-item small" filetype="{{file.mimeType}}"></span>
+                    </div>
+                  </a>
                 {{/each}}
               </td>
             </tr>
