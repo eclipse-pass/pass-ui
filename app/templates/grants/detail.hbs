@@ -28,7 +28,7 @@
     <ul class='col-sm-6'>
       <li><strong>Status:</strong> {{model.grant.awardStatus}}</li>
       {{!-- <li><strong>PI:</strong> <a href='mailto:{{model.grant.pi.email}}'>{{model.grant.pi.displayName}}</a></li> --}}
-      <li><strong>PI:</strong> {{model.grant.pi.displayName}}</li>      
+      <li><strong>PI:</strong> {{model.grant.pi.displayName}}</li>
       <li><strong>CoPIs:</strong>
         <ul>
           {{#each model.grant.coPis as |person|}}
@@ -41,15 +41,16 @@
   </div>
 </div>
 
-<h3  class="font-weight-light">Submissions for grant</h3>
-
-{{models-table
-  data=model.submissions
-  columns=columns
-  themeInstance=themeInstance
-  showColumnsDropdown=false
-  filteringIgnoreCase=true
-  multipleColumnsSorting=false
-  useFilteringByColumns=false
-  showGlobalFilter=false
-}}
+<h3 class="font-weight-light">Submissions for grant</h3>
+<div class="submission-table">
+  {{models-table
+    data=model.submissions
+    columns=columns
+    themeInstance=themeInstance
+    showColumnsDropdown=false
+    filteringIgnoreCase=true
+    multipleColumnsSorting=false
+    useFilteringByColumns=false
+    showGlobalFilter=false
+  }}
+</div>
