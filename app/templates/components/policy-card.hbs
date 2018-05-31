@@ -25,7 +25,7 @@
           {{#if journal.isMethodA}}
             <div class="alert alert-success">
               The journal you published in participates in the PMC Method A program, and will submit the published article to PMC on your behalf.
-              <em>You do not need to submit a manuscript to NIHMS as a part of this
+              <em>You do not need to submit a manuscript to NIH Manuscript Submission System (NIHMS) as a part of this
               process.</em>
             </div>
           {{else}}
@@ -37,7 +37,7 @@
                 {{radio-button value=true name='removeNIHDeposit' checked=model.newSubmission.removeNIHDeposit}}
                 I have made (or intend to make) an arrangement with the publisher to
                 deposit my article directly to PMC. (You will not need to submit your
-                manuscript to NIHMS as part of this process.)
+                manuscript to NIH Manuscript Submission System (NIHMS) as part of this process.)
                 <br>
                 {{radio-button value=false name='removeNIHDeposit' checked=model.newSubmission.removeNIHDeposit}}
                 I will not make an arrangement with the publisher to deposit my article

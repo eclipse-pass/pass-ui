@@ -7,17 +7,24 @@
   <div class='col-md-6 mt-4 mb-4'>
     <div class='card'>
       <div class='card-body'>
-        <h2 class='card-title font-weight-light'>Manage Publication Submissions</h2>
+        <h2 class='card-title font-weight-light'>
+          Manage Publication Submissions
+        </h2>
         <p class='card-text'>
-          The submissions dashboard allows you to create new submission to multiple repositories as required by
-          your funding agency or in relation to your institution's policies. You can also review and manage
-          deposit status of your submissions into pertinent repositories.
+          The submissions dashboard allows you to create new submission to
+          multiple repositories as required by your funding agency or in
+          relation to your institution's policies. You can also review and
+          manage deposit status of your submissions into pertinent repositories.
         </p>
         <div class="text-center">
           {{#if (get (await currentUser.user) 'isSubmitter')}}
-            {{#link-to "submissions.new" class='btn btn-primary mt-1'}}Start new submission{{/link-to}}
+            {{#link-to "submissions.new" class='btn btn-primary mt-1'}}
+              Start new submission
+            {{/link-to}}
           {{/if}}
-          {{#link-to 'submissions' class='btn btn-primary mr-auto mt-1'}}View Submissions{{/link-to}}
+          {{#link-to 'submissions' class='btn btn-primary mr-auto mt-1'}}
+            View Submissions
+          {{/link-to}}
         </div>
       </div>
     </div>
@@ -25,14 +32,16 @@
   <div class='col-md-6 mb-4 mt-4'>
     <div class='card'>
       <div class='card-body'>
-        <h2 class='card-title font-weight-light'>Review Grant Compliance</h2>
+        <h2 class='card-title font-weight-light'>Manage Grants Compliance</h2>
         <p class='card-text'>
-          The grant dashboard allows you to review information relating to your grants. You can also review
-          submissions associated with each grant, their public access compliance statuses and perform
-          appropriate actions to address compliance issues.
+          The grants dashboard allows you to review information relating to
+          your grants. For each grant, you can review its existing submissions'
+          statuses or create new submissions.
         </p>
         <div class="text-center">
-          {{#link-to 'grants' class='btn btn-primary mt-1'}}Start new submission from a grant{{/link-to}}
+          {{#link-to 'grants' class='btn btn-primary mt-1'}}
+            Manage grants' submissions
+          {{/link-to}}
         </div>
       </div>
     </div>

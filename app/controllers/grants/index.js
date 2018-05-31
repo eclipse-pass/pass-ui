@@ -101,22 +101,6 @@ export default Controller.extend({
       disableFiltering: true,
       component: 'grant-link-cell'
     },
-    // {
-    //   propertyName: 'grant.localKey',
-    //   title: 'COEUS',
-    //   disableFiltering: true,
-    // },
-    // {
-    //   title: 'PI',
-    //   propertyName: 'grant.pi',
-    //   component: 'pi-list-cell'
-    // },
-    // {
-    //   propertyName: 'grant.startDate',
-    //   title: 'Start',
-    //   disableFiltering: true,
-    //   component: 'date-cell'
-    // },
     {
       propertyName: 'grant.endDate',
       title: 'End Date',
@@ -125,7 +109,7 @@ export default Controller.extend({
     },
     {
       propertyName: 'submissions.length',
-      title: 'Submissions',
+      title: '# of Submissions',
       disableFiltering: true,
       component: 'grant-submission-cell'
     },
@@ -139,6 +123,10 @@ export default Controller.extend({
       title: 'Policy Compliance',
       component: 'oap-compliance-cell',
     },
+    {
+      title: 'Actions',
+      component: 'grant-action-cell'
+    }
   ],
 
   themeInstance: Bootstrap4Theme.create(),
