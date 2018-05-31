@@ -61,11 +61,32 @@ export default Component.extend({
       $('#externalSubmission').modal('hide');
     },
     submit() {
+      let disableSubmit = true;
+      let didNotAgree = true;
       // In case a crafty user edits the page HTML, don't submit when not allowed
       if (this.get('disableSubmit')) {
+        if (!this.get('hasVisitedEric')) {
+          $('.fa-exclamation-triangle').css('color', '#f86c6b');
+          $('.fa-exclamation-triangle').css('font-size', '2.2em');
+          setTimeout(() => {
+            $('.fa-exclamation-triangle').css('color', '#b0b0b0');
+            $('.fa-exclamation-triangle').css('font-size', '2em');
+          }, 4000);
+          toastr.warning('Please visit the following web portal to submit your manuscript directly. Metadata displayed above could be used to aid in your submission progress.');
+        }
+        disableSubmit = false;
+      }
+      if (this.get('didNotAgree')) {
+        didNotAgree = false;
+      }
+
+      if (!didNotAgree || !disableSubmit) {
         return;
       }
       this.sendAction('submit');
+    },
+    agreeToDeposit() {
+      this.set('step', 5);
     },
     back() {
       this.sendAction('back');

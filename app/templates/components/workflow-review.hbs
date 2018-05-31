@@ -196,8 +196,11 @@
   </div>
 </div>
 <button class="btn btn-outline-primary" {{action "back"}}>Back</button>
-<button class="btn btn-primary pull-right submit" {{action "submit"}} disabled={{disableSubmit}}>Submit</button>
-
+{{#if didNotAgree}}
+  <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#didNotAgreeModal">Submit</button>
+{{else}}
+  <button class="btn btn-primary pull-right submit" {{action "submit"}}>Submit</button>
+{{/if}}
 <!-- Modal -->
 <div class="modal fade" id="externalSubmission" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -215,6 +218,29 @@
         <button type="button" class="btn btn-outline-primary mr-auto" data-dismiss="modal">Cancel</button>
         <a target="_blank" class="btn btn-primary pull-right" href="https://eric.ed.gov/submit/" {{action "clickEric" preventDefault=false}}>
           Redirect
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="didNotAgreeModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabel">Notice!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        You added JScholarship as a repository but didn't agree to the deposit agreement, so your submission will not be submitted to JScholarship. To fix this, go back to Johns Hopkins - JScholarship metadata form
+and agree to the deposit agreement.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-primary mr-auto" {{action "agreeToDeposit"}} data-dismiss="modal">Agree to deposit</button>
+        <a class="btn btn-primary pull-right" href="https://eric.ed.gov/submit/" {{action "submit"}}>
+          Submit
         </a>
       </div>
     </div>

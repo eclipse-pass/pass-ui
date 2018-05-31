@@ -62,7 +62,7 @@ export default Controller.extend({
               xhr.send(data);
             };
             reader.onerror = function (evt) {
-              alert('error reading file');
+              toastr.error('Error reading file');
             };
           });
         });
