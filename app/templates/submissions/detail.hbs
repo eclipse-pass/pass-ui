@@ -83,11 +83,23 @@ table td {
             <tr>
               <td class="text-nowrap">Repositories</td>
               <td>
+                <ul>
                   {{#each (await model.sub.repositories) as |repository index|}}
-                    {{repository.name}}<br>
+                    <li>{{repository.name}}</li>
                   {{/each}}
+                </ul>
               </td>
             </tr>
+            {{#if externalSubmission}}
+            <tr>
+              <td class="text-nowrap">External Submission Repositories</td>
+              <td>
+                <ul>
+                  <li>Deposit into Educational Resources Information Center (ERIC) was prompted</li>
+              </ul>
+              </td>
+            </tr>
+            {{/if}}
             <tr>
             </tr>
             <td class="text-nowrap">Submitter</td>
@@ -97,28 +109,30 @@ table td {
               {{/if}}
             </td>
             <tr>
-              <td>Metadata</td>
+              <td>Details</td>
               <td>
                 <ul class="list-unstyled">
                   {{#each-in metadataBlobNoKeys as |key data|}}
-                    {{!-- TODO: Look in to making the ifs into one if --}}
+                    {{!-- TODO: Look in to making the ifs in to one if --}}
                     {{#if (not-eq key 'Embargo')}}
                       {{#if (not-eq key 'Under-embargo')}}
                         {{#if (not-eq key 'Embargo-end-date')}}
                           {{#if (not-eq key 'Agreement-to-embargo')}}
-                            {{#if (eq key 'Author(s)')}}
-                              <li><b>{{key}}</b>:
-                                <ul>
-                                  {{#each data as |author|}}
-                                    <li>{{author.author}}{{#if author.orcid}} (<a href={{author.orcid}} target="_blank">{{author.orcid}}</a>){{/if}}</li>
-                                  {{/each}}
-                                </ul>
-                              </li>
-                            {{else}}
-                              {{#if (eq key 'URL')}}
-                              <li><b>{{key}}</b>: <a href={{data}} target="_blank">{{data}}</a></li>
+                            {{#if (not-eq key 'Submission')}}
+                              {{#if (eq key 'Author(s)')}}
+                                <li><b>{{key}}</b>:
+                                  <ul>
+                                    {{#each data as |author|}}
+                                      <li>{{author.author}}{{#if author.orcid}} (<a href={{author.orcid}} target="_blank">{{author.orcid}}</a>){{/if}}</li>
+                                    {{/each}}
+                                  </ul>
+                                </li>
                               {{else}}
-                              <li><b>{{key}}</b>: {{{data}}}</li>
+                                {{#if (eq key 'URL')}}
+                                <li><b>{{key}}</b>: <a href={{data}} target="_blank">{{data}}</a></li>
+                                {{else}}
+                                <li><b>{{key}}</b>: {{{data}}}</li>
+                                {{/if}}
                               {{/if}}
                             {{/if}}
                           {{/if}}
