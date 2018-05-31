@@ -69,8 +69,12 @@ module.exports = function (environment) {
     elasticsearch: 'http://localhost:9200/pass/_search'
   };
   ENV.userService = {
-    url: 'https://pass/pass-user-service/whoami'
+    url: 'https://localhost:8080/pass-user-service/whoami'
   };
+
+  if (process.env.USER_SERVICE_URL) {
+    ENV.userService.url = process.env.USER_SERVICE_URL;
+  }
 
   if (process.env.FEDORA_ADAPTER_BASE) {
     ENV.fedora.base = process.env.FEDORA_ADAPTER_BASE;
