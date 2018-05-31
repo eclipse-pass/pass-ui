@@ -455,7 +455,7 @@ h1, h2 {
 }
 table td {
   border: 1px dotted silver;
-  word-break: break-word;
+  word-break: break-word!important;
 }
 
 #toast-container > div {
