@@ -57,29 +57,58 @@
           <small class="text-muted">{{model.newSubmission.dateSubmitted.date-time}}<br>{{model.newSubmission.dateCreated.date-time}}</small>
         </div>
         <p class="mb-1">{{model.publication.doi}}</p>
-        <small class="text-muted">Please review the information below</small>
+        <div class="text-muted">Please review the information below</div>
         <table class="table table-responsive-sm table-bordered w-100">
-
           <tbody>
             <tr>
-              <td class="text-nowrap">Repositories</td>
+              <td>
+                Repositories<br>
+                <small style="width:150px;">Submission into the following repositories are required according to applicable policies.</small>
+              </td>
               <td>
                 <ul>
                 {{#each model.newSubmission.repositories as |repository|}}
-                  <li>{{repository.name}}</li>
+                  <li>
+                  {{#if (eq repository.name 'JScholarship')}}
+                      {{#if didNotAgree}}
+                          <div class="alert-danger" style="border-radius:2px; word-break:normal;  background-color: transparent;  border-color: transparent;">
+                            {{repository.name}}<br>
+                            <p class="text-danger text-left m-0"><strong>Warning:</strong> you added JScholarship as a repository but didn't agree to the deposit agreement,
+                              so your submission will not be submitted to JScholarship. To fix this, go back and agree to the deposit agreement.</p>
+                          </div>
+                        {{else}}
+                          {{repository.name}}
+                      {{/if}}
+                    {{else}}
+                      {{repository.name}}
+                    {{/if}}
+                  </li>
                 {{/each}}
               </ul>
               </td>
             </tr>
-            {{#if didNotAgree}}
-            <tr>
-              <td colspan=100%>
-                <div class="alert alert-danger" style="border-radius:5px; word-break:normal;">
-                  <p class="text-danger text-left"><strong>Warning:</strong> you added JScholarship as a repository but didn't agree to the deposit agreement,
-                    so your submission will not be submitted to JScholarship. To fix this, go back and agree to the deposit agreement.</p>
-                </div>
-              </td>
-            </tr>
+            {{#if mustVisitEric}}
+              <tr>
+                <td class="text-nowrap text-center">External Submission Required
+                  <br>
+                  {{#if disableSubmit}}
+                    <i class="fa fa-exclamation-triangle fa-2x mt-3 notice-triangle"></i>
+                  {{/if}}
+                </td>
+                <td>
+                  <label class="">
+                    Please visit the following web portal to submit your manuscript directly. Metadata displayed above
+                    could be used to aid in your submission progress.
+                  </label>
+                  <ul class="m-0">
+                    <li>
+                      <button type="button" class="btn btn-link" data-toggle="modal" data-target="#externalSubmission">
+                        https://eric.ed.gov/submit/
+                      </button>
+                    </li>
+                  </ul>
+                </td>
+              </tr>
             {{/if}}
             <tr>
               <td>Grants</td>
@@ -96,7 +125,7 @@
               </td>
             </tr>
             <tr>
-              <td>Metadata</td>
+              <td>Details</td>
               <td>
                 <ul class="list-unstyled">
                   {{#each-in metadataBlobNoKeys as |key data|}}
@@ -105,19 +134,21 @@
                       {{#if (not-eq key 'Under-embargo')}}
                         {{#if (not-eq key 'Embargo-end-date')}}
                           {{#if (not-eq key 'Agreement-to-embargo')}}
-                            {{#if (eq key 'Author(s)')}}
-                              <li><b>{{key}}</b>:
-                                <ul>
-                                  {{#each data as |author|}}
-                                    <li>{{author.author}}{{#if author.orcid}} (<a href={{author.orcid}} target="_blank">{{author.orcid}}</a>){{/if}}</li>
-                                  {{/each}}
-                                </ul>
-                              </li>
-                            {{else}}
-                              {{#if (eq key 'URL')}}
-                              <li><b>{{key}}</b>: <a href={{data}} target="_blank">{{data}}</a></li>
+                            {{#if (not-eq key 'Submission')}}
+                              {{#if (eq key 'Author(s)')}}
+                                <li><b>{{key}}</b>:
+                                  <ul>
+                                    {{#each data as |author|}}
+                                      <li>{{author.author}}{{#if author.orcid}} (<a href={{author.orcid}} target="_blank">{{author.orcid}}</a>){{/if}}</li>
+                                    {{/each}}
+                                  </ul>
+                                </li>
                               {{else}}
-                              <li><b>{{key}}</b>: {{{data}}}</li>
+                                {{#if (eq key 'URL')}}
+                                <li><b>{{key}}</b>: <a href={{data}} target="_blank">{{data}}</a></li>
+                                {{else}}
+                                <li><b>{{key}}</b>: {{{data}}}</li>
+                                {{/if}}
                               {{/if}}
                             {{/if}}
                           {{/if}}
@@ -149,30 +180,6 @@
                 {{/each}}
               </td>
             </tr>
-            {{#if mustVisitEric}}
-              <tr>
-                <td class="text-nowrap text-center">External Submission Portal
-                  <br>
-                  {{#if disableSubmit}}
-                    <i class="fa fa-exclamation-triangle fa-2x mt-3 notice-triangle"></i>
-                  {{/if}}
-                </td>
-                <td>
-                  <label class="">
-                    Please visit the following web portal to submit your manuscript directly. Metadata displayed above
-                    could be used to aid in your submission progress.
-                  </label>
-                  <ul class="m-0">
-                    <li>
-                      <button type="button" class="btn btn-link" data-toggle="modal" data-target="#externalSubmission">
-                        https://eric.ed.gov/submit/
-                      </button>
-                    </li>
-                  </ul>
-                </td>
-              </tr>
-            {{/if}}
-
           </tbody>
         </table>
       </div>
@@ -189,8 +196,11 @@
   </div>
 </div>
 <button class="btn btn-outline-primary" {{action "back"}}>Back</button>
-<button class="btn btn-primary pull-right submit" {{action "submit"}} disabled={{disableSubmit}}>Submit</button>
-
+{{#if didNotAgree}}
+  <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#didNotAgreeModal">Submit</button>
+{{else}}
+  <button class="btn btn-primary pull-right submit" {{action "submit"}}>Submit</button>
+{{/if}}
 <!-- Modal -->
 <div class="modal fade" id="externalSubmission" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -208,6 +218,29 @@
         <button type="button" class="btn btn-outline-primary mr-auto" data-dismiss="modal">Cancel</button>
         <a target="_blank" class="btn btn-primary pull-right" href="https://eric.ed.gov/submit/" {{action "clickEric" preventDefault=false}}>
           Redirect
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="didNotAgreeModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabel">Notice!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        You added JScholarship as a repository but didn't agree to the deposit agreement, so your submission will not be submitted to JScholarship. To fix this, go back to Johns Hopkins - JScholarship metadata form
+and agree to the deposit agreement.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-primary mr-auto" {{action "agreeToDeposit"}} data-dismiss="modal">Agree to deposit</button>
+        <a class="btn btn-primary pull-right" href="https://eric.ed.gov/submit/" {{action "submit"}} data-dismiss="modal">
+          Submit
         </a>
       </div>
     </div>

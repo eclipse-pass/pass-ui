@@ -136,8 +136,11 @@ th.table-header {
 .policies-list {
   h6 {
     margin-bottom: .5em;
-    // font-weight: bold;
+    font-weight: bold;
   }
+}
+h6.card-subtitle {
+  font-size: 1.1em;
 }
 .clearFilterIcon {
   height:32px;
@@ -449,6 +452,10 @@ h1, h2 {
 .slide {
   width:130px!important;
   margin:auto;
+}
+table td {
+  border: 1px dotted silver;
+  word-break: break-word;
 }
 
 #toast-container > div {

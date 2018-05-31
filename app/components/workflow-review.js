@@ -6,6 +6,12 @@ export default Component.extend({
     // // TODO:  add validation step here that checks the model each rerender
     // this.set('isValidated', false)
   },
+  externalSubmission: Ember.computed('metadataBlobNoKeys', function () { // eslint-disable-line
+    if (this.get('metadataBlobNoKeys').Submission) {
+      return true;
+    }
+    return false;
+  }),
   parsedFiles: Ember.computed('filesTemp', function () {
     return this.get('filesTemp');
   }),
@@ -19,6 +25,7 @@ export default Component.extend({
         if (ele.data.hasOwnProperty(key)) {
           let strippedData;
           strippedData = ele.data[key];
+
           if (key === 'authors') {
             if (metadataBlobNoKeys['author(s)']) {
               metadataBlobNoKeys['author(s)'] = _.uniqBy(metadataBlobNoKeys['author(s)'].concat(strippedData), 'author');
@@ -54,11 +61,32 @@ export default Component.extend({
       $('#externalSubmission').modal('hide');
     },
     submit() {
+      let disableSubmit = true;
+      let didNotAgree = true;
       // In case a crafty user edits the page HTML, don't submit when not allowed
       if (this.get('disableSubmit')) {
+        if (!this.get('hasVisitedEric')) {
+          $('.fa-exclamation-triangle').css('color', '#f86c6b');
+          $('.fa-exclamation-triangle').css('font-size', '2.2em');
+          setTimeout(() => {
+            $('.fa-exclamation-triangle').css('color', '#b0b0b0');
+            $('.fa-exclamation-triangle').css('font-size', '2em');
+          }, 4000);
+          toastr.warning('Please visit the following web portal to submit your manuscript directly. Metadata displayed above could be used to aid in your submission progress.');
+        }
+        disableSubmit = false;
+      }
+      if (this.get('didNotAgree')) {
+        didNotAgree = false;
+      }
+
+      if (!disableSubmit) {
         return;
       }
       this.sendAction('submit');
+    },
+    agreeToDeposit() {
+      this.set('step', 5);
     },
     back() {
       this.sendAction('back');
