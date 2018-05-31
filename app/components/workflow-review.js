@@ -80,7 +80,7 @@ export default Component.extend({
         didNotAgree = false;
       }
 
-      if (!didNotAgree || !disableSubmit) {
+      if (!disableSubmit) {
         return;
       }
       this.sendAction('submit');
