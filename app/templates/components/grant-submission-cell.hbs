@@ -1,4 +1,3 @@
 {{#link-to 'grants.detail' (get record 'grant.id')}}
-  {{await (get record column.propertyName)}} submissions
+  {{await (get record column.propertyName)}} submission{{if (not-eq (await (get record column.propertyName)) 1) 's'}}
 {{/link-to}}<br>
-({{#link-to "submissions.new" (query-params grant=(get record 'grant.id'))}}Create new{{/link-to}})
