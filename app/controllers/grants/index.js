@@ -109,7 +109,7 @@ export default Controller.extend({
     },
     {
       propertyName: 'submissions.length',
-      title: 'Submissions',
+      title: '# of Submissions',
       disableFiltering: true,
       component: 'grant-submission-cell'
     },

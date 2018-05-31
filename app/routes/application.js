@@ -512,7 +512,7 @@ export default Route.extend(ApplicationRouteMixin, {
       { // 18
         awardNumber: 'H325T090027',
         localKey: '105336',
-        projectName: 'The Johns Hopkins Universtiy Secondary Support Initiative (JHUSSI)',
+        projectName: 'The Johns Hopkins University Secondary Support Initiative (JHUSSI)',
         startDate: new Date('2009-01-01'),
         endDate: new Date('2016-06-30'),
         awardStatus: 'terminated',
