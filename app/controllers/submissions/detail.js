@@ -2,6 +2,12 @@ import Controller from '@ember/controller';
 import _ from 'lodash';
 
 export default Controller.extend({
+  externalSubmission: Ember.computed('metadataBlobNoKeys', function () { // eslint-disable-line
+    if (this.get('metadataBlobNoKeys').Submission) {
+      return true;
+    }
+    return false;
+  }),
   metadataBlobNoKeys: Ember.computed('model.sub.metadata', function () { // eslint-disable-line
     let metadataBlobNoKeys = [];
     JSON.parse(this.get('model.sub.metadata')).forEach((ele) => {
