@@ -3,7 +3,7 @@ version: '2'
 services:
 
   fcrepo:
-    image: oapass/fcrepo:4.7.5-2.1-SNAPSHOT
+    image: oapass/fcrepo:4.7.5-2.2-SNAPSHOT
     container_name: fcrepo
     env_file: .env
     environment:
@@ -15,7 +15,7 @@ services:
       - "${FCREPO_DEBUG_PORT}:${FCREPO_DEBUG_PORT}"
 
   indexer:
-    image: oapass/indexer:0.0.8-2.1-SNAPSHOT
+    image: oapass/indexer:0.0.10-2.2-SNAPSHOT
     container_name: indexer
     env_file: .env
     links:
