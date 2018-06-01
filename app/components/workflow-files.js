@@ -18,7 +18,7 @@ export default Component.extend({
     this.set('files', Ember.A());
     if (this.get('filesTemp') && this.get('filesTemp').length > 0) {
       this.get('filesTemp').forEach((file) => {
-        this.get('files').pushObject(this.get('store').createRecord('file', file));
+        this.get('files').pushObject(file);
       });
       this.set('nextDisabled', false);
     }

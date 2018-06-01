@@ -15,13 +15,13 @@ services:
       - "${FCREPO_DEBUG_PORT}:${FCREPO_DEBUG_PORT}"
 
   indexer:
-    image: oapass/indexer:0.0.7-2.0-SNAPSHOT
+    image: oapass/indexer:0.0.8-2.1-SNAPSHOT
     container_name: indexer
     env_file: .env
     links:
       - fcrepo:localhost
     volumes:
-      - ./.hosts:/etc/hosts:Z
+      - .docker/hosts:/etc/hosts:Z
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.3
@@ -37,7 +37,7 @@ services:
         hard: -1
     volumes:
       - esdata:/usr/share/elasticsearch/data
-      - ./.elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:Z
+      - .docker/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:Z
     ports:
       - "${ES_PORT}:${ES_PORT}"
 
