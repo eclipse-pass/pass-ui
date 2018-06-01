@@ -28,6 +28,10 @@ You will need the following things properly installed on your computer.
 
 ## Running / Development
 
+There are two different docker configurations.
+
+### Configuration 1
+
 * `docker-compose up`
   * Fedora repository at http://localhost:8080/fcrepo/ (admin:moo)
   * Elasticsearch index at http://localhost:9200/pass/
@@ -36,6 +40,24 @@ You will need the following things properly installed on your computer.
 * `ember serve`
 * Visit your app at [http://localhost:4200](http://localhost:4200).
 * Visit your tests at [http://localhost:4200/tests](http://localhost:4200/tests).
+
+### Configuration 2
+
+In this configuration all requests must pass through a Shibboleth proxy to access services
+available at https://pass/.
+
+
+* In .docker/shib/ run `docker-compose up`
+  * Fedora repository at https://pass/fcrepo/ 
+  * Elasticsearch index search endpoint at https://pass/es/
+  * Wait for containers to settle.
+  * In order to remove persisted data, stop all the containers and `docker system prune -f`
+* Visit your app at https://pass/
+* Visit your tests at https://pass/tests
+* The local code runs in the `ember` container.
+
+Note that ember test will not be able to run tests which make requests to services behind
+the Shibboleth proxy. The ember test client would have to go through the process of getting credentials first.
 
 ### Configuration
 
