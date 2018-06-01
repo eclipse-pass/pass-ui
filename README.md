@@ -54,6 +54,7 @@ available at https://pass/.
   * In order to remove persisted data, stop all the containers and `docker system prune -f`
 * Visit your app at https://pass/
 * Visit your tests at https://pass/tests
+* The local code runs in the `ember` container.
 
 Note that ember test will not be able to run tests which make requests to services behind
 the Shibboleth proxy. The ember test client would have to go through the process of getting credentials first.
