@@ -72,7 +72,11 @@ export default Component.extend({
   actions: {
     next() {
       this.send('saveAll');
-      this.sendAction('next');
+      if (this.get('model.newSubmission.repositories.length') == 0) {
+        swal('You\'re done!', 'If you don\'t plan on submitting to any repositories, you can stop at this time.', 'success');
+      } else {
+        this.sendAction('next');
+      }
     },
     back() {
       this.sendAction('back');
