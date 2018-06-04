@@ -55,6 +55,7 @@ export default Ember.Component.extend({
                     // due to short title you have to call this
                     if (!(doiEntry === 'container-title-short')) {
                       prePopulateData[f.get(doiEntry)[0][1]] = doiInfo[doiEntry];
+                      newForm.schema.properties[doiEntry].readonly = true;
                     }
                   }
                 }
