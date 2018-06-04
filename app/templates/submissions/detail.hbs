@@ -71,8 +71,8 @@ table td {
               <td>
                 <ul class="list-unstyled">
                   {{#each model.sub.grants as |grant|}}
-                    <li><b>{{grant.awardNumber}}</b> : {{grant.projectName}}</li>
-                    <li><b>Funder</b> : {{grant.primaryFunder.name}}</li>
+                    <li><b>{{grant.awardNumber}}</b>: {{grant.projectName}}</li>
+                    <li><b>Funder</b>: {{grant.primaryFunder.name}}</li>
                     {{#if (not-eq grant model.sub.grants.lastObject)}}
                       <hr>
                     {{/if}}
