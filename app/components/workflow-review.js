@@ -2,9 +2,12 @@ import Component from '@ember/component';
 import _ from 'lodash';
 
 export default Component.extend({
-  didRender() {
+  init() {
+    this._super(...arguments);
     // // TODO:  add validation step here that checks the model each rerender
     // this.set('isValidated', false)
+      $('[data-toggle="tooltip"]').tooltip();
+
   },
   externalSubmission: Ember.computed('metadataBlobNoKeys', function () { // eslint-disable-line
     if (this.get('metadataBlobNoKeys').Submission) {
