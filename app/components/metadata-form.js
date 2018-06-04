@@ -47,6 +47,7 @@ export default Ember.Component.extend({
                     }
                     prePopulateData[f.get(doiEntry)[0][1]].push({ author: name, orcid });
                   });
+                  newForm.schema.properties.authors.readonly = true;
                 } else if (doiInfo[doiEntry].length > 0) {
                   // Predicts data with .61 accuracy
                   if (f.get(doiEntry)[0][0] > 0.61) {
