@@ -65,7 +65,7 @@ module('Acceptance | grants/index', (hooks) => {
         switch (index) {
           case 0:
           case 2:
-          case 5: {
+          case 4: {
             const html = td.querySelector('a');
             assert.ok(html, 'Cell must contain an Anchor tag');
             assert.ok(html.href, 'Cell must have an href');
