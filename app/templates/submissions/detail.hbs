@@ -101,6 +101,18 @@ table td {
             </tr>
             {{/if}}
             <tr>
+              <td>Deposits</td>
+              <td>
+                <ul>
+                  {{#each (search-associated 'deposit' 'submission' model.sub.id) as |deposit index|}}
+                    <li>Deposit for {{await deposit.repository.name}} (<a href={{await deposit.repositoryCopy.accessUrl}}>{{await deposit.repositoryCopy.externalIds}}</a>)
+                      <ul>
+                        <li>Status: {{deposit.depositStatus}}</li>
+                      </ul>
+                    </li>
+                  {{/each}}
+                </ul>
+              </td>
             </tr>
             <td class="text-nowrap">Submitter</td>
             <td>{{get (await model.sub.user) 'displayName'}}
