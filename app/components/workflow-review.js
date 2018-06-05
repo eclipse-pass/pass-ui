@@ -2,9 +2,12 @@ import Component from '@ember/component';
 import _ from 'lodash';
 
 export default Component.extend({
-  didRender() {
+  init() {
+    this._super(...arguments);
     // // TODO:  add validation step here that checks the model each rerender
     // this.set('isValidated', false)
+      $('[data-toggle="tooltip"]').tooltip();
+
   },
   externalSubmission: Ember.computed('metadataBlobNoKeys', function () { // eslint-disable-line
     if (this.get('metadataBlobNoKeys').Submission) {
@@ -94,5 +97,32 @@ export default Component.extend({
     checkValidate() {
       this.sendAction('validate');
     },
+    openEricAlert() {
+      swal(
+        'Notice!',
+        'You are being redirected to an external site. This will open in a new tab.',
+        {
+          buttons: {
+            cancel: {
+              text: 'Cancel',
+            },
+            confirm: {
+              text: 'Redirect',
+            },
+          }
+        },
+      ).then((value) => {
+        if (value.dismiss) {
+          console.log('dont redirect');
+          return;
+        }
+        console.log('go to eric');
+        this.send('clickEric');
+        var win = window.open('https://eric.ed.gov/submit/', '_blank');
+        win.focus();
+        // remove jscholership from submission
+        //this.set('model.newSubmission.repositories', this.get('model.newSubmission.repositories').filter(repo => repo.get('name') !== 'JScholarship'));
+      });
+    }
   }
 });

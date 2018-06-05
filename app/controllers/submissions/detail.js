@@ -2,6 +2,11 @@ import Controller from '@ember/controller';
 import _ from 'lodash';
 
 export default Controller.extend({
+  tooltips: function () {
+    $(() => {
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+  }.on('init'),
   externalSubmission: Ember.computed('metadataBlobNoKeys', function () { // eslint-disable-line
     if (this.get('metadataBlobNoKeys').Submission) {
       return true;

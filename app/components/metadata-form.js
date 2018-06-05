@@ -55,7 +55,6 @@ export default Ember.Component.extend({
                     // due to short title you have to call this
                     if (!(doiEntry === 'container-title-short')) {
                       prePopulateData[f.get(doiEntry)[0][1]] = doiInfo[doiEntry];
-                      newForm.schema.properties[doiEntry].readonly = true;
                     }
                   }
                 }
@@ -151,6 +150,21 @@ export default Ember.Component.extend({
         },
       },
     };
+
+    for (const doiEntry in this.get('doiInfo')) {
+      // Validate and check any doi data to make sure its close to the right field
+      try {
+        this.get('doiInfo')[doiEntry] = this.get('doiInfo')[doiEntry].replace(/(<([^>]+)>)/ig, '');
+        if (doiEntry == 'author') {
+          newForm.schema.properties.authors.readonly = true;
+        } else if (this.get('doiInfo')[doiEntry].length > 0) {
+          if (!(doiEntry === 'container-title-short')) {
+            newForm.schema.properties[doiEntry].readonly = true;
+          }
+        }
+      } catch (e) {} // eslint-disable-line no-empty
+    }
+
 
     $(document).ready(() => {
       $('#schemaForm').empty();

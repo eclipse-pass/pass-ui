@@ -1,52 +1,43 @@
 <style>
-  .document-item::after {
-    content: 'file';
-    content: attr(filetype);
-    text-align: right;
-    padding: 2px;
-    background-color: #536c79;
-    color: #fff;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
+.fa-30 {
+  font-size: 30px;
+  margin-top: 4px;
+}
+.text-gray {
+  color:gray;
+}
+.file {
+  background-color: #fdfdfd;
+  background-clip: border-box;
+  border: 1px solid #dedede!important;
+  border-radius: 1px!important;
+  max-height:50px;
+  color: gray;
+}
 
-  .fa-30 {
-    font-size: 30px;
-    margin-top: 4px;
-  }
+.line-height-50 {
+  line-height: 50px;
+  overflow: hidden;
+}
 
-  .file-icon {
-    padding: 4px;
-    width: 100px;
-    height: 125px;
-    display: inline-block;
-    color: rgba(0, 0, 0, 0.5);
-  }
+.line-height-35 {
+  line-height: 35px;
+}
+.zoom-in {cursor: zoom-in;}
 
-  .text-overflow {
-    width: 100%;
-    display: inline-block;
-    overflow: hidden;
-    white-space: pre-wrap;
-    height: 18px;
-    margin-bottom: 3px;
-  }
 
-  table td {
-    border: 1px dotted silver;
-    word-break: break-all;
-  }
+table td {
+  border: 1px dotted silver;
+  word-break: break-all;
+}
 
-  .min-review-type-width {
-    min-width: 100px;
-  }
+.min-review-type-width {
+  min-width: 100px;
+}
+.max-width {
+  max-width: 300px!important;
+}
 
-  .manuscriptTag {
-    position: absolute;
-    top: 22px;
-    right: 44%;
-  }
 </style>
 <div class="form-group row">
   <div class="col-md-12">
@@ -61,7 +52,7 @@
         <table class="table table-responsive-sm table-bordered w-100">
           <tbody>
             <tr>
-              <td style="max-width:200px;">
+              <td class="max-width">
                 Repositories<br>
                 <small>Submission into these repositories is required according to the respective policies.</small>
               </td>
@@ -89,7 +80,7 @@
             </tr>
             {{#if mustVisitEric}}
               <tr>
-                <td class="text-nowrap text-center">External Submission Required
+                <td class="text-nowrap text-center" id="externalSubmission">External Submission Required
                   <br>
                   {{#if disableSubmit}}
                     <i class="fa fa-exclamation-triangle fa-2x mt-3 notice-triangle"></i>
@@ -102,7 +93,7 @@
                   </label>
                   <ul class="m-0">
                     <li>
-                      <button type="button" class="btn btn-link" data-toggle="modal" data-target="#externalSubmission">
+                      <button type="button" class="btn btn-link" {{action "openEricAlert"}}>
                         https://eric.ed.gov/submit/
                       </button>
                     </li>
@@ -164,20 +155,36 @@
             <tr>
               <td>Files</td>
               <td>
-                {{#each parsedFiles as |file|}}
-                  <div class="card file-icon text-center">
-                    {{!-- {{#if (eq model.newSubmission.files.isManuscript file.name)}}
-                      <span>
-                        <i class="fa fa-star manuscriptTag"></i>
-                      </span>
-                    {{/if}} --}}
+                <p class="text-right mb-1"><i class="fas fa-info-circle text-gray"></i><i><small>Hover over text for full text</small></i></p>
+                <div class="container-fluid">
+                  {{#each parsedFiles as |file|}}
+                    <div class="row file mb-1">
+                      <div class="col-md-1 p-1 pl-3">
+                        {{#if (eq file.mimeType 'png')}}
+                          <i class="fas fa-file-image fa-30 line-height-35"></i>
+                        {{else if (eq file.mimeType 'vnd.openxmlformats-officedocument.presentationml.presentation')}}
+                          <i class="fas fa-file-powerpoint fa-30 line-height-35"></i>
+                        {{else if (eq file.mimeType 'msword')}}
+                            <i class="fas fa-file-word fa-30 line-height-35"></i>
+                        {{else if (eq file.mimeType 'pdf')}}
+                            <i class="fas fa-file-pdf fa-30 line-height-35"></i>
+                        {{else}}
+                          <i class="far fa-file fa-30 line-height-35"></i>
+                        {{/if}}
+                      </div>
+                      <div class="col-md-5 line-height-50 pl-0" data-toggle="tooltip" data-placement="top" title={{file.name}}>
+                        {{file.name}}
+                      </div>
+                      <div class="col-md-2 line-height-50">
+                        {{file.fileRole}}
+                      </div>
+                      <div class="col-md-4 line-height-50" data-toggle="tooltip" data-placement="top" title={{file.description}}>
+                        {{file.description}}
+                      </div>
+                    </div>
+                  {{/each}}
+                </div>
 
-                    <span class="small">{{file.fileRole}}</span><br>
-                    <i class="fa fa-file-o fa-30"></i>
-                    <p class="text-overflow">{{file.name}}</p>
-                    <span class="document-item small text-overflow" filetype="{{file.mimeType}}"></span>
-                  </div>
-                {{/each}}
               </td>
             </tr>
           </tbody>
@@ -196,53 +203,4 @@
   </div>
 </div>
 <button class="btn btn-outline-primary" {{action "back"}}>Back</button>
-{{#if didNotAgree}}
-  <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#didNotAgreeModal">Submit</button>
-{{else}}
-  <button class="btn btn-primary pull-right submit" {{action "submit"}}>Submit</button>
-{{/if}}
-<!-- Modal -->
-<div class="modal fade" id="externalSubmission" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Notice!</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        You are being redirected to an external site. This will open in a new tab.
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline-primary mr-auto" data-dismiss="modal">Cancel</button>
-        <a target="_blank" class="btn btn-primary pull-right" href="https://eric.ed.gov/submit/" {{action "clickEric" preventDefault=false}}>
-          Redirect
-        </a>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="didNotAgreeModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalLabel">Notice!</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        You added JScholarship as a repository but didn't agree to the deposit agreement, so your submission will not be submitted to JScholarship. To fix this, go back to Johns Hopkins - JScholarship metadata form
-and agree to the deposit agreement.
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline-primary mr-auto" {{action "agreeToDeposit"}} data-dismiss="modal">Agree to deposit</button>
-        <a class="btn btn-primary pull-right" href="https://eric.ed.gov/submit/" {{action "submit"}} data-dismiss="modal">
-          Submit
-        </a>
-      </div>
-    </div>
-  </div>
-</div>
+<button class="btn btn-primary pull-right submit" {{action "submit"}}>Submit</button>

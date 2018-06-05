@@ -1,39 +1,32 @@
 {{#link-to 'submissions' class="btn btn-small back-arrow"}}<i class="fa fa-arrow-left fa-lg"></i>{{/link-to}}
 <h2 class="font-weight-light d-inline-block">Submission Detail</h2>
 <style>
-.document-item::after {
-  content: 'file';
-  content: attr(filetype);
-  text-align: right;
-  padding: 2px;
-  background-color: #536c79;
-  color: #fff;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
 .fa-30 {
   font-size: 30px;
   margin-top: 4px;
 }
-
-.file-icon {
-  padding: 4px;
-  width: 100px;
-  height: 125px;
-  display: inline-block;
-  color: rgba(0, 0, 0, 0.5);
+.text-gray {
+  color:gray;
+}
+.file {
+  background-color: #fdfdfd;
+  background-clip: border-box;
+  border: 1px solid #dedede!important;
+  border-radius: 1px!important;
+  max-height:50px;
+  color: gray;
 }
 
-.text-overflow {
-  width: 100%;
-  display: inline-block;
+.line-height-50 {
+  line-height: 50px;
   overflow: hidden;
-  white-space: pre-wrap;
-  height: 18px;
-  margin-bottom: 3px;
 }
+
+.line-height-35 {
+  line-height: 35px;
+}
+.zoom-in {cursor: zoom-in;}
+
 
 table td {
   border: 1px dotted silver;
@@ -44,10 +37,8 @@ table td {
   min-width: 100px;
 }
 
-.manuscriptTag {
-  position: absolute;
-  top: 22px;
-  right: 44%;
+.max-width {
+  max-width: 300px!important;
 }
 </style>
 <div class="form-group row">
@@ -62,7 +53,7 @@ table td {
         <table class="table table-responsive-sm table-bordered w-100">
           <tbody>
             <tr>
-              <td>Status</td>
+              <td class="max-width">Status</td>
               <td>{{model.sub.aggregatedDepositStatus}}
               </td>
             </tr>
@@ -158,16 +149,37 @@ table td {
             <tr>
               <td>Files</td>
               <td>
-                {{#each (get model 'files') as |file|}}
-                  <a href={{file.uri}}>
-                    <div class="card file-icon text-center">
-                      <span class="small">{{file.fileRole}}</span><br>
-                      <i class="fa fa-file-o fa-30"></i>
-                      <p class="text-overflow">{{file.name}}</p>
-                      <span class="document-item small" filetype="{{file.mimeType}}"></span>
+                <p class="text-right mb-1"><i class="fas fa-info-circle text-gray"></i><i><small>Hover over text for full text</small></i></p>
+                <div class="container-fluid">
+                  {{#each (get model 'files') as |file|}}
+                    <div class="row file mb-1">
+                      <div class="col-md-1 p-1 pl-3">
+                        {{#if (eq file.mimeType 'png')}}
+                          <i class="fas fa-file-image fa-30 line-height-35"></i>
+                        {{else if (eq file.mimeType 'vnd.openxmlformats-officedocument.presentationml.presentation')}}
+                          <i class="fas fa-file-powerpoint fa-30 line-height-35"></i>
+                        {{else if (eq file.mimeType 'msword')}}
+                            <i class="fas fa-file-word fa-30 line-height-35"></i>
+                        {{else if (eq file.mimeType 'pdf')}}
+                            <i class="fas fa-file-pdf fa-30 line-height-35"></i>
+                        {{else}}
+                          <i class="far fa-file fa-30 line-height-35"></i>
+                        {{/if}}
+                      </div>
+                      <div class="col-md-5 line-height-50 pl-0" data-toggle="tooltip" data-placement="top" title={{file.name}}>
+                        {{file.name}}
+                      </div>
+                      <div class="col-md-2 line-height-50">
+                        {{file.fileRole}}
+                      </div>
+                      <div class="col-md-4 line-height-50" data-toggle="tooltip" data-placement="top" title={{file.description}}>
+                        {{file.description}}
+                      </div>
                     </div>
-                  </a>
-                {{/each}}
+                  {{else}}
+                  <div class="text-center">Loading files...</div>
+                  {{/each}}
+                </div>
               </td>
             </tr>
           </tbody>
