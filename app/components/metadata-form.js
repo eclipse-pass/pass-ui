@@ -151,9 +151,7 @@ export default Ember.Component.extend({
       },
     };
 
-    // Fuzzy Match here
     for (const doiEntry in this.get('doiInfo')) {
-      debugger;
       // Validate and check any doi data to make sure its close to the right field
       try {
         this.get('doiInfo')[doiEntry] = this.get('doiInfo')[doiEntry].replace(/(<([^>]+)>)/ig, '');

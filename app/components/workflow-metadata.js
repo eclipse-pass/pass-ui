@@ -2,6 +2,7 @@ import Component from '@ember/component';
 import _ from 'lodash';
 
 export default Component.extend({
+  didAgree: false,
   common: {
     id: 'common',
     data: {},
@@ -198,12 +199,36 @@ export default Component.extend({
         let jhuRepo = this.get('model.repositories').filter(repo => repo.get('name') === 'JScholarship');
         if (jhuRepo.length > 0) {
           if (!value) {
-            this.set('didNotAgree', true);
+            swal(
+              'Notice!',
+              'You added JScholarship as a repository but didn\'t agree to the deposit agreement, so your submission will not be submitted to JScholarship. To fix this, agree to the deposit agreement below.',
+              {
+                buttons: {
+                  cancel: {
+                    text: 'Agreet to deposit',
+                  },
+                  confirm: true,
+                }
+              },
+            ).then((value) => {
+              if (value.dismiss) {
+                console.log('agree to deposit');
+                return;
+              }
+              console.log('remove jscholership');
+              this.send('nextLogic');
+              // remove jscholership from submission
+              this.set('model.newSubmission.repositories', this.get('model.newSubmission.repositories').filter(repo => repo.get('name') !== 'JScholarship'));
+            });
           } else {
-            this.set('didNotAgree', false);
+            this.send('nextLogic');
           }
         }
+      } else {
+        this.send('nextLogic');
       }
+    },
+    nextLogic() {
       const step = this.get('currentFormStep');
       if (step + 1 < this.get('schemas').length) {
         this.set('currentFormStep', step + 1);
