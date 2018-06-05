@@ -24,6 +24,10 @@ module.exports = function (environment) {
       // when it is created
     }
   };
+  // Disable mirage entirely.
+  ENV['ember-cli-mirage'] = {
+    enabled: false
+  };
 
   if (environment === 'development') {
     // ENV.APP.LOG_RESOLVER = true;
@@ -42,6 +46,10 @@ module.exports = function (environment) {
     ENV.APP.LOG_VIEW_LOOKUPS = false;
 
     ENV.APP.rootElement = '#ember-testing';
+    // Disable mirage entirely.
+    ENV['ember-cli-mirage'] = {
+      enabled: true
+    };
   }
 
   if (environment === 'surge') {
@@ -54,17 +62,19 @@ module.exports = function (environment) {
     };
   }
 
-  // Disable mirage entirely.
-  ENV['ember-cli-mirage'] = {
-    enabled: true
-  };
-
   ENV.fedora = {
     base: 'http://localhost:8080/fcrepo/rest/',
     context: 'http://example.org/pass/',
     data: 'http://example.org/pass/',
     elasticsearch: 'http://localhost:9200/pass/_search'
   };
+  ENV.userService = {
+    url: 'https://localhost:8080/pass-user-service/whoami'
+  };
+
+  if (process.env.USER_SERVICE_URL) {
+    ENV.userService.url = process.env.USER_SERVICE_URL;
+  }
 
   if (process.env.FEDORA_ADAPTER_BASE) {
     ENV.fedora.base = process.env.FEDORA_ADAPTER_BASE;
@@ -93,7 +103,7 @@ module.exports = function (environment) {
   } else {
     ENV.fedora.password = 'moo';
   }
-  
+
 
   return ENV;
 };

@@ -1,5 +1,4 @@
 import Route from '@ember/routing/route';
-import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 import { hash } from 'rsvp';
 
 /**
@@ -10,7 +9,7 @@ import { hash } from 'rsvp';
  * Getting the Grant object is simple from the backend. Getting associated submissions
  * is done through the search service (through Store.query)
  */
-export default Route.extend(AuthenticatedRouteMixin, {
+export default Route.extend({
   model(params) {
     let grant = this.get('store').findRecord('grant', params.grant_id);
 

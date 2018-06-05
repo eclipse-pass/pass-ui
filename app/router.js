@@ -7,7 +7,7 @@ const Router = EmberRouter.extend({
 });
 
 Router.map(function () {
-  this.route('login');
+  // this.route('login');
   this.route('index', { path: '/welcome' });
   this.route('dashboard', { path: '/' });
   this.route('about');
