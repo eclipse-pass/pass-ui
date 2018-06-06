@@ -42,7 +42,7 @@ export default Component.extend({
 
           if (grant.get('primaryFunder.policy.content') && grepos) {
             // NOT( (Don't include NIH deposit) AND (funder policy IS the NIH policy) )
-            if (!(!this.get('includeNIHDeposit') && grant.get('primaryFunder.policy.title') === 'National Institute of Health Public Access Policy')) {
+            if (!(!this.get('includeNIHDeposit') && grant.get('primaryFunder.policy.title') === 'National Institutes of Health Public Access Policy')) {
               grepos.forEach(r => repos.addObject(r));
             } else if (anyInSubmission) {
               // If the new submission already has the repositories for this grant
