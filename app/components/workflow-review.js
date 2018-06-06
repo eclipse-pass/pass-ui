@@ -6,8 +6,7 @@ export default Component.extend({
     this._super(...arguments);
     // // TODO:  add validation step here that checks the model each rerender
     // this.set('isValidated', false)
-      $('[data-toggle="tooltip"]').tooltip();
-
+    $('[data-toggle="tooltip"]').tooltip();
   },
   externalSubmission: Ember.computed('metadataBlobNoKeys', function () { // eslint-disable-line
     if (this.get('metadataBlobNoKeys').Submission) {
@@ -121,7 +120,7 @@ export default Component.extend({
         var win = window.open('https://eric.ed.gov/submit/', '_blank');
         win.focus();
         // remove jscholership from submission
-        //this.set('model.newSubmission.repositories', this.get('model.newSubmission.repositories').filter(repo => repo.get('name') !== 'JScholarship'));
+        // this.set('model.newSubmission.repositories', this.get('model.newSubmission.repositories').filter(repo => repo.get('name') !== 'JScholarship'));
       });
     }
   }
