@@ -1,9 +1,8 @@
 import Route from '@ember/routing/route';
-import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 import RSVP from 'rsvp';
 import _ from 'lodash';
 
-export default Route.extend(AuthenticatedRouteMixin, {
+export default Route.extend({
   currentUser: Ember.inject.service('current-user'),
 
   model() {

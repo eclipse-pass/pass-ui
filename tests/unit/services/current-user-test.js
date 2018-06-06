@@ -4,24 +4,19 @@ import { setupTest } from 'ember-qunit';
 module('Unit | Service | current-user', (hooks) => {
   setupTest(hooks);
 
-  const mockStore = {
-    moo: 'Moo',
-    findAll() {
-      return Ember.A(Ember.Object.create({
-        username: 'hvu',
-        email: 'hvu@example.com'
-      }));
-    }
-  };
+  // const mockStore = {
+  //   moo: 'Moo',
+  //   findAll() {
+  //     return Ember.A(Ember.Object.create({
+  //       username: 'hvu',
+  //       email: 'hvu@example.com'
+  //     }));
+  //   }
+  // };
 
   test('it exists', function (assert) {
     const service = this.owner.lookup('service:current-user');
     assert.ok(service);
-  });
-
-  test('loading unauthenticated user returns no data', function (assert) {
-    const service = this.owner.lookup('service:current-user');
-    service.load().then(user => assert.notOk(user));
   });
 
   // test('loading authenticated user returns user data', function (assert) {

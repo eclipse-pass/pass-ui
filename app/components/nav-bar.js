@@ -1,7 +1,6 @@
 import Component from '@ember/component';
 
 export default Component.extend({
-  session: Ember.inject.service('session'),
   currentUser: Ember.inject.service('current-user'),
 
   /**
@@ -13,7 +12,7 @@ export default Component.extend({
 
   actions: {
     invalidateSession() {
-      this.get('session').invalidate();
+      // this.get('session').invalidate();
     },
   },
 });

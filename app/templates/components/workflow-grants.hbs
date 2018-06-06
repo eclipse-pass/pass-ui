@@ -8,7 +8,7 @@
 </p>
 {{submission-funding-table grants=model.newSubmission.grants remove=(action "removeGrant")}}
 <label>Add Grants:</label>
-{{find-grant id="grant"  onSelect=(action "addGrant")}}
+{{find-grant id="grant"  addGrant=(action "addGrant")}}
 <br>
 <button class="btn btn-outline-primary" {{action "back"}}>Back</button>
 <button class="btn btn-primary next pull-right" {{action "next"}}>Next</button>

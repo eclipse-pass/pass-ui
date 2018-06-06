@@ -37,16 +37,18 @@ export default Component.extend({
       // let repo = grant.get('primaryFunder.policy.repositories.content');
       if (grant.get('primaryFunder').content) {
         let grepos = grant.get('primaryFunder.policy.repositories');
-        let anyInSubmission = grepos.any(grantRepo => this.get('model.newSubmission.repositories').contains(grantRepo));
+        if (grepos && grepos.length > 0) { // A Funder may not have a Policy
+          let anyInSubmission = grepos.any(grantRepo => this.get('model.newSubmission.repositories').contains(grantRepo));
 
-        if (grant.get('primaryFunder.policy.content') && grepos) {
-          // NOT( (Don't include NIH deposit) AND (funder policy IS the NIH policy) )
-          if (!(!this.get('includeNIHDeposit') && grant.get('primaryFunder.policy.title') === 'National Institute of Health Public Access Policy')) {
-            grepos.forEach(r => repos.addObject(r));
-          } else if (anyInSubmission) {
-            // If the new submission already has the repositories for this grant
-            // Remove those repositories (they are added back later)
-            this.get('model.newSubmission.repositories').removeObjects(grepos);
+          if (grant.get('primaryFunder.policy.content') && grepos) {
+            // NOT( (Don't include NIH deposit) AND (funder policy IS the NIH policy) )
+            if (!(!this.get('includeNIHDeposit') && grant.get('primaryFunder.policy.title') === 'National Institute of Health Public Access Policy')) {
+              grepos.forEach(r => repos.addObject(r));
+            } else if (anyInSubmission) {
+              // If the new submission already has the repositories for this grant
+              // Remove those repositories (they are added back later)
+              this.get('model.newSubmission.repositories').removeObjects(grepos);
+            }
           }
         }
       }
