@@ -1,7 +1,7 @@
 version: '3.1'
 
 services:
- 
+
   ember:
     build: ember-dev/
     image: oapass/ember-dev
@@ -27,6 +27,54 @@ services:
     networks:
       - front
       - back
+    volumes:
+      - passdata:/data
+    depends_on: 
+      - assets
+
+  proxy:
+    image: oapass/httpd-proxy:20180518
+    container_name: proxy
+    networks:
+     - front
+     - back
+    ports:
+     - "80:80"
+     - "443:443"
+
+  idp:
+    image: oapass/idp:20180518
+    container_name: idp
+    depends_on:
+     - ldap
+    environment:
+     - JETTY_MAX_HEAP=64m
+     - JETTY_BROWSER_SSL_KEYSTORE_PASSWORD=password
+     - JETTY_BACKCHANNEL_SSL_KEYSTORE_PASSWORD=password
+    expose:
+     - "4443"
+    networks:
+     - back
+    secrets:
+     - source: idp_backchannel
+     - source: idp_browser
+     - source: idp_encryption
+     - source: idp_signing
+     - source: idp_sealer
+
+  ldap:
+    image: oapass/ldap:20180518
+    container_name: ldap
+    networks:
+     - back
+
+  sp:
+    image: oapass/sp:20180518
+    container_name: sp
+    networks:
+     - back
+    secrets:
+     - source: sp_key
 
   indexer:
     image: oapass/indexer:0.0.10-2.2-SNAPSHOT
@@ -48,59 +96,22 @@ services:
         soft: -1
         hard: -1
     volumes:
-      - esdata:/usr/share/elasticsearch/data   
+      - passdata:/usr/share/elasticsearch/data   
     ports: 
       - "${ES_PORT}:${ES_PORT}"
     networks:
       - front
       - back
+    depends_on: 
+      - assets
 
-  proxy:
-    image: oapass/httpd-proxy
-    container_name: proxy
-    networks:
-     - front
-     - back
-    ports:
-     - "80:80"
-     - "443:443"
-
-  idp:
-    image: oapass/idp
-    container_name: idp
-    depends_on:
-     - ldap
-    environment:
-     - JETTY_MAX_HEAP=64m
-     - JETTY_BROWSER_SSL_KEYSTORE_PASSWORD=password
-     - JETTY_BACKCHANNEL_SSL_KEYSTORE_PASSWORD=password
-    expose:
-     - "4443"
-    networks:
-     - back
-    secrets:
-     - source: idp_backchannel
-     - source: idp_browser
-     - source: idp_encryption
-     - source: idp_signing
-     - source: idp_sealer
-
-  ldap:
-    image: oapass/ldap
-    container_name: ldap
-    networks:
-     - back
-
-  sp:
-    image: oapass/sp
-    container_name: sp
-    networks:
-     - back
-    secrets:
-     - source: sp_key
-
+  assets:
+    image: birkland/assets:2018-06-05
+    volumes:
+      - passdata:/data
+  
 volumes:
-  esdata:
+  passdata:
     driver: local
 
 networks:
