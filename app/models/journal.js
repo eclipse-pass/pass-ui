@@ -15,5 +15,9 @@ export default DS.Model.extend({
   }),
   isMethodB: Ember.computed('pmcParticipation', function () {
     return this.get('pmcParticipation') ? this.get('pmcParticipation').toLowerCase() === 'b' : false;
-  })
+  }),
+
+  // TODO MUST REMOVE
+  // Artifact of incomplete data - once Journal data is updated this must be removed
+  name: DS.attr('string')
 });
