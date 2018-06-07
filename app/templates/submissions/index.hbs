@@ -4,22 +4,25 @@
   </div>
   <div class="col-6">
     {{#if (get (await currentUser.user) 'isSubmitter')}}
-      {{#link-to "submissions.new" class="btn btn-primary btn-small pull-right"}}Create new Submission{{/link-to}}
+      {{#link-to "submissions.new" class="btn btn-primary btn-small pull-right"}}Create new submission{{/link-to}}
     {{/if}}
   </div>
 </div>
-<div class="submission-table">
-{{models-table
-  data=model
-  columns=columns
-  themeInstance=themeInstance
-  showColumnsDropdown=false
-  useFilteringByColumns=false
-  filteringIgnoreCase=true
-  multipleColumnsSorting=false
-  authorSelected='authorclick'
-}}
+<div class="row">
+  <div class="col-12" style="overflow-x: auto;">
+    <div class="submission-table">
+    {{models-table
+      data=model
+      columns=columns
+      themeInstance=themeInstance
+      showColumnsDropdown=false
+      useFilteringByColumns=false
+      filteringIgnoreCase=true
+      multipleColumnsSorting=false
+      authorSelected='authorclick'
+    }}
+    </div>
+  </div>
 </div>
-
 {{#message-dialog show=messageShow to=messageTo subject=messageSubject message=messageText}}
 {{/message-dialog}}

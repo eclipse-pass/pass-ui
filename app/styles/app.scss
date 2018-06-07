@@ -481,22 +481,23 @@ table td {
 }
 
 // Tables
-.grant-table, .submission-table {
-  overflow-x: auto;
+.submission-table {
+  // overflow-x: auto;
 }
 .grant-table table {
   th {
     min-width: 100px;
     font-size:0.9em;
   }
-  tbody tr td:nth-of-type(2) {
-    min-width: 150px;
-    max-width:200px;
-  }
   tbody tr td:nth-of-type(1)>div {
     min-width: 200px;
     max-width:250px;
   }
+  tbody tr td:nth-of-type(2) {
+    min-width: 150px;
+    max-width:200px;
+  }
+
 }
 
 .submission-table {

@@ -11,10 +11,11 @@
           Manage Publication Submissions
         </h2>
         <p class='card-text'>
-          The submissions dashboard allows you to create new submission to
-          multiple repositories as required by your funding agency or in
-          relation to your institution's policies. You can also review and
-          manage deposit status of your submissions into pertinent repositories.
+          The submissions view allows you to:
+            <ul>
+              <li>create submissions to one or more repository in order to comply with the access policies of your funders and institutions</li>
+              <li>review the statuses of previous submissions</li>
+            </ul>
         </p>
         <div class="text-center">
           {{#if (get (await currentUser.user) 'isSubmitter')}}
@@ -23,7 +24,7 @@
             {{/link-to}}
           {{/if}}
           {{#link-to 'submissions' class='btn btn-primary mr-auto mt-1'}}
-            View Submissions
+            View submissions
           {{/link-to}}
         </div>
       </div>
@@ -34,9 +35,11 @@
       <div class='card-body'>
         <h2 class='card-title font-weight-light'>Manage Grants Compliance</h2>
         <p class='card-text'>
-          The grants dashboard allows you to review information relating to
-          your grants. For each grant, you can review its existing submissions'
-          statuses or create new submissions.
+          The grants view allows you to:
+          <ul>
+            <li>see an overview of submission statuses at the grant level</li>
+            <li>create a submission for a specific grant</li>
+          </ul>
         </p>
         <div class="text-center">
           {{#link-to 'grants' class='btn btn-primary mt-1'}}
