@@ -1,9 +1,3 @@
-{{!-- {{#if (get (await currentUser.user) 'isSubmitter')}}
-  {{#link-to 'submissions.new' (query-params grant=model.id) class="btn btn-primary btn-small pull-right mt-3"}}Create new Submission{{/link-to}}
-{{/if}}
-
-{{#link-to 'grants' class="btn btn-small back-arrow"}}<i class="fa fa-arrow-left fa-lg text-dark"></i>{{/link-to}}
-<h2 class="font-weight-light d-inline-block">Grant Details</h2> --}}
 <div class="row mt-3 mb-3">
   <div class="col-6 pt-1">
     {{#link-to 'grants' class="btn btn-small back-arrow"}}<i class="fa fa-arrow-left fa-lg"></i>{{/link-to}}
@@ -11,7 +5,7 @@
   </div>
   <div class="col-6">
     {{#if (get (await currentUser.user) 'isSubmitter')}}
-      {{#link-to "submissions.new" (query-params grant=model.grant.id) class="btn btn-primary btn-small pull-right"}}Create new Submission{{/link-to}}
+      {{#link-to "submissions.new" (query-params grant=model.grant.id) class="btn btn-primary btn-small pull-right"}}Create new submission{{/link-to}}
     {{/if}}
   </div>
 </div>
@@ -27,13 +21,11 @@
 
     <ul class='col-sm-6'>
       <li><strong>Status:</strong> {{model.grant.awardStatus}}</li>
-      {{!-- <li><strong>PI:</strong> <a href='mailto:{{model.grant.pi.email}}'>{{model.grant.pi.displayName}}</a></li> --}}
       <li><strong>PI:</strong> {{model.grant.pi.displayName}}</li>
       <li><strong>CoPIs:</strong>
         <ul>
           {{#each model.grant.coPis as |person|}}
             {{person.displayName}}
-            {{!-- <li><a href='mailto:{{person.email}}'>{{person.displayName}}</a></li> --}}
           {{/each}}
         </ul>
       </li>
