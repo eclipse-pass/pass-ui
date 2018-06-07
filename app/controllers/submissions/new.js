@@ -16,6 +16,13 @@ export default Controller.extend({
         }
       }
       const sub = this.get('model.newSubmission');
+
+      // remove all weblink-only repositories so they don't get deposited
+      sub.get('repositories').forEach((repo) => {
+        // add each repo to the metadata
+        debugger;
+      });
+      sub.set('repositories', sub.get('repositories').filter(repo => repo.get('weblinkOnly')));
       const pub = this.get('model.publication');
       sub.set('aggregatedDepositStatus', 'not-started');
       sub.set('submittedDate', new Date());
