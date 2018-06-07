@@ -10,7 +10,7 @@
 <label>Add Grants:</label>
 {{!-- {{find-grant id="grant"  addGrant=(action "addGrant")}} --}}
 <select onchange={{action "addGrant" "target.value"}} class="form-control">
-  <option value="" selected disabled hidden>Select from Your Grants</option>
+  <option value="" selected disabled hidden>Select from your grants</option>
   {{#each model.grants as |grantChoice|}}
     <option value={{grantChoice}} selected={{eq grant grantChoice}}>{{grantChoice.awardNumber}}: {{grantChoice.projectName}}</option>
   {{/each}}
