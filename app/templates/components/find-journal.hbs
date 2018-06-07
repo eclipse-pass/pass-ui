@@ -5,5 +5,5 @@
   onchange=(action "onSelect")
   as |journal|
 }}
-  {{journal.journalName}}
+  {{get journal 'journalName'}} {{get journal 'name'}}
 {{/power-select}}
