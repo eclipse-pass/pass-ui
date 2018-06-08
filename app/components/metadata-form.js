@@ -161,11 +161,7 @@ export default Ember.Component.extend({
           newForm.schema.properties.authors.readonly = true;
         } else if (this.get('doiInfo')[doiEntry].length > 0) {
           if (!(doiEntry === 'container-title-short')) {
-            if (!(doiEntry === 'container-title')) {
-              if (!(doiEntry === 'title')) {
-                newForm.schema.properties[doiEntry].readonly = true;
-              }
-            }
+            newForm.schema.properties[doiEntry].readonly = true;
           }
         }
       } catch (e) {} // eslint-disable-line no-empty
