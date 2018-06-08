@@ -6,6 +6,10 @@
 </p>
 <div class="form-group">
   <label>DOI</label>
+  <button tooltip-position="right" tooltip="A digital object identifier (DOI) is a unique alphanumeric string assigned to identify content and provide a persistent link to its location on the Internet.">
+    <!--  The publisher assigns a DOI some time after your manuscript is accepted for publication. The DOI is typically located on the first page of the electronic journal article, near the copyright notice. The DOI can also be found on the database landing page for the article. -->
+    <i class="fas fa-info-circle"></i>
+  </button>
   {{!-- <div style="color:red"><div style="font-style: italic">no pmc:</div>10.1103/PhysRevFluids.1.073604</div>
   <div style="color:red"><div style="font-style: italic">method A:</div>10.1021/acsmedchemlett.7b00397</div>
   <div style="color:red"><div style="font-style: italic">method B:</div>10.1039/c7fo01251a</div> --}}
@@ -33,6 +37,5 @@
     <input type="text" class="form-control" value={{model.publication.journal}}  placeholder="Select Journal by Title"/>
   {{/unless}}
 </div>
-
 {{#link-to 'submissions.index' class="btn btn-outline-primary"}}Back{{/link-to}}
 <button class="btn btn-primary pull-right next" {{action "validateNext"}}>Next</button>
