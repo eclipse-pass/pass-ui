@@ -19,7 +19,7 @@ function diff(array1, array2) {
 }
 export default Component.extend({
   addedRepositories: [],
-
+  router: service(),
   store: service('store'),
   isFirstTime: true,
   willRender() {
@@ -74,8 +74,23 @@ export default Component.extend({
   actions: {
     next() {
       this.send('saveAll');
+      const that = this;
       if (this.get('model.newSubmission.repositories.length') == 0) {
-        swal('You\'re done!', 'If you don\'t plan on submitting to any repositories, you can stop at this time.', 'success');
+        swal(
+          'You\'re done!',
+          'If you don\'t plan on submitting to any repositories, you can stop at this time.',
+          {
+            buttons: {
+              cancel: true,
+              confirm: true,
+            }
+          },
+        ).then((value) => {
+          if (value.dismiss) {
+            return;
+          }
+          this.get('router').transitionTo('dashboard');
+        });
       } else {
         this.sendAction('next');
       }
