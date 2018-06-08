@@ -106,7 +106,7 @@ services:
       - assets
 
   assets:
-    image: birkland/assets:2018-06-05
+    image: birkland/assets:2018-06-07
     volumes:
       - passdata:/data
   
