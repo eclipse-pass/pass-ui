@@ -30,6 +30,7 @@ export default Component.extend({
   store: service('store'),
   doiJournal: false,
   validDOI: 'form-control',
+  isValidDOI: false,
   validTitle: 'form-control',
   nextDisabled: Ember.computed('model.publication.journal', 'model.publication.title', function () {
     if (
@@ -41,6 +42,10 @@ export default Component.extend({
   }),
   init() {
     this._super(...arguments);
+  },
+  didRender() {
+    this._super(...arguments);
+    this.send('validateDOI');
   },
   actions: {
     validateNext() {
@@ -92,13 +97,16 @@ export default Component.extend({
       // 0 = no value
       if (doi == null || !doi) {
         this.set('validDOI', 'form-control');
+        this.set('isValidDOI', false);
       } else if (newDOIRegExp.test(doi) === true || ancientDOIRegExp.test(doi) === true) { // 1 - Accepted
         this.set('validDOI', 'form-control is-valid');
         $('.ember-power-select-trigger').css('border-color', '#4dbd74');
         this.set('validTitle', 'form-control is-valid');
         this.set('model.newSubmission.metadata', '[]');
+        this.set('isValidDOI', true);
       } else {
         this.set('validDOI', 'form-control is-invalid');
+        this.set('isValidDOI', false);
       }
     },
     validateTitle() {
