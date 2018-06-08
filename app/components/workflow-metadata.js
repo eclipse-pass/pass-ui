@@ -32,18 +32,10 @@ export default Component.extend({
           description: 'Select your publication date',
           format: 'datetime',
         },
-        publicationType: {
-          type: 'string',
-          title: 'Publication Type',
-          enum: ['ElectronicPublication', 'PrintPublication'],
-        },
         abstract: {
           type: 'string',
         },
         subjects: {
-          type: 'string',
-        },
-        URL: {
           type: 'string',
         },
         authors: {
@@ -106,16 +98,6 @@ export default Component.extend({
           type: 'text',
           label: 'Publication Date',
           placeholder: 'mm/dd/yy',
-          fieldClass: 'col-4 pull-left pl-0',
-        },
-        publicationType: {
-          type: 'select',
-          noneLabel: 'Select your Publication type.',
-          fieldClass: 'pull-left col-8 pr-0',
-          optionLabels: [
-            'Electronic Publication',
-            'Print Publication',
-          ],
         },
         abstract: {
           type: 'textarea',
@@ -126,12 +108,6 @@ export default Component.extend({
         subjects: {
           type: 'text',
           label: 'Keywords',
-          placeholder: '',
-          fieldClass: 'clearfix',
-        },
-        URL: {
-          type: 'text',
-          label: 'Final article URL',
           placeholder: '',
           fieldClass: 'clearfix',
         },
