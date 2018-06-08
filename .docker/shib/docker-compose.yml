@@ -16,7 +16,7 @@ services:
       - back
 
   fcrepo:
-    image: oapass/fcrepo:4.7.5-2.2-SNAPSHOT-1
+    image: oapass/fcrepo:4.7.5-2.2-SNAPSHOT-3
     container_name: fcrepo
     env_file: .env
     ports:
@@ -63,7 +63,7 @@ services:
      - source: idp_sealer
 
   ldap:
-    image: oapass/ldap:20180518
+    image: oapass/ldap:20180608
     container_name: ldap
     networks:
      - back
