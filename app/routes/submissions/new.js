@@ -22,18 +22,33 @@ export default Route.extend({
 
   model(params) {
     let preLoadedGrant = null;
+    let newSubmission = null;
+    let publication = this.get('store').createRecord('publication');
+
     if (params.grant) {
       preLoadedGrant = this.get('store').findRecord('grant', params.grant);
     }
 
-    let publication = this.get('store').createRecord('publication');
-    let newSubmission = this.get('store').createRecord('submission');
+    // let publication = null;
+    if (params.submission) {
+      newSubmission = this.get('store').findRecord('submission', params.submission);
+      // publication = newSubmission.get('publication');
+    } else {
+      newSubmission = this.get('store').createRecord('submission');
+    }
 
     const querySize = 100;
 
     const repositories = this.loadObjects('repository', 0, 50);
     const funders = this.loadObjects('funder', 0, 50);
-    const grants = this.loadObjects('grant', 0, 50);
+    const grants = this.get('store').query('grant', {
+      term: {
+        pi: this.get('currentUser.user.id')
+      },
+      from: 0,
+      size: 50,
+    });
+
     const policies = this.loadObjects('policy', 0, 50);
     const journals = this.loadObjects('journal', 0, 50);
     const h = Ember.RSVP.hash({
@@ -47,5 +62,19 @@ export default Route.extend({
       preLoadedGrant
     });
     return h;
-  }
+  },
+  setupController(controller, model) {
+    this._super(controller, model);
+    debugger;
+    if (model.newSubmission.get('id')) {
+      let that = this;
+      this.get('store').findRecord('publication', model.newSubmission.get('publication.id')).then((pub) => {
+        debugger;
+        model.set('publication', pub);
+      })
+    }
+  },
+  // afterModel(model, transition) {
+  //   debugger;
+  // }
 });

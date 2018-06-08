@@ -4,7 +4,7 @@ import { inject as service } from '@ember/service';
 
 export default Component.extend({
   store: service('store'),
-
+  grant: null,
   /** Holds all newly-added grants */
   addedGrants: [],
   optionalGrants: Ember.computed('model', function () {
@@ -27,11 +27,21 @@ export default Component.extend({
       this.sendAction('back');
     },
     addGrant(grant) {
-      const submission = this.get('model.newSubmission');
-      submission.get('grants').pushObject(grant);
-      this.get('addedGrants').push(grant);
-      this.set('maxStep', 2);
-      submission.set('metadata', '[]');
+      if (event.target.value) {
+        this.get('store').findRecord('grant', event.target.value).then((g) => {
+          const submission = this.get('model.newSubmission');
+          submission.get('grants').pushObject(g);
+          this.get('addedGrants').push(g);
+          this.set('maxStep', 2);
+          submission.set('metadata', '[]');
+        });
+      } else {
+        const submission = this.get('model.newSubmission');
+        submission.get('grants').pushObject(grant);
+        this.get('addedGrants').push(grant);
+        this.set('maxStep', 2);
+        submission.set('metadata', '[]');
+      }
     },
     removeGrant(grant) {
       // if grant is grant passed in from grant detail page remove query parms

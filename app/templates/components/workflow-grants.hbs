@@ -9,10 +9,10 @@
 {{submission-funding-table grants=model.newSubmission.grants remove=(action "removeGrant")}}
 <label>Add Grants:</label>
 {{!-- {{find-grant id="grant"  addGrant=(action "addGrant")}} --}}
-<select onchange={{action "addGrant" "target.value"}} class="form-control">
+<select onchange={{action "addGrant" null}} class="form-control">
   <option value="" selected disabled hidden>Select from your grants</option>
   {{#each model.grants as |grantChoice|}}
-    <option value={{grantChoice}} selected={{eq grant grantChoice}}>{{grantChoice.awardNumber}}: {{grantChoice.projectName}}</option>
+    <option value={{grantChoice.id}} selected={{eq grant grantChoice}}>{{grantChoice.awardNumber}}: {{grantChoice.projectName}}</option>
   {{/each}}
 </select>
 <br>

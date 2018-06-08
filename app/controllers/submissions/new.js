@@ -3,7 +3,7 @@ import ENV from 'pass-ember/config/environment';
 
 export default Controller.extend({
   currentUser: Ember.inject.service('current-user'),
-  queryParams: ['grant'],
+  queryParams: ['grant', 'submission'],
   tempFiles: Ember.A(),
   didNotAgree: false, // JHU included as a repository but removed before review because deposit agreement wasn't accepted
   actions: {
