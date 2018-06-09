@@ -1,5 +1,16 @@
+<div class="row mb-2">
+  <div class="col-6">
 {{#link-to 'submissions' class="btn btn-small back-arrow"}}<i class="fa fa-arrow-left fa-lg"></i>{{/link-to}}
 <h2 class="font-weight-light d-inline-block">Submission Detail</h2>
+</div>
+<div class="col-6 text-right">
+  {{#if model.sub.isStub}}
+    {{#link-to 'submissions.new' (query-params submission=record.id) class="btn btn-outline-primary text-right"}}
+    Complete submission
+    {{/link-to}}
+  {{/if}}
+</div>
+</div>
 <style>
 .fa-30 {
   font-size: 30px;

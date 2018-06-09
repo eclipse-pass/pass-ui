@@ -22,6 +22,7 @@
     keyUp=(action "lookupDOI")
     id="doi"
     placeholder="leave blank if your manuscript or article has not yet been assigned a DOI"
+    readonly=model.newSubmission.id
   }}
   <div class="text-danger">
     {{if (eq validDOI 2) 'Please provide a valid DOI'}}
