@@ -54,8 +54,11 @@ table td {
           <tbody>
             <tr>
               <td class="max-width">Status</td>
-              <td>{{model.sub.aggregatedDepositStatus}}
-              </td>
+              {{#if (eq model.sub.source  "other")}}
+                <td><i>This submission did not originate from PASS.</i></td>
+              {{else}}
+                <td>{{model.sub.aggregatedDepositStatus}}</td>
+              {{/if}}
             </tr>
             <tr>
               <td>Grants</td>
@@ -91,24 +94,31 @@ table td {
               </td>
             </tr>
             {{/if}}
-            <tr>
-              <td>Deposits</td>
-              <td>
-                <ul>
-                  {{#each (search-associated 'deposit' 'submission' model.sub.id) as |deposit index|}}
-                    <li>Deposit for {{await deposit.repository.name}} (<a href={{await deposit.repositoryCopy.accessUrl}}>{{await deposit.repositoryCopy.externalIds}}</a>)
-                      <ul>
-                        <li>Status: {{deposit.depositStatus}}</li>
-                      </ul>
-                    </li>
-                  {{/each}}
-                </ul>
-              </td>
-            </tr>
+            {{#if (not-eq model.sub.source  "other")}}
+              <tr>
+                <td>Deposits</td>
+                <td>
+                  <ul>
+                    {{#each (search-associated 'deposit' 'submission' model.sub.id) as |deposit index|}}
+                      <li>Deposit for {{await deposit.repository.name}} (<a href={{await deposit.repositoryCopy.accessUrl}}>{{await deposit.repositoryCopy.externalIds}}</a>)
+                        <ul>
+                          <li>Status: {{deposit.depositStatus}}</li>
+                        </ul>
+                      </li>
+                    {{/each}}
+                  </ul>
+                </td>
+              </tr>
+            {{/if}}
             <td class="text-nowrap">Submitter</td>
-            <td>{{get (await model.sub.user) 'displayName'}}
-              {{#if (get (await model.sub.user) 'institutionalId')}}
-                ({{get (await model.sub.user) 'institutionalId'}})
+            <td>
+              {{#if (eq model.sub.source  "other")}}
+                <i>This submission did not originate from PASS</i>
+              {{else}}
+                {{get (await model.sub.user) 'displayName'}}
+                {{#if (get (await model.sub.user) 'institutionalId')}}
+                  ({{get (await model.sub.user) 'institutionalId'}})
+                {{/if}}
               {{/if}}
             </td>
             <tr>
@@ -149,39 +159,45 @@ table td {
             <tr>
               <td>Files</td>
               <td>
-                <p class="text-right mb-1"><i class="fas fa-info-circle text-gray"></i><i><small>Hover over text for full text</small></i></p>
-                <div class="container-fluid">
-                  {{#each (get model 'files') as |file|}}
-                  <a href={{file.uri}}>
-                    <div class="row file mb-1">
-                      <div class="col-md-1 p-1 pl-3">
-                        {{#if (eq file.mimeType 'png')}}
-                          <i class="fas fa-file-image fa-30 line-height-35"></i>
-                        {{else if (eq file.mimeType 'vnd.openxmlformats-officedocument.presentationml.presentation')}}
-                          <i class="fas fa-file-powerpoint fa-30 line-height-35"></i>
-                        {{else if (eq file.mimeType 'msword')}}
-                            <i class="fas fa-file-word fa-30 line-height-35"></i>
-                        {{else if (eq file.mimeType 'pdf')}}
-                            <i class="fas fa-file-pdf fa-30 line-height-35"></i>
-                        {{else}}
-                          <i class="far fa-file fa-30 line-height-35"></i>
-                        {{/if}}
+                {{#if (eq model.sub.source  "other")}}
+                <p>
+                  <i>We do not have a copy of manuscript files because this submission did not originate from PASS</i>
+                </p>
+                {{else}}
+                  <p class="text-right mb-1"><i class="fas fa-info-circle text-gray"></i><i><small>Hover over text for full text</small></i></p>
+                  <div class="container-fluid">
+                    {{#each (get model 'files') as |file|}}
+                    <a href={{file.uri}}>
+                      <div class="row file mb-1">
+                        <div class="col-md-1 p-1 pl-3">
+                          {{#if (eq file.mimeType 'png')}}
+                            <i class="fas fa-file-image fa-30 line-height-35"></i>
+                          {{else if (eq file.mimeType 'vnd.openxmlformats-officedocument.presentationml.presentation')}}
+                            <i class="fas fa-file-powerpoint fa-30 line-height-35"></i>
+                          {{else if (eq file.mimeType 'msword')}}
+                              <i class="fas fa-file-word fa-30 line-height-35"></i>
+                          {{else if (eq file.mimeType 'pdf')}}
+                              <i class="fas fa-file-pdf fa-30 line-height-35"></i>
+                          {{else}}
+                            <i class="far fa-file fa-30 line-height-35"></i>
+                          {{/if}}
+                        </div>
+                        <div class="col-md-5 line-height-50 pl-0" data-toggle="tooltip" data-placement="top" title={{file.name}}>
+                          {{file.name}}
+                        </div>
+                        <div class="col-md-2 line-height-50">
+                          {{file.fileRole}}
+                        </div>
+                        <div class="col-md-4 line-height-50" data-toggle="tooltip" data-placement="top" title={{file.description}}>
+                          {{file.description}}
+                        </div>
                       </div>
-                      <div class="col-md-5 line-height-50 pl-0" data-toggle="tooltip" data-placement="top" title={{file.name}}>
-                        {{file.name}}
-                      </div>
-                      <div class="col-md-2 line-height-50">
-                        {{file.fileRole}}
-                      </div>
-                      <div class="col-md-4 line-height-50" data-toggle="tooltip" data-placement="top" title={{file.description}}>
-                        {{file.description}}
-                      </div>
-                    </div>
-                  </a>
-                  {{else}}
-                  <div class="text-center">No files found</div>
-                  {{/each}}
-                </div>
+                    </a>
+                    {{else}}
+                    <div class="text-center">No files found</div>
+                    {{/each}}
+                  </div>
+                {{/if}}
               </td>
             </tr>
           </tbody>
