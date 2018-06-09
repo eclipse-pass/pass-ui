@@ -34,23 +34,24 @@ export default Component.extend({
     const grants = this.get('model.newSubmission.grants');
     const repos = Ember.A();
     grants.forEach((grant) => {
-      // let repo = grant.get('primaryFunder.policy.repositories.content');
-      if (grant.get('primaryFunder').content) {
-        let grepos = grant.get('primaryFunder.policy.repositories');
-        if (grepos && grepos.length > 0) { // A Funder may not have a Policy
-          let anyInSubmission = grepos.any(grantRepo => this.get('model.newSubmission.repositories').contains(grantRepo));
+      const funder = grant.get('primaryFunder');
+      if (!funder.content || !funder.get('policy')) {
+        return;
+      }
 
-          if (grant.get('primaryFunder.policy.content') && grepos) {
-            // NOT( (Don't include NIH deposit) AND (funder policy IS the NIH policy) )
-            if (!(!this.get('includeNIHDeposit') && grant.get('primaryFunder.policy.title') === 'National Institutes of Health Public Access Policy')) {
-              grepos.forEach(r => repos.addObject(r));
-            } else if (anyInSubmission) {
-              // If the new submission already has the repositories for this grant
-              // Remove those repositories (they are added back later)
-              this.get('model.newSubmission.repositories').removeObjects(grepos);
-            }
-          }
-        }
+      // Grant has funder and that funder has a policy. Get the repositories tied to the policy
+      const grantRepos = funder.get('policy.repositories');
+      if (!grantRepos || grantRepos.length == 0) {
+        return;
+      }
+
+      const shouldAddNIH = this.get('includeNIHDeposit');
+      let anyInSubmission = grantRepos.any(grantRepo => this.get('model.newSubmission.repositories').includes(grantRepo));
+      if (shouldAddNIH || !funder.get('policy.title').toUpperCase() === 'National Institutes of Health Public Access Policy') {
+        grantRepos.forEach(repo => repos.addObject(repo));
+      } else if (anyInSubmission) {
+        // Remove it from the submission so that it can be re-added :)
+        this.get('model.newSubmission.repositories').removeObjects(grantRepos);
       }
     });
     // STEP 2
@@ -118,7 +119,7 @@ export default Component.extend({
       this.set('model.newSubmission.repositories', tempRepos);
       // add back the ones the user selected
       this.get('addedRepositories').forEach((repositoryToAdd) => {
-        if (!((this.get('model.newSubmission.repositories').contains(repositoryToAdd)))) {
+        if (!((this.get('model.newSubmission.repositories').includes(repositoryToAdd)))) {
           this.get('model.newSubmission.repositories').addObject(repositoryToAdd);
         }
       });
