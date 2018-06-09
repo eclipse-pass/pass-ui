@@ -21,6 +21,6 @@ export default Route.extend({
   },
 
   _doSubmitter(user) {
-    return this.store.query('submission', { match: { user: user.get('id') } });
+    return this.store.query('submission', { query: { match: { user: user.get('id') } }, size: 50 });
   },
 });
