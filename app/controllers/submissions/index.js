@@ -62,6 +62,10 @@ export default Controller.extend({
     component: 'submissions-repoid-cell',
     disableSorting: true
   },
+  {
+    title: 'Actions',
+    component: 'submission-action-cell'
+  }
   ],
 
   adminColumns: [{

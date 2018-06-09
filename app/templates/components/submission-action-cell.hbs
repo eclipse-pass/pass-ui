@@ -1,0 +1,5 @@
+{{#if record.isStub}}
+  {{#link-to 'submissions.new' (query-params submission=record.id) class="btn btn-outline-primary"}}
+  Complete submission
+  {{/link-to}}
+{{/if}}

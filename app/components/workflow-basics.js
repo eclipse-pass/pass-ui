@@ -46,6 +46,7 @@ export default Component.extend({
   didRender() {
     this._super(...arguments);
     this.send('validateDOI');
+    this.send('lookupDOI');
   },
   actions: {
     validateNext() {
