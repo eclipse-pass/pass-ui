@@ -164,7 +164,9 @@ export default Component.extend({
     let retVal = this.get('activeRepositories').filterBy('formSchema');
     retVal = retVal.map(repository => JSON.parse(repository.get('formSchema')));
     retVal.unshift(this.get('common'));
-    return retVal;
+
+    // NOTE: This is here to remove nih from the schmas array. remove this line once NIH has a better schema.
+    return retVal.filter(x => x.id !== 'nih'); // return retval;
   }),
 
   displayFormStep: Ember.computed('currentFormStep', function () {
