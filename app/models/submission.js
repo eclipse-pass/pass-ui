@@ -42,4 +42,7 @@ export default DS.Model.extend({
     });
     return grants;
   }),
+  isStub: Ember.computed('source', 'submitted', function () {
+    return this.get('source').contains('other') && !(this.get('submitted'));
+  })
 });
