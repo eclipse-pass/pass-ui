@@ -3,18 +3,20 @@
   {{#if repositoryCopy.externalIds}}
     {{if index ', '}}
     {{#if repositoryCopy.accessUrl}}
-      <a href="{{repositoryCopy.accessUrl}}" target="_blank">
-        <ul class="repoid-cell">
-        {{#each repositoryCopy.externalIds as |moo|}}
-          <li>{{moo}}</li>
-        {{/each}}
-        </ul>
-      </a>
+    <ul class="repoid-cell">
+      {{#each repositoryCopy.externalIds as |externalIds|}}
+        <a href="{{repositoryCopy.accessUrl}}" target="_blank">
+          <li>{{externalIds}}</li>
+        </a>
+      {{/each}}
+    </ul>
     {{else}}
       <ul class="repoid-cell">
-      {{#each repositoryCopy.externalIds as |moo|}}
-        <li>{{moo}}</li>
-      {{/each}}
+        {{#each repositoryCopy.externalIds as |externalIds|}}
+          <a href="{{repositoryCopy.accessUrl}}" target="_blank">
+            <li>{{externalIds}}</li>
+          </a>
+        {{/each}}
       </ul>
     {{/if}}
   {{else}}
