@@ -135,15 +135,15 @@ table td {
                       <li>
                         <ul class="repoid-cell">
                         {{#if repoCopy.accessUrl}}
-                          {{#each repoCopy.externalIds as |moo|}}
+                          {{#each repoCopy.externalIds as |externalIds|}}
                             <li>
-                              <a href="{{repoCopy.accessUrl}}" target="_blank">{{moo}}</a> - {{get repoCopy "repository.name"}} ({{repoCopy.copyStatus}})
+                              <a href="{{repoCopy.accessUrl}}" target="_blank">{{externalIds}}</a> - {{get repoCopy "repository.name"}} ({{repoCopy.copyStatus}})
                             </li>
                           {{/each}}
                         {{else}}
                           <ul class="repoid-cell">
-                          {{#each repoCopy.externalIds as |moo|}}
-                            <li>{{moo}} - {{get repoCopy "repository.name"}} ({{repoCopy.copyStatus}})</li>
+                          {{#each repoCopy.externalIds as |externalIds|}}
+                            <li>{{externalIds}} - {{get repoCopy "repository.name"}} ({{repoCopy.copyStatus}})</li>
                           {{/each}}
                           </ul>
                         {{/if}}
