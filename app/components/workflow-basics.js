@@ -46,7 +46,8 @@ export default Component.extend({
   didRender() {
     this._super(...arguments);
     this.send('validateDOI');
-    this.send('lookupDOI');
+    // this may be needed but it caused bugs 
+    // this.send('lookupDOI');
   },
   actions: {
     validateNext() {
@@ -124,7 +125,9 @@ export default Component.extend({
     },
     /** looks up the DIO and returns title and journal if avaiable */
     lookupDOI() {
-      this.set('model.publication.doi', this.get('model.publication.doi').replace(/https?:\/\/(dx\.)?doi\.org\//gi, ''));
+      if (this.get('model.publication.doi')) {
+        this.set('model.publication.doi', this.get('model.publication.doi').replace(/https?:\/\/(dx\.)?doi\.org\//gi, ''));
+      }
       const publication = this.get('model.publication');
       if (publication) {
         this.send('validateDOI');
