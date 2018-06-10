@@ -48,7 +48,7 @@ export default Ember.Helper.extend({
 
   paramsChanged: Ember.observer('associatedId', function () {
     const self = this;
-    let query = { term: {} };
+    let query = { size: 500, term: {} };
 
     query.term[this.get('propertyName')] = this.get('associatedId');
     this.get('store').query(this.get('type'), query).then((results) => {

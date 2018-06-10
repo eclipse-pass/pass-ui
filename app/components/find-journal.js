@@ -34,7 +34,7 @@ export default Component.extend({
             ]
           }
         },
-        size: 100
+        size: 500
       });
     },
 

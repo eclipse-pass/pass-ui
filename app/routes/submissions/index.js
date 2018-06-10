@@ -17,10 +17,10 @@ export default Route.extend({
   },
 
   _doAdmin() {
-    return this.store.query('submission', { query: { match_all: {} }, size: 50 });
+    return this.store.query('submission', { query: { match_all: {} }, size: 500 });
   },
 
   _doSubmitter(user) {
-    return this.store.query('submission', { query: { match: { user: user.get('id') } }, size: 50 });
+    return this.store.query('submission', { query: { match: { user: user.get('id') } }, size: 500 });
   },
 });

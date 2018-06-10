@@ -11,7 +11,7 @@ export default Component.extend({
     searchGrants(term) {
       const regex = new RegExp(term, 'i');
       let userid = this.get('currentUser.user').get('id');
-      return this.get('store').query('grant', { query: { term: { pi: userid } }, from: 0, size: 10 })
+      return this.get('store').query('grant', { query: { term: { pi: userid } }, from: 0, size: 500 })
         .then(grants => grants.filter(grant => grant.get('awardNumber').match(regex) ||
                         grant.get('projectName').match(regex)));
     },
