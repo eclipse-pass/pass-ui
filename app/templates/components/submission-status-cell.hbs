@@ -7,7 +7,7 @@
   .not-started>.fa-circle {
     color: #c8ced3;
   }
-  .accepted>.fa-circle {
+  .accepted>.fa-circle, .accepted .fa-info-circle{
     color: #4dbd74;
   }
   .in-progress>.fa-circle {
@@ -19,11 +19,26 @@
 </style>
 
 <div class="text-left">
-  <span class="status {{record.aggregatedDepositStatus}} pr-1">
-    {{#if (eq status "Accepted")}}<i class="fas fa-circle"></i> {{status}}{{/if}}
-    {{#if (eq status "In Progress")}}<i class="fas fa-circle"></i> {{status}}{{/if}}
-    {{#if (eq status "Stalled")}}<i class="fas fa-circle"></i> {{status}} (<a href="#">?</a>){{/if}}
-    {{#if (eq status "Not Started")}}<i class="fas fa-circle"></i> {{status}}{{/if}}
+    {{#if (eq record.source 'other')}}
+      {{#if (eq record.submitted true)}}
+      <span class="status accepted pr-1">
+        <span tooltip-position="top" tooltip="Funder has receive a submission for this publication from a different source.">
+          <i class="fas fa-info-circle d-inline"></i> Submitted
+        </span>
+      </span>
+      {{else}}
+        <span class="status not-started pr-1">
+          <i class="fas fa-circle"></i> Manuscript expected
+        </span>
+      {{/if}}
+    {{else}}
+      <span class="status {{record.aggregatedDepositStatus}} pr-1">
+        {{#if (eq status "Accepted")}}<i class="fas fa-circle"></i> {{status}}{{/if}}
+        {{#if (eq status "In Progress")}}<i class="fas fa-circle"></i> {{status}}{{/if}}
+        {{#if (eq status "Stalled")}}<i class="fas fa-circle"></i> {{status}} (<a href="#">?</a>){{/if}}
+        {{#if (eq status "Not Started")}}<i class="fas fa-circle"></i> {{status}}{{/if}}
+      </span>
 
-  </span>
+    {{/if}}
+
 </div>
