@@ -114,7 +114,7 @@ table td {
                 <td>Deposits</td>
                 <td>
                   <ul>
-                    {{#each (search-associated 'deposit' 'submission' model.sub.id) as |deposit index|}}
+                    {{#each model.deposits as |deposit index|}}
                       <li>Deposit for {{await deposit.repository.name}} (<a href={{await deposit.repositoryCopy.accessUrl}}>{{await deposit.repositoryCopy.externalIds}}</a>)
                         <ul>
                           <li>Status: {{deposit.depositStatus}}</li>
@@ -125,17 +125,32 @@ table td {
                 </td>
               </tr>
             {{/if}}
-            <td class="text-nowrap">Submitter</td>
-            <td>
-              {{#if (eq model.sub.source  "other")}}
-                <i>This submission did not originate from PASS</i>
-              {{else}}
-                {{get (await model.sub.user) 'displayName'}}
-                {{#if (get (await model.sub.user) 'institutionalId')}}
-                  ({{get (await model.sub.user) 'institutionalId'}})
+            <tr>
+              <td class="text-nowrap">Manuscript IDs</td>
+              {{!-- Must display all repositoryCopy.externalIds --}}
+              <td>
+                <ul>
+                  {{#each model.repoCopies as |repoCopy index|}}
+                    {{#each repoCopy.externalIds as |externalId|}}
+                      <li>{{externalId}} - {{get repoCopy "repository.name"}}</li>
+                    {{/each}}
+                  {{/each}}
+                </ul>
+              </td>
+            </tr>
+            <tr>
+              <td class="text-nowrap">Submitter</td>
+              <td>
+                {{#if (eq model.sub.source  "other")}}
+                  <i>This submission did not originate from PASS</i>
+                {{else}}
+                  {{get (await model.sub.user) 'displayName'}}
+                  {{#if (get (await model.sub.user) 'institutionalId')}}
+                    ({{get (await model.sub.user) 'institutionalId'}})
+                  {{/if}}
                 {{/if}}
-              {{/if}}
-            </td>
+              </td>
+            </tr>
             <tr>
               <td>Details</td>
               <td>
