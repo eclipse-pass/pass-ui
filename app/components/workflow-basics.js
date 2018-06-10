@@ -124,7 +124,9 @@ export default Component.extend({
     },
     /** looks up the DIO and returns title and journal if avaiable */
     lookupDOI() {
-      this.set('model.publication.doi', this.get('model.publication.doi').replace(/https?:\/\/(dx\.)?doi\.org\//gi, ''));
+      if (this.get('model.publication.doi')) {
+        this.set('model.publication.doi', this.get('model.publication.doi').replace(/https?:\/\/(dx\.)?doi\.org\//gi, ''));
+      }
       const publication = this.get('model.publication');
       if (publication) {
         this.send('validateDOI');
