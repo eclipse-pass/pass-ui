@@ -87,7 +87,7 @@ export default Component.extend({
     next() {
       if (this.get('doiInfo').length === 0) {
         this.set('doiInfo', {
-          'container-title': this.get('model.publication.journal.journalName'),
+          'container-title': this.get('model.publication.journal.name'),
           title: this.get('model.publication.title')
         });
       }
