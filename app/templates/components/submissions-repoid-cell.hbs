@@ -1,12 +1,12 @@
-{{#each (search-associated 'deposit' 'submission' record.id) as |deposit index|}}
+{{#each (search-associated 'repositoryCopy' 'publication' (get record 'publication.id')) as |repositoryCopy index|}}
   {{if index ', '}}
-  {{#if (get deposit "repositoryCopy.accessUrl")}}
-    <a href="{{get deposit "repositoryCopy.accessUrl"}}" target="_blank">
-      {{get deposit "repositoryCopy.externalIds"}}
+  {{#if repositoryCopy.accessUrl}}
+    <a href="{{repositoryCopy.accessUrl}}" target="_blank">
+      {{repositoryCopy.externalIds}}
     </a>
   {{else}}
-    {{#if (get deposit "repositoryCopy.externalIds")}}
-      {{get deposit "repositoryCopy.externalIds"}}
+    {{#if repositoryCopy.externalIds}}
+      {{repositoryCopy.externalIds}}
     {{else}}
     {{/if}}
   {{/if}}

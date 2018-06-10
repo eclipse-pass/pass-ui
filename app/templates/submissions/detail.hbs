@@ -127,13 +127,18 @@ table td {
             {{/if}}
             <tr>
               <td class="text-nowrap">Manuscript IDs</td>
-              {{!-- Must display all repositoryCopy.externalIds --}}
               <td>
                 <ul>
                   {{#each model.repoCopies as |repoCopy index|}}
-                    {{#each repoCopy.externalIds as |externalId|}}
-                      <li>{{externalId}} - {{get repoCopy "repository.name"}} ({{repoCopy.copyStatus}})</li>
-                    {{/each}}
+                    {{#if repoCopy.externalIds}}
+                      <li>
+                        {{#if repoCopy.accessUrl}}
+                          <a href="{{repoCopy.accessUrl}}" target="_blank">{{repoCopy.externalIds}}</a> - {{get repoCopy "repository.name"}} ({{repoCopy.copyStatus}})
+                        {{else}}
+                          {{repoCopy.externalIds}} - {{get repoCopy "repository.name"}} ({{repoCopy.copyStatus}})
+                        {{/if}}
+                      </li>
+                    {{/if}}
                   {{/each}}
                 </ul>
               </td>
