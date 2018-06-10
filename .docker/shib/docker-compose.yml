@@ -33,7 +33,7 @@ services:
       - assets
 
   proxy:
-    image: oapass/httpd-proxy:20180608@sha256:3b6f6623d0e87e4b2e11d2dcfbd9a2321b5f05d036073f142a4ee3deaad29782
+    image: oapass/httpd-proxy:20180609@sha256:d73e25407c5eb20fa2271734cdb0d24db2b4efde941d8706e116bec1198c5d95
     container_name: proxy
     networks:
      - front
@@ -69,7 +69,7 @@ services:
      - back
 
   sp:
-    image: oapass/sp:20180518@sha256:ab2d1c3caec871b1154bd528052e3ecc8d9e09c6eed72af5af2b3f808c66be70
+    image: oapass/sp:20180609@sha256:7f2066338cf300d88eb8545b35261f64e1749086a7bed28536f0417f2582056e
     container_name: sp
     networks:
      - back
