@@ -132,7 +132,7 @@ table td {
                 <ul>
                   {{#each model.repoCopies as |repoCopy index|}}
                     {{#each repoCopy.externalIds as |externalId|}}
-                      <li>{{externalId}} - {{get repoCopy "repository.name"}}</li>
+                      <li>{{externalId}} - {{get repoCopy "repository.name"}} ({{repoCopy.copyStatus}})</li>
                     {{/each}}
                   {{/each}}
                 </ul>
