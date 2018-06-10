@@ -36,6 +36,7 @@ table td {
 }
 .max-width {
   max-width: 300px!important;
+  white-space: nowrap;
 }
 
 </style>
@@ -53,8 +54,10 @@ table td {
           <tbody>
             <tr>
               <td class="max-width">
-                Repositories<br>
-                <small>Submission into these repositories is required according to the respective policies.</small>
+                Repositories
+                <span tooltip-position="right" tooltip="Submission into these repositories is required according to the respective policies.">
+                  <i class="fas fa-info-circle"></i>
+                </span>
               </td>
               <td>
                 <ul>
@@ -155,7 +158,7 @@ table td {
             <tr>
               <td>Files</td>
               <td>
-                <p class="text-right mb-1"><i class="fas fa-info-circle text-gray"></i><i><small>Hover over text for full text</small></i></p>
+                <p class="text-right mb-1"><i class="fas fa-info-circle"></i><i><small>Hover over text for full text</small></i></p>
                 <div class="container-fluid">
                   {{#each parsedFiles as |file|}}
                     <div class="row file mb-1">
