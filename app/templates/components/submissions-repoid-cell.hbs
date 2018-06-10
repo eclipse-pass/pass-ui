@@ -1,15 +1,23 @@
+<div style="min-width:150px">
 {{#each (search-associated 'repositoryCopy' 'publication' (get record 'publication.id')) as |repositoryCopy index|}}
   {{#if repositoryCopy.externalIds}}
     {{if index ', '}}
     {{#if repositoryCopy.accessUrl}}
-      <a href="{{repositoryCopy.accessUrl}}" target="_blank">
-        {{repositoryCopy.externalIds}}
-      </a>
+    <ul class="repoid-cell">
+      {{#each repositoryCopy.externalIds as |externalIds|}}
+        <a href="{{repositoryCopy.accessUrl}}" target="_blank">
+          <li>{{externalIds}}</li>
+        </a>
+      {{/each}}
+    </ul>
     {{else}}
-      {{#if repositoryCopy.externalIds}}
-        {{repositoryCopy.externalIds}}
-      {{else}}
-      {{/if}}
+      <ul class="repoid-cell">
+        {{#each repositoryCopy.externalIds as |externalIds|}}
+          <a href="{{repositoryCopy.accessUrl}}" target="_blank">
+            <li>{{externalIds}}</li>
+          </a>
+        {{/each}}
+      </ul>
     {{/if}}
   {{else}}
     <span class="nodata-placeholder">Not available</span>
@@ -17,3 +25,4 @@
 {{else}}
   <span class="nodata-placeholder">Not available</span>
 {{/each}}
+</div>

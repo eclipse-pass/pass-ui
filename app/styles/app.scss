@@ -659,3 +659,12 @@ table td {
   display: block;
   font-style: italic;
 }
+.repoid-cell {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  word-break: initial;
+}
+.title-column { min-width: 400px; }
+.msid-column { min-width: 130px; }
+.actions-column { min-width: 125px; }

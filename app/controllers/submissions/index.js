@@ -24,6 +24,7 @@ export default Controller.extend({
 
   piColumns: [{
     propertyName: 'publicationTitle',
+    className: 'title-column',
     title: 'Article',
     component: 'submissions-article-cell'
   },
@@ -41,11 +42,6 @@ export default Controller.extend({
   },
   {
     propertyName: 'submittedDate',
-    title: 'Last Update Date',
-    component: 'date-cell'
-  },
-  {
-    propertyName: 'submittedDate',
     title: 'Submitted Date',
     component: 'date-cell'
   },
@@ -58,12 +54,14 @@ export default Controller.extend({
   },
   {
     propertyName: 'repoCopies',
-    title: 'Manuscript ID',
+    className: 'msid-column',
+    title: 'Manuscript IDs',
     component: 'submissions-repoid-cell',
     disableSorting: true
   },
   {
     title: 'Actions',
+    className: 'actions-column',
     component: 'submission-action-cell'
   }
   ],
@@ -84,11 +82,6 @@ export default Controller.extend({
   },
   {
     propertyName: 'submittedDate',
-    title: 'Last Update Date',
-    component: 'date-cell'
-  },
-  {
-    propertyName: 'submittedDate',
     title: 'Submitted Date',
     component: 'date-cell'
   },
@@ -100,7 +93,7 @@ export default Controller.extend({
   },
   {
     // propertyName: 'repoCopies',
-    title: 'Manuscript ID',
+    title: 'Manuscript IDs',
     component: 'submissions-repoid-cell'
   },
   ],
