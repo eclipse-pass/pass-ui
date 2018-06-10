@@ -27,6 +27,7 @@ export default Controller.extend({
       sub.set('submittedDate', new Date());
       sub.set('submitted', true);
       sub.set('user', this.get('currentUser.user'));
+      sub.set('source', 'pass');
       pub.save().then((p) => {
         console.log('publication saved');
         sub.set('publication', p);
