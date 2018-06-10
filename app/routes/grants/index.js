@@ -24,7 +24,7 @@ export default Route.extend({
     }
 
     let promise = defer();
-    const querySize = 50;
+    const querySize = 500;
     const grantQuery = {
       // sort: [{ awardNumber: { order: 'asc' } }], // TODO
       query: {

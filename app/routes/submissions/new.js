@@ -31,18 +31,18 @@ export default Route.extend({
 
     const querySize = 100;
 
-    const repositories = this.loadObjects('repository', 0, 50);
-    const funders = this.loadObjects('funder', 0, 50);
+    const repositories = this.loadObjects('repository', 0, 500);
+    const funders = this.loadObjects('funder', 0, 500);
     const grants = this.get('store').query('grant', {
       term: {
         pi: this.get('currentUser.user.id')
       },
       from: 0,
-      size: 50,
+      size: 500,
     });
 
-    const policies = this.loadObjects('policy', 0, 50);
-    const journals = this.loadObjects('journal', 0, 50);
+    const policies = this.loadObjects('policy', 0, 500);
+    const journals = this.loadObjects('journal', 0, 500);
 
     // let publication = null;
     if (params.submission) {

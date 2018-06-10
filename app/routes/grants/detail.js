@@ -17,7 +17,7 @@ export default Route.extend({
       term: {
         grants: params.grant_id
       },
-      size: 50
+      size: 500
     };
     let submissions = this.get('store').query('submission', query);
 
