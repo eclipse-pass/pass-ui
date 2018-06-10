@@ -4,7 +4,7 @@
   </div>
   <div class="col-6">
     {{#if (get (await currentUser.user) 'isSubmitter')}}
-      {{#link-to "submissions.new" class="btn btn-primary btn-small pull-right"}}Create new submission{{/link-to}}
+      {{#link-to "submissions.new" (query-params grant=null submission=null) class="btn btn-primary btn-small pull-right"}}Create new submission{{/link-to}}
     {{/if}}
   </div>
 </div>
