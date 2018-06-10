@@ -2,4 +2,6 @@
   {{#link-to 'submissions.new' (query-params submission=record.id) class="btn btn-outline-primary"}}
   Complete submission
   {{/link-to}}
+  {{else}}
+  <small><i>No action needed in PASS.</i></small>
 {{/if}}
