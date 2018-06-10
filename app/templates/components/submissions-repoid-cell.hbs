@@ -1,13 +1,19 @@
 {{#each (search-associated 'repositoryCopy' 'publication' (get record 'publication.id')) as |repositoryCopy index|}}
-  {{if index ', '}}
-  {{#if repositoryCopy.accessUrl}}
-    <a href="{{repositoryCopy.accessUrl}}" target="_blank">
-      {{repositoryCopy.externalIds}}
-    </a>
-  {{else}}
-    {{#if repositoryCopy.externalIds}}
-      {{repositoryCopy.externalIds}}
+  {{#if repositoryCopy.externalIds}}
+    {{if index ', '}}
+    {{#if repositoryCopy.accessUrl}}
+      <a href="{{repositoryCopy.accessUrl}}" target="_blank">
+        {{repositoryCopy.externalIds}}
+      </a>
     {{else}}
+      {{#if repositoryCopy.externalIds}}
+        {{repositoryCopy.externalIds}}
+      {{else}}
+      {{/if}}
     {{/if}}
+  {{else}}
+    <span class="nodata-placeholder">Not available</span>
   {{/if}}
+{{else}}
+  <span class="nodata-placeholder">Not available</span>
 {{/each}}

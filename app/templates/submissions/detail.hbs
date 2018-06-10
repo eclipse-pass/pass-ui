@@ -128,7 +128,9 @@ table td {
             <tr>
               <td class="text-nowrap">Manuscript IDs</td>
               <td>
-                <ul>
+                
+                {{#if model.repoCopies}}
+                  <ul>
                   {{#each model.repoCopies as |repoCopy index|}}
                     {{#if repoCopy.externalIds}}
                       <li>
@@ -138,9 +140,14 @@ table td {
                           {{repoCopy.externalIds}} - {{get repoCopy "repository.name"}} ({{repoCopy.copyStatus}})
                         {{/if}}
                       </li>
+                    {{else}}
+                      <span class="nodata-placeholder">Manuscript IDs are not yet available</span>
                     {{/if}}
                   {{/each}}
-                </ul>
+                  </ul>
+                {{else}}
+                  <span class="nodata-placeholder">Manuscript IDs are not yet available</span>
+                {{/if}}
               </td>
             </tr>
             <tr>
