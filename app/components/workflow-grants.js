@@ -29,6 +29,7 @@ export default Component.extend({
     addGrant(grant) {
       if (event.target.value) {
         this.get('store').findRecord('grant', event.target.value).then((g) => {
+          g.get('primaryFunder.policy'); // Make sure policy is loaded in memory
           const submission = this.get('model.newSubmission');
           submission.get('grants').pushObject(g);
           this.get('addedGrants').push(g);
