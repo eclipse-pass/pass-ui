@@ -27,9 +27,12 @@
         </span>
       </span>
       {{else}}
-        <span class="status not-started pr-1">
-          <i class="fas fa-circle"></i> Manuscript expected
+        <span tooltip-position="left" tooltip="Funder has receive a submission for this publication from a different source.">
+          <i class="fas fa-info-circle d-inline"></i> {{status}}
         </span>
+        {{!-- <span class="status not-started pr-1">
+          <i class="fas fa-circle"></i> Manuscript expected
+        </span> --}}
       {{/if}}
     {{else}}
       <span class="status {{record.aggregatedDepositStatus}} pr-1">
