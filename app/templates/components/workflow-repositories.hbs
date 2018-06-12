@@ -5,9 +5,9 @@
     you are required to deposit your manuscript/article into:
   </p>
   <ul class="list-group">
-    {{#each requiredRepositories as |repo|}}
+    {{#each requiredRepositories as |repoInfo|}}
       <li class="list-group-item d-flex justify-content-between align-items-center my-1">
-        {{repo.name}}
+        {{repoInfo.repo.name}} - required by {{repoInfo.funders}}
       </li>
     {{/each}}
   </ul>
