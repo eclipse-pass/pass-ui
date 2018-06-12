@@ -13,7 +13,7 @@
   </ul>
 {{/if}}
 {{#if optionalRepositories}}
-<h4 class="mt-3 font-weight-light">Local repositories</h4>
+<h4 class="mt-3 font-weight-light">Institutional repositories</h4>
 <p>
   Submission to local repositories is optional but encouraged.
   To opt out of submitting to a local repository, uncheck its checkbox.
@@ -22,7 +22,11 @@
   <ul class="list-group">
     {{#each optionalRepositories as |repo|}}
       <li class="list-group-item d-flex align-items-center my-1">
-        {{input type="checkbox" change=(action "toggleRepository" repo) checked=true name=repo.name}}
+        {{#if requiredRepositories.length}}
+          {{input type="checkbox" change=(action "toggleRepository" repo) checked=true name=repo.name}}
+        {{else}}
+          {{input type="checkbox" change=(action "toggleRepository" repo) checked=true name=repo.name disabled="true"}}
+        {{/if}}
         <label for="{{repo.name}}" class="mb-0 ml-2">{{repo.name}}</label>
       </li>
     {{/each}}
