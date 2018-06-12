@@ -10,6 +10,9 @@ export default Controller.extend({
   messageSubject: '',
   messageText: '',
 
+  tablePageSize: 50,
+  tablePageSizeValues: [10, 25, 50],
+
   // Columns displayed depend on the user role
   columns: computed('currentUser', {
     get() {
