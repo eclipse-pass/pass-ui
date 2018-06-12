@@ -80,7 +80,13 @@ export default Component.extend({
     if (repos.length > 1) {
       repos = [repos[0]];
     }
-    return repos;
+    let result = [];
+    repos.forEach(r => result.push({
+      repo: r,
+      // funders: this.getFunderNamesForRepo(r)
+      funders: 'Johns Hopkins University'
+    }));
+    return result;
   }),
   didRender() {
     this._super(...arguments);
