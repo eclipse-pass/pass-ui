@@ -11,6 +11,7 @@ import ENV from 'pass-ember/config/environment';
  * TODO do we need to pass authentication headers?
  */
 export default Service.extend({
+  suggestSize: 10,
   ajax: Ember.inject.service(),
   base: Ember.computed(() => ENV.fedora.elasticsearch),
   es_field_suffix: '_suggest',
@@ -86,7 +87,10 @@ export default Service.extend({
 
     let query = {
       prefix,
-      completion: { field: esFieldName }
+      completion: {
+        field: esFieldName,
+        size: this.get('suggestSize')
+      }
     };
 
     if (context) {
