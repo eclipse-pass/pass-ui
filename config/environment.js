@@ -72,6 +72,10 @@ module.exports = function (environment) {
     url: 'https://localhost:8080/pass-user-service/whoami'
   };
 
+  if (process.env.EMBER_ROOT_URL) {
+    ENV.rootURL = process.env.EMBER_ROOT_URL;
+  }
+
   if (process.env.USER_SERVICE_URL) {
     ENV.userService.url = process.env.USER_SERVICE_URL;
   }
