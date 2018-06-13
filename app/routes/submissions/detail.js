@@ -10,12 +10,14 @@ export default Route.extend({
 
     const repoCopies = sub.then(s =>
       this.get('store').query('RepositoryCopy', { term: { publication: s.get('publication.id') }, size: querySize }));
+    const repos = sub.then(s => s.get('repositories'));
 
     return hash({
       sub,
       files,
       deposits,
-      repoCopies
+      repoCopies,
+      repos
     });
   },
 });
