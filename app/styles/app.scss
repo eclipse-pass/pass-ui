@@ -357,6 +357,10 @@ td {
   }
 }
 
+.form-control:disabled, .form-control[readonly] {
+    background-color: #eff7fb!important;
+}
+
 ////////////////////////////
 // End Alpaca
 ////////////////////////////
