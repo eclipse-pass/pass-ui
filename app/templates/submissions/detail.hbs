@@ -94,7 +94,7 @@
                 </ul>
               </td>
             </tr>
-            <tr>
+            {{!-- <tr>
               <td class="text-nowrap">Repositories</td>
               <td>
                 <ul class="list-unstyled mb-0">
@@ -103,7 +103,7 @@
                   {{/each}}
                 </ul>
               </td>
-            </tr>
+            </tr> --}}
             {{#if externalSubmission}}
               <tr>
                 <td class="text-nowrap">External Submission Repositories</td>
@@ -130,7 +130,7 @@
                 </td>
               </tr>
             {{/if}}
-            <tr>
+            {{!-- <tr>
               <td class="text-nowrap">Manuscript IDs</td>
               <td>
                 {{#if model.repoCopies}}
@@ -163,7 +163,7 @@
                   <span class="nodata-placeholder">Manuscript IDs are not yet available</span>
                 {{/if}}
               </td>
-            </tr>
+            </tr> --}}
             <tr>
               <td class="text-nowrap">Submitter</td>
               <td>
@@ -214,6 +214,27 @@
                 </ul>
               </td>
             </tr>
+            {{!-- Consolidate repository, deposit, repoCopy info --}}
+            {{#if repoMap}}
+            <tr>
+              <td>Repositories</td>
+              <td>
+                {{#each repoMap as |repoInfo|}}
+                <div class="card">
+                  <div class="card-body">
+                    <p class="card-title">
+                      {{repoInfo.repo.name}} 
+                      {{#if repoInfo.repo.url}}<a href={{repoInfo.repo.url}}>{{repoInfo.repo.url}}</a>{{/if}}
+                    </p>
+                    <p class="card-text">
+                      {{repocopy-display repoCopy=repoInfo.repositoryCopy}}
+                    </p>
+                  </div>
+                </div>
+                {{/each}}
+              </td>
+            </tr>
+            {{/if}}
             <tr>
               <td>Files</td>
               <td>

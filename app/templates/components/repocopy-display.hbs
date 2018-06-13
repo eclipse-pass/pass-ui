@@ -1,0 +1,24 @@
+<style>
+  .inline { display: inline; }
+</style>
+{{#if repoCopy.externalIds}}
+  <ul class="">
+  {{#if repoCopy.accessUrl}}
+    {{#each repoCopy.externalIds as |externalIds|}}
+    <li>
+      <a href="{{repoCopy.accessUrl}}" target="_blank">{{externalIds}}</a> 
+      {{repocopy-status status=repoCopy.copyStatus class="inline"}}
+    </li>
+    {{/each}}
+  {{else}}
+    <ul class="repoid-cell">
+    {{#each repoCopy.externalIds as |externalIds|}}
+      <li>{{externalIds}} {{repocopy-status status=repoCopy.copyStatus class="inline"}}</li>
+    {{/each}}
+    </ul>
+  {{/if}}
+  </ul>
+{{else}}
+  <strong>{{repoCopy.copyStatus}}</strong> 
+  <span class="nodata-placeholder">Manuscript ID(s) are not yet available</span>
+{{/if}}
