@@ -12,9 +12,7 @@ export default Component.extend({
     return this.get('policyIsNIH') && !this.get('methodAJournal');
   }),
   policyIsJHU: Ember.computed(function () { // eslint-ignore-line
-    if (this.get('repositories')) {
-      return this.get('repositories').any(repo => repo.get('name') === 'JScholarship');
-    }
+    return this.get('policy.title') === 'Johns Hopkins University (JHU) Open Access Policy';
   }),
   didRender() {
     this._super(...arguments);
