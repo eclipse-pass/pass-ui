@@ -33,7 +33,8 @@ export default Component.extend({
         this.get('addedGrants').push(grant);
         this.set('maxStep', 2);
         submission.set('metadata', '[]');
-      } else if (event && event.target.value) {
+      } else if (event && event.target.value && event.target.value !== 'default') {
+        Ember.$('select')[0].selectedIndex = 0;
         this.get('store').findRecord('grant', event.target.value).then((g) => {
           g.get('primaryFunder.policy'); // Make sure policy is loaded in memory
           const submission = this.get('model.newSubmission');
