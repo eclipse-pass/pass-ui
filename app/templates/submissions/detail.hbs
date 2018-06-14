@@ -1,56 +1,61 @@
 <div class="row mb-2">
   <div class="col-6">
-{{#link-to 'submissions' class="btn btn-small back-arrow"}}<i class="fa fa-arrow-left fa-lg"></i>{{/link-to}}
-<h2 class="font-weight-light d-inline-block">Submission Detail</h2>
-</div>
-<div class="col-6 text-right">
-  {{#if model.sub.isStub}}
-    {{#link-to 'submissions.new' (query-params submission=record.id) class="btn btn-outline-primary text-right"}}
-    Finish submission
-    {{/link-to}}
-  {{/if}}
-</div>
+    {{#link-to 'submissions' class="btn btn-small back-arrow" }}<i class="fa fa-arrow-left fa-lg"></i>{{/link-to}}
+    <h2 class="font-weight-light d-inline-block">Submission Detail</h2>
+  </div>
+  <div class="col-6 text-right">
+    {{#if model.sub.isStub}}
+      {{#link-to 'submissions.new' (query-params submission=record.id) class="btn btn-outline-primary text-right" }}
+        Finish submission
+      {{/link-to}}
+    {{/if}}
+  </div>
 </div>
 <style>
-.fa-30 {
-  font-size: 30px;
-  margin-top: 4px;
-}
-.text-gray {
-  color:gray;
-}
-.file {
-  background-color: #fdfdfd;
-  background-clip: border-box;
-  border: 1px solid #dedede!important;
-  border-radius: 1px!important;
-  max-height:50px;
-  color: gray;
-}
+  .fa-30 {
+    font-size: 30px;
+    margin-top: 4px;
+  }
 
-.line-height-50 {
-  line-height: 50px;
-  overflow: hidden;
-}
+  .text-gray {
+    color: gray;
+  }
 
-.line-height-35 {
-  line-height: 35px;
-}
-.zoom-in {cursor: zoom-in;}
+  .file {
+    background-color: #fdfdfd;
+    background-clip: border-box;
+    border: 1px solid #dedede !important;
+    border-radius: 1px !important;
+    max-height: 50px;
+    color: gray;
+  }
+
+  .line-height-50 {
+    line-height: 50px;
+    overflow: hidden;
+  }
+
+  .line-height-35 {
+    line-height: 35px;
+  }
+
+  .zoom-in {
+    cursor: zoom-in;
+  }
 
 
-table td {
-  border: 1px dotted silver;
-  word-break: break-all;
-}
+  table td {
+    border: 1px dotted silver;
+    word-break: break-all;
+  }
 
-.min-review-type-width {
-  min-width: 100px;
-}
+  .min-review-type-width {
+    min-width: 100px;
+  }
 
-.max-width {
-  max-width: 300px!important;
-}
+  .max-width {
+    max-width: 300px !important;
+  }
 </style>
 <div class="form-group row">
   <div class="col-md-12">
@@ -65,7 +70,7 @@ table td {
           <tbody>
             <tr>
               <td class="max-width">Status</td>
-              {{#if (eq model.sub.source  "other")}}
+              {{#if (eq model.sub.source "other")}}
                 {{#if (eq model.sub.submitted true)}}
                   <td><i>This submission did not originate from PASS.</i></td>
                 {{else}}
@@ -100,22 +105,22 @@ table td {
               </td>
             </tr>
             {{#if externalSubmission}}
-            <tr>
-              <td class="text-nowrap">External Submission Repositories</td>
-              <td>
-                <ul>
-                  <li>Deposit into Educational Resources Information Center (ERIC) was prompted</li>
-              </ul>
-              </td>
-            </tr>
+              <tr>
+                <td class="text-nowrap">External Submission Repositories</td>
+                <td>
+                  <ul>
+                    <li>Deposit into Educational Resources Information Center (ERIC) was prompted</li>
+                  </ul>
+                </td>
+              </tr>
             {{/if}}
-            {{#if (not-eq model.sub.source  "other")}}
+            {{#if (not-eq model.sub.source "other")}}
               <tr>
                 <td>Deposits</td>
                 <td>
                   <ul>
                     {{#each model.deposits as |deposit index|}}
-                      <li>Deposit for {{await deposit.repository.name}} (<a href={{await deposit.repositoryCopy.accessUrl}}>{{await deposit.repositoryCopy.externalIds}}</a>)
+                      <li>Deposit for {{await deposit.repository.name}} (<a href= {{await deposit.repositoryCopy.accessUrl}}>{{await deposit.repositoryCopy.externalIds}}</a>)
                         <ul>
                           <li>Status: {{deposit.depositStatus}}</li>
                         </ul>
@@ -130,29 +135,29 @@ table td {
               <td>
                 {{#if model.repoCopies}}
                   <ul class="repoid-cell">
-                  {{#each model.repoCopies as |repoCopy index|}}
-                    {{#if repoCopy.externalIds}}
-                      <li>
-                        <ul class="repoid-cell">
-                        {{#if repoCopy.accessUrl}}
-                          {{#each repoCopy.externalIds as |externalIds|}}
-                            <li>
-                              <a href="{{repoCopy.accessUrl}}" target="_blank">{{externalIds}}</a> - {{get repoCopy "repository.name"}} ({{repoCopy.copyStatus}})
-                            </li>
-                          {{/each}}
-                        {{else}}
+                    {{#each model.repoCopies as |repoCopy index|}}
+                      {{#if repoCopy.externalIds}}
+                        <li>
                           <ul class="repoid-cell">
-                          {{#each repoCopy.externalIds as |externalIds|}}
-                            <li>{{externalIds}} - {{get repoCopy "repository.name"}} ({{repoCopy.copyStatus}})</li>
-                          {{/each}}
+                            {{#if repoCopy.accessUrl}}
+                              {{#each repoCopy.externalIds as |externalIds|}}
+                                <li>
+                                  <a href="{{repoCopy.accessUrl}}" target="_blank">{{externalIds}}</a> - {{get repoCopy "repository.name"}} ({{repoCopy.copyStatus}})
+                                </li>
+                              {{/each}}
+                            {{else}}
+                              <ul class="repoid-cell">
+                                {{#each repoCopy.externalIds as |externalIds|}}
+                                  <li>{{externalIds}} - {{get repoCopy "repository.name"}} ({{repoCopy.copyStatus}})</li>
+                                {{/each}}
+                              </ul>
+                            {{/if}}
                           </ul>
-                        {{/if}}
-                        </ul>
-                      </li>
-                    {{else}}
-                      <span class="nodata-placeholder">Manuscript IDs are not yet available</span>
-                    {{/if}}
-                  {{/each}}
+                        </li>
+                      {{else}}
+                        <span class="nodata-placeholder">Manuscript IDs are not yet available</span>
+                      {{/if}}
+                    {{/each}}
                   </ul>
                 {{else}}
                   <span class="nodata-placeholder">Manuscript IDs are not yet available</span>
@@ -162,7 +167,7 @@ table td {
             <tr>
               <td class="text-nowrap">Submitter</td>
               <td>
-                {{#if (eq model.sub.source  "other")}}
+                {{#if (eq model.sub.source "other")}}
                   <i>This submission did not originate from PASS</i>
                 {{else}}
                   {{get (await model.sub.user) 'displayName'}}
@@ -187,15 +192,17 @@ table td {
                                 <li><b>{{key}}</b>:
                                   <ul>
                                     {{#each data as |author|}}
-                                      <li>{{author.author}}{{#if author.orcid}} (<a href={{author.orcid}} target="_blank">{{author.orcid}}</a>){{/if}}</li>
+                                      <li>{{author.author}}
+                                        {{#if author.orcid}} (<a href= {{author.orcid}} target="_blank">{{author.orcid}}</a>){{/if}}
+                                      </li>
                                     {{/each}}
                                   </ul>
                                 </li>
                               {{else}}
                                 {{#if (eq key 'URL')}}
-                                <li><b>{{key}}</b>: <a href={{data}} target="_blank">{{data}}</a></li>
+                                  <li><b>{{key}}</b>: <a href= {{data}} target="_blank">{{data}}</a></li>
                                 {{else}}
-                                <li><b>{{key}}</b>: {{{data}}}</li>
+                                  <li><b>{{key}}</b>: {{{data}}}</li>
                                 {{/if}}
                               {{/if}}
                             {{/if}}
@@ -210,42 +217,39 @@ table td {
             <tr>
               <td>Files</td>
               <td>
-                {{#if (eq model.sub.source  "other")}}
-                <p class="mb-0">
-                  <i>We do not have a copy of manuscript files because this submission did not originate from PASS</i>
-                </p>
+                {{#if (eq model.sub.source "other")}}
+                  <p class="mb-0">
+                    <i>We do not have a copy of manuscript files because this submission did not originate from PASS</i>
+                  </p>
                 {{else}}
                   <p class="text-right mb-1"><i class="fas fa-info-circle text-gray"></i><i><small>Hover over text for full text</small></i></p>
                   <div class="container-fluid">
                     {{#each (get model 'files') as |file|}}
-                      <a href={{file.uri}}>
+                      <a href= {{file.uri}}>
                         <div class="row file mb-1">
                           <div class="col-md-1 p-1 pl-3">
                             {{#if (eq file.mimeType 'png')}}
-                              <i class="fas fa-file-image fa-30 line-height-35"></i>
-                            {{else if (eq file.mimeType 'vnd.openxmlformats-officedocument.presentationml.presentation')}}
-                              <i class="fas fa-file-powerpoint fa-30 line-height-35"></i>
-                            {{else if (eq file.mimeType 'msword')}}
-                                <i class="fas fa-file-word fa-30 line-height-35"></i>
-                            {{else if (eq file.mimeType 'pdf')}}
-                                <i class="fas fa-file-pdf fa-30 line-height-35"></i>
+                              <i class="fas fa-file-image fa-30 line-height-35"></i> {{else if (eq file.mimeType 'vnd.openxmlformats-officedocument.presentationml.presentation')}}
+                              <i class="fas fa-file-powerpoint fa-30 line-height-35"></i> {{else if (eq file.mimeType 'msword')}}
+                              <i class="fas fa-file-word fa-30 line-height-35"></i> {{else if (eq file.mimeType 'pdf')}}
+                              <i class="fas fa-file-pdf fa-30 line-height-35"></i>
                             {{else}}
                               <i class="far fa-file fa-30 line-height-35"></i>
                             {{/if}}
                           </div>
-                          <div class="col-md-5 line-height-50 pl-0" data-toggle="tooltip" data-placement="top" title={{file.name}}>
+                          <div class="col-md-5 line-height-50 pl-0" data-toggle="tooltip" data-placement="top" title= {{file.name}}>
                             {{file.name}}
                           </div>
                           <div class="col-md-2 line-height-50">
                             {{file.fileRole}}
                           </div>
-                          <div class="col-md-4 line-height-50" data-toggle="tooltip" data-placement="top" title={{file.description}}>
+                          <div class="col-md-4 line-height-50" data-toggle="tooltip" data-placement="top" title= {{file.description}}>
                             {{file.description}}
                           </div>
                         </div>
                       </a>
-                    {{else}}
-                      <div class="text-center">Loading files...</div>
+                {{else}}
+                  <div class="text-center">Loading files...</div>
                     {{/each}}
                   </div>
                 {{/if}}
