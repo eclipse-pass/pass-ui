@@ -45,11 +45,23 @@ export default Component.extend({
   },
   didRender() {
     this._super(...arguments);
-    this.send('validateDOI');
   },
   didInsertElement() {
     this._super(...arguments);
     this.send('lookupDOI');
+  },
+  showDOIasValid() {
+    this.set('validDOI', 'form-control is-valid');
+    $('.ember-power-select-trigger').css('border-color', '#4dbd74');
+    this.set('validTitle', 'form-control is-valid');
+    this.set('model.newSubmission.metadata', '[]');
+    this.set('isValidDOI', true);
+    toastr.remove();
+    toastr.success('We have pre populated information from the DOI provided');
+  },
+  showDOIasInvalid() {
+    this.set('validDOI', 'form-control is-invalid');
+    this.set('isValidDOI', false);
   },
   actions: {
     validateNext() {
@@ -59,6 +71,7 @@ export default Component.extend({
       let validJournal = false;
 
       if (journal.get('journalName') == null) {
+        toastr.remove();
         toastr.warning('The journal must not be left blank');
         validJournal = false;
         $('.ember-power-select-trigger').css('border-color', '#f86c6b');
@@ -68,6 +81,7 @@ export default Component.extend({
       }
 
       if (title == null) {
+        toastr.remove();
         toastr.warning('The title must not be left blank');
         this.set('validTitle', 'form-control is-invalid');
         validTitle = false;
@@ -75,6 +89,7 @@ export default Component.extend({
         validTitle = true;
         this.set('validTitle', 'form-control is-valid');
       } else {
+        toastr.remove();
         toastr.warning('Title must be longer then 3 characters');
         validTitle = false;
         this.set('validTitle', 'form-control is-invalid');
@@ -95,24 +110,18 @@ export default Component.extend({
     },
     validateDOI() {
       // ref: https://www.crossref.org/blog/dois-and-matching-regular-expressions/
-      const doi = this.get('model.publication.doi');
-      const newDOIRegExp = /^(https?:\/\/(dx\.)?doi\.org\/)?10.\d{4,9}\/[-._;()/:A-Z0-9]+$/i;
-      const ancientDOIRegExp = /^(https?:\/\/(dx\.)?doi\.org\/)?10.1002\/[^\s]+$/i;
-      // 0 = no value
-      if (doi == null || !doi) {
-        this.set('validDOI', 'form-control');
-        this.set('isValidDOI', false);
-      } else if (newDOIRegExp.test(doi) === true || ancientDOIRegExp.test(doi) === true) { // 1 - Accepted
-        this.set('validDOI', 'form-control is-valid');
-        $('.ember-power-select-trigger').css('border-color', '#4dbd74');
-        this.set('validTitle', 'form-control is-valid');
-        this.set('model.newSubmission.metadata', '[]');
-        this.set('isValidDOI', true);
-        toastr.success('We\'ve pre-populated information from the DOI provided!');
-      } else {
-        this.set('validDOI', 'form-control is-invalid');
-        this.set('isValidDOI', false);
-      }
+      // const doi = this.get('model.publication.doi');
+      // const newDOIRegExp = /^(https?:\/\/(dx\.)?doi\.org\/)?10.\d{4,9}\/[-._;()/:A-Z0-9]+$/i;
+      // const ancientDOIRegExp = /^(https?:\/\/(dx\.)?doi\.org\/)?10.1002\/[^\s]+$/i;
+      // // 0 = no value
+      // if (doi == null || !doi) {
+      //   this.set('validDOI', 'form-control');
+      //   this.set('isValidDOI', false);
+      // } else if (newDOIRegExp.test(doi) === true || ancientDOIRegExp.test(doi) === true) { // 1 - Accepted
+      //   this.showDOIasValid();
+      // } else {
+      //   this.showDOIasInvalid();
+      // }
     },
     validateTitle() {
       const title = this.get('model.publication.title');
@@ -127,7 +136,12 @@ export default Component.extend({
       }
     },
     /** looks up the DIO and returns title and journal if avaiable */
-    lookupDOI() {
+    lookupDOI(event) {
+      const keycode = event ? event.keyCode : '';
+      if (keycode === 16 || keycode === 17 || keycode === 18) {
+        return; // Don't lookup for these keys as they don't directly change the input...
+      }
+
       if (this.get('model.publication.doi')) {
         this.set('model.publication.doi', this.get('model.publication.doi').trim());
         this.set('model.publication.doi', this.get('model.publication.doi').replace(/doi:/gi, ''));
@@ -142,8 +156,7 @@ export default Component.extend({
             return;
           }
           this.set('doiInfo', doiInfo);
-          // useful console.log
-          // console.log(doiInfo);
+          this.showDOIasValid();
           publication.set('title', doiInfo.title);
 
           publication.set('submittedDate', doiInfo.deposited);
@@ -181,6 +194,14 @@ export default Component.extend({
               publication.set('journal', journal);
             }
           });
+        }).catch((error) => {
+          if (error.response) {
+            this.showDOIasInvalid();
+            if (error.response) {
+              toastr.remove();
+              toastr.error(`${error.response.statusText} : ${error.response.url}`);
+            }
+          }
         });
       }
     },
