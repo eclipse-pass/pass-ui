@@ -123,7 +123,9 @@ export default Component.extend({
           label: 'Embargo End Date',
           helper: '<i>After the embargo end date, your submission manuscripts or article can be made public.</i>',
           helpersPosition: 'above',
-          placeholder: 'mm/dd/yyyy',
+          placeholder: 'dd/mm/yyyy',
+          validate: true,
+          inputType: 'date'
         },
       },
     },
