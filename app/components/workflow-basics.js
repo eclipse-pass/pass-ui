@@ -108,7 +108,7 @@ export default Component.extend({
         this.set('validTitle', 'form-control is-valid');
         this.set('model.newSubmission.metadata', '[]');
         this.set('isValidDOI', true);
-        toastr.success('We have pre populated information from the DOI provided');
+        toastr.success('We\'ve pre-populated information from the DOI provided!');
       } else {
         this.set('validDOI', 'form-control is-invalid');
         this.set('isValidDOI', false);
