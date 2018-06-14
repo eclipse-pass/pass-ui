@@ -10,7 +10,7 @@
     {{#each grants as |grant|}}
       <tr class="pr-0">
         <td class="awardnum-column">
-          {{#link-to "grants.detail" grant}}{{grant.awardNumber}}{{/link-to}}
+          {{#link-to "grants.detail" grant class="text-nowrap"}}{{grant.awardNumber}}{{/link-to}}
         </td>
         <td>{{grant.projectName}}</td>
         <td class="pr-0 mr-0">
