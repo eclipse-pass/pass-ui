@@ -10,8 +10,8 @@ export default Controller.extend({
   messageSubject: '',
   messageText: '',
 
-  tablePageSize: 5,
-  tablePageSizeValues: [5, 10, 25],
+  tablePageSize: 50,
+  tablePageSizeValues: [10, 25, 50],
 
   // Columns displayed depend on the user role
   columns: computed('currentUser', {
@@ -42,6 +42,7 @@ export default Controller.extend({
     {
       propertyName: 'grant.awardNumber',
       title: 'Award Number',
+      className: 'awardnum-column',
       disableFiltering: true,
       component: 'grant-link-cell'
     },
@@ -98,6 +99,7 @@ export default Controller.extend({
     {
       propertyName: 'grant.awardNumber',
       title: 'Award #',
+      className: 'awardnum-column',
       disableFiltering: true,
       component: 'grant-link-cell'
     },

@@ -58,7 +58,7 @@ export default Component.extend({
       let validTitle = false;
       let validJournal = false;
 
-      if (journal.get('journalName') == null && journal.get('name') == null) {
+      if (journal.get('journalName') == null) {
         toastr.warning('The journal must not be left blank');
         validJournal = false;
         $('.ember-power-select-trigger').css('border-color', '#f86c6b');
@@ -87,7 +87,7 @@ export default Component.extend({
     next() {
       if (this.get('doiInfo').length === 0) {
         this.set('doiInfo', {
-          'container-title': this.get('model.publication.journal.journalName') || this.get('model.publication.journal.name'),
+          'container-title': this.get('model.publication.journal.journalName'),
           title: this.get('model.publication.title')
         });
       }
@@ -108,6 +108,7 @@ export default Component.extend({
         this.set('validTitle', 'form-control is-valid');
         this.set('model.newSubmission.metadata', '[]');
         this.set('isValidDOI', true);
+        toastr.success('We have pre populated information from the DOI provided');
       } else {
         this.set('validDOI', 'form-control is-invalid');
         this.set('isValidDOI', false);

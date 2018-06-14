@@ -72,51 +72,61 @@ export default Component.extend({
           rows: 2,
           cols: 100,
           label: 'Article / Manuscript Title',
-          placeholder: 'Enter the manuscript title'
+          placeholder: 'Enter the manuscript title',
+          hidden: true,
         },
         'container-title': {
           type: 'text',
           label: 'Journal Title',
-          placeholder: 'Enter the journal title'
+          placeholder: 'Enter the journal title',
+          hidden: true,
         },
         volume: {
           type: 'text',
           label: 'Volume',
           placeholder: 'Enter the volume',
+          hidden: true,
         },
         issue: {
           type: 'text',
           label: 'Issue',
           placeholder: 'Enter issue',
+          hidden: true,
         },
         ISSN: {
           type: 'text',
           label: 'ISSN',
-          placeholder: 'ISSN'
+          placeholder: 'ISSN',
+          hidden: true,
         },
         publicationDate: {
           type: 'text',
           label: 'Publication Date',
           placeholder: 'mm/dd/yy',
+          hidden: true,
         },
         abstract: {
           type: 'textarea',
           label: 'Abstract',
           placeholder: 'Enter abstract',
           fieldClass: 'clearfix',
+          hidden: true,
         },
         subjects: {
           type: 'text',
           label: 'Keywords',
           placeholder: '',
           fieldClass: 'clearfix',
+          hidden: true
         },
         authors: {
+          hidden: true,
         },
         'under-embargo': {
           type: 'checkbox',
           rightLabel: 'The material being submitted is published under an embargo.',
-          fieldClass: 'm-0 mt-4'
+          fieldClass: 'm-0 mt-4',
+          hidden: true,
         },
         'Embargo-end-date': {
           type: 'date',
@@ -124,6 +134,7 @@ export default Component.extend({
           helper: '<i>After the embargo end date, your submission manuscripts or article can be made public.</i>',
           helpersPosition: 'above',
           placeholder: 'mm/dd/yyyy',
+          hidden: true,
         },
       },
     },
