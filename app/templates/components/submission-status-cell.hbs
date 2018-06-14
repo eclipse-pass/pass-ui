@@ -1,5 +1,6 @@
 <style>
   .fas {
+    display: inline;
     font-size: 0.8em;
     opacity: 0.9;
     width: 15%;
@@ -20,9 +21,29 @@
 
 <div class="text-left">
   <span class="status {{status}} pr-1">
-    {{#if (eq status "Complete")}}<i class="fas fa-circle"></i> {{status}}{{/if}}
-    {{#if (eq status "Manuscript expected")}}<i class="fas fa-circle"></i> {{status}}{{/if}}
-    {{#if (eq status "Submitted")}}<i class="fas fa-circle"></i> {{status}}{{/if}}
+    {{#if (eq status "Complete")}}
+      {{#if (eq record.source "other")}}
+        <span tooltip-position="left" tooltip="Funder has receive a submission for this publication from a different source.">
+          <i class="fas fa-info-circle"></i> {{status}}
+        </span>
+      {{else}}
+        <i class="fas fa-circle"></i> {{status}}
+      {{/if}}
+    {{/if}}
+    {{#if (eq status "Manuscript expected")}}
+      <span tooltip-position="left" tooltip="Your funder is aware of this publication and is expecting the deposit of your manuscript.">
+        <i class="fas fa-info-circle"></i> {{status}}
+      </span>
+    {{/if}}
+    {{#if (eq status "Submitted")}}
+      {{#if (eq record.source "pass")}}
+        <span tooltip-position="left" tooltip="This submission is in queue to be transmitted to target its repositories.">
+          <i class="fas fa-info-circle"></i> {{status}}
+        </span>
+      {{else}}
+        <i class="fas fa-circle"></i> {{status}}
+      {{/if}}
+    {{/if}}
     {{#if (eq status "See details")}}
       {{#link-to "submissions.detal" record.id}}
         <i class="fas fa-circle"></i> {{status}}
