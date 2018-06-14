@@ -34,6 +34,7 @@ export default Controller.extend({
   {
     title: 'Award Number (Funder)',
     propertyName: 'grantInfo',
+    className: 'awardnum-funder-column',
     component: 'submissions-award-cell',
     disableSorting: true
   },
@@ -76,6 +77,7 @@ export default Controller.extend({
   },
   {
     title: 'Award Number (Funder)',
+    className: 'awardnum-funder-column',
     component: 'submissions-award-cell'
   },
   {
