@@ -112,7 +112,6 @@ export default Ember.Component.extend({
         isValidated = true;
       };
     }
-
     // form ctrls
     newForm.options.form = {
       buttons: {
