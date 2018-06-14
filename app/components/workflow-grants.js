@@ -14,6 +14,9 @@ export default Component.extend({
   submissionGrants: Ember.computed('model.newSubmission', function () {
     return this.get('model.newSubmission.grants');
   }),
+  sortedGrants: Ember.computed('model.grants', function () {
+    return this.get('model.grants').sortBy('awardNumber');
+  }),
   didRender() {
     if (this.get('model.preLoadedGrant')) {
       this.send('addGrant', this.get('model.preLoadedGrant'));
@@ -41,6 +44,7 @@ export default Component.extend({
           this.get('addedGrants').push(g);
           this.set('maxStep', 2);
           submission.set('metadata', '[]');
+          Ember.$('select')[0].selectedIndex = 0;
         });
       }
     },

@@ -108,6 +108,7 @@ export default Component.extend({
         this.set('validTitle', 'form-control is-valid');
         this.set('model.newSubmission.metadata', '[]');
         this.set('isValidDOI', true);
+        toastr.success('We\'ve pre-populated information from the DOI provided!');
       } else {
         this.set('validDOI', 'form-control is-invalid');
         this.set('isValidDOI', false);
@@ -128,6 +129,8 @@ export default Component.extend({
     /** looks up the DIO and returns title and journal if avaiable */
     lookupDOI() {
       if (this.get('model.publication.doi')) {
+        this.set('model.publication.doi', this.get('model.publication.doi').trim());
+        this.set('model.publication.doi', this.get('model.publication.doi').replace(/doi:/gi, ''));
         this.set('model.publication.doi', this.get('model.publication.doi').replace(/https?:\/\/(dx\.)?doi\.org\//gi, ''));
       }
       const publication = this.get('model.publication');

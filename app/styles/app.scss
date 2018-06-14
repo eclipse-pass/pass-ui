@@ -4,20 +4,7 @@
 @import "ember-modal-dialog/ember-modal-appearance";
 @import "ember-power-select";
 
-// @font-face {
-//   font-family: "gentona-light";
-//   src:url("/fonts/Gentona-Light.ttf");
-// }
-
-// @font-face {
-//   font-family: "gentona-medium";
-//   src: url("/fonts/Gentona-Medium.tff");
-// }
-
-// @font-face {
-//   font-family: "quadon-black";
-//   src:url("/fonts/Quadon-Regular.ttf");
-// }
+// Font-faces decaled in 'index.html' for now, so {{rootURL}} can be used
 
 $jhu-grey: #E5E2E0;
 $jhu-grey2: #B4B2AD;
@@ -362,6 +349,10 @@ td {
   }
 }
 
+.form-control:disabled, .form-control[readonly] {
+    background-color: #eff7fb!important;
+}
+
 ////////////////////////////
 // End Alpaca
 ////////////////////////////
@@ -374,7 +365,7 @@ $primary-color: #418FDE;
 $danger-color: #f86c6b;
 $navbar-color: #005EB8;
 body {
-  font-family:  gentona-light,sans-serif!important;
+  font-family:  gentona-medium,sans-serif!important;
   font-size: 1em !important;
   color:#2C2C33 !important;
   -webkit-font-smoothing: antialiased;
@@ -663,6 +654,19 @@ table td {
   display: block;
   font-style: italic;
 }
+
+footer {
+  min-height:100px;
+}
+
+.site {
+  min-width:300px;
+}
+
+.submission-table table th:nth-child(2) {
+  white-space: nowrap;
+}
+
 .repoid-cell {
   list-style: none;
   margin: 0;
@@ -672,3 +676,5 @@ table td {
 .title-column { min-width: 400px; }
 .msid-column { min-width: 145px; }
 .actions-column { min-width: 125px; }
+.awardnum-column { min-width: 125px; }
+.awardnum-funder-column { min-width: 150px; }

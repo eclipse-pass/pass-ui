@@ -7,7 +7,7 @@ export default Component.extend({
     id: 'common',
     data: {},
     schema: {
-      title: "Publication Details <br><p class='lead text-muted'>Please provide additional information about your article/manuscript below. If DOI was provided in the initial step of the submission, the metadata associated with that DOI was looked up and used to prepopulate this form. </p>",
+      title: "Publication Details <br><p class='lead text-muted'>Please provide additional information about your article/manuscript below. If DOI was provided in the initial step of the submission, the metadata associated with that DOI was found and used to prepopulate this form. </p>",
       type: 'object',
       properties: {
         title: {
@@ -133,8 +133,9 @@ export default Component.extend({
           label: 'Embargo End Date',
           helper: '<i>After the embargo end date, your submission manuscripts or article can be made public.</i>',
           helpersPosition: 'above',
-          placeholder: 'mm/dd/yyyy',
-          hidden: true,
+          placeholder: 'dd/mm/yyyy',
+          validate: true,
+          inputType: 'date'
         },
       },
     },

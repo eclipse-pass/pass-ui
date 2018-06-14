@@ -6,10 +6,11 @@
     width: 200px;
   }
 </style>
-{{#each model.newSubmission.repositories  as |repo| }}
+{{#each model.newSubmission.repositories as |repo| }}
   {{#if (eq repo.name "PubMed Central")}}
     <p>
-    <a href="https://www.ncbi.nlm.nih.gov/pmc/about/public-access/" target="_blank" >National Institutes of Health (NIH) and other PubMed Central-supported funding agencies</a> require funded authors to submit the Author's Accepted Manuscripts. For clarification on the difference between Author's Accepted Manuscript and Final Published Article, <a href="https://www.ncbi.nlm.nih.gov/pmc/about/authorms/" target="_blank" >please see here</a>.
+      <a href="https://www.ncbi.nlm.nih.gov/pmc/about/public-access/" target="_blank">National Institutes of Health (NIH) and other PubMed Central-supported funding agencies</a> require funded authors to submit the Author's Accepted Manuscripts. For clarification
+      on the difference between Author's Accepted Manuscript and Final Published Article, <a href="https://www.ncbi.nlm.nih.gov/pmc/about/authorms/" target="_blank">please see here</a>.
     </p>
     <p>
       To ensure successful processing of your submission in NIH Manuscript Submission System, be sure to include all referenced tables, figures and supplemental files in your submission, in addition to the Author's Accepted Manuscript.
@@ -29,7 +30,11 @@
         <tr class="text-center">
           <th>File Name</th>
           <th>File Role</th>
-          <th>Description</th>
+          <th>
+            <span tooltip-position="top" tooltip="Brief descriptive label, may be displayed in some repositories.">
+              <i class="fas fa-info-circle d-inline"></i> Description
+            </span>
+          </th>
           <th>Action</th>
         </tr>
       </thead>
@@ -48,7 +53,7 @@
               </select>
             </td>
             <td class="vertical-align-middle">
-              {{input  class="form-control file-description-width" value=file.description}}
+              {{input class="form-control file-description-width" value=file.description}}
             </td>
             <td class="text-center vertical-align-middle">
               <button type="button" class="btn btn-outline-danger" {{action 'removeFile' file}}>Remove</button>
@@ -63,4 +68,4 @@
 <!--/.row-->
 <p><strong>Tip:</strong> Use the Control or the Shift key to select multiple files.</p>
 <button class="btn btn-outline-primary" {{action "back"}}>Back</button>
-<button class="btn btn-primary pull-right next"  {{action "next"}}>Next</button>
+<button class="btn btn-primary pull-right next" {{action "next"}}>Next</button>
