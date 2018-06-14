@@ -128,6 +128,8 @@ export default Component.extend({
     /** looks up the DIO and returns title and journal if avaiable */
     lookupDOI() {
       if (this.get('model.publication.doi')) {
+        this.set('model.publication.doi', this.get('model.publication.doi').trim());
+        this.set('model.publication.doi', this.get('model.publication.doi').replace(/doi:/gi, ''));
         this.set('model.publication.doi', this.get('model.publication.doi').replace(/https?:\/\/(dx\.)?doi\.org\//gi, ''));
       }
       const publication = this.get('model.publication');

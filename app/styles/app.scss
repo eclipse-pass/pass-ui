@@ -660,6 +660,14 @@ table td {
   font-style: italic;
 }
 
+footer {
+  min-height:100px;
+}
+
+.site {
+  min-width:300px;
+}
+
 .submission-table table th:nth-child(2) {
   white-space: nowrap;
 }
