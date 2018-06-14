@@ -92,7 +92,7 @@ table td {
             <tr>
               <td class="text-nowrap">Repositories</td>
               <td>
-                <ul>
+                <ul class="list-unstyled mb-0">
                   {{#each (await model.sub.repositories) as |repository index|}}
                     <li>{{repository.name}}</li>
                   {{/each}}
@@ -211,7 +211,7 @@ table td {
               <td>Files</td>
               <td>
                 {{#if (eq model.sub.source  "other")}}
-                <p>
+                <p class="mb-0">
                   <i>We do not have a copy of manuscript files because this submission did not originate from PASS</i>
                 </p>
                 {{else}}
