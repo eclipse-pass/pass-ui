@@ -659,3 +659,7 @@ table td {
   display: block;
   font-style: italic;
 }
+
+.submission-table table th:nth-child(2) {
+  white-space: nowrap;
+}
