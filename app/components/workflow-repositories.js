@@ -2,21 +2,21 @@ import Component from '@ember/component';
 import { inject as service, } from '@ember/service';
 import EmberArray from '@ember/array';
 
-function diff(array1, array2) {
-  const retArray = [];
-  array1.forEach((element1) => {
-    let flag = false;
-    array2.forEach((element2) => {
-      if (element1.get('id') === element2.get('id')) {
-        flag = true;
-      }
-    });
-    if (!flag) {
-      retArray.push(element1);
-    }
-  });
-  return retArray;
-}
+// function diff(array1, array2) {
+//   const retArray = [];
+//   array1.forEach((element1) => {
+//     let flag = false;
+//     array2.forEach((element2) => {
+//       if (element1.get('id') === element2.get('id')) {
+//         flag = true;
+//       }
+//     });
+//     if (!flag) {
+//       retArray.push(element1);
+//     }
+//   });
+//   return retArray;
+// }
 export default Component.extend({
   addedRepositories: [],
   router: service(),
@@ -30,9 +30,20 @@ export default Component.extend({
       this.get('addedRepositories').pushObject(jScholarships[0]);
     }
   },
+  getFunderNamesForRepo(repo) {
+    const funders = this.get('model.newSubmission.grants').map(grant => grant.get('primaryFunder'));
+    const fundersWithRepos = funders.filter(funder => funder.get('policy.repositories'));
+    const fundersWithOurRepo = fundersWithRepos.filter(funder => funder.get('policy') &&
+      funder.get('policy.repositories') && funder.get('policy.repositories').includes(repo));
+    if (fundersWithRepos && fundersWithOurRepo.length > 0) {
+      return fundersWithOurRepo.map(funder => funder.get('name'))
+        .filter((item, index, arr) => arr.indexOf(item) == index).join(', ');
+    }
+    return '';
+  },
   requiredRepositories: Ember.computed('model.repositories', function () {
     const grants = this.get('model.newSubmission.grants');
-    const repos = Ember.A();
+    let repos = Ember.A();
     grants.forEach((grant) => {
       const funder = grant.get('primaryFunder');
       if (!funder.content || !funder.get('policy')) {
@@ -48,15 +59,21 @@ export default Component.extend({
       const shouldAddNIH = this.get('includeNIHDeposit');
       let anyInSubmission = grantRepos.any(grantRepo => this.get('model.newSubmission.repositories').includes(grantRepo));
       if (shouldAddNIH || !funder.get('policy.title').toUpperCase() === 'National Institutes of Health Public Access Policy') {
-        grantRepos.forEach(repo => repos.addObject(repo));
+        grantRepos.forEach((repo) => {
+          repos.addObject({
+            repo,
+            funders: this.getFunderNamesForRepo(repo)
+          });
+          repos = repos.uniqBy('repo');
+        });
       } else if (anyInSubmission) {
         // Remove it from the submission so that it can be re-added :)
-        this.get('model.newSubmission.repositories').removeObjects(grantRepos);
+        this.get('model.newSubmission.repositories').removeObjects(grantRepos.map(g => g.repo));
       }
     });
     // STEP 2
     repos.forEach((repo) => {
-      this.send('addRepo', repo);
+      this.send('addRepo', repo.repo);
     });
 
     // STEP 3
@@ -67,7 +84,13 @@ export default Component.extend({
     if (repos.length > 1) {
       repos = [repos[0]];
     }
-    return repos;
+    let result = [];
+    repos.forEach(r => result.push({
+      repo: r,
+      // funders: this.getFunderNamesForRepo(r)
+      funders: 'Johns Hopkins University'
+    }));
+    return result;
   }),
   didRender() {
     this._super(...arguments);

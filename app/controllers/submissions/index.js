@@ -10,6 +10,9 @@ export default Controller.extend({
   messageSubject: '',
   messageText: '',
 
+  tablePageSize: 50,
+  tablePageSizeValues: [10, 25, 50],
+
   // Columns displayed depend on the user role
   columns: computed('currentUser', {
     get() {
@@ -24,12 +27,14 @@ export default Controller.extend({
 
   piColumns: [{
     propertyName: 'publicationTitle',
+    className: 'title-column',
     title: 'Article',
     component: 'submissions-article-cell'
   },
   {
     title: 'Award Number (Funder)',
     propertyName: 'grantInfo',
+    className: 'awardnum-funder-column',
     component: 'submissions-award-cell',
     disableSorting: true
   },
@@ -38,11 +43,6 @@ export default Controller.extend({
     title: 'Repositories',
     component: 'submissions-repo-cell',
     disableSorting: true
-  },
-  {
-    propertyName: 'submittedDate',
-    title: 'Last Update Date',
-    component: 'date-cell'
   },
   {
     propertyName: 'submittedDate',
@@ -58,12 +58,14 @@ export default Controller.extend({
   },
   {
     propertyName: 'repoCopies',
-    title: 'Manuscript ID',
+    className: 'msid-column',
+    title: 'Manuscript IDs',
     component: 'submissions-repoid-cell',
     disableSorting: true
   },
   {
     title: 'Actions',
+    className: 'actions-column',
     component: 'submission-action-cell'
   }
   ],
@@ -75,17 +77,13 @@ export default Controller.extend({
   },
   {
     title: 'Award Number (Funder)',
+    className: 'awardnum-funder-column',
     component: 'submissions-award-cell'
   },
   {
     propertyName: 'repositories',
     title: 'Repositories',
     component: 'submissions-repo-cell'
-  },
-  {
-    propertyName: 'submittedDate',
-    title: 'Last Update Date',
-    component: 'date-cell'
   },
   {
     propertyName: 'submittedDate',
@@ -100,7 +98,7 @@ export default Controller.extend({
   },
   {
     // propertyName: 'repoCopies',
-    title: 'Manuscript ID',
+    title: 'Manuscript IDs',
     component: 'submissions-repoid-cell'
   },
   ],

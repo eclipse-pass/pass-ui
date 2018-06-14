@@ -69,7 +69,7 @@ table td {
                 {{#if (eq model.sub.submitted true)}}
                   <td><i>This submission did not originate from PASS.</i></td>
                 {{else}}
-                  <td><i>You funder is aware of this publication and is expecting the deposit of your manuscript.</i></td>
+                  <td><i>Your funder is aware of this publication and is expecting the deposit of your manuscript.</i></td>
                 {{/if}}
               {{else}}
                 <td>{{model.sub.aggregatedDepositStatus}}</td>
@@ -128,17 +128,26 @@ table td {
             <tr>
               <td class="text-nowrap">Manuscript IDs</td>
               <td>
-
                 {{#if model.repoCopies}}
-                  <ul>
+                  <ul class="repoid-cell">
                   {{#each model.repoCopies as |repoCopy index|}}
                     {{#if repoCopy.externalIds}}
                       <li>
+                        <ul class="repoid-cell">
                         {{#if repoCopy.accessUrl}}
-                          <a href="{{repoCopy.accessUrl}}" target="_blank">{{repoCopy.externalIds}}</a> - {{get repoCopy "repository.name"}} ({{repoCopy.copyStatus}})
+                          {{#each repoCopy.externalIds as |externalIds|}}
+                            <li>
+                              <a href="{{repoCopy.accessUrl}}" target="_blank">{{externalIds}}</a> - {{get repoCopy "repository.name"}} ({{repoCopy.copyStatus}})
+                            </li>
+                          {{/each}}
                         {{else}}
-                          {{repoCopy.externalIds}} - {{get repoCopy "repository.name"}} ({{repoCopy.copyStatus}})
+                          <ul class="repoid-cell">
+                          {{#each repoCopy.externalIds as |externalIds|}}
+                            <li>{{externalIds}} - {{get repoCopy "repository.name"}} ({{repoCopy.copyStatus}})</li>
+                          {{/each}}
+                          </ul>
                         {{/if}}
+                        </ul>
                       </li>
                     {{else}}
                       <span class="nodata-placeholder">Manuscript IDs are not yet available</span>

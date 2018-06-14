@@ -26,21 +26,22 @@ export default Component.extend({
     back() {
       this.sendAction('back');
     },
-    addGrant(grant) {
-      if (event.target.value) {
+    addGrant(grant, event) {
+      if (grant) {
+        const submission = this.get('model.newSubmission');
+        submission.get('grants').pushObject(grant);
+        this.get('addedGrants').push(grant);
+        this.set('maxStep', 2);
+        submission.set('metadata', '[]');
+      } else if (event && event.target.value) {
         this.get('store').findRecord('grant', event.target.value).then((g) => {
+          g.get('primaryFunder.policy'); // Make sure policy is loaded in memory
           const submission = this.get('model.newSubmission');
           submission.get('grants').pushObject(g);
           this.get('addedGrants').push(g);
           this.set('maxStep', 2);
           submission.set('metadata', '[]');
         });
-      } else {
-        const submission = this.get('model.newSubmission');
-        submission.get('grants').pushObject(grant);
-        this.get('addedGrants').push(grant);
-        this.set('maxStep', 2);
-        submission.set('metadata', '[]');
       }
     },
     removeGrant(grant) {

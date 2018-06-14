@@ -159,9 +159,12 @@ export default Ember.Component.extend({
         this.get('doiInfo')[doiEntry] = this.get('doiInfo')[doiEntry].replace(/(<([^>]+)>)/ig, '');
         if (doiEntry == 'author') {
           newForm.schema.properties.authors.readonly = true;
+          newForm.options.fields.authors.hidden = false;
         } else if (this.get('doiInfo')[doiEntry].length > 0) {
           if (!(doiEntry === 'container-title-short')) {
             newForm.schema.properties[doiEntry].readonly = true;
+            newForm.options.fields[doiEntry].hidden = false;
+
           }
         }
       } catch (e) {} // eslint-disable-line no-empty
