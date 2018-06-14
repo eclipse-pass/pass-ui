@@ -11,7 +11,7 @@
     </li>
     {{/each}}
   {{else}}
-    <ul class="repoid-cell">
+    <ul class="">
     {{#each repoCopy.externalIds as |externalIds|}}
       <li>{{externalIds}} {{repocopy-status status=repoCopy.copyStatus class="inline"}}</li>
     {{/each}}
@@ -19,6 +19,6 @@
   {{/if}}
   </ul>
 {{else}}
-  <strong>{{repoCopy.copyStatus}}</strong> 
-  <span class="nodata-placeholder">Manuscript ID(s) are not yet available</span>
+  <span class="nodata-placeholder">Manuscript ID(s) are not yet available</span> 
+  {{repocopy-status status=repoCopy.copyStatus class="inline"}}
 {{/if}}

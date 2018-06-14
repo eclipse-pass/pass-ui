@@ -109,7 +109,7 @@ table td {
               </td>
             </tr>
             {{/if}}
-            {{#if (not-eq model.sub.source  "other")}}
+            {{#if (and model.deposits (not-eq model.sub.source  "other"))}}
               <tr>
                 <td>Deposits</td>
                 <td>
@@ -124,6 +124,39 @@ table td {
                   </ul>
                 </td>
               </tr>
+            {{/if}}
+            {{!-- Consolidate repository, deposit, repoCopy info --}}
+            {{#if repoMap}}
+            <tr>
+              <td style="min-width:115px;">Repositories</td>
+              <td>
+                <ul class="list-unstyled">
+                {{#each repoMap as |repoInfo index|}}
+                  {{#if (not-eq index 0)}}<hr>{{/if}}
+                  <li>
+                    <p class="card-title">
+                      {{repoInfo.repo.name}} 
+                      {{#if repoInfo.repo.url}}<a href={{repoInfo.repo.url}}>{{repoInfo.repo.url}}</a>{{/if}}
+                    </p>
+                    <p class="card-text">
+                      {{repocopy-display repoCopy=repoInfo.repositoryCopy}}
+                    </p>
+                  </li>
+                {{!-- <div class="card">
+                  <div class="card-body">
+                    <p class="card-title">
+                      {{repoInfo.repo.name}} 
+                      {{#if repoInfo.repo.url}}<a href={{repoInfo.repo.url}}>{{repoInfo.repo.url}}</a>{{/if}}
+                    </p>
+                    <p class="card-text">
+                      {{repocopy-display repoCopy=repoInfo.repositoryCopy}}
+                    </p>
+                  </div>
+                </div> --}}
+                {{/each}}
+                </ul>
+              </td>
+            </tr>
             {{/if}}
             {{!-- <tr>
               <td class="text-nowrap">Manuscript IDs</td>
@@ -207,27 +240,6 @@ table td {
                 </ul>
               </td>
             </tr>
-            {{!-- Consolidate repository, deposit, repoCopy info --}}
-            {{#if repoMap}}
-            <tr>
-              <td>Repositories</td>
-              <td>
-                {{#each repoMap as |repoInfo|}}
-                <div class="card">
-                  <div class="card-body">
-                    <p class="card-title">
-                      {{repoInfo.repo.name}} 
-                      {{#if repoInfo.repo.url}}<a href={{repoInfo.repo.url}}>{{repoInfo.repo.url}}</a>{{/if}}
-                    </p>
-                    <p class="card-text">
-                      {{repocopy-display repoCopy=repoInfo.repositoryCopy}}
-                    </p>
-                  </div>
-                </div>
-                {{/each}}
-              </td>
-            </tr>
-            {{/if}}
             <tr>
               <td>Files</td>
               <td>
