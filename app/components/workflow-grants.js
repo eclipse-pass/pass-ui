@@ -14,6 +14,9 @@ export default Component.extend({
   submissionGrants: Ember.computed('model.newSubmission', function () {
     return this.get('model.newSubmission.grants');
   }),
+  sortedGrants: Ember.computed('model.grants', function () {
+    return this.get('model.grants').sortBy('awardNumber');
+  }),
   didRender() {
     if (this.get('model.preLoadedGrant')) {
       this.send('addGrant', this.get('model.preLoadedGrant'));
@@ -26,21 +29,23 @@ export default Component.extend({
     back() {
       this.sendAction('back');
     },
-    addGrant(grant) {
-      if (event.target.value) {
-        this.get('store').findRecord('grant', event.target.value).then((g) => {
-          const submission = this.get('model.newSubmission');
-          submission.get('grants').pushObject(g);
-          this.get('addedGrants').push(g);
-          this.set('maxStep', 2);
-          submission.set('metadata', '[]');
-        });
-      } else {
+    addGrant(grant, event) {
+      if (grant) {
         const submission = this.get('model.newSubmission');
         submission.get('grants').pushObject(grant);
         this.get('addedGrants').push(grant);
         this.set('maxStep', 2);
         submission.set('metadata', '[]');
+      } else if (event && event.target.value) {
+        this.get('store').findRecord('grant', event.target.value).then((g) => {
+          g.get('primaryFunder.policy'); // Make sure policy is loaded in memory
+          const submission = this.get('model.newSubmission');
+          submission.get('grants').pushObject(g);
+          this.get('addedGrants').push(g);
+          this.set('maxStep', 2);
+          submission.set('metadata', '[]');
+          Ember.$('select')[0].selectedIndex = 0;
+        });
       }
     },
     removeGrant(grant) {
