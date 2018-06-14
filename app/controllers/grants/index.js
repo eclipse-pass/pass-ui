@@ -42,6 +42,7 @@ export default Controller.extend({
     {
       propertyName: 'grant.awardNumber',
       title: 'Award Number',
+      className: 'awardnum-column',
       disableFiltering: true,
       component: 'grant-link-cell'
     },
@@ -98,6 +99,7 @@ export default Controller.extend({
     {
       propertyName: 'grant.awardNumber',
       title: 'Award #',
+      className: 'awardnum-column',
       disableFiltering: true,
       component: 'grant-link-cell'
     },
