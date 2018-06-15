@@ -1,5 +1,17 @@
 {{outlet}}
-<div class="ml-auto mr-auto" style="max-width: 1000px;">
+<style>
+.faq-content h3 {
+  padding-top:10px;
+  font-weight:bold;
+  font-size: 1.2rem!important;
+}
+.integration-type-text {
+  font-style: italic;
+  margin-bottom:3px;
+  padding-bottom:0;
+}
+</style>
+<div class="ml-auto mr-auto faq-content" style="max-width: 1000px;">
   <header class="mt-5">
     <h1>Frequently Asked Questions</h1>
   </header>
@@ -7,11 +19,13 @@
     <h3 id="policies_PASS_can_support">What Open or Public Access policies can PASS support?</h3>
     <p>PASS fully supports Johns Hopkins University (JHU) Open Access policy by facilitating submissions of author’s accepted manuscripts (final published article - where permitted) into JScholarship, JHU institutional repository.</p>
     <p id="agencies_supported_by_PASS">Additionally, PASS supports existing workflows for Public Access mandated submissions into PubMed Central (PMC) - used by NIH and other funding agencies. Full list of agencies, whose Public Access policies PASS can support is below:</p>
-    <h5>Full integration (programmatic submission from PASS to NIH Manuscript Submission System (NIHMS) and status updates)</h5>
+    <h5>Full integration</h5>
+    <p class="integration-type-text">Programmatic submission from PASS to NIH Manuscript Submission System (NIHMS) and status updates</p>
     <ul>
       <li>NIH - National Institutes of Health</li>
     </ul>
-    <h5>Deposit integration (programmatic submission from PASS to NIHMS)</h5>
+    <h5>Deposit integration</h5>
+    <p class="integration-type-text">Programmatic submission from PASS to NIHMS without status updates</p>
     <ul>
       <li>ACL - Administration for Community Living</li>
       <li>AHRQ - Agency for Healthcare Research and Quality</li>
@@ -22,14 +36,24 @@
       <li>HHMI- Howard Hughes Medical Institute</li>
       <li>NASA -National Aeronautics and Space Administration </li>
     </ul>
-    <h5>Linked web portal (programmatic integration is not currently possible, but PASS does provide link to the agencies’ submission portal and provide full list of relevant metadata to aid with submission process)</h5>
+    <h5>Linked web portal</h5>
+    <p class="integration-type-text">Programmatic integration is not currently possible, but PASS does provide link to the agencies’ submission portal and provide full list of relevant metadata to aid with submission process</p>
     <ul>
       <li>ED – Department of Education</li>
       <li>USAID – US Agency for International Development</li>
     </ul>
   </section>
   <section>
-    <h3 id="processing">What is article processing charge?</h3>
+    <h3 id="processing">What is an article processing charge?</h3>
     <p>Article process charge, also known as publication fee, is a fee often charged to authors, by publisher, to fund the publication of open access journal articles. This fee is typically paid for by the author’s institution or research funder and range from $100 to $5000.</p>
+  </section>
+  <section>
+    <h3 id="nih-submissions">What information about NIH submissions is pre-loaded into PASS?</h3>
+    <p>Records of prior NIH submissions displayed in PASS go back to January 2013. Each night, updated Submission information is loaded into PASS from the NIH Manuscript Submission system (NIHMS). This information contains the public access compliance status of articles associated with NIH grants. If you are a PI on an NIH grant and have articles that are associated with those grants in PubMed, you may see the following on {{#link-to 'submissions'}}your Submissions page{{/link-to}}:</p>
+       <ul>
+         <li>Information about completed or in-progress Submissions, some of which may have been initiated outside of PASS. No action is required for these Submissions.</li>
+         <li>Information about manuscripts that have not yet been received by NIH for deposit into PubMed Central. These will appear in PASS as "requiring a manuscript" and can be completed through PASS to deposit the manuscript into compliance.</li>
+       </ul>
+    <p>The information for these submissions comes directly from NIH. Please feel free to {{#link-to 'contact'}}contact us{{/link-to}} if there are problems with the information so that we can contact NIH.</p>
   </section>
 </div>

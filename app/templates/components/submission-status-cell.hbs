@@ -1,5 +1,6 @@
 <style>
   .fas {
+    display: inline;
     font-size: 0.8em;
     opacity: 0.9;
     width: 15%;
@@ -7,10 +8,10 @@
   .not-started>.fa-circle {
     color: #c8ced3;
   }
-  .accepted>.fa-circle, .accepted .fa-info-circle{
+  .Complete>.fa-circle, .Complete .fa-info-circle{
     color: #4dbd74;
   }
-  .in-progress>.fa-circle {
+  .See.details>.fa-circle {
     color: #ffc107;
   }
   .stalled>.fa-circle {
@@ -19,33 +20,26 @@
 </style>
 
 <div class="text-left">
-    {{#if (eq record.source 'other')}}
-      {{#if (eq record.submitted true)}}
-      <span class="status accepted pr-1">
-        <span tooltip-position="left" tooltip="Funder has receive a submission for this publication from a different source.">
-          <i class="fas fa-info-circle d-inline"></i> Submitted
-        </span>
+  <span class="status {{status}} pr-1">
+    {{#if (eq status "Complete")}}
+      <span tooltip-position="left" tooltip="All target repositories have received a copy of the Submission and verified that it is approved for publication">
+        <i class="fas fa-info-circle"></i> {{status}}
       </span>
-      {{else}}
-        <span tooltip-position="left" tooltip="Your funder is aware of this publication and is expecting the deposit of your manuscript.">
-          <i class="fas fa-info-circle d-inline"></i>  Manuscript expected
-        </span>
-        {{!-- <span class="status not-started pr-1">
-          <i class="fas fa-circle"></i> Manuscript expected
-        </span> --}}
-      {{/if}}
-    {{else}}
-      <span class="status {{record.aggregatedDepositStatus}} pr-1">
-        {{#if (eq status "Accepted")}}<i class="fas fa-circle"></i> {{status}}{{/if}}
-        {{#if (eq status "In Progress")}}<i class="fas fa-circle"></i> {{status}}{{/if}}
-        {{#if (eq status "Stalled")}}<i class="fas fa-circle"></i> {{status}} (<a href="#">?</a>){{/if}}
-        {{#if (eq status "Not Started")}}
-        <span tooltip-position="left" tooltip="This submission is in queue to be transmitted to target its repositories.">
-          <i class="fas fa-info-circle d-inline"></i> {{status}}
-        </span>
-        {{/if}}
-      </span>
-
     {{/if}}
-
+    {{#if (eq status "Manuscript expected")}}
+      <span tooltip-position="left" tooltip="Your funder is aware of this publication and is expecting the deposit of your manuscript.">
+        <i class="fas fa-info-circle"></i> {{status}}
+      </span>
+    {{/if}}
+    {{#if (eq status "Submitted")}}
+      <span tooltip-position="left" tooltip="This submission has either been sent to all target repositories, or is in the queue and will be submitted shortly.">
+        <i class="fas fa-info-circle"></i> {{status}}
+      </span>
+    {{/if}}
+    {{#if (eq status "See details")}}
+      {{#link-to "submissions.detal" record.id}}
+        <i class="fas fa-circle"></i> {{status}}
+      {{/link-to}}
+    {{/if}}
+  </span>
 </div>
