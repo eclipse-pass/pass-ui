@@ -42,7 +42,7 @@ export default Route.extend({
     });
 
     const policies = this.loadObjects('policy', 0, 500);
-    const journals = this.loadObjects('journal', 0, 500);
+    // const journals = this.loadObjects('journal', 0, 500);
 
     // let publication = null;
     if (params.submission) {
@@ -55,7 +55,7 @@ export default Route.extend({
           publication,
           grants,
           policies,
-          journals,
+          // journals,
           funders,
           preLoadedGrant
         });
@@ -69,7 +69,7 @@ export default Route.extend({
       publication,
       grants,
       policies,
-      journals,
+      // journals,
       funders,
       preLoadedGrant
     });

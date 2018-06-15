@@ -153,19 +153,25 @@ export default Component.extend({
           publication.set('volume', doiInfo.volume);
           publication.set('abstract', doiInfo.abstract);
 
-          const journal = this.get('model.journals').findBy(
-            'journalName',
-            doiInfo['container-title'].trim(),
-          );
-          if (!journal) {
-            const newJournal = this.get('store').createRecord('journal', {
-              journalName: doiInfo['container-title'].trim(),
-              nlmta: 'UNKNOWN',
-            });
-            newJournal.save().then(j => publication.set('journal', j));
-          } else {
-            publication.set('journal', journal);
-          }
+          // const journal = this.get('model.journals').findBy(
+          //   'journalName',
+          //   doiInfo['container-title'].trim(),
+          // );
+          const desiredName = doiInfo['container-title'].trim();
+          this.get('store').query('journal', {
+            query: { match: { journalName: desiredName } }
+          }).then((journals) => {
+            debugger
+            if (!journal) {
+              const newJournal = this.get('store').createRecord('journal', {
+                journalName: doiInfo['container-title'].trim(),
+                nlmta: 'UNKNOWN',
+              });
+              newJournal.save().then(j => publication.set('journal', j));
+            } else {
+              publication.set('journal', journal);
+            }
+          });
         });
       }
     },

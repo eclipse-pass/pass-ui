@@ -75,7 +75,8 @@ export default Service.extend({
 
     return this.get('ajax').post(this.get('base'), {
       data,
-      headers: this._headers()
+      headers: this._headers(),
+      xhrFields: { withCredentials: true }
     }).then(res => this._adaptResults(res, type));
   },
 
