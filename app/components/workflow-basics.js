@@ -153,15 +153,20 @@ export default Component.extend({
           publication.set('volume', doiInfo.volume);
           publication.set('abstract', doiInfo.abstract);
 
-          // const journal = this.get('model.journals').findBy(
-          //   'journalName',
-          //   doiInfo['container-title'].trim(),
-          // );
           const desiredName = doiInfo['container-title'].trim();
           this.get('store').query('journal', {
             query: { match: { journalName: desiredName } }
           }).then((journals) => {
-            debugger
+            /*
+             * TODO this hack is done because the query returns more matches than expected
+             * We should modify the indexer to index 'journal.journalName' as keyword, instead
+             * of text. Then queries will match on the full journalName ONLY, without the
+             * fuzziness.
+             *
+             * Here, we get the first journal object that has exactly the same journalName
+             * that we were originally looking for.
+             */
+            let journal = journals.findBy('journalName', desiredName);
             if (!journal) {
               const newJournal = this.get('store').createRecord('journal', {
                 journalName: doiInfo['container-title'].trim(),
