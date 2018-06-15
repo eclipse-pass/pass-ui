@@ -143,7 +143,7 @@ export default Component.extend({
           }
           this.set('doiInfo', doiInfo);
           // useful console.log
-          console.log(doiInfo);
+          // console.log(doiInfo);
           publication.set('title', doiInfo.title);
 
           publication.set('submittedDate', doiInfo.deposited);
@@ -154,20 +154,19 @@ export default Component.extend({
           publication.set('abstract', doiInfo.abstract);
 
           const desiredName = doiInfo['container-title'].trim();
-          this.get('store').query('journal', {
-            query: { match: { journalName: desiredName } }
-          }).then((journals) => {
-            /*
-             * TODO this hack is done because the query returns more matches than expected
-             * We should modify the indexer to index 'journal.journalName' as keyword, instead
-             * of text. Then queries will match on the full journalName ONLY, without the
-             * fuzziness.
-             *
-             * Here, we get the first journal object that has exactly the same journalName
-             * that we were originally looking for.
-             */
-            let journal = journals.findBy('journalName', desiredName);
+          const desiredIssn = Array.isArray(doiInfo['ISSN']) ? doiInfo['ISSN'][0] : // eslint-disable-line
+            (doiInfo['ISSN'] ? doiInfo['ISSN'] : ''); // eslint-disable-line
+          let query = {
+            bool: {
+              should: [{ match: { journalName: desiredName } }],
+              must: { term: { issns: desiredIssn } }
+            }
+          };
+          // Must match ISSN, optionally match journalName
+          this.get('store').query('journal', { query }).then((journals) => {
+            let journal = journals.get('length') > 0 ? journals.objectAt(0) : false;
             if (!journal) {
+              console.log(` >>> Journal not found [${desiredIssn}] ${desiredName}`);
               const newJournal = this.get('store').createRecord('journal', {
                 journalName: doiInfo['container-title'].trim(),
                 nlmta: 'UNKNOWN',
