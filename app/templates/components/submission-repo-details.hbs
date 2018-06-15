@@ -1,0 +1,41 @@
+<style>
+  .sub-status { padding-left:23px; }
+  .fas {
+    display: inline;
+    font-size: 0.8em;
+    opacity: 0.9;
+  }
+  .Complete>.fa-circle, .Complete .fa-info-circle {color: #4dbd74;}
+  .stalled>.fa-circle {color: #f86c6b;}
+</style>
+<li>
+  <p class="card-title">
+    <strong>{{repo.name}} ({{#if repo.url}}<a href={{repo.url}}>{{repo.url}}</a>{{/if}})</strong>
+  </p>
+  <p class="card-text">
+    <div class="sub-status">
+      {{#if repoCopy}}
+        {{#if (eq repoCopy.copyStatus "complete")}}
+          <span class="Complete" tooltip-position="left" tooltip="Submission to this repository was accepted and processed that the repository. ID(s) have been assigned to the submitted manuscript">
+            <i class="fas fa-info-circle"></i> Complete
+          </span>
+          {{repocopy-display repoCopy=repoCopy}}
+        {{/if}}
+        {{#if (eq repoCopy.copyStatus "stalled")}}
+          <span class="stalled" tooltip-position="left" tooltip="">
+            <i class="fas fa-info-circle"></i> Stalled
+          </span>
+        {{/if}}
+      {{else}}
+        {{#if (eq repo.url "https://eric.ed.gov/")}}
+          <span>Deposit into {{repo.name}} was prompted.</span>
+        {{else}}
+          <span class="" tooltip-position="left" tooltip="PASS has received your submission. Your submission has been sent to the target repositories or is in queue to be sent">
+            <i class="fas fa-info-circle"></i> Submitted
+          </span>
+          {{repocopy-display repoCopy=repoCopy}}
+        {{/if}}
+      {{/if}}
+    </div>
+  </p>
+</li>

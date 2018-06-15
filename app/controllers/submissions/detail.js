@@ -13,6 +13,17 @@ export default Controller.extend({
     }
     return false;
   }),
+  /**
+   * Ugly way to generate date for the template to use.
+   * {
+   *    'repository-id': {
+   *      repo: { }, // repository obj
+   *      deposit: {}, // related deposit, if exists
+   *      repositoryCopy: {} // related repoCopy if exists
+   *    }
+   * }
+   * This map is then turned into an array for use in the template
+   */
   repoMap: Ember.computed('model.deposits', 'model.repoCopies', function () {
     let hasStuff = false;
     const repos = this.get('model.repos');

@@ -1,24 +1,20 @@
 <style>
-  .inline { display: inline; }
+  ul { padding-left: 16px; }
 </style>
 {{#if repoCopy.externalIds}}
   <ul class="">
   {{#if repoCopy.accessUrl}}
     {{#each repoCopy.externalIds as |externalIds|}}
-    <li>
-      <a href="{{repoCopy.accessUrl}}" target="_blank">{{externalIds}}</a> 
-      {{repocopy-status status=repoCopy.copyStatus class="inline"}}
-    </li>
+    <li><a href="{{repoCopy.accessUrl}}" target="_blank">{{externalIds}}</a></li>
     {{/each}}
   {{else}}
     <ul class="">
     {{#each repoCopy.externalIds as |externalIds|}}
-      <li>{{externalIds}} {{repocopy-status status=repoCopy.copyStatus class="inline"}}</li>
+      <li>{{externalIds}}</li>
     {{/each}}
     </ul>
   {{/if}}
   </ul>
 {{else}}
-  <span class="nodata-placeholder">Manuscript ID(s) are not yet available</span> 
-  {{repocopy-status status=repoCopy.copyStatus class="inline"}}
+  <span class="nodata-placeholder">Manuscript ID(s) are not yet available</span>
 {{/if}}

@@ -94,109 +94,20 @@
                 </ul>
               </td>
             </tr>
-            {{!-- <tr>
-              <td class="text-nowrap">Repositories</td>
-              <td>
-                <ul class="list-unstyled mb-0">
-                  {{#each (await model.sub.repositories) as |repository index|}}
-                    <li>{{repository.name}}</li>
-                  {{/each}}
-                </ul>
-              </td>
-            </tr> --}}
-            {{#if externalSubmission}}
-              <tr>
-                <td class="text-nowrap">External Submission Repositories</td>
-                <td>
-                  <ul>
-                    <li>Deposit into Educational Resources Information Center (ERIC) was prompted</li>
-                  </ul>
-                </td>
-              </tr>
-            {{/if}}
-            {{#if (and model.deposits (not-eq model.sub.source  "other"))}}
-              <tr>
-                <td>Deposits</td>
-                <td>
-                  <ul>
-                    {{#each model.deposits as |deposit index|}}
-                      <li>Deposit for {{await deposit.repository.name}} (<a href= {{await deposit.repositoryCopy.accessUrl}}>{{await deposit.repositoryCopy.externalIds}}</a>)
-                        <ul>
-                          <li>Status: {{deposit.depositStatus}}</li>
-                        </ul>
-                      </li>
-                    {{/each}}
-                  </ul>
-                </td>
-              </tr>
-            {{/if}}
             {{!-- Consolidate repository, deposit, repoCopy info --}}
             {{#if repoMap}}
             <tr>
-              <td style="min-width:115px;">Repositories</td>
+              <td>Repositories</td>
               <td>
                 <ul class="list-unstyled">
                 {{#each repoMap as |repoInfo index|}}
                   {{#if (not-eq index 0)}}<hr>{{/if}}
-                  <li>
-                    <p class="card-title">
-                      {{repoInfo.repo.name}} 
-                      {{#if repoInfo.repo.url}}<a href={{repoInfo.repo.url}}>{{repoInfo.repo.url}}</a>{{/if}}
-                    </p>
-                    <p class="card-text">
-                      {{repocopy-display repoCopy=repoInfo.repositoryCopy}}
-                    </p>
-                  </li>
-                {{!-- <div class="card">
-                  <div class="card-body">
-                    <p class="card-title">
-                      {{repoInfo.repo.name}} 
-                      {{#if repoInfo.repo.url}}<a href={{repoInfo.repo.url}}>{{repoInfo.repo.url}}</a>{{/if}}
-                    </p>
-                    <p class="card-text">
-                      {{repocopy-display repoCopy=repoInfo.repositoryCopy}}
-                    </p>
-                  </div>
-                </div> --}}
+                  {{submission-repo-details repo=repoInfo.repo deposit=repoInfo.deposit repoCopy=repoInfo.repositoryCopy}}
                 {{/each}}
                 </ul>
               </td>
             </tr>
             {{/if}}
-            {{!-- <tr>
-              <td class="text-nowrap">Manuscript IDs</td>
-              <td>
-                {{#if model.repoCopies}}
-                  <ul class="repoid-cell">
-                    {{#each model.repoCopies as |repoCopy index|}}
-                      {{#if repoCopy.externalIds}}
-                        <li>
-                          <ul class="repoid-cell">
-                            {{#if repoCopy.accessUrl}}
-                              {{#each repoCopy.externalIds as |externalIds|}}
-                                <li>
-                                  <a href="{{repoCopy.accessUrl}}" target="_blank">{{externalIds}}</a> - {{get repoCopy "repository.name"}} ({{repoCopy.copyStatus}})
-                                </li>
-                              {{/each}}
-                            {{else}}
-                              <ul class="repoid-cell">
-                                {{#each repoCopy.externalIds as |externalIds|}}
-                                  <li>{{externalIds}} - {{get repoCopy "repository.name"}} ({{repoCopy.copyStatus}})</li>
-                                {{/each}}
-                              </ul>
-                            {{/if}}
-                          </ul>
-                        </li>
-                      {{else}}
-                        <span class="nodata-placeholder">Manuscript IDs are not yet available</span>
-                      {{/if}}
-                    {{/each}}
-                  </ul>
-                {{else}}
-                  <span class="nodata-placeholder">Manuscript IDs are not yet available</span>
-                {{/if}}
-              </td>
-            </tr> --}}
             <tr>
               <td class="text-nowrap">Submitter</td>
               <td>
