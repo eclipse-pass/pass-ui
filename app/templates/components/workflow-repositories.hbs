@@ -24,8 +24,6 @@
       <li class="list-group-item d-flex align-items-center my-1">
         {{#if requiredRepositories.length}}
           {{input type="checkbox" change=(action "toggleRepository" repoInfo.repo) checked=true name=repoInfo.repo.name}}
-        {{else}}
-          {{input type="checkbox" change=(action "toggleRepository" repoInfo.repo) checked=true name=repoInfo.repo.name disabled="true"}}
         {{/if}}
         <label for="{{repoInfo.repo.name}}" class="mb-0 ml-2">{{repoInfo.repo.name}} - required by {{repoInfo.funders}}</label>
       </li>
