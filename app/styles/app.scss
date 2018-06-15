@@ -4,15 +4,7 @@
 @import "ember-modal-dialog/ember-modal-appearance";
 @import "ember-power-select";
 
-@font-face {
-    font-family: "gentona-medium";
-    src:url("/fonts/Gentona-Medium.ttf");
-}
-
-@font-face {
-    font-family: "quadon-black";
-    src:url("/fonts/Quadon-Medium.ttf");
-}
+// Font-faces decaled in 'index.html' for now, so {{rootURL}} can be used
 
 $jhu-grey: #E5E2E0;
 $jhu-grey2: #B4B2AD;
@@ -392,7 +384,6 @@ h2 {
 h3 {
   font-size: 1.3rem!important;
 }
-
 
 a {
   color: $navbar-color !important;
