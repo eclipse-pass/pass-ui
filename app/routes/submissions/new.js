@@ -42,9 +42,7 @@ export default Route.extend({
     });
 
     const policies = this.loadObjects('policy', 0, 500);
-    const journals = this.loadObjects('journal', 0, 500);
 
-    // let publication = null;
     if (params.submission) {
       return this.get('store').findRecord('submission', params.submission).then((sub) => {
         newSubmission = this.get('store').findRecord('submission', params.submission);
@@ -55,12 +53,10 @@ export default Route.extend({
           publication,
           grants,
           policies,
-          journals,
           funders,
           preLoadedGrant
         });
       });
-      // publication = newSubmission.get('publication');
     }
     newSubmission = this.get('store').createRecord('submission');
     const h = Ember.RSVP.hash({
@@ -69,7 +65,7 @@ export default Route.extend({
       publication,
       grants,
       policies,
-      journals,
+      // journals,
       funders,
       preLoadedGrant
     });
