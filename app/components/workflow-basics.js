@@ -143,7 +143,7 @@ export default Component.extend({
           }
           this.set('doiInfo', doiInfo);
           // useful console.log
-          console.log(doiInfo);
+          // console.log(doiInfo);
           publication.set('title', doiInfo.title);
 
           publication.set('submittedDate', doiInfo.deposited);
@@ -153,19 +153,34 @@ export default Component.extend({
           publication.set('volume', doiInfo.volume);
           publication.set('abstract', doiInfo.abstract);
 
-          const journal = this.get('model.journals').findBy(
-            'journalName',
-            doiInfo['container-title'].trim(),
-          );
-          if (!journal) {
-            const newJournal = this.get('store').createRecord('journal', {
-              journalName: doiInfo['container-title'].trim(),
-              nlmta: 'UNKNOWN',
-            });
-            newJournal.save().then(j => publication.set('journal', j));
-          } else {
-            publication.set('journal', journal);
+          const desiredName = doiInfo['container-title'].trim();
+          const desiredIssn = Array.isArray(doiInfo['ISSN']) ? doiInfo['ISSN'][0] : // eslint-disable-line
+            (doiInfo['ISSN'] ? doiInfo['ISSN'] : ''); // eslint-disable-line
+
+          let query = {
+            bool: {
+              should: [{ match: { journalName: desiredName } }],
+              // must: { term: { issns: desiredIssn } }
+            }
+          };
+          if (desiredIssn) {
+            query.bool.must = { term: { issns: desiredIssn } };
           }
+          // Must match ISSN, optionally match journalName
+          this.get('store').query('journal', { query }).then((journals) => {
+            let journal = journals.get('length') > 0 ? journals.objectAt(0) : false;
+            if (!journal) {
+              console.log(` >>> Journal not found [${desiredIssn}] ${desiredName}`);
+              const newJournal = this.get('store').createRecord('journal', {
+                journalName: doiInfo['container-title'].trim(),
+                issns: doiInfo.ISSN,
+                nlmta: 'UNKNOWN',
+              });
+              newJournal.save().then(j => publication.set('journal', j));
+            } else {
+              publication.set('journal', journal);
+            }
+          });
         });
       }
     },

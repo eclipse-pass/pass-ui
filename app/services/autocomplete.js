@@ -11,7 +11,7 @@ import ENV from 'pass-ember/config/environment';
  * TODO do we need to pass authentication headers?
  */
 export default Service.extend({
-  suggestSize: 10,
+  suggestSize: 100,
   ajax: Ember.inject.service(),
   base: Ember.computed(() => ENV.fedora.elasticsearch),
   es_field_suffix: '_suggest',
@@ -75,7 +75,8 @@ export default Service.extend({
 
     return this.get('ajax').post(this.get('base'), {
       data,
-      headers: this._headers()
+      headers: this._headers(),
+      xhrFields: { withCredentials: true }
     }).then(res => this._adaptResults(res, type));
   },
 
