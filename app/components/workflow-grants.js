@@ -6,7 +6,7 @@ export default Component.extend({
   store: service('store'),
   grant: null,
   /** Holds all newly-added grants */
-  addedGrants: [],
+  addedGrants: Ember.A(),
   optionalGrants: Ember.computed('model', function () {
     return this.get('model.grants');
   }),
@@ -14,10 +14,12 @@ export default Component.extend({
   submissionGrants: Ember.computed('model.newSubmission', function () {
     return this.get('model.newSubmission.grants');
   }),
-  sortedGrants: Ember.computed('model.grants', function () {
-    return this.get('model.grants').sortBy('awardNumber');
+  sortedGrants: Ember.computed('addedGrants.[]', function () {
+    return this.get('model.grants').filter(grant => !this.get('addedGrants').includes(grant))
+      .sortBy('awardNumber');
   }),
-  didRender() {
+  init() {
+    this._super(...arguments);
     if (this.get('model.preLoadedGrant')) {
       this.send('addGrant', this.get('model.preLoadedGrant'));
     }
@@ -33,7 +35,7 @@ export default Component.extend({
       if (grant) {
         const submission = this.get('model.newSubmission');
         submission.get('grants').pushObject(grant);
-        this.get('addedGrants').push(grant);
+        this.get('addedGrants').pushObject(grant);
         this.set('maxStep', 2);
         submission.set('metadata', '[]');
       } else if (event && event.target.value) {
@@ -41,7 +43,7 @@ export default Component.extend({
           g.get('primaryFunder.policy'); // Make sure policy is loaded in memory
           const submission = this.get('model.newSubmission');
           submission.get('grants').pushObject(g);
-          this.get('addedGrants').push(g);
+          this.get('addedGrants').pushObject(g);
           this.set('maxStep', 2);
           submission.set('metadata', '[]');
           Ember.$('select')[0].selectedIndex = 0;
@@ -56,7 +58,7 @@ export default Component.extend({
       const submission = this.get('model.newSubmission');
       submission.get('grants').removeObject(grant);
       const index = this.get('addedGrants').indexOf(grant);
-      this.get('addedGrants').splice(index, 1);
+      this.get('addedGrants').removeAt(index);
       this.set('maxStep', 2);
       submission.set('metadata', '[]');
     },
