@@ -14,27 +14,13 @@
   </p>
   <p class="card-text">
     <div class="sub-status">
-      {{#if repoCopy}}
-        {{#if (eq repoCopy.copyStatus "complete")}}
-          <span class="Complete" tooltip-position="left" tooltip="Submission to this repository was accepted and processed that the repository. ID(s) have been assigned to the submitted manuscript">
-            <i class="fas fa-info-circle"></i> Complete
-          </span>
-          {{repocopy-display repoCopy=repoCopy}}
-        {{/if}}
-        {{#if (eq repoCopy.copyStatus "stalled")}}
-          <span class="stalled" tooltip-position="left" tooltip="">
-            <i class="fas fa-info-circle"></i> Stalled
-          </span>
-        {{/if}}
+      {{#if isExternalRepo}}
+        <span>Deposit into {{repo.name}} was prompted.</span>
       {{else}}
-        {{#if (eq repo.url "https://eric.ed.gov/")}}
-          <span>Deposit into {{repo.name}} was prompted.</span>
-        {{else}}
-          <span class="" tooltip-position="left" tooltip="PASS has received your submission. Your submission has been sent to the target repositories or is in queue to be sent">
-            <i class="fas fa-info-circle"></i> Submitted
-          </span>
-          {{repocopy-display repoCopy=repoCopy}}
-        {{/if}}
+        <span class="{{status}}" {{#if tooltip}}tooltip-position="left" tooltip="{{tooltip}}{{/if}}">
+          {{#if tooltip}}<i class="fas fa-info-circle"></i> {{/if}}{{status}}
+        </span>
+        {{repocopy-display repoCopy=repoCopy}}
       {{/if}}
     </div>
   </p>
