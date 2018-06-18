@@ -17,9 +17,16 @@
       {{#if isExternalRepo}}
         <span>Deposit into {{repo.name}} was prompted.</span>
       {{else}}
-        <span class="{{status}}" {{#if tooltip}}tooltip-position="left" tooltip="{{tooltip}}{{/if}}">
-          {{#if tooltip}}<i class="fas fa-info-circle"></i> {{/if}}{{status}}
-        </span>
+        {{#if tooltip}}
+          <span class="{{status}}" tooltip-position="left" tooltip="{{tooltip}}">
+            <i class="fas fa-info-circle"></i> {{status}}
+          </span>
+        {{else}}
+          <span class="{{status}}">
+            <i class="fas fa-circle"></i> {{status}}
+          </span>
+        {{/if}}
+        
         {{repocopy-display repoCopy=repoCopy}}
       {{/if}}
     </div>
