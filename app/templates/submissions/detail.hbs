@@ -69,7 +69,7 @@
         <table class="table table-responsive-sm table-bordered w-100">
           <tbody>
             <tr>
-              <td class="max-width">Status</td>
+              <td class="max-width"><strong>Status</strong></td>
               {{#if (eq model.sub.source "other")}}
                 {{#if (eq model.sub.submitted true)}}
                   <td><i>This submission did not originate from PASS.</i></td>
@@ -81,7 +81,7 @@
               {{/if}}
             </tr>
             <tr>
-              <td>Grants</td>
+              <td><strong>Grants</strong></td>
               <td>
                 <ul class="list-unstyled">
                   {{#each model.sub.grants as |grant|}}
@@ -94,78 +94,21 @@
                 </ul>
               </td>
             </tr>
+            {{!-- Consolidate repository, deposit, repoCopy info --}}
+            {{#if repoMap}}
             <tr>
-              <td class="text-nowrap">Repositories</td>
+              <td><strong>Repositories</strong></td>
               <td>
-                <ul class="list-unstyled mb-0">
-                  {{#each (await model.sub.repositories) as |repository index|}}
-                    <li>{{repository.name}}</li>
-                  {{/each}}
+                <ul class="list-unstyled">
+                {{#each repoMap as |repoInfo index|}}
+                  {{submission-repo-details repo=repoInfo.repo deposit=repoInfo.deposit repoCopy=repoInfo.repositoryCopy}}
+                {{/each}}
                 </ul>
               </td>
             </tr>
-            {{#if externalSubmission}}
-              <tr>
-                <td class="text-nowrap">External Submission Repositories</td>
-                <td>
-                  <ul>
-                    <li>Deposit into Educational Resources Information Center (ERIC) was prompted</li>
-                  </ul>
-                </td>
-              </tr>
-            {{/if}}
-            {{#if (not-eq model.sub.source "other")}}
-              <tr>
-                <td>Deposits</td>
-                <td>
-                  <ul>
-                    {{#each model.deposits as |deposit index|}}
-                      <li>Deposit for {{await deposit.repository.name}} (<a href= {{await deposit.repositoryCopy.accessUrl}}>{{await deposit.repositoryCopy.externalIds}}</a>)
-                        <ul>
-                          <li>Status: {{deposit.depositStatus}}</li>
-                        </ul>
-                      </li>
-                    {{/each}}
-                  </ul>
-                </td>
-              </tr>
             {{/if}}
             <tr>
-              <td class="text-nowrap">Manuscript IDs</td>
-              <td>
-                {{#if model.repoCopies}}
-                  <ul class="repoid-cell">
-                    {{#each model.repoCopies as |repoCopy index|}}
-                      {{#if repoCopy.externalIds}}
-                        <li>
-                          <ul class="repoid-cell">
-                            {{#if repoCopy.accessUrl}}
-                              {{#each repoCopy.externalIds as |externalIds|}}
-                                <li>
-                                  <a href="{{repoCopy.accessUrl}}" target="_blank">{{externalIds}}</a> - {{get repoCopy "repository.name"}} ({{repoCopy.copyStatus}})
-                                </li>
-                              {{/each}}
-                            {{else}}
-                              <ul class="repoid-cell">
-                                {{#each repoCopy.externalIds as |externalIds|}}
-                                  <li>{{externalIds}} - {{get repoCopy "repository.name"}} ({{repoCopy.copyStatus}})</li>
-                                {{/each}}
-                              </ul>
-                            {{/if}}
-                          </ul>
-                        </li>
-                      {{else}}
-                        <span class="nodata-placeholder">Manuscript IDs are not yet available</span>
-                      {{/if}}
-                    {{/each}}
-                  </ul>
-                {{else}}
-                  <span class="nodata-placeholder">Manuscript IDs are not yet available</span>
-                {{/if}}
-              </td>
-            </tr>
-            <tr>
-              <td class="text-nowrap">Submitter</td>
+              <td class="text-nowrap"><strong>Submitter</strong></td>
               <td>
                 {{#if (eq model.sub.source "other")}}
                   <i>This submission did not originate from PASS</i>
@@ -178,7 +121,7 @@
               </td>
             </tr>
             <tr>
-              <td>Details</td>
+              <td><strong>Details</strong></td>
               <td>
                 <ul class="list-unstyled">
                   {{#each-in metadataBlobNoKeys as |key data|}}
@@ -215,7 +158,7 @@
               </td>
             </tr>
             <tr>
-              <td>Files</td>
+              <td><strong>Files</strong></td>
               <td>
                 {{#if (eq model.sub.source "other")}}
                   <p class="mb-0">

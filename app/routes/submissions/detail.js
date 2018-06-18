@@ -9,13 +9,15 @@ export default Route.extend({
     const deposits = this.get('store').query('deposit', { term: { submission: params.submission_id }, size: querySize });
 
     const repoCopies = sub.then(s =>
-      this.get('store').query('RepositoryCopy', { term: { publication: s.get('publication.id') }, size: querySize }));
+      this.get('store').query('repositoryCopy', { term: { publication: s.get('publication.id') }, size: querySize }));
+    const repos = sub.then(s => s.get('repositories'));
 
     return hash({
       sub,
       files,
       deposits,
-      repoCopies
+      repoCopies,
+      repos
     });
   },
 });
