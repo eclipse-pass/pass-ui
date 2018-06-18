@@ -39,7 +39,10 @@ export default Route.extend({
           should: [
             { term: { pi: this.get('currentUser.user.id') } },
             { term: { coPis: this.get('currentUser.user.id') } }
-          ]
+          ],
+          filter: {
+            range: { "endDate": { "gte": "2011-01-01" }} 
+          }
         }
       },
       from: 0,

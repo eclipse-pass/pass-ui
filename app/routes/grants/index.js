@@ -35,7 +35,10 @@ export default Route.extend({
           should: [
             { term: { pi: user.get('id') } },
             { term: { coPis: user.get('id') } }
-          ]
+          ],
+          filter: {
+            range: { "endDate": { "gte": "2011-01-01" }} 
+          }
         }
       },
       size: querySize
