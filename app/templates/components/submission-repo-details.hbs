@@ -1,5 +1,6 @@
 <style>
   .sub-status { padding-left:23px; }
+  .sub-status .card-title { font-size: 1.2em; }
   .fas {
     display: inline;
     font-size: 0.8em;
@@ -9,26 +10,37 @@
   .stalled>.fa-circle {color: #f86c6b;}
 </style>
 <li>
-  <p class="card-title">
-    <strong>{{repo.name}} ({{#if repo.url}}<a href={{repo.url}}>{{repo.url}}</a>{{/if}})</strong>
-  </p>
-  <p class="card-text">
-    <div class="sub-status">
-      {{#if isExternalRepo}}
-        <span>Deposit into {{repo.name}} was prompted.</span>
-      {{else}}
-        {{#if tooltip}}
-          <span class="{{status}}" tooltip-position="left" tooltip="{{tooltip}}">
-            <i class="fas fa-info-circle"></i> {{status}}
-          </span>
+  <div class="card float-left col-5 mr-3 mb-0">
+    <div class="card-body sub-status">
+      <div class="row card-title">
+        {{#if repo.url}}
+          <a href={{repo.url}} target="_blank">{{repo.name}}</a>
         {{else}}
-          <span class="{{status}}">
-            <i class="fas fa-circle"></i> {{status}}
-          </span>
+          {{repo.name}}
         {{/if}}
-        
+      </div>
+      <p class="card-text">
+        <div class="row">
+          <strong class="col-5 px-0">Status: </strong>
+          {{#if isExternalRepo}}
+            <span class="col">Deposit into {{repo.name}} was prompted.</span>
+          {{else}}
+            <div class="col">
+              {{#if tooltip}}
+                <span class="{{status}}" tooltip-position="left" tooltip="{{tooltip}}">
+                  <i class="fas fa-info-circle"></i> {{status}}
+                </span>
+              {{else}}
+                <span class="{{status}}">
+                  <i class="fas fa-circle"></i> {{status}}
+                </span>
+              {{/if}}
+            </div>
+          {{/if}}
+        </div>
+        <hr class="my-2">
         {{repocopy-display repoCopy=repoCopy}}
-      {{/if}}
+      </p>
     </div>
-  </p>
+  </div>
 </li>

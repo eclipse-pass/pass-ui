@@ -101,7 +101,6 @@
               <td>
                 <ul class="list-unstyled">
                 {{#each repoMap as |repoInfo index|}}
-                  {{#if (not-eq index 0)}}<hr>{{/if}}
                   {{submission-repo-details repo=repoInfo.repo deposit=repoInfo.deposit repoCopy=repoInfo.repositoryCopy}}
                 {{/each}}
                 </ul>
@@ -109,7 +108,7 @@
             </tr>
             {{/if}}
             <tr>
-              <td class="text-nowrap">Submitter</td>
+              <td class="text-nowrap"><h2>Submitter</h2></td>
               <td>
                 {{#if (eq model.sub.source "other")}}
                   <i>This submission did not originate from PASS</i>

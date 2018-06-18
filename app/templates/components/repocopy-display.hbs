@@ -1,20 +1,20 @@
-<style>
-  ul { padding-left: 16px; }
-</style>
-{{#if repoCopy.externalIds}}
-  <ul class="">
-  {{#if repoCopy.accessUrl}}
-    {{#each repoCopy.externalIds as |externalIds|}}
-    <li><a href="{{repoCopy.accessUrl}}" target="_blank">{{externalIds}}</a></li>
-    {{/each}}
-  {{else}}
-    <ul class="">
-    {{#each repoCopy.externalIds as |externalIds|}}
-      <li>{{externalIds}}</li>
-    {{/each}}
+<div class="row">
+  <strong class="col-5 px-0">Manuscript ID(s):</strong>
+  {{#if repoCopy.externalIds}}
+    <ul class="col list-unstyled">
+    {{#if repoCopy.accessUrl}}
+      {{#each repoCopy.externalIds as |externalIds|}}
+      <li><a href="{{repoCopy.accessUrl}}" target="_blank">{{externalIds}}</a></li>
+      {{/each}}
+    {{else}}
+      <ul class="col list-unstyled">
+      {{#each repoCopy.externalIds as |externalIds|}}
+        <li>{{externalIds}}</li>
+      {{/each}}
+      </ul>
+    {{/if}}
     </ul>
+  {{else}}
+    <span class="col nodata-placeholder">Manuscript ID(s) are not yet assigned by the repository.</span>
   {{/if}}
-  </ul>
-{{else}}
-  <span class="nodata-placeholder">Manuscript ID(s) are not yet available</span>
-{{/if}}
+</div>
