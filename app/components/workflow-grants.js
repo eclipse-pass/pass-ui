@@ -4,9 +4,7 @@ import { inject as service } from '@ember/service';
 
 export default Component.extend({
   store: service('store'),
-  grant: null,
-  /** Holds all newly-added grants */
-  addedGrants: Ember.A(),
+
   optionalGrants: Ember.computed('model', function () {
     return this.get('model.grants');
   }),
@@ -14,9 +12,10 @@ export default Component.extend({
   submissionGrants: Ember.computed('model.newSubmission', function () {
     return this.get('model.newSubmission.grants');
   }),
-  sortedGrants: Ember.computed('addedGrants.[]', function () {
-    return this.get('model.grants').filter(grant => !this.get('addedGrants').includes(grant))
-      .sortBy('awardNumber');
+  sortedGrants: Ember.computed('model.newSubmission.grants.[]', function () {
+    const subGrants = this.get('model.newSubmission.grants');
+    return this.get('model.grants').filter(grant => !subGrants || !subGrants.includes(grant))
+      .sortBy('endDate');
   }),
   init() {
     this._super(...arguments);
@@ -35,7 +34,6 @@ export default Component.extend({
       if (grant) {
         const submission = this.get('model.newSubmission');
         submission.get('grants').pushObject(grant);
-        this.get('addedGrants').pushObject(grant);
         this.set('maxStep', 2);
         submission.set('metadata', '[]');
       } else if (event && event.target.value) {
@@ -43,7 +41,6 @@ export default Component.extend({
           g.get('primaryFunder.policy'); // Make sure policy is loaded in memory
           const submission = this.get('model.newSubmission');
           submission.get('grants').pushObject(g);
-          this.get('addedGrants').pushObject(g);
           this.set('maxStep', 2);
           submission.set('metadata', '[]');
           Ember.$('select')[0].selectedIndex = 0;
@@ -58,19 +55,8 @@ export default Component.extend({
       const submission = this.get('model.newSubmission');
       submission.get('grants').removeObject(grant);
       const index = this.get('addedGrants').indexOf(grant);
-      this.get('addedGrants').removeAt(index);
       this.set('maxStep', 2);
       submission.set('metadata', '[]');
-    },
-    saveAll() {
-      const grants = this.get('addedGrants');
-      this.set('addedGrants', []);
-      const submission = this.get('model.newSubmission');
-
-      return Promise.all(grants.map((grant) => {
-        grant.get('submissions').pushObject(submission);
-        return grant.save();
-      })).then(() => submission.save());
     },
   },
 });
