@@ -7,6 +7,8 @@ export default Component.extend({
     const deposit = this.get('deposit');
     const repo = this.get('repo');
     const repoCopy = this.get('repoCopy');
+    const source = this.get('submission.source');
+    const isSubmitted = this.get('submission.submitted');
 
     if (repoCopy) {
       const cs = repoCopy.get('copyStatus');
@@ -15,6 +17,8 @@ export default Component.extend({
       } else if (cs === 'stalled') {
         return 'Stalled';
       }
+    } else if (source == 'other' && !isSubmitted) {
+      return 'Manuscript expected';
     }
 
     return 'Submitted';
@@ -31,6 +35,8 @@ export default Component.extend({
         return 'The repository has found a problem with your submission that has caused progress to stall. This may require direct interaction with the repository to re-initiate the process. Please check the repository website for more details.';
       case 'Submitted':
         return 'Your submission has been sent to the repository or is in queue to be sent.';
+      case 'Manuscript expected':
+        return 'Your funder is aware of this publication and is expecting the deposit of your manuscript.';
       default:
         return '';
     }

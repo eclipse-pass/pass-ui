@@ -101,7 +101,7 @@
               <td>
                 <ul class="list-unstyled">
                 {{#each repoMap as |repoInfo index|}}
-                  {{submission-repo-details repo=repoInfo.repo deposit=repoInfo.deposit repoCopy=repoInfo.repositoryCopy}}
+                  {{submission-repo-details repo=repoInfo.repo deposit=repoInfo.deposit repoCopy=repoInfo.repositoryCopy submission=model.sub}}
                 {{/each}}
                 </ul>
               </td>
