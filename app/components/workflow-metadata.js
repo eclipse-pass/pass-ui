@@ -193,7 +193,7 @@ export default Component.extend({
           if (!value) {
             swal({
               title: 'Notice!',
-              text: "You added JScholarship as a repository but didn\'t agree to the deposit agreement, so your submission will not be submitted to JScholarship. To fix this, agree to the deposit agreement below.",
+              text: 'You added JScholarship as a repository but didn\'t agree to the deposit agreement, so your submission will not be submitted to JScholarship. To fix this, agree to the deposit agreement below.',
               showCancelButton: true,
               confirmButtonText: 'Proceed anyway',
               cancelButtonText: 'Return to deposit agreement'
