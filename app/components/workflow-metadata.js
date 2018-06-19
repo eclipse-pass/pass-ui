@@ -191,25 +191,20 @@ export default Component.extend({
         let jhuRepo = this.get('model.repositories').filter(repo => repo.get('name') === 'JScholarship');
         if (jhuRepo.length > 0) {
           if (!value) {
-            swal(
-              'Notice!',
-              'You added JScholarship as a repository but didn\'t agree to the deposit agreement, so your submission will not be submitted to JScholarship. To fix this, agree to the deposit agreement below.',
-              {
-                buttons: {
-                  cancel: {
-                    text: 'Agreet to deposit',
-                  },
-                  confirm: true,
-                }
-              },
-            ).then((value) => {
+            swal({
+              title: 'Notice!',
+              text: 'You added JScholarship as a repository but didn\'t agree to the deposit agreement, so your submission will not be submitted to JScholarship. To fix this, agree to the deposit agreement below.',
+              showCancelButton: true,
+              confirmButtonText: 'Proceed anyway',
+              cancelButtonText: 'Return to deposit agreement'
+            }).then((value) => {
               if (value.dismiss) {
                 console.log('agree to deposit');
                 return;
               }
-              console.log('remove jscholership');
+              console.log('remove jscholarship');
               this.send('nextLogic');
-              // remove jscholership from submission
+              // remove jscholarship from submission
               this.set('model.newSubmission.repositories', this.get('model.newSubmission.repositories').filter(repo => repo.get('name') !== 'JScholarship'));
             });
           } else {
