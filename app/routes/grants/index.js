@@ -31,13 +31,17 @@ export default Route.extend({
         // 'projectName'
       ],
       query: {
-        bool: {
-          should: [
-            { term: { pi: user.get('id') } },
-            { term: { coPis: user.get('id') } }
-          ],
+        constant_score: {
           filter: {
-            range: { "endDate": { "gte": "2011-01-01" }} 
+            bool: {
+              should: [
+                { term: { pi: user.get('id') } },
+                { term: { coPis: user.get('id') } }
+              ],
+              must : {
+                range: { endDate: { gte: '2011-01-01' } }
+              }
+            }
           }
         }
       },

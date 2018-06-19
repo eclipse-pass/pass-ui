@@ -35,13 +35,17 @@ export default Route.extend({
     const funders = this.loadObjects('funder', 0, 500);
     const grants = this.get('store').query('grant', {
       query: {
-        bool: {
-          should: [
-            { term: { pi: this.get('currentUser.user.id') } },
-            { term: { coPis: this.get('currentUser.user.id') } }
-          ],
+        constant_score: {
           filter: {
-            range: { "endDate": { "gte": "2011-01-01" }} 
+            bool: {
+              should: [
+                { term: { pi: this.get('currentUser.user.id') } },
+                { term: { coPis: this.get('currentUser.user.id') } }
+              ],
+              must : {
+                range: { endDate: { gte: '2011-01-01' } }
+              }
+            }
           }
         }
       },
