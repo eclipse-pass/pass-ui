@@ -35,7 +35,7 @@ export default Route.extend({
     const funders = this.loadObjects('funder', 0, 500);
     const grants = this.get('store').query('grant', {
       query: {
-        constant_score : {
+        constant_score: {
           filter: {
             bool: {
               should: [
@@ -43,7 +43,7 @@ export default Route.extend({
                 { term: { coPis: this.get('currentUser.user.id') } }
               ],
               must : {
-                range: { "endDate": { "gte": "2011-01-01" } }
+                range: { endDate: { gte: '2011-01-01' } }
               }
             }
           }

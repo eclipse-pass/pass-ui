@@ -31,7 +31,7 @@ export default Route.extend({
         // 'projectName'
       ],
       query: {
-        constant_score : {
+        constant_score: {
           filter: {
             bool: {
               should: [
@@ -39,7 +39,7 @@ export default Route.extend({
                 { term: { coPis: user.get('id') } }
               ],
               must : {
-                range: { "endDate": { "gte": "2011-01-01" } }
+                range: { endDate: { gte: '2011-01-01' } }
               }
             }
           }
