@@ -28,7 +28,7 @@ export default Route.extend({
     const grantQuery = {
       sort: [
         'awardStatus',
-        // 'projectName'
+        'endDate'
       ],
       query: {
         constant_score: {
@@ -38,7 +38,7 @@ export default Route.extend({
                 { term: { pi: user.get('id') } },
                 { term: { coPis: user.get('id') } }
               ],
-              must : {
+              must: {
                 range: { endDate: { gte: '2011-01-01' } }
               }
             }
