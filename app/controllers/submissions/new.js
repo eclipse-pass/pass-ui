@@ -1,6 +1,5 @@
 import Controller from '@ember/controller';
 import ENV from 'pass-ember/config/environment';
-import { debug } from '@ember/debug';
 
 export default Controller.extend({
   currentUser: Ember.inject.service('current-user'),
