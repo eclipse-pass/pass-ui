@@ -28,7 +28,7 @@ export default Route.extend({
     const grantQuery = {
       sort: [
         'awardStatus',
-        'endDate'
+        { endDate: 'desc' }
       ],
       query: {
         constant_score: {

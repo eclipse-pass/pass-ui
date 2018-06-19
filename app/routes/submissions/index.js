@@ -19,7 +19,7 @@ export default Route.extend({
   _doAdmin() {
     return this.store.query('submission', {
       sort: [
-        { submittedDate: { missing: '_last' } }
+        { submittedDate: { missing: '_last', order: 'desc' } }
       ],
       query: { match_all: {} },
       size: 500
@@ -29,7 +29,7 @@ export default Route.extend({
   _doSubmitter(user) {
     return this.store.query('submission', {
       sort: [
-        { submittedDate: { missing: '_last' } }
+        { submittedDate: { missing: '_last', order: 'desc' } }
       ],
       query: { match: { user: user.get('id') } },
       size: 500
