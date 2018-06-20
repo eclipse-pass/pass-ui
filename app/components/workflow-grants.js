@@ -14,8 +14,7 @@ export default Component.extend({
   }),
   sortedGrants: Ember.computed('model.newSubmission.grants.[]', function () {
     const subGrants = this.get('model.newSubmission.grants');
-    return this.get('model.grants').filter(grant => !subGrants || !subGrants.includes(grant))
-      .sortBy('endDate');
+    return this.get('model.grants').filter(grant => !subGrants || !subGrants.includes(grant));
   }),
   init() {
     this._super(...arguments);
@@ -54,7 +53,6 @@ export default Component.extend({
       }
       const submission = this.get('model.newSubmission');
       submission.get('grants').removeObject(grant);
-      const index = this.get('addedGrants').indexOf(grant);
       this.set('maxStep', 2);
       submission.set('metadata', '[]');
     },

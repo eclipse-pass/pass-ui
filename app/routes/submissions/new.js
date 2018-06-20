@@ -34,6 +34,9 @@ export default Route.extend({
     const repositories = this.loadObjects('repository', 0, 500);
     const funders = this.loadObjects('funder', 0, 500);
     const grants = this.get('store').query('grant', {
+      sort: [
+        { endDate: 'desc' }
+      ],
       query: {
         constant_score: {
           filter: {
@@ -42,7 +45,7 @@ export default Route.extend({
                 { term: { pi: this.get('currentUser.user.id') } },
                 { term: { coPis: this.get('currentUser.user.id') } }
               ],
-              must : {
+              must: {
                 range: { endDate: { gte: '2011-01-01' } }
               }
             }
