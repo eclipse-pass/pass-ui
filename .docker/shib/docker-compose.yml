@@ -77,7 +77,7 @@ services:
      - source: sp_key
 
   indexer:
-    image: oapass/indexer:0.0.10-2.2-SNAPSHOT-1@sha256:5cbba3d4f195ba28fd4b0111baf8a95a11bccdde44091538c31090c4df70b849
+    image: oapass/indexer:0.0.12-2.2-SNAPSHOT@sha256:a8599b27219d9cb85b596fd90d173e370c3d53494630a98c00bee43f5c7bd8e6
     container_name: indexer
     env_file: .env
     networks:
