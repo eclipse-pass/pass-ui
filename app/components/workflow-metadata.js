@@ -131,11 +131,16 @@ export default Component.extend({
         'Embargo-end-date': {
           type: 'date',
           label: 'Embargo End Date',
-          helper: '<i>After the embargo end date, your submission manuscripts or article can be made public.</i>',
+          helper: '<i>After the embargo end date, your submission manuscripts or article can be made public. <b>If this publication is not under embargo, please leave this field blank.<b></i>',
           helpersPosition: 'above',
           placeholder: 'dd/mm/yyyy',
           validate: true,
-          inputType: 'date'
+          inputType: 'date',
+          fieldClass: 'date-time-picker',
+          picker: {
+            format: 'MM/DD/YY',
+            allowInputToggle: true
+          }
         },
       },
     },
