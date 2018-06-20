@@ -353,6 +353,14 @@ td {
     background-color: #eff7fb!important;
 }
 
+.date-time-picker input {
+  max-width: 400px;
+}
+input[type=date]::-webkit-inner-spin-button,
+input[type=date]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+
 ////////////////////////////
 // End Alpaca
 ////////////////////////////
