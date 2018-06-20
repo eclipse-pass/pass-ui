@@ -22,7 +22,11 @@ export default Controller.extend({
         // add each repo to the metadata
       });
       sub.set('repositories', sub.get('repositories').filter((repo) => { // eslint-disable-line
-        return repo.get('integrationType') !== 'web-link' && repo.get('url') !== 'https://eric.ed.gov/';
+        // TODO the specific URL checks should be removed after Repository data is updated to
+        // include 'integrationType' property
+        return repo.get('integrationType') !== 'web-link' &&
+          repo.get('url') !== 'https://eric.ed.gov/' &&
+          repo.get('url') !== 'https://dec.usaid.gov/';
       }));
 
       const pub = this.get('model.publication');
