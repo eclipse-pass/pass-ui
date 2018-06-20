@@ -12,11 +12,6 @@
   </div>
 </div>
 <style>
-  .fa-30 {
-    font-size: 30px;
-    margin-top: 4px;
-  }
-
   .text-gray {
     color: gray;
   }
@@ -56,6 +51,19 @@
   .max-width {
     max-width: 300px !important;
   }
+
+  .fa-30 {
+    font-size: 30px!important;
+    margin-top: 4px;
+  }
+
+  tbody.striped tr:nth-of-type(odd) {
+    background-color: white;
+  }
+  tbody.striped tr {
+    background: #fdfdfd;
+  }
+
 </style>
 <div class="form-group row">
   <div class="col-md-12">
@@ -165,36 +173,43 @@
                     <i>We do not have a copy of manuscript files because this submission did not originate from PASS</i>
                   </p>
                 {{else}}
-                  <p class="text-right mb-1"><i class="fas fa-info-circle text-gray"></i><i><small>Hover over text for full text</small></i></p>
-                  <div class="container-fluid">
+                  <table style="min-width:500px;">
+                    <thead>
+                      <tr>
+                        <th scope="col"></th>
+                        <th scope="col" class="font-weight-light">Name</th>
+                        <th scope="col" class="font-weight-light">Type</th>
+                        <th scope="col" class="font-weight-light">Description</th>
+                      </tr>
+                    </thead>
+                    <tbody class="striped">
                     {{#each (get model 'files') as |file|}}
-                      <a href= {{file.uri}}>
-                        <div class="row file mb-1">
-                          <div class="col-md-1 p-1 pl-3">
-                            {{#if (eq file.mimeType 'png')}}
-                              <i class="fas fa-file-image fa-30 line-height-35"></i> {{else if (eq file.mimeType 'vnd.openxmlformats-officedocument.presentationml.presentation')}}
-                              <i class="fas fa-file-powerpoint fa-30 line-height-35"></i> {{else if (eq file.mimeType 'msword')}}
-                              <i class="fas fa-file-word fa-30 line-height-35"></i> {{else if (eq file.mimeType 'pdf')}}
-                              <i class="fas fa-file-pdf fa-30 line-height-35"></i>
-                            {{else}}
-                              <i class="far fa-file fa-30 line-height-35"></i>
-                            {{/if}}
-                          </div>
-                          <div class="col-md-5 line-height-50 pl-0" data-toggle="tooltip" data-placement="top" title= {{file.name}}>
-                            {{file.name}}
-                          </div>
-                          <div class="col-md-2 line-height-50">
-                            {{file.fileRole}}
-                          </div>
-                          <div class="col-md-4 line-height-50" data-toggle="tooltip" data-placement="top" title= {{file.description}}>
-                            {{file.description}}
-                          </div>
-                        </div>
-                      </a>
-                {{else}}
-                  <div class="text-center">Loading files...</div>
+                      <tr>
+                        <td data-label="icon">
+                          {{#if (eq file.mimeType 'png')}}
+                            <i class="fas fa-file-image fa-30 line-height-35 text-gray"></i> {{else if (eq file.mimeType 'vnd.openxmlformats-officedocument.presentationml.presentation')}}
+                            <i class="fas fa-file-powerpoint fa-30 line-height-35 text-gray"></i> {{else if (eq file.mimeType 'msword')}}
+                            <i class="fas fa-file-word fa-30 line-height-35 text-gray"></i> {{else if (eq file.mimeType 'pdf')}}
+                            <i class="fas fa-file-pdf fa-30 line-height-35 text-gray"></i>
+                          {{else}}
+                            <i class="far fa-file fa-30 line-height-35 text-gray"></i>
+                          {{/if}}
+                        </td>
+                        <td data-label="name" style="min-width:200px;">
+                         <a href= {{file.uri}}>{{file.name}}</a>
+                        </td>
+                        <td data-label="type" class="text-nowrap">
+                          {{file.fileRole}}
+                        </td>
+                        <td data-label="description" >
+                          {{file.description}}
+                        </td>
+                      </tr>
+                    {{else}}
+                      <div class="text-center">Loading files...</div>
                     {{/each}}
-                  </div>
+                  </tbody>
+                </table>
                 {{/if}}
               </td>
             </tr>
