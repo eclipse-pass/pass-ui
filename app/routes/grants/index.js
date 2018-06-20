@@ -31,18 +31,16 @@ export default Route.extend({
         { endDate: 'desc' }
       ],
       query: {
-        constant_score: {
-          filter: {
-            bool: {
+        bool: {
+          must: [
+            { range: { endDate: { gte: '2011-01-01' } } },
+            { bool: {
               should: [
                 { term: { pi: user.get('id') } },
                 { term: { coPis: user.get('id') } }
-              ],
-              must: {
-                range: { endDate: { gte: '2011-01-01' } }
-              }
+              ]}
             }
-          }
+          ]
         }
       },
       size: querySize
