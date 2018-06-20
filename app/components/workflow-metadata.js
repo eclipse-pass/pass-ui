@@ -195,10 +195,10 @@ export default Component.extend({
               title: 'Notice!',
               text: 'You added JScholarship as a repository but didn\'t agree to the deposit agreement, so your submission will not be submitted to JScholarship. To fix this, agree to the deposit agreement below.',
               showCancelButton: true,
-              confirmButtonText: 'Proceed anyway',
-              cancelButtonText: 'Return to deposit agreement'
-            }).then((value) => {
-              if (value.dismiss) {
+              confirmButtonText: 'Return to deposit agreement',
+              cancelButtonText: 'Proceed anyway'
+            }).then(result => {
+              if (result.value) {
                 console.log('agree to deposit');
                 return;
               }
