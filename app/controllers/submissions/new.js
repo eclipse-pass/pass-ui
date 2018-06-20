@@ -21,7 +21,14 @@ export default Controller.extend({
       sub.get('repositories').forEach((repo) => {
         // add each repo to the metadata
       });
-      sub.set('repositories', sub.get('repositories').filter(repo => repo.get('weblinkOnly')));
+      sub.set('repositories', sub.get('repositories').filter((repo) => { // eslint-disable-line
+        // TODO the specific URL checks should be removed after Repository data is updated to
+        // include 'integrationType' property
+        return repo.get('integrationType') !== 'web-link' &&
+          repo.get('url') !== 'https://eric.ed.gov/' &&
+          repo.get('url') !== 'https://dec.usaid.gov/';
+      }));
+
       const pub = this.get('model.publication');
       sub.set('aggregatedDepositStatus', 'not-started');
       sub.set('submittedDate', new Date());
