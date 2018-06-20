@@ -53,7 +53,6 @@ export default Component.extend({
       }
       const submission = this.get('model.newSubmission');
       submission.get('grants').removeObject(grant);
-      const index = this.get('addedGrants').indexOf(grant);
       this.set('maxStep', 2);
       submission.set('metadata', '[]');
     },
