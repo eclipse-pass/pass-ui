@@ -682,7 +682,11 @@ footer {
   list-style: none;
   margin: 0;
   padding: 0;
+}
+.repoid-cell li {
   word-break: initial;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .title-column { min-width: 24rem; }
 .msid-column { min-width: 10rem; }
