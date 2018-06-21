@@ -45,6 +45,10 @@ export default Component.extend({
           for (let i = 0; i < uploads.files.length; i++) {
             const file = uploads.files[i];
             if (file) {
+              if (file.size > (1024 * 1024 * 100)) {
+                toastr.error(`Your file '${file.name}' is bigger than 100MB (${Number.parseFloat(file.size / 1024 / 1024).toPrecision(3)}MB) and was not added to the submission.`);
+                continue;
+              }
               const newFile = this.get('store').createRecord('file', {
                 name: file.name,
                 mimeType: file.type.substring(file.type.indexOf('/') + 1),
