@@ -13,9 +13,7 @@
     {{else}}
       <ul class="repoid-cell">
         {{#each repositoryCopy.externalIds as |externalIds|}}
-          <a href="{{repositoryCopy.accessUrl}}" target="_blank">
-            <li title="{{externalIds}}">{{externalIds}}</li>
-          </a>
+          <li title="{{externalIds}}">{{externalIds}}</li>
         {{/each}}
       </ul>
     {{/if}}
