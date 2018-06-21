@@ -238,6 +238,13 @@ export default Component.extend({
           },
         });
 
+        metadata.push({
+          id: 'pmc',
+          data: {
+            nlmta: 'moo'
+          }
+        });
+
         // Add metadata for external submissions
         const externalRepos = this.get('model.newSubmission.repositories').filter(repo =>
           repo.get('integrationType') === 'web-link' ||

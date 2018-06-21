@@ -137,10 +137,12 @@ export default Component.extend({
       if (publication) {
         this.send('validateDOI');
         this.set('doiJournal', false);
-        resolve(publication).then((doiInfo) => {
+        resolve(publication).then(async (doiInfo) => {
           if (doiInfo.isDestroyed) {
             return;
           }
+
+          await getNlmtaFromIssn(doiInfo);
           // // Crappy hack to rename property 'container-title' (received from DOI)
           // // to 'journal-title' that is expected by the back end services
           doiInfo['journal-title'] = doiInfo['container-title'];
@@ -198,4 +200,39 @@ export default Component.extend({
       $('.ember-power-select-trigger').css('border-color', '#4dbd74');
     },
   },
+
+  /**
+   * Use various services to fetch NLMTA and pub-type for given ISSNs found
+   * in the DOI data. This info will be merged in with the DOI data.
+   *
+   *  {
+   *    ... // other DOI data
+   *    "issn-map": {
+   *      "<ISSN-1>": {
+   *        "nlmta": ""
+   *        "pub-type": ""
+   *      }
+   *    }
+   *  }
+   */
+  getNlmtaFromIssn(doiInfo) {
+    const defer = Ember.RSVP.defer();
+
+    const issnMap = {};
+    if (Array.isArray(doiInfo.ISSN)) {
+      doiInfo.ISSN.forEach((issn) => {
+        getNLMID(issn);
+      });
+    }
+    return defer.promise;
+  },
+  /**
+   * @param issn {string}
+   */
+  getNLMID(issn) {
+    const url = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nlmcatalog&term=${issn}[issn]&retmode=json`;
+    fetch(url).then((resp) => {
+      debugger
+    });
+  }
 });
