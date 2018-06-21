@@ -8,12 +8,13 @@ export default Component.extend({
     // this.set('isValidated', false)
     $('[data-toggle="tooltip"]').tooltip();
   },
-  externalSubmission: Ember.computed('metadataBlobNoKeys', function () { // eslint-disable-line
-    if (this.get('metadataBlobNoKeys').Submission) {
-      return true;
-    }
-    return false;
-  }),
+  externalRepoMap: {},
+  // externalSubmission: Ember.computed('metadataBlobNoKeys', function () { // eslint-disable-line
+  //   if (this.get('metadataBlobNoKeys').Submission) {
+  //     return true;
+  //   }
+  //   return false;
+  // }),
   parsedFiles: Ember.computed('filesTemp', function () {
     return this.get('filesTemp');
   }),
@@ -50,24 +51,32 @@ export default Component.extend({
     }
     return metadataBlobNoKeys;
   }),
-  hasVisitedEric: false,
-  mustVisitEric: Ember.computed('model.newSubmission.metadata', function () {
-    return JSON.parse(this.get('model.newSubmission.metadata')).map(m => m.id).includes('eric');
+  hasVisitedWeblink: Ember.computed('externalRepoMap', function () {
+    return Object.values(this.get('externalRepoMap')).every(val => val === true);
   }),
-  disableSubmit: Ember.computed('mustVisitEric', 'hasVisitedEric', function () {
-    return this.get('mustVisitEric') && !this.get('hasVisitedEric');
+  weblinkRepos: Ember.computed('model.newSubmission.repositories', function () {
+    const repos = this.get('model.newSubmission.repositories').filter(repo =>
+      repo.get('integrationType') === 'web-link' ||
+      repo.get('url') === 'https://eric.ed.gov/' ||
+      repo.get('url') === 'https://dec.usaid.gov/');
+
+    repos.forEach(repo => this.get('externalRepoMap')[repo.get('id')] = false); // eslint-disable-line
+    // debugger
+    return repos;
+  }),
+  mustVisitWeblink: Ember.computed('weblinkRepos', function () {
+    return this.get('weblinkRepos').get('length') > 0;
+  }),
+  disableSubmit: Ember.computed('mustVisitWeblink', 'hasVisitedWeblink', function () {
+    return this.get('mustVisitWeblink') && !this.get('hasVisitedWeblink');
   }),
   actions: {
-    clickEric() {
-      this.set('hasVisitedEric', true);
-      $('#externalSubmission').modal('hide');
-    },
     submit() {
       let disableSubmit = true;
       let didNotAgree = true;
       // In case a crafty user edits the page HTML, don't submit when not allowed
       if (this.get('disableSubmit')) {
-        if (!this.get('hasVisitedEric')) {
+        if (!this.get('hasVisitedWeblink')) {
           $('.fa-exclamation-triangle').css('color', '#f86c6b');
           $('.fa-exclamation-triangle').css('font-size', '2.2em');
           setTimeout(() => {
@@ -96,31 +105,30 @@ export default Component.extend({
     checkValidate() {
       this.sendAction('validate');
     },
-    openEricAlert() {
-      swal(
-        'Notice!',
-        'You are being redirected to an external site. This will open in a new tab.',
-        {
-          buttons: {
-            cancel: {
-              text: 'Cancel',
-            },
-            confirm: {
-              text: 'Redirect',
-            },
-          }
-        },
-      ).then((value) => {
+    openWeblinkAlert(repo) {
+      swal({
+        title: 'Notice!',
+        text: 'You are being redirected to an external site. This will open a new tab.',
+        showCancelButton: true,
+        cancelButtonText: 'Cancel',
+        confirmButtonText: 'Redirect'
+      }).then((value) => {
         if (value.dismiss) {
           console.log('dont redirect');
           return;
         }
-        console.log('go to eric');
-        this.send('clickEric');
-        var win = window.open('https://eric.ed.gov/submit/', '_blank');
+        console.log(`go to web-link repo ${repo.get('name')}`);
+
+        // this.get('externalRepoMap')[repo.get('id')] = true;
+        this.set(`externalRepoMap.${repo.id}`, true);
+        const allLinksVisited = Object.values(this.get('externalRepoMap')).every(val => val === true);
+        if (allLinksVisited) {
+          this.set('hasVisitedWeblink', true);
+        }
+        $('#externalSubmission').modal('hide');
+
+        var win = window.open(repo.get('url'), '_blank');
         win.focus();
-        // remove jscholership from submission
-        // this.set('model.newSubmission.repositories', this.get('model.newSubmission.repositories').filter(repo => repo.get('name') !== 'JScholarship'));
       });
     }
   }

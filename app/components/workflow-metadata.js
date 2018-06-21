@@ -202,7 +202,7 @@ export default Component.extend({
               showCancelButton: true,
               confirmButtonText: 'Return to deposit agreement',
               cancelButtonText: 'Proceed anyway'
-            }).then(result => {
+            }).then((result) => {
               if (result.value) {
                 console.log('agree to deposit');
                 return;
@@ -238,17 +238,17 @@ export default Component.extend({
           },
         });
 
-
-        JSON.parse(this.get('model.newSubmission.metadata')).map((m) => {
-          if (m.id.includes('eric')) {
-            metadata.push({
-              id: 'external-submissions',
-              data: {
-                submission: 'Prompted to deposit into Educational Resources Information Center (ERIC).'
-              },
-            });
-          }
-        });
+        // Add metadata for external submissions
+        const externalRepos = this.get('model.newSubmission.repositories').filter(repo =>
+          repo.get('integrationType') === 'web-link' ||
+          repo.get('url') === 'https://eric.ed.gov/' ||
+          repo.get('url') === 'https://dec.usaid.gov/');
+        if (externalRepos.get('length') > 0) {
+          let md = { id: 'external-submissions', data: { submission: [] } };
+          externalRepos.forEach(repo => md.data.submission.push(`Deposit into ${repo.get('name')} was prompted`));
+          // Push this new thing to the overall 'metadata' obj
+          metadata.push(md);
+        }
         this.set('model.newSubmission.metadata', JSON.stringify(metadata));
         this.sendAction('next');
       }
