@@ -141,6 +141,10 @@ export default Component.extend({
           if (doiInfo.isDestroyed) {
             return;
           }
+          // // Crappy hack to rename property 'container-title' (received from DOI)
+          // // to 'journal-title' that is expected by the back end services
+          doiInfo['journal-title'] = doiInfo['container-title'];
+
           this.set('doiInfo', doiInfo);
           // useful console.log
           // console.log(doiInfo);
