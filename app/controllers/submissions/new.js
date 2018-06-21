@@ -63,14 +63,20 @@ export default Controller.extend({
                 console.log('file binary saved');
                 file.set('submission', s);
                 file.set('uri', results.target.response);
-                file.save().then(() => {
-                  console.log('file object saved');
-                  ctr += 1;
-                  console.log(ctr);
-                  console.log('saved file!');
-                  if (ctr >= len) {
-                    this.transitionToRoute('thanks', { queryParams: { submission: s.id } });
+                file.save().then((f) => {
+                  if (f) {
+                    console.log('file object saved');
+                    ctr += 1;
+                    console.log(ctr);
+                    console.log('saved file!');
+                    if (ctr >= len) {
+                      this.transitionToRoute('thanks', { queryParams: { submission: s.id } });
+                    }
+                  } else {
+                    toastr.error('It looks like one or more of your files failed to upload. Please try again or contact support.');
                   }
+                }).catch((e) => {
+                  toastr.error(e);
                 });
               };
               xhr.send(data);
