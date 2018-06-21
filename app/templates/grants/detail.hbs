@@ -21,7 +21,7 @@
     <ul class='col-sm-6'>
       <li><strong>Status:</strong> {{model.grant.awardStatus}}</li>
       <li><strong>PI:</strong> {{model.grant.pi.displayName}}</li>
-      <li><strong>CoPIs:</strong>
+      <li><strong>Co-PI(s) / Co-I(s):</strong>
         <ul>
           {{#each model.grant.coPis as |person|}}
             {{person.displayName}}
