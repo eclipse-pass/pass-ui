@@ -50,6 +50,7 @@
 
   .max-width {
     max-width: 300px !important;
+    min-width: 150px;
   }
 
   .fa-30 {
@@ -114,6 +115,18 @@
                 </ul>
               </td>
             </tr>
+            {{/if}}
+            {{#if externalSubmission}}
+              <tr>
+                <td class="text-nowrap"><strong>External Submission Repositories</strong></td>
+                <td>
+                  <ul class="list-unstyled">
+                    {{#each externalSubmission as |sub|}}
+                      <li>{{sub}}</li>
+                    {{/each}}
+                  </ul>
+                </td>
+              </tr>
             {{/if}}
             <tr>
               <td class="text-nowrap"><strong>Submitter</strong></td>

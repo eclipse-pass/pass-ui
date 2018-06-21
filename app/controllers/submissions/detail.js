@@ -7,11 +7,8 @@ export default Controller.extend({
       $('[data-toggle="tooltip"]').tooltip();
     });
   }.on('init'),
-  externalSubmission: Ember.computed('metadataBlobNoKeys', function () { // eslint-disable-line
-    if (this.get('metadataBlobNoKeys').Submission) {
-      return true;
-    }
-    return false;
+  externalSubmission: Ember.computed('metadataBlobNoKeys', function () {
+    return this.get('metadataBlobNoKeys').Submission;
   }),
   /**
    * Ugly way to generate date for the template to use.
@@ -72,7 +69,7 @@ export default Controller.extend({
 
     return null;
   }),
-  metadataBlobNoKeys: Ember.computed('model.sub.metadata', function () { // eslint-disable-line
+  metadataBlobNoKeys: Ember.computed('model.sub.metadata', function () {
     let metadataBlobNoKeys = [];
     JSON.parse(this.get('model.sub.metadata')).forEach((ele) => {
       for (var key in ele.data) {
