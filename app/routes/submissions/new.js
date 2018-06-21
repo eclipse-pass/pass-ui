@@ -8,7 +8,7 @@ export default Route.extend({
   resetController(controller, isExiting, transition) {
     // Explicitly clear the 'grant' query parameter when reloading this route
     if (isExiting) {
-      controller.set('grant', undefined);
+      controller.get('queryParams').forEach(param => controller.set(param, null));
       this.get('store').peekAll('submission').forEach(s => s.rollbackAttributes());
     }
   },
@@ -41,11 +41,13 @@ export default Route.extend({
         bool: {
           must: [
             { range: { endDate: { gte: '2011-01-01' } } },
-            { bool: {
-              should: [
-                { term: { pi: this.get('currentUser.user.id') } },
-                { term: { coPis: this.get('currentUser.user.id') } }
-              ]}
+            {
+              bool: {
+                should: [
+                  { term: { pi: this.get('currentUser.user.id') } },
+                  { term: { coPis: this.get('currentUser.user.id') } }
+                ]
+              }
             }
           ]
         }
