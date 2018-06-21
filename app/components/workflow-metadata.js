@@ -14,7 +14,7 @@ export default Component.extend({
           type: 'string',
           required: true
         },
-        'container-title': {
+        'journal-title': {
           type: 'string',
           required: true
         },
@@ -75,7 +75,7 @@ export default Component.extend({
           placeholder: 'Enter the manuscript title',
           hidden: true,
         },
-        'container-title': {
+        'journal-title': {
           type: 'text',
           label: 'Journal Title',
           placeholder: 'Enter the journal title',
