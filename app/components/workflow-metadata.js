@@ -229,6 +229,12 @@ export default Component.extend({
         // Add any crossref info that was not added through the metadata forms
         const doiInfo = this.get('doiInfo');
         let metadata = JSON.parse(this.get('model.newSubmission.metadata'));
+
+        const common = metadata.filter(md => md.id === 'common');
+        if (common.length > 0) {
+          common[0].data['issn-map'] = doiInfo['issn-map'];
+        }
+
         metadata.push({
           id: 'crossref',
           data: {
@@ -236,6 +242,13 @@ export default Component.extend({
             publisher: doiInfo.publisher,
             'journal-title-short': doiInfo['container-title-short']
           },
+        });
+
+        metadata.push({
+          id: 'pmc',
+          data: {
+            nlmta: doiInfo.nlmta
+          }
         });
 
         // Add metadata for external submissions
