@@ -1,8 +1,10 @@
 import Component from '@ember/component';
 import _ from 'lodash';
+import { inject as service, } from '@ember/service';
 
 export default Component.extend({
   didAgree: false,
+  router: service(),
   common: {
     id: 'common',
     data: {},
@@ -208,9 +210,28 @@ export default Component.extend({
                 return;
               }
               console.log('remove jscholarship');
-              this.send('nextLogic');
               // remove jscholarship from submission
               this.set('model.newSubmission.repositories', this.get('model.newSubmission.repositories').filter(repo => repo.get('name') !== 'JScholarship'));
+
+              if (this.get('model.newSubmission.repositories.length') == 0) {
+                swal(
+                  'You\'re done!',
+                  'If you don\'t plan on submitting to any repositories, you can stop at this time.',
+                  {
+                    buttons: {
+                      cancel: true,
+                      confirm: true,
+                    }
+                  },
+                ).then((value) => {
+                  if (value.dismiss) {
+                    return;
+                  }
+                  this.get('router').transitionTo('dashboard');
+                });
+              } else {
+                this.send('nextLogic');
+              }
             });
           } else {
             this.send('nextLogic');
