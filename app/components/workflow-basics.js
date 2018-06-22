@@ -143,8 +143,10 @@ export default Component.extend({
           }
 
           const nlmtaDump = await this.getNlmtaFromIssn(doiInfo);
-          doiInfo.nlmta = nlmtaDump.nlmta;
-          doiInfo['issn-map'] = nlmtaDump.map;
+          if (nlmtaDump) {
+            doiInfo.nlmta = nlmtaDump.nlmta;
+            doiInfo['issn-map'] = nlmtaDump.map;
+          }
           // // Crappy hack to rename property 'container-title' (received from DOI)
           // // to 'journal-title' that is expected by the back end services
           doiInfo['journal-title'] = doiInfo['container-title'];
@@ -231,10 +233,18 @@ export default Component.extend({
         // Map of NLMIDs to objects
         // Example: https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nlmcatalog&term=0006-2952[issn]
         const nlmidMap = await this.getNLMID(issn);
+        if (!nlmidMap || (nlmidMap.length === 0)) {
+          res.resolve();
+          return;
+        }
         // Example: https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=nlmcatalog&retmode=json&rettype=abstract&id=101032
         const idmap = await this.getNLMTA(nlmidMap);
         nlmidMap.forEach((id) => {
           const data = idmap[id];
+          if (!idmap) {
+            res.resolve();
+            return;
+          }
           issnMap.nlmta = data.medlineta;
           issnMap.map[issn] = {
             'pub-type': data.issnlist
