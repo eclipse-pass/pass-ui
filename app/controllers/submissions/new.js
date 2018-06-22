@@ -32,17 +32,15 @@ export default Controller.extend({
       const pub = this.get('model.publication');
       sub.set('aggregatedDepositStatus', 'not-started');
       sub.set('submittedDate', new Date());
-      sub.set('submitted', true);
+      sub.set('submitted', false);
       sub.set('user', this.get('currentUser.user'));
       sub.set('source', 'pass');
       pub.save().then((p) => {
-        console.log('publication saved');
         sub.set('publication', p);
         let ctr = 0;
         let len = this.get('filesTemp').length;
         sub.set('removeNIHDeposit', false);
         sub.save().then((s) => {
-          console.log('submission saved');
           this.get('filesTemp').forEach((file) => {
             let contentType = file.get('_file.type') ? file.get('_file.type') : 'application/octet-stream';
             var reader = new FileReader();
@@ -60,17 +58,14 @@ export default Controller.extend({
                 }
               }
               xhr.onload = (results) => {
-                console.log('file binary saved');
                 file.set('submission', s);
                 file.set('uri', results.target.response);
                 file.save().then((f) => {
                   if (f) {
-                    console.log('file object saved');
                     ctr += 1;
-                    console.log(ctr);
-                    console.log('saved file!');
                     if (ctr >= len) {
-                      this.transitionToRoute('thanks', { queryParams: { submission: s.id } });
+                      s.set('submitted', true);
+                      s.save().then(() => this.transitionToRoute('thanks', { queryParams: { submission: s.id } }));
                     }
                   } else {
                     toastr.error('It looks like one or more of your files failed to upload. Please try again or contact support.');
