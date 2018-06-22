@@ -18,9 +18,9 @@ export default Controller.extend({
       const sub = this.get('model.newSubmission');
 
       // remove all weblink-only repositories so they don't get deposited
-      sub.get('repositories').forEach((repo) => {
-        // add each repo to the metadata
-      });
+      // sub.get('repositories').forEach((repo) => {
+      //   // add each repo to the metadata
+      // });
       sub.set('repositories', sub.get('repositories').filter((repo) => { // eslint-disable-line
         // TODO the specific URL checks should be removed after Repository data is updated to
         // include 'integrationType' property
@@ -32,11 +32,11 @@ export default Controller.extend({
       const pub = this.get('model.publication');
       sub.set('aggregatedDepositStatus', 'not-started');
       sub.set('submittedDate', new Date());
-      sub.set('submitted', true);
-      sub.set('user', this.get('currentUser.user'));
+      sub.set('submitted', false);
+      sub.set('user', this.get('currentUser.user.id'));
       sub.set('source', 'pass');
       pub.save().then((p) => {
-        sub.set('publication', p);
+        sub.set('publication', p.get('id'));
         let ctr = 0;
         let len = this.get('filesTemp').length;
         sub.set('removeNIHDeposit', false);
@@ -48,7 +48,7 @@ export default Controller.extend({
             reader.onload = (evt) => {
               let data = evt.target.result;
               let xhr = new XMLHttpRequest();
-              xhr.open('POST', `${s.id}`, true);
+              xhr.open('POST', `${s.get('id')}`, true);
               xhr.setRequestHeader('Content-Disposition', `attachment; filename="${file.get('name')}"`);
               xhr.setRequestHeader('Content-Type', contentType);
               if (ENV.environment === 'travis' || ENV.environment === 'development') {
@@ -58,14 +58,17 @@ export default Controller.extend({
                 }
               }
               xhr.onload = (results) => {
-                file.set('submission', s);
+                file.set('submission', s.get('id'));
                 file.set('uri', results.target.response);
                 file.save().then((f) => {
                   if (f) {
                     ctr += 1;
                     console.log(ctr);
                     if (ctr >= len) {
-                      this.transitionToRoute('thanks', { queryParams: { submission: s.id } });
+                      s.set('submitted', true);
+                      s.save().then(() => {
+                        this.transitionToRoute('thanks', { queryParams: { submission: s.id } });
+                      });
                     }
                   } else {
                     toastr.error('It looks like one or more of your files failed to upload. Please try again or contact support.');
