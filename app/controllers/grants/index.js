@@ -55,12 +55,14 @@ export default Controller.extend({
       propertyName: 'grant.startDate',
       title: 'Start',
       disableFiltering: true,
+      className: 'date-column',
       component: 'date-cell'
     },
     {
       propertyName: 'grant.endDate',
       title: 'End',
       disableFiltering: true,
+      className: 'date-column',
       component: 'date-cell'
     },
     {
@@ -107,6 +109,7 @@ export default Controller.extend({
       propertyName: 'grant.endDate',
       title: 'End Date',
       disableFiltering: true,
+      className: 'date-column',
       component: 'date-cell'
     },
     {

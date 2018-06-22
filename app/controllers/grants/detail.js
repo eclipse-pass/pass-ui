@@ -22,11 +22,13 @@ export default Controller.extend({
       propertyName: 'repositoryNames',
       title: 'Repositories',
       component: 'submissions-repo-cell',
+      className: 'repositories-column',
       disableSorting: true
     },
     {
       propertyName: 'submittedDate',
       title: 'Submitted Date',
+      className: 'date-column',
       component: 'date-cell'
     },
     {
