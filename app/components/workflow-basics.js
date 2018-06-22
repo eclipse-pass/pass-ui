@@ -143,7 +143,7 @@ export default Component.extend({
           }
 
           const nlmtaDump = await this.getNlmtaFromIssn(doiInfo);
-          if (nlmtaDump) {
+          if (nlmtaDump) {debugger
             doiInfo.nlmta = nlmtaDump.nlmta;
             doiInfo['issn-map'] = nlmtaDump.map;
           }
@@ -245,7 +245,7 @@ export default Component.extend({
       }
       issnMap.nlmta = data.medlineta;
       data.issnlist.filter(item => item.issntype !== 'Linking').forEach((item) => {
-        issnMap.map[item.issn] = { 'pub-type': item.issntype };
+        issnMap.map[item.issn] = { 'pub-type': [item.issntype] };
       });
     });
 
