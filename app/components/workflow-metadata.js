@@ -18,6 +18,9 @@ export default Component.extend({
           type: 'string',
           required: true
         },
+        nlmta: {
+          type: 'string'
+        },
         volume: {
           type: 'string',
         },
@@ -80,6 +83,12 @@ export default Component.extend({
           label: 'Journal Title',
           placeholder: 'Enter the journal title',
           hidden: true,
+        },
+        nlmta: {
+          type: 'text',
+          label: 'NLMTA',
+          placeholder: '',
+          hidden: true
         },
         volume: {
           type: 'text',
@@ -241,7 +250,7 @@ export default Component.extend({
         metadata.push({
           id: 'pmc',
           data: {
-            nlmta: 'moo'
+            'issn-map': doiInfo['issn-map']
           }
         });
 
@@ -258,6 +267,7 @@ export default Component.extend({
         }
         this.set('model.newSubmission.metadata', JSON.stringify(metadata));
         this.sendAction('next');
+        debugger
       }
     },
     previousForm() {

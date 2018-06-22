@@ -142,7 +142,9 @@ export default Component.extend({
             return;
           }
 
-          await getNlmtaFromIssn(doiInfo);
+          const nlmtaDump = await this.getNlmtaFromIssn(doiInfo);
+          doiInfo.nlmta = nlmtaDump.nlmta;
+          doiInfo['issn-map'] = nlmtaDump.map;
           // // Crappy hack to rename property 'container-title' (received from DOI)
           // // to 'journal-title' that is expected by the back end services
           doiInfo['journal-title'] = doiInfo['container-title'];
@@ -208,31 +210,61 @@ export default Component.extend({
    *  {
    *    ... // other DOI data
    *    "issn-map": {
-   *      "<ISSN-1>": {
-   *        "nlmta": ""
-   *        "pub-type": ""
+   *      "nlmta": "",
+   *      "map": {
+   *        "<ISSN-1>": {
+   *          "pub-type": ""
+   *        }
    *      }
    *    }
    *  }
    */
   getNlmtaFromIssn(doiInfo) {
-    const defer = Ember.RSVP.defer();
-
-    const issnMap = {};
+    const res = Ember.RSVP.defer();
+    const issnMap = {
+      nlmta: undefined,
+      map: {}
+    };
     if (Array.isArray(doiInfo.ISSN)) {
-      doiInfo.ISSN.forEach((issn) => {
-        getNLMID(issn);
+      let count = doiInfo.ISSN.length;
+      doiInfo.ISSN.forEach(async (issn) => {
+        // Map of NLMIDs to objects
+        // Example: https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nlmcatalog&term=0006-2952[issn]
+        const nlmidMap = await this.getNLMID(issn);
+        // Example: https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=nlmcatalog&retmode=json&rettype=abstract&id=101032
+        const idmap = await this.getNLMTA(nlmidMap);
+        nlmidMap.forEach((id) => {
+          const data = idmap[id];
+          issnMap.nlmta = data.medlineta;
+          issnMap.map[issn] = {
+            'pub-type': data.issnlist
+              .filter(item => item.issn === issn && item.issntype !== 'Linking')
+              .map(item => item.issntype)
+          };
+
+          if (--count === 0) {
+            // Wait until all ISSN requests resolve
+            res.resolve(issnMap);
+          }
+        });
       });
     }
-    return defer.promise;
+    return res.promise;
   },
   /**
+   * TODO What happens if 'idlist' contains more than one ID?
    * @param issn {string}
    */
   getNLMID(issn) {
     const url = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nlmcatalog&term=${issn}[issn]&retmode=json`;
-    fetch(url).then((resp) => {
-      debugger
-    });
+    return fetch(url).then(resp => resp.json().then(data => data.esearchresult.idlist));
+  },
+  getNLMTA(nlmid) {
+    let idquery = nlmid;
+    if (Array.isArray(nlmid)) {
+      idquery = nlmid.join(',');
+    }
+    const url = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=nlmcatalog&retmode=json&rettype=abstract&id=${idquery}`;
+    return fetch(url).then(resp => resp.json().then(data => data.result));
   }
 });
