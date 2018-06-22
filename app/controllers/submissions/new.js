@@ -67,7 +67,7 @@ export default Controller.extend({
                     if (ctr >= len) {
                       s.set('submitted', true);
                       s.save().then(() => {
-                        this.transitionToRoute('thanks', { queryParams: { submission: s.id } });
+                        this.transitionToRoute('thanks', { queryParams: { submission: s.get('id') } });
                       });
                     }
                   } else {
