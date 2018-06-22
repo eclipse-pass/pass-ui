@@ -32,7 +32,7 @@ export default Controller.extend({
       const pub = this.get('model.publication');
       sub.set('aggregatedDepositStatus', 'not-started');
       sub.set('submittedDate', new Date());
-      sub.set('submitted', true);
+      sub.set('submitted', false);
       sub.set('user', this.get('currentUser.user'));
       sub.set('source', 'pass');
       pub.save().then((p) => {
@@ -70,7 +70,9 @@ export default Controller.extend({
                     console.log(ctr);
                     console.log('saved file!');
                     if (ctr >= len) {
-                      this.transitionToRoute('thanks', { queryParams: { submission: s.id } });
+                      console.log('Setting \'submitted=true\'');
+                      s.set('submitted', true);
+                      s.save().then(() => this.transitionToRoute('thanks', { queryParams: { submission: s.id } }));
                     }
                   } else {
                     toastr.error('It looks like one or more of your files failed to upload. Please try again or contact support.');
