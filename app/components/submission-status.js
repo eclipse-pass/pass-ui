@@ -2,10 +2,12 @@ import Component from '@ember/component';
 
 export default Component.extend({
   // For specs: https://github.com/OA-PASS/pass-ember/issues/568
-  status: Ember.computed('record', function () {
-    const submission = this.get('record');
-    const repoCopies = this.get('column.repoCopiesMap')[submission.get('id')];
-    const deposits = this.get('column.depositsMap')[submission.get('id')];
+  status: Ember.computed('submission', function () {
+    const submission = this.get('submission');
+    const repoCopies = this.get('repoCopies');
+    const deposits = this.get('deposits');
+
+    // TODO duplicated logic in submission-status-cell
 
     if (repoCopies.any(rc => rc.get('copyStatus') == 'stalled')) {
         return 'Stalled';
