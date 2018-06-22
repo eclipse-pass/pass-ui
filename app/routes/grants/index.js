@@ -19,7 +19,6 @@ export default Route.extend({
   model() {
     const user = this.get('currentUser.user');
     if (!user) {
-      console.log(' ## No user MOO');
       return;
     }
 

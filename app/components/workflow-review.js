@@ -114,10 +114,10 @@ export default Component.extend({
         confirmButtonText: 'Redirect'
       }).then((value) => {
         if (value.dismiss) {
-          console.log('dont redirect');
+          // Don't redirect
           return;
         }
-        console.log(`go to web-link repo ${repo.get('name')}`);
+        // Go to the weblink repo
 
         // this.get('externalRepoMap')[repo.get('id')] = true;
         this.set(`externalRepoMap.${repo.id}`, true);

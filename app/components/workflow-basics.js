@@ -180,7 +180,6 @@ export default Component.extend({
           this.get('store').query('journal', { query }).then((journals) => {
             let journal = journals.get('length') > 0 ? journals.objectAt(0) : false;
             if (!journal) {
-              console.log(` >>> Journal not found [${desiredIssn}] ${desiredName}`);
               const newJournal = this.get('store').createRecord('journal', {
                 journalName: doiInfo['container-title'].trim(),
                 issns: doiInfo.ISSN,

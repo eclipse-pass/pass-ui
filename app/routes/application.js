@@ -40,7 +40,7 @@ export default Route.extend({
     const self = this;
     return this.get('finder').findAll().then((data) => {
       if (!data.hits || data.hits.total < 10) {
-        console.log('%c No data found in the search index, adding test data!', 'color: #F08600');
+        // console.log('%c No data found in the search index, adding test data!', 'color: #F08600');
         return self._add_test_data(jhuInstitution);
       }
       return jhuInstitution;

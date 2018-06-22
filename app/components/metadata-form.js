@@ -50,7 +50,6 @@ export default Ember.Component.extend({
                 } else if (doiInfo[doiEntry].length > 0) {
                   // Predicts data with .61 accuracy
                   if (f.get(doiEntry)[0][0] > 0.61) {
-                    console.log(doiEntry, doiInfo[doiEntry], f.get(doiEntry)[0][0]);
                     // set the found record to the metadata
                     // due to short title you have to call this
                     if (!(doiEntry === 'container-title-short')) {
@@ -152,7 +151,6 @@ export default Ember.Component.extend({
 
     // set readonly fields
     for (const doiEntry in this.get('doiInfo')) {
-      console.log(doiEntry)
       // Validate and check any doi data to make sure its close to the right field
       try {
         this.get('doiInfo')[doiEntry] = this.get('doiInfo')[doiEntry].replace(/(<([^>]+)>)/ig, '');
