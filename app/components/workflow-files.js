@@ -54,7 +54,6 @@ export default Component.extend({
                 mimeType: file.type.substring(file.type.indexOf('/') + 1),
                 description: file.description,
                 fileRole: 'supplemental',
-                uri: 'http://example.com',
                 _file: file
               });
               if (this.get('files').length === 0) {
