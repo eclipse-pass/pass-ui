@@ -227,7 +227,9 @@ export default Component.extend({
       nlmta: undefined,
       map: {}
     };
-    if (Array.isArray(doiInfo.ISSN)) {
+    if (!doiInfo.ISSN || !Array.isArray(doiInfo.ISSN)) {
+      res.resolve();
+    } else if (Array.isArray(doiInfo.ISSN)) {
       let count = doiInfo.ISSN.length;
       doiInfo.ISSN.forEach(async (issn) => {
         // Map of NLMIDs to objects

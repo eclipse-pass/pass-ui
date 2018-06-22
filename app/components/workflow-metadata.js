@@ -18,9 +18,6 @@ export default Component.extend({
           type: 'string',
           required: true
         },
-        nlmta: {
-          type: 'string'
-        },
         volume: {
           type: 'string',
         },
@@ -83,12 +80,6 @@ export default Component.extend({
           label: 'Journal Title',
           placeholder: 'Enter the journal title',
           hidden: true,
-        },
-        nlmta: {
-          type: 'text',
-          label: 'NLMTA',
-          placeholder: '',
-          hidden: true
         },
         volume: {
           type: 'text',
@@ -238,6 +229,12 @@ export default Component.extend({
         // Add any crossref info that was not added through the metadata forms
         const doiInfo = this.get('doiInfo');
         let metadata = JSON.parse(this.get('model.newSubmission.metadata'));
+
+        const common = metadata.filter(md => md.id === 'common');
+        if (common.length > 0) {
+          common[0].data['issn-map'] = doiInfo['issn-map'];
+        }
+
         metadata.push({
           id: 'crossref',
           data: {
@@ -250,7 +247,7 @@ export default Component.extend({
         metadata.push({
           id: 'pmc',
           data: {
-            'issn-map': doiInfo['issn-map']
+            nlmta: doiInfo.nlmta
           }
         });
 
@@ -267,7 +264,6 @@ export default Component.extend({
         }
         this.set('model.newSubmission.metadata', JSON.stringify(metadata));
         this.sendAction('next');
-        debugger
       }
     },
     previousForm() {
