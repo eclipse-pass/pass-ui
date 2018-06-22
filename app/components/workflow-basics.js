@@ -250,7 +250,7 @@ export default Component.extend({
           issnMap.nlmta = data.medlineta;
           issnMap.map[issn] = {
             'pub-type': data.issnlist
-              .filter(item => item.issn === issn && item.issntype !== 'Linking')
+              .filter(item => item.issn === issn)
               .map(item => item.issntype)
           };
 
