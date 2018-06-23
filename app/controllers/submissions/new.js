@@ -29,14 +29,20 @@ export default Controller.extend({
           repo.get('url') !== 'https://dec.usaid.gov/';
       }));
 
+      /*
+       * Note for the code below, but also Ember in general::::
+       * Seems that calling `obj.set('prop', obj2)` must be used in the case of:
+       *    obj.prop: belongsTo('obj2')
+       * Where calling `obj.set('prop', obj2.get('id'))` will not set the relationship
+       */
       const pub = this.get('model.publication');
       sub.set('aggregatedDepositStatus', 'not-started');
       sub.set('submittedDate', new Date());
       sub.set('submitted', false);
-      sub.set('user', this.get('currentUser.user.id'));
+      sub.set('user', this.get('currentUser.user')); // this.get('currentUser.user.id') seems to break stuff
       sub.set('source', 'pass');
       pub.save().then((p) => {
-        sub.set('publication', p.get('id'));
+        sub.set('publication', p); // p.get('id') seems to break stuff
         let ctr = 0;
         let len = this.get('filesTemp').length;
         sub.set('removeNIHDeposit', false);
@@ -58,7 +64,7 @@ export default Controller.extend({
                 }
               }
               xhr.onload = (results) => {
-                file.set('submission', s.get('id'));
+                file.set('submission', s); // s.get('id') seems to break stuff
                 file.set('uri', results.target.response);
                 file.save().then((f) => {
                   if (f) {
