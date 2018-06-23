@@ -143,7 +143,7 @@ export default Component.extend({
           }
 
           const nlmtaDump = await this.getNlmtaFromIssn(doiInfo);
-          if (nlmtaDump) {debugger
+          if (nlmtaDump) {
             doiInfo.nlmta = nlmtaDump.nlmta;
             doiInfo['issn-map'] = nlmtaDump.map;
           }
