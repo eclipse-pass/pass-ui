@@ -206,10 +206,10 @@ export default Component.extend({
               cancelButtonText: 'Proceed anyway'
             }).then((result) => {
               if (result.value) {
-                console.log('agree to deposit');
+                // agree to deposit
                 return;
               }
-              console.log('remove jscholarship');
+
               // remove jscholarship from submission
               this.set('model.newSubmission.repositories', this.get('model.newSubmission.repositories').filter(repo => repo.get('name') !== 'JScholarship'));
 
