@@ -79,15 +79,7 @@
           <tbody>
             <tr>
               <td class="max-width"><strong>Status</strong></td>
-              {{#if (eq model.sub.source "other")}}
-                {{#if (eq model.sub.submitted true)}}
-                  <td><i>This submission did not originate from PASS.</i></td>
-                {{else}}
-                  <td><i>Your funder is aware of this publication and is expecting the deposit of your manuscript.</i></td>
-                {{/if}}
-              {{else}}
-                <td>{{model.sub.aggregatedDepositStatus}}</td>
-              {{/if}}
+              {{submission-status deposits=model.deposits repoCopies=model.repoCopies submission=model.sub}}
             </tr>
             <tr>
               <td><strong>Grants</strong></td>

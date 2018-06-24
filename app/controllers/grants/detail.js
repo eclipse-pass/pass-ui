@@ -1,11 +1,15 @@
 import Controller from '@ember/controller';
 import { inject as service } from '@ember/service';
 import Bootstrap4Theme from 'ember-models-table/themes/bootstrap4';
+import { computed } from '@ember/object';
 
 export default Controller.extend({
   currentUser: Ember.inject.service('current-user'),
-  columns: [
-    {
+
+  // Columns displayed depend on the user role
+  columns: computed('currentUser', {
+    get() {
+      return [{
       propertyName: 'publicationTitle',
       className: 'title-column',
       title: 'Article',
@@ -34,9 +38,9 @@ export default Controller.extend({
     {
       propertyName: 'aggregatedDepositStatus',
       title: 'Status',
-      filterWithSelect: true,
-      predefinedFilterOptions: ['In Progress', 'Complete'],
-      component: 'submission-status-cell'
+      component: 'submission-status-cell',
+      repoCopiesMap: this.get('model.repoCopiesMap'),
+      depositsMap: this.get('model.depositsMap')
     },
     {
       propertyName: 'repoCopies',
@@ -49,8 +53,8 @@ export default Controller.extend({
       title: 'Actions',
       className: 'actions-column',
       component: 'submission-action-cell'
-    }
-  ],
+    }]
+  }}),
 
   themeInstance: Bootstrap4Theme.create(),
 });

@@ -4,10 +4,10 @@ import { inject as service } from '@ember/service';
 export default Component.extend({
   submissionStatus: service(),
 
-  status: Ember.computed('record', function () {
-    const submission = this.get('record');
-    const repoCopies = this.get('column.repoCopiesMap')[submission.get('id')];
-    const deposits = this.get('column.depositsMap')[submission.get('id')];
+  status: Ember.computed('submission', function () {
+    const submission = this.get('submission');
+    const repoCopies = this.get('repoCopies');
+    const deposits = this.get('deposits');
 
     return this.get('submissionStatus').calculateStatus(submission, repoCopies, deposits);
   })

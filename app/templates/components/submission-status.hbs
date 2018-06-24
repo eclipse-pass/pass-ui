@@ -19,7 +19,6 @@
   }
 </style>
 
-<div class="text-left">
   <span class="status {{status}} pr-1">
     {{#if (eq status "Complete")}}
       <span tooltip-position="left" tooltip="All target repositories have received a copy of the Submission and verified that it is approved for publication">
@@ -42,9 +41,6 @@
       </span>
     {{/if}}
     {{#if (eq status "See details")}}
-      {{#link-to "submissions.detail" record.id}}
-        <i class="fas fa-circle"></i> {{status}}
-      {{/link-to}}
+      <i class="fas fa-circle"></i> See details below
     {{/if}}
   </span>
-</div>

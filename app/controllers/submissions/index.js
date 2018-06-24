@@ -17,95 +17,91 @@ export default Controller.extend({
   columns: computed('currentUser', {
     get() {
       if (this.get('currentUser.user.isAdmin')) {
-        return this.get('adminColumns');
+        return [{
+          propertyName: 'publication',
+          title: 'Article',
+          component: 'submissions-article-cell'
+        },
+        {
+          title: 'Award Number (Funder)',
+          className: 'awardnum-funder-column',
+          component: 'submissions-award-cell'
+        },
+        {
+          propertyName: 'repositories',
+          title: 'Repositories',
+          className: 'repositories-column',
+          component: 'submissions-repo-cell'
+        },
+        {
+          propertyName: 'submittedDate',
+          title: 'Submitted Date',
+          className: 'date-column',
+          component: 'date-cell'
+        },
+        {
+          propertyName: 'aggregatedDepositStatus',
+          title: 'Status',
+          repoCopiesMap: this.get('model.repoCopiesMap'),
+          depositsMap: this.get('model.depositsMap')
+        },
+        {
+          // propertyName: 'repoCopies',
+          title: 'Manuscript IDs',
+          component: 'submissions-repoid-cell'
+        }
+      ];
       } else if (this.get('currentUser.user.isSubmitter')) {
-        return this.get('piColumns');
-      }
+        return [{
+          propertyName: 'publicationTitle',
+          className: 'title-column',
+          title: 'Article',
+          component: 'submissions-article-cell'
+        },
+        {
+          title: 'Award Number (Funder)',
+          propertyName: 'grantInfo',
+          className: 'awardnum-funder-column',
+          component: 'submissions-award-cell',
+          disableSorting: true
+        },
+        {
+          propertyName: 'repositoryNames',
+          title: 'Repositories',
+          component: 'submissions-repo-cell',
+          className: 'repositories-column',
+          disableSorting: true
+        },
+        {
+          propertyName: 'submittedDate',
+          title: 'Submitted Date',
+          className: 'date-column',
+          component: 'date-cell'
+        },
+        {
+          propertyName: 'aggregatedDepositStatus',
+          title: 'Status',
+          component: 'submission-status-cell',
+          repoCopiesMap: this.get('model.repoCopiesMap'),
+          depositsMap: this.get('model.depositsMap')
+        },
+        {
+          propertyName: 'repoCopies',
+          className: 'msid-column',
+          title: 'Manuscript IDs',
+          component: 'submissions-repoid-cell',
+          disableSorting: true
+        },
+        {
+          title: 'Actions',
+          className: 'actions-column',
+          component: 'submission-action-cell'
+        }
+      ];
+    } else {
       return [];
-    },
-  }),
-
-  piColumns: [{
-    propertyName: 'publicationTitle',
-    className: 'title-column',
-    title: 'Article',
-    component: 'submissions-article-cell'
-  },
-  {
-    title: 'Award Number (Funder)',
-    propertyName: 'grantInfo',
-    className: 'awardnum-funder-column',
-    component: 'submissions-award-cell',
-    disableSorting: true
-  },
-  {
-    propertyName: 'repositoryNames',
-    title: 'Repositories',
-    component: 'submissions-repo-cell',
-    className: 'repositories-column',
-    disableSorting: true
-  },
-  {
-    propertyName: 'submittedDate',
-    title: 'Submitted Date',
-    className: 'date-column',
-    component: 'date-cell'
-  },
-  {
-    propertyName: 'aggregatedDepositStatus',
-    title: 'Status',
-    filterWithSelect: true,
-    predefinedFilterOptions: ['In Progress', 'Complete'],
-    component: 'submission-status-cell'
-  },
-  {
-    propertyName: 'repoCopies',
-    className: 'msid-column',
-    title: 'Manuscript IDs',
-    component: 'submissions-repoid-cell',
-    disableSorting: true
-  },
-  {
-    title: 'Actions',
-    className: 'actions-column',
-    component: 'submission-action-cell'
-  }
-  ],
-
-  adminColumns: [{
-    propertyName: 'publication',
-    title: 'Article',
-    component: 'submissions-article-cell'
-  },
-  {
-    title: 'Award Number (Funder)',
-    className: 'awardnum-funder-column',
-    component: 'submissions-award-cell'
-  },
-  {
-    propertyName: 'repositories',
-    title: 'Repositories',
-    className: 'repositories-column',
-    component: 'submissions-repo-cell'
-  },
-  {
-    propertyName: 'submittedDate',
-    title: 'Submitted Date',
-    className: 'date-column',
-    component: 'date-cell'
-  },
-  {
-    propertyName: 'aggregatedDepositStatus',
-    title: 'Status',
-    filterWithSelect: true,
-    predefinedFilterOptions: ['In Progress', 'Complete'],
-  },
-  {
-    // propertyName: 'repoCopies',
-    title: 'Manuscript IDs',
-    component: 'submissions-repoid-cell'
-  },
-  ],
+    }
+  }}),
 
   themeInstance: Bootstrap4Theme.create(),
 });
