@@ -29,6 +29,8 @@ export default Controller.extend({
           repo.get('url') !== 'https://dec.usaid.gov/';
       }));
 
+      this.set('model.uploading', true);
+      this.set('model.waitingMessage', 'Saving your submission');
       /*
        * Note for the code below, but also Ember in general::::
        * Seems that calling `obj.set('prop', obj2)` must be used in the case of:
@@ -63,6 +65,7 @@ export default Controller.extend({
                   xhr.setRequestHeader('Authorization', 'Basic YWRtaW46bW9v'); // TODO: should not be hardcoded
                 }
               }
+              this.set('model.waitingMessage', 'Uploading files');
               xhr.onload = (results) => {
                 file.set('submission', s); // s.get('id') seems to break stuff
                 file.set('uri', results.target.response);
@@ -73,6 +76,7 @@ export default Controller.extend({
                     if (ctr >= len) {
                       s.set('submitted', true);
                       s.save().then(() => {
+                        this.set('model.uploading', false);
                         this.transitionToRoute('thanks', { queryParams: { submission: s.get('id') } });
                       });
                     }
@@ -80,12 +84,14 @@ export default Controller.extend({
                     toastr.error('It looks like one or more of your files failed to upload. Please try again or contact support.');
                   }
                 }).catch((e) => {
+                  this.set('model.uploading', false);
                   toastr.error(e);
                 });
               };
               xhr.send(data);
             };
             reader.onerror = function (evt) {
+              this.set('model.uploading', false);
               toastr.error('Error reading file');
             };
           });
