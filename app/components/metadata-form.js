@@ -161,7 +161,6 @@ export default Ember.Component.extend({
           if (!(doiEntry === 'container-title-short')) {
             newForm.schema.properties[doiEntry].readonly = true;
             newForm.options.fields[doiEntry].hidden = false;
-
           }
         }
       } catch (e) {} // eslint-disable-line no-empty

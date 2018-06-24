@@ -2,11 +2,22 @@ import Controller from '@ember/controller';
 import _ from 'lodash';
 
 export default Controller.extend({
+  // statusService: Ember.inject.service('submission-status'),
+
   tooltips: function () {
     $(() => {
       $('[data-toggle="tooltip"]').tooltip();
     });
   }.on('init'),
+
+  // status: Ember.computed('model.sub', 'model.repoCopies', 'model.deposits', function () {
+  //   return this.get('statusService').calculateStatus(
+  //     this.get('model.sub'),
+  //     this.get('model.repoCopies'),
+  //     this.get('model.deposits')
+  //   );
+  // }),
+
   externalSubmission: Ember.computed('metadataBlobNoKeys', function () {
     return this.get('metadataBlobNoKeys').Submission;
   }),

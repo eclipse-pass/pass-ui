@@ -33,11 +33,13 @@ export default Route.extend({
         bool: {
           must: [
             { range: { endDate: { gte: '2011-01-01' } } },
-            { bool: {
-              should: [
-                { term: { pi: user.get('id') } },
-                { term: { coPis: user.get('id') } }
-              ]}
+            {
+              bool: {
+                should: [
+                  { term: { pi: user.get('id') } },
+                  { term: { coPis: user.get('id') } }
+                ]
+              }
             }
           ]
         }

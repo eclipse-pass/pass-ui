@@ -22,29 +22,25 @@ export default Route.extend({
     }
 
     if (submissions) {
-      depositsMap = submissions.then(result => {
+      depositsMap = submissions.then((result) => { // eslint-disable-line
         return this.get('store').query('deposit', {
           from: 0,
           size: 500,
           query: {
-            terms : { submission : result.map(s => s.get('id')) }
+            terms: { submission: result.map(s => s.get('id')) }
           }
         });
-      }).then(deposits => {
+      }).then((deposits) => {
         let map = {};
 
-        submissions.forEach(s => {
-          map[s.get('id')] = [];
-        });
+        submissions.forEach(s => map[s.get('id')] = []); // eslint-disable-line
 
-        deposits.forEach(d => {
-          map[d.get('submission.id')].push(d);
-        });
+        deposits.forEach(d => map[d.get('submission.id')].push(d));
 
         return map;
       });
 
-      repoCopiesMap = submissions.then(result => {
+      repoCopiesMap = submissions.then((result) => { // eslint-disable-line
         return this.get('store').query('repositoryCopy', {
           from: 0,
           size: 500,
@@ -52,14 +48,12 @@ export default Route.extend({
             terms: { publication: result.map(s => s.get('publication.id')) }
           }
         });
-      }).then(repoCopies => {
+      }).then((repoCopies) => {
         let map = {};
 
-        submissions.forEach(s => {
-          map[s.get('id')] = [];
-        });
+        submissions.forEach(s => map[s.get('id')] = []); // eslint-disable-line
 
-        repoCopies.forEach(rc => {
+        repoCopies.forEach((rc) => {
           let sub = submissions.find(s => s.get('publication.id') == rc.get('publication.id'));
 
           if (sub) {

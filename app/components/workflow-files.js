@@ -47,7 +47,7 @@ export default Component.extend({
             if (file) {
               if (file.size > (1024 * 1024 * 100)) {
                 toastr.error(`Your file '${file.name}' is ${Number.parseFloat(file.size / 1024 / 1024).toPrecision(3)}MB. This exceeds the maximum upload size of 100MB and the file was not added to the submission.`);
-                continue;
+                continue; // eslint-disable-line
               }
               const newFile = this.get('store').createRecord('file', {
                 name: file.name,
