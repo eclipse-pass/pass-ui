@@ -85,11 +85,8 @@ export default Component.extend({
       }
     },
     next() {
-      if (this.get('doiInfo').length === 0) {
-        this.set('doiInfo', {
-          'container-title': this.get('model.publication.journal.journalName'),
-          title: this.get('model.publication.title')
-        });
+      if (!this.get('doiInfo.title')) {
+        this.set('doiInfo.title', this.get('model.publication.title'));
       }
       this.sendAction('next');
     },
@@ -197,7 +194,21 @@ export default Component.extend({
     /** Sets the selected journal for the current publication.
      * @param journal {DS.Model} The journal
      */
-    selectJournal(journal) {
+    async selectJournal(journal) {
+      let doiInfo = this.get('doiInfo');
+      doiInfo = {
+        'journal-title': this.get('model.publication.journal.journalName'),
+        title: this.get('model.publication.title'),
+        ISSN: journal.get('issns')
+      };
+
+      const nlmtaDump = await this.getNlmtaFromIssn(doiInfo);
+      if (nlmtaDump) {
+        doiInfo.nlmta = nlmtaDump.nlmta;
+        doiInfo['issn-map'] = nlmtaDump.map;
+      }
+      this.set('doiInfo', doiInfo);
+
       const publication = this.get('model.publication');
       publication.set('journal', journal);
       $('.ember-power-select-trigger').css('border-color', '#4dbd74');
