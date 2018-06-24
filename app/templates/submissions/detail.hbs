@@ -79,7 +79,7 @@
           <tbody>
             {{!-- <tr>
               <td class="max-width"><strong>Status</strong></td>
-              {{submission-status deposits=model.deposits repoCopies=model.repoCopies submission=model.sub}}
+              <td>{{#if (eq status "Manuscript expected")}}Notice: {{status}}{{/if}}</td>
             </tr> --}}
             <tr>
               <td><strong>Grants</strong></td>
