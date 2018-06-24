@@ -7,11 +7,11 @@ export default Service.extend({
   // Some (out of date?) information https://github.com/OA-PASS/pass-ember/issues/568
   calculateStatus(submission, repoCopies, deposits) {
     if (repoCopies.any(rc => rc.get('copyStatus') == 'stalled')) {
-        return 'Stalled';
+      return 'Stalled';
     }
 
     if (submission.get('source') == 'other' && !submission.get('submitted')) {
-        return 'Manuscript expected';
+      return 'Manuscript expected';
     }
 
     if (repoCopies.get('length') == 0) {
