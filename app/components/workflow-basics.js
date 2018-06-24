@@ -88,6 +88,9 @@ export default Component.extend({
       if (!this.get('doiInfo.title')) {
         this.set('doiInfo.title', this.get('model.publication.title'));
       }
+      if (!this.get('doiInfo.author')) {
+        this.set('doiInfo.author', []);
+      }
       this.sendAction('next');
     },
     validateDOI() {
