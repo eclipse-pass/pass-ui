@@ -154,7 +154,8 @@ export default Ember.Component.extend({
       // Validate and check any doi data to make sure its close to the right field
       try {
         this.get('doiInfo')[doiEntry] = this.get('doiInfo')[doiEntry].replace(/(<([^>]+)>)/ig, '');
-        if (doiEntry == 'author') {
+        if (doiEntry == 'author' && this.get('doiInfo.author').length > 0) {
+          // Mark 'author' data read-only only if there already is author data.
           newForm.schema.properties.authors.readonly = true;
           newForm.options.fields.authors.hidden = false;
         } else if (this.get('doiInfo')[doiEntry].length > 0) {

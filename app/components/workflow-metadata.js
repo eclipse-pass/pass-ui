@@ -42,6 +42,7 @@ export default Component.extend({
         },
         authors: {
           title: '<div class="row"><div class="col-6">Author(s)</div><div class="col-6 p-0">ORCID(s)</div></div>',
+          required: true,
           type: 'array',
           uniqueItems: true,
           items: {
@@ -122,7 +123,7 @@ export default Component.extend({
           hidden: true
         },
         authors: {
-          hidden: true,
+          // hidden: true,
         },
         'under-embargo': {
           type: 'checkbox',
