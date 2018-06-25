@@ -32,7 +32,7 @@ export default Component.extend({
       case 'Complete':
         return 'Submission was accepted and processed by the repository. ID(s) have been assigned to the submitted manuscript.';
       case 'Stalled':
-        return 'The repository has found a problem with your submission that has caused progress to stall. This may require direct interaction with the repository to re-initiate the process. Please check the repository website for more details.';
+        return 'The repository has found a problem with your submission that has caused progress to stall. Please contact the repository for more details.';
       case 'Submitted':
         return 'Your submission has been sent to the repository or is in queue to be sent.';
       case 'Manuscript expected':
