@@ -200,8 +200,7 @@ export default Component.extend({
     async selectJournal(journal) {
       let doiInfo = this.get('doiInfo');
       doiInfo = {
-        'journal-title': this.get('model.publication.journal.journalName'),
-        title: this.get('model.publication.title'),
+        'journal-title': journal.get('journalName'),
         ISSN: journal.get('issns')
       };
 
