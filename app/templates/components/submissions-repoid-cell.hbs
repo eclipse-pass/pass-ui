@@ -1,6 +1,17 @@
-{{#each record as |deposit index|}}
-  {{if index ', '}}
-    {{optional-link (concat deposit.repositoryCopy.externalIds ' (' deposit.repositoryCopy.copyStatus ')') deposit.repositoryCopy.accessUrl}}
+{{#each displayIds as |idInfo index|}}
+  <ul class="repoid-cell">
+    {{#if idInfo.url}}
+      {{#each idInfo.ids as |id|}}
+        <a href="{{idInfo.url}}" target="_blank">
+          <li title="{{id.title}}">{{id.display}}</li>
+        </a>
+      {{/each}}
+    {{else}}
+      {{#each idInfo.ids as |id|}}
+        <li title="{{id.title}}">{{id.display}}</li>
+      {{/each}}
+    {{/if}}
+  </ul>
 {{else}}
-None yet
+  <span class="nodata-placeholder">Not available</span>
 {{/each}}

@@ -1,0 +1,135 @@
+version: '3.1'
+
+services:
+
+  ember:
+    build: ember-dev/
+    image: oapass/ember-dev
+    container_name: ember
+    env_file: .env
+    volumes:
+      - ../../:/app:Z
+      - /app/node_modules
+    ports:
+      - "${EMBER_PORT}:${EMBER_PORT}"
+    networks:
+      - back
+
+  fcrepo:
+    image: oapass/fcrepo:4.7.5-2.2-SNAPSHOT-4@sha256:5af64e29c4e0ecc0887c94ab5ea2fe6eea959e0dd30995985d4226b65de951a9
+    container_name: fcrepo
+    env_file: .env
+    ports:
+      - "${FCREPO_PORT}:${FCREPO_PORT}"
+      - "${FCREPO_JMS_PORT}:${FCREPO_JMS_PORT}"
+      - "${FCREPO_STOMP_PORT}:${FCREPO_STOMP_PORT}"
+      - "${FCREPO_DEBUG_PORT}:${FCREPO_DEBUG_PORT}"
+    networks:
+      - front
+      - back
+    volumes:
+      - passdata:/data
+    depends_on: 
+      - assets
+
+  proxy:
+    image: oapass/httpd-proxy:20180609@sha256:d73e25407c5eb20fa2271734cdb0d24db2b4efde941d8706e116bec1198c5d95
+    container_name: proxy
+    networks:
+     - front
+     - back
+    ports:
+     - "80:80"
+     - "443:443"
+
+  idp:
+    image: oapass/idp:20180518@sha256:8fc230e81574161626c8cebd9fda35ae2ff0f8a0c8bce085397972ecb09ce7eb
+    container_name: idp
+    depends_on:
+     - ldap
+    environment:
+     - JETTY_MAX_HEAP=64m
+     - JETTY_BROWSER_SSL_KEYSTORE_PASSWORD=password
+     - JETTY_BACKCHANNEL_SSL_KEYSTORE_PASSWORD=password
+    expose:
+     - "4443"
+    networks:
+     - back
+    secrets:
+     - source: idp_backchannel
+     - source: idp_browser
+     - source: idp_encryption
+     - source: idp_signing
+     - source: idp_sealer
+
+  ldap:
+    image: oapass/ldap:20180609@sha256:a90044c91d70735f8a0b10cf63151d109fbb87fd775d48f5bc02a91c04fbd882
+    container_name: ldap
+    networks:
+     - back
+
+  sp:
+    image: oapass/sp:20180609@sha256:7f2066338cf300d88eb8545b35261f64e1749086a7bed28536f0417f2582056e
+    container_name: sp
+    networks:
+     - back
+    secrets:
+     - source: sp_key
+
+  indexer:
+    image: oapass/indexer:0.0.12-2.2-SNAPSHOT@sha256:a8599b27219d9cb85b596fd90d173e370c3d53494630a98c00bee43f5c7bd8e6
+    container_name: indexer
+    env_file: .env
+    networks:
+      - back
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.3@sha256:ccfad77c0731c010e6ff8c43b4ab50f5ce90c0fa4e65846530779c5c6707c20a
+    container_name: elasticsearch
+    env_file: .env
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - passdata:/usr/share/elasticsearch/data   
+    ports: 
+      - "${ES_PORT}:${ES_PORT}"
+    networks:
+      - front
+      - back
+    depends_on: 
+      - assets
+
+  assets:
+    image: birkland/assets:2018-06-19@sha256:5639825b668e982f248d35bb23a5d942a9353ca37c55cba06221e568e8445d88
+    volumes:
+      - passdata:/data
+  
+volumes:
+  passdata:
+    driver: local
+
+networks:
+  front:
+    driver: bridge
+  back:
+    driver: bridge
+
+secrets:
+  idp_backchannel:
+    file: ./secrets/idp/idp-backchannel.p12
+  idp_browser:
+    file: ./secrets/idp/idp-browser.p12
+  idp_encryption:
+    file: ./secrets/idp/idp-encryption.key
+  idp_signing:
+    file: ./secrets/idp/idp-signing.key
+  idp_sealer:
+    file: ./secrets/idp/sealer.jks
+  sp_key:
+    file: ./secrets/sp/sp-key.pem

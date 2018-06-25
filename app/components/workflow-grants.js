@@ -5,8 +5,6 @@ import { inject as service } from '@ember/service';
 export default Component.extend({
   store: service('store'),
 
-  /** Holds all newly-added grants */
-  addedGrants: [],
   optionalGrants: Ember.computed('model', function () {
     return this.get('model.grants');
   }),
@@ -14,7 +12,12 @@ export default Component.extend({
   submissionGrants: Ember.computed('model.newSubmission', function () {
     return this.get('model.newSubmission.grants');
   }),
-  didRender() {
+  sortedGrants: Ember.computed('model.newSubmission.grants.[]', function () {
+    const subGrants = this.get('model.newSubmission.grants');
+    return this.get('model.grants').filter(grant => !subGrants || !subGrants.includes(grant));
+  }),
+  init() {
+    this._super(...arguments);
     if (this.get('model.preLoadedGrant')) {
       this.send('addGrant', this.get('model.preLoadedGrant'));
     }
@@ -26,27 +29,32 @@ export default Component.extend({
     back() {
       this.sendAction('back');
     },
-    addGrant(grant) {
-      const submission = this.get('model.newSubmission');
-      submission.get('grants').pushObject(grant);
-      this.get('addedGrants').push(grant);
+    addGrant(grant, event) {
+      if (grant) {
+        const submission = this.get('model.newSubmission');
+        submission.get('grants').pushObject(grant);
+        this.set('maxStep', 2);
+        submission.set('metadata', '[]');
+      } else if (event && event.target.value) {
+        this.get('store').findRecord('grant', event.target.value).then((g) => {
+          g.get('primaryFunder.policy'); // Make sure policy is loaded in memory
+          const submission = this.get('model.newSubmission');
+          submission.get('grants').pushObject(g);
+          this.set('maxStep', 2);
+          submission.set('metadata', '[]');
+          Ember.$('select')[0].selectedIndex = 0;
+        });
+      }
     },
     removeGrant(grant) {
+      // if grant is grant passed in from grant detail page remove query parms
+      if (grant === this.get('model.preLoadedGrant')) {
+        this.set('model.preLoadedGrant', null);
+      }
       const submission = this.get('model.newSubmission');
       submission.get('grants').removeObject(grant);
-
-      const index = this.get('addedGrants').indexOf(grant);
-      this.get('addedGrants').splice(index, 1);
-    },
-    saveAll() {
-      const grants = this.get('addedGrants');
-      this.set('addedGrants', []);
-      const submission = this.get('model.newSubmission');
-
-      return Promise.all(grants.map((grant) => {
-        grant.get('submissions').pushObject(submission);
-        return grant.save();
-      })).then(() => submission.save());
+      this.set('maxStep', 2);
+      submission.set('metadata', '[]');
     },
   },
 });

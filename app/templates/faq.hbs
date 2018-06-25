@@ -1,0 +1,111 @@
+{{outlet}}
+<style>
+.faq-content h3 {
+  padding-top:10px;
+  font-weight:bold;
+  font-size: 1.2rem!important;
+}
+.integration-type-text {
+  font-style: italic;
+  margin-bottom:3px;
+  padding-bottom:0;
+}
+.faq-anchor {
+  display: block;
+  position: relative;
+  top: -50px;
+  visibility: hidden;
+}
+</style>
+<div class="ml-auto mr-auto faq-content" style="max-width: 1000px;">
+  <header class="mt-5">
+    <h1>Frequently Asked Questions</h1>
+  </header>
+  <p>The following questions are answered on this page. If you have other questions, feel free to {{#link-to 'contact'}}contact us{{/link-to}}</p>
+  <ul>
+    <li><a href="{{rootURL}}faq#supported-policies">What Open or Public Access policies can PASS support?</a></li>
+    <li><a href="{{rootURL}}faq#institution-policy">What is JHU's open access policy?</a></li>
+    <li><a href="{{rootURL}}faq#what-to-expect">What should I expect after submitting through PASS?</a></li>
+    <li><a href="{{rootURL}}faq#publisher-submit">Will the publisher automatically submit my article to PubMed Central?</a></li>
+    <li><a href="{{rootURL}}faq#nih-submissions">What information about NIH submissions is pre-loaded into PASS?</a></li>
+    <li><a href="{{rootURL}}faq#negotiate-copyright">How do I negotiate a copyright agreement for my publication to comply with Public/Open Access Policies?</a></li>
+  </ul>
+  <section>
+    <a id="supported-policies" class="faq-anchor"></a>
+    <h3>What Open or Public Access policies can PASS support?</h3>
+    <p>PASS supports Johns Hopkins University’s (JHU) Open Access policy by facilitating submission of an author’s accepted manuscripts to JScholarship, JHU’s institutional repository.</p>
+    <p id="agencies_supported_by_PASS">Additionally, PASS supports existing workflows for federal funding agencies’ public access policy submission into PubMed Central (PMC) - used by NIH and the other funding agencies listed below:</p>
+    <h5>Full integration</h5>
+    <p class="integration-type-text">Programmatic submission from PASS to NIH Manuscript Submission System (NIHMS) and submission status updates</p>
+    <ul>
+      <li>NIH - National Institutes of Health</li>
+    </ul>
+    <h5>Deposit integration</h5>
+    <p class="integration-type-text">Programmatic submission from PASS to NIHMS without submission status updates</p>
+    <ul>
+      <li>ACL - Administration for Community Living</li>
+      <li>AHRQ - Agency for Healthcare Research and Quality</li>
+      <li>ASPR – Office of the Assistant Secretary for Preparedness and Response</li>
+      <li>CDC – Centers for Disease Control</li>
+      <li>VA – Department of Veteran Affairs</li>
+      <li>FDA - Food and Drug Administration</li>
+      <li>HHMI- Howard Hughes Medical Institute</li>
+      <li>NASA -National Aeronautics and Space Administration </li>
+    </ul>
+    <h5>Linked web portal</h5>
+    <p class="integration-type-text">While programmatic integration is not currently possible, PASS does provide a link to these agencies’ submission portal and provides a list of relevant metadata to aid with submission process</p>
+    <ul>
+      <li>ED – Department of Education</li>
+      <li>USAID – US Agency for International Development</li>
+    </ul>
+  </section>
+  <section>
+    <a id="institution-policy" class="faq-anchor"></a>
+    <h3>What is JHU's open access policy?</h3>
+    <p>As of July 1, 2018, Johns Hopkins University has implemented a university wide open access policy that expects  every scholarly article produced by full-time faculty members of Johns Hopkins University be accessible in an open access repository. To learn more about this policy visit the <a href="https://provost.jhu.edu/about/open-access/" target="_blank">Office of the Provost's webpages on Open Access at Johns Hopkins</a>.</p>
+  </section>
+  <section>
+    <a id="what-to-expect" class="faq-anchor"></a>
+    <h3>What should I expect after submitting through PASS?</h3>
+    <p>Each submission may go through a different process for each repository. The PASS team will continue to work with funding agencies to improve integration with their repositories, and bring PASS users more convenient features and streamlined workflows. The current processes are described below:</p>
+    <h5>PubMed Central (PMC)</h5>
+    <p>Within a few hours of submitting your manuscript files to <a href="https://www.ncbi.nlm.nih.gov/pmc/" target="_blank">PubMed Central</a> through PASS, you will be contacted by the National Institutes of Health Manuscript Submission system (NIHMS) to approve the processing of the submission. At that point your submission will be assigned a NIHMSID, which can be used to demonstrate public access policy compliance while your submission is being processed.</p>
+    <p>NIHMS staff will review the submission for completeness and accuracy. If any additional information is required, NIHMS will contact you to request changes. If no further information is required, the submission will be formatted for PMC publication.</p>
+    <p>Once the processing stage is complete, you will be contacted again by NIHMS for final approval of the documents before publication in PMC. A PMCID will be assigned once the final approval has been received and the manuscript is matched to a PubMed record with complete citation information. The manuscript will then be made publicly available in PMC following the publisher-required embargo period, where applicable.</p>
+    <p>For submissions citing an NIH grant for which you are or were the PI, PASS will be able to retrieve and display submissions, NIHMSID, and PMCID as they become available.</p>
+    <p>You can read more about the NIHMS process in <a href="https://www.ncbi.nlm.nih.gov/books/NBK3846/" target="_blank">the NIHMS Help booklet on the NIH website</a>.</p>
+    <h5>JScholarship</h5>
+    <p>Manuscripts submitted to <a href="https://jscholarship.library.jhu.edu/" target="_blank">JScholarship</a> will be assigned an ID and link within several hours, which will be visible through PASS. The manuscript will also be publicly accessible within hours, or following any publisher-required embargo period, where applicable. Content within JScholarship is harvested and indexed by search engines such as Google.</p>
+    <h5>Department of Education's ERIC Repository</h5>
+    <p>PASS does not automatically create or track submissions to <a href="https://eric.ed.gov/" target="_blank">ERIC</a>, but it does identify manuscripts that are subject to the ED public access policy and provides a link to ERIC submission portal.</p>
+    <h5>US Agency for International Development's DEC Repository</h5>
+    <p>PASS does not automatically create or track submissions to <a href="https://dec.usaid.gov/" target="_blank">DEC</a>, but it does identify manuscripts that are subject to the USAID public access policy and provides a link to USAID submission portal.</p>
+  </section>
+  <section>
+    <a id="publisher-submit" class="faq-anchor"></a>
+    <h3>Will the publisher automatically submit my article to PubMed Central?</h3>
+    <p>Whether articles are automatically submitted to PubMed Central by a publisher varies depending on the journal. Each journal falls into one of the following categories:</p>
+    <ol>
+      <li>The publisher can automatically submit the manuscript to PubMed Central on your behalf. A list of journals that provide this service can be <a href="https://publicaccess.nih.gov/submit_process_journals.htm" target="_blank">found here</a>. In this instance, nothing needs to be done through PASS.</li>
+      <li>The publisher offers a service to submit the manuscript, but you need to make a special arrangement for them to do this and they may charge a processing fee.</li>
+      <li>The publisher does not offer any service, and you must make your own arrangements to deposit the article. This would previously be done through the NIH Manuscript Submission system (NIHMS).</li>
+    </ol>
+    <p>When there is a fee or you must make your own arrangements, PASS can be used to submit the article to PubMed Central directly without fee. For more information on the various submission paths used by journals, visit the <a href="https://publicaccess.nih.gov/" target="_blank">NIH public access website.</a></p>
+  </section>
+  <section>
+    <a id="nih-submissions" class="faq-anchor"></a>
+    <h3>What information about NIH submissions is pre-loaded into PASS?</h3>
+    <p>Records of prior NIH submissions displayed in PASS go back to January 2013. Each night, updated Submission information is loaded into PASS from the NIH Manuscript Submission system (NIHMS). This information contains the public access compliance status of articles associated with NIH grants. If you are a PI on an NIH grant and have articles that are associated with those grants in PubMed, you may see the following on {{#link-to 'submissions'}}your Submissions page{{/link-to}}:</p>
+       <ul>
+         <li>Information about completed or in-progress Submissions, some of which may have been initiated outside of PASS. No action is required for these Submissions.</li>
+         <li>Information about manuscripts that have not yet been received by NIH for deposit into PubMed Central. These will appear in PASS as "requiring a manuscript" and can be completed through PASS to deposit the manuscript into compliance.</li>
+       </ul>
+    <p>The information for these submissions comes directly from NIH. Please feel free to {{#link-to 'contact'}}contact us{{/link-to}} if there are problems with the information so that we can contact NIH.</p>
+  </section>
+  <section>
+    <a id="negotiate-copyright" class="faq-anchor"></a>
+    <h3>How do I negotiate a copyright agreement for my publication to comply with Public/Open Access Policies?</h3>
+    <p>Many journals make allowances for self-archiving and compliance with access policies implemented by a funder or institution. You can look up many publishers’ policies for copyright and self-archiving on the <a href="http://www.sherpa.ac.uk/romeo/index.php" target="_blank">SHERPA/RoMEO website</a>. If a journal does not allow open sharing of your article, you may be able to negotiate with them to make an exception. For help with copyright negotiation, or any other copyright related questions, please {{#link-to 'contact'}}contact Robin Sinn at the Office of Scholarly Communication{{/link-to}}.</p>
+  </section>
+  
+</div>

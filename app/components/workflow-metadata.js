@@ -1,105 +1,149 @@
 import Component from '@ember/component';
 import _ from 'lodash';
+import { inject as service, } from '@ember/service';
 
 export default Component.extend({
+  didAgree: false,
+  router: service(),
   common: {
     id: 'common',
     data: {},
     schema: {
-      title: "Common <br><p class='lead text-muted'>Please provide additional information about your article/manuscript below:</p>",
+      title: "Publication Details <br><p class='lead text-muted'>Please provide additional information about your article/manuscript below. If DOI was provided in the initial step of the submission, the metadata associated with that DOI was found and used to prepopulate this form. </p>",
       type: 'object',
       properties: {
+        title: {
+          type: 'string',
+          required: true
+        },
+        'journal-title': {
+          type: 'string',
+          required: true
+        },
         volume: {
           type: 'string',
         },
         issue: {
           type: 'string',
+        },
+        ISSN: {
+          type: 'string'
         },
         publicationDate: {
           title: 'Publication Date',
           description: 'Select your publication date',
           format: 'datetime',
         },
-        publicationType: {
-          type: 'string',
-          title: 'Publication Type',
-          enum: ['ElectronicPublication', 'PrintPublication'],
-        },
         abstract: {
           type: 'string',
         },
         subjects: {
           type: 'string',
         },
-        URL: {
-          type: 'string',
-        },
         authors: {
-          title: 'Author(s)',
+          title: '<div class="row"><div class="col-6">Author(s)</div><div class="col-6 p-0">ORCID(s)</div></div>',
+          // required: true,
           type: 'array',
+          uniqueItems: true,
           items: {
-            title: 'Author',
             type: 'object',
             properties: {
               author: {
-                title: 'Name',
                 type: 'string',
                 fieldClass: 'body-text col-6 pull-left pl-0',
               },
               orcid: {
-                title: 'ORCiD',
                 type: 'string',
                 fieldClass: 'body-text col-6 pull-left pr-0',
               }
             }
           }
+        },
+        'under-embargo': {
+          type: 'string'
+        },
+        'Embargo-end-date': {
+          type: 'string',
+          format: 'date'
         }
-      },
+      }
     },
     options: {
       fields: {
+        title: {
+          type: 'textarea',
+          rows: 2,
+          cols: 100,
+          label: 'Article / Manuscript Title',
+          placeholder: 'Enter the manuscript title',
+          hidden: true,
+        },
+        'journal-title': {
+          type: 'text',
+          label: 'Journal Title',
+          placeholder: 'Enter the journal title',
+          hidden: true,
+        },
         volume: {
           type: 'text',
           label: 'Volume',
           placeholder: 'Enter the volume',
+          hidden: true,
         },
         issue: {
           type: 'text',
           label: 'Issue',
           placeholder: 'Enter issue',
+          hidden: true,
+        },
+        ISSN: {
+          type: 'text',
+          label: 'ISSN',
+          placeholder: 'ISSN',
+          hidden: true,
         },
         publicationDate: {
           type: 'text',
           label: 'Publication Date',
           placeholder: 'mm/dd/yy',
-          fieldClass: 'col-4 pull-left pl-0',
-        },
-        publicationType: {
-          type: 'select',
-          noneLabel: 'Select your Publication type.',
-          fieldClass: 'pull-left col-8 pr-0',
-          optionLabels: [
-            'Electronic Publication',
-            'Print Publication',
-          ],
+          hidden: true,
         },
         abstract: {
           type: 'textarea',
           label: 'Abstract',
-          placeholder: 'Enter astract',
+          placeholder: 'Enter abstract',
           fieldClass: 'clearfix',
+          hidden: true,
         },
         subjects: {
           type: 'text',
-          label: 'Subjects',
-          placeholder: 'subject, subject',
-          fieldClass: 'clearfix',
-        },
-        URL: {
-          type: 'text',
-          label: 'Final article URL',
+          label: 'Keywords',
           placeholder: '',
           fieldClass: 'clearfix',
+          hidden: true
+        },
+        authors: {
+          hidden: true,
+        },
+        'under-embargo': {
+          type: 'checkbox',
+          rightLabel: 'The material being submitted is published under an embargo.',
+          fieldClass: 'm-0 mt-4',
+          hidden: true,
+        },
+        'Embargo-end-date': {
+          type: 'date',
+          label: 'Embargo End Date',
+          helper: '<i>After the embargo end date, your submission manuscripts or article can be made public. <b>If this publication is not under embargo, please leave this field blank.<b></i>',
+          helpersPosition: 'above',
+          placeholder: 'dd/mm/yyyy',
+          validate: true,
+          inputType: 'date',
+          fieldClass: 'date-time-picker',
+          picker: {
+            format: 'MM/DD/YY',
+            allowInputToggle: true
+          }
         },
       },
     },
@@ -140,7 +184,9 @@ export default Component.extend({
     let retVal = this.get('activeRepositories').filterBy('formSchema');
     retVal = retVal.map(repository => JSON.parse(repository.get('formSchema')));
     retVal.unshift(this.get('common'));
-    return retVal;
+
+    // NOTE: This is here to remove nih from the schmas array. remove this line once NIH has a better schema.
+    return retVal.filter(x => x.id !== 'nih'); // return retval;
   }),
 
   displayFormStep: Ember.computed('currentFormStep', function () {
@@ -148,11 +194,97 @@ export default Component.extend({
   }),
   actions: {
     nextForm() {
+      if ($('[name="agreement-to-deposit"]').length == 2) {
+        let value = $('[name="agreement-to-deposit"]')[1].checked;
+        let jhuRepo = this.get('model.repositories').filter(repo => repo.get('name') === 'JScholarship');
+        if (jhuRepo.length > 0) {
+          if (!value) {
+            swal({
+              title: 'Notice!',
+              text: 'You added JScholarship as a repository but didn\'t agree to the deposit agreement, so your submission will not be submitted to JScholarship. To fix this, agree to the deposit agreement below.',
+              showCancelButton: true,
+              confirmButtonText: 'Return to deposit agreement',
+              cancelButtonText: 'Proceed anyway'
+            }).then((result) => {
+              if (result.value) {
+                // agree to deposit
+                return;
+              }
+
+              // remove jscholarship from submission
+              this.set('model.newSubmission.repositories', this.get('model.newSubmission.repositories').filter(repo => repo.get('name') !== 'JScholarship'));
+
+              if (this.get('model.newSubmission.repositories.length') == 0) {
+                swal(
+                  'You\'re done!',
+                  'If you don\'t plan on submitting to any repositories, you can stop at this time.',
+                  {
+                    buttons: {
+                      cancel: true,
+                      confirm: true,
+                    }
+                  },
+                ).then((value) => {
+                  if (value.dismiss) {
+                    return;
+                  }
+                  this.get('router').transitionTo('dashboard');
+                });
+              } else {
+                this.send('nextLogic');
+              }
+            });
+          } else {
+            this.send('nextLogic');
+          }
+        }
+      } else {
+        this.send('nextLogic');
+      }
+    },
+    nextLogic() {
       const step = this.get('currentFormStep');
       if (step + 1 < this.get('schemas').length) {
         this.set('currentFormStep', step + 1);
         this.set('schema', this.get('schemas')[step + 1]);
       } else {
+        // Add any crossref info that was not added through the metadata forms
+        const doiInfo = this.get('doiInfo');
+        let metadata = JSON.parse(this.get('model.newSubmission.metadata'));
+
+        const common = metadata.filter(md => md.id === 'common');
+        if (common.length > 0) {
+          common[0].data['issn-map'] = doiInfo['issn-map'];
+        }
+
+        metadata.push({
+          id: 'crossref',
+          data: {
+            doi: doiInfo.DOI,
+            publisher: doiInfo.publisher,
+            'journal-title-short': doiInfo['container-title-short']
+          },
+        });
+
+        metadata.push({
+          id: 'pmc',
+          data: {
+            nlmta: doiInfo.nlmta
+          }
+        });
+
+        // Add metadata for external submissions
+        const externalRepos = this.get('model.newSubmission.repositories').filter(repo =>
+          repo.get('integrationType') === 'web-link' ||
+          repo.get('url') === 'https://eric.ed.gov/' ||
+          repo.get('url') === 'https://dec.usaid.gov/');
+        if (externalRepos.get('length') > 0) {
+          let md = { id: 'external-submissions', data: { submission: [] } };
+          externalRepos.forEach(repo => md.data.submission.push(`Deposit into ${repo.get('name')} was prompted`));
+          // Push this new thing to the overall 'metadata' obj
+          metadata.push(md);
+        }
+        this.set('model.newSubmission.metadata', JSON.stringify(metadata));
         this.sendAction('next');
       }
     },

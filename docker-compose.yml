@@ -3,28 +3,28 @@ version: '2'
 services:
 
   fcrepo:
-    image: oapass/fcrepo:4.7.5-2.0-SNAPSHOT
-    container_name: fcrepo    
+    image: oapass/fcrepo:4.7.5-2.2-SNAPSHOT-4@sha256:5af64e29c4e0ecc0887c94ab5ea2fe6eea959e0dd30995985d4226b65de951a9
+    container_name: fcrepo
     env_file: .env
     environment:
       - FCREPO_JMS_BASEURL=http://localhost:8080/fcrepo/rest
-    ports: 
+    ports:
       - "${FCREPO_PORT}:${FCREPO_PORT}"
       - "${FCREPO_JMS_PORT}:${FCREPO_JMS_PORT}"
       - "${FCREPO_STOMP_PORT}:${FCREPO_STOMP_PORT}"
       - "${FCREPO_DEBUG_PORT}:${FCREPO_DEBUG_PORT}"
 
   indexer:
-    image: oapass/indexer
+    image: oapass/indexer:0.0.10-2.2-SNAPSHOT-1@sha256:5cbba3d4f195ba28fd4b0111baf8a95a11bccdde44091538c31090c4df70b849
     container_name: indexer
     env_file: .env
     links:
       - fcrepo:localhost
     volumes:
-      - ./.hosts:/etc/hosts:Z
+      - .docker/hosts:/etc/hosts:Z
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.3
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.3@sha256:ccfad77c0731c010e6ff8c43b4ab50f5ce90c0fa4e65846530779c5c6707c20a
     container_name: elasticsearch
     env_file: .env
     environment:
@@ -37,7 +37,7 @@ services:
         hard: -1
     volumes:
       - esdata:/usr/share/elasticsearch/data
-      - ./.elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:Z
+      - .docker/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:Z
     ports:
       - "${ES_PORT}:${ES_PORT}"
 

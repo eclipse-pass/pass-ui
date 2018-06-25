@@ -17,14 +17,14 @@ install:
 before_script:
   - docker-compose pull
   - docker-compose up -d
-  - bash .wait.sh
+  - bash .docker/travis-wait.sh
 script:
-- npm test
+  - ember test --test-port=4200 && echo "Reporting coveralls" && cat coverage/lcov.info | node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage
 before_deploy:
-- ember build --environment=surge
+  - ember build --environment=surge
 deploy:
   provider: surge
   project: "./dist/"
   domain: pass-jhu.surge.sh
-  on: deploy
+  on: master
   skip_cleanup: true

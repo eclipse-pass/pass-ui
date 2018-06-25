@@ -10,104 +10,101 @@ export default Controller.extend({
   messageSubject: '',
   messageText: '',
 
-  submissionsToShow: Ember.computed('model.@each.id', function () {
-    let ret = this.get('model').filterBy('id');
-    return ret;
-  }),
-  actions: {
-    authorclick(submission) {
-      this.set('messageShow', true);
-      this.set('messageTo', submission.get('user.displayName'));
-      this.set('messageSubject', 'OAP Compliance');
-      this.set('messageText', `Concerning submission ${submission.get('title')}, the status is ${submission.get('aggregatedDepositStatus')}.\nPlease check your PASS dashboard.`);
-    },
-  },
+  tablePageSize: 50,
+  tablePageSizeValues: [10, 25, 50],
 
   // Columns displayed depend on the user role
   columns: computed('currentUser', {
     get() {
-      if (this.get('currentUser.user.roles').includes('admin')) {
-        return this.get('adminColumns');
-      } else if (this.get('currentUser.user.roles').includes('submitter')) {
-        return this.get('piColumns');
+      if (this.get('currentUser.user.isAdmin')) {
+        return [
+          {
+            propertyName: 'publication',
+            title: 'Article',
+            component: 'submissions-article-cell'
+          },
+          {
+            title: 'Award Number (Funder)',
+            className: 'awardnum-funder-column',
+            component: 'submissions-award-cell'
+          },
+          {
+            propertyName: 'repositories',
+            title: 'Repositories',
+            className: 'repositories-column',
+            component: 'submissions-repo-cell'
+          },
+          {
+            propertyName: 'submittedDate',
+            title: 'Submitted Date',
+            className: 'date-column',
+            component: 'date-cell'
+          },
+          {
+            propertyName: 'aggregatedDepositStatus',
+            title: 'Status',
+            repoCopiesMap: this.get('model.repoCopiesMap'),
+            depositsMap: this.get('model.depositsMap')
+          },
+          {
+            // propertyName: 'repoCopies',
+            title: 'Manuscript IDs',
+            component: 'submissions-repoid-cell'
+          }
+        ];
+      } else if (this.get('currentUser.user.isSubmitter')) {
+        return [
+          {
+            propertyName: 'publicationTitle',
+            className: 'title-column',
+            title: 'Article',
+            component: 'submissions-article-cell'
+          },
+          {
+            title: 'Award Number (Funder)',
+            propertyName: 'grantInfo',
+            className: 'awardnum-funder-column',
+            component: 'submissions-award-cell',
+            disableSorting: true
+          },
+          {
+            propertyName: 'repositoryNames',
+            title: 'Repositories',
+            component: 'submissions-repo-cell',
+            className: 'repositories-column',
+            disableSorting: true
+          },
+          {
+            propertyName: 'submittedDate',
+            title: 'Submitted Date',
+            className: 'date-column',
+            component: 'date-cell'
+          },
+          {
+            propertyName: 'aggregatedDepositStatus',
+            title: 'Status',
+            component: 'submission-status-cell',
+            repoCopiesMap: this.get('model.repoCopiesMap'),
+            depositsMap: this.get('model.depositsMap')
+          },
+          {
+            propertyName: 'repoCopies',
+            className: 'msid-column',
+            title: 'Manuscript IDs',
+            component: 'submissions-repoid-cell',
+            disableSorting: true
+          },
+          {
+            title: 'Actions',
+            className: 'actions-column',
+            component: 'submission-action-cell'
+          }
+        ];
+      } else { // eslint-disable-line
+        return [];
       }
-      return [];
-    },
+    }
   }),
-
-  piColumns: [{
-    propertyName: 'publication',
-    title: 'Article',
-    component: 'submissions-article-cell'
-  },
-  {
-    title: 'Award Number (Funder)',
-    component: 'submissions-award-cell'
-  },
-  {
-    propertyName: 'repositories',
-    title: 'Repo',
-    component: 'submissions-repo-cell'
-  },
-  {
-    propertyName: 'submittedDate',
-    title: 'Last Update Date',
-    component: 'date-cell'
-  },
-  {
-    propertyName: 'submittedDate',
-    title: 'Submitted Date',
-    component: 'date-cell'
-  },
-  {
-    propertyName: 'aggregatedDepositStatus',
-    title: 'Status',
-    filterWithSelect: true,
-    predefinedFilterOptions: ['In Progress', 'Complete'],
-  },
-  {
-    propertyName: 'deposits',
-    title: 'OAP Repo Id',
-    component: 'submissions-repoid-cell'
-  },
-  ],
-
-  adminColumns: [{
-    propertyName: 'publication',
-    title: 'Article',
-    component: 'submissions-article-cell'
-  },
-  {
-    title: 'Award Number (Funder)',
-    component: 'submissions-award-cell'
-  },
-  {
-    propertyName: 'repositories',
-    title: 'Repo',
-    component: 'submissions-repo-cell'
-  },
-  {
-    propertyName: 'submittedDate',
-    title: 'Last Update Date',
-    component: 'date-cell'
-  },
-  {
-    propertyName: 'submittedDate',
-    title: 'Submitted Date',
-    component: 'date-cell'
-  },
-  {
-    propertyName: 'aggregatedDepositStatus',
-    title: 'Status',
-    filterWithSelect: true,
-    predefinedFilterOptions: ['In Progress', 'Complete'],
-  },
-  {
-    propertyName: 'deposits',
-    title: 'OAP Repo Id',
-    component: 'submissions-repoid-cell'
-  },
-  ],
 
   themeInstance: Bootstrap4Theme.create(),
 });

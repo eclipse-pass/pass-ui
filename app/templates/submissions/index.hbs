@@ -1,23 +1,49 @@
+<style>
+  .fas {
+    display: inline;
+    font-size: 0.8em;
+    opacity: 0.9;
+    width: 15%;
+  }
+  .Complete>.fa-circle, .Complete .fa-info-circle {
+    color: #4dbd74;
+  }
+  .See.details>.fa-circle, .See.details .fa-info-circle {
+    color: #ffc107;
+  }
+  .Stalled>.fa-circle, .Stalled .fa-info-circle {
+    color: #990f0f;
+  }
+</style>
+
 <div class="row mt-3 mb-3">
   <div class="col-6">
     <h1 class="font-weight-light pt-1">Submissions</h1>
   </div>
   <div class="col-6">
     {{#if (get (await currentUser.user) 'isSubmitter')}}
-      {{#link-to "submissions.new" class="btn btn-primary btn-small pull-right"}}Create new Submission{{/link-to}}
+      {{#link-to "submissions.new" (query-params grant=null submission=null) class="btn btn-primary btn-small pull-right"}}Create new submission{{/link-to}}
     {{/if}}
   </div>
 </div>
-{{models-table
-  data=submissionsToShow
-  columns=columns
-  themeInstance=themeInstance
-  showColumnsDropdown=false
-  useFilteringByColumns=false
-  filteringIgnoreCase=true
-  multipleColumnsSorting=false
-  authorSelected='authorclick'
-}}
-
+<p>This list contains all Submissions that you have initiated through PASS. If you have an NIH grant, it may also contain pre-loaded information about incomplete, in-progress, or completed Submissions to PubMed Central that cite a grant for which you are the PI. Find out more about these pre-loaded NIH submissions on the <a href="{{rootURL}}faq#nih-submissions">FAQ page</a></p>
+<div class="row">
+  <div class="col-12" style="overflow-x: auto;">
+    <div class="submission-table">
+    {{models-table
+      data=model.submissions
+      columns=columns
+      themeInstance=themeInstance
+      showColumnsDropdown=false
+      useFilteringByColumns=false
+      filteringIgnoreCase=true
+      multipleColumnsSorting=false
+      authorSelected='authorclick'
+      pageSize=tablePageSize
+      pageSizeValues=tablePageSizeValues
+    }}
+    </div>
+  </div>
+</div>
 {{#message-dialog show=messageShow to=messageTo subject=messageSubject message=messageText}}
 {{/message-dialog}}

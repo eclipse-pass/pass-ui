@@ -12,24 +12,15 @@ export default DS.Model.extend({
   email: DS.attr('string'),
 
   institutionalId: DS.attr('string'),
-  orcId: DS.attr('string'),
+  orcidId: DS.attr('string'),
   affiliation: DS.attr('string'),
+  /** Possible values: admin, submitter */
   roles: DS.attr('set'),
 
-  /** Not part of the pass-data-model */
-  isStaff: DS.attr('boolean'),
-  isActive: DS.attr('boolean'),
-  isSuperuser: DS.attr('boolean'),
-  isAnonymous: DS.attr('boolean'),
-  dateJoined: DS.attr('date'),
-  shibbolethId: DS.attr('string'),
-
-  submissionDraft: DS.belongsTo('submission'),
-
   isSubmitter: Ember.computed('roles', function () {
-    if (this.get('roles').contains('submitter')) {
-      return true;
-    }
-    return false;
+    return this.get('roles').includes('submitter');
+  }),
+  isAdmin: Ember.computed('roles', function () {
+    return this.get('roles').includes('admin');
   })
 });

@@ -15,7 +15,13 @@
     "start": "ember server",
     "test": "ember test"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "coveralls": "^3.0.1",
+    "ember-cli-code-coverage": "^0.4.2",
+    "ember-lodash": "^4.18.0",
+    "qunit-dom": "^0.6.2",
+    "toastr": "^2.1.4"
+  },
   "engines": {
     "node": "^4.5 || 6.* || >= 7.*"
   },
@@ -43,12 +49,12 @@
     "ember-composable-helpers": "^2.1.0",
     "ember-data": "^2.18.0",
     "ember-export-application-global": "^2.0.0",
-    "ember-fedora-adapter": "git+https://github.com/OA-PASS/ember-fedora-adapter.git",
+    "ember-fedora-adapter": "git+https://github.com/OA-PASS/ember-fedora-adapter.git#master",
     "ember-font-awesome": "^4.0.0-rc.2",
     "ember-load-initializers": "^1.0.0",
     "ember-modal-dialog": "^2.4.1",
     "ember-models-table": "^2.3.0",
-    "ember-power-select": "^2.0.0-beta.0",
+    "ember-power-select": "git+https://github.com/cameronblandford/ember-power-select.git#fix/ember3-test",
     "ember-promise-helpers": "^1.0.6",
     "ember-radio-buttons": "^4.1.0",
     "ember-resolver": "^4.0.0",
@@ -66,6 +72,7 @@
     "eslint-plugin-react": "^7.7.0",
     "jquery": "^3.3.1",
     "loader.js": "^4.2.3",
-    "popper.js": "^1.13.0"
+    "popper.js": "^1.13.0",
+    "ember-toastr": "^1.7.1"
   }
 }

@@ -7,5 +7,8 @@ export default DS.Model.extend({
   fileRole: DS.attr('string'),
   uri: DS.attr('string'),
   mimeType: DS.attr('string'),
-  submission: DS.belongsTo('submission', { inverse: 'files' }),
+  submission: DS.belongsTo('submission'),
+
+  // not represented on backend
+  _file: DS.attr(),
 });

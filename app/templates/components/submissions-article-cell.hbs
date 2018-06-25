@@ -1,1 +1,3 @@
-{{#link-to "submissions.detail" record.id class="moo"}}{{record.publication.title}}{{/link-to}}
+{{#link-to "submissions.detail" record.id class="moo"}}
+  {{get record 'publication.title'}}
+{{/link-to}}

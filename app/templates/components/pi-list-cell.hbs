@@ -1,8 +1,15 @@
 {{! Format pi and copi list as pi / copi names. Click on PI to do something.}}
-{{!-- <a href='javascript:;' class='' {{action 'sendAction' 'piSelected' record}} title='Click to contact PI'> --}}
-  {{record.pi.displayName}}
-{{!-- </a> --}}
-{{#each record.coPis as |person index|}}
-  {{person.name}}
-{{else}}
-{{/each}}
+{{!-- <style>
+  .pi-list {
+    padding: 0 6px;
+    margin: 0;
+    min-width: 85px;
+  }
+</style>
+<ul class="pi-list">
+  <li>{{record.grant.pi.displayName}}</li>
+  {{#each (get record 'grant.coPis') as |person|}}
+    <li>{{person.displayName}}</li>
+  {{/each}}
+</ul> --}}
+{{record.grant.pi.displayName}}

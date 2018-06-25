@@ -1,14 +1,13 @@
-<div class="row">
   <div class="card w-100 my-2">
     <div class="card-body">
       {{#if policyIsJHU}}
         <h4 class="card-title"><a href="#">{{policy.title}}</a></h4>
-        <h6 class="card-subtitle">Expects deposit into an open access repository</h6>
+        <h6 class="card-subtitle mb-2">Expects deposit into an open access repository</h6>
       {{else}}
         <h4 class="card-title">
           <a href="#">{{policy.title}}</a>
         </h4>
-        <h6 class="card-subtitle">Requires deposit into
+        <h6 class="card-subtitle mb-2">Requires deposit into
           {{#each policy.repositories as |repo index|}}
             {{if index ', '}}{{repo.name}}
           {{/each}}
@@ -22,11 +21,11 @@
         {{/if}}
 
         <br><br>
-        {{#if (or (eq policy.title 'National Institute of Health Public Access Policy') (eq policy.title 'NIH'))}}
+        {{#if (or (eq policy.title 'National Institutes of Health Public Access Policy') (eq policy.title 'NIH'))}}
           {{#if journal.isMethodA}}
             <div class="alert alert-success">
               The journal you published in participates in the PMC Method A program, and will submit the published article to PMC on your behalf.
-              <em>You do not need to submit a manuscript to NIHMS as a part of this
+              <em>You do not need to submit a manuscript to NIH Manuscript Submission System (NIHMS) as a part of this
               process.</em>
             </div>
           {{else}}
@@ -38,7 +37,7 @@
                 {{radio-button value=true name='removeNIHDeposit' checked=model.newSubmission.removeNIHDeposit}}
                 I have made (or intend to make) an arrangement with the publisher to
                 deposit my article directly to PMC. (You will not need to submit your
-                manuscript to NIHMS as part of this process.)
+                manuscript to NIH Manuscript Submission System (NIHMS) as part of this process.)
                 <br>
                 {{radio-button value=false name='removeNIHDeposit' checked=model.newSubmission.removeNIHDeposit}}
                 I will not make an arrangement with the publisher to deposit my article
@@ -51,4 +50,3 @@
       </p>
     </div>
   </div>
-</div>

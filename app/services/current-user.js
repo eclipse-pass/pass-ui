@@ -1,18 +1,25 @@
 import Ember from 'ember';
 import Service from '@ember/service';
-
-const { inject: { service }, RSVP } = Ember;
+import ENV from 'pass-ember/config/environment';
 
 export default Service.extend({
-  session: service(),
-  store: service(),
+  whoamiUrl: ENV.userService.url,
+  store: Ember.inject.service(),
+  ajax: Ember.inject.service(),
+
+  user: null,
 
   load() {
-    if (this.get('session.isAuthenticated')) {
-      return this.get('store').queryRecord('user', { me: true, include: 'person' }).then((user) => {
+    return this.get('ajax').request(this.get('whoamiUrl', 'GET', {
+      headers: {
+        Accept: 'application/json; charset=utf-8',
+        withCredentials: 'include'
+      }
+    })).then((response) => { // eslint-disable-line
+      return this.get('store').findRecord('user', response['@id']).then((user) => {
         this.set('user', user);
+        return user;
       });
-    }
-    return RSVP.resolve();
+    });
   },
 });

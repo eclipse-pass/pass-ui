@@ -1,38 +1,33 @@
-
 {{#if requiredRepositories}}
-  <h4 class="mt-3 font-weight-light">Required</h4>
-
+  <h4 class="mt-3 font-weight-light">Funders' repositories</h4>
   <p>
-    Based on the information about the funders and journal you have provided, you are required to deposit your manuscript/article into:
+    Based on the grant and journal information provided, you are required to submit your manuscript to the repositories below. PASS will help you to create submissions for these in the following steps:
   </p>
-
   <ul class="list-group">
-    {{#each requiredRepositories as |repo|}}
+    {{#each requiredRepositories as |repoInfo|}}
       <li class="list-group-item d-flex justify-content-between align-items-center my-1">
-        {{repo.name}}
+        {{repoInfo.repo.name}} - required by {{repoInfo.funders}}
       </li>
     {{/each}}
   </ul>
 {{/if}}
 {{#if optionalRepositories}}
-<h4 class="mt-3 font-weight-light">Local</h4>
+<h4 class="mt-3 font-weight-light">Institutional repositories</h4>
 <p>
-  These are your institutional repositories:
+  A Submission to the following will put you in compliance with your <a href="{{rootURL}}faq#institution-policy" target="_blank">institution's open access policy</a>. If you are already making your publication openly available elsewhere (e.g. PubMed Central), this may be optional.
 </p>
 <div id="local-deposit-list">
   <ul class="list-group">
-    {{#each optionalRepositories as |repo|}}
+    {{#each optionalRepositories as |repoInfo|}}
       <li class="list-group-item d-flex align-items-center my-1">
-        {{!-- DEBUG: Bug here if the user goes back and tries to change the option after they move past this step  it wont update
-        this may be due to how we are loading metadata forms --}}
-        {{input type="checkbox" change=(action "toggleRepository" repo) checked=true id=repo.name name=repo.name}}
-        <label for="{{repo.name}}" class="mb-0 ml-2">{{repo.name}}</label>
-
+        {{#if requiredRepositories.length}}
+          {{input type="checkbox" change=(action "toggleRepository" repoInfo.repo) checked=true name=repoInfo.repo.name}}
+        {{/if}}
+        <label for="{{repoInfo.repo.name}}" class="mb-0 ml-2">{{repoInfo.repo.name}} - required by {{repoInfo.funders}}</label>
       </li>
     {{/each}}
   </ul>
 </div>
 {{/if}}
-
 <button class="btn btn-outline-primary mt-3" {{action "back"}}>Back</button>
-<button class="btn btn-primary pull-right mt-3" {{action "next"}}>Next</button> {{yield}}
+<button class="btn btn-primary next pull-right mt-3" {{action "next"}}>Next</button> {{yield}}

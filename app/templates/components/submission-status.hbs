@@ -1,0 +1,46 @@
+<style>
+  .fas {
+    display: inline;
+    font-size: 0.8em;
+    opacity: 0.9;
+    width: 15%;
+  }
+  .not-started>.fa-circle {
+    color: #c8ced3;
+  }
+  .Complete>.fa-circle, .Complete .fa-info-circle{
+    color: #4dbd74;
+  }
+  .See.details>.fa-circle, .See.details .fa-info-circle{ {
+    color: #ffc107;
+  }
+  .Stalled>.fa-circle, .Stalled .fa-info-circle{ {
+    color: #990f0f;
+  }
+</style>
+
+  <span class="status {{status}} pr-1">
+    {{#if (eq status "Complete")}}
+      <span tooltip-position="left" tooltip="All target repositories have received a copy of the Submission and verified that it is approved for publication">
+        <i class="fas fa-info-circle"></i> {{status}}
+      </span>
+    {{/if}}
+    {{#if (eq status "Manuscript expected")}}
+      <span tooltip-position="left" tooltip="Your funder is aware of this publication and is expecting the deposit of your manuscript.">
+        <i class="fas fa-info-circle"></i> {{status}}
+      </span>
+    {{/if}}
+    {{#if (eq status "Submitted")}}
+      <span tooltip-position="left" tooltip="This submission has either been sent to all target repositories, or is in the queue and will be submitted shortly.">
+        <i class="fas fa-info-circle"></i> {{status}}
+      </span>
+    {{/if}}
+    {{#if (eq status "Stalled")}}
+      <span tooltip-position="left" tooltip="There is a problem with your submission in one or more of the target repositories. See below for details">
+        <i class="fas fa-info-circle"></i> {{status}}
+      </span>
+    {{/if}}
+    {{#if (eq status "See details")}}
+      <i class="fas fa-circle"></i> See details below
+    {{/if}}
+  </span>

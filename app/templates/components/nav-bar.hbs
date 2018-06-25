@@ -1,17 +1,21 @@
-  <nav class="navbar navbar-light navbar-expand-md" style="background: white;" id="myHeader">
-    <div class="container">
+  <nav class="navbar navbar-light navbar-expand-md w-100" style="background: white;" id="myHeader">
+    <div class={{if fullWidth 'container-fluid' 'container'}}>
+      <div class="col-xs-12" style="width:100%;">
       <button class="navbar-toggler text-center border-none" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav" style="width:100%">
-        <li class="nav-item">{{#link-to 'dashboard' class='nav-link pl-0'}}Home{{/link-to}}</li>
-        <li class="nav-item">{{#link-to 'grants' class="nav-link"}}Grants{{/link-to}}</li>
-        <li class="nav-item">{{#link-to 'submissions' class="nav-link"}}Submissions{{/link-to}}</li>
+        <li class="nav-item">{{#link-to 'dashboard' class='nav-link pl-0 ml-0'}}Dashboard{{/link-to}}</li>
+        {{#if hasAUser}}
+          <li class="nav-item">{{#link-to 'grants' class="nav-link"}}Grants{{/link-to}}</li>
+          <li class="nav-item">{{#link-to 'submissions' class="nav-link"}}Submissions{{/link-to}}</li>
+        {{/if}}
         <li class="nav-item">{{#link-to 'about' class='nav-link'}}About{{/link-to}}</li>
-        <li class="nav-item pull-right">{{#link-to 'contact' class='nav-link borderless'}}Contact{{/link-to}}</li>
+        <li class="nav-item">{{#link-to 'contact' class='nav-link'}}Contact{{/link-to}}</li>
+        <li class="nav-item">{{#link-to 'faq' class='nav-link'}}FAQ{{/link-to}}</li>
 
-        {{#if session.isAuthenticated}}
+        {{!-- {{#if session.isAuthenticated}} --}}
           {{!-- <li class="nav-item dropdown ml-auto">
             <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
               <img src="https://image.ibb.co/c8rxhx/bell_png_bell_icon_image_16624_512.png" style="width:20px" alt="admin@bootstrapmaster.com">
@@ -27,30 +31,33 @@
             </div>
           </li> --}}
           <li class="nav-item dropdown ml-auto">
-            <a class="nav-link pr-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-              {{gravatar-image email=currentUser.user.email
+            <a class="nav-link accountInfo pr-1" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+              <span class="pr-1">{{gravatar-image email=currentUser.user.email
                 title=currentUser.user.email
                 alt=currentUser.user.email
                 defaultImage='identicon'
                 class='img-avatar'
                 size=30
                 retina=true}}
-              {{currentUser.user.firstName}} {{currentUser.user.lastName}} ({{currentUser.user.roles}})
+              </span>
+                {{log currentUser}}
+              {{currentUser.user.displayName}}
             </a>
             <div class="dropdown-menu dropdown-menu-right">
               <div class="dropdown-header text-center">
                 <strong>Account</strong>
               </div>
               <div class="divider"></div>
-              <a class="dropdown-item" href="#"  {{action 'invalidateSession'}}><i class="fa fa-lock"></i>Logout</a>
+              <a class="dropdown-item" href="/logout"  ><i class="fa fa-lock"></i>Logout</a>
             </div>
           </li>
-        {{else}}
-        <li class="nav-item dropdown ml-auto">
+        {{!-- {{else}} --}}
+        {{!-- <li class="nav-item dropdown ml-auto">
           {{#link-to "login" class="dropdown-item btn btn-primary"}}<i class="fa fa-lock"></i>Login{{/link-to}}
-        </li>
-        {{/if}}
+        </li> --}}
+        {{!-- {{/if}} --}}
       </ul>
     </div>
+  </div>
     </div>
   </nav>

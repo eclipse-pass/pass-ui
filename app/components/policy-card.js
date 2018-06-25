@@ -5,16 +5,14 @@ export default Component.extend({
     return this.get('journal.isMethodA');
   }),
   policyIsNIH: Ember.computed('policy', function () {
-    return this.get('policy.title') === 'National Institute of Health Public Access Policy';
+    return this.get('policy.title') === 'National Institutes of Health Public Access Policy';
   }),
   // checks if the radio buttons need to be displayed
   nihAndNotMethodAJournal: Ember.computed(function () { // eslint-ignore-line
     return this.get('policyIsNIH') && !this.get('methodAJournal');
   }),
   policyIsJHU: Ember.computed(function () { // eslint-ignore-line
-    if (this.get('repositories')) {
-      return this.get('repositories').any(repo => repo.get('name') === 'JScholarship');
-    }
+    return this.get('policy.title') === 'Johns Hopkins University (JHU) Open Access Policy';
   }),
   didRender() {
     this._super(...arguments);

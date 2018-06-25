@@ -3,8 +3,6 @@ import DS from 'ember-data';
 export default DS.Model.extend({
   /** Name of the publisher (REQUIRED) */
   name: DS.attr('string'),
-  /** List of Journals */
-  journals: DS.hasMany('journal', { async: true }),
   /**
    * Publisher participation in NIH Public Access Program by sending final published article to PMC.
    *

@@ -1,8 +1,16 @@
-<div class="row justify-content-center">
-  <div class="col-sm-12">
-        <h1 class="font-weight-light">Grants</h1>
-        {{models-table
-          data=model.grants
+<div class="row">
+  <div class="col-12">
+    <h1 class="font-weight-light">Your Grants</h1>
+    <p>
+      Grants with end dates after January 1, 2011 have been loaded into PASS from the Johns Hopkins grant management system, COEUS. You are listed as a PI, Co-PI, or Co-I for these grants within the COEUS system. If you find any issue with these grant records, please {{#link-to 'contact'}}contact us{{/link-to}}.
+    </p>
+  </div>
+</div>
+<div class="row justify-content-center grant-table">
+  <div class="col-12" style="overflow-x:auto;">
+    <div class="grant-table">
+      {{models-table
+          data=model
           columns=columns
           themeInstance=themeInstance
           showColumnsDropdown=false
@@ -13,6 +21,7 @@
           pageSize=tablePageSize
           pageSizeValues=tablePageSizeValues
         }}
+    </div>
   </div>
 </div>
 {{#message-dialog show=messageShow to=messageTo subject=messageSubject message=messageText}}

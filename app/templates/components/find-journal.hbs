@@ -2,8 +2,8 @@
   search=(action "searchJournals")
   selected=value
   placeholder="Journal"
-  onchange=onSelect
+  onchange=(action "onSelect")
   as |journal|
 }}
-  {{journal.journalName}}
+  {{get journal 'journalName'}}
 {{/power-select}}
