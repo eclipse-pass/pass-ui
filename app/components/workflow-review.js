@@ -1,7 +1,7 @@
 import Component from '@ember/component';
 
 export default Component.extend({
-  metatadaService: Ember.inject.service('metadata-blob'),
+  metadataService: Ember.inject.service('metadata-blob'),
 
   init() {
     this._super(...arguments);
