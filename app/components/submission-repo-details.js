@@ -48,6 +48,8 @@ export default Component.extend({
         return 'Your submission has been sent to the repository or is in queue to be sent.';
       case 'Manuscript expected':
         return 'Your funder is aware of this publication and is expecting the deposit of your manuscript.';
+      case 'Failed':
+        return 'The system failed to receive the files for this submission. Please try again by starting a new submission';
       default:
         return '';
     }
