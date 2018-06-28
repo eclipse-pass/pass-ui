@@ -10,6 +10,10 @@ export default Service.extend({
       return '';
     }
 
+    if (submission.get('aggregatedDepositStatus') === 'failed') {
+      return 'See details'; // show failed
+    }
+
     if (repoCopies && repoCopies.any(rc => rc.get('copyStatus') == 'stalled')) {
       return 'Stalled';
     }

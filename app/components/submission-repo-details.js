@@ -16,9 +16,20 @@ export default Component.extend({
         return 'Complete';
       } else if (cs === 'stalled') {
         return 'Stalled';
+      } else if (cs === 'rejected') {
+        return 'Rejected';
       }
     } else if (source == 'other' && !isSubmitted) {
       return 'Manuscript expected';
+    }
+
+    if (deposit && deposit.get('depositStatus') === 'failed') {
+      return 'Failed';
+    }
+
+    // Failed deposit means deposit never created??
+    if (!deposit && source == 'pass' && this.get('submission.aggregatedDepositStatus') === 'failed') {
+      return 'Failed';
     }
 
     return 'Submitted';
