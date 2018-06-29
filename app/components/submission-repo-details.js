@@ -50,6 +50,8 @@ export default Component.extend({
         return 'Your funder is aware of this publication and is expecting the deposit of your manuscript.';
       case 'Failed':
         return 'The system failed to receive the files for this submission. Please try again by starting a new submission';
+      case 'Rejected':
+        return '';
       default:
         return '';
     }
