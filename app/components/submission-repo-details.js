@@ -16,9 +16,20 @@ export default Component.extend({
         return 'Complete';
       } else if (cs === 'stalled') {
         return 'Stalled';
+      } else if (cs === 'rejected') {
+        return 'Rejected';
       }
     } else if (source == 'other' && !isSubmitted) {
       return 'Manuscript expected';
+    }
+
+    if (deposit && deposit.get('depositStatus') === 'failed') {
+      return 'Failed';
+    }
+
+    // Failed deposit means deposit never created??
+    if (!deposit && source == 'pass' && this.get('submission.aggregatedDepositStatus') === 'failed') {
+      return 'Failed';
     }
 
     return 'Submitted';
@@ -37,6 +48,10 @@ export default Component.extend({
         return 'Your submission has been sent to the repository or is in queue to be sent.';
       case 'Manuscript expected':
         return 'Your funder is aware of this publication and is expecting the deposit of your manuscript.';
+      case 'Failed':
+        return 'The system failed to receive the files for this submission. Please try again by starting a new submission';
+      case 'Rejected':
+        return 'This target repository has rejected your submission. Please contact us for more details or try to submit your manuscript again.';
       default:
         return '';
     }
