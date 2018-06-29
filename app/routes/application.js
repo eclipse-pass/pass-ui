@@ -22,10 +22,7 @@ export default Route.extend({
     return this._loadCurrentUser();
   },
   _loadCurrentUser() {
-    return this.get('currentUser').load().catch((e) => {
-      // this.get('session').invalidate();
-      console.log(e);
-    });
+    return this.get('currentUser').load();
   },
   async model() {
     // temp jhuInstitution move out or remove later
