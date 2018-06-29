@@ -51,7 +51,7 @@ export default Component.extend({
       case 'Failed':
         return 'The system failed to receive the files for this submission. Please try again by starting a new submission';
       case 'Rejected':
-        return '';
+        return 'This target repository has rejected your submission. Please contact us for more details or try to submit your manuscript again.';
       default:
         return '';
     }
