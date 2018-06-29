@@ -8,27 +8,23 @@ function interrogateError(error) {
     return;
   }
 
-  const moo = config.rootURL;
+  // const moo = config.rootURL;
 
-  if (error.status == 401 || error.payload == 401) {
-    console.log(' >> 401 error');
-    // window.location.replace('https://google.com');
+  if (error.status == 401 || error.payload == 401) { // eslint-disable-line
   }
-  if (error.status == 403 || error.payload == 403) {
-    console.log(' >> 403 error');
-    // window.location.replace('https://google.com');
+  if (error.status == 403 || error.payload == 403) { // eslint-disable-line
   }
+  // Login, logout, navigate to landing page, click to login
+  // Error message"The ajax operation was aborted"
 }
 
 export function initialize(/* application */) {
   console.log('Initialization MOO');
   Ember.onerror = (error) => {
-    console.log(` >> Ember error caught: ${error}`);
     interrogateError(error);
   };
 
   Ember.RSVP.on('error', (error) => {
-    console.log(` >> RSVP error caught: ${error}`);
     interrogateError(error);
   });
 }
