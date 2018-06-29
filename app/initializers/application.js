@@ -9,7 +9,7 @@ function interrogateError(error) {
   }
 
   const moo = config.rootURL;
-debugger
+
   if (error.status == 401 || error.payload == 401) {
     console.log(' >> 401 error');
     // window.location.replace('https://google.com');
