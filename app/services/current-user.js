@@ -12,9 +12,9 @@ export default Service.extend({
   load() {
     return this.get('ajax').request(this.get('whoamiUrl', 'GET', {
       headers: {
-        Accept: 'application/json; charset=utf-8',
-        withCredentials: 'include'
-      }
+        Accept: 'application/json; charset=utf-8'
+      },
+      xhrFields: { withCredentials: 'include' }
     })).then((response) => { // eslint-disable-line
       return this.get('store').findRecord('user', response['@id']).then((user) => {
         this.set('user', user);
