@@ -13,10 +13,12 @@ Router.map(function () {
   this.route('about');
   this.route('contact');
   this.route('submissions', function () {
+    this.route('detail', { path: '/*path' });
     this.route('detail', { path: '/:submission_id' });
     this.route('new');
   });
   this.route('grants', function () {
+    this.route('detail', { path: '/*path' });
     this.route('detail', { path: '/:grant_id' });
   });
   this.route('thanks');
