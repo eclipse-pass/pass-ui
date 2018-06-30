@@ -2,6 +2,26 @@ import Route from '@ember/routing/route';
 import { hash } from 'rsvp';
 
 export default Route.extend({
+  /**
+   * It is possible for unfortunate things to happen somewhere in the backend stack
+   * that will result in the returned IDs being unencoded. This Route is setup in
+   * the Router to glob match to all '/submissions/*'. In the event that unencoded
+   * ID is encountered (it will include slashes), simply encode it and replace the
+   * current history with the encoded version.
+   */
+  beforeModel(transition) {
+    const intent = transition.intent.url;
+    const prefix = '/submissions/';
+
+    if (!intent) {
+      return;
+    }
+
+    const targetId = intent.substring(prefix.length);
+    if (targetId.includes('//')) {
+      this.replaceWith(`${prefix}${encodeURIComponent(targetId)}`);
+    }
+  },
   model(params) {
     const querySize = 500;
     const sub = this.get('store').findRecord('submission', params.submission_id);

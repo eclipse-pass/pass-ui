@@ -10,6 +10,26 @@ import { hash } from 'rsvp';
  * is done through the search service (through Store.query)
  */
 export default Route.extend({
+  /**
+   * It is possible for unfortunate things to happen somewhere in the backend stack
+   * that will result in the returned IDs being unencoded. This Route is setup in
+   * the Router to glob match to all '/grants/*'. In the event that unencoded
+   * ID is encountered (it will include slashes), simply encode it and replace the
+   * current history with the encoded version.
+   */
+  beforeModel(transition) {
+    const intent = transition.intent.url;
+    const prefix = '/grants/';
+
+    if (!intent) {
+      return;
+    }
+
+    const targetId = intent.substring(prefix.length);
+    if (targetId.includes('//')) {
+      this.replaceWith(`${prefix}${encodeURIComponent(targetId)}`);
+    }
+  },
   model(params) {
     let grant = this.get('store').findRecord('grant', params.grant_id);
 
