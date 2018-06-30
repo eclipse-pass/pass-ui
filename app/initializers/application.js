@@ -1,5 +1,3 @@
-// import config from 'pass-ember/config/environment';
-
 function interrogateError(error) {
   console.log(`THE ERROR ::: ${JSON.stringify(error)}`);
   if (error.name == 'TransitionAborted') {
@@ -11,24 +9,25 @@ function interrogateError(error) {
     return;
   }
 
-  // const moo = config.rootURL;
-  // debugger
   if (error.status == 401 || error.payload == 401) {
+    window.location.replace('/401.html');
     return;
   }
   if (error.status == 403 || error.payload == 403) {
+    window.location.replace('/403.html');
     return;
   }
   if (error.payload == 'Unauthorized') {
+    window.location.replace('/403.html');
     return;
   }
   // Login, logout, navigate to landing page, click to login
   // Error message"The ajax operation was aborted"
-  // swal({
-  //   type: 'error',
-  //   title: 'Error',
-  //   text: 'Something went wrong'
-  // });
+  swal({
+    type: 'error',
+    title: 'Something went wrong',
+    text: `${error.message}`
+  });
 }
 
 export function initialize(/* application */) {
