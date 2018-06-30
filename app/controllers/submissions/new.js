@@ -57,7 +57,7 @@ export default Controller.extend({
               let data = evt.target.result;
               let xhr = new XMLHttpRequest();
               xhr.open('POST', `${s.get('id')}`, true);
-              xhr.setRequestHeader('Content-Disposition', `attachment; filename="${file.get('name')}"`);
+              xhr.setRequestHeader('Content-Disposition', `attachment; filename="${encodeURI(file.get('name'))}"`);
               xhr.setRequestHeader('Content-Type', contentType);
               if (ENV.environment === 'travis' || ENV.environment === 'development') {
                 xhr.withCredentials = true;
