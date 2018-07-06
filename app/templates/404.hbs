@@ -1,23 +1,24 @@
 {{outlet}}
 <style>
-.fourohfour {
-  font-size: 10em !important;
+.error-text {
+  font-size: 2em !important;
   margin-bottom: 0;
   height: auto;
 }
-.page-not-found {
-  font-size: 3em !important;
-  margin-top: -40px;
-}
 .helpful-text {
-  font-size: 1.5em !important;
+  font-size: 1.3em !important;
+}
+.error-icon {
+  width:120px;
+  float:left;
+  margin-top:50px;
+  margin-right:20px;
 }
 </style>
-<div class="row text-center" style="padding-top:50px;">
+<div class="row">
   <div class="col">
-    <h1 class="fourohfour">404</h1>
-    <h1 class="page-not-found"><small class="muted">Page Not Found</small></h1>
-    <p class="helpful-text"><br>Looks like the page you're looking for doesn't exist :(</p>
-    <p>If you think this might be a problem with the site itself, please {{#link-to 'contact'}}let us know{{/link-to}}.</p>
+    <img src="{{rootURL}}img/error-icon.png" class="error-icon" alt="Error icon">
+    <p class="error-text"><br>404: Page not found</p>
+    <p class="helpful-text">Looks like the page you're looking for does not exist. If you think there is a problem with the site, please {{#link-to 'contact'}}let us know{{/link-to}}.</p>
   </div>
 </div>
