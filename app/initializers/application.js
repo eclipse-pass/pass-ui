@@ -14,11 +14,11 @@ function interrogateError(error) {
     return;
   }
   if (error.status == 403 || error.payload == 403) {
-    window.location.replace('/403.html');
+    // window.location.replace('/403.html');
     return;
   }
   if (error.payload == 'Unauthorized') {
-    window.location.replace('/403.html');
+    // window.location.replace('/403.html');
     return;
   }
   // Login, logout, navigate to landing page, click to login
