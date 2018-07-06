@@ -16,6 +16,9 @@ export default Route.extend({
    * the Router to glob match to all '/grants/*'. In the event that unencoded
    * ID is encountered (it will include slashes), simply encode it and replace the
    * current history with the encoded version.
+   *
+   * https://pass/grants/https:%2F%2Fpass%2Ffcrepo%2Frest%2Fgrants%2F07%2F4b%2F32%2Fa5%2F074b32a5-f1e2-4938-8b3d-c63449145c65
+   * https://pass/grants/https://pass/fcrepo/rest/grants/07/4b/32/a5/074b32a5-f1e2-4938-8b3d-c63449145c65
    */
   beforeModel(transition) {
     const intent = transition.intent.url;
@@ -26,11 +29,16 @@ export default Route.extend({
     }
 
     const targetId = intent.substring(prefix.length);
-    if (targetId.includes('//')) {
+    if (targetId.includes('https://')) {
       this.replaceWith(`${prefix}${encodeURIComponent(targetId)}`);
     }
   },
-  model(params) {
+  model(params, transition) {
+    if (!params || !params.grant_id) {
+      this.replaceWith('/404');
+      return;
+    }
+
     let grant = this.get('store').findRecord('grant', params.grant_id);
 
     const query = {
@@ -98,6 +106,8 @@ export default Route.extend({
       submissions,
       repoCopiesMap,
       depositsMap
+    }).catch((error) => {
+      this.replaceWith('/404');
     });
   },
 });

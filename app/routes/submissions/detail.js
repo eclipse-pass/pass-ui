@@ -18,11 +18,16 @@ export default Route.extend({
     }
 
     const targetId = intent.substring(prefix.length);
-    if (targetId.includes('//')) {
+    if (targetId.includes('https://')) {
       this.replaceWith(`${prefix}${encodeURIComponent(targetId)}`);
     }
   },
   model(params) {
+    if (!params || !params.submission_id) {
+      this.replaceWith('/404');
+      return;
+    }
+
     const querySize = 500;
     const sub = this.get('store').findRecord('submission', params.submission_id);
     const files = this.get('store').query('file', { term: { submission: params.submission_id }, size: querySize });
@@ -38,6 +43,8 @@ export default Route.extend({
       deposits,
       repoCopies,
       repos
+    }).catch((error) => {
+      this.replaceWith('/404');
     });
   },
 });
