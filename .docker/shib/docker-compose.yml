@@ -16,13 +16,11 @@ services:
       - back
 
   fcrepo:
-    image: oapass/fcrepo:4.7.5-2.2-SNAPSHOT-4@sha256:5af64e29c4e0ecc0887c94ab5ea2fe6eea959e0dd30995985d4226b65de951a9
+    image:  oapass/fcrepo:4.7.5-2.2-SNAPSHOT-11@sha256:48e4aa7c6cb5ab384815e1e88e8421f5b6978b52764bcc050781882f188aa3e5
     container_name: fcrepo
     env_file: .env
     ports:
       - "${FCREPO_PORT}:${FCREPO_PORT}"
-      - "${FCREPO_JMS_PORT}:${FCREPO_JMS_PORT}"
-      - "${FCREPO_STOMP_PORT}:${FCREPO_STOMP_PORT}"
       - "${FCREPO_DEBUG_PORT}:${FCREPO_DEBUG_PORT}"
     networks:
       - front
@@ -32,8 +30,30 @@ services:
     depends_on: 
       - assets
 
+  activemq:
+    image: oapass/activemq:20180618@sha256:e3cd47a1bc4c21899fc34e5ac7198f6c069f4148296bad0ce619cc2bdda5f435
+    container_name: activemq
+    env_file: .env
+    ports:
+      - "${ACTIVEMQ_JMS_PORT}:${ACTIVEMQ_JMS_PORT}"
+      - "${ACTIVEMQ_STOMP_PORT}:${ACTIVEMQ_STOMP_PORT}"
+      - "${ACTIVEMQ_WEBCONSOLE_PORT}:${ACTIVEMQ_WEBCONSOLE_PORT}"
+    networks:
+      - front
+      - back
+
+  static-html:
+    image: oapass/static-html:20180629-7a50084@sha256:30805d485830d08161a1d4b4fb73c6c070174cfd529deb6edbcd4ef3dd286022
+    container_name: static-html
+    env_file: .env
+    ports:
+      - "${STATIC_HTML_PORT}:${STATIC_HTML_PORT}"
+    networks:
+      - back
+      - front
+  
   proxy:
-    image: oapass/httpd-proxy:20180609@sha256:d73e25407c5eb20fa2271734cdb0d24db2b4efde941d8706e116bec1198c5d95
+    image: oapass/httpd-proxy:20180622@sha256:423b358d177cb903316b1449ed2d25357137e85a9b3f4d270e30e56354c54c0e
     container_name: proxy
     networks:
      - front
@@ -63,13 +83,13 @@ services:
      - source: idp_sealer
 
   ldap:
-    image: oapass/ldap:20180609@sha256:a90044c91d70735f8a0b10cf63151d109fbb87fd775d48f5bc02a91c04fbd882
+    image: oapass/ldap:201808706@sha256:89cdbc3e91917675d9e3da94447f05b74a8fa0b018965c8d97ff278273ab7971
     container_name: ldap
     networks:
      - back
 
   sp:
-    image: oapass/sp:20180609@sha256:7f2066338cf300d88eb8545b35261f64e1749086a7bed28536f0417f2582056e
+    image: oapass/sp:20180618@sha256:6999dc7a46c3fd3710bb215d562aca12463e8366eead899ec633b84e1456af3a
     container_name: sp
     networks:
      - back
@@ -106,9 +126,17 @@ services:
       - assets
 
   assets:
-    image: birkland/assets:2018-06-19@sha256:5639825b668e982f248d35bb23a5d942a9353ca37c55cba06221e568e8445d88
+    image: birkland/assets:2018-07-06@sha256:2af6f8394e337e31abcf7594c66d03547824a49538aafa6ee688bb4011e8aab5
     volumes:
       - passdata:/data
+
+  authz:
+    image: oapass/authz:0.1.0-2.2-SNAPSHOT@sha256:7b82b6a348794f5aff4b91a90dcfcbeb1a8fbffee6a7e1bd337f12909480a86f
+    container_name: authz
+    env_file: .env
+    networks:
+      - back
+
   
 volumes:
   passdata:
