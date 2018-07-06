@@ -105,8 +105,7 @@ export default Route.extend({
       grant,
       submissions,
       repoCopiesMap,
-      depositsMap,
-      transition
+      depositsMap
     }).catch((error) => {
       this.replaceWith('/404');
     });
