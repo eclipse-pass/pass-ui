@@ -1,3 +1,5 @@
+import ENV from 'pass-ember/config/environment';
+
 function interrogateError(error) {
   console.log(`THE ERROR ::: ${JSON.stringify(error)}`);
   if (error.name == 'TransitionAborted') {
@@ -20,6 +22,10 @@ function interrogateError(error) {
   if (error.payload == 'Unauthorized') {
     // window.location.replace('/403.html');
     return;
+  }
+  if (error.status == 404) {
+    // Get 404 page in app, assume rootURL ends in '/'
+    window.location.replace(`${ENV.rootURL}404`);
   }
   // Login, logout, navigate to landing page, click to login
   // Error message"The ajax operation was aborted"
