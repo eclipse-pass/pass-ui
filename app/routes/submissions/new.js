@@ -5,6 +5,8 @@ const {
 } = Ember.inject;
 
 export default Route.extend({
+  currentUser: service(),
+
   resetController(controller, isExiting, transition) {
     // Explicitly clear the 'grant' query parameter when reloading this route
     if (isExiting) {
@@ -13,13 +15,21 @@ export default Route.extend({
     }
   },
 
-  currentUser: service(),
+  /**
+   * Check the user roles. If user is not a Submitter, prevent navigation to this route
+   */
+  beforeModel(transition) {
+    if (!this.get('currentUser.user.isSubmitter')) {
+      transition.abort();
+    }
+  },
 
   // Return a promise to load count objects starting at offsefrom of given type.
   loadObjects(type, offset, count) {
     return this.get('store').query(type, { query: { match_all: {} }, from: offset, size: count });
   },
 
+  // TODO MUST be refactored to load (all) related objects more intelligently
   model(params) {
     let preLoadedGrant = null;
     let newSubmission = null;
@@ -29,34 +39,23 @@ export default Route.extend({
       preLoadedGrant = this.get('store').findRecord('grant', params.grant);
     }
 
-    const querySize = 100;
+    const querySize = 500;
+    const defaultSort = [{ endDate: 'desc' }];
 
-    const repositories = this.loadObjects('repository', 0, 500);
-    const funders = this.loadObjects('funder', 0, 500);
-    const grants = this.get('store').query('grant', {
-      sort: [
-        { endDate: 'desc' }
-      ],
-      query: {
-        bool: {
-          must: [
-            { range: { endDate: { gte: '2011-01-01' } } },
-            {
-              bool: {
-                should: [
-                  { term: { pi: this.get('currentUser.user.id') } },
-                  { term: { coPis: this.get('currentUser.user.id') } }
-                ]
-              }
-            }
-          ]
-        }
-      },
-      from: 0,
-      size: 500,
-    });
+    let grantsQuery;
+    if (this.get('currentUser.user.isAdmin')) {
+      grantsQuery = this.getAdminGrantQuery(0, querySize, defaultSort);
+    } else if (this.get('currentUser.user.isSubmitter')) {
+      grantsQuery = this.getSubmitterGrantQuery(0, querySize, defaultSort);
+    } else {
+      return;
+    }
 
-    const policies = this.loadObjects('policy', 0, 500);
+    const grants = this.get('store').query('grant', grantsQuery);
+
+    const repositories = this.loadObjects('repository', 0, querySize);
+    const funders = this.loadObjects('funder', 0, querySize);
+    const policies = this.loadObjects('policy', 0, querySize);
 
     if (params.submission) {
       return this.get('store').findRecord('submission', params.submission).then((sub) => {
@@ -85,5 +84,36 @@ export default Route.extend({
       preLoadedGrant
     });
     return h;
+  },
+
+  getAdminGrantQuery(from, size, sort) {
+    return {
+      sort,
+      query: { range: { endDate: { gte: '2011-01-01' } } },
+      from,
+      size,
+    };
+  },
+  getSubmitterGrantQuery(from, size, sort) {
+    return {
+      sort,
+      query: {
+        bool: {
+          must: [
+            { range: { endDate: { gte: '2011-01-01' } } },
+            {
+              bool: {
+                should: [
+                  { term: { pi: this.get('currentUser.user.id') } },
+                  { term: { coPis: this.get('currentUser.user.id') } }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      from,
+      size,
+    };
   }
 });

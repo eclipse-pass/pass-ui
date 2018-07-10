@@ -24,28 +24,16 @@ export default Route.extend({
 
     let promise = defer();
     const querySize = 500;
-    const grantQuery = {
-      sort: [
-        'awardStatus',
-        { endDate: 'desc' }
-      ],
-      query: {
-        bool: {
-          must: [
-            { range: { endDate: { gte: '2011-01-01' } } },
-            {
-              bool: {
-                should: [
-                  { term: { pi: user.get('id') } },
-                  { term: { coPis: user.get('id') } }
-                ]
-              }
-            }
-          ]
-        }
-      },
-      size: querySize
-    };
+    const defaultSort = ['awardStatus', { endDate: 'desc' }];
+
+    let grantQuery;
+    if (user.get('isAdmin')) {
+      grantQuery = this.getAdminQuery(defaultSort, querySize);
+    } else if (user.get('isSubmitter')) {
+      grantQuery = this.getSubmitterQuery(defaultSort, querySize);
+    } else {
+      return;
+    }
 
     // First search for all Grants associated with the current user
     this.get('store').query('grant', grantQuery).then((grants) => {
@@ -78,4 +66,36 @@ export default Route.extend({
 
     return promise.promise;
   },
+
+  getAdminQuery(sort, size) {
+    const grantQuery = {
+      sort,
+      query: {
+        range: { endDate: { gte: '2011-01-01' } }
+      },
+      size
+    };
+  },
+
+  getSubmitterQuery() {
+    const grantQuery = {
+      sort,
+      query: {
+        bool: {
+          must: [
+            { range: { endDate: { gte: '2011-01-01' } } },
+            {
+              bool: {
+                should: [
+                  { term: { pi: user.get('id') } },
+                  { term: { coPis: user.get('id') } }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      size
+    };
+  }
 });

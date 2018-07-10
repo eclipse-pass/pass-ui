@@ -16,77 +16,17 @@ export default Controller.extend({
   // Columns displayed depend on the user role
   columns: computed('currentUser', {
     get() {
-      const userRoles = this.get('currentUser.user.roles');
-      if (userRoles.includes('admin')) {
+      const user = this.get('currentUser.user');
+      if (user.get('isSubmitter')) {
+        return this.get('submitterColumns');
+      } else if (user.get('isAdmin')) {
         return this.get('adminColumns');
-      } else if (userRoles.includes('submitter')) {
-        return this.get('piColumns');
       }
       return [];
     },
   }),
 
-  // TODO Reduce duplication in column definitions
-  adminColumns: [
-    {
-      propertyName: 'grant.projectName',
-      title: 'Project Name',
-      component: 'grant-link-cell'
-    },
-    {
-      propertyName: 'grant.primaryFunder.name',
-      title: 'Funder',
-      filterWithSelect: true,
-      predefinedFilterOptions: ['NIH', 'DOE', 'NSF'],
-    },
-    {
-      propertyName: 'grant.awardNumber',
-      title: 'Award Number',
-      className: 'awardnum-column',
-      disableFiltering: true,
-      component: 'grant-link-cell'
-    },
-    {
-      title: 'PI',
-      propertyName: 'grant.pi',
-      component: 'pi-list-cell'
-    },
-    {
-      propertyName: 'grant.startDate',
-      title: 'Start',
-      disableFiltering: true,
-      className: 'date-column',
-      component: 'date-cell'
-    },
-    {
-      propertyName: 'grant.endDate',
-      title: 'End',
-      disableFiltering: true,
-      className: 'date-column',
-      component: 'date-cell'
-    },
-    {
-      propertyName: 'grant.awardStatus',
-      title: 'Status',
-      filterWithSelect: true,
-      predefinedFilterOptions: ['Active', 'Ended'],
-    },
-    {
-      propertyName: 'submissions.length',
-      title: 'Submissions count',
-      disableFiltering: true,
-      component: 'grant-link-cell'
-    },
-    {
-      propertyName: 'grant.oapCompliance',
-      title: 'OAP Compliance',
-      component: 'oap-compliance-cell',
-      filterWithSelect: true,
-      predefinedFilterOptions: ['No', 'Yes'],
-    },
-  ],
-
-  piColumns: [
+  commonColumns: [
     {
       propertyName: 'grant.projectName',
       title: 'Project Name',
@@ -128,11 +68,20 @@ export default Controller.extend({
       title: 'Policy Compliance',
       component: 'oap-compliance-cell',
     },
-    {
+  ],
+
+  adminColumns() {
+    return this.get('commonColumns');
+  },
+
+  submitterColumns() {
+    let cols = this.get('commonColumns');
+    cols.push({
       title: 'Actions',
       component: 'grant-action-cell'
-    }
-  ],
+    });
+    return cols;
+  },
 
   themeInstance: Bootstrap4Theme.create(),
 });

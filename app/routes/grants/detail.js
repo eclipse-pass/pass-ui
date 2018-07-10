@@ -42,6 +42,7 @@ export default Route.extend({
     let grant = this.get('store').findRecord('grant', params.grant_id);
 
     const query = {
+      sort: ['awardStatus', { endDate: 'desc' }],
       term: {
         grants: params.grant_id
       },
