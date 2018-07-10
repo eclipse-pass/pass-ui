@@ -6,4 +6,4 @@ You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License.
 
-All photographs used on PASS website are property of Johns Hopkins University. All rights reserved. 
+Photographs used on PASS website are courtesy of Johns Hopkins schools, divisions and offices: Homewood Photography, Krieger School of Arts and Sciences, Carey Business School, School of Education, Whiting School of Engineering, School of Medicines, and Bloomberg School of Public Health.
