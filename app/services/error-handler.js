@@ -13,13 +13,10 @@ export default Service.extend({
     } else if (error.message === 'shib302') {
       // Sent from the Fedora adapter to indicate the session has timed out.
       this.handleSessionTimeout(error);
-    } else if (error.status == 401 || error.payload == 401) {
+    } else if (error.status == 401 || error.payload == 401 || error.payload == 'Unauthorized') {
       // Login failure.
       this.handleLoginFailure(error);
     } else if (error.status == 403 || error.payload == 403) {
-      // Some authorization issue
-      this.handleAuthorizationProblem(error);
-    } else if (error.payload == 'Unauthorized') {
       // Some authorization issue
       this.handleAuthorizationProblem(error);
     } else if (error.status == 404) {
