@@ -67,21 +67,21 @@ export default Controller.extend({
       propertyName: 'grant.oapCompliance',
       title: 'Policy Compliance',
       component: 'oap-compliance-cell',
-    },
+    }
   ],
 
-  adminColumns() {
+  adminColumns: computed('commonColumns', function () {
     return this.get('commonColumns');
-  },
+  }),
 
-  submitterColumns() {
+  submitterColumns: computed('commonColumns', function () {
     let cols = this.get('commonColumns');
     cols.push({
       title: 'Actions',
       component: 'grant-action-cell'
     });
     return cols;
-  },
+  }),
 
   themeInstance: Bootstrap4Theme.create(),
 });

@@ -30,7 +30,7 @@ export default Route.extend({
     if (user.get('isAdmin')) {
       grantQuery = this.getAdminQuery(defaultSort, querySize);
     } else if (user.get('isSubmitter')) {
-      grantQuery = this.getSubmitterQuery(defaultSort, querySize);
+      grantQuery = this.getSubmitterQuery(defaultSort, querySize, user);
     } else {
       return;
     }
@@ -77,7 +77,7 @@ export default Route.extend({
     };
   },
 
-  getSubmitterQuery() {
+  getSubmitterQuery(sort, size, user) {
     return {
       sort,
       query: {
