@@ -68,7 +68,7 @@ export default Route.extend({
   },
 
   getAdminQuery(sort, size) {
-    const grantQuery = {
+    return {
       sort,
       query: {
         range: { endDate: { gte: '2011-01-01' } }
@@ -78,7 +78,7 @@ export default Route.extend({
   },
 
   getSubmitterQuery() {
-    const grantQuery = {
+    return {
       sort,
       query: {
         bool: {
