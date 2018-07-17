@@ -53,8 +53,8 @@ export default Service.extend({
   handleUnknownError(error) {
     swal({
       type: 'error',
-      title: 'Something went wrong',
-      text: `${error.message}`
+      title: 'Something went wrong.',
+      text: `${JSON.stringify(error)}`
     });
   }
 });
