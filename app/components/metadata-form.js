@@ -163,9 +163,13 @@ export default Ember.Component.extend({
             newForm.options.fields[doiEntry].hidden = false;
           }
         }
+        // if NO DOI is present show authors
+        if (!this.get('doiInfo').DOI) {
+          newForm.schema.properties.authors.readonly = false;
+          newForm.options.fields.authors.hidden = false;
+        }
       } catch (e) {} // eslint-disable-line no-empty
     }
-
 
     $(document).ready(() => {
       $('#schemaForm').empty();
