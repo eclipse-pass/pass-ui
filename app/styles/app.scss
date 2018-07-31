@@ -329,6 +329,10 @@ td {
 [data-alpaca-container-item-name*="authors_"] {
   width: 100%;
 }
+
+.help-block {
+  display: none;
+}
 [data-alpaca-container-item-name*="authors_"] > div > div:nth-child(2) > div  {
   width: 100%;
   display: flex;
