@@ -16,7 +16,7 @@ services:
       - back
 
   fcrepo:
-    image:  oapass/fcrepo:4.7.5-2.2-SNAPSHOT-11@sha256:48e4aa7c6cb5ab384815e1e88e8421f5b6978b52764bcc050781882f188aa3e5
+    image:  oapass/fcrepo:4.7.5-2.2-SNAPSHOT-12@sha256:944c9d26a45283dfe14189b6da0e83ce72f824cfe0306f3f2951c97e706c51d9
     container_name: fcrepo
     env_file: .env
     ports:
@@ -29,6 +29,7 @@ services:
       - passdata:/data
     depends_on: 
       - assets
+      - activemq
 
   activemq:
     image: oapass/activemq:20180618@sha256:e3cd47a1bc4c21899fc34e5ac7198f6c069f4148296bad0ce619cc2bdda5f435
@@ -43,7 +44,7 @@ services:
       - back
 
   static-html:
-    image: oapass/static-html:20180629-7a50084@sha256:30805d485830d08161a1d4b4fb73c6c070174cfd529deb6edbcd4ef3dd286022
+    image: oapass/static-html:20180706-50b17b9@sha256:96361a5ffea55c09a60ad2e27697b8430e76a71e78d43a0c7892bddc29c96772
     container_name: static-html
     env_file: .env
     ports:
@@ -126,18 +127,10 @@ services:
       - assets
 
   assets:
-    image: birkland/assets:2018-07-06@sha256:2af6f8394e337e31abcf7594c66d03547824a49538aafa6ee688bb4011e8aab5
+    image: birkland/assets:2018-08-01@sha256:5a4e2605f6d37cd12d3a6fbc9afecc16ab427a395b3150b9f072d4b25a06fab2
     volumes:
       - passdata:/data
 
-  authz:
-    image: oapass/authz:0.1.0-2.2-SNAPSHOT@sha256:7b82b6a348794f5aff4b91a90dcfcbeb1a8fbffee6a7e1bd337f12909480a86f
-    container_name: authz
-    env_file: .env
-    networks:
-      - back
-
-  
 volumes:
   passdata:
     driver: local
