@@ -32,6 +32,7 @@ export default Component.extend({
   validDOI: 'form-control',
   isValidDOI: false,
   validTitle: 'form-control',
+  toast: service('toast'),
   nextDisabled: Ember.computed('model.publication.journal', 'model.publication.title', function () {
     if (
       this.get('model.publication.journal') &&
@@ -141,8 +142,11 @@ export default Component.extend({
           if (doiInfo.isDestroyed) {
             return;
           }
-
-          const nlmtaDump = await this.getNlmtaFromIssn(doiInfo);
+          try {
+            const nlmtaDump = await this.getNlmtaFromIssn(doiInfo);
+          } catch (e) {
+            this.get('toast').error(`error: ${e}`, 'Something went wrong!');
+          }
           if (nlmtaDump) {
             doiInfo.nlmta = nlmtaDump.nlmta;
             doiInfo['issn-map'] = nlmtaDump.map;
