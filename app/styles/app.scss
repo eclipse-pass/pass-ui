@@ -708,6 +708,25 @@ footer {
   width: 100%;
 }
 
+.block-user-input {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  background: rgba(224, 224, 224, 0.2);
+  min-width: 100%;
+  min-height: 100%;
+  display:none;
+}
+
+.block-user-input .fa-spinner{
+  font-size: 40px;
+  margin: auto;
+  position: absolute;
+  top: 52%;
+  left: 48%;
+}
+
 // Spinny things
 @-moz-keyframes spin {
   from { -moz-transform: rotate(0deg); }
