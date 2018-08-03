@@ -5,7 +5,7 @@ moduleFor('service:error-handler', 'Unit | Service | error handler', {
   // needs: ['service:foo']
 });
 
-// Replace this with your real tests.
+// Do to errors throwing a page redirect this can not be tested as a unit test.
 test('it exists', function (assert) {
   let service = this.subject();
   assert.ok(service);
