@@ -8,7 +8,6 @@ export default Component.extend({
     const submission = this.get('record');
     const repoCopies = this.get('column.repoCopiesMap')[submission.get('id')];
     const deposits = this.get('column.depositsMap')[submission.get('id')];
-
     return this.get('submissionStatus').calculateStatus(submission, repoCopies, deposits);
   })
 });
