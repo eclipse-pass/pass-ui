@@ -1,4 +1,4 @@
-import Route from '@ember/routing/route';
+import CheckSessionRoute from './check-session-route';
 
-export default Route.extend({
+export default CheckSessionRoute.extend({
 });
