@@ -21,7 +21,7 @@ export default Route.extend({
   afterModel() {
     return this._loadCurrentUser();
   },
-  
+
   _loadCurrentUser() {
     return this.get('currentUser').load();
   }
