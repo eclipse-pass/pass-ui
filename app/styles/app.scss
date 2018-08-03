@@ -298,6 +298,7 @@ td {
 
 .glyphicon {
   font-family: "FontAwesome";
+  font-style: normal;
 }
 .glyphicon-plus-sign:before{
   content: "\f067";
@@ -321,13 +322,21 @@ td {
 .alpaca-array-actionbar-bottom {
   margin-top:-25px;
 }
+.alpaca-vertical {
+  margin-bottom: 20px;
+}
 
 .alpaca-array-actionbar-top {
   float: right;
   margin-right: -130px;
+  display: inline-flex!important;
 }
 [data-alpaca-container-item-name*="authors_"] {
   width: 100%;
+}
+
+.help-block {
+  display: none;
 }
 [data-alpaca-container-item-name*="authors_"] > div > div:nth-child(2) > div  {
   width: 100%;
@@ -697,6 +706,25 @@ footer {
 .repositories-column { min-width: 7.5rem; }
 #journal div {
   width: 100%;
+}
+
+.block-user-input {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  background: rgba(224, 224, 224, 0.2);
+  min-width: 100%;
+  min-height: 100%;
+  display:none;
+}
+
+.block-user-input .fa-spinner{
+  font-size: 40px;
+  margin: auto;
+  position: absolute;
+  top: 52%;
+  left: 48%;
 }
 
 // Spinny things

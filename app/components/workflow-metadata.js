@@ -123,7 +123,7 @@ export default WorkflowComponent.extend({
           hidden: true
         },
         authors: {
-          hidden: true,
+          hidden: false,
         },
         'under-embargo': {
           type: 'checkbox',

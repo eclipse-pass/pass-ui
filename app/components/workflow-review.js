@@ -47,6 +47,7 @@ export default WorkflowComponent.extend({
   }),
   actions: {
     submit() {
+      $('.block-user-input').css('display', 'block');
       let disableSubmit = true;
       let didNotAgree = true;
       // In case a crafty user edits the page HTML, don't submit when not allowed
@@ -67,6 +68,7 @@ export default WorkflowComponent.extend({
       }
 
       if (!disableSubmit) {
+        $('.block-user-input').css('display', 'none');
         return;
       }
       this.sendAction('submit');
