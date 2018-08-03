@@ -1,4 +1,4 @@
-import Component from '@ember/component';
+import WorkflowComponent from './workflow-component';
 import { inject as service, } from '@ember/service';
 import EmberArray from '@ember/array';
 
@@ -17,7 +17,7 @@ import EmberArray from '@ember/array';
 //   });
 //   return retArray;
 // }
-export default Component.extend({
+export default WorkflowComponent.extend({
   addedRepositories: [],
   router: service(),
   store: service('store'),

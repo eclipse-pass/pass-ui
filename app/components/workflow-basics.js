@@ -1,4 +1,4 @@
-import Component from '@ember/component';
+import WorkflowComponent from './workflow-component';
 import { inject as service, } from '@ember/service';
 
 
@@ -26,7 +26,7 @@ function resolve(submission) {
   }).then(response => response.json());
 }
 
-export default Component.extend({
+export default WorkflowComponent.extend({
   store: service('store'),
   doiJournal: false,
   validDOI: 'form-control',

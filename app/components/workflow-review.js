@@ -1,6 +1,6 @@
-import Component from '@ember/component';
+import WorkflowComponent from './workflow-component';
 
-export default Component.extend({
+export default WorkflowComponent.extend({
   metadataService: Ember.inject.service('metadata-blob'),
 
   init() {
