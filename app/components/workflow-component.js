@@ -2,6 +2,7 @@ import Component from '@ember/component';
 import ENV from '../config/environment';
 export default Component.extend({
   toast: Ember.inject.service('toast'),
+  errorHandler: Ember.inject.service('error-handler');
   init() {
     this._super(...arguments);
     let url = "Make sure you set your ENV.userService.url value in ~config/environment.js or your .env file";
@@ -10,7 +11,7 @@ export default Component.extend({
     }
     Ember.$.get( url, (data) => {
       if (!(data.username)) {
-        this.get('toast').error("Please refresh your page and log back in.", 'Session has been invalidated.');
+        this.get('errorHandler').handleError(new Error('shib302'));
       }
     });
   }

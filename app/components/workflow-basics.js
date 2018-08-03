@@ -33,6 +33,7 @@ export default WorkflowComponent.extend({
   isValidDOI: false,
   validTitle: 'form-control',
   toast: service('toast'),
+  errorHandler: service('error-handler'),
   nextDisabled: Ember.computed('model.publication.journal', 'model.publication.title', function () {
     if (
       this.get('model.publication.journal') &&
@@ -146,6 +147,7 @@ export default WorkflowComponent.extend({
             const nlmtaDump = await this.getNlmtaFromIssn(doiInfo);
           } catch (e) {
             this.get('toast').error(`error: ${e}`, 'Something went wrong!');
+            this.get('errorHandler').handleError(e);
           }
           if (nlmtaDump) {
             doiInfo.nlmta = nlmtaDump.nlmta;

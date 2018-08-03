@@ -9,7 +9,7 @@ export default Route.extend({
     }
     Ember.$.get( url, (data) => {
       if (!(data.username)) {
-        this.get('toast').error("Please refresh your page and log back in.", 'Session has been invalidated.');
+        this.get('errorHandler').handleError(new Error('shib302'));
       }
     });
   }
