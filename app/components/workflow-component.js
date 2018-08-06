@@ -1,7 +1,6 @@
 import Component from '@ember/component';
 import ENV from '../config/environment';
 export default Component.extend({
-  toast: Ember.inject.service('toast'),
   errorHandler: Ember.inject.service('error-handler'),
   init() {
     this._super(...arguments);
