@@ -34,7 +34,15 @@ export default Service.extend({
   },
 
   handleSessionTimeout(error) {
-    window.location.reload(true);
+    swal({
+      type: 'error',
+      title: 'Your session timed out',
+      text: `The page will now reload.`
+    }).then((result) => {
+      if (result.value){
+        window.location.reload(true);
+      }
+    })
   },
 
   handleLoginFailure(error) {

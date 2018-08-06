@@ -143,11 +143,12 @@ export default WorkflowComponent.extend({
           if (doiInfo.isDestroyed) {
             return;
           }
+          let nlmtaDump;
           try {
-            const nlmtaDump = await this.getNlmtaFromIssn(doiInfo);
+            nlmtaDump = await this.getNlmtaFromIssn(doiInfo);
           } catch (e) {
-            this.get('toast').error(`error: ${e}`, 'Something went wrong!');
-            this.get('errorHandler').handleError(e);
+            // this.get('errorHandler').handleError(e.message);
+            console.log('NLMTA lookup failed.');
           }
           if (nlmtaDump) {
             doiInfo.nlmta = nlmtaDump.nlmta;
