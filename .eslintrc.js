@@ -33,7 +33,7 @@ module.exports = {
       "import/no-extraneous-dependencies": "off",
       "no-restricted-globals": "off",
       "comma-dangle": "off",
-      "array-callback-return": "off"
-
+      "array-callback-return": "off",
+      "no-lonely-if": "off"
     }
 };
