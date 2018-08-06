@@ -601,20 +601,24 @@ table td {
   top:50%;
   margin-left:-8px;
   transform: translateX(-100%)   translateY(-50%);
+  min-width: 200px;
 }
 [tooltip-position='top']::after{
   left:50%;
+  min-width: 200px;
 }
 [tooltip-position='bottom']::after{
   top:100%;
   margin-top:8px;
   transform: translateX(-50%) translateY(0%);
+  min-width: 200px;
 }
 [tooltip-position='right']::after{
   left:100%;
   top:50%;
   margin-left:8px;
   transform: translateX(0%)   translateY(-50%);
+  min-width: 200px;
 }
 
 [tooltip]:hover::after,[tooltip]:hover::before {
