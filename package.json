@@ -18,6 +18,7 @@
   "devDependencies": {
     "coveralls": "^3.0.1",
     "ember-cli-code-coverage": "^0.4.2",
+    "ember-load": "0.0.12",
     "ember-lodash": "^4.18.0",
     "qunit-dom": "^0.6.2",
     "toastr": "^2.1.4"

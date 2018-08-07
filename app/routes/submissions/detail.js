@@ -1,7 +1,7 @@
-import Route from '@ember/routing/route';
+import CheckSessionRoute from '../check-session-route';
 import { hash } from 'rsvp';
 
-export default Route.extend({
+export default CheckSessionRoute.extend({
   /**
    * It is possible for unfortunate things to happen somewhere in the backend stack
    * that will result in the returned IDs being unencoded. This Route is setup in

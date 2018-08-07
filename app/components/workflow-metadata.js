@@ -1,8 +1,8 @@
-import Component from '@ember/component';
+import WorkflowComponent from './workflow-component';
 import _ from 'lodash';
 import { inject as service, } from '@ember/service';
 
-export default Component.extend({
+export default WorkflowComponent.extend({
   didAgree: false,
   router: service(),
   common: {

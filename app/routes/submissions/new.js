@@ -1,10 +1,10 @@
-import Route from '@ember/routing/route';
+import CheckSessionRoute from '../check-session-route';
 
 const {
   service,
 } = Ember.inject;
 
-export default Route.extend({
+export default CheckSessionRoute.extend({
   resetController(controller, isExiting, transition) {
     // Explicitly clear the 'grant' query parameter when reloading this route
     if (isExiting) {
