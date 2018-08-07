@@ -1,4 +1,4 @@
-import Route from '@ember/routing/route';
+import CheckSessionRoute from './check-session-route';
 
 $(document).ready(() => {
   if (location.hash !== '') {
@@ -7,5 +7,5 @@ $(document).ready(() => {
     }, 'slow');
   }
 });
-export default Route.extend({
+export default CheckSessionRoute.extend({
 });
