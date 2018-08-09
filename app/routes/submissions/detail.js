@@ -10,6 +10,7 @@ export default CheckSessionRoute.extend({
    * current history with the encoded version.
    */
   beforeModel(transition) {
+    this._super(transition);
     const intent = transition.intent.url;
     const prefix = '/submissions/';
 
