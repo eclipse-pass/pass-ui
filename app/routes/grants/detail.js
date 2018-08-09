@@ -36,7 +36,7 @@ export default CheckSessionRoute.extend({
   },
   model(params, transition) {
     if (!params || !params.grant_id) {
-      this.replaceWith('/404');
+      this.get('errorHandler').handleError(new Error('didNotLoadData'));
       return;
     }
 
@@ -107,8 +107,6 @@ export default CheckSessionRoute.extend({
       submissions,
       repoCopiesMap,
       depositsMap
-    }).catch((error) => {
-      this.replaceWith('/404');
     });
   },
 });
