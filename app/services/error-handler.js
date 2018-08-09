@@ -77,7 +77,11 @@ export default Service.extend({
     swal({
       type: 'error',
       title: 'Something went wrong.',
-      text: `${JSON.stringify(error)}`
+      text: `When you click OK the page will reload. If the issue persists, please contact us and include a copy of this message. ${JSON.stringify(error)}`
+    }).then((result) => {
+      if (result.value){
+        window.location.reload(true);
+      }
     });
   }
 });
