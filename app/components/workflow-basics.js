@@ -143,13 +143,7 @@ export default WorkflowComponent.extend({
           if (doiInfo.isDestroyed) {
             return;
           }
-          let nlmtaDump;
-          try {
-            nlmtaDump = await this.getNlmtaFromIssn(doiInfo);
-          } catch (e) {
-            // this.get('errorHandler').handleError(e.message);
-            console.log('NLMTA lookup failed.');
-          }
+          const nlmtaDump = await this.getNlmtaFromIssn(doiInfo);
           if (nlmtaDump) {
             doiInfo.nlmta = nlmtaDump.nlmta;
             doiInfo['issn-map'] = nlmtaDump.map;
@@ -276,7 +270,12 @@ export default WorkflowComponent.extend({
    */
   getNLMID(issn) {
     const url = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nlmcatalog&term=${issn}[issn]&retmode=json`;
-    return fetch(url).then(resp => resp.json().then(data => data.esearchresult.idlist));
+    return fetch(url)
+      .then(resp => resp.json().then(data => data.esearchresult.idlist))
+      .catch(function(e) {
+        console.log('NLMTA lookup failed.', e);
+        return;
+      });
   },
   getNLMTA(nlmid) {
     let idquery = nlmid;
@@ -284,6 +283,11 @@ export default WorkflowComponent.extend({
       idquery = nlmid.join(',');
     }
     const url = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=nlmcatalog&retmode=json&rettype=abstract&id=${idquery}`;
-    return fetch(url).then(resp => resp.json().then(data => data.result));
+    return fetch(url)
+      .then(resp => resp.json().then(data => data.result))
+      .catch(function(e) {
+        console.log('NLMTA lookup failed.', e);
+        return;
+      });
   }
 });
