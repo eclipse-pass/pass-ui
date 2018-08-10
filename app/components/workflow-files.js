@@ -1,4 +1,4 @@
-import Component from '@ember/component';
+import WorkflowComponent from './workflow-component';
 
 function checkDisabled(files) {
   if (!(files)) {
@@ -10,7 +10,7 @@ function checkDisabled(files) {
   return false;
 }
 
-export default Component.extend({
+export default WorkflowComponent.extend({
   store: Ember.inject.service('store'),
   files: Ember.A(),
   init() {
