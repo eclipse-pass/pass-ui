@@ -127,6 +127,13 @@ export default Ember.Component.extend({
               // value.author = `${value.author} ${value.family}`;
               // delete value.family;
               const formId = newForm.id;
+
+              // Check for authors fields that are blank and remove them
+              if (formId === 'common') {
+                let trimmedAuthors = value.authors.filter(author => author.author);
+                value.authors = trimmedAuthors;
+              }
+
               metadata.push({
                 id: formId,
                 data: value,
