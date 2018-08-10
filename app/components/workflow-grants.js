@@ -1,8 +1,8 @@
-import Component from '@ember/component';
+import WorkflowComponent from './workflow-component';
 import { Promise, } from 'rsvp';
 import { inject as service } from '@ember/service';
 
-export default Component.extend({
+export default WorkflowComponent.extend({
   store: service('store'),
 
   optionalGrants: Ember.computed('model', function () {

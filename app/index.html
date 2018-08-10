@@ -33,6 +33,10 @@
     {{content-for "head-footer"}}
   </head>
   <body>
+    <div class="text-center app-loader">
+      <div class="lds-dual-ring"></div>
+      <!-- <h4 class="text-center text-muted">PASS is loading...</h4> -->
+    </div>
     {{content-for "body"}}
     <script src="{{rootURL}}assets/vendor.js"></script>
     <script src="{{rootURL}}assets/pass-ember.js"></script>

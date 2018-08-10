@@ -1,4 +1,4 @@
-import Component from '@ember/component';
+import WorkflowComponent from './workflow-component';
 import { inject as service, } from '@ember/service';
 
 
@@ -26,12 +26,14 @@ function resolve(submission) {
   }).then(response => response.json());
 }
 
-export default Component.extend({
+export default WorkflowComponent.extend({
   store: service('store'),
   doiJournal: false,
   validDOI: 'form-control',
   isValidDOI: false,
   validTitle: 'form-control',
+  toast: service('toast'),
+  errorHandler: service('error-handler'),
   nextDisabled: Ember.computed('model.publication.journal', 'model.publication.title', function () {
     if (
       this.get('model.publication.journal') &&
@@ -141,8 +143,13 @@ export default Component.extend({
           if (doiInfo.isDestroyed) {
             return;
           }
-
-          const nlmtaDump = await this.getNlmtaFromIssn(doiInfo);
+          let nlmtaDump;
+          try {
+            nlmtaDump = await this.getNlmtaFromIssn(doiInfo);
+          } catch (e) {
+            // this.get('errorHandler').handleError(e.message);
+            console.log('NLMTA lookup failed.');
+          }
           if (nlmtaDump) {
             doiInfo.nlmta = nlmtaDump.nlmta;
             doiInfo['issn-map'] = nlmtaDump.map;

@@ -1,4 +1,4 @@
-import Route from '@ember/routing/route';
+import CheckSessionRoute from '../check-session-route';
 import { hash } from 'rsvp';
 
 /**
@@ -9,7 +9,7 @@ import { hash } from 'rsvp';
  * Getting the Grant object is simple from the backend. Getting associated submissions
  * is done through the search service (through Store.query)
  */
-export default Route.extend({
+export default CheckSessionRoute.extend({
   /**
    * It is possible for unfortunate things to happen somewhere in the backend stack
    * that will result in the returned IDs being unencoded. This Route is setup in

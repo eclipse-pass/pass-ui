@@ -28,10 +28,18 @@ export default Service.extend({
         }
       }
     });
+    // capitalize all keys in metadata blob and remove the old lowercased one
     for (var key in metadataBlobNoKeys) {
       if (metadataBlobNoKeys.hasOwnProperty(key)) {
-        metadataBlobNoKeys[_.capitalize(key)] = metadataBlobNoKeys[key];
-        delete metadataBlobNoKeys[key];
+        // three use cases for upper case
+        if (key === 'nlmta' || key === 'doi' || key === 'ISSN') {
+          metadataBlobNoKeys[_.upperCase(key)] = metadataBlobNoKeys[key];
+        } else {
+          metadataBlobNoKeys[_.capitalize(key)] = metadataBlobNoKeys[key];
+        }
+        if (key !== 'ISSN') {
+          delete metadataBlobNoKeys[key];
+        }
       }
     }
     return metadataBlobNoKeys;

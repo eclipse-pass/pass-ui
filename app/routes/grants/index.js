@@ -1,9 +1,9 @@
-import Route from '@ember/routing/route';
+import CheckSessionRoute from '../check-session-route';
 import { hash, defer } from 'rsvp';
 
 const { service } = Ember.inject;
 
-export default Route.extend({
+export default CheckSessionRoute.extend({
   currentUser: service('current-user'),
 
   /**

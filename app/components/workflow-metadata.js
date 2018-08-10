@@ -1,8 +1,32 @@
-import Component from '@ember/component';
+import WorkflowComponent from './workflow-component';
 import _ from 'lodash';
 import { inject as service, } from '@ember/service';
 
-export default Component.extend({
+function getBrowserInfo() {
+  let ua = navigator.userAgent;
+  let tem;
+  let M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
+  if (/trident/i.test(M[1])) {
+    tem = /\brv[ :]+(\d+)/g.exec(ua) || [];
+    return { name: 'IE ', version: (tem[1] || '') };
+  }
+  if (M[1] === 'Chrome') {
+    tem = ua.match(/\bOPR\/(\d+)/);
+    if (tem != null) {
+      return { name: 'Opera', version: tem[1] };
+    }
+  }
+  M = M[2] ? [M[1], M[2]] : [navigator.appName, navigator.appVersion, '-?'];
+  //  eslint-disable-next-line
+  if((tem=ua.match(/version\/(\d+)/i))!=null) {M.splice(1,1,tem[1]);}
+  return {
+    name: M[0],
+    version: M[1]
+  };
+}
+
+
+export default WorkflowComponent.extend({
   didAgree: false,
   router: service(),
   common: {
@@ -270,6 +294,13 @@ export default Component.extend({
           id: 'pmc',
           data: {
             nlmta: doiInfo.nlmta
+          }
+        });
+
+        metadata.push({
+          id: 'agent_information',
+          data: {
+            information: getBrowserInfo()
           }
         });
 
