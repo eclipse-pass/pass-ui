@@ -1,7 +1,7 @@
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 
-moduleForComponent('grant-submission-cell', 'Integration | Component | grant submission cell', {
+moduleForComponent('find-grant', 'Integration | Component | find grant', {
   integration: true
 });
 
@@ -10,6 +10,6 @@ test('it renders', function (assert) {
   // Handle any actions with this.on('myAction', function(val) { ... });
 
   // Template usage:
-  this.render(hbs`{{grant-submission-cell}}`);
+  this.render(hbs`{{find-grant}}`);
   assert.ok(true);
 });

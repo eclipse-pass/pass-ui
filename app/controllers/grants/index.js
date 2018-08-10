@@ -16,10 +16,10 @@ export default Controller.extend({
   // Columns displayed depend on the user role
   columns: computed('currentUser', {
     get() {
-      const userRoles = this.get('currentUser.user.roles');
-      if (userRoles.includes('admin')) {
+      const user = this.get('currentUser.user');
+      if (user.get('isAdmin')) {
         return this.get('adminColumns');
-      } else if (userRoles.includes('submitter')) {
+      } else if (user.get('isSubmitter')) {
         return this.get('piColumns');
       }
       return [];

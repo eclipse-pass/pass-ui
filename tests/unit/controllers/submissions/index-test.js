@@ -1,6 +1,6 @@
 import { moduleFor, test } from 'ember-qunit';
 
-moduleFor('controller:grants/index', 'Unit | Controller | grants/index', {
+moduleFor('controller:submissions/index', 'Unit | Controller | submissions/index', {
   // Specify the other units that are required for this test.
   needs: ['service:currentUser', 'service:ajax']
 });

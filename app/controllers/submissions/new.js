@@ -16,11 +16,6 @@ export default Controller.extend({
         }
       }
       const sub = this.get('model.newSubmission');
-
-      // remove all weblink-only repositories so they don't get deposited
-      // sub.get('repositories').forEach((repo) => {
-      //   // add each repo to the metadata
-      // });
       sub.set('repositories', sub.get('repositories').filter((repo) => { // eslint-disable-line
         // TODO the specific URL checks should be removed after Repository data is updated to
         // include 'integrationType' property
@@ -62,7 +57,7 @@ export default Controller.extend({
               if (ENV.environment === 'travis' || ENV.environment === 'development') {
                 xhr.withCredentials = true;
                 if (ENV.environment === 'development') {
-                  xhr.setRequestHeader('Authorization', 'Basic YWRtaW46bW9v'); // TODO: should not be hardcoded
+                  xhr.setRequestHeader('Authorization', 'Basic YWRtaW46bW9v');
                 }
               }
               this.set('model.waitingMessage', 'Uploading files');
