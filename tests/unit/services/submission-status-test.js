@@ -4,22 +4,79 @@ moduleFor('service:submission-status', 'Unit | Service | submission status', {
   // Specify the other units that are required for this test.
   // needs: ['service:foo']
 });
-test('it exists', function (assert) {
+test('it shows the correct values according to the input', function (assert) {
   let service = this.subject();
+  assert.ok(service);
   let submission = Ember.Object.create({
-    aggregatedDepositStatus: 'not-started',
+    aggregatedDepositStatus: 'failed',
     submittedDate: null,
     source: 'other',
     metadata: '[]',
     submitted: true,
-    user: 'https://pass/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95',
-    publication: 'https://pass/fcrepo/rest/publications/2c/36/27/70/2c362770-feba-4751-a91c-eb4f1ff69214',
-    repositories: ['https://pass/fcrepo/rest/repositories/77/64/12/ec/776412ec-0f5e-488e-97dc-15bb427d27e2'],
-    grants: ['https://pass/fcrepo/rest/grants/32/83/d3/a5/3283d3a5-56e3-4c20-be44-4e26969a5795']
+    user: Ember.Object.create({
+
+    }),
+    publication: Ember.Object.create({
+
+    }),
+    repositories: [
+      Ember.Object.create({
+
+      })
+    ],
+    grants: [
+      Ember.Object.create({
+
+      })
+    ]
   });
   let repoCopies = [];
   let deposits = [];
   let result = service.calculateStatus(submission, repoCopies, deposits);
   assert.equal(result, 'See details');
-  assert.ok(service);
+
+  // Manuscript expected
+  submission.set('aggregatedDepositStatus', 'not-started');
+  submission.set('source', 'other');
+  submission.set('submitted', false);
+  let result2 = service.calculateStatus(submission, repoCopies, deposits);
+  assert.equal(result2, 'Manuscript expected');
+
+  // Submitted
+  submission.set('source', 'pass');
+  submission.set('submitted', true);
+  let result3 = service.calculateStatus(submission, repoCopies, deposits);
+  assert.equal(result3, 'Submitted');
+
+  // Stalled
+  repoCopies = [
+    Ember.Object.create({
+      copyStatus: 'stalled'
+    }),
+    Ember.Object.create({
+      copyStatus: 'stalled'
+    }),
+    Ember.Object.create({
+      copyStatus: 'complete'
+    })
+  ];
+  let result4 = service.calculateStatus(submission, repoCopies, deposits);
+  assert.equal(result4, 'Stalled');
+
+  repoCopies = [
+    Ember.Object.create({
+      copyStatus: 'complete'
+    })
+  ]
+  deposits = [
+    Ember.Object.create({})
+  ]
+  let result5 = service.calculateStatus(submission, repoCopies, deposits);
+  assert.equal(result5, 'Complete');
+
+  repoCopies.push(Ember.Object.create({copyStatus: 'complete'}));
+  repoCopies.push(Ember.Object.create({copyStatus: 'incomplete'}));
+  submission.set('source', 'other');
+  let result6 = service.calculateStatus(submission, repoCopies, deposits);
+  assert.equal(result6, 'Complete');
 });
