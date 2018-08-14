@@ -96,8 +96,7 @@ export default WorkflowComponent.extend({
         }
         // Go to the weblink repo
 
-        // this.get('externalRepoMap')[repo.get('id')] = true;
-        this.set(`externalRepoMap.${repo.id}`, true);
+        this.get('externalRepoMap')[repo.get('id')] = true;
         const allLinksVisited = Object.values(this.get('externalRepoMap')).every(val => val === true);
         if (allLinksVisited) {
           this.set('hasVisitedWeblink', true);
