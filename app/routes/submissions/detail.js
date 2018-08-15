@@ -10,6 +10,7 @@ export default CheckSessionRoute.extend({
    * current history with the encoded version.
    */
   beforeModel(transition) {
+    this._super(transition);
     const intent = transition.intent.url;
     const prefix = '/submissions/';
 
@@ -24,7 +25,7 @@ export default CheckSessionRoute.extend({
   },
   model(params) {
     if (!params || !params.submission_id) {
-      this.replaceWith('/404');
+      this.get('errorHandler').handleError(new Error('didNotLoadData'));
       return;
     }
 
@@ -43,8 +44,6 @@ export default CheckSessionRoute.extend({
       deposits,
       repoCopies,
       repos
-    }).catch((error) => {
-      this.replaceWith('/404');
     });
   },
 });
