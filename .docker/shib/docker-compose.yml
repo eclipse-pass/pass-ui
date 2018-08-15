@@ -54,7 +54,7 @@ services:
       - front
   
   proxy:
-    image: oapass/httpd-proxy:20180622@sha256:423b358d177cb903316b1449ed2d25357137e85a9b3f4d270e30e56354c54c0e
+    image: oapass/httpd-proxy:20180815@sha256:f2aeead1df34ddb8d22b8251a7ef2542f7aedb75952c57a8caecf4c74fd79bb7
     container_name: proxy
     networks:
      - front
@@ -64,7 +64,7 @@ services:
      - "443:443"
 
   idp:
-    image: oapass/idp:20180518@sha256:8fc230e81574161626c8cebd9fda35ae2ff0f8a0c8bce085397972ecb09ce7eb
+    image: oapass/idp:20180815@sha256:8cb8e3ac890200bd1611b1b9c82e3cebf7ace1007e5cdfab36eab3118f70be6b
     container_name: idp
     depends_on:
      - ldap
@@ -90,7 +90,7 @@ services:
      - back
 
   sp:
-    image: oapass/sp:20180618@sha256:6999dc7a46c3fd3710bb215d562aca12463e8366eead899ec633b84e1456af3a
+    image: oapass/sp:20180815@sha256:2882114242a7f3160605b3e0f0adfc348f5b74fe625e1eae8db1bb034200c2a8
     container_name: sp
     networks:
      - back
