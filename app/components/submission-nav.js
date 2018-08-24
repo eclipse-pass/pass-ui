@@ -14,4 +14,8 @@ export default Component.extend({
       }
     }
   },
+  didRender() {
+    this._super(...arguments);
+    window.scrollTo(0,0);
+  }
 });
