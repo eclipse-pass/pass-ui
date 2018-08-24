@@ -58,7 +58,7 @@ export default WorkflowComponent.extend({
 
       const shouldAddNIH = this.get('includeNIHDeposit');
       let anyInSubmission = grantRepos.any(grantRepo => this.get('model.newSubmission.repositories').includes(grantRepo));
-      if (shouldAddNIH || !funder.get('policy.title').toUpperCase() === 'National Institutes of Health Public Access Policy') {
+      if (shouldAddNIH || funder.get('policy.title').toUpperCase() !== 'NATIONAL INSTITUTES OF HEALTH PUBLIC ACCESS POLICY') {
         grantRepos.forEach((repo) => {
           repos.addObject({
             repo,
