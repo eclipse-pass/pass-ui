@@ -23,7 +23,9 @@ Router.map(function () {
   });
   this.route('thanks');
   this.route('404', { path: '/*path' });
-  this.route('faq');
+  this.route('faq', {
+    queryParams: ['anchor']
+  });
 });
 
 export default Router;
