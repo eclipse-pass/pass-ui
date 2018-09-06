@@ -1,4 +1,4 @@
-import Route from '@ember/routing/route';
+import CheckSessionRoute from '../check-session-route';
 import { hash } from 'rsvp';
 
 /**
@@ -9,7 +9,7 @@ import { hash } from 'rsvp';
  * Getting the Grant object is simple from the backend. Getting associated submissions
  * is done through the search service (through Store.query)
  */
-export default Route.extend({
+export default CheckSessionRoute.extend({
   /**
    * It is possible for unfortunate things to happen somewhere in the backend stack
    * that will result in the returned IDs being unencoded. This Route is setup in
@@ -21,6 +21,7 @@ export default Route.extend({
    * https://pass/grants/https://pass/fcrepo/rest/grants/07/4b/32/a5/074b32a5-f1e2-4938-8b3d-c63449145c65
    */
   beforeModel(transition) {
+    this._super(transition);
     const intent = transition.intent.url;
     const prefix = '/grants/';
 
@@ -35,7 +36,7 @@ export default Route.extend({
   },
   model(params, transition) {
     if (!params || !params.grant_id) {
-      this.replaceWith('/404');
+      this.get('errorHandler').handleError(new Error('didNotLoadData'));
       return;
     }
 
@@ -106,8 +107,6 @@ export default Route.extend({
       submissions,
       repoCopiesMap,
       depositsMap
-    }).catch((error) => {
-      this.replaceWith('/404');
     });
   },
 });

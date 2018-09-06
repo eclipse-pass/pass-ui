@@ -1,4 +1,4 @@
-import Component from '@ember/component';
+import WorkflowComponent from './workflow-component';
 import { inject as service, } from '@ember/service';
 import EmberArray from '@ember/array';
 
@@ -17,7 +17,7 @@ import EmberArray from '@ember/array';
 //   });
 //   return retArray;
 // }
-export default Component.extend({
+export default WorkflowComponent.extend({
   addedRepositories: [],
   router: service(),
   store: service('store'),
@@ -58,7 +58,7 @@ export default Component.extend({
 
       const shouldAddNIH = this.get('includeNIHDeposit');
       let anyInSubmission = grantRepos.any(grantRepo => this.get('model.newSubmission.repositories').includes(grantRepo));
-      if (shouldAddNIH || !funder.get('policy.title').toUpperCase() === 'National Institutes of Health Public Access Policy') {
+      if (shouldAddNIH || funder.get('policy.title').toUpperCase() !== 'NATIONAL INSTITUTES OF HEALTH PUBLIC ACCESS POLICY') {
         grantRepos.forEach((repo) => {
           repos.addObject({
             repo,

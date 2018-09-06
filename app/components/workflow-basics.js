@@ -1,4 +1,4 @@
-import Component from '@ember/component';
+import WorkflowComponent from './workflow-component';
 import { inject as service, } from '@ember/service';
 
 
@@ -26,12 +26,14 @@ function resolve(submission) {
   }).then(response => response.json());
 }
 
-export default Component.extend({
+export default WorkflowComponent.extend({
   store: service('store'),
   doiJournal: false,
   validDOI: 'form-control',
   isValidDOI: false,
   validTitle: 'form-control',
+  toast: service('toast'),
+  errorHandler: service('error-handler'),
   nextDisabled: Ember.computed('model.publication.journal', 'model.publication.title', function () {
     if (
       this.get('model.publication.journal') &&
@@ -141,7 +143,6 @@ export default Component.extend({
           if (doiInfo.isDestroyed) {
             return;
           }
-
           const nlmtaDump = await this.getNlmtaFromIssn(doiInfo);
           if (nlmtaDump) {
             doiInfo.nlmta = nlmtaDump.nlmta;
@@ -269,7 +270,12 @@ export default Component.extend({
    */
   getNLMID(issn) {
     const url = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nlmcatalog&term=${issn}[issn]&retmode=json`;
-    return fetch(url).then(resp => resp.json().then(data => data.esearchresult.idlist));
+    return fetch(url)
+      .then(resp => resp.json().then(data => data.esearchresult.idlist))
+      .catch(function(e) {
+        console.log('NLMTA lookup failed.', e);
+        return;
+      });
   },
   getNLMTA(nlmid) {
     let idquery = nlmid;
@@ -277,6 +283,11 @@ export default Component.extend({
       idquery = nlmid.join(',');
     }
     const url = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=nlmcatalog&retmode=json&rettype=abstract&id=${idquery}`;
-    return fetch(url).then(resp => resp.json().then(data => data.result));
+    return fetch(url)
+      .then(resp => resp.json().then(data => data.result))
+      .catch(function(e) {
+        console.log('NLMTA lookup failed.', e);
+        return;
+      });
   }
 });

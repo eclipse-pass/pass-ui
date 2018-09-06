@@ -1,6 +1,6 @@
-import Component from '@ember/component';
+import WorkflowComponent from './workflow-component';
 
-export default Component.extend({
+export default WorkflowComponent.extend({
   metadataService: Ember.inject.service('metadata-blob'),
 
   init() {
@@ -96,8 +96,7 @@ export default Component.extend({
         }
         // Go to the weblink repo
 
-        // this.get('externalRepoMap')[repo.get('id')] = true;
-        this.set(`externalRepoMap.${repo.id}`, true);
+        this.get('externalRepoMap')[repo.get('id')] = true;
         const allLinksVisited = Object.values(this.get('externalRepoMap')).every(val => val === true);
         if (allLinksVisited) {
           this.set('hasVisitedWeblink', true);

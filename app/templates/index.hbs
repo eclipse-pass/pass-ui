@@ -92,5 +92,5 @@
   </h2>
   {{carousel-gallery class="row mb-4 padding-lr-100"}}
   <div class="w-100 text-center">
-    <a href="{{rootURL}}faq#supported-policies" class="btn btn-link mt-1 pl-4 pr-4 ember-view">See full list of policies supported by PASS here</a>
+    {{#link-to "faq" (query-params anchor="#supported-policies") class="btn btn-link mt-1 pl-4 pr-4 ember-view"}}See full list of policies supported by PASS here{{/link-to}}
   </div>

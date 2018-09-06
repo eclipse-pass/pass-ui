@@ -11,8 +11,11 @@ export default Service.extend({
     if (error.name == 'TransitionAborted') {
       // Ignore
     } else if (error.message === 'shib302') {
-      // Sent from the Fedora adapter to indicate the session has timed out.
+      // Sent from the session checker to indicate the session has timed out.
       this.handleSessionTimeout(error);
+    } else if (error.message === 'didNotLoadData') {
+      // Used to indicate when expected data is missing, will do reload
+      this.handleDidNotLoadDataError(error);
     } else if (error.status == 401 || error.payload == 401 || error.payload == 'Unauthorized') {
       // Login failure.
       this.handleLoginFailure(error);
@@ -34,7 +37,15 @@ export default Service.extend({
   },
 
   handleSessionTimeout(error) {
-    window.location.reload(true);
+    swal({
+      type: 'error',
+      title: 'Your session timed out',
+      text: `When you click OK the page will reload.`
+    }).then((result) => {
+      if (result.value){
+        window.location.reload(true);
+      }
+    })
   },
 
   handleLoginFailure(error) {
@@ -50,11 +61,27 @@ export default Service.extend({
     window.location.replace(`${ENV.rootURL}404`);
   },
 
+  handleDidNotLoadDataError(error) {
+    swal({
+      type: 'error',
+      title: 'Page could not load',
+      text: `Some information required by this page did not load correctly. When you click OK the page will reload. If the issue persists, please contact us and include a copy of this message. ${JSON.stringify(error)}`
+    }).then((result) => {
+      if (result.value){
+        window.location.reload(true);
+      }
+    });
+  },
+
   handleUnknownError(error) {
     swal({
       type: 'error',
       title: 'Something went wrong.',
-      text: `${JSON.stringify(error)}`
+      text: `When you click OK the page will reload. If the issue persists, please contact us and include a copy of this message. ${JSON.stringify(error)}`
+    }).then((result) => {
+      if (result.value){
+        window.location.reload(true);
+      }
     });
   }
 });

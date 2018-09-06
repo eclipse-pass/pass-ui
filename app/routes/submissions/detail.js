@@ -1,7 +1,7 @@
-import Route from '@ember/routing/route';
+import CheckSessionRoute from '../check-session-route';
 import { hash } from 'rsvp';
 
-export default Route.extend({
+export default CheckSessionRoute.extend({
   /**
    * It is possible for unfortunate things to happen somewhere in the backend stack
    * that will result in the returned IDs being unencoded. This Route is setup in
@@ -10,6 +10,7 @@ export default Route.extend({
    * current history with the encoded version.
    */
   beforeModel(transition) {
+    this._super(transition);
     const intent = transition.intent.url;
     const prefix = '/submissions/';
 
@@ -24,7 +25,7 @@ export default Route.extend({
   },
   model(params) {
     if (!params || !params.submission_id) {
-      this.replaceWith('/404');
+      this.get('errorHandler').handleError(new Error('didNotLoadData'));
       return;
     }
 
@@ -43,8 +44,6 @@ export default Route.extend({
       deposits,
       repoCopies,
       repos
-    }).catch((error) => {
-      this.replaceWith('/404');
     });
   },
 });

@@ -14,9 +14,4 @@ export default Controller.extend({
   didRender() {
     this.set('institution', this.store.find('institution'));
   },
-  actions: {
-    invalidateSession() {
-      // this.get('session').invalidate();
-    },
-  },
 });

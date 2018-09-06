@@ -1,6 +1,6 @@
-import Component from '@ember/component';
+import WorkflowComponent from './workflow-component';
 
-export default Component.extend({
+export default WorkflowComponent.extend({
   activePolicies: Ember.computed('model.newSubmission', function () {
     let policies = Ember.A();
     // policies can come from funders

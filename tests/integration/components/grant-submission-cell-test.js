@@ -12,5 +12,4 @@ test('it renders', function (assert) {
   // Template usage:
   this.render(hbs`{{grant-submission-cell}}`);
   assert.ok(true);
-  // assert.equal(this.$().text().trim(), 'template block text');
 });

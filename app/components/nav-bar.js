@@ -15,4 +15,10 @@ export default Component.extend({
       // this.get('session').invalidate();
     },
   },
+  didRender() {
+    this._super(...arguments);
+    if (window.location.search.indexOf("anchor=") == -1) {
+      window.scrollTo(0,0); 
+    }
+  }
 });
