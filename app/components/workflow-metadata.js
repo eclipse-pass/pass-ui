@@ -190,8 +190,12 @@ export default WorkflowComponent.extend({
 
           // if Proxy is submitting dont show JScholarship to proxy
           console.log('form', form.id, this.get('model.newSubmission.hasProxy'));
-          if (form.id  !== 'JScholarship') {
-            schemas.addObject(form);
+          if (this.get('model.newSubmission.hasProxy')) {
+            if (form.id !== 'JScholarship') {
+              schemas.addObject(form);
+            }
+          } else {
+            schemas.addObject(form);  
           }
         } catch (e) {
           console.log('ERROR:', e);

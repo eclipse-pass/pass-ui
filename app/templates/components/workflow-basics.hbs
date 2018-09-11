@@ -1,10 +1,10 @@
 {{yield}}
 <div class="py-0 mt-2 alert alert-secondary">
 <p class="my-2 lead">I'm creating this submission on behalf of:
- {{radio-button class="ml-3 mr-1" value=false name='hasProxy' checked=hasProxy}} Myself {{radio-button class="ml-3 mr-1" value=true name='hasProxy' checked=hasProxy}} Someone else
+ {{radio-button class="ml-3 mr-1" value=false name='showProxyWindow' checked=showProxyWindow}} Myself {{radio-button class="ml-3 mr-1" value=true name='showProxyWindow' checked=showProxyWindow}} Someone else
 </p>
 </div>
-{{#if hasProxy}}
+{{#if showProxyWindow}}
 <div class="alert alert-info">
   <p>When a submission is created on someone's behalf, PASS will contact that person to acquire their approval before finalizing the submission and sending it to its corresponding repositories.</p>
   <p class="mb-0">Please indicate on behalf of whom this submission is being completed:</p>
@@ -16,7 +16,8 @@
     {{!-- <input class="ml-2" placeholder="Preferred Name">
     <input class="ml-2" placeholder="Last Name"> --}}
   </p>
-  <input class="mt-1 mb-3" placeholder="&nbsp;Email address"/>
+  {{input class="mt-1 mb-3" value=proxyEmail placeholder=" Email address"}}
+  {{input class="mt-1 mb-3" value=proxyName placeholder=" Name"}}
 </div>
 {{/if}}
 <p class="lead text-muted">
