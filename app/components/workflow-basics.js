@@ -34,7 +34,7 @@ export default WorkflowComponent.extend({
   validTitle: 'form-control',
   toast: service('toast'),
   errorHandler: service('error-handler'),
-  hasProxy: true,
+  showProxyWindow: false,
   nextDisabled: Ember.computed('model.publication.journal', 'model.publication.title', function () {
     if (
       this.get('model.publication.journal') &&
