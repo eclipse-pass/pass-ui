@@ -34,6 +34,7 @@ export default WorkflowComponent.extend({
   validTitle: 'form-control',
   toast: service('toast'),
   errorHandler: service('error-handler'),
+  hasProxy: true,
   nextDisabled: Ember.computed('model.publication.journal', 'model.publication.title', function () {
     if (
       this.get('model.publication.journal') &&
@@ -44,6 +45,7 @@ export default WorkflowComponent.extend({
   }),
   init() {
     this._super(...arguments);
+    this.set('hasProxy', false);
   },
   didRender() {
     this._super(...arguments);
@@ -54,6 +56,9 @@ export default WorkflowComponent.extend({
     this.send('lookupDOI');
   },
   actions: {
+    toggleProxy(choice) {
+      this.set('hasProxy', choice);
+    },
     validateNext() {
       const title = this.get('model.publication.title');
       const journal = this.get('model.publication.journal');
@@ -215,7 +220,7 @@ export default WorkflowComponent.extend({
       const publication = this.get('model.publication');
       publication.set('journal', journal);
       $('.ember-power-select-trigger').css('border-color', '#4dbd74');
-    },
+    }
   },
 
   /**

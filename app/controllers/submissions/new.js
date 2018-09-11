@@ -36,7 +36,7 @@ export default Controller.extend({
       sub.set('aggregatedDepositStatus', 'not-started');
       sub.set('submittedDate', new Date());
       sub.set('submitted', false);
-      sub.set('user', this.get('currentUser.user')); // this.get('currentUser.user.id') seems to break stuff
+      sub.set('submitter', this.get('currentUser.user')); // this.get('currentUser.user.id') seems to break stuff
       sub.set('source', 'pass');
       pub.save().then((p) => {
         sub.set('publication', p); // p.get('id') seems to break stuff

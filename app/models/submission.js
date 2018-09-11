@@ -8,7 +8,8 @@ export default DS.Model.extend({
   metadata: DS.attr('string', { defaultValue: '[]' }), // Stringified JSON
   submitted: DS.attr('boolean', { defaultValue: false }),
 
-  user: DS.belongsTo('user'),
+  submitter: DS.belongsTo('user'),
+  preparers: DS.hasMany('user', { async: true }),
   publication: DS.belongsTo('publication'),
   repositories: DS.hasMany('repository', { async: true }), // not on this model on API
   /**

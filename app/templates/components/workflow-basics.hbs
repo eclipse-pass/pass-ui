@@ -1,4 +1,24 @@
 {{yield}}
+<div class="py-0 mt-2 alert alert-secondary">
+<p class="my-2 lead">I'm creating this submission on behalf of:
+ {{radio-button class="ml-3 mr-1" value=false name='hasProxy' checked=hasProxy}} Myself {{radio-button class="ml-3 mr-1" value=true name='hasProxy' checked=hasProxy}} Someone else
+</p>
+</div>
+{{#if hasProxy}}
+<div class="alert alert-info">
+  <p>When a submission is created on someone's behalf, PASS will contact that person to acquire their approval before finalizing the submission and sending it to its corresponding repositories.</p>
+  <p class="mb-0">Please indicate on behalf of whom this submission is being completed:</p>
+  <div style="max-width:400px;" class="mt-1 mb-3">
+    {{find-user id="user" value=model.submitter}}
+  </div>
+  {{!-- <input class="mb-2" placeholder="&nbsp;Search PASS users by last name or JHED ID" style="width:350px;"> --}}
+  <p class="mb-0"><strong>If the person you are submitting for does not have an account with PASS</strong>, please provide their email address {{!-- and name --}} so we may notify them: 
+    {{!-- <input class="ml-2" placeholder="Preferred Name">
+    <input class="ml-2" placeholder="Last Name"> --}}
+  </p>
+  <input class="mt-1 mb-3" placeholder="&nbsp;Email address"/>
+</div>
+{{/if}}
 <p class="lead text-muted">
   If the manuscript/article you are submitting has been assigned a Digital
   Object Identifier (DOI), please provide it now to pre-populate submission
