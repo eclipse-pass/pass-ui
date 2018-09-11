@@ -46,4 +46,7 @@ export default DS.Model.extend({
   isStub: Ember.computed('source', 'submitted', function () {
     return this.get('source') === 'other' && !(this.get('submitted'));
   }),
+  hasProxy: Ember.computed('submission', function () {
+    return !!(this.get('submission.preparer'));
+  }),
 });

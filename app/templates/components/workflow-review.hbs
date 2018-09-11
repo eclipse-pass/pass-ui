@@ -213,6 +213,7 @@
                 </table>
               </td>
             </tr>
+            {{#if model.newSubmission.hasProxy}}
             <tr>
               <td>Comments</td>
               <td>
@@ -227,6 +228,7 @@
                 {{textarea placeholder="add note..." value=message class="form-control custom-control p-2" rows="2" style="resize:none; min-height: 38px!important;"}}
               </td>
             </tr>
+            {{/if}}
           </tbody>
         </table>
       </div>

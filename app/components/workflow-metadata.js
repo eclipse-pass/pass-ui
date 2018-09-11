@@ -182,10 +182,17 @@ export default WorkflowComponent.extend({
   willRender() {
     let schemas = this.get('schemas');
     this.set('schemas', []);
+
+
     this.get('metadataForms').forEach((form) => {
       if (form) {
         try {
-          schemas.addObject(form);
+
+          // if Proxy is submitting dont show JScholarship to proxy
+          console.log('form', form.id, this.get('model.newSubmission.hasProxy'));
+          if (form.id  !== 'JScholarship') {
+            schemas.addObject(form);
+          }
         } catch (e) {
           console.log('ERROR:', e);
         }
