@@ -19,6 +19,9 @@ export default DS.Model.extend({
    */
   grants: DS.hasMany('grant', { async: true }),
 
+  hasProxy: Ember.computed('preparers', function() {
+    return !!(this.get('preparers'));
+  }),
   // don't get saved to database
   removeNIHDeposit: false,
 
