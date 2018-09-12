@@ -19,10 +19,12 @@ export default DS.Model.extend({
    */
   grants: DS.hasMany('grant', { async: true }),
 
-  hasProxy: Ember.computed('preparers', function() {
-    console.log('this.get("reparers").length', this.get('preparers.length'))
-    return (this.get('preparers.length') > 0);
-  }),
+  // hasProxy: Ember.computed('preparers.[]', function() {
+  //   console.log(`PREPARERS UPDATED: ${this.get('preparers.length')} total preparers now`);
+  //   console.log(`preparers: ${this.get('preparers')}`);
+  //   return (this.get('preparers.length') > 0);
+  // }),
+  hasProxy: false,
   // don't get saved to database
   removeNIHDeposit: false,
 

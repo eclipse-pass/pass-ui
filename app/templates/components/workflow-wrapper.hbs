@@ -33,7 +33,7 @@
           we just want to validate the last step because up untill this point its okay not to have all the data
           just let them fill out the forms then check that the data is right at the end
         --}}
-      {{workflow-review comments=comments hasProxy=hasProxy submitterName=submitterName submitterEmail=submitterEmail didNotAgree=didNotAgree model=model isValidated=isValidated validate=(action "validate") back=(action "back") submit=(action "submit") filesTemp=filesTemp step=step}}
+      {{workflow-review userIsSubmitter=userIsSubmitter userIsPreparer=userIsPreparer comments=comments hasProxy=hasProxy submitterName=submitterName submitterEmail=submitterEmail didNotAgree=didNotAgree model=model isValidated=isValidated validate=(action "validate") back=(action "back") submit=(action "submit") filesTemp=filesTemp step=step}}
     {{/if}}
   </main>
 </div>

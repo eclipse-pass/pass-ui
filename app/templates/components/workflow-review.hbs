@@ -239,5 +239,5 @@
 {{#if model.uploading}}
   <button class="btn btn-primary pull-right submit" disabled><div class="lds-dual-ring"></div>{{model.waitingMessage}}</button>
 {{else}}
-  <button class="btn btn-primary pull-right submit" {{action "submit"}}>Submit</button>
+  <button class="btn btn-primary pull-right submit" {{action "submit"}}>{{submitButtonText}}</button>
 {{/if}}

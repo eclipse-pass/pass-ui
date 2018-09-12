@@ -48,10 +48,6 @@ export default WorkflowComponent.extend({
     }
     return true;
   }),
-  updateProxyInfo: Ember.computed('showProxyWindow', () => {
-    console.log('ASGASGASGAS');
-    return false;
-  }),
   init() {
     this._super(...arguments);
     this.set('hasProxy', false);
@@ -59,11 +55,12 @@ export default WorkflowComponent.extend({
   didRender() {
     this._super(...arguments);
     this.send('validateDOI');
-    if (!(this.get('showProxyWindow'))) {
+    if (!(this.get('model.newSubmission.hasProxy'))) {
       this.set('submitterEmail', '');
       this.set('submitterName', '');
       this.set('model.newSubmission.submitter', null);
       this.get('model.newSubmission.preparers').clear();
+      this.set('emailLookup', '');
     }
   },
   didInsertElement() {
@@ -108,8 +105,6 @@ export default WorkflowComponent.extend({
               const displayName = this.get('model.newSubmission.submitter.displayName');
               toastr.success(`Submitter updated to ${displayName}.`);
               console.log(this.get('model.newSubmission.submitter.email'));
-              this.get('model.newSubmission.preparers').addObject(this.get('currentUser.user'));
-              console.log(`preparers: ${this.get('model.newSubmission.preparers')}`);
             });
           } else {
             console.log('No wesults fouwnd! Sowwy!!! uwu (●´ω｀●)');
@@ -147,7 +142,20 @@ export default WorkflowComponent.extend({
         validTitle = false;
         this.set('validTitle', 'form-control is-invalid');
       }
-
+      if (this.get('showProxyWindow')) {
+        if (
+            // if the submitter is not the current user AND a submitter exists
+            ((this.get('model.newSubmission.submitter') && this.get('model.newSubmission.submitter') !== this.get('currentUser.user')) 
+            // OR there is information to be turned into a submitter later
+            || (this.get('submitterEmail') && this.get('submitterName'))) && 
+            // AND the current user is not already a preparer,
+            !(this.get('model.newSubmission.preparers').includes(this.get('currentUser.user')))
+          ) {
+            // ADD the current user to the preparers list
+            console.log('adding user as preparer!');
+            this.get('model.newSubmission.preparers').addObject(this.get('currentUser.user'));
+        }
+      }
       if (validTitle && validJournal) {
         this.send('next');
       }

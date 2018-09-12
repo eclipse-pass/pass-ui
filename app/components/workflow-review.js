@@ -45,6 +45,13 @@ export default WorkflowComponent.extend({
   disableSubmit: Ember.computed('mustVisitWeblink', 'hasVisitedWeblink', function () {
     return this.get('mustVisitWeblink') && !this.get('hasVisitedWeblink');
   }),
+  submitButtonText: Ember.computed('userIsPreparer', function() {
+    if (this.get('userIsPreparer')) {
+      return 'Request approval';
+    } else {
+      return 'Submit';
+    }
+  }),
   actions: {
     submit() {
       $('.block-user-input').css('display', 'block');
