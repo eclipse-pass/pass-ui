@@ -23,7 +23,7 @@
       {{workflow-repositories hasProxy=hasProxy model=model next=(action "next") back=(action "back") includeNIHDeposit=includeNIHDeposit}}
     {{/if}}
     {{#if (eq step 5)}}
-      {{workflow-metadata didNotAgree=didNotAgree model=model doiInfo=doiInfo step=step next=(action "next") back=(action "back")}}
+      {{workflow-metadata currentUser=currentUser didNotAgree=didNotAgree model=model doiInfo=doiInfo step=step next=(action "next") back=(action "back")}}
     {{/if}}
     {{#if (eq step 6)}}
       {{workflow-files model=model next=(action "next") back=(action "back") filesTemp=filesTemp}}

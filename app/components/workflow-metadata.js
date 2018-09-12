@@ -187,16 +187,22 @@ export default WorkflowComponent.extend({
     this.get('metadataForms').forEach((form) => {
       if (form) {
         try {
-
           // if Proxy is submitting dont show JScholarship to proxy
           console.log('form', form.id, this.get('model.newSubmission.hasProxy'));
           if (this.get('model.newSubmission.hasProxy')) {
-            if (form.id !== 'JScholarship') {
+            //  check to see if it is the  preparers, if it is hide deposit agreement 
+            let currentUser = this.get('currentUser.user');
+            if (this.get('model.newSubmission.preparers.email')  === currentUser.email ) {
+              if (form.id !== 'JScholarship') {
+                schemas.addObject(form);
+              }
+            } else {
               schemas.addObject(form);
             }
           } else {
             schemas.addObject(form);  
           }
+
         } catch (e) {
           console.log('ERROR:', e);
         }
