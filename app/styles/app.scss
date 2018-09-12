@@ -773,3 +773,8 @@ footer {
     transform: rotate(360deg);
   }
 }
+
+.vertical-text {
+  display: inline-flex!important;
+  align-items: center!important;
+}

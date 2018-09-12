@@ -23,7 +23,7 @@
       {{workflow-repositories hasProxy=hasProxy model=model next=(action "next") back=(action "back") includeNIHDeposit=includeNIHDeposit}}
     {{/if}}
     {{#if (eq step 5)}}
-      {{workflow-metadata didNotAgree=didNotAgree model=model doiInfo=doiInfo step=step next=(action "next") back=(action "back")}}
+      {{workflow-metadata currentUser=currentUser didNotAgree=didNotAgree model=model doiInfo=doiInfo step=step next=(action "next") back=(action "back")}}
     {{/if}}
     {{#if (eq step 6)}}
       {{workflow-files model=model next=(action "next") back=(action "back") filesTemp=filesTemp}}
@@ -33,7 +33,25 @@
           we just want to validate the last step because up untill this point its okay not to have all the data
           just let them fill out the forms then check that the data is right at the end
         --}}
-      {{workflow-review hasProxy=hasProxy submitterName=submitterName submitterEmail=submitterEmail didNotAgree=didNotAgree model=model isValidated=isValidated validate=(action "validate") back=(action "back") submit=(action "submit") filesTemp=filesTemp step=step}}
+      {{workflow-review comments=comments hasProxy=hasProxy submitterName=submitterName submitterEmail=submitterEmail didNotAgree=didNotAgree model=model isValidated=isValidated validate=(action "validate") back=(action "back") submit=(action "submit") filesTemp=filesTemp step=step}}
     {{/if}}
   </main>
 </div>
+
+{{!-- There needs to be a check here to not show comments unless its a proxy --}}
+{{#if model.newSubmission.hasProxy}}
+  {{#if (not-eq step 7)}}
+    <div class="alert alert-info mt-3">
+      <h3 class="mt-3 mb-0">Comments</h3>
+      <hr class="mt-0">
+      {{commenting-block 
+        showMessageEntry=false 
+        comments=comments 
+        addComment=(action "addComment")
+        saveComment=(action "saveComment")
+        deleteComment=(action "deleteComment")
+      }}
+    </div>
+  {{/if}}
+{{/if}}
+

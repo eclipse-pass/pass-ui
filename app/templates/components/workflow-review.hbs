@@ -213,6 +213,22 @@
                 </table>
               </td>
             </tr>
+            {{#if model.newSubmission.hasProxy}}
+            <tr>
+              <td>Comments</td>
+              <td>
+                <p>
+                  This submission is prepared on behalf of <a href="#">f{{model.newSubmission.submitter.email}}</a>
+                </p>
+                <p>
+                  Once "Request for approval" is clicked a requst for approval will be sent to <a href="#">f{{model.newSubmission.submitter.email}}</a>. Submissions will be sent to target repositories on approval, or sent back to you if additional edits are requested.
+                </p>
+                <hr>
+                {{commenting-block showMessageEntry=false comments=comments deleteComment=(action "deleteComment") }}
+                {{textarea placeholder="add note..." value=message class="form-control custom-control p-2" rows="2" style="resize:none; min-height: 38px!important;"}}
+              </td>
+            </tr>
+            {{/if}}
           </tbody>
         </table>
       </div>
