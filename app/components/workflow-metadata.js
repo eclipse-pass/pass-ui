@@ -192,7 +192,7 @@ export default WorkflowComponent.extend({
           if (this.get('model.newSubmission.hasProxy')) {
             //  check to see if it is the  preparers, if it is hide deposit agreement 
             let currentUser = this.get('currentUser.user');
-            if (this.get('model.newSubmission.preparers.email')  === currentUser.email ) {
+            if (this.get('model.newSubmission.preparers').includes(currentUser)) {
               if (form.id !== 'JScholarship') {
                 schemas.addObject(form);
               }
