@@ -48,6 +48,10 @@ export default WorkflowComponent.extend({
     }
     return true;
   }),
+  updateProxyInfo: Ember.computed('showProxyWindow', () => {
+    console.log('ASGASGASGAS');
+    return false;
+  }),
   init() {
     this._super(...arguments);
     this.set('hasProxy', false);
@@ -55,6 +59,12 @@ export default WorkflowComponent.extend({
   didRender() {
     this._super(...arguments);
     this.send('validateDOI');
+    if (!(this.get('showProxyWindow'))) {
+      this.set('submitterEmail', '');
+      this.set('submitterName', '');
+      this.set('model.newSubmission.submitter', null);
+      this.get('model.newSubmission.preparers').clear();
+    }
   },
   didInsertElement() {
     this._super(...arguments);
