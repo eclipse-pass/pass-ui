@@ -39,6 +39,7 @@ export default WorkflowComponent.extend({
   errorHandler: service('error-handler'),
   showProxyWindow: false,
   emailLookup: '',
+  currentUser: service('current-user'),
   nextDisabled: Ember.computed('model.publication.journal', 'model.publication.title', function () {
     if (
       this.get('model.publication.journal') &&
@@ -90,7 +91,19 @@ export default WorkflowComponent.extend({
           headers: this._headers(),
           xhrFields: { withCredentials: true }
         }).then(res => {
-          this.set('model.newSubmission.submitter', res.hits[0]._source['@id']);
+          console.log(res);
+          if (res.hits.hits.length > 0) {
+            this.get('store').findRecord('user', res.hits.hits[0]._source['@id']).then((u) => {
+              this.set('model.newSubmission.submitter', u);
+              const displayName = this.get('model.newSubmission.submitter.displayName');
+              toastr.success(`Submitter updated to ${displayName}.`);
+              console.log(this.get('model.newSubmission.submitter.email'));
+              this.get('model.newSubmission.preparers').addObject(this.get('currentUser.user'));
+              console.log(`preparers: ${this.get('model.newSubmission.preparers')}`);
+            });
+          } else {
+            console.log('No wesults fouwnd! Sowwy!!! uwu (●´ω｀●)');
+          }
         });
       }
     },
