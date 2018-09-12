@@ -6,6 +6,11 @@ export default Controller.extend({
   queryParams: ['grant', 'submission'],
   tempFiles: Ember.A(),
   didNotAgree: false, // JHU included as a repository but removed before review because deposit agreement wasn't accepted
+  submitterEmail: '',
+  submitterName: '',
+  hasProxy: Ember.computed('submitterEmail', 'model.newSubmission.preparers', function () {
+    return this.get('submitterEmail') || this.get('model.newSubmission.preparers');
+  }),
   actions: {
     submit() {
       if (this.get('didNotAgree')) {
@@ -36,7 +41,7 @@ export default Controller.extend({
       sub.set('aggregatedDepositStatus', 'not-started');
       sub.set('submittedDate', new Date());
       sub.set('submitted', false);
-      sub.set('user', this.get('currentUser.user')); // this.get('currentUser.user.id') seems to break stuff
+      sub.set('submitter', this.get('currentUser.user')); // this.get('currentUser.user.id') seems to break stuff
       sub.set('source', 'pass');
       pub.save().then((p) => {
         sub.set('publication', p); // p.get('id') seems to break stuff

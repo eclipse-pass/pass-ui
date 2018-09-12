@@ -1,5 +1,6 @@
 import WorkflowComponent from './workflow-component';
 import { inject as service, } from '@ember/service';
+import ENV from 'pass-ember/config/environment';
 
 
 function resolve(submission) {
@@ -28,12 +29,17 @@ function resolve(submission) {
 
 export default WorkflowComponent.extend({
   store: service('store'),
+  base: Ember.computed(() => ENV.fedora.elasticsearch),
+  ajax: Ember.inject.service(),
   doiJournal: false,
   validDOI: 'form-control',
   isValidDOI: false,
   validTitle: 'form-control',
   toast: service('toast'),
   errorHandler: service('error-handler'),
+  showProxyWindow: false,
+  emailLookup: '',
+  currentUser: service('current-user'),
   nextDisabled: Ember.computed('model.publication.journal', 'model.publication.title', function () {
     if (
       this.get('model.publication.journal') &&
@@ -44,6 +50,7 @@ export default WorkflowComponent.extend({
   }),
   init() {
     this._super(...arguments);
+    this.set('hasProxy', false);
   },
   didRender() {
     this._super(...arguments);
@@ -53,7 +60,56 @@ export default WorkflowComponent.extend({
     this._super(...arguments);
     this.send('lookupDOI');
   },
+  _headers() {
+    return {
+      'Content-Type': 'application/json; charset=utf-8'
+    };
+  },
   actions: {
+    searchUsers() {
+      const email = this.get('emailLookup');
+      if (email) {
+        return this.get('ajax').post(this.get('base'), {
+          data: {
+            "size":500,
+            "from":0,
+            "query":{
+              "bool":{
+                "must":{
+                  "term":{
+                    email
+                  }
+                },
+                "filter":{
+                  "term":{
+                    "@type":"User"
+                  }
+                }
+              }, 
+            },
+            "_source":{"excludes":"*_suggest"}},
+          headers: this._headers(),
+          xhrFields: { withCredentials: true }
+        }).then(res => {
+          console.log(res);
+          if (res.hits.hits.length > 0) {
+            this.get('store').findRecord('user', res.hits.hits[0]._source['@id']).then((u) => {
+              this.set('model.newSubmission.submitter', u);
+              const displayName = this.get('model.newSubmission.submitter.displayName');
+              toastr.success(`Submitter updated to ${displayName}.`);
+              console.log(this.get('model.newSubmission.submitter.email'));
+              this.get('model.newSubmission.preparers').addObject(this.get('currentUser.user'));
+              console.log(`preparers: ${this.get('model.newSubmission.preparers')}`);
+            });
+          } else {
+            console.log('No wesults fouwnd! Sowwy!!! uwu (●´ω｀●)');
+          }
+        });
+      }
+    },
+    toggleProxy(choice) {
+      this.set('hasProxy', choice);
+    },
     validateNext() {
       const title = this.get('model.publication.title');
       const journal = this.get('model.publication.journal');
@@ -215,7 +271,7 @@ export default WorkflowComponent.extend({
       const publication = this.get('model.publication');
       publication.set('journal', journal);
       $('.ember-power-select-trigger').css('border-color', '#4dbd74');
-    },
+    }
   },
 
   /**

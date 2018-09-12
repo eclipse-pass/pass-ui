@@ -8,6 +8,19 @@ export default Component.extend({
   isValidated: Ember.A(),
   doiInfo: [],
   includeNIHDeposit: true,
+  comments: Ember.A([{
+    dateTime: 'date',
+    message: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae ',
+    user: {
+      username: 'nih-user@johnshopkins.edu',
+      displayName: 'Nihu Ser',
+      firstName: 'Alfredo',
+      lastName: 'Kirkwood',
+      email: 'nihuser@jhu.edu',
+      institutionalId: 'nih-user',
+      roles: ['submitter']
+    }
+  }]),
   init() {
     this._super(...arguments);
     this.set('filesTemp', Ember.A());
@@ -41,6 +54,17 @@ export default Component.extend({
         }
       });
       this.set('isValidated', tempValidateArray);
+    },
+    addComment(comment) {
+      this.comments.unshiftObject(comment);
+      console.log(this.get('comments'));
+    },
+    saveComment(values) {
+      this.comments[values[0]] = values[1];
+    },
+    deleteComment(index) {
+      console.log('delete', index)
+      this.comments.removeAt(index)
     },
   },
 });

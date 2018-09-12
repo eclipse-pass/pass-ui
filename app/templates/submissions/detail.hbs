@@ -98,7 +98,7 @@
             {{!-- Consolidate repository, deposit, repoCopy info --}}
             {{#if repoMap}}
             <tr>
-              <td><strong>Repositories</strong></td>
+              <td class="text-nowrap"><strong>Repositories</strong></td>
               <td>
                 <ul class="list-unstyled">
                 {{#each repoMap as |repoInfo index|}}
@@ -218,6 +218,13 @@
                   </tbody>
                 </table>
                 {{/if}}
+              </td>
+            </tr>
+            <tr>
+              <td class="text-nowrap"><strong>Comments</strong></td>
+              <td>
+                {{commenting-block showMessageEntry=false comments=comments deleteComment=(action "deleteComment") }} 
+                {{textarea placeholder="add note..." value=message class="form-control custom-control p-2" rows="2" style="resize:none; min-height: 38px!important;"}}
               </td>
             </tr>
           </tbody>

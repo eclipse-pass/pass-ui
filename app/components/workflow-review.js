@@ -106,6 +106,9 @@ export default WorkflowComponent.extend({
         var win = window.open(repo.get('url'), '_blank');
         win.focus();
       });
-    }
+    },
+    deleteComment(index) {
+      this.sendAction('deleteComment', index);
+    },
   }
 });

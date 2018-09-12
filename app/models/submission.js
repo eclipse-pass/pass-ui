@@ -8,7 +8,8 @@ export default DS.Model.extend({
   metadata: DS.attr('string', { defaultValue: '[]' }), // Stringified JSON
   submitted: DS.attr('boolean', { defaultValue: false }),
 
-  user: DS.belongsTo('user'),
+  submitter: DS.belongsTo('user'),
+  preparers: DS.hasMany('user', { async: true }),
   publication: DS.belongsTo('publication'),
   repositories: DS.hasMany('repository', { async: true }), // not on this model on API
   /**
@@ -18,6 +19,10 @@ export default DS.Model.extend({
    */
   grants: DS.hasMany('grant', { async: true }),
 
+  hasProxy: Ember.computed('preparers', function() {
+    console.log('this.get("reparers").length', this.get('preparers.length'))
+    return (this.get('preparers.length') > 0);
+  }),
   // don't get saved to database
   removeNIHDeposit: false,
 
@@ -45,4 +50,7 @@ export default DS.Model.extend({
   isStub: Ember.computed('source', 'submitted', function () {
     return this.get('source') === 'other' && !(this.get('submitted'));
   }),
+  // hasProxy: Ember.computed('submission', function () {
+  //   return !!(this.get('submission.preparer'));
+  // }),
 });

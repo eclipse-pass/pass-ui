@@ -2,7 +2,6 @@ import Controller from '@ember/controller';
 
 export default Controller.extend({
   metadataService: Ember.inject.service('metadata-blob'),
-
   tooltips: function () {
     $(() => {
       $('[data-toggle="tooltip"]').tooltip();
@@ -74,4 +73,23 @@ export default Controller.extend({
   metadataBlobNoKeys: Ember.computed('model.sub.metadata', function () {
     return this.get('metadataService').getDisplayBlob(this.get('model.sub.metadata'));
   }),
+  comments: Ember.A([{
+    dateTime: 'date',
+    message: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae ',
+    user: {
+      username: 'nih-user@johnshopkins.edu',
+      displayName: 'Nihu Ser',
+      firstName: 'Alfredo',
+      lastName: 'Kirkwood',
+      email: 'nihuser@jhu.edu',
+      institutionalId: 'nih-user',
+      roles: ['submitter']
+    }
+  }]),
+  actions: {
+    deleteComment(index) {
+      console.log('delete', index)
+      this.comments.removeAt(index)
+    },
+  },
 });
