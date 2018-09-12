@@ -9,15 +9,12 @@
   <p>When a submission is created on someone's behalf, PASS will contact that person to acquire their approval before finalizing the submission and sending it to its corresponding repositories.</p>
   <p class="mb-0">Please indicate on behalf of whom this submission is being completed:</p>
   <div style="max-width:400px;" class="mt-1 mb-3">
-    {{find-user id="user" value=model.submitter}}
+    {{input class="mt-1 mb-3" value=emailLookup placeholder="Search user by email"}}<div class="btn btn-primary" onclick={{action 'searchUsers'}}></div>
   </div>
-  {{!-- <input class="mb-2" placeholder="&nbsp;Search PASS users by last name or JHED ID" style="width:350px;"> --}}
   <p class="mb-0"><strong>If the person you are submitting for does not have an account with PASS</strong>, please provide their email address {{!-- and name --}} so we may notify them: 
-    {{!-- <input class="ml-2" placeholder="Preferred Name">
-    <input class="ml-2" placeholder="Last Name"> --}}
   </p>
-  {{input class="mt-1 mb-3" value=proxyEmail placeholder=" Email address"}}
-  {{input class="mt-1 mb-3" value=proxyName placeholder=" Name"}}
+  {{input class="mt-1 mb-3" value=submitterEmail placeholder=" Email address"}}
+  {{input class="mt-1 mb-3" value=submitterName placeholder=" Name"}}
 </div>
 {{/if}}
 <p class="lead text-muted">

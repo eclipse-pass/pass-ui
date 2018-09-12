@@ -1,5 +1,6 @@
 import WorkflowComponent from './workflow-component';
 import { inject as service, } from '@ember/service';
+import ENV from 'pass-ember/config/environment';
 
 
 function resolve(submission) {
@@ -28,6 +29,8 @@ function resolve(submission) {
 
 export default WorkflowComponent.extend({
   store: service('store'),
+  base: Ember.computed(() => ENV.fedora.elasticsearch),
+  ajax: Ember.inject.service(),
   doiJournal: false,
   validDOI: 'form-control',
   isValidDOI: false,
@@ -35,6 +38,7 @@ export default WorkflowComponent.extend({
   toast: service('toast'),
   errorHandler: service('error-handler'),
   showProxyWindow: false,
+  emailLookup: '',
   nextDisabled: Ember.computed('model.publication.journal', 'model.publication.title', function () {
     if (
       this.get('model.publication.journal') &&
@@ -55,7 +59,41 @@ export default WorkflowComponent.extend({
     this._super(...arguments);
     this.send('lookupDOI');
   },
+  _headers() {
+    return {
+      'Content-Type': 'application/json; charset=utf-8'
+    };
+  },
   actions: {
+    searchUsers() {
+      const email = this.get('emailLookup');
+      if (email) {
+        return this.get('ajax').post(this.get('base'), {
+          data: {
+            "size":500,
+            "from":0,
+            "query":{
+              "bool":{
+                "must":{
+                  "term":{
+                    email
+                  }
+                },
+                "filter":{
+                  "term":{
+                    "@type":"User"
+                  }
+                }
+              }, 
+            },
+            "_source":{"excludes":"*_suggest"}},
+          headers: this._headers(),
+          xhrFields: { withCredentials: true }
+        }).then(res => {
+          this.set('model.newSubmission.submitter', res.hits[0]._source['@id']);
+        });
+      }
+    },
     toggleProxy(choice) {
       this.set('hasProxy', choice);
     },

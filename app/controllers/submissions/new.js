@@ -6,10 +6,10 @@ export default Controller.extend({
   queryParams: ['grant', 'submission'],
   tempFiles: Ember.A(),
   didNotAgree: false, // JHU included as a repository but removed before review because deposit agreement wasn't accepted
-  proxyEmail: '',
-  proxyName: '',
-  hasProxy: Ember.computed('proxyEmail', 'model.newSubmission.preparers', function () {
-    return this.get('proxyEmail') || this.get('model.newSubmission.preparers');
+  submitterEmail: '',
+  submitterName: '',
+  hasProxy: Ember.computed('submitterEmail', 'model.newSubmission.preparers', function () {
+    return this.get('submitterEmail') || this.get('model.newSubmission.preparers');
   }),
   actions: {
     submit() {
