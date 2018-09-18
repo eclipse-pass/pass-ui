@@ -29,61 +29,6 @@ function getBrowserInfo() {
 export default WorkflowComponent.extend({
   didAgree: false,
   router: service(),
-
-
-  newJScholarship: {
-    id: 'newJScholarship',
-    schema: {
-      title: 'Johns Hopkins - JScholarship <br><p class=\'lead text-muted\'>Deposit requirements for JH\'s institutional repository JScholarship.</p>',
-      type: 'object',
-      properties: {
-        authors: {
-          title: '<div class="row"><div class="col-6">Author(s)</div><div class="col-6 p-0">ORCID(s)</div></div>',
-          // required: true,
-          type: 'array',
-          uniqueItems: true,
-          items: {
-            type: 'object',
-            properties: {
-              author: {
-                type: 'string',
-                fieldClass: 'body-text col-6 pull-left pl-0',
-              },
-              orcid: {
-                type: 'string',
-                fieldClass: 'body-text col-6 pull-left pr-0',
-              }
-            }
-          }
-        },
-        embargo: {
-          type: 'string',
-          'default': 'NON-EXCLUSIVE LICENSE FOR USE OF MATERIALS This non-exclusive license defines the terms for the deposit of Materials in all formats into the digital repository of materials collected, preserved and made available through the Johns Hopkins Digital Repository, JScholarship. The Contributor hereby grants to Johns Hopkins a royalty free, non-exclusive worldwide license to use, re-use, display, distribute, transmit, publish, re-publish or copy the Materials, either digitally or in print, or in any other medium, now or hereafter known, for the purpose of including the Materials hereby licensed in the collection of materials in the Johns Hopkins Digital Repository for educational use worldwide. In some cases, access to content may be restricted according to provisions established in negotiation with the copyright holder. This license shall not authorize the commercial use of the Materials by Johns Hopkins or any other person or organization, but such Materials shall be restricted to non-profit educational use. Persons may apply for commercial use by contacting the copyright holder. Copyright and any other intellectual property right in or to the Materials shall not be transferred by this agreement and shall remain with the Contributor, or the Copyright holder if different from the Contributor. Other than this limited license, the Contributor or Copyright holder retains all rights, title, copyright and other interest in the images licensed. If the submission contains material for which the Contributor does not hold copyright, the Contributor represents that s/he has obtained the permission of the Copyright owner to grant Johns Hopkins the rights required by this license, and that such third-party owned material is clearly identified and acknowledged within the text or content of the submission. If the submission is based upon work that has been sponsored or supported by an agency or organization other than Johns Hopkins, the Contributor represents that s/he has fulfilled any right of review or other obligations required by such contract or agreement. Johns Hopkins will not make any alteration, other than as allowed by this license, to your submission. This agreement embodies the entire agreement of the parties. No modification of this agreement shall be of any effect unless it is made in writing and signed by all of the parties to the agreement.'
-        },
-        'agreement-to-deposit': {
-          type: 'string'
-        }
-      }
-    },
-    options: {
-      fields: {
-        authors: {
-          hidden: false,
-        },
-        embargo: {
-          type: 'textarea',
-          label: 'Deposit Agreement',
-          disabled: true,
-          rows: '16'
-        },
-        'agreement-to-deposit': {
-          type: 'checkbox',
-          rightLabel: 'I agree to the above statement on today\'s date',
-          fieldClass: 'col-12 text-right p-0'
-        }
-      }
-    }
-  },
   common: {
     id: 'common',
     data: {},
