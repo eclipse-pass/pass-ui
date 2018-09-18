@@ -8,7 +8,7 @@
 </p>
 {{submission-funding-table grants=model.newSubmission.grants remove=(action "removeGrant")}}
 <label>Add Grants:</label>
-{{#if hasProxy}}
+{{#if model.newSubmission.hasProxy}}
 {{find-grant id="grant" addGrant=(action "addGrant")}}
 {{else}}
 <select onchange={{action "addGrant" null}} class="form-control">

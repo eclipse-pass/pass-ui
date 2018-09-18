@@ -8,6 +8,7 @@ export default Controller.extend({
   didNotAgree: false, // JHU included as a repository but removed before review because deposit agreement wasn't accepted
   submitterEmail: '',
   submitterName: '',
+  comment: '',
   hasProxy: Ember.computed('submitterEmail', 'model.newSubmission.preparers', function () {
     return this.get('submitterEmail') || this.get('model.newSubmission.preparers');
   }),
@@ -76,14 +77,30 @@ export default Controller.extend({
                     ctr += 1;
                     console.log(ctr);
                     if (ctr >= len) {
+                      let subEvent = this.store.createRecord('submissionEvent');
+                      subEvent.performedBy = this.get('currentUser.user');
+                      subEvent.comment = this.get('comment');
+                      subEvent.performedDate = new Date();
                       if (s.get('submitter') === this.get('currentUser.user')) {
                         s.set('submitted', true);
+                        subEvent.performerRole = 'submitter';
+                        sub.eventType = 'submitted';
                       } else {
                         s.set('status', 'approval-pending');
+                        subEvent.performerRole = 'preparer';
+                        if (s.get('submitter')) {
+                          subEvent.eventType = 'approval-requested';
+                        } else if (this.get('submitterName') && this.get('submitterEmail')) {
+                          subEvent.eventType = 'approval-requested-newuser';
+                          s.submitter = `mailto:${encodeURI(this.get('submitterEmail'))}`;
+                          subEvent.link = `${ENV.rootURL}/submissions/${s.id}`;
+                        }
                       }
                       s.save().then(() => {
                         this.set('model.uploading', false);
-                        this.transitionToRoute('thanks', { queryParams: { submission: s.get('id') } });
+                        subEvent.save().then(() => {
+                          this.transitionToRoute('thanks', { queryParams: { submission: s.get('id') } });
+                        });
                       });
                     }
                   } else {

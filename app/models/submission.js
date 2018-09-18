@@ -7,7 +7,7 @@ export default DS.Model.extend({
   source: DS.attr('string', { defaultValue: 'pass' }),
   metadata: DS.attr('string', { defaultValue: '[]' }), // Stringified JSON
   submitted: DS.attr('boolean', { defaultValue: false }),
-
+  submissionStatus: DS.attr('string'),
   submitter: DS.belongsTo('user'),
   preparers: DS.hasMany('user', { async: true }),
   publication: DS.belongsTo('publication'),
@@ -18,12 +18,6 @@ export default DS.Model.extend({
    * have the same PI. If a grant has a different PI, it should be a separate submission.
    */
   grants: DS.hasMany('grant', { async: true }),
-
-  // hasProxy: Ember.computed('preparers.[]', function() {
-  //   console.log(`PREPARERS UPDATED: ${this.get('preparers.length')} total preparers now`);
-  //   console.log(`preparers: ${this.get('preparers')}`);
-  //   return (this.get('preparers.length') > 0);
-  // }),
   hasProxy: false,
   // don't get saved to database
   removeNIHDeposit: false,
