@@ -29,11 +29,66 @@ function getBrowserInfo() {
 export default WorkflowComponent.extend({
   didAgree: false,
   router: service(),
+
+
+  newJScholarship: {
+    id: 'newJScholarship',
+    schema: {
+      title: 'Johns Hopkins - JScholarship <br><p class=\'lead text-muted\'>Deposit requirements for JH\'s institutional repository JScholarship.</p>',
+      type: 'object',
+      properties: {
+        authors: {
+          title: '<div class="row"><div class="col-6">Author(s)</div><div class="col-6 p-0">ORCID(s)</div></div>',
+          // required: true,
+          type: 'array',
+          uniqueItems: true,
+          items: {
+            type: 'object',
+            properties: {
+              author: {
+                type: 'string',
+                fieldClass: 'body-text col-6 pull-left pl-0',
+              },
+              orcid: {
+                type: 'string',
+                fieldClass: 'body-text col-6 pull-left pr-0',
+              }
+            }
+          }
+        },
+        embargo: {
+          type: 'string',
+          'default': 'NON-EXCLUSIVE LICENSE FOR USE OF MATERIALS This non-exclusive license defines the terms for the deposit of Materials in all formats into the digital repository of materials collected, preserved and made available through the Johns Hopkins Digital Repository, JScholarship. The Contributor hereby grants to Johns Hopkins a royalty free, non-exclusive worldwide license to use, re-use, display, distribute, transmit, publish, re-publish or copy the Materials, either digitally or in print, or in any other medium, now or hereafter known, for the purpose of including the Materials hereby licensed in the collection of materials in the Johns Hopkins Digital Repository for educational use worldwide. In some cases, access to content may be restricted according to provisions established in negotiation with the copyright holder. This license shall not authorize the commercial use of the Materials by Johns Hopkins or any other person or organization, but such Materials shall be restricted to non-profit educational use. Persons may apply for commercial use by contacting the copyright holder. Copyright and any other intellectual property right in or to the Materials shall not be transferred by this agreement and shall remain with the Contributor, or the Copyright holder if different from the Contributor. Other than this limited license, the Contributor or Copyright holder retains all rights, title, copyright and other interest in the images licensed. If the submission contains material for which the Contributor does not hold copyright, the Contributor represents that s/he has obtained the permission of the Copyright owner to grant Johns Hopkins the rights required by this license, and that such third-party owned material is clearly identified and acknowledged within the text or content of the submission. If the submission is based upon work that has been sponsored or supported by an agency or organization other than Johns Hopkins, the Contributor represents that s/he has fulfilled any right of review or other obligations required by such contract or agreement. Johns Hopkins will not make any alteration, other than as allowed by this license, to your submission. This agreement embodies the entire agreement of the parties. No modification of this agreement shall be of any effect unless it is made in writing and signed by all of the parties to the agreement.'
+        },
+        'agreement-to-deposit': {
+          type: 'string'
+        }
+      }
+    },
+    options: {
+      fields: {
+        authors: {
+          hidden: false,
+        },
+        embargo: {
+          type: 'textarea',
+          label: 'Deposit Agreement',
+          disabled: true,
+          rows: '16'
+        },
+        'agreement-to-deposit': {
+          type: 'checkbox',
+          rightLabel: 'I agree to the above statement on today\'s date',
+          fieldClass: 'col-12 text-right p-0'
+        }
+      }
+    }
+  },
   common: {
     id: 'common',
     data: {},
     schema: {
-      title: "Publication Details <br><p class='lead text-muted'>Please provide additional information about your article/manuscript below. If DOI was provided in the initial step of the submission, the metadata associated with that DOI was found and used to prepopulate this form. </p>",
+      title: "Publication Details <br><p class='lead text-muted'>Please provide additional information about your article/manuscript below. If DOI was provided in the initial step of the submission, the metadata associated with that DOI was found and used to prepopulate this form. </p> <p class='lead text-muted'> <i class='glyphicon glyphicon-info-sign'></i> Fields that are not editable were populated using metadata associated with the provided DOI. </p>",
       type: 'object',
       properties: {
         title: {
@@ -53,6 +108,9 @@ export default WorkflowComponent.extend({
         ISSN: {
           type: 'string'
         },
+        publisher: {
+          type: 'string'
+        },
         publicationDate: {
           title: 'Publication Date',
           description: 'Select your publication date',
@@ -65,7 +123,7 @@ export default WorkflowComponent.extend({
           type: 'string',
         },
         authors: {
-          title: '<div class="row"><div class="col-6">Author(s)</div><div class="col-6 p-0">ORCID(s)</div></div>',
+          title: '<div class="row"><div class="col-6">Author(s)<small class="text-muted">(optional)</small> </div><div class="col-6 p-0">ORCID(s)</div></div>',
           // required: true,
           type: 'array',
           uniqueItems: true,
@@ -100,51 +158,57 @@ export default WorkflowComponent.extend({
           cols: 100,
           label: 'Article / Manuscript Title',
           placeholder: 'Enter the manuscript title',
-          hidden: true,
+          hidden: false,
         },
         'journal-title': {
           type: 'text',
           label: 'Journal Title',
           placeholder: 'Enter the journal title',
-          hidden: true,
+          hidden: false,
         },
         volume: {
           type: 'text',
-          label: 'Volume',
+          label: 'Volume  <small class="text-muted">(optional)</small>',
           placeholder: 'Enter the volume',
-          hidden: true,
+          hidden: false,
         },
         issue: {
           type: 'text',
-          label: 'Issue',
+          label: 'Issue  <small class="text-muted">(optional)</small>',
           placeholder: 'Enter issue',
-          hidden: true,
+          hidden: false,
         },
         ISSN: {
           type: 'text',
-          label: 'ISSN',
+          label: 'ISSN <small class="text-muted">(optional)</small>',
           placeholder: 'ISSN',
-          hidden: true,
+          hidden: false,
+        },
+        publisher: {
+          type: 'text',
+          label: 'Publisher <small class="text-muted">(optional)</small>',
+          placeholder: 'Enter the Publisher',
+          hidden: false,
         },
         publicationDate: {
           type: 'text',
-          label: 'Publication Date',
+          label: 'Publication Date  <small class="text-muted">(optional)</small>',
           placeholder: 'mm/dd/yy',
-          hidden: true,
+          hidden: false,
         },
         abstract: {
           type: 'textarea',
-          label: 'Abstract',
+          label: 'Abstract <small class="text-muted">(optional)</small>',
           placeholder: 'Enter abstract',
           fieldClass: 'clearfix',
-          hidden: true,
+          hidden: false,
         },
         subjects: {
           type: 'text',
-          label: 'Keywords',
+          label: 'Keywords <small class="text-muted">(optional)</small>',
           placeholder: '',
           fieldClass: 'clearfix',
-          hidden: true
+          hidden: true,
         },
         authors: {
           hidden: false,
@@ -153,7 +217,7 @@ export default WorkflowComponent.extend({
           type: 'checkbox',
           rightLabel: 'The material being submitted is published under an embargo.',
           fieldClass: 'm-0 mt-4',
-          hidden: true,
+          hidden: false,
         },
         'Embargo-end-date': {
           type: 'date',
@@ -255,11 +319,29 @@ export default WorkflowComponent.extend({
                   this.get('router').transitionTo('dashboard');
                 });
               } else {
-                this.send('nextLogic');
+                JSON.parse(this.get('model.newSubmission.metadata')).forEach((data) => {
+                  if (data.id === 'newJScholarship') {
+                    if (data.data.authors.length === 0) {
+                      toastr.warning('At least one author must be provided.');
+                      return;
+                    } else {
+                      this.send('nextLogic');
+                    }
+                  }
+                });
               }
             });
           } else {
-            this.send('nextLogic');
+            JSON.parse(this.get('model.newSubmission.metadata')).forEach((data) => {
+              if (data.id === 'newJScholarship') {
+                if (data.data.authors.length === 0) {
+                  toastr.warning('At least one author must be provided.');
+                  return;
+                } else {
+                  this.send('nextLogic');
+                }
+              }
+            });
           }
         }
       } else {
