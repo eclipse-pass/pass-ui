@@ -39,7 +39,7 @@ export default Controller.extend({
        * Where calling `obj.set('prop', obj2.get('id'))` will not set the relationship
        */
       const pub = this.get('model.publication');
-      sub.set('aggregatedDepositStatus', 'not-started');
+      sub.set('submissionStatus', 'not-started');
       sub.set('submittedDate', new Date());
       sub.set('submitted', false);
       if (!(sub.get('hasProxy'))) {
@@ -86,7 +86,7 @@ export default Controller.extend({
                         subEvent.performerRole = 'submitter';
                         sub.eventType = 'submitted';
                       } else {
-                        s.set('status', 'approval-pending');
+                        s.set('submissionStatus', 'approval-pending');
                         subEvent.performerRole = 'preparer';
                         if (s.get('submitter')) {
                           subEvent.eventType = 'approval-requested';
@@ -100,7 +100,13 @@ export default Controller.extend({
                         this.set('model.uploading', false);
                         subEvent.save().then(() => {
                           this.transitionToRoute('thanks', { queryParams: { submission: s.get('id') } });
+                        }).catch((e) => {
+                          this.set('model.uploading', false);
+                          toastr.error(e);
                         });
+                      }).catch((e) => {
+                        this.set('model.uploading', false);
+                        toastr.error(e);
                       });
                     }
                   } else {
@@ -118,6 +124,9 @@ export default Controller.extend({
               toastr.error('Error reading file');
             };
           });
+        }).catch((e) => {
+          this.set('model.uploading', false);
+          toastr.error(e);
         });
       });
     },

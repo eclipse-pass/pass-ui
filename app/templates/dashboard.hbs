@@ -50,18 +50,18 @@
     </div>
   </div>
 </div>
-{{#if (or numberAwaitingApproval numberAwaitingEdits)}}
-<div class="row">
-  <div class="col-12">
-    <div class="alert alert-info">
-      You have:<br>
-      {{#if statsLoaded}}
-      {{numberAwaitingApproval}} submissions awaiting approval.<br>
-      {{numberAwaitingEdits}} submissions awaiting your edits.
-      {{else}}
-      Loading...
-      {{/if}}
+{{!-- {{#if (or numberAwaitingApproval numberAwaitingEdits)}} --}}
+  <div class="row">
+    <div class="col-12">
+      <div class="alert alert-info">
+        You have:<br>
+        {{#if statsLoaded}}
+        {{numberAwaitingApproval}} submissions awaiting your approval.<br>
+        {{numberAwaitingEdits}} submissions you've prepared awaiting the submitter's approval.
+        {{else}}
+        Loading...
+        {{/if}}
+      </div>
     </div>
   </div>
-  {{/if}}
-</div>
+{{!-- {{/if}} --}}

@@ -11,24 +11,23 @@ export default Controller.extend({
   numberAwaitingApproval: null,
   numberAwaitingEdits: null,
   base: Ember.computed(() => ENV.fedora.elasticsearch),
-  statsLoaded: false,
+  statsLoaded: true,
   _headers() {
     return {
       'Content-Type': 'application/json; charset=utf-8'
     };
   },
-  init() {
-    this.get('ajax').post(this.get('base'), {
+  numberAwaitingApproval: Ember.computed('currentUser.user', function () {
+    return this.get('ajax').post(this.get('base'), {
       data: {
         "size":500,
         "from":0,
         "query":{
           "bool":{
-            // "must":{
-            //   "term":{
-            //     "submissionStatus": "submitted"
-            //   }
-            // },
+            "must":{
+              "term": { "submissionStatus": "approval-requested" },
+              "term": { "preparer": this.get('currentUser.user.id') }
+            },
             "filter":{
               "term":{
                 "@type":"Submission"
@@ -40,32 +39,40 @@ export default Controller.extend({
       headers: this._headers(),
       xhrFields: { withCredentials: true }
     }).then((results) => {
+      console.log(results);
+      this.set('numberAwaitingApproval', results.hits.total);
+      return results.hits.total;
+    });
+  }),
+  numberAwaitingEdits: Ember.computed('currentUser.user', function () {
+    this.get('ajax').post(this.get('base'), {
+      data: {
+        "size":500,
+        "from":0,
+        "query":{
+          "bool":{
+            "must":{
+              "term": { "submissionStatus": "approval-requested" },
+              "term": { "submitter": this.get('currentUser.user.id') }
+            },
+            "filter":{
+              "term":{
+                "@type":"Submission"
+              }
+            }
+          }, 
+        },
+        "_source":{"excludes":"*_suggest"}},
+      headers: this._headers(),
+      xhrFields: { withCredentials: true }
+    }).then((results) => {
+      this.set('statsLoaded', true);
+      console.log(results.hits.total);
       this.set('numberAwaitingEdits', results.hits.total);
+      return results.hits.total;
     });
-    this.get('ajax').post(this.get('base'), {
-      data: {
-        "size":500,
-        "from":0,
-        "query":{
-          "bool":{
-            // "must":{
-            //   "term":{
-            //     "submissionStatus": "submitted"
-            //   }
-            // },
-            "filter":{
-              "term":{
-                "@type":"Submission"
-              }
-            }
-          }, 
-        },
-        "_source":{"excludes":"*_suggest"}},
-      headers: this._headers(),
-      xhrFields: { withCredentials: true }
-    }).then((results) => {
-      this.set('numberAwaitingApproval', results.hits.total + 1);
-    });
+  }),
+  init() {
     return this._super();
   }
 });
