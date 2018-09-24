@@ -265,9 +265,9 @@ export default WorkflowComponent.extend({
                 });
               } else {
                 JSON.parse(this.get('model.newSubmission.metadata')).forEach((data) => {
-                  if (data.id === 'newJScholarship') {
+                  if (data.id === 'jScholarship') {
                     if (data.data.authors.length === 0) {
-                      toastr.warning('At least one author must be provided.');
+                      toastr.warning('JScholarship requires at least ONE author to be identified by name when submitting a manuscript. At least one of the authors being identified should be a member of Johns Hopkins community.');
                       return;
                     } else {
                       this.send('nextLogic');
@@ -278,9 +278,9 @@ export default WorkflowComponent.extend({
             });
           } else {
             JSON.parse(this.get('model.newSubmission.metadata')).forEach((data) => {
-              if (data.id === 'newJScholarship') {
+              if (data.id === 'jScholarship') {
                 if (data.data.authors.length === 0) {
-                  toastr.warning('At least one author must be provided.');
+                  toastr.warning('JScholarship requires at least ONE author to be identified by name when submitting a manuscript. At least one of the authors being identified should be a member of Johns Hopkins community.');
                   return;
                 } else {
                   this.send('nextLogic');
