@@ -37,6 +37,7 @@ export default Ember.Component.extend({
                 try {
                   doiInfo[doiEntry] = doiInfo[doiEntry].replace(/(<([^>]+)>)/ig, '');
                 } catch (e) {} // eslint-disable-line no-empty
+                console.log(doiEntry)
                 if (doiEntry == 'author') {
                   doiInfo[doiEntry].forEach((author, index) => {
                     const name = `${doiInfo[doiEntry][index].given} ${doiInfo[doiEntry][index].family}`;
@@ -60,6 +61,10 @@ export default Ember.Component.extend({
                   }
                 }
               }
+            }
+            if (this.get('schema').id === 'jScholarship') {
+              console.log('here');
+              prePopulateData.embargo = this.get('schema').schema.properties.embargo.default;
             }
 
             // set any data to the forms
