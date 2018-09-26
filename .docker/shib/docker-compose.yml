@@ -125,9 +125,8 @@ services:
       - back
     depends_on: 
       - assets
-
   assets:
-    image: birkland/assets:2018-08-01@sha256:5a4e2605f6d37cd12d3a6fbc9afecc16ab427a395b3150b9f072d4b25a06fab2
+    image: birkland/assets:2018-09-26
     volumes:
       - passdata:/data
 

@@ -31,7 +31,7 @@ export default WorkflowComponent.extend({
   router: service(),
 
   // jScholarship2: {
-  //   id: 'jScholarship',
+  //   id: 'JScholarship',
   //   schema: {
   //     title: 'Johns Hopkins - JScholarship <br><p class=\'lead text-muted\'>Deposit requirements for JH\'s institutional repository JScholarship.</p>',
   //     type: 'object',
@@ -267,7 +267,6 @@ export default WorkflowComponent.extend({
   metadataForms: Ember.computed('activeRepositories', function () {
     let retVal = this.get('activeRepositories').filterBy('formSchema');
     retVal = retVal.map(repository => JSON.parse(repository.get('formSchema')));
-    // retVal.unshift(this.get('jScholarship2'));
     retVal.unshift(this.get('common'));
 
     // NOTE: This is here to remove nih from the schmas array. remove this line once NIH has a better schema.
@@ -287,7 +286,7 @@ export default WorkflowComponent.extend({
         // check for authors
           let doAuthorsExist = false;
           JSON.parse(this.get('model.newSubmission.metadata')).forEach((data) => {
-            if (data.id === 'jScholarship') {
+            if (data.id === 'JScholarship') {
               if (data.data.authors.length > 0) {
                 doAuthorsExist = true;
               } else {
@@ -353,7 +352,6 @@ export default WorkflowComponent.extend({
               }
               this.set('model.newSubmission.repositories', this.get('model.newSubmission.repositories').filter(repo => repo.get('name') !== 'JScholarship'));
               if (this.get('model.newSubmission.repositories.length') == 0) {
-
                 swal(
                   'You\'re done!',
                   'If you don\'t plan on adding authors, you can stop at this time.', {
@@ -382,7 +380,7 @@ export default WorkflowComponent.extend({
               title: 'Notice!',
               text: 'You added JScholarship as a repository. JScholarship requires that (a) you list at least ONE author who is a member of the Johns Hopkins community, and (b) you agree to the deposit statement. Please return to the form to provide the required information.',
               showCancelButton: true,
-              confirmButtonText: 'Add author/agree to deposit',
+              confirmButtonText: 'Add author/Agree to deposit',
               cancelButtonText: 'Proceed anyway'
             }).then((result) => {
               if (result.value) {
@@ -391,7 +389,6 @@ export default WorkflowComponent.extend({
               }
               this.set('model.newSubmission.repositories', this.get('model.newSubmission.repositories').filter(repo => repo.get('name') !== 'JScholarship'));
               if (this.get('model.newSubmission.repositories.length') == 0) {
-
                 swal(
                   'You\'re done!',
                   'If you don\'t plan on adding authors and agreeing  to deposit, you can stop at this time.', {
