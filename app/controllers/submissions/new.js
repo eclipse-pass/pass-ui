@@ -6,6 +6,12 @@ export default Controller.extend({
   queryParams: ['grant', 'submission'],
   tempFiles: Ember.A(),
   didNotAgree: false, // JHU included as a repository but removed before review because deposit agreement wasn't accepted
+  submitterEmail: '',
+  submitterName: '',
+  comment: '',
+  hasProxy: Ember.computed('submitterEmail', 'model.newSubmission.preparers', function () {
+    return this.get('submitterEmail') || this.get('model.newSubmission.preparers');
+  }),
   actions: {
     submit() {
       if (this.get('didNotAgree')) {
@@ -33,10 +39,12 @@ export default Controller.extend({
        * Where calling `obj.set('prop', obj2.get('id'))` will not set the relationship
        */
       const pub = this.get('model.publication');
-      sub.set('aggregatedDepositStatus', 'not-started');
+      sub.set('submissionStatus', 'not-started');
       sub.set('submittedDate', new Date());
       sub.set('submitted', false);
-      sub.set('user', this.get('currentUser.user')); // this.get('currentUser.user.id') seems to break stuff
+      if (!(sub.get('hasProxy'))) {
+        sub.set('submitter', this.get('currentUser.user')); // this.get('currentUser.user.id') seems to break stuff
+      }
       sub.set('source', 'pass');
       pub.save().then((p) => {
         sub.set('publication', p); // p.get('id') seems to break stuff
@@ -69,10 +77,42 @@ export default Controller.extend({
                     ctr += 1;
                     console.log(ctr);
                     if (ctr >= len) {
-                      s.set('submitted', true);
+                      let subEvent = this.store.createRecord('submissionEvent');
+                      subEvent.performedBy = this.get('currentUser.user');
+                      subEvent.comment = this.get('comment');
+                      subEvent.performedDate = new Date();
+                      subEvent.submission = s;
+                      debugger;
+                      if (s.get('submitter') === this.get('currentUser.user')) {
+                        s.set('submitted', true);
+                        subEvent.performerRole = 'submitter';
+                        sub.eventType = 'submitted';
+                      } else {
+                        s.set('submissionStatus', 'approval-pending');
+                        subEvent.performerRole = 'preparer';
+                        if (s.get('submitter')) {
+                          subEvent.eventType = 'approval-requested';
+                        } else if (this.get('submitterName') && this.get('submitterEmail')) {
+                          subEvent.eventType = 'approval-requested-newuser';
+                          s.submitter = `mailto:${encodeURI(this.get('submitterEmail'))}`;
+                          subEvent.link = `${ENV.rootURL}/submissions/${s.id}`;
+                        }
+                      }
                       s.save().then(() => {
                         this.set('model.uploading', false);
-                        this.transitionToRoute('thanks', { queryParams: { submission: s.get('id') } });
+                        subEvent.save().then(() => {
+                          this.transitionToRoute('thanks', {
+                            queryParams: {
+                              submission: s.get('id')
+                            }
+                          });
+                        }).catch((e) => {
+                          this.set('model.uploading', false);
+                          toastr.error(e);
+                        });
+                      }).catch((e) => {
+                        this.set('model.uploading', false);
+                        toastr.error(e);
                       });
                     }
                   } else {
@@ -90,6 +130,9 @@ export default Controller.extend({
               toastr.error('Error reading file');
             };
           });
+        }).catch((e) => {
+          this.set('model.uploading', false);
+          toastr.error(e);
         });
       });
     },

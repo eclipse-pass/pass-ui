@@ -1,0 +1,45 @@
+{{#if showMessageEntry}}
+<div class="input-group mb-2">
+    {{!-- if you want submit on enter add this insert-newline="addComment" --}}
+    {{textarea placeholder="message..." value=message class="form-control custom-control p-2" rows="2"
+    style="resize:none; min-height: 38px!important;"}}
+    <span class="input-group-addon btn btn-outline-primary vertical-text" {{action "addComment"}}>Comment</span>
+</div>
+{{/if}}
+{{#each (search-associated 'submissionEvent' 'submission' submission.id) as |submissionEvent|}}
+<p>DEBUG</p>
+<div class="comment my-2 row">
+    <div class="comment-content col-md-12 col-sm-12">
+        <h6 class="small comment-meta"><a href="#">{{get (await submissionEvent.performedBy) 'displayName'}}</a>
+            {{submissionEvent.performedDate}}
+            <div class="btn-group">
+                <button type="button" class="btn btn-sm btn-link dropdown-toggle-split p-0" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    <small><i class="fa fa-ellipsis-v" aria-hidden="true"></i></small>
+                </button>
+                <div class="dropdown-menu">
+                    {{!-- <a class="dropdown-item" href="#" {{action "editComment" index}}>Edit</a> --}}
+                    <a class="dropdown-item" href="#" {{action "deleteComment" comment}}>Delete</a>
+                </div>
+            </div>
+        </h6>
+        <div class="comment-body">
+            {{!-- {{#if comment.editMode}}
+            <div class="input-group mb-2">
+                {{textarea placeholder="message..." value=comment.message class="form-control custom-control p-2"
+                rows="2" style="resize:none;
+                min-height: 38px!important;"}}
+                <span class="input-group-addon btn btn-outline-danger vertical-text" {{action "deleteComment" comment}}><i
+                        class="fas fa-times"></i></span>
+                <span class="input-group-addon btn btn-outline-primary vertical-text" {{action "saveComment" comment}}><i
+                        class="far fa-save"></i></span>
+            </div>
+            {{else}} --}}
+            <p>
+                {{comment.message}}<br>
+            </p>
+            {{!-- {{/if}} --}}
+        </div>
+    </div>
+</div>
+{{/each}}

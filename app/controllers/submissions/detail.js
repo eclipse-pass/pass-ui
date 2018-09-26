@@ -2,13 +2,12 @@ import Controller from '@ember/controller';
 
 export default Controller.extend({
   metadataService: Ember.inject.service('metadata-blob'),
-
   tooltips: function () {
     $(() => {
       $('[data-toggle="tooltip"]').tooltip();
     });
   }.on('init'),
-
+  store: Ember.inject.service('store'),
   externalSubmission: Ember.computed('metadataBlobNoKeys', function () {
     return this.get('metadataBlobNoKeys').Submission;
   }),
@@ -30,7 +29,9 @@ export default Controller.extend({
     const repoCopies = this.get('model.repoCopies');
 
     let map = {};
-    repos.forEach(r => map[r.get('id')] = { repo: r }); // eslint-disable-line
+    repos.forEach(r => map[r.get('id')] = {
+      repo: r
+    }); // eslint-disable-line
 
     if (deps) {
       deps.forEach((deposit) => {
@@ -59,7 +60,9 @@ export default Controller.extend({
             repositoryCopy: rc
           };
         } else {
-          map[repo.get('id')] = Object.assign(map[repo.get('id')], { repositoryCopy: rc });
+          map[repo.get('id')] = Object.assign(map[repo.get('id')], {
+            repositoryCopy: rc
+          });
         }
       });
     }
@@ -74,4 +77,29 @@ export default Controller.extend({
   metadataBlobNoKeys: Ember.computed('model.sub.metadata', function () {
     return this.get('metadataService').getDisplayBlob(this.get('model.sub.metadata'));
   }),
+  comments: Ember.A([{
+    dateTime: 'date',
+    message: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae ',
+    user: {
+      username: 'nih-user@johnshopkins.edu',
+      displayName: 'Nihu Ser',
+      firstName: 'Alfredo',
+      lastName: 'Kirkwood',
+      email: 'nihuser@jhu.edu',
+      institutionalId: 'nih-user',
+      roles: ['submitter']
+    }
+  }]),
+  actions: {
+    deleteComment(index) {
+      console.log('delete', index)
+      this.comments.removeAt(index)
+    },
+    requestMoreChanges() {
+      console.log('requesting more changes');
+    },
+    approveChanges() {
+      console.log('approving changes');
+    }
+  },
 });
