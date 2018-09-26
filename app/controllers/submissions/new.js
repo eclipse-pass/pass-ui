@@ -44,6 +44,7 @@ export default Controller.extend({
       sub.set('submitted', false);
       if (!(sub.get('hasProxy'))) {
         sub.set('submitter', this.get('currentUser.user')); // this.get('currentUser.user.id') seems to break stuff
+        debugger;
       }
       sub.set('source', 'pass');
       pub.save().then((p) => {
@@ -78,24 +79,23 @@ export default Controller.extend({
                     console.log(ctr);
                     if (ctr >= len) {
                       let subEvent = this.store.createRecord('submissionEvent');
-                      subEvent.performedBy = this.get('currentUser.user');
-                      subEvent.comment = this.get('comment');
-                      subEvent.performedDate = new Date();
-                      subEvent.submission = s;
-                      debugger;
-                      if (s.get('submitter') === this.get('currentUser.user')) {
+                      subEvent.set('performedBy', this.get('currentUser.user'));
+                      subEvent.set('comment', this.get('comment'));
+                      subEvent.set('performedDate', new Date());
+                      subEvent.set('submission', s);
+                      if (s.get('submitter.id') === this.get('currentUser.user.id')) {
                         s.set('submitted', true);
-                        subEvent.performerRole = 'submitter';
-                        sub.eventType = 'submitted';
+                        subEvent.set('performerRole', 'submitter');
+                        subEvent.set('eventType', 'submitted');
                       } else {
                         s.set('submissionStatus', 'approval-pending');
-                        subEvent.performerRole = 'preparer';
+                        subEvent.set('performerRole', 'preparer');
                         if (s.get('submitter')) {
-                          subEvent.eventType = 'approval-requested';
+                          subEvent.set('eventType', 'approval-requested');
                         } else if (this.get('submitterName') && this.get('submitterEmail')) {
-                          subEvent.eventType = 'approval-requested-newuser';
-                          s.submitter = `mailto:${encodeURI(this.get('submitterEmail'))}`;
-                          subEvent.link = `${ENV.rootURL}/submissions/${s.id}`;
+                          subEvent.set('eventType', 'approval-requested-newuser');
+                          s.set('submitter', `mailto:${encodeURI(this.get('submitterEmail'))}`);
+                          subEvent.set('link', `${ENV.rootURL}/submissions/${s.id}`);
                         }
                       }
                       s.save().then(() => {
