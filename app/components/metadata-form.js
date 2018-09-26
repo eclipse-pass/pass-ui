@@ -62,8 +62,7 @@ export default Ember.Component.extend({
                 }
               }
             }
-            if (this.get('schema').id === 'jScholarship') {
-              console.log('here');
+            if (this.get('schema').id === 'JScholarship') {
               prePopulateData.embargo = this.get('schema').schema.properties.embargo.default;
             }
 
