@@ -7,7 +7,7 @@ export default Controller.extend({
       $('[data-toggle="tooltip"]').tooltip();
     });
   }.on('init'),
-
+  store: Ember.inject.service('store'),
   externalSubmission: Ember.computed('metadataBlobNoKeys', function () {
     return this.get('metadataBlobNoKeys').Submission;
   }),
@@ -29,7 +29,9 @@ export default Controller.extend({
     const repoCopies = this.get('model.repoCopies');
 
     let map = {};
-    repos.forEach(r => map[r.get('id')] = { repo: r }); // eslint-disable-line
+    repos.forEach(r => map[r.get('id')] = {
+      repo: r
+    }); // eslint-disable-line
 
     if (deps) {
       deps.forEach((deposit) => {
@@ -58,7 +60,9 @@ export default Controller.extend({
             repositoryCopy: rc
           };
         } else {
-          map[repo.get('id')] = Object.assign(map[repo.get('id')], { repositoryCopy: rc });
+          map[repo.get('id')] = Object.assign(map[repo.get('id')], {
+            repositoryCopy: rc
+          });
         }
       });
     }
@@ -91,5 +95,11 @@ export default Controller.extend({
       console.log('delete', index)
       this.comments.removeAt(index)
     },
+    requestMoreChanges() {
+      console.log('requesting more changes');
+    },
+    approveChanges() {
+      console.log('approving changes');
+    }
   },
 });

@@ -81,6 +81,8 @@ export default Controller.extend({
                       subEvent.performedBy = this.get('currentUser.user');
                       subEvent.comment = this.get('comment');
                       subEvent.performedDate = new Date();
+                      subEvent.submission = s;
+                      debugger;
                       if (s.get('submitter') === this.get('currentUser.user')) {
                         s.set('submitted', true);
                         subEvent.performerRole = 'submitter';
@@ -99,7 +101,11 @@ export default Controller.extend({
                       s.save().then(() => {
                         this.set('model.uploading', false);
                         subEvent.save().then(() => {
-                          this.transitionToRoute('thanks', { queryParams: { submission: s.get('id') } });
+                          this.transitionToRoute('thanks', {
+                            queryParams: {
+                              submission: s.get('id')
+                            }
+                          });
                         }).catch((e) => {
                           this.set('model.uploading', false);
                           toastr.error(e);
