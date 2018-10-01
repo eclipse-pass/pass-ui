@@ -263,16 +263,13 @@ export default WorkflowComponent.extend({
               // remove jscholarship from submission
               this.set('model.newSubmission.repositories', this.get('model.newSubmission.repositories').filter(repo => repo.get('name') !== 'JScholarship'));
               if (this.get('model.newSubmission.repositories.length') == 0) {
-                swal(
-                  'You\'re done!',
-                  'If you don\'t plan on submitting to any repositories, you can stop at this time.',
-                  {
-                    buttons: {
-                      cancel: true,
-                      confirm: true,
-                    }
-                  },
-                ).then((value) => {
+                swal({
+                  title: 'You\'re about to abort the submission!',
+                  text: 'The submission cannot proceed with out the required information by its target repository. Click "Abort" to confirm your exit.',
+                  showCancelButton: true,
+                  confirmButtonText: 'Abort',
+                  cancelButtonText: 'Go back to add information'
+                }).then((value) => {
                   if (value.dismiss) {
                     return;
                   }
@@ -303,15 +300,13 @@ export default WorkflowComponent.extend({
               }
               this.set('model.newSubmission.repositories', this.get('model.newSubmission.repositories').filter(repo => repo.get('name') !== 'JScholarship'));
               if (this.get('model.newSubmission.repositories.length') == 0) {
-                swal(
-                  'You\'re done!',
-                  'If you don\'t plan on adding authors, you can stop at this time.', {
-                    buttons: {
-                      cancel: true,
-                      confirm: true,
-                    }
-                  },
-                ).then((value) => {
+                swal({
+                  title: 'You\'re about to abort the submission!',
+                  text: 'The submission cannot proceed with out the required information by its target repository. Click "Abort" to confirm your exit.',
+                  showCancelButton: true,
+                  confirmButtonText: 'Abort',
+                  cancelButtonText: 'Go back to add information'
+                }).then((value) => {
                   if (value.dismiss) {
                     return;
                   }
@@ -342,15 +337,13 @@ export default WorkflowComponent.extend({
               }
               this.set('model.newSubmission.repositories', this.get('model.newSubmission.repositories').filter(repo => repo.get('name') !== 'JScholarship'));
               if (this.get('model.newSubmission.repositories.length') == 0) {
-                swal(
-                  'You\'re done!',
-                  'If you don\'t plan on adding authors and agreeing  to deposit, you can stop at this time.', {
-                    buttons: {
-                      cancel: true,
-                      confirm: true,
-                    }
-                  },
-                ).then((value) => {
+                swal({
+                  title: 'You\'re about to abort the submission!',
+                  text: 'The submission cannot proceed with out the required information by its target repository. Click "Abort" to confirm your exit.',
+                  showCancelButton: true,
+                  confirmButtonText: 'Abort',
+                  cancelButtonText: 'Go back to add information'
+                }).then((value) => {
                   if (value.dismiss) {
                     return;
                   }
