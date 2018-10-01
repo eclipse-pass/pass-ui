@@ -1,3 +1,4 @@
+{{#if submission.id}}
 {{#if showMessageEntry}}
 <div class="input-group mb-2">
     {{!-- if you want submit on enter add this insert-newline="addComment" --}}
@@ -7,7 +8,6 @@
 </div>
 {{/if}}
 {{#each (search-associated 'submissionEvent' 'submission' submission.id) as |submissionEvent|}}
-<p>DEBUG</p>
 <div class="comment my-2 row">
     <div class="comment-content col-md-12 col-sm-12">
         <h6 class="small comment-meta"><a href="#">{{get (await submissionEvent.performedBy) 'displayName'}}</a>
@@ -36,10 +36,11 @@
             </div>
             {{else}} --}}
             <p>
-                {{comment.message}}<br>
+                {{submissionEvent.comment}}<br>
             </p>
             {{!-- {{/if}} --}}
         </div>
     </div>
 </div>
 {{/each}}
+{{/if}}
