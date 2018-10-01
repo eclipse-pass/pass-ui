@@ -217,7 +217,6 @@ export default WorkflowComponent.extend({
     let retVal = this.get('activeRepositories').filterBy('formSchema');
     retVal = retVal.map(repository => JSON.parse(repository.get('formSchema')));
     retVal.unshift(this.get('common'));
-
     // NOTE: This is here to remove nih from the schmas array. remove this line once NIH has a better schema.
     return retVal.filter(x => x.id !== 'nih'); // return retval;
   }),
@@ -227,22 +226,33 @@ export default WorkflowComponent.extend({
   }),
   actions: {
     nextForm() {
+      debugger;
+      let commonAuthors = [];
+      let doAuthorsExist = false;
+      JSON.parse(this.get('model.newSubmission.metadata')).forEach((data) => {
+        // let temp = [];
+        // debugger;
+        // if (data.id === 'common') {
+        //   data.data.authors.forEach((author) => {
+        //     temp.push(author.author);
+        //   });
+        // }
+        // check if authors exist in JScholarship
+        if (data.id === 'JScholarship') {
+          // data.data.authors = temp;
+          if (data.data.authors.length > 0) {
+            doAuthorsExist = true;
+          } else {
+            doAuthorsExist = false;
+          }
+        }
+      });
+
       if ($('[name="agreement-to-deposit"]').length == 2) {
         let value = $('[name="agreement-to-deposit"]')[1].checked;
         let jhuRepo = this.get('model.repositories').filter(repo => repo.get('name') === 'JScholarship');
         // if jhuRepo exists
         if (jhuRepo.length > 0) {
-        // check for authors
-          let doAuthorsExist = false;
-          JSON.parse(this.get('model.newSubmission.metadata')).forEach((data) => {
-            if (data.id === 'JScholarship') {
-              if (data.data.authors.length > 0) {
-                doAuthorsExist = true;
-              } else {
-                doAuthorsExist = false;
-              }
-            }
-          });
           // ----------------------------------------------------------------------
           //
           // if USER has not agreed to deposit but has one user
@@ -370,6 +380,13 @@ export default WorkflowComponent.extend({
       if (step + 1 < this.get('schemas').length) {
         this.set('currentFormStep', step + 1);
         this.set('schema', this.get('schemas')[step + 1]);
+        debugger;
+        // if (this.get('schema').id === 'JScholarship') {
+        //   this.set('schema.data.authors', [{
+        //     author: 'oyls',
+        //     orcid: 'sah'
+        //   }]);
+        // }
         // add author info if there
       } else {
         // Add any crossref info that was not added through the metadata forms
