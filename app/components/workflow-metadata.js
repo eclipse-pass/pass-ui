@@ -279,7 +279,9 @@ export default WorkflowComponent.extend({
                   this.get('router').transitionTo('dashboard');
                 });
               } else {
-                this.send('nextLogic');
+                if (result.dismiss != 'overlay') {
+                  this.send('nextLogic');
+                }
               }
             });
             // ----------------------------------------------------------------------
@@ -316,7 +318,9 @@ export default WorkflowComponent.extend({
                   this.get('router').transitionTo('dashboard');
                 });
               } else {
-                this.send('nextLogic');
+                if (result.dismiss != 'overlay') {
+                  this.send('nextLogic');
+                }
               }
             });
             // ----------------------------------------------------------------------
@@ -353,7 +357,9 @@ export default WorkflowComponent.extend({
                   this.get('router').transitionTo('dashboard');
                 });
               } else {
-                this.send('nextLogic');
+                if (result.dismiss != 'overlay') {
+                  this.send('nextLogic');
+                }
               }
             });
           } else {
