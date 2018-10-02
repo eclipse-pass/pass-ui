@@ -240,9 +240,11 @@
     </div>
   </div>
 </div>
+{{#if isSubmitter}}
 <div class="row">
   <div class="col-12 text-right">
     <button class="btn btn-success" onclick={{action 'approveChanges'}}>Approve Changes</button>
     <button class="btn btn-danger" onclick={{action 'requestMoreChanges'}}>Request More Changes</button>
   </div>
 </div>
+{{/if}}

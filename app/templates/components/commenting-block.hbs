@@ -11,16 +11,16 @@
 <div class="comment my-2 row">
     <div class="comment-content col-md-12 col-sm-12">
         <h6 class="small comment-meta"><a href="#">{{get (await submissionEvent.performedBy) 'displayName'}}</a>
-            {{submissionEvent.performedDate}}
+            {{format-date submissionEvent.performedDate}}
             <div class="btn-group">
                 <button type="button" class="btn btn-sm btn-link dropdown-toggle-split p-0" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
                     <small><i class="fa fa-ellipsis-v" aria-hidden="true"></i></small>
                 </button>
-                <div class="dropdown-menu">
+                {{!-- <div class="dropdown-menu"> --}}
                     {{!-- <a class="dropdown-item" href="#" {{action "editComment" index}}>Edit</a> --}}
-                    <a class="dropdown-item" href="#" {{action "deleteComment" comment}}>Delete</a>
-                </div>
+                    {{!-- <a class="dropdown-item" href="#" {{action "deleteComment" comment}}>Delete</a> --}}
+                    {{!-- </div> --}}
             </div>
         </h6>
         <div class="comment-body">

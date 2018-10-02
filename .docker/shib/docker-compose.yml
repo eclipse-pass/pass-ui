@@ -1,4 +1,4 @@
-version: "3.1"
+version: '3.1'
 
 services:
   ember:
@@ -10,7 +10,7 @@ services:
       - ../../:/app:Z
       - /app/node_modules
     ports:
-      - "${EMBER_PORT}:${EMBER_PORT}"
+      - '${EMBER_PORT}:${EMBER_PORT}'
     networks:
       - back
 
@@ -19,8 +19,8 @@ services:
     container_name: fcrepo
     env_file: .env
     ports:
-      - "${FCREPO_PORT}:${FCREPO_PORT}"
-      - "${FCREPO_DEBUG_PORT}:${FCREPO_DEBUG_PORT}"
+      - '${FCREPO_PORT}:${FCREPO_PORT}'
+      - '${FCREPO_DEBUG_PORT}:${FCREPO_DEBUG_PORT}'
     networks:
       - front
       - back
@@ -35,9 +35,9 @@ services:
     container_name: activemq
     env_file: .env
     ports:
-      - "${ACTIVEMQ_JMS_PORT}:${ACTIVEMQ_JMS_PORT}"
-      - "${ACTIVEMQ_STOMP_PORT}:${ACTIVEMQ_STOMP_PORT}"
-      - "${ACTIVEMQ_WEBCONSOLE_PORT}:${ACTIVEMQ_WEBCONSOLE_PORT}"
+      - '${ACTIVEMQ_JMS_PORT}:${ACTIVEMQ_JMS_PORT}'
+      - '${ACTIVEMQ_STOMP_PORT}:${ACTIVEMQ_STOMP_PORT}'
+      - '${ACTIVEMQ_WEBCONSOLE_PORT}:${ACTIVEMQ_WEBCONSOLE_PORT}'
     networks:
       - front
       - back
@@ -47,7 +47,7 @@ services:
     container_name: static-html
     env_file: .env
     ports:
-      - "${STATIC_HTML_PORT}:${STATIC_HTML_PORT}"
+      - '${STATIC_HTML_PORT}:${STATIC_HTML_PORT}'
     networks:
       - back
       - front
@@ -59,8 +59,8 @@ services:
       - front
       - back
     ports:
-      - "80:80"
-      - "443:443"
+      - '80:80'
+      - '443:443'
 
   idp:
     image: oapass/idp:20180815@sha256:8cb8e3ac890200bd1611b1b9c82e3cebf7ace1007e5cdfab36eab3118f70be6b
@@ -72,7 +72,7 @@ services:
       - JETTY_BROWSER_SSL_KEYSTORE_PASSWORD=password
       - JETTY_BACKCHANNEL_SSL_KEYSTORE_PASSWORD=password
     expose:
-      - "4443"
+      - '4443'
     networks:
       - back
     secrets:
@@ -110,7 +110,7 @@ services:
     environment:
       - discovery.type=single-node
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
     ulimits:
       memlock:
         soft: -1
@@ -118,7 +118,7 @@ services:
     volumes:
       - passdata:/usr/share/elasticsearch/data
     ports:
-      - "${ES_PORT}:${ES_PORT}"
+      - '${ES_PORT}:${ES_PORT}'
     networks:
       - front
       - back
@@ -126,7 +126,7 @@ services:
       - assets
 
   assets:
-    image: birkland/assets:2018-09-18@sha256:ac73a08576a02e377c8341bb26237f92148d278da914b507ec0b3e3116ae3140
+    image: birkland/assets:2018-09-28_3.1@sha256:3e3b9def417657369179033e1cb663dca013967c7f421c794c2e3e4fb39c42da
     volumes:
       - passdata:/data
 
