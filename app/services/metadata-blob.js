@@ -13,7 +13,7 @@ export default Service.extend({
           if (key === 'authors') {
             if (Array.isArray(strippedData) && strippedData.length > 0) {
               if (metadataBlobNoKeys['author(s)']) {
-                metadataBlobNoKeys['author(s)'] = _.uniqBy(metadataBlobNoKeys['author(s)'].concat(strippedData), 'author');
+                metadataBlobNoKeys['author(s)'] = _.uniqBy(metadataBlobNoKeys['author(s)'], 'author');
               } else {
                 metadataBlobNoKeys['author(s)'] = strippedData;
               }

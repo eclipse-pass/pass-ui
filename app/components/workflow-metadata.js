@@ -226,18 +226,9 @@ export default WorkflowComponent.extend({
   }),
   actions: {
     nextForm() {
-      debugger;
       let commonAuthors = [];
       let doAuthorsExist = false;
       JSON.parse(this.get('model.newSubmission.metadata')).forEach((data) => {
-        // let temp = [];
-        // debugger;
-        // if (data.id === 'common') {
-        //   data.data.authors.forEach((author) => {
-        //     temp.push(author.author);
-        //   });
-        // }
-        // check if authors exist in JScholarship
         if (data.id === 'JScholarship') {
           // data.data.authors = temp;
           if (data.data.authors.length > 0) {
@@ -380,13 +371,22 @@ export default WorkflowComponent.extend({
       if (step + 1 < this.get('schemas').length) {
         this.set('currentFormStep', step + 1);
         this.set('schema', this.get('schemas')[step + 1]);
-        debugger;
-        // if (this.get('schema').id === 'JScholarship') {
-        //   this.set('schema.data.authors', [{
-        //     author: 'oyls',
-        //     orcid: 'sah'
-        //   }]);
-        // }
+        let tempAuthorJSON = [];
+        if (this.get('schema').id === 'JScholarship') {
+          metadata.forEach((md, index) => {
+            if (md.id === 'common') {
+              md.data.authors.forEach((author, i) => {
+                tempAuthorJSON[i] = {
+                  given: author.author,
+                  family: '',
+                  orcid: '',
+                };
+              });
+            }
+          });
+
+          this.set('doiInfo', { author: tempAuthorJSON });
+        }
         // add author info if there
       } else {
         // Add any crossref info that was not added through the metadata forms
@@ -430,7 +430,8 @@ export default WorkflowComponent.extend({
           externalRepos.forEach(repo => md.data.submission.push(`Deposit into ${repo.get('name')} was prompted`));
           // Push this new thing to the overall 'metadata' obj
           metadata.push(md);
-        }
+        }      
+       // check for duplcates in metadata 
         this.set('model.newSubmission.metadata', JSON.stringify(metadata));
         this.sendAction('next');
       }
