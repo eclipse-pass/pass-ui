@@ -51,6 +51,7 @@
 <div class="alert alert-info mt-3">
   <h3 class="mt-3 mb-0">Comments</h3>
   <hr class="mt-0">
+  {{#if model.newSubmission.id}}
   {{commenting-block
   showMessageEntry=false
   comments=comments
@@ -59,6 +60,7 @@
   saveComment=(action "saveComment")
   deleteComment=(action "deleteComment")
   }}
+  {{/if}}
 </div>
 {{/if}}
 {{/if}}

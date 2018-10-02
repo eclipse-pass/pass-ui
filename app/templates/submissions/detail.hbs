@@ -230,8 +230,10 @@
               <td>
                 {{commenting-block showMessageEntry=false submission=model.sub comments=comments deleteComment=(action
                 "deleteComment") }}
+                {{#if (or (and isSubmitter submissionNeedsSubmitter) (and isPreparer submissionNeedsPreparer))}}
                 {{textarea placeholder="add note..." value=message class="form-control custom-control p-2" rows="2"
                 style="resize:none; min-height: 38px!important;"}}
+                {{/if}}
               </td>
             </tr>
           </tbody>
@@ -240,11 +242,19 @@
     </div>
   </div>
 </div>
-{{#if isSubmitter}}
+{{#if (and isSubmitter submissionNeedsSubmitter)}}
 <div class="row">
   <div class="col-12 text-right">
     <button class="btn btn-success" onclick={{action 'approveChanges'}}>Approve Changes</button>
-    <button class="btn btn-danger" onclick={{action 'requestMoreChanges'}}>Request More Changes</button>
+    <button class="btn btn-warning" onclick={{action 'requestMoreChanges'}}>Request More Changes</button>
+    <button class="btn btn-danger" onclick={{action 'cancelSubmission'}}>Request More Changes</button>
+  </div>
+</div>
+{{/if}}
+{{#if (and isPreparer submissionNeedsPreparer)}}
+<div class="row">
+  <div class="col-12 text-right">
+    <button class="btn btn-primary" onclick={{action 'approveChanges'}}>Edit Submission</button>
   </div>
 </div>
 {{/if}}

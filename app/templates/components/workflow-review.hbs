@@ -226,10 +226,11 @@
                   This submission is prepared on behalf of {{model.newSubmission.submitter.displayName}} (<a href="#">{{model.newSubmission.submitter.email}}</a>)
                 </p>
                 <p>
-                  Once "Request for approval" is clicked a requst for approval will be sent to
+                  Once "Request approval" is clicked, a notification will be sent to
                   {{model.newSubmission.submitter.displayName}} (<a href="#">{{model.newSubmission.submitter.email}}</a>).
-                  Submissions will be sent to target repositories on approval, or sent back to you if additional edits
-                  are requested.
+                  The submission will be sent to its target repositories upon approval, or be sent back to you if
+                  additional edits
+                  are requested by the {{model.newSubmission.submitter.displayName}}.
                 </p>
                 <hr>
                 {{commenting-block showMessageEntry=false comments=comments deleteComment=(action "deleteComment") }}
