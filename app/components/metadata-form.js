@@ -134,7 +134,7 @@ export default Ember.Component.extend({
               const formId = newForm.id;
 
               // Check for authors fields that are blank and remove them
-              if (formId === 'common') {
+              if (formId === 'common' || formId != 'JScholarship') {
                 let trimmedAuthors = value.authors.filter(author => author.author);
                 value.authors = trimmedAuthors;
               }
