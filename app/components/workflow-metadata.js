@@ -373,6 +373,7 @@ export default WorkflowComponent.extend({
         this.set('schema', this.get('schemas')[step + 1]);
         let tempAuthorJSON = [];
         if (this.get('schema').id === 'JScholarship') {
+
           metadata.forEach((md, index) => {
             if (md.id === 'common') {
               md.data.authors.forEach((author, i) => {
@@ -384,8 +385,12 @@ export default WorkflowComponent.extend({
               });
             }
           });
-
-          this.set('doiInfo', { author: tempAuthorJSON });
+          // if there is DOI dont use temp author json from user input 
+          if (!this.get('doiInfo').DOI) {
+            this.set('doiInfo', {
+              author: tempAuthorJSON
+            });
+          }
         }
         // add author info if there
       } else {
