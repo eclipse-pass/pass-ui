@@ -232,7 +232,17 @@ export default WorkflowComponent.extend({
         if (data.id === 'JScholarship') {
           // data.data.authors = temp;
           if (data.data.authors.length > 0) {
-            doAuthorsExist = true;
+            let containsTextArray = [];
+            data.data.authors.forEach((author) => {
+              if (author.author) {
+                containsTextArray.push(true);
+              } else {
+                doAuthorsExist = false;
+              }
+            });
+            if (containsTextArray.includes(true)) {
+              doAuthorsExist = true;
+            }
           } else {
             doAuthorsExist = false;
           }
@@ -261,24 +271,26 @@ export default WorkflowComponent.extend({
                 // agree to deposit
                 return;
               }
-              // remove jscholarship from submission
-              this.set('model.newSubmission.repositories', this.get('model.newSubmission.repositories').filter(repo => repo.get('name') !== 'JScholarship'));
-              if (this.get('model.newSubmission.repositories.length') == 0) {
-                swal({
-                  title: 'You\'re about to abort the submission!',
-                  text: 'The submission cannot proceed with out the required information by its target repository. Click "Abort" to confirm your exit.',
-                  showCancelButton: true,
-                  confirmButtonText: 'Abort',
-                  cancelButtonText: 'Go back to add information'
-                }).then((value) => {
-                  if (value.dismiss) {
-                    return;
+              if (result.dismiss != 'overlay') {
+                // remove jscholarship from submission
+                this.set('model.newSubmission.repositories', this.get('model.newSubmission.repositories').filter(repo => repo.get('name') !== 'JScholarship'));
+                if (this.get('model.newSubmission.repositories.length') == 0) {
+                  swal({
+                    title: 'You\'re about to abort the submission!',
+                    text: 'The submission cannot proceed with out the required information by its target repository. Click "Abort" to confirm your exit.',
+                    showCancelButton: true,
+                    confirmButtonText: 'Abort',
+                    cancelButtonText: 'Go back to add information'
+                  }).then((value) => {
+                    if (value.dismiss) {
+                      return;
+                    }
+                    this.get('router').transitionTo('dashboard');
+                  });
+                } else {
+                  if (result.dismiss != 'overlay') {
+                    this.send('nextLogic');
                   }
-                  this.get('router').transitionTo('dashboard');
-                });
-              } else {
-                if (result.dismiss != 'overlay') {
-                  this.send('nextLogic');
                 }
               }
             });
@@ -299,23 +311,25 @@ export default WorkflowComponent.extend({
                 // agree to add authors
                 return;
               }
-              this.set('model.newSubmission.repositories', this.get('model.newSubmission.repositories').filter(repo => repo.get('name') !== 'JScholarship'));
-              if (this.get('model.newSubmission.repositories.length') == 0) {
-                swal({
-                  title: 'You\'re about to abort the submission!',
-                  text: 'The submission cannot proceed with out the required information by its target repository. Click "Abort" to confirm your exit.',
-                  showCancelButton: true,
-                  confirmButtonText: 'Abort',
-                  cancelButtonText: 'Go back to add information'
-                }).then((value) => {
-                  if (value.dismiss) {
-                    return;
+              if (result.dismiss != 'overlay') {
+                this.set('model.newSubmission.repositories', this.get('model.newSubmission.repositories').filter(repo => repo.get('name') !== 'JScholarship'));
+                if (this.get('model.newSubmission.repositories.length') == 0) {
+                  swal({
+                    title: 'You\'re about to abort the submission!',
+                    text: 'The submission cannot proceed with out the required information by its target repository. Click "Abort" to confirm your exit.',
+                    showCancelButton: true,
+                    confirmButtonText: 'Abort',
+                    cancelButtonText: 'Go back to add information'
+                  }).then((value) => {
+                    if (value.dismiss) {
+                      return;
+                    }
+                    this.get('router').transitionTo('dashboard');
+                  });
+                } else {
+                  if (result.dismiss != 'overlay') {
+                    this.send('nextLogic');
                   }
-                  this.get('router').transitionTo('dashboard');
-                });
-              } else {
-                if (result.dismiss != 'overlay') {
-                  this.send('nextLogic');
                 }
               }
             });
@@ -336,23 +350,25 @@ export default WorkflowComponent.extend({
                 // agree to add authors
                 return;
               }
-              this.set('model.newSubmission.repositories', this.get('model.newSubmission.repositories').filter(repo => repo.get('name') !== 'JScholarship'));
-              if (this.get('model.newSubmission.repositories.length') == 0) {
-                swal({
-                  title: 'You\'re about to abort the submission!',
-                  text: 'The submission cannot proceed with out the required information by its target repository. Click "Abort" to confirm your exit.',
-                  showCancelButton: true,
-                  confirmButtonText: 'Abort',
-                  cancelButtonText: 'Go back to add information'
-                }).then((value) => {
-                  if (value.dismiss) {
-                    return;
+              if (result.dismiss != 'overlay') {
+                this.set('model.newSubmission.repositories', this.get('model.newSubmission.repositories').filter(repo => repo.get('name') !== 'JScholarship'));
+                if (this.get('model.newSubmission.repositories.length') == 0) {
+                  swal({
+                    title: 'You\'re about to abort the submission!',
+                    text: 'The submission cannot proceed with out the required information by its target repository. Click "Abort" to confirm your exit.',
+                    showCancelButton: true,
+                    confirmButtonText: 'Abort',
+                    cancelButtonText: 'Go back to add information'
+                  }).then((value) => {
+                    if (value.dismiss) {
+                      return;
+                    }
+                    this.get('router').transitionTo('dashboard');
+                  });
+                } else {
+                  if (result.dismiss != 'overlay') {
+                    this.send('nextLogic');
                   }
-                  this.get('router').transitionTo('dashboard');
-                });
-              } else {
-                if (result.dismiss != 'overlay') {
-                  this.send('nextLogic');
                 }
               }
             });
@@ -373,7 +389,6 @@ export default WorkflowComponent.extend({
         this.set('schema', this.get('schemas')[step + 1]);
         let tempAuthorJSON = [];
         if (this.get('schema').id === 'JScholarship') {
-
           metadata.forEach((md, index) => {
             if (md.id === 'common') {
               md.data.authors.forEach((author, i) => {
@@ -436,7 +451,7 @@ export default WorkflowComponent.extend({
           // Push this new thing to the overall 'metadata' obj
           metadata.push(md);
         }      
-       // check for duplcates in metadata 
+        // check for duplcates in metadata 
         this.set('model.newSubmission.metadata', JSON.stringify(metadata));
         this.sendAction('next');
       }
