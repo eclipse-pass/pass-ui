@@ -3,7 +3,6 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   didRender() {
-    debugger;
     this._super(...arguments);
     const that = this;
     const originalForm = this.get('schema');
