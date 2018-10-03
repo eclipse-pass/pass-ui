@@ -165,8 +165,8 @@ export default WorkflowComponent.extend({
         if (
           // if the submitter is not the current user AND a submitter exists
           ((this.get('model.newSubmission.submitter') &&
-            this.get('model.newSubmission.submitter') !==
-              this.get('currentUser.user')) ||
+            this.get('model.newSubmission.submitter.id') !==
+              this.get('currentUser.user.id')) ||
             // OR there is information to be turned into a submitter later
             (this.get('submitterEmail') && this.get('submitterName'))) &&
           // AND the current user is not already a preparer,

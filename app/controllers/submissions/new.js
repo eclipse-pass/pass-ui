@@ -120,10 +120,11 @@ export default Controller.extend({
                             this.get('currentUser.user.id')
                           ) {
                             s.set('submitted', true);
+                            s.set('submissionStatus', 'submitted');
                             subEvent.set('performerRole', 'submitter');
                             subEvent.set('eventType', 'submitted');
                           } else {
-                            s.set('submissionStatus', 'approval-pending');
+                            s.set('submissionStatus', 'approval-requested');
                             subEvent.set('performerRole', 'preparer');
                             if (s.get('submitter')) {
                               subEvent.set('eventType', 'approval-requested');

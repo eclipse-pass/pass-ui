@@ -8,6 +8,7 @@ export default Controller.extend({
       $('[data-toggle="tooltip"]').tooltip();
     });
   }.on('init'),
+  currentUser: Ember.inject.service('current-user'),
   store: Ember.inject.service('store'),
   externalSubmission: Ember.computed('metadataBlobNoKeys', function() {
     return this.get('metadataBlobNoKeys').Submission;
@@ -92,7 +93,7 @@ export default Controller.extend({
   }),
   isPreparer: Ember.computed('currentUser.user', 'model', function() {
     return (
-      this.get('model.sub.preparer.id') === this.get('currentUser.user.id')
+      this.get('model.sub.preparers').map(x => x.get('id')).contains(this.get('currentUser.user.id'))
     );
   }),
   submissionNeedsPreparer: Ember.computed(
@@ -153,6 +154,7 @@ export default Controller.extend({
       se.save().then(() => {
         let sub = this.get('model.sub');
         sub.set('submissionStatus', 'submitted');
+        sub.set('submitted', true);
         sub.save().then(() => {
           console.log('Approved changes and submitted submission.');
         });

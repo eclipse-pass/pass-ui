@@ -254,7 +254,8 @@
 {{#if (and isPreparer submissionNeedsPreparer)}}
 <div class="row">
   <div class="col-12 text-right">
-    <button class="btn btn-primary" onclick={{action 'approveChanges'}}>Edit Submission</button>
+    {{#link-to 'submissions.new' (query-params submission=model.sub.id) class="btn btn-primary"}}Edit this
+    submission{{/link-to}}
   </div>
 </div>
 {{/if}}
