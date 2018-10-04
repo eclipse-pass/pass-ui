@@ -22,6 +22,11 @@ export default Ember.Component.extend({
           shouldFuzzyMatch = false;
           newForm.data = data.data;
         }
+        // Always allow JScholarship
+        if (data.id == 'JScholarship') {
+          shouldFuzzyMatch = false;
+          newForm.data = data.data;
+        }
       });
       const doiInfo = this.get('doiInfo');
       if (shouldFuzzyMatch && Object.keys(doiInfo).length > 0) {
@@ -180,6 +185,12 @@ export default Ember.Component.extend({
         if (!this.get('doiInfo').DOI) {
           newForm.schema.properties.authors.readonly = false;
           newForm.options.fields.authors.hidden = false;
+        }
+        if (newForm.id === 'JScholarship') {
+          if (this.get('doiInfo').author.length > 0) {
+            newForm.schema.properties.authors.readonly = true;
+            newForm.options.fields.authors.hidden = false;
+          }
         }
       } catch (e) {} // eslint-disable-line no-empty
     }
