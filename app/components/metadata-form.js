@@ -1,5 +1,6 @@
 // import Component from '@ember/component';
 import Ember from 'ember';
+import _ from 'lodash';
 
 export default Ember.Component.extend({
   didRender() {
@@ -17,19 +18,47 @@ export default Ember.Component.extend({
     let metadata = JSON.parse(this.get('model.metadata'));
     if (newForm.id) {
       let shouldFuzzyMatch = true;
+
+
+      if (newForm.id === 'JScholarship') {
+        shouldFuzzyMatch = true;
+        let commonMetadata = metadata.filter(md => md.id === 'common')[0];
+        if (commonMetadata) {
+          // if there is no data with common Metadata data set up structure
+          if (!newForm.data) {
+            newForm.data = {};
+            newForm.data.authors = [];
+          }
+          // if commonMetadata Metadata authors array is grater then 0 set to JScholarship authors
+          if (commonMetadata.data.authors.length > 0) {
+            newForm.data.authors = commonMetadata.data.authors;
+          }
+        }
+      } else if (newForm.id === 'common') {
+        shouldFuzzyMatch = true;
+        let JScholarshipMetadata = metadata.filter(md => md.id === 'JScholarship')[0];
+        if (JScholarshipMetadata) {
+          // if there is no data with JScholarship Metadata data set up structure
+          if (!newForm.data) {
+            newForm.data = {};
+            newForm.data.authors = [];
+          }
+          // if JScholarship Metadata authors array is grater then 0 set to common authors
+          if (JScholarshipMetadata.data.authors.length > 0) {
+            newForm.data.authors = JScholarshipMetadata.data.authors;
+          }
+        }
+      }
+
+      // Check if metadata exists already
       metadata.forEach((data) => {
         if (data.id == newForm.id) {
           shouldFuzzyMatch = false;
-          newForm.data = data.data;
-        }
-        // Always allow JScholarship
-        if (data.id === 'JScholarship') {
-          shouldFuzzyMatch = false;
-          if (metadata.filter(md => md.id === 'common')[0].data.authors.length > 0) {
-            newForm.data.authors = metadata.filter(md => md.id === 'common')[0].data.authors;
-          }
+          newForm.data = _.merge(newForm.data, data.data);
         }
       });
+
+
       const doiInfo = this.get('doiInfo');
       if (shouldFuzzyMatch && Object.keys(doiInfo).length > 0) {
         const prePopulateData = {};
