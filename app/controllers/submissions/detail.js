@@ -92,9 +92,9 @@ export default Controller.extend({
     );
   }),
   isPreparer: Ember.computed('currentUser.user', 'model', function() {
-    return (
-      this.get('model.sub.preparers').map(x => x.get('id')).contains(this.get('currentUser.user.id'))
-    );
+    return this.get('model.sub.preparers')
+      .map(x => x.get('id'))
+      .contains(this.get('currentUser.user.id'));
   }),
   submissionNeedsPreparer: Ember.computed(
     'currentUser.user',
@@ -127,7 +127,7 @@ export default Controller.extend({
         );
       }
       let se = this.get('store').createRecord('submissionEvent', {
-        submission: this.get('model.sub.id'),
+        submission: this.get('model.sub'),
         performedBy: this.get('currentUser.user'),
         performedDate: new Date(),
         comment: this.get('message'),
@@ -144,7 +144,7 @@ export default Controller.extend({
     },
     approveChanges() {
       let se = this.get('store').createRecord('submissionEvent', {
-        submission: this.get('model.sub.id'),
+        submission: this.get('model.sub'),
         performedBy: this.get('currentUser.user'),
         performedDate: new Date(),
         comment: this.get('message'),
@@ -162,7 +162,7 @@ export default Controller.extend({
     },
     cancelSubmission() {
       let se = this.get('store').createRecord('submissionEvent', {
-        submission: this.get('model.sub.id'),
+        submission: this.get('model.sub'),
         performedBy: this.get('currentUser.user'),
         performedDate: new Date(),
         comment: this.get('message'),

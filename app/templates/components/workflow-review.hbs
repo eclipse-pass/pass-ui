@@ -223,7 +223,12 @@
               <td>Comments</td>
               <td>
                 <p>
-                  This submission is prepared on behalf of {{model.newSubmission.submitter.displayName}} (<a href="#">{{model.newSubmission.submitter.email}}</a>)
+                  This submission is prepared on behalf of
+                  {{#if model.newSubmission.submitter}}
+                  {{model.newSubmission.submitter.displayName}} (<a href={{model.newSubmission.submitter.id}}>{{model.newSubmission.submitter.email}}</a>)
+                  {{else}}
+                  {{submitterName}} (<a href="mailto:{{submitterEmail}}">{{submitterEmail}}</a>)
+                  {{/if}}
                 </p>
                 <p>
                   Once "Request approval" is clicked, a notification will be sent to

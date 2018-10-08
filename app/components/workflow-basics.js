@@ -44,10 +44,18 @@ export default WorkflowComponent.extend({
   nextDisabled: Ember.computed(
     'model.publication.journal',
     'model.publication.title',
+    'model.newSubmission.hasProxy',
+    'model.newSubmission.preparer',
     function() {
       if (
         this.get('model.publication.journal') &&
-        this.get('model.publication.title')
+        this.get('model.publication.title') &&
+        // if there's a proxy, there must also be either
+        // a submitter or (submitterName and submitterEmail)
+        ((this.get('model.newSubmission.hasProxy') &&
+          (this.get('model.newSubmission.submitter') ||
+            (this.get('submitterName') && this.get('submitterEmail')))) ||
+          !this.get('model.newSubmission.hasProxy'))
       ) {
         return false;
       }
@@ -124,7 +132,7 @@ export default WorkflowComponent.extend({
                   );
                 });
             } else {
-              console.log('No wesults fouwnd! Sowwy!!! uwu (●´ω｀●)');
+              toastr.error(`Submitter not found.`);
             }
           });
       }
