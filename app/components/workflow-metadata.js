@@ -382,36 +382,63 @@ export default WorkflowComponent.extend({
     },
     nextLogic() {
       const step = this.get('currentFormStep');
-      let metadata = JSON.parse(this.get('model.newSubmission.metadata'));
+      const metadata = JSON.parse(this.get('model.newSubmission.metadata'));
+      const doiInfo = this.get('doiInfo');
 
       if (step + 1 < this.get('schemas').length) {
         this.set('currentFormStep', step + 1);
-        this.set('schema', this.get('schemas')[step + 1]);
-        let author = [];
-        if (this.get('schema').id === 'JScholarship') {
-          metadata.forEach((md, index) => {
-            if (md.id === 'common') {
-              md.data.authors.forEach((a, i) => {
-                author[i] = {
-                  given: a.author,
-                  family: '',
-                  orcid: '',
-                };
-              });
-            }
-          });
-          let doiInfo = this.get('doiInfo');
-          doiInfo.author = author;
-          this.set('doiInfo', doiInfo);
+
+        let JScholarship = this.get('schemas').filter(md => md.id === 'JScholarship')[0];
+        let JScholarshipMetadata = metadata.filter(md => md.id === 'JScholarship')[0];
+        let commonMetadata = metadata.filter(md => md.id === 'common')[0];
+        let common = this.get('schemas').filter(md => md.id === 'common')[0];
+
+        // COPY common data to JScholarship
+        if (commonMetadata.data.authors.length > 0) {
+          if (!JScholarshipMetadata) {
+            JScholarship.data = {};
+            JScholarship.data.authors = [];
+
+            let author = [];
+            metadata.forEach((md, index) => {
+              if (md.id === 'common') {
+                md.data.authors.forEach((a, i) => {
+                  author[i] = {
+                    given: a.author,
+                    family: '',
+                    orcid: '',
+                  };
+                });
+              }
+            });
+            let doiInfo = this.get('doiInfo');
+            doiInfo.author = author;
+            this.set('doiInfo', doiInfo);
+
+            JScholarship.data.authors = author;
+            doiInfo.author = author;
+            this.set('doiInfo', doiInfo);
+          }
+        } else if (JScholarshipMetadata) {
+          if (JScholarshipMetadata.data.authors.length > 0) {
+            JScholarship.data = {};
+            JScholarship.data.authors = [];
+            JScholarship.data.authors = JScholarshipMetadata.data.authors;
+            doiInfo.author = JScholarshipMetadata.data.authors;
+            this.set('doiInfo', doiInfo);
+            debugger;
+            commonMetadata.data.authors = JScholarshipMetadata.data.authors;
+            common.data.authors = JScholarshipMetadata.data.authors;
+          }
         }
-        // add author info if there
+        // Move to next form
+        this.set('schema', this.get('schemas')[step + 1]);
       } else {
         // Add any crossref info that was not added through the metadata forms
-        const doiInfo = this.get('doiInfo');
 
-        const common = metadata.filter(md => md.id === 'common');
-        if (common.length > 0) {
-          common[0].data['issn-map'] = doiInfo['issn-map'];
+        // const common = metadata.filter(md => md.id === 'common');
+        if (commonMetadata.length > 0) {
+          commonMetadata.data['issn-map'] = doiInfo['issn-map'];
         }
 
         metadata.push({
