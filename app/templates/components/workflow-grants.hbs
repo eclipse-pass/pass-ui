@@ -8,16 +8,16 @@
 </p>
 {{submission-funding-table grants=model.newSubmission.grants remove=(action "removeGrant")}}
 <label>Add Grants:</label>
-{{#if model.newSubmission.hasProxy}}
+{{!-- {{#if (or model.newSubmission.hasNewProxy hasProxy)}}
 {{find-grant id="grant" addGrant=(action "addGrant")}}
-{{else}}
+{{else}} --}}
 <select onchange={{action "addGrant" null}} class="form-control">
   <option value='default' selected disabled hidden>Select from your grants</option>
-  {{#each sortedGrants as |grantChoice|}}
+  {{#each (search-associated 'grant' 'pi' model.newSubmission.submitter.id) as |grantChoice|}}
     <option value={{grantChoice.id}} selected={{eq grant grantChoice}}>{{grantChoice.awardNumber}}: {{grantChoice.projectName}} ({{format-date grantChoice.startDate}} - {{format-date grantChoice.endDate}})</option>
   {{/each}}
 </select>
-{{/if}}
+{{!-- {{/if}} --}}
 <br>
 <button class="btn btn-outline-primary" {{action "back"}}>Back</button>
 <button class="btn btn-primary next pull-right" {{action "next"}}>Next</button>

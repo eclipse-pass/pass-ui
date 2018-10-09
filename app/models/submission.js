@@ -17,9 +17,7 @@ export default DS.Model.extend({
   }),
   submissionStatus: DS.attr('string'),
   submitter: DS.belongsTo('user'),
-  preparers: DS.hasMany('user', {
-    async: true
-  }),
+  preparers: DS.hasMany('user'),
   publication: DS.belongsTo('publication'),
   repositories: DS.hasMany('repository', {
     async: true
@@ -35,8 +33,9 @@ export default DS.Model.extend({
   grants: DS.hasMany('grant', {
     async: true
   }),
-  hasProxy: false,
+
   // don't get saved to database
+  hasProxy: false,
   removeNIHDeposit: false,
 
   // attributes needed for tables

@@ -1,11 +1,12 @@
-{{#if submission.id}}
-{{#each (search-associated 'submissionEvent' 'submission' submission.id) as |submissionEvent|}}
+{{#if submissionEvents}}
+{{#each submissionEvents as |submissionEvent|}}
+{{#if submissionEvent.comment}}
 <div class="comment my-2 row">
     <div class="comment-content col-12">
-        <h4 class="comment-meta">
-            <a href="#">{{get (await submissionEvent.performedBy) 'displayName'}}</a>
-            <small>{{format-date submissionEvent.performedDate}}</small>
-        </h4>
+        <p class="comment-meta">
+            <span class="lead"><a href="#">{{get (await submissionEvent.performedBy) 'displayName'}}</a></span>
+            <span class="text-muted">({{format-date submissionEvent.performedDate}})</span>
+        </p>
         <div class="comment-body">
             <p>
                 {{submissionEvent.comment}}<br>
@@ -13,5 +14,6 @@
         </div>
     </div>
 </div>
+{{/if}}
 {{/each}}
 {{/if}}

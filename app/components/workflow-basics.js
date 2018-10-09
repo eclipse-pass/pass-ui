@@ -17,7 +17,7 @@ function resolve(submission) {
       Accept: 'application/vnd.citationstyles.csl+json'
     }
   })
-    .then(response => {
+    .then((response) => {
       if (response.status >= 200 && response.status < 300) {
         return response;
       }
@@ -44,22 +44,24 @@ export default WorkflowComponent.extend({
   nextDisabled: Ember.computed(
     'model.publication.journal',
     'model.publication.title',
-    'model.newSubmission.hasProxy',
+    'model.newSubmission.hasNewProxy',
     'model.newSubmission.preparer',
-    function() {
-      if (
+    function () {
+      return (
         this.get('model.publication.journal') &&
         this.get('model.publication.title') &&
         // if there's a proxy, there must also be either
         // a submitter or (submitterName and submitterEmail)
-        ((this.get('model.newSubmission.hasProxy') &&
-          (this.get('model.newSubmission.submitter') ||
-            (this.get('submitterName') && this.get('submitterEmail')))) ||
-          !this.get('model.newSubmission.hasProxy'))
-      ) {
-        return false;
-      }
-      return true;
+        (
+          (
+            this.get('model.newSubmission.hasNewProxy') &&
+            (
+              this.get('model.newSubmission.submitter') ||
+              (this.get('submitterName') && this.get('submitterEmail'))
+            )
+          ) ||
+          !this.get('model.newSubmission.hasNewProxy'))
+      );
     }
   ),
   init() {
@@ -69,7 +71,7 @@ export default WorkflowComponent.extend({
   didRender() {
     this._super(...arguments);
     this.send('validateDOI');
-    if (!this.get('model.newSubmission.hasProxy')) {
+    if (!this.get('model.newSubmission.hasNewProxy')) {
       this.set('submitterEmail', '');
       this.set('submitterName', '');
       this.set('model.newSubmission.submitter', null);
@@ -114,25 +116,19 @@ export default WorkflowComponent.extend({
             headers: this._headers(),
             xhrFields: { withCredentials: true }
           })
-          .then(res => {
+          .then((res) => {
             console.log(res);
             if (res.hits.hits.length > 0) {
               this.get('store')
                 .findRecord('user', res.hits.hits[0]._source['@id'])
-                .then(u => {
+                .then((u) => {
                   this.set('model.newSubmission.submitter', u);
-                  const displayName = this.get(
-                    'model.newSubmission.submitter.displayName'
-                  );
+                  const displayName = this.get('model.newSubmission.submitter.displayName');
                   toastr.success(`Submitter updated to ${displayName}.`);
-                  console.log(
-                    `submitter updated to ${this.get(
-                      'model.newSubmission.submitter.email'
-                    )}`
-                  );
+                  console.log(`submitter updated to ${this.get('model.newSubmission.submitter.email')}`);
                 });
             } else {
-              toastr.error(`Submitter not found.`);
+              toastr.error('Submitter not found.');
             }
           });
       }
@@ -168,7 +164,7 @@ export default WorkflowComponent.extend({
         this.set('validTitle', 'form-control is-invalid');
       }
       console.log('checking if hasProxy == true');
-      if (this.get('model.newSubmission.hasProxy')) {
+      if (this.get('model.newSubmission.hasNewProxy')) {
         console.log('it does!');
         if (
           // if the submitter is not the current user AND a submitter exists
@@ -184,9 +180,7 @@ export default WorkflowComponent.extend({
         ) {
           // ADD the current user to the preparers list
           console.log('adding user as preparer!');
-          this.get('model.newSubmission.preparers').addObject(
-            this.get('currentUser.user')
-          );
+          this.get('model.newSubmission.preparers').addObject(this.get('currentUser.user'));
         }
       }
       if (validTitle && validJournal) {
@@ -221,9 +215,7 @@ export default WorkflowComponent.extend({
         this.set('validTitle', 'form-control is-valid');
         this.set('model.newSubmission.metadata', '[]');
         this.set('isValidDOI', true);
-        toastr.success(
-          "We've pre-populated information from the DOI provided!"
-        );
+        toastr.success("We've pre-populated information from the DOI provided!");
       } else {
         this.set('validDOI', 'form-control is-invalid');
         this.set('isValidDOI', false);
@@ -264,7 +256,7 @@ export default WorkflowComponent.extend({
       if (publication) {
         this.send('validateDOI');
         this.set('doiJournal', false);
-        resolve(publication).then(async doiInfo => {
+        resolve(publication).then(async (doiInfo) => {
           if (doiInfo.isDestroyed) {
             return;
           }
@@ -290,10 +282,10 @@ export default WorkflowComponent.extend({
           publication.set('abstract', doiInfo.abstract);
 
           const desiredName = doiInfo['container-title'].trim();
-          const desiredIssn = Array.isArray(doiInfo['ISSN'])
+          const desiredIssn = Array.isArray(doiInfo.ISSN)
             ? doiInfo['ISSN'][0] // eslint-disable-line
-            : doiInfo['ISSN']
-              ? doiInfo['ISSN']
+            : doiInfo.ISSN
+              ? doiInfo.ISSN
               : ''; // eslint-disable-line
 
           let query = {
@@ -308,7 +300,7 @@ export default WorkflowComponent.extend({
           // Must match ISSN, optionally match journalName
           this.get('store')
             .query('journal', { query })
-            .then(journals => {
+            .then((journals) => {
               let journal =
                 journals.get('length') > 0 ? journals.objectAt(0) : false;
               if (!journal) {
@@ -382,7 +374,7 @@ export default WorkflowComponent.extend({
     }
     // Example: https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=nlmcatalog&retmode=json&rettype=abstract&id=101032
     const idmap = await this.getNLMTA(nlmidMap);
-    nlmidMap.forEach(id => {
+    nlmidMap.forEach((id) => {
       const data = idmap[id];
       if (!idmap) {
         return;
@@ -390,7 +382,7 @@ export default WorkflowComponent.extend({
       issnMap.nlmta = data.medlineta;
       data.issnlist
         .filter(item => item.issntype !== 'Linking')
-        .forEach(item => {
+        .forEach((item) => {
           issnMap.map[item.issn] = { 'pub-type': [item.issntype] };
         });
     });
@@ -405,9 +397,8 @@ export default WorkflowComponent.extend({
     const url = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nlmcatalog&term=${issn}[issn]&retmode=json`;
     return fetch(url)
       .then(resp => resp.json().then(data => data.esearchresult.idlist))
-      .catch(function(e) {
+      .catch((e) => {
         console.log('NLMTA lookup failed.', e);
-        return;
       });
   },
   getNLMTA(nlmid) {
@@ -418,9 +409,8 @@ export default WorkflowComponent.extend({
     const url = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=nlmcatalog&retmode=json&rettype=abstract&id=${idquery}`;
     return fetch(url)
       .then(resp => resp.json().then(data => data.result))
-      .catch(function(e) {
+      .catch((e) => {
         console.log('NLMTA lookup failed.', e);
-        return;
       });
   }
 });

@@ -75,7 +75,7 @@
           {{#if model.sub.submittedDate}}<small class="text-muted text-right">Submitted {{format-date
             model.sub.submittedDate}}</small>{{/if}}
         </div>
-        <p class="mb-1">DOI: {{model.sub.publication.doi}}</p>
+        <p class="mb-1">DOI: {{#if model.sub.publication}}{{model.sub.publication.doi}}{{else}}<span class="text-muted">None</span>{{/if}}</p>
         <table class="table table-responsive-sm table-bordered w-100">
           <tbody>
             {{!-- <tr>
@@ -225,17 +225,18 @@
                 {{/if}}
               </td>
             </tr>
+            {{#if (or isPreparer isSubmitter)}}
             <tr>
               <td class="text-nowrap"><strong>Comments</strong></td>
               <td>
-                {{commenting-block showMessageEntry=false submission=model.sub comments=comments deleteComment=(action
-                "deleteComment") }}
+                {{commenting-block submissionEvents=model.submissionEvents}}
                 {{#if (or (and isSubmitter submissionNeedsSubmitter) (and isPreparer submissionNeedsPreparer))}}
                 {{textarea placeholder="add note..." value=message class="form-control custom-control p-2" rows="2"
                 style="resize:none; min-height: 38px!important;"}}
                 {{/if}}
               </td>
             </tr>
+            {{/if}}
           </tbody>
         </table>
       </div>
@@ -245,9 +246,10 @@
 {{#if (and isSubmitter submissionNeedsSubmitter)}}
 <div class="row">
   <div class="col-12 text-right">
-    <button class="btn btn-success" onclick={{action 'approveChanges'}}>Approve Changes</button>
-    <button class="btn btn-warning" onclick={{action 'requestMoreChanges'}}>Request More Changes</button>
-    <button class="btn btn-danger" onclick={{action 'cancelSubmission'}}>Cancel Changes</button>
+    <button class="btn btn-primary" onclick={{action 'approveChanges'}}>Submit</button>
+    <button class="btn btn-default" onclick={{action 'requestMoreChanges'}}>Request More Changes</button>
+    {{#link-to 'submissions.new' (query-params submission=model.sub.id) class="btn btn-default"}}Edit Submission{{/link-to}}
+    <button class="btn btn-danger" onclick={{action 'cancelSubmission'}}>Cancel Submission</button>
   </div>
 </div>
 {{/if}}

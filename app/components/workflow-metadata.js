@@ -188,9 +188,9 @@ export default WorkflowComponent.extend({
       if (form) {
         try {
           // if Proxy is submitting dont show JScholarship to proxy
-          console.log('form', form.id, this.get('model.newSubmission.hasProxy'));
-          if (this.get('model.newSubmission.hasProxy')) {
-            //  check to see if it is the  preparers, if it is hide deposit agreement 
+          console.log('form', form.id, this.get('model.newSubmission.hasNewProxy'));
+          if (this.get('model.newSubmission.hasNewProxy')) {
+            //  check to see if it is the  preparers, if it is hide deposit agreement
             let currentUser = this.get('currentUser.user');
             if (this.get('model.newSubmission.preparers').includes(currentUser)) {
               if (form.id !== 'JScholarship') {
@@ -200,7 +200,7 @@ export default WorkflowComponent.extend({
               schemas.addObject(form);
             }
           } else {
-            schemas.addObject(form);  
+            schemas.addObject(form);
           }
 
         } catch (e) {
