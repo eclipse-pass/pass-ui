@@ -6,7 +6,7 @@ import ENV from 'pass-ember/config/environment';
 
 export default Service.extend({
   handleError(error) {
-    console.log(`Handling error: ${error}`);
+    console.log(`Handling error: ${JSON.stringify(error.message)}`);
 
     if (error.name == 'TransitionAborted') {
       // Ignore
@@ -65,7 +65,7 @@ export default Service.extend({
     swal({
       type: 'error',
       title: 'Page could not load',
-      text: `Some information required by this page did not load correctly. When you click OK the page will reload. If the issue persists, please contact us and include a copy of this message. ${error.message}`
+      text: `Some information required by this page did not load correctly. When you click OK the page will reload. If the issue persists, please contact us and include a copy of this message. ${JSON.stringify(error.message)}`
     }).then((result) => {
       if (result.value) {
         window.location.reload(true);
@@ -77,7 +77,7 @@ export default Service.extend({
     swal({
       type: 'error',
       title: 'Something went wrong.',
-      text: `When you click OK the page will reload. If the issue persists, please contact us and include a copy of this message. ${error.message}`
+      text: `When you click OK the page will reload. If the issue persists, please contact us and include a copy of this message. ${JSON.stringify(error.message)}`
     }).then((result) => {
       if (result.value) {
         window.location.reload(true);

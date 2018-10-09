@@ -1,4 +1,29 @@
 {{yield}}
+{{#if (not model.newSubmission.id)}}
+<div class="py-0 mt-2 alert alert-secondary">
+  <p class="my-2 lead">I'm creating this submission on behalf of:
+    {{radio-button class="ml-3 mr-1" value=false name='showProxyWindow' checked=model.newSubmission.hasProxy}} Myself
+    {{radio-button class="ml-3 mr-1" value=true name='showProxyWindow' checked=model.newSubmission.hasProxy}} Someone
+    else
+  </p>
+</div>
+{{#if model.newSubmission.hasProxy}}
+<div class="alert alert-info">
+  <p>When a submission is created on someone's behalf, PASS will contact that person to acquire their approval before
+    finalizing the submission and sending it to its corresponding repositories.</p>
+  <p class="mb-0">Please indicate on behalf of whom this submission is being completed:</p>
+  <div style="max-width:400px;" class="mt-1 mb-3">
+    {{input class="mt-1 mb-3" value=emailLookup placeholder="Search user by email"}}<button class="btn btn-primary"
+      onclick={{action 'searchUsers'}}>Assign submitter</button>
+  </div>
+  <p class="mb-0"><strong>If the person you are submitting for does not have an account with PASS</strong>, please
+    provide their email address {{!-- and name --}} so we may notify them:
+  </p>
+  {{input class="mt-1 mb-3" value=submitterEmail placeholder=" Email address"}}
+  {{input class="mt-1 mb-3" value=submitterName placeholder=" Name"}}
+</div>
+{{/if}}
+{{/if}}
 <p class="lead text-muted">
   If the manuscript/article you are submitting has been assigned a Digital
   Object Identifier (DOI), please provide it now to pre-populate submission
@@ -9,20 +34,29 @@
   <p class="help-block">
     <i class="glyphicon glyphicon-info-sign"></i>
     <i>
-      A digital object identifier (DOI) is a unique alphanumeric string assigned to identify content and provide a persistent link to its location on the Internet. The publisher assigns a DOI some time after your manuscript is accepted for publication. The DOI is typically located on the first page of the electronic journal article, near the copyright notice. The DOI can also be found on the database landing page for the article.
+      A digital object identifier (DOI) is a unique alphanumeric string assigned to identify content and provide a
+      persistent link to its location on the Internet. The publisher assigns a DOI some time after your manuscript is
+      accepted for publication. The DOI is typically located on the first page of the electronic journal article, near
+      the copyright notice. The DOI can also be found on the database landing page for the article.
     </i>
   </p>
 
-  {{!-- <div style="color:red"><div style="font-style: italic">no pmc:</div>10.1103/PhysRevFluids.1.073604</div>
-  <div style="color:red"><div style="font-style: italic">method A:</div>10.1021/acsmedchemlett.7b00397</div>
-  <div style="color:red"><div style="font-style: italic">method B:</div>10.1039/c7fo01251a</div> --}}
+  {{!-- <div style="color:red">
+    <div style="font-style: italic">no pmc:</div>10.1103/PhysRevFluids.1.073604
+  </div>
+  <div style="color:red">
+    <div style="font-style: italic">method A:</div>10.1021/acsmedchemlett.7b00397
+  </div>
+  <div style="color:red">
+    <div style="font-style: italic">method B:</div>10.1039/c7fo01251a
+  </div> --}}
   {{input
-    class=validDOI
-    value=model.publication.doi
-    keyUp=(action "lookupDOI")
-    id="doi"
-    placeholder="Leave blank if your manuscript or article has not yet been assigned a DOI"
-    readonly=model.newSubmission.id
+  class=validDOI
+  value=model.publication.doi
+  keyUp=(action "lookupDOI")
+  id="doi"
+  placeholder="Leave blank if your manuscript or article has not yet been assigned a DOI"
+  readonly=model.newSubmission.id
   }}
   <div class="text-danger">
     {{if (eq validDOI 2) 'Please provide a valid DOI'}}
@@ -30,19 +64,22 @@
 </div>
 <div class="form-group">
   <label>Manuscript/Article Title <span class="text-muted">(required)</span></label>
-  {{textarea value=model.publication.title cols="100%" rows="2" class=validTitle placeholder="Manuscript/Article Title" keyUp=(action "validateTitle") id="title"  readonly=isValidDOI }}
+  {{textarea value=model.publication.title cols="100%" rows="2" class=validTitle placeholder="Manuscript/Article Title"
+  keyUp=(action "validateTitle") id="title" readonly=isValidDOI }}
 </div>
 
 <div class="form-group">
   <div>
     <label>Journal <span class="text-muted">(required)</span></label>
-    {{#link-to "contact" class='btn btn-link pull-right pr-0'}}Can't find your journal? Contact us to add it.{{/link-to}}
+    {{#link-to "contact" class='btn btn-link pull-right pr-0'}}Can't find your journal? Contact us to add
+    it.{{/link-to}}
   </div>
   <div class="w-100">
     {{#unless isValidDOI}}
-      {{find-journal id="journal" selectJournal=(action "selectJournal") value=model.publication.journal isValidDOI=isValidDOI}}
+    {{find-journal id="journal" selectJournal=(action "selectJournal") value=model.publication.journal
+    isValidDOI=isValidDOI}}
     {{else}}
-      <input type="text" class={{validTitle}} value={{await (get model.publication.journal 'journalName')}} readonly>
+    <input type="text" class={{validTitle}} value={{await (get model.publication.journal 'journalName')}} readonly>
     {{/unless}}
   </div>
 </div>

@@ -27,7 +27,9 @@ export default CheckSessionRoute.extend({
           from: 0,
           size: 500,
           query: {
-            terms: { submission: result.map(s => s.get('id')) }
+            terms: {
+              submission: result.map(s => s.get('id'))
+            }
           }
         });
       }).then((deposits) => {
@@ -45,7 +47,9 @@ export default CheckSessionRoute.extend({
           from: 0,
           size: 500,
           query: {
-            terms: { publication: result.map(s => s.get('publication.id')) }
+            terms: {
+              publication: result.map(s => s.get('publication.id'))
+            }
           }
         });
       }).then((repoCopies) => {
@@ -74,20 +78,32 @@ export default CheckSessionRoute.extend({
 
   _doAdmin() {
     return this.store.query('submission', {
-      sort: [
-        { submittedDate: { missing: '_last', order: 'desc' } }
-      ],
-      query: { match_all: {} },
+      sort: [{
+        submittedDate: {
+          missing: '_last',
+          order: 'desc'
+        }
+      }],
+      query: {
+        match_all: {}
+      },
       size: 500
     });
   },
 
   _doSubmitter(user) {
     return this.store.query('submission', {
-      sort: [
-        { submittedDate: { missing: '_last', order: 'desc' } }
-      ],
-      query: { match: { user: user.get('id') } },
+      sort: [{
+        submittedDate: {
+          missing: '_last',
+          order: 'desc'
+        }
+      }],
+      query: {
+        match: {
+          submitter: user.get('id')
+        }
+      },
       size: 500
     });
   },

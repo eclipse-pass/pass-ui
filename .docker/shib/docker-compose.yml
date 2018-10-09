@@ -1,7 +1,6 @@
 version: '3.1'
 
 services:
-
   ember:
     build: ember-dev/
     image: oapass/ember-dev
@@ -11,23 +10,23 @@ services:
       - ../../:/app:Z
       - /app/node_modules
     ports:
-      - "${EMBER_PORT}:${EMBER_PORT}"
+      - '${EMBER_PORT}:${EMBER_PORT}'
     networks:
       - back
 
   fcrepo:
-    image:  oapass/fcrepo:4.7.5-2.2-SNAPSHOT-12@sha256:944c9d26a45283dfe14189b6da0e83ce72f824cfe0306f3f2951c97e706c51d9
+    image: oapass/fcrepo:4.7.5-3.1-SNAPSHOT@sha256:a10ed1961e8487f14ad29c3684c47f497cfd892f7364278013f094b4db6384a3
     container_name: fcrepo
     env_file: .env
     ports:
-      - "${FCREPO_PORT}:${FCREPO_PORT}"
-      - "${FCREPO_DEBUG_PORT}:${FCREPO_DEBUG_PORT}"
+      - '${FCREPO_PORT}:${FCREPO_PORT}'
+      - '${FCREPO_DEBUG_PORT}:${FCREPO_DEBUG_PORT}'
     networks:
       - front
       - back
     volumes:
       - passdata:/data
-    depends_on: 
+    depends_on:
       - assets
       - activemq
 
@@ -36,69 +35,69 @@ services:
     container_name: activemq
     env_file: .env
     ports:
-      - "${ACTIVEMQ_JMS_PORT}:${ACTIVEMQ_JMS_PORT}"
-      - "${ACTIVEMQ_STOMP_PORT}:${ACTIVEMQ_STOMP_PORT}"
-      - "${ACTIVEMQ_WEBCONSOLE_PORT}:${ACTIVEMQ_WEBCONSOLE_PORT}"
+      - '${ACTIVEMQ_JMS_PORT}:${ACTIVEMQ_JMS_PORT}'
+      - '${ACTIVEMQ_STOMP_PORT}:${ACTIVEMQ_STOMP_PORT}'
+      - '${ACTIVEMQ_WEBCONSOLE_PORT}:${ACTIVEMQ_WEBCONSOLE_PORT}'
     networks:
       - front
       - back
 
   static-html:
-    image: oapass/static-html:20180706-50b17b9@sha256:96361a5ffea55c09a60ad2e27697b8430e76a71e78d43a0c7892bddc29c96772
+    image: oapass/static-html:20180816-23df535@sha256:556085172c39877c4167a92c7464d595b9bbb48da2abae6a8f6377a79429c22e
     container_name: static-html
     env_file: .env
     ports:
-      - "${STATIC_HTML_PORT}:${STATIC_HTML_PORT}"
+      - '${STATIC_HTML_PORT}:${STATIC_HTML_PORT}'
     networks:
       - back
       - front
-  
+
   proxy:
     image: oapass/httpd-proxy:20180815@sha256:f2aeead1df34ddb8d22b8251a7ef2542f7aedb75952c57a8caecf4c74fd79bb7
     container_name: proxy
     networks:
-     - front
-     - back
+      - front
+      - back
     ports:
-     - "80:80"
-     - "443:443"
+      - '80:80'
+      - '443:443'
 
   idp:
     image: oapass/idp:20180815@sha256:8cb8e3ac890200bd1611b1b9c82e3cebf7ace1007e5cdfab36eab3118f70be6b
     container_name: idp
     depends_on:
-     - ldap
+      - ldap
     environment:
-     - JETTY_MAX_HEAP=64m
-     - JETTY_BROWSER_SSL_KEYSTORE_PASSWORD=password
-     - JETTY_BACKCHANNEL_SSL_KEYSTORE_PASSWORD=password
+      - JETTY_MAX_HEAP=64m
+      - JETTY_BROWSER_SSL_KEYSTORE_PASSWORD=password
+      - JETTY_BACKCHANNEL_SSL_KEYSTORE_PASSWORD=password
     expose:
-     - "4443"
+      - '4443'
     networks:
-     - back
+      - back
     secrets:
-     - source: idp_backchannel
-     - source: idp_browser
-     - source: idp_encryption
-     - source: idp_signing
-     - source: idp_sealer
+      - source: idp_backchannel
+      - source: idp_browser
+      - source: idp_encryption
+      - source: idp_signing
+      - source: idp_sealer
 
   ldap:
     image: oapass/ldap:201808706@sha256:89cdbc3e91917675d9e3da94447f05b74a8fa0b018965c8d97ff278273ab7971
     container_name: ldap
     networks:
-     - back
+      - back
 
   sp:
     image: oapass/sp:20180815@sha256:2882114242a7f3160605b3e0f0adfc348f5b74fe625e1eae8db1bb034200c2a8
     container_name: sp
     networks:
-     - back
+      - back
     secrets:
-     - source: sp_key
+      - source: sp_key
 
   indexer:
-    image: oapass/indexer:0.0.12-2.2-SNAPSHOT@sha256:a8599b27219d9cb85b596fd90d173e370c3d53494630a98c00bee43f5c7bd8e6
+    image: oapass/indexer:0.0.15-3.1-SNAPSHOT@sha256:17136594594a8816070cdb2068d3e24d3def389fa90b8729cd768124f3a9b8e9
     container_name: indexer
     env_file: .env
     networks:
@@ -111,22 +110,22 @@ services:
     environment:
       - discovery.type=single-node
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
     ulimits:
       memlock:
         soft: -1
         hard: -1
     volumes:
-      - passdata:/usr/share/elasticsearch/data   
-    ports: 
-      - "${ES_PORT}:${ES_PORT}"
+      - passdata:/usr/share/elasticsearch/data
+    ports:
+      - '${ES_PORT}:${ES_PORT}'
     networks:
       - front
       - back
-    depends_on: 
+    depends_on:
       - assets
   assets:
-    image: birkland/assets:2018-09-26
+    image: birkland/assets:2018-09-28_3.1@sha256:3e3b9def417657369179033e1cb663dca013967c7f421c794c2e3e4fb39c42da
     volumes:
       - passdata:/data
 

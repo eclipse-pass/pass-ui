@@ -1,16 +1,3 @@
-<div class="row mb-2">
-  <div class="col-6">
-    {{#link-to 'submissions' class="btn btn-small back-arrow" }}<i class="fa fa-arrow-left fa-lg"></i>{{/link-to}}
-    <h2 class="font-weight-light d-inline-block">Submission Detail</h2>
-  </div>
-  <div class="col-6 text-right">
-    {{#if model.sub.isStub}}
-      {{#link-to 'submissions.new' (query-params submission=record.id) class="btn btn-outline-primary text-right" }}
-        Finish submission
-      {{/link-to}}
-    {{/if}}
-  </div>
-</div>
 <style>
   .text-gray {
     color: gray;
@@ -54,25 +41,39 @@
   }
 
   .fa-30 {
-    font-size: 30px!important;
+    font-size: 30px !important;
     margin-top: 4px;
   }
 
   tbody.striped tr:nth-of-type(odd) {
     background-color: white;
   }
+
   tbody.striped tr {
     background: #fdfdfd;
   }
-
 </style>
+<div class="row mb-2">
+  <div class="col-6">
+    {{#link-to 'submissions' class="btn btn-small back-arrow" }}<i class="fa fa-arrow-left fa-lg"></i>{{/link-to}}
+    <h2 class="font-weight-light d-inline-block">Submission Detail</h2>
+  </div>
+  <div class="col-6 text-right">
+    {{#if model.sub.isStub}}
+    {{#link-to 'submissions.new' (query-params submission=record.id) class="btn btn-outline-primary text-right" }}
+    Finish submission
+    {{/link-to}}
+    {{/if}}
+  </div>
+</div>
 <div class="form-group row">
-  <div class="col-md-12">
+  <div class="col-12">
     <div class="list-group">
       <div href="#" class="list-group-item flex-column align-items-start">
         <div class="d-flex w-100 justify-content-between">
           <h5 class="mb-1"> {{model.sub.publication.title}}</h5>
-          {{#if model.sub.submittedDate}}<small class="text-muted text-right">Submitted {{format-date model.sub.submittedDate}}</small>{{/if}}
+          {{#if model.sub.submittedDate}}<small class="text-muted text-right">Submitted {{format-date
+            model.sub.submittedDate}}</small>{{/if}}
         </div>
         <p class="mb-1">DOI: {{model.sub.publication.doi}}</p>
         <table class="table table-responsive-sm table-bordered w-100">
@@ -86,11 +87,11 @@
               <td>
                 <ul class="list-unstyled">
                   {{#each model.sub.grants as |grant|}}
-                    <li><b>{{grant.awardNumber}}</b>: {{grant.projectName}}</li>
-                    <li><b>Funder</b>: {{grant.primaryFunder.name}}</li>
-                    {{#if (not-eq grant model.sub.grants.lastObject)}}
-                      <hr>
-                    {{/if}}
+                  <li><b>{{grant.awardNumber}}</b>: {{grant.projectName}}</li>
+                  <li><b>Funder</b>: {{grant.primaryFunder.name}}</li>
+                  {{#if (not-eq grant model.sub.grants.lastObject)}}
+                  <hr>
+                  {{/if}}
                   {{/each}}
                 </ul>
               </td>
@@ -98,38 +99,39 @@
             {{!-- Consolidate repository, deposit, repoCopy info --}}
             {{#if repoMap}}
             <tr>
-              <td><strong>Repositories</strong></td>
+              <td class="text-nowrap"><strong>Repositories</strong></td>
               <td>
                 <ul class="list-unstyled">
-                {{#each repoMap as |repoInfo index|}}
-                  {{submission-repo-details repo=repoInfo.repo deposit=repoInfo.deposit repoCopy=repoInfo.repositoryCopy submission=model.sub}}
-                {{/each}}
+                  {{#each repoMap as |repoInfo index|}}
+                  {{submission-repo-details repo=repoInfo.repo deposit=repoInfo.deposit
+                  repoCopy=repoInfo.repositoryCopy submission=model.sub}}
+                  {{/each}}
                 </ul>
               </td>
             </tr>
             {{/if}}
             {{#if externalSubmission}}
-              <tr>
-                <td class="text-nowrap"><strong>External Submission Repositories</strong></td>
-                <td>
-                  <ul class="list-unstyled">
-                    {{#each externalSubmission as |sub|}}
-                      <li>{{sub}}</li>
-                    {{/each}}
-                  </ul>
-                </td>
-              </tr>
+            <tr>
+              <td class="text-nowrap"><strong>External Submission Repositories</strong></td>
+              <td>
+                <ul class="list-unstyled">
+                  {{#each externalSubmission as |sub|}}
+                  <li>{{sub}}</li>
+                  {{/each}}
+                </ul>
+              </td>
+            </tr>
             {{/if}}
             <tr>
               <td class="text-nowrap"><strong>Submitter</strong></td>
               <td>
                 {{#if (eq model.sub.source "other")}}
-                  <i>This submission did not originate from PASS</i>
+                <i>This submission did not originate from PASS</i>
                 {{else}}
-                  {{get (await model.sub.user) 'displayName'}}
-                  {{#if (get (await model.sub.user) 'institutionalId')}}
-                    ({{get (await model.sub.user) 'institutionalId'}})
-                  {{/if}}
+                {{get (await model.sub.user) 'displayName'}}
+                {{#if (get (await model.sub.user) 'institutionalId')}}
+                ({{get (await model.sub.user) 'institutionalId'}})
+                {{/if}}
                 {{/if}}
               </td>
             </tr>
@@ -138,36 +140,36 @@
               <td>
                 <ul class="list-unstyled">
                   {{#each-in metadataBlobNoKeys as |key data|}}
-                    {{!-- TODO: Look in to making the ifs in to one if --}}
-                    {{#if (not-eq key 'Embargo')}}
-                      {{#if (not-eq key 'Information')}}
-                        {{#if (not-eq key 'Under-embargo')}}
-                          {{#if (not-eq key 'Embargo-end-date')}}
-                            {{#if (not-eq key 'Agreement-to-embargo')}}
-                              {{#if (not-eq key 'Submission')}}
-                                {{#if (eq key 'Author(s)')}}
-                                  <li><b>{{key}}</b>:
-                                    <ul>
-                                      {{#each data as |author|}}
-                                        <li>{{author.author}}
-                                          {{#if author.orcid}} (<a href= {{author.orcid}} target="_blank">{{author.orcid}}</a>){{/if}}
-                                        </li>
-                                      {{/each}}
-                                    </ul>
-                                  </li>
-                                {{else}}
-                                  {{#if (eq key 'URL')}}
-                                    <li><b>{{key}}</b>: <a href= {{data}} target="_blank">{{data}}</a></li>
-                                  {{else}}
-                                    <li><b>{{key}}</b>: {{{data}}}</li>
-                                  {{/if}}
-                                {{/if}}
-                              {{/if}}
-                            {{/if}}
-                          {{/if}}
-                        {{/if}}
-                      {{/if}}
-                    {{/if}}
+                  {{!-- TODO: Look in to making the ifs in to one if --}}
+                  {{#if (not-eq key 'Embargo')}}
+                  {{#if (not-eq key 'Information')}}
+                  {{#if (not-eq key 'Under-embargo')}}
+                  {{#if (not-eq key 'Embargo-end-date')}}
+                  {{#if (not-eq key 'Agreement-to-embargo')}}
+                  {{#if (not-eq key 'Submission')}}
+                  {{#if (eq key 'Author(s)')}}
+                  <li><b>{{key}}</b>:
+                    <ul>
+                      {{#each data as |author|}}
+                      <li>{{author.author}}
+                        {{#if author.orcid}} (<a href={{author.orcid}} target="_blank">{{author.orcid}}</a>){{/if}}
+                      </li>
+                      {{/each}}
+                    </ul>
+                  </li>
+                  {{else}}
+                  {{#if (eq key 'URL')}}
+                  <li><b>{{key}}</b>: <a href={{data}} target="_blank">{{data}}</a></li>
+                  {{else}}
+                  <li><b>{{key}}</b>: {{{data}}}</li>
+                  {{/if}}
+                  {{/if}}
+                  {{/if}}
+                  {{/if}}
+                  {{/if}}
+                  {{/if}}
+                  {{/if}}
+                  {{/if}}
                   {{/each-in}}
                 </ul>
               </td>
@@ -176,47 +178,61 @@
               <td><strong>Files</strong></td>
               <td>
                 {{#if (eq model.sub.source "other")}}
-                  <p class="mb-0">
-                    <i>We do not have a copy of manuscript files because this submission did not originate from PASS</i>
-                  </p>
+                <p class="mb-0">
+                  <i>We do not have a copy of manuscript files because this submission did not originate from PASS</i>
+                </p>
                 {{else}}
-                  <table style="min-width:500px;">
-                    <thead>
-                      <tr>
-                        <th scope="col"></th>
-                        <th scope="col" class="font-weight-light">Name</th>
-                        <th scope="col" class="font-weight-light">Type</th>
-                        <th scope="col" class="font-weight-light">Description</th>
-                      </tr>
-                    </thead>
-                    <tbody class="striped">
+                <table style="min-width:500px;">
+                  <thead>
+                    <tr>
+                      <th scope="col"></th>
+                      <th scope="col" class="font-weight-light">Name</th>
+                      <th scope="col" class="font-weight-light">Type</th>
+                      <th scope="col" class="font-weight-light">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody class="striped">
                     {{#each (get model 'files') as |file|}}
-                      <tr>
-                        <td data-label="icon">
-                          {{#if (eq file.mimeType 'png')}}
-                            <i class="fas fa-file-image fa-30 line-height-35 text-gray"></i> {{else if (eq file.mimeType 'vnd.openxmlformats-officedocument.presentationml.presentation')}}
-                            <i class="fas fa-file-powerpoint fa-30 line-height-35 text-gray"></i> {{else if (eq file.mimeType 'msword')}}
-                            <i class="fas fa-file-word fa-30 line-height-35 text-gray"></i> {{else if (eq file.mimeType 'pdf')}}
-                            <i class="fas fa-file-pdf fa-30 line-height-35 text-gray"></i>
-                          {{else}}
-                            <i class="far fa-file fa-30 line-height-35 text-gray"></i>
-                          {{/if}}
-                        </td>
-                        <td data-label="name" style="min-width:200px;">
-                         <a href= {{file.uri}}>{{file.name}}</a>
-                        </td>
-                        <td data-label="type" class="text-nowrap">
-                          {{file.fileRole}}
-                        </td>
-                        <td data-label="description" >
-                          {{file.description}}
-                        </td>
-                      </tr>
+                    <tr>
+                      <td data-label="icon">
+                        {{#if (eq file.mimeType 'png')}}
+                        <i class="fas fa-file-image fa-30 line-height-35 text-gray"></i> {{else if (eq file.mimeType
+                        'vnd.openxmlformats-officedocument.presentationml.presentation')}}
+                        <i class="fas fa-file-powerpoint fa-30 line-height-35 text-gray"></i> {{else if (eq
+                        file.mimeType 'msword')}}
+                        <i class="fas fa-file-word fa-30 line-height-35 text-gray"></i> {{else if (eq file.mimeType
+                        'pdf')}}
+                        <i class="fas fa-file-pdf fa-30 line-height-35 text-gray"></i>
+                        {{else}}
+                        <i class="far fa-file fa-30 line-height-35 text-gray"></i>
+                        {{/if}}
+                      </td>
+                      <td data-label="name" style="min-width:200px;">
+                        <a href={{file.uri}}>{{file.name}}</a>
+                      </td>
+                      <td data-label="type" class="text-nowrap">
+                        {{file.fileRole}}
+                      </td>
+                      <td data-label="description">
+                        {{file.description}}
+                      </td>
+                    </tr>
                     {{else}}
-                      <div class="text-center">Loading files...</div>
+                    <div class="text-center">Loading files...</div>
                     {{/each}}
                   </tbody>
                 </table>
+                {{/if}}
+              </td>
+            </tr>
+            <tr>
+              <td class="text-nowrap"><strong>Comments</strong></td>
+              <td>
+                {{commenting-block showMessageEntry=false submission=model.sub comments=comments deleteComment=(action
+                "deleteComment") }}
+                {{#if (or (and isSubmitter submissionNeedsSubmitter) (and isPreparer submissionNeedsPreparer))}}
+                {{textarea placeholder="add note..." value=message class="form-control custom-control p-2" rows="2"
+                style="resize:none; min-height: 38px!important;"}}
                 {{/if}}
               </td>
             </tr>
@@ -226,3 +242,20 @@
     </div>
   </div>
 </div>
+{{#if (and isSubmitter submissionNeedsSubmitter)}}
+<div class="row">
+  <div class="col-12 text-right">
+    <button class="btn btn-success" onclick={{action 'approveChanges'}}>Approve Changes</button>
+    <button class="btn btn-warning" onclick={{action 'requestMoreChanges'}}>Request More Changes</button>
+    <button class="btn btn-danger" onclick={{action 'cancelSubmission'}}>Cancel Changes</button>
+  </div>
+</div>
+{{/if}}
+{{#if (and isPreparer submissionNeedsPreparer)}}
+<div class="row">
+  <div class="col-12 text-right">
+    {{#link-to 'submissions.new' (query-params submission=model.sub.id) class="btn btn-primary"}}Edit this
+    submission{{/link-to}}
+  </div>
+</div>
+{{/if}}

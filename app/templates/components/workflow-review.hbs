@@ -75,60 +75,62 @@
               <td>
                 <ul>
                   {{#each model.newSubmission.repositories as |repository|}}
-                    <li>
-                      {{#if (eq repository.name 'JScholarship')}}
-                        {{#if didNotAgree}}
-                          <div class="alert-danger" style="border-radius:2px; word-break:normal;  background-color: transparent;  border-color: transparent;">
-                            {{repository.name}}<br>
-                            <p class="text-danger text-left m-0"><strong>Warning:</strong> you added JScholarship as a repository but didn't agree to the deposit agreement, so your submission will not be submitted to JScholarship. To fix this, go back and agree to the deposit agreement.</p>
-                          </div>
-                        {{else}}
-                          {{repository.name}}
-                        {{/if}}
-                      {{else}}
-                        {{repository.name}}
-                      {{/if}}
-                    </li>
+                  <li>
+                    {{#if (eq repository.name 'JScholarship')}}
+                    {{#if didNotAgree}}
+                    <div class="alert-danger" style="border-radius:2px; word-break:normal;  background-color: transparent;  border-color: transparent;">
+                      {{repository.name}}<br>
+                      <p class="text-danger text-left m-0"><strong>Warning:</strong> you added JScholarship as a
+                        repository but didn't agree to the deposit agreement, so your submission will not be submitted
+                        to JScholarship. To fix this, go back and agree to the deposit agreement.</p>
+                    </div>
+                    {{else}}
+                    {{repository.name}}
+                    {{/if}}
+                    {{else}}
+                    {{repository.name}}
+                    {{/if}}
+                  </li>
                   {{/each}}
                 </ul>
               </td>
             </tr>
             {{#if mustVisitWeblink}}
 
-                <tr>
-                  <td class="text-nowrap text-center" id="externalSubmission">External Submission Required
-                    <br>
-                    {{#if disableSubmit}}
-                      <i class="fa fa-exclamation-triangle fa-2x mt-3 notice-triangle"></i>
-                    {{/if}}
-                  </td>
-                  <td>
-                    <label class="">
-                      Please visit the following web portal to submit your manuscript directly. Metadata displayed above
-                      could be used to aid in your submission progress.
-                    </label>
-                    <ul class="m-0">
-                      {{#each weblinkRepos as |repo|}}
-                        <li>
-                          <button type="button" class="btn btn-link" {{action "openWeblinkAlert" repo}}>
-                            {{get repo 'url'}}
-                          </button>
-                        </li>
-                      {{/each}}
-                    </ul>
-                  </td>
-                </tr>
+            <tr>
+              <td class="text-nowrap text-center" id="externalSubmission">External Submission Required
+                <br>
+                {{#if disableSubmit}}
+                <i class="fa fa-exclamation-triangle fa-2x mt-3 notice-triangle"></i>
+                {{/if}}
+              </td>
+              <td>
+                <label class="">
+                  Please visit the following web portal to submit your manuscript directly. Metadata displayed above
+                  could be used to aid in your submission progress.
+                </label>
+                <ul class="m-0">
+                  {{#each weblinkRepos as |repo|}}
+                  <li>
+                    <button type="button" class="btn btn-link" {{action "openWeblinkAlert" repo}}>
+                      {{get repo 'url'}}
+                    </button>
+                  </li>
+                  {{/each}}
+                </ul>
+              </td>
+            </tr>
             {{/if}}
             <tr>
               <td>Grants</td>
               <td>
                 <ul class="list-unstyled">
                   {{#each model.newSubmission.grants as |grant|}}
-                    <li><b>{{grant.awardNumber}}</b> : {{grant.projectName}}</li>
-                    <li><b>Funder</b> : {{grant.primaryFunder.name}}</li>
-                    {{#if (not-eq grant model.newSubmission.grants.lastObject)}}
-                      <hr>
-                    {{/if}}
+                  <li><b>{{grant.awardNumber}}</b> : {{grant.projectName}}</li>
+                  <li><b>Funder</b> : {{grant.primaryFunder.name}}</li>
+                  {{#if (not-eq grant model.newSubmission.grants.lastObject)}}
+                  <hr>
+                  {{/if}}
                   {{/each}}
                 </ul>
               </td>
@@ -138,36 +140,36 @@
               <td>
                 <ul class="list-unstyled">
                   {{#each-in metadataBlobNoKeys as |key data|}}
-                    {{!-- TODO: Look in to making the ifs in to one if --}}
-                    {{#if (not-eq key 'Embargo')}}
-                      {{#if (not-eq key 'Information')}}
-                        {{#if (not-eq key 'Under-embargo')}}
-                          {{#if (not-eq key 'Embargo-end-date')}}
-                            {{#if (not-eq key 'Agreement-to-embargo')}}
-                              {{#if (not-eq key 'Submission')}}
-                                {{#if (eq key 'Author(s)')}}
-                                  <li><b>{{key}}</b>:
-                                    <ul>
-                                      {{#each data as |author|}}
-                                        <li>{{author.author}}
-                                          {{#if author.orcid}} (<a href= {{author.orcid}} target="_blank">{{author.orcid}}</a>){{/if}}
-                                        </li>
-                                      {{/each}}
-                                    </ul>
-                                  </li>
-                                {{else}}
-                                  {{#if (eq key 'URL')}}
-                                    <li><b>{{key}}</b>: <a href= {{data}} target="_blank">{{data}}</a></li>
-                                  {{else}}
-                                    <li><b>{{key}}</b>: {{{data}}}</li>
-                                  {{/if}}
-                                {{/if}}
-                              {{/if}}
-                            {{/if}}
-                          {{/if}}
-                        {{/if}}
-                      {{/if}}
-                    {{/if}}
+                  {{!-- TODO: Look in to making the ifs in to one if --}}
+                  {{#if (not-eq key 'Embargo')}}
+                  {{#if (not-eq key 'Information')}}
+                  {{#if (not-eq key 'Under-embargo')}}
+                  {{#if (not-eq key 'Embargo-end-date')}}
+                  {{#if (not-eq key 'Agreement-to-embargo')}}
+                  {{#if (not-eq key 'Submission')}}
+                  {{#if (eq key 'Author(s)')}}
+                  <li><b>{{key}}</b>:
+                    <ul>
+                      {{#each data as |author|}}
+                      <li>{{author.author}}
+                        {{#if author.orcid}} (<a href={{author.orcid}} target="_blank">{{author.orcid}}</a>){{/if}}
+                      </li>
+                      {{/each}}
+                    </ul>
+                  </li>
+                  {{else}}
+                  {{#if (eq key 'URL')}}
+                  <li><b>{{key}}</b>: <a href={{data}} target="_blank">{{data}}</a></li>
+                  {{else}}
+                  <li><b>{{key}}</b>: {{{data}}}</li>
+                  {{/if}}
+                  {{/if}}
+                  {{/if}}
+                  {{/if}}
+                  {{/if}}
+                  {{/if}}
+                  {{/if}}
+                  {{/if}}
                   {{/each-in}}
                 </ul>
               </td>
@@ -176,7 +178,7 @@
             <tr>
               <td>Files</td>
               <td>
-                <table style="min-width:500px; width:100%;" >
+                <table style="min-width:500px; width:100%;">
                   <thead>
                     <tr>
                       <th scope="col"></th>
@@ -187,50 +189,70 @@
                   </thead>
                   <tbody class="striped">
                     {{#each parsedFiles as |file|}}
-                      <tr>
-                        <td data-label="icon">
-                          {{#if (eq file.mimeType 'png')}}
-                            <i class="fas fa-file-image fa-30 line-height-35 text-gray"></i> {{else if (eq file.mimeType 'vnd.openxmlformats-officedocument.presentationml.presentation')}}
-                            <i class="fas fa-file-powerpoint fa-30 line-height-35 text-gray"></i> {{else if (eq file.mimeType 'msword')}}
-                            <i class="fas fa-file-word fa-30 line-height-35 text-gray"></i> {{else if (eq file.mimeType 'pdf')}}
-                            <i class="fas fa-file-pdf fa-30 line-height-35 text-gray"></i>
-                          {{else}}
-                            <i class="far fa-file fa-30 line-height-35 text-gray"></i>
-                          {{/if}}
-                        </td>
-                        <td data-label="name" style="min-width:200px;">
-                          {{file.name}}
-                        </td>
-                        <td data-label="type" class="text-nowrap">
-                          {{file.fileRole}}
-                        </td>
-                        <td data-label="description">
-                          {{file.description}}
-                        </td>
-                      </tr>
+                    <tr>
+                      <td data-label="icon">
+                        {{#if (eq file.mimeType 'png')}}
+                        <i class="fas fa-file-image fa-30 line-height-35 text-gray"></i> {{else if (eq file.mimeType
+                        'vnd.openxmlformats-officedocument.presentationml.presentation')}}
+                        <i class="fas fa-file-powerpoint fa-30 line-height-35 text-gray"></i> {{else if (eq
+                        file.mimeType 'msword')}}
+                        <i class="fas fa-file-word fa-30 line-height-35 text-gray"></i> {{else if (eq file.mimeType
+                        'pdf')}}
+                        <i class="fas fa-file-pdf fa-30 line-height-35 text-gray"></i>
+                        {{else}}
+                        <i class="far fa-file fa-30 line-height-35 text-gray"></i>
+                        {{/if}}
+                      </td>
+                      <td data-label="name" style="min-width:200px;">
+                        {{file.name}}
+                      </td>
+                      <td data-label="type" class="text-nowrap">
+                        {{file.fileRole}}
+                      </td>
+                      <td data-label="description">
+                        {{file.description}}
+                      </td>
+                    </tr>
                     {{/each}}
                   </tbody>
                 </table>
               </td>
             </tr>
+            {{#if model.newSubmission.hasProxy}}
+            <tr>
+              <td>Comments</td>
+              <td>
+                <p>
+                  This submission is prepared on behalf of
+                  {{#if model.newSubmission.submitter}}
+                  {{model.newSubmission.submitter.displayName}} (<a href={{model.newSubmission.submitter.id}}>{{model.newSubmission.submitter.email}}</a>)
+                  {{else}}
+                  {{submitterName}} (<a href="mailto:{{submitterEmail}}">{{submitterEmail}}</a>)
+                  {{/if}}
+                </p>
+                <p>
+                  Once "Request approval" is clicked, a notification will be sent to
+                  {{model.newSubmission.submitter.displayName}} (<a href="#">{{model.newSubmission.submitter.email}}</a>).
+                  The submission will be sent to its target repositories upon approval, or be sent back to you if
+                  additional edits
+                  are requested by the {{model.newSubmission.submitter.displayName}}.
+                </p>
+                <hr>
+                {{commenting-block showMessageEntry=false comments=comments deleteComment=(action "deleteComment") }}
+                {{textarea placeholder="add note..." value=comment class="form-control custom-control p-2" rows="2"
+                style="resize:none; min-height: 38px!important;"}}
+              </td>
+            </tr>
+            {{/if}}
           </tbody>
         </table>
       </div>
-      {{!-- <div class="form-group row bg-gray-100 m-0">
-        <label class="col-md-10 col-form-label">I have read and verify that the information for this submission is valid and that the informatin provided is not in violation of any grants.</label>
-        <div class="col-md-2 col-form-label">
-          <div class="form-check form-check-inline mr-1">
-            <input class="form-check-input" type="checkbox" id="userVerify" {{action 'checkValidate' on="change" }}>
-            <label class="form-check-label" for="userVerify">yes</label>
-          </div>
-        </div>
-      </div> --}}
     </div>
   </div>
 </div>
 <button class="btn btn-outline-primary" {{action "back"}}>Back</button>
 {{#if model.uploading}}
-  <button class="btn btn-primary pull-right submit" disabled><i class="fas fa-spinner do-spin"></i> {{model.waitingMessage}}</button>
+<button class="btn btn-primary pull-right submit" disabled>{{model.waitingMessage}}</button>
 {{else}}
-  <button class="btn btn-primary pull-right submit" {{action "submit"}}>Submit</button>
+<button class="btn btn-primary pull-right submit" {{action "submit"}}>{{submitButtonText}}</button>
 {{/if}}

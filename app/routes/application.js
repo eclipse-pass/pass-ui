@@ -18,11 +18,12 @@ export default CheckSessionRoute.extend({
     },
   },
 
-  afterModel() {
-    return this._loadCurrentUser();
+  afterModel(model, transition) {
+    return this._loadCurrentUser(transition.queryParams['userToken']);
   },
 
-  _loadCurrentUser() {
-    return this.get('currentUser').load();
+  _loadCurrentUser(userToken) {
+    console.log(`userToken: ${userToken}`);
+    return this.get('currentUser').load(userToken);
   }
 });

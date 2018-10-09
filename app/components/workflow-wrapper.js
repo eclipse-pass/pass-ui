@@ -8,10 +8,48 @@ export default Component.extend({
   isValidated: Ember.A(),
   doiInfo: [],
   includeNIHDeposit: true,
+  comments: Ember.A([
+    {
+      dateTime: 'date',
+      message:
+        'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae ',
+      user: {
+        username: 'nih-user@johnshopkins.edu',
+        displayName: 'Nihu Ser',
+        firstName: 'Alfredo',
+        lastName: 'Kirkwood',
+        email: 'nihuser@jhu.edu',
+        institutionalId: 'nih-user',
+        roles: ['submitter']
+      }
+    }
+  ]),
   init() {
     this._super(...arguments);
     this.set('filesTemp', Ember.A());
   },
+  userIsPreparer: Ember.computed(
+    'currentUser.user',
+    'model.newSubmission',
+    function() {
+      return this.get('model.newSubmission.preparers')
+        .map(x => x.id)
+        .includes(
+          this.get('currentUser.user.id') ||
+            (this.get('submitterEmail') && this.get('submitterName'))
+        );
+    }
+  ),
+  userIsSubmitter: Ember.computed(
+    'currentUser.user',
+    'model.newSubmission',
+    function() {
+      return (
+        this.get('model.newSubmission.submitter') ===
+        this.get('currentUser.user')
+      );
+    }
+  ),
   actions: {
     toggleNIHDeposit(bool) {
       this.set('includeNIHDeposit', bool);
@@ -32,15 +70,28 @@ export default Component.extend({
     validate() {
       const tempValidateArray = [];
       this.set('isValidated', []);
-      Object.keys(this.get('model.newSubmission').toJSON()).forEach((property) => {
-        // TODO:  Add more logic here for better validation
-        if (this.get('model.newSubmission').get(property) !== undefined) {
-          tempValidateArray[property] = true;
-        } else {
-          tempValidateArray[property] = false;
+      Object.keys(this.get('model.newSubmission').toJSON()).forEach(
+        property => {
+          // TODO:  Add more logic here for better validation
+          if (this.get('model.newSubmission').get(property) !== undefined) {
+            tempValidateArray[property] = true;
+          } else {
+            tempValidateArray[property] = false;
+          }
         }
-      });
+      );
       this.set('isValidated', tempValidateArray);
     },
-  },
+    addComment(comment) {
+      this.comments.unshiftObject(comment);
+      console.log(this.get('comments'));
+    },
+    saveComment(values) {
+      this.comments[values[0]] = values[1];
+    },
+    deleteComment(index) {
+      console.log('delete', index);
+      this.comments.removeAt(index);
+    }
+  }
 });
