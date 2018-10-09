@@ -17,6 +17,13 @@
     </p>
   {{/if}}
 {{/each}}
+<h3>Existing Files</h3>
+<ul>
+{{#each model.files as |file|}}
+<li><a href={{file.uri}}>{{file.name}}</a></li>
+{{/each}}
+</ul>
+
 <p class="lead text-muted mb-2">Attach manuscript/article files to this submission.</p>
 <p class="lead text-muted">Each individual file must be smaller than 100MB.</p>
 <div class="form-group row">

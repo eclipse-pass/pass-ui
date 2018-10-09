@@ -182,6 +182,8 @@ export default WorkflowComponent.extend({
           console.log('adding user as preparer!');
           this.get('model.newSubmission.preparers').addObject(this.get('currentUser.user'));
         }
+      } else {
+        this.set('model.newSubmission.submitter', this.get('currentUser/user/id'));
       }
       if (validTitle && validJournal) {
         this.send('next');

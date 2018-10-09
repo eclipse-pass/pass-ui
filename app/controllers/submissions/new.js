@@ -56,9 +56,9 @@ export default Controller.extend({
       sub.set('submissionStatus', 'not-started');
       sub.set('submittedDate', new Date());
       sub.set('submitted', false);
-      if (!sub.get('hasProxy')) {
-        sub.set('submitter', this.get('currentUser.user')); // this.get('currentUser.user.id') seems to break stuff
-      }
+      // if (!sub.get('hasNewProxy') && !this.get('hasProxy')) {
+      //   sub.set('submitter', this.get('currentUser.user')); // this.get('currentUser.user.id') seems to break stuff
+      // }
       sub.set('source', 'pass');
       pub.save().then((p) => {
         sub.set('publication', p); // p.get('id') seems to break stuff

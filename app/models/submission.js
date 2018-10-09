@@ -35,7 +35,7 @@ export default DS.Model.extend({
   }),
 
   // don't get saved to database
-  hasProxy: false,
+  hasNewProxy: false,
   removeNIHDeposit: false,
 
   // attributes needed for tables

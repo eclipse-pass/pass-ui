@@ -100,8 +100,20 @@ export default CheckSessionRoute.extend({
         }
       }],
       query: {
-        match: {
-          submitter: user.get('id')
+        bool: {
+          should: [
+            {
+              term: {
+                submitter: user.get('id')
+
+              }
+            },
+            {
+              term: {
+                preparers: user.get('id')
+              }
+            },
+          ]
         }
       },
       size: 500
