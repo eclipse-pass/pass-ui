@@ -31,7 +31,9 @@ export default Component.extend({
     if (!deposit && source == 'pass' && this.get('submission.aggregatedDepositStatus') === 'failed') {
       return 'Failed';
     }
-
+    if (this.get('submission.aggregatedDepositStatus') !== 'submitted') {
+      return 'Waiting to be submitted';
+    }
     return 'Submitted';
   }),
 
@@ -52,6 +54,8 @@ export default Component.extend({
         return 'The system failed to receive the files for this submission. Please try again by starting a new submission';
       case 'Rejected':
         return 'This target repository has rejected your submission. Please contact us for more details or try to submit your manuscript again.';
+      case 'Waiting to be submitted':
+        return 'The submission has not been officially submitted to PASS. When the submitter approves the submission, the status will update to \'Submitted\'';
       default:
         return '';
     }
