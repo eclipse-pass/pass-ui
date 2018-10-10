@@ -137,12 +137,9 @@
                 <ul class="list-unstyled">
                   {{#each-in metadataBlobNoKeys as |key data|}}
                   {{!-- TODO: Look in to making the ifs in to one if --}}
-                  {{#if (not-eq key 'Embargo')}}
-                  {{#if (not-eq key 'Information')}}
-                  {{#if (not-eq key 'Under-embargo')}}
-                  {{#if (not-eq key 'Embargo-end-date')}}
-                  {{#if (not-eq key 'Agreement-to-embargo')}}
-                  {{#if (not-eq key 'Submission')}}
+                  {{#if (and (not-eq key 'Embargo') (not-eq key 'Information'))}}
+                  {{#if (and (not-eq key 'Under-embargo') (not-eq key 'Embargo-end-date'))}}
+                  {{#if (and (not-eq key 'Agreement-to-embargo') (not-eq key 'Submission'))}}
                   {{#if (eq key 'Author(s)')}}
                   <li><b>{{key}}</b>:
                     <ul>
@@ -158,9 +155,6 @@
                   <li><b>{{key}}</b>: <a href={{data}} target="_blank">{{data}}</a></li>
                   {{else}}
                   <li><b>{{key}}</b>: {{{data}}}</li>
-                  {{/if}}
-                  {{/if}}
-                  {{/if}}
                   {{/if}}
                   {{/if}}
                   {{/if}}
