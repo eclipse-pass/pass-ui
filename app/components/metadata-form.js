@@ -44,7 +44,7 @@ export default Ember.Component.extend({
             newForm.data.authors = [];
           }
           // if JScholarship Metadata authors array is grater then 0 set to common authors
-          if (JScholarshipMetadata.data.authors.length > 0) {
+          if (JScholarshipMetadata.data.authors && JScholarshipMetadata.data.authors.length > 0) {
             newForm.data.authors = JScholarshipMetadata.data.authors;
           }
         }
@@ -192,7 +192,31 @@ export default Ember.Component.extend({
           title: 'Back',
           styles: 'pull-left btn btn-outline-primary',
           click() {
-            that.previousForm();
+            if (isValidated) {
+              const value = this.getValue();
+              // concat auther + family together
+              // value.author = `${value.author} ${value.family}`;
+              // delete value.family;
+              const formId = newForm.id;
+              // Check for authors fields that are blank and remove them
+              if (formId === 'common' || formId === 'JScholarship') {
+                let trimmedAuthors = value.authors.filter(author => author.author);
+                value.authors = trimmedAuthors;
+              }
+
+              metadata.push({
+                id: formId,
+                data: value,
+              });
+              // remove any duplicates
+              let uniqIds = {},
+                source = metadata;
+              // eslint-disable-next-line no-return-assign
+              let filtered = source.reverse().filter(obj => !uniqIds[obj.id] && (uniqIds[obj.id] = true));
+
+              that.set('model.metadata', JSON.stringify(filtered));
+              that.previousForm();
+            }
           },
         },
       },
