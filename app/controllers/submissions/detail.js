@@ -147,22 +147,34 @@ export default Controller.extend({
       });
     },
     approveChanges() {
-      let se = this.get('store').createRecord('submissionEvent', {
-        submission: this.get('model.sub'),
-        performedBy: this.get('currentUser.user'),
-        performedDate: new Date(),
-        comment: this.get('message'),
-        performerRole: 'submitter',
-        eventType: 'submitted'
-      });
-      se.save().then(() => {
-        let sub = this.get('model.sub');
-        sub.set('submissionStatus', 'submitted');
-        sub.set('submitted', true);
-        sub.save().then(() => {
-          console.log('Approved changes and submitted submission.');
-          window.location.reload(true);
-        });
+      swal({
+        title: 'Deposit Agreement',
+        text: 'Agreement text goes here. By clicking \'I Agree\', I am confirming that I agree to this text on today\'s date.',
+        type: 'info',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'I Agree',
+        cancelButtonText: 'Never mind'
+      }).then((result) => {
+        if (result.value) {
+          let se = this.get('store').createRecord('submissionEvent', {
+            submission: this.get('model.sub'),
+            performedBy: this.get('currentUser.user'),
+            performedDate: new Date(),
+            comment: this.get('message'),
+            performerRole: 'submitter',
+            eventType: 'submitted'
+          });
+          se.save().then(() => {
+            let sub = this.get('model.sub');
+            sub.set('submissionStatus', 'submitted');
+            sub.set('submitted', true);
+            sub.save().then(() => {
+              window.location.reload(true);
+            });
+          });
+        }
       });
     },
     cancelSubmission() {
