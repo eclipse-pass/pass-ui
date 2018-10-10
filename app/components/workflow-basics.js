@@ -66,12 +66,13 @@ export default WorkflowComponent.extend({
   ),
   init() {
     this._super(...arguments);
-    this.set('hasProxy', false);
+    // this.set('hasProxy', false);
   },
   didRender() {
     this._super(...arguments);
     this.send('validateDOI');
-    if (!this.get('model.newSubmission.hasNewProxy')) {
+    if (!this.get('model.newSubmission.hasNewProxy') && !this.get('hasProxy')) {
+      console.log('remove submitter');
       this.set('submitterEmail', '');
       this.set('submitterName', '');
       this.set('model.newSubmission.submitter', null);
@@ -182,8 +183,8 @@ export default WorkflowComponent.extend({
           console.log('adding user as preparer!');
           this.get('model.newSubmission.preparers').addObject(this.get('currentUser.user'));
         }
-      } else {
-        this.set('model.newSubmission.submitter', this.get('currentUser/user/id'));
+      } else if (!this.get('hasProxy')) {
+        this.set('model.newSubmission.submitter', this.get('currentUser.user.id'));
       }
       if (validTitle && validJournal) {
         this.send('next');

@@ -21,19 +21,15 @@ export default Controller.extend({
         size: 500,
         from: 0,
         query: {
-          constant_score: {
+          bool: {
+            must: [
+              { term: { submissionStatus: 'approval-requested' } },
+              { term: { submitter: this.get('currentUser.user.id') } }
+            ],
             filter: {
-              bool: {
-                must: [
-                  { term: { submissionStatus: 'approval-requested' } },
-                  { terms: { preparer: [this.get('currentUser.user.id')] } }
-                ],
-                filter: {
-                  term: {
-                    '@type': 'Submission'
-                  }
-                }
-              },
+              term: {
+                '@type': 'Submission'
+              }
             }
           }
         },
@@ -53,21 +49,17 @@ export default Controller.extend({
         size: 500,
         from: 0,
         query: {
-          constant_score: {
+          bool: {
+            must: [
+              { term: { submissionStatus: 'changes-requested' } },
+              { term: { preparer: this.get('currentUser.user.id') } }
+            ],
             filter: {
-              bool: {
-                must: [
-                  { term: { submissionStatus: 'approval-requested' } },
-                  { term: { submitter: this.get('currentUser.user.id') } }
-                ],
-                filter: {
-                  term: {
-                    '@type': 'Submission'
-                  }
-                }
-              },
+              term: {
+                '@type': 'Submission'
+              }
             }
-          }
+          },
         },
         _source: { excludes: '*_suggest' }
       },

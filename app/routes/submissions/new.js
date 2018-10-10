@@ -62,12 +62,16 @@ export default CheckSessionRoute.extend({
 
     if (params.submission) {
       return this.get('store').findRecord('submission', params.submission).then((sub) => {
-        console.log('submission found!');
         newSubmission = this.get('store').findRecord('submission', params.submission);
         publication = sub.get('publication');
         submissionEvents = this.get('store').query('submissionEvent', {
-          term: {
-            submission: sub.get('id')
+          sort: [
+            { performedDate: 'asc' }
+          ],
+          query: {
+            term: {
+              submission: sub.get('id')
+            }
           }
         });
         files = this.get('store').query('file', {
