@@ -10,6 +10,10 @@ export default Service.extend({
       return '';
     }
 
+    if (submission.get('submissionStatus') === 'changes-requested') {
+      return 'Edits required';
+    }
+
     if (submission.get('aggregatedDepositStatus') === 'failed') {
       return 'See details'; // show failed
     }
