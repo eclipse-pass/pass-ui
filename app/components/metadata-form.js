@@ -1,5 +1,6 @@
 // import Component from '@ember/component';
 import Ember from 'ember';
+import _ from 'lodash';
 
 export default Ember.Component.extend({
   didRender() {
@@ -17,12 +18,47 @@ export default Ember.Component.extend({
     let metadata = JSON.parse(this.get('model.metadata'));
     if (newForm.id) {
       let shouldFuzzyMatch = true;
+
+
+      if (newForm.id === 'JScholarship') {
+        shouldFuzzyMatch = true;
+        let commonMetadata = metadata.filter(md => md.id === 'common')[0];
+        if (commonMetadata) {
+          // if there is no data with common Metadata data set up structure
+          if (!newForm.data) {
+            newForm.data = {};
+            newForm.data.authors = [];
+          }
+          // if commonMetadata Metadata authors array is grater then 0 set to JScholarship authors
+          if (commonMetadata.data.authors.length > 0) {
+            newForm.data.authors = commonMetadata.data.authors;
+          }
+        }
+      } else if (newForm.id === 'common') {
+        shouldFuzzyMatch = true;
+        let JScholarshipMetadata = metadata.filter(md => md.id === 'JScholarship')[0];
+        if (JScholarshipMetadata) {
+          // if there is no data with JScholarship Metadata data set up structure
+          if (!newForm.data) {
+            newForm.data = {};
+            newForm.data.authors = [];
+          }
+          // if JScholarship Metadata authors array is grater then 0 set to common authors
+          if (JScholarshipMetadata.data.authors && JScholarshipMetadata.data.authors.length > 0) {
+            newForm.data.authors = JScholarshipMetadata.data.authors;
+          }
+        }
+      }
+
+      // Check if metadata exists already
       metadata.forEach((data) => {
         if (data.id == newForm.id) {
           shouldFuzzyMatch = false;
-          newForm.data = data.data;
+          newForm.data = _.merge(newForm.data, data.data);
         }
       });
+
+
       const doiInfo = this.get('doiInfo');
       if (shouldFuzzyMatch && Object.keys(doiInfo).length > 0) {
         const prePopulateData = {};
@@ -37,6 +73,7 @@ export default Ember.Component.extend({
                 try {
                   doiInfo[doiEntry] = doiInfo[doiEntry].replace(/(<([^>]+)>)/ig, '');
                 } catch (e) {} // eslint-disable-line no-empty
+                console.log(doiEntry)
                 if (doiEntry == 'author') {
                   doiInfo[doiEntry].forEach((author, index) => {
                     const name = `${doiInfo[doiEntry][index].given} ${doiInfo[doiEntry][index].family}`;
@@ -60,6 +97,9 @@ export default Ember.Component.extend({
                   }
                 }
               }
+            }
+            if (this.get('schema').id === 'JScholarship') {
+              prePopulateData.embargo = this.get('schema').schema.properties.embargo.default;
             }
 
             // set any data to the forms
@@ -127,9 +167,8 @@ export default Ember.Component.extend({
               // value.author = `${value.author} ${value.family}`;
               // delete value.family;
               const formId = newForm.id;
-
               // Check for authors fields that are blank and remove them
-              if (formId === 'common') {
+              if (formId === 'common' || formId === 'JScholarship') {
                 let trimmedAuthors = value.authors.filter(author => author.author);
                 value.authors = trimmedAuthors;
               }
@@ -153,7 +192,31 @@ export default Ember.Component.extend({
           title: 'Back',
           styles: 'pull-left btn btn-outline-primary',
           click() {
-            that.previousForm();
+            if (isValidated) {
+              const value = this.getValue();
+              // concat auther + family together
+              // value.author = `${value.author} ${value.family}`;
+              // delete value.family;
+              const formId = newForm.id;
+              // Check for authors fields that are blank and remove them
+              if (formId === 'common' || formId === 'JScholarship') {
+                let trimmedAuthors = value.authors.filter(author => author.author);
+                value.authors = trimmedAuthors;
+              }
+
+              metadata.push({
+                id: formId,
+                data: value,
+              });
+              // remove any duplicates
+              let uniqIds = {},
+                source = metadata;
+              // eslint-disable-next-line no-return-assign
+              let filtered = source.reverse().filter(obj => !uniqIds[obj.id] && (uniqIds[obj.id] = true));
+
+              that.set('model.metadata', JSON.stringify(filtered));
+              that.previousForm();
+            }
           },
         },
       },
@@ -179,6 +242,15 @@ export default Ember.Component.extend({
           newForm.options.fields.authors.hidden = false;
         }
       } catch (e) {} // eslint-disable-line no-empty
+      if (newForm.id === 'JScholarship') {
+        // if (this.get('doiInfo').author.length > 0) {
+        let common = metadata.filter(md => md.id === 'common')[0];
+        if (common.data.authors.length > 0) {
+          newForm.schema.properties.authors.readonly = true;
+          newForm.options.fields.authors.hidden = false;
+        }
+        // }
+      }
     }
 
     $(document).ready(() => {
