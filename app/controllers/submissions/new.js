@@ -53,7 +53,6 @@ export default Controller.extend({
        * Where calling `obj.set('prop', obj2.get('id'))` will not set the relationship
        */
       const pub = this.get('model.publication');
-      sub.set('submissionStatus', 'not-started');
       sub.set('submittedDate', new Date());
       sub.set('submitted', false);
       sub.set('source', 'pass');

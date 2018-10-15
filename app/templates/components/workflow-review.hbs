@@ -225,7 +225,7 @@
                 <p>
                   This submission is prepared on behalf of
                   {{#if model.newSubmission.submitter}}
-                  {{model.newSubmission.submitter.displayName}} (<a href={{model.newSubmission.submitter.id}}>{{model.newSubmission.submitter.email}}</a>)
+                  {{model.newSubmission.submitter.displayName}} (<a href="mailto:{{model.newSubmission.submitter.email}}">{{model.newSubmission.submitter.email}}</a>)
                   {{else}}
                   {{submitterName}} (<a href="mailto:{{submitterEmail}}">{{submitterEmail}}</a>)
                   {{/if}}
