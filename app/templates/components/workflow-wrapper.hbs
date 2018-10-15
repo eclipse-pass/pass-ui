@@ -29,7 +29,7 @@
     {{workflow-metadata currentUser=currentUser didNotAgree=didNotAgree model=model doiInfo=doiInfo step=step
     next=(action "next") back=(action "back")}}
     {{/if}}
-    {{#if (eq step 6)}}w
+    {{#if (eq step 6)}}
     {{workflow-files model=model next=(action "next") back=(action "back") filesTemp=filesTemp}}
     {{/if}}
     {{#if (eq step 7)}}
