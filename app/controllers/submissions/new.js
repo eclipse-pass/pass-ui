@@ -11,11 +11,14 @@ export default Controller.extend({
   comment: '',
   hasProxy: Ember.computed(
     'submitterEmail',
+    'submitterName',
     'model.newSubmission.preparers',
+    'model.newSubmission.hasNewProxy',
     function () {
       return (
-        this.get('submitterEmail') && this.get('submitterName') ||
-        this.get('model.newSubmission.preparers.length') > 0
+        (this.get('submitterEmail') && this.get('submitterName')) ||
+        this.get('model.newSubmission.preparers.length') > 0 ||
+        this.get('model.newSubmission.hasNewProxy')
       );
     }
   ),

@@ -56,7 +56,7 @@ export default WorkflowComponent.extend({
           (
             this.get('model.newSubmission.hasNewProxy') &&
             (
-              this.get('model.newSubmission.submitter') ||
+              this.get('model.newSubmission.submitter.id') ||
               (this.get('submitterName') && this.get('submitterEmail'))
             )
           ) ||
@@ -64,15 +64,12 @@ export default WorkflowComponent.extend({
       );
     }
   ),
-  init() {
-    this._super(...arguments);
-    // this.set('hasProxy', false);
-  },
   didRender() {
     this._super(...arguments);
     this.send('validateDOI');
+
+    // if there's no proxy, reset all proxy-popup-related fields
     if (!this.get('model.newSubmission.hasNewProxy') && !this.get('hasProxy')) {
-      console.log('remove submitter');
       this.set('submitterEmail', '');
       this.set('submitterName', '');
       this.set('model.newSubmission.submitter', null);
@@ -93,45 +90,31 @@ export default WorkflowComponent.extend({
     searchUsers() {
       const email = this.get('emailLookup');
       if (email) {
-        return this.get('ajax')
-          .post(this.get('base'), {
-            data: {
-              size: 500,
-              from: 0,
-              query: {
-                bool: {
-                  must: {
-                    term: {
-                      email
-                    }
-                  },
-                  filter: {
-                    term: {
-                      '@type': 'User'
-                    }
-                  }
-                }
-              },
-              _source: { excludes: '*_suggest' }
+        return this.get('ajax').post(this.get('base'), {
+          data: {
+            size: 500,
+            from: 0,
+            query: {
+              bool: { must: { term: { email } }, filter: { term: { '@type': 'User' } } }
             },
-            headers: this._headers(),
-            xhrFields: { withCredentials: true }
-          })
-          .then((res) => {
-            console.log(res);
-            if (res.hits.hits.length > 0) {
-              this.get('store')
-                .findRecord('user', res.hits.hits[0]._source['@id'])
-                .then((u) => {
-                  this.set('model.newSubmission.submitter', u);
-                  const displayName = this.get('model.newSubmission.submitter.displayName');
-                  toastr.success(`Submitter updated to ${displayName}.`);
-                  console.log(`submitter updated to ${this.get('model.newSubmission.submitter.email')}`);
-                });
-            } else {
-              toastr.error('Submitter not found.');
-            }
-          });
+            _source: { excludes: '*_suggest' }
+          },
+          headers: this._headers(),
+          xhrFields: { withCredentials: true }
+        }).then((res) => {
+          console.log(res);
+          if (res.hits.hits.length > 0) {
+            this.get('store')
+              .findRecord('user', res.hits.hits[0]._source['@id'])
+              .then((u) => {
+                this.set('model.newSubmission.submitter', u);
+                const displayName = this.get('model.newSubmission.submitter.displayName');
+                toastr.success(`Submitter updated to ${displayName}.`);
+              });
+          } else {
+            toastr.error('Submitter not found.');
+          }
+        });
       }
     },
     toggleProxy(choice) {
@@ -140,72 +123,56 @@ export default WorkflowComponent.extend({
     validateNext() {
       const title = this.get('model.publication.title');
       const journal = this.get('model.publication.journal');
-      let validTitle = false;
-      let validJournal = false;
 
-      if (journal.get('journalName') == null) {
+      const newProxy = this.get('model.newSubmission.hasNewProxy');
+      const currentUserIsNotSubmitter = this.get('model.newSubmission.submitter.id') !== this.get('currentUser.user.id');
+      const proxySubmitterInfoExists = this.get('submitterEmail') && this.get('submitterName');
+      const userIsNotPreparer = !this.get('model.newSubmission.preparers').map(x => x.get('id')).includes(this.get('currentUser.user.id'));
+      const submitterExists = this.get('model.newSubmission.submitter.id');
+      const proxySubmitterExists = submitterExists && currentUserIsNotSubmitter;
+
+
+      // A journal and title must be present
+      if (!journal.get('id')) {
         toastr.warning('The journal must not be left blank');
-        validJournal = false;
         $('.ember-power-select-trigger').css('border-color', '#f86c6b');
       } else {
-        validJournal = true;
         $('.ember-power-select-trigger').css('border-color', '#4dbd74');
       }
 
-      if (title == null) {
+      if (!title) {
         toastr.warning('The title must not be left blank');
         this.set('validTitle', 'form-control is-invalid');
-        validTitle = false;
-      } else if (title.length > 3) {
-        validTitle = true;
-        this.set('validTitle', 'form-control is-valid');
       } else {
-        toastr.warning('Title must be longer then 3 characters');
-        validTitle = false;
-        this.set('validTitle', 'form-control is-invalid');
+        this.set('validTitle', 'form-control is-valid');
       }
-      console.log('checking if hasProxy == true');
-      if (this.get('model.newSubmission.hasNewProxy')) {
-        console.log('it does!');
-        if (
-          // if the submitter is not the current user AND a submitter exists
-          ((this.get('model.newSubmission.submitter.id') &&
-            this.get('model.newSubmission.submitter.id') !==
-              this.get('currentUser.user.id')) ||
-            // OR there is information to be turned into a submitter later
-            (this.get('submitterEmail') && this.get('submitterName'))) &&
-          // AND the current user is not already a preparer,
-          !this.get('model.newSubmission.preparers')
-            .map(x => x.get('id'))
-            .includes(this.get('currentUser.user.id'))
-        ) {
-          // ADD the current user to the preparers list
-          console.log('adding user as preparer!');
+
+      // if either is missing, end function early.
+      if (!journal.get('id') || !title) {
+        return;
+      }
+
+      if (!(submitterExists || proxySubmitterInfoExists) && newProxy) {
+        toastr.warning('You have indicated that you are submitting on behalf of someone else, but have not chosen that someone.');
+        return;
+      }
+      debugger; // eslint-disable-line
+      if (newProxy) {
+        // If the submitter is not the current user
+        // OR there is information to be turned into a submitter later
+        // AND the current user is not already a preparer,
+        if ((proxySubmitterExists || proxySubmitterInfoExists) && userIsNotPreparer) {
+          // THEN add the current user to the preparers list
           this.get('model.newSubmission.preparers').addObject(this.get('currentUser.user'));
         }
       } else if (!this.get('hasProxy')) {
-        this.set('model.newSubmission.submitter', this.get('currentUser.user.id'));
+        this.set('model.newSubmission.submitter', this.get('currentUser.user'));
       }
-      if (validTitle && validJournal) {
-        debugger; // eslint-disable-line
-        if (this.get('haxProxy') || this.get('model.newSubmission.hasNewProxy')) {
-          if (this.get('model.newSubmission.submitter.id') || (this.get('submitterName') && this.get('submitterEmail'))) {
-            this.send('next');
-          } else {
-            toastr.warning('You have indicated that you are submitting on behalf of someone else, but have not chosen that someone.');
-          }
-        } else {
-          this.send('next');
-        }
-      }
+
+      this.send('next');
     },
     next() {
-      if (!this.get('doiInfo.title')) {
-        this.set('doiInfo.title', this.get('model.publication.title'));
-      }
-      // if (!this.get('doiInfo.author')) {
-      //   this.set('doiInfo.author', []);
-      // }
+      if (!this.get('doiInfo.title')) this.set('doiInfo.title', this.get('model.publication.title'));
       this.sendAction('next');
     },
     validateDOI() {
@@ -217,10 +184,7 @@ export default WorkflowComponent.extend({
       if (doi == null || !doi) {
         this.set('validDOI', 'form-control');
         this.set('isValidDOI', false);
-      } else if (
-        newDOIRegExp.test(doi) === true ||
-        ancientDOIRegExp.test(doi) === true
-      ) {
+      } else if (newDOIRegExp.test(doi) === true || ancientDOIRegExp.test(doi) === true) {
         // 1 - Accepted
         this.set('validDOI', 'form-control is-valid');
         $('.ember-power-select-trigger').css('border-color', '#4dbd74');
@@ -235,11 +199,7 @@ export default WorkflowComponent.extend({
     },
     validateTitle() {
       const title = this.get('model.publication.title');
-      this.set('validTitle', title == null || title.length > 5);
-      // if(validTitle)
-      if (title == null) {
-        this.set('validTitle', 'form-control');
-      } else if (title.length > 3) {
+      if (title) {
         this.set('validTitle', 'form-control is-valid');
       } else {
         this.set('validTitle', 'form-control is-invalid');
@@ -258,10 +218,7 @@ export default WorkflowComponent.extend({
         );
         this.set(
           'model.publication.doi',
-          this.get('model.publication.doi').replace(
-            /https?:\/\/(dx\.)?doi\.org\//gi,
-            ''
-          )
+          this.get('model.publication.doi').replace(/https?:\/\/(dx\.)?doi\.org\//gi, '')
         );
       }
       const publication = this.get('model.publication');
@@ -277,18 +234,11 @@ export default WorkflowComponent.extend({
             doiInfo.nlmta = nlmtaDump.nlmta;
             doiInfo['issn-map'] = nlmtaDump.map;
           }
-          // // Crappy hack to rename property 'container-title' (received from DOI)
-          // // to 'journal-title' that is expected by the back end services
           doiInfo['journal-title'] = doiInfo['container-title'];
-
           this.set('doiInfo', doiInfo);
-          // useful console.log
-          // console.log(doiInfo);
           publication.set('title', doiInfo.title);
-
           publication.set('submittedDate', doiInfo.deposited);
           publication.set('creationDate', doiInfo.created);
-
           publication.set('issue', doiInfo.issue);
           publication.set('volume', doiInfo.volume);
           publication.set('abstract', doiInfo.abstract);
@@ -303,7 +253,6 @@ export default WorkflowComponent.extend({
           let query = {
             bool: {
               should: [{ match: { journalName: desiredName } }]
-              // must: { term: { issns: desiredIssn } }
             }
           };
           if (desiredIssn) {
