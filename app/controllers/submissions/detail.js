@@ -128,23 +128,24 @@ export default Controller.extend({
           'Please add a comment before requesting changes.',
           'warning'
         );
-      }
-      let se = this.get('store').createRecord('submissionEvent', {
-        submission: this.get('model.sub'),
-        performedBy: this.get('currentUser.user'),
-        performedDate: new Date(),
-        comment: this.get('message'),
-        performerRole: 'submitter',
-        eventType: 'changes-requested'
-      });
-      se.save().then(() => {
-        let sub = this.get('model.sub');
-        sub.set('submissionStatus', 'changes-requested');
-        sub.save().then(() => {
-          console.log('Requested more changes from preparer.');
-          window.location.reload(true);
+      } else {
+        let se = this.get('store').createRecord('submissionEvent', {
+          submission: this.get('model.sub'),
+          performedBy: this.get('currentUser.user'),
+          performedDate: new Date(),
+          comment: this.get('message'),
+          performerRole: 'submitter',
+          eventType: 'changes-requested'
         });
-      });
+        se.save().then(() => {
+          let sub = this.get('model.sub');
+          sub.set('submissionStatus', 'changes-requested');
+          sub.save().then(() => {
+            console.log('Requested more changes from preparer.');
+            window.location.reload(true);
+          });
+        });
+      }
     },
     approveChanges() {
       swal({
@@ -155,7 +156,7 @@ export default Controller.extend({
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
         confirmButtonText: 'I Agree',
-        cancelButtonText: 'Never mind'
+        cancelButtonText: 'Nevermind'
       }).then((result) => {
         if (result.value) {
           let se = this.get('store').createRecord('submissionEvent', {

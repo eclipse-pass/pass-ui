@@ -37,6 +37,22 @@ export default WorkflowComponent.extend({
     back() {
       this.sendAction('back');
     },
+    deleteExistingFile(file) {
+      swal({
+        title: 'Are you sure?',
+        text: 'If you delete this file, it will be gone forever.',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'I Agree',
+        cancelButtonText: 'Nevermind'
+      }).then((result) => {
+        if (result.value) {
+          file.destroyRecord();
+        }
+      });
+    },
     getFiles() {
       const submission = this.get('model.newSubmission');
       const uploads = document.getElementById('file-multiple-input');

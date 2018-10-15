@@ -3,7 +3,6 @@
     Finish submission
   {{/link-to}}
 {{else}}
-  {{debugger}}
   {{#if (and (eq record.submissionStatus 'changes-requested') isPreparer)}}
     {{#link-to 'submissions.new' (query-params submission=record.id) class="btn btn-outline-primary"}}
       Edit submission

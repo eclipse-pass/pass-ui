@@ -169,7 +169,7 @@ export default WorkflowComponent.extend({
         console.log('it does!');
         if (
           // if the submitter is not the current user AND a submitter exists
-          ((this.get('model.newSubmission.submitter') &&
+          ((this.get('model.newSubmission.submitter.id') &&
             this.get('model.newSubmission.submitter.id') !==
               this.get('currentUser.user.id')) ||
             // OR there is information to be turned into a submitter later
@@ -187,7 +187,16 @@ export default WorkflowComponent.extend({
         this.set('model.newSubmission.submitter', this.get('currentUser.user.id'));
       }
       if (validTitle && validJournal) {
-        this.send('next');
+        debugger; // eslint-disable-line
+        if (this.get('haxProxy') || this.get('model.newSubmission.hasNewProxy')) {
+          if (this.get('model.newSubmission.submitter.id') || (this.get('submitterName') && this.get('submitterEmail'))) {
+            this.send('next');
+          } else {
+            toastr.warning('You have indicated that you are submitting on behalf of someone else, but have not chosen that someone.');
+          }
+        } else {
+          this.send('next');
+        }
       }
     },
     next() {
@@ -285,11 +294,11 @@ export default WorkflowComponent.extend({
           publication.set('abstract', doiInfo.abstract);
 
           const desiredName = doiInfo['container-title'].trim();
-          const desiredIssn = Array.isArray(doiInfo.ISSN)
+          const desiredIssn = Array.isArray(doiInfo.ISSN) // eslint-disable-line
             ? doiInfo['ISSN'][0] // eslint-disable-line
             : doiInfo.ISSN
               ? doiInfo.ISSN
-              : ''; // eslint-disable-line
+              : '';
 
           let query = {
             bool: {

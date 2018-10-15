@@ -17,54 +17,45 @@ export default WorkflowComponent.extend({
   //   }
   //   return false;
   // }),
-  parsedFiles: Ember.computed('filesTemp', function() {
+  parsedFiles: Ember.computed('filesTemp', function () {
     return this.get('filesTemp');
   }),
-  metadata: Ember.computed('model.newSubmission.metadata', function() {
+  metadata: Ember.computed('model.newSubmission.metadata', function () {
     // eslint-disable-line
     return JSON.parse(this.get('model.newSubmission.metadata'));
   }),
   metadataBlobNoKeys: Ember.computed(
     'model.newSubmission.metadata',
-    function() {
-      return this.get('metadataService').getDisplayBlob(
-        this.get('model.newSubmission.metadata')
-      );
+    function () {
+      return this.get('metadataService').getDisplayBlob(this.get('model.newSubmission.metadata'));
     }
   ),
-  hasVisitedWeblink: Ember.computed('externalRepoMap', function() {
-    return Object.values(this.get('externalRepoMap')).every(
-      val => val === true
-    );
+  hasVisitedWeblink: Ember.computed('externalRepoMap', function () {
+    return Object.values(this.get('externalRepoMap')).every(val => val === true);
   }),
-  weblinkRepos: Ember.computed('model.newSubmission.repositories', function() {
-    const repos = this.get('model.newSubmission.repositories').filter(
-      repo =>
-        repo.get('integrationType') === 'web-link' ||
+  weblinkRepos: Ember.computed('model.newSubmission.repositories', function () {
+    const repos = this.get('model.newSubmission.repositories').filter(repo =>
+      repo.get('integrationType') === 'web-link' ||
         repo.get('url') === 'https://eric.ed.gov/' ||
-        repo.get('url') === 'https://dec.usaid.gov/'
-    );
+        repo.get('url') === 'https://dec.usaid.gov/');
 
-    repos.forEach(
-      repo => (this.get('externalRepoMap')[repo.get('id')] = false)
-    ); // eslint-disable-line
-    // debugger
+    repos.forEach(repo => (this.get('externalRepoMap')[repo.get('id')] = false)); // eslint-disable-line
     return repos;
   }),
-  mustVisitWeblink: Ember.computed('weblinkRepos', function() {
+  mustVisitWeblink: Ember.computed('weblinkRepos', function () {
     return this.get('weblinkRepos').get('length') > 0;
   }),
   disableSubmit: Ember.computed(
     'mustVisitWeblink',
     'hasVisitedWeblink',
-    function() {
+    function () {
       return this.get('mustVisitWeblink') && !this.get('hasVisitedWeblink');
     }
   ),
   userIsPreparer: Ember.computed(
     'model.newSubmission',
     'currentUser.user',
-    function() {
+    function () {
       return (
         this.get('hasProxy') &&
         this.get('model.newSubmission.submitter.id') !==
@@ -72,12 +63,11 @@ export default WorkflowComponent.extend({
       );
     }
   ),
-  submitButtonText: Ember.computed('userIsPreparer', function() {
+  submitButtonText: Ember.computed('userIsPreparer', function () {
     if (this.get('userIsPreparer')) {
       return 'Request approval';
-    } else {
-      return 'Submit';
     }
+    return 'Submit';
   }),
   actions: {
     submit() {
@@ -93,9 +83,7 @@ export default WorkflowComponent.extend({
             $('.fa-exclamation-triangle').css('color', '#b0b0b0');
             $('.fa-exclamation-triangle').css('font-size', '2em');
           }, 4000);
-          toastr.warning(
-            'Please visit the following web portal to submit your manuscript directly. Metadata displayed above could be used to aid in your submission progress.'
-          );
+          toastr.warning('Please visit the following web portal to submit your manuscript directly. Metadata displayed above could be used to aid in your submission progress.');
         }
         disableSubmit = false;
       }
@@ -126,7 +114,7 @@ export default WorkflowComponent.extend({
         showCancelButton: true,
         cancelButtonText: 'Cancel',
         confirmButtonText: 'Redirect'
-      }).then(value => {
+      }).then((value) => {
         if (value.dismiss) {
           // Don't redirect
           return;
@@ -134,9 +122,7 @@ export default WorkflowComponent.extend({
         // Go to the weblink repo
 
         this.get('externalRepoMap')[repo.get('id')] = true;
-        const allLinksVisited = Object.values(
-          this.get('externalRepoMap')
-        ).every(val => val === true);
+        const allLinksVisited = Object.values(this.get('externalRepoMap')).every(val => val === true);
         if (allLinksVisited) {
           this.set('hasVisitedWeblink', true);
         }

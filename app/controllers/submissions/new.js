@@ -14,7 +14,7 @@ export default Controller.extend({
     'model.newSubmission.preparers',
     function () {
       return (
-        this.get('submitterEmail') ||
+        this.get('submitterEmail') && this.get('submitterName') ||
         this.get('model.newSubmission.preparers.length') > 0
       );
     }
@@ -57,7 +57,7 @@ export default Controller.extend({
       sub.set('submitted', false);
       sub.set('source', 'pass');
       pub.save().then((p) => {
-        sub.set('publication', p); // p.get('id') seems to break stuff
+        sub.set('publication', p);
         let ctr = 0;
         let len = this.get('filesTemp').length;
         sub.set('removeNIHDeposit', false);
@@ -90,14 +90,14 @@ export default Controller.extend({
                 }
                 this.set('model.waitingMessage', 'Uploading files');
                 xhr.onload = (results) => {
-                  file.set('submission', s); // s.get('id') seems to break stuff
+                  file.set('submission', s);
                   file.set('uri', results.target.response);
                   file
                     .save()
                     .then((f) => {
                       if (f) {
                         ctr += 1;
-                        console.log(ctr);
+                        // once every file is uploaded:
                         if (ctr >= len) {
                           let subEvent = this.store.createRecord('submissionEvent');
                           subEvent.set(
@@ -113,6 +113,7 @@ export default Controller.extend({
                           ) {
                             s.set('submitted', true);
                             s.set('submissionStatus', 'submitted');
+                            sub.set('aggregatedDepositStatus', 'not-started');
                             subEvent.set('performerRole', 'submitter');
                             subEvent.set('eventType', 'submitted');
                           } else {
@@ -140,7 +141,7 @@ export default Controller.extend({
                           }
                           s.save()
                             .then(() => {
-                              this.set('model.uploading', false);
+                              // this.set('model.uploading', false);
                               subEvent
                                 .save()
                                 .then(() => {
