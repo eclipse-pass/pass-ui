@@ -2,12 +2,12 @@
 {{#if (not model.newSubmission.id)}}
 <div class="py-0 mt-2 alert alert-secondary">
   <p class="my-2 lead">I'm creating this submission on behalf of:
-    {{radio-button class="ml-3 mr-1" value=false name='showProxyWindow' checked=model.newSubmission.hasProxy}} Myself
-    {{radio-button class="ml-3 mr-1" value=true name='showProxyWindow' checked=model.newSubmission.hasProxy}} Someone
+    {{radio-button class="ml-3 mr-1" value=false name='showProxyWindow' checked=model.newSubmission.hasNewProxy}} Myself
+    {{radio-button class="ml-3 mr-1" value=true name='showProxyWindow' checked=model.newSubmission.hasNewProxy}} Someone
     else
   </p>
 </div>
-{{#if model.newSubmission.hasProxy}}
+{{#if model.newSubmission.hasNewProxy}}
 <div class="alert alert-info">
   <p>When a submission is created on someone's behalf, PASS will contact that person to acquire their approval before
     finalizing the submission and sending it to its corresponding repositories.</p>

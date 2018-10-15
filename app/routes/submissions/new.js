@@ -23,6 +23,8 @@ export default CheckSessionRoute.extend({
   model(params) {
     let preLoadedGrant = null;
     let newSubmission = null;
+    let submissionEvents = null;
+    let files = null;
     let publication = this.get('store').createRecord('publication');
 
     if (params.grant) {
@@ -62,14 +64,31 @@ export default CheckSessionRoute.extend({
       return this.get('store').findRecord('submission', params.submission).then((sub) => {
         newSubmission = this.get('store').findRecord('submission', params.submission);
         publication = sub.get('publication');
+        submissionEvents = this.get('store').query('submissionEvent', {
+          sort: [
+            { performedDate: 'asc' }
+          ],
+          query: {
+            term: {
+              submission: sub.get('id')
+            }
+          }
+        });
+        files = this.get('store').query('file', {
+          term: {
+            submission: sub.get('id')
+          }
+        });
         return Ember.RSVP.hash({
           repositories,
           newSubmission,
+          submissionEvents,
           publication,
           grants,
           policies,
           funders,
-          preLoadedGrant
+          preLoadedGrant,
+          files
         });
       });
     }

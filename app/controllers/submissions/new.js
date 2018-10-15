@@ -12,7 +12,7 @@ export default Controller.extend({
   hasProxy: Ember.computed(
     'submitterEmail',
     'model.newSubmission.preparers',
-    function() {
+    function () {
       return (
         this.get('submitterEmail') ||
         this.get('model.newSubmission.preparers.length') > 0
@@ -33,16 +33,15 @@ export default Controller.extend({
       const sub = this.get('model.newSubmission');
       sub.set(
         'repositories',
-        sub.get('repositories').filter(repo => {
+        sub.get('repositories').filter(repo =>
           // eslint-disable-line
           // TODO the specific URL checks should be removed after Repository data is updated to
           // include 'integrationType' property
-          return (
+          (
             repo.get('integrationType') !== 'web-link' &&
             repo.get('url') !== 'https://eric.ed.gov/' &&
             repo.get('url') !== 'https://dec.usaid.gov/'
-          );
-        })
+          ))
       );
 
       this.set('model.uploading', true);
@@ -57,26 +56,22 @@ export default Controller.extend({
       sub.set('submissionStatus', 'not-started');
       sub.set('submittedDate', new Date());
       sub.set('submitted', false);
-      if (!sub.get('hasProxy')) {
-        sub.set('submitter', this.get('currentUser.user')); // this.get('currentUser.user.id') seems to break stuff
-        debugger;
-      }
       sub.set('source', 'pass');
-      pub.save().then(p => {
+      pub.save().then((p) => {
         sub.set('publication', p); // p.get('id') seems to break stuff
         let ctr = 0;
         let len = this.get('filesTemp').length;
         sub.set('removeNIHDeposit', false);
         sub
           .save()
-          .then(s => {
-            this.get('filesTemp').forEach(file => {
+          .then((s) => {
+            this.get('filesTemp').forEach((file) => {
               let contentType = file.get('_file.type')
                 ? file.get('_file.type')
                 : 'application/octet-stream';
               var reader = new FileReader();
               reader.readAsArrayBuffer(file.get('_file'));
-              reader.onload = evt => {
+              reader.onload = (evt) => {
                 let data = evt.target.result;
                 let xhr = new XMLHttpRequest();
                 xhr.open('POST', `${s.get('id')}`, true);
@@ -95,19 +90,17 @@ export default Controller.extend({
                   }
                 }
                 this.set('model.waitingMessage', 'Uploading files');
-                xhr.onload = results => {
+                xhr.onload = (results) => {
                   file.set('submission', s); // s.get('id') seems to break stuff
                   file.set('uri', results.target.response);
                   file
                     .save()
-                    .then(f => {
+                    .then((f) => {
                       if (f) {
                         ctr += 1;
                         console.log(ctr);
                         if (ctr >= len) {
-                          let subEvent = this.store.createRecord(
-                            'submissionEvent'
-                          );
+                          let subEvent = this.store.createRecord('submissionEvent');
                           subEvent.set(
                             'performedBy',
                             this.get('currentUser.user')
@@ -138,9 +131,7 @@ export default Controller.extend({
                               );
                               s.set(
                                 'submitter',
-                                `mailto:${encodeURI(
-                                  this.get('submitterEmail')
-                                )}`
+                                `mailto:${encodeURI(this.get('submitterEmail'))}`
                               );
                               subEvent.set(
                                 'link',
@@ -160,36 +151,34 @@ export default Controller.extend({
                                     }
                                   });
                                 })
-                                .catch(e => {
+                                .catch((e) => {
                                   this.set('model.uploading', false);
                                   toastr.error(e);
                                 });
                             })
-                            .catch(e => {
+                            .catch((e) => {
                               this.set('model.uploading', false);
                               toastr.error(e);
                             });
                         }
                       } else {
-                        toastr.error(
-                          'It looks like one or more of your files failed to upload. Please try again or contact support.'
-                        );
+                        toastr.error('It looks like one or more of your files failed to upload. Please try again or contact support.');
                       }
                     })
-                    .catch(e => {
+                    .catch((e) => {
                       this.set('model.uploading', false);
                       toastr.error(e);
                     });
                 };
                 xhr.send(data);
               };
-              reader.onerror = function(evt) {
+              reader.onerror = function (evt) {
                 this.set('model.uploading', false);
                 toastr.error('Error reading file');
               };
             });
           })
-          .catch(e => {
+          .catch((e) => {
             this.set('model.uploading', false);
             toastr.error(e);
           });

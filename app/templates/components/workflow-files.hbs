@@ -17,6 +17,16 @@
     </p>
   {{/if}}
 {{/each}}
+<div class="container">
+<p class="mt-3 lead">Existing Files</p>
+{{#each model.files as |file|}}
+<div class="row">
+  <div class="col-6"><a href={{file.uri}}>{{file.name}}</a></div>
+  <div class="col-6"><button class="btn btn-outline-danger">Remove</button></div>
+  </div>
+{{/each}}
+</div>
+
 <p class="lead text-muted mb-2">Attach manuscript/article files to this submission.</p>
 <p class="lead text-muted">Each individual file must be smaller than 100MB.</p>
 <div class="form-group row">

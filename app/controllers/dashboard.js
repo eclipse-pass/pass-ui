@@ -8,8 +8,6 @@ export default Controller.extend({
   isSubmitter: Ember.computed('currentUser', () =>
     this.get('currentUser.user.roles').includes('submitter')),
   ajax: Ember.inject.service(),
-  numberAwaitingApproval: null,
-  numberAwaitingEdits: null,
   base: Ember.computed(() => ENV.fedora.elasticsearch),
   statsLoaded: true,
   _headers() {
@@ -20,22 +18,23 @@ export default Controller.extend({
   numberAwaitingApproval: Ember.computed('currentUser.user', function () {
     return this.get('ajax').post(this.get('base'), {
       data: {
-        "size":500,
-        "from":0,
-        "query":{
-          "bool":{
-            "must":{
-              "term": { "submissionStatus": "approval-requested" },
-              "term": { "preparer": this.get('currentUser.user.id') }
-            },
-            "filter":{
-              "term":{
-                "@type":"Submission"
+        size: 500,
+        from: 0,
+        query: {
+          bool: {
+            must: [
+              { term: { submissionStatus: 'approval-requested' } },
+              { term: { submitter: this.get('currentUser.user.id') } }
+            ],
+            filter: {
+              term: {
+                '@type': 'Submission'
               }
             }
-          }, 
+          }
         },
-        "_source":{"excludes":"*_suggest"}},
+        _source: { excludes: '*_suggest' }
+      },
       headers: this._headers(),
       xhrFields: { withCredentials: true }
     }).then((results) => {
@@ -47,22 +46,23 @@ export default Controller.extend({
   numberAwaitingEdits: Ember.computed('currentUser.user', function () {
     this.get('ajax').post(this.get('base'), {
       data: {
-        "size":500,
-        "from":0,
-        "query":{
-          "bool":{
-            "must":{
-              "term": { "submissionStatus": "approval-requested" },
-              "term": { "submitter": this.get('currentUser.user.id') }
-            },
-            "filter":{
-              "term":{
-                "@type":"Submission"
+        size: 500,
+        from: 0,
+        query: {
+          bool: {
+            must: [
+              { term: { submissionStatus: 'changes-requested' } },
+              { term: { preparer: this.get('currentUser.user.id') } }
+            ],
+            filter: {
+              term: {
+                '@type': 'Submission'
               }
             }
-          }, 
+          },
         },
-        "_source":{"excludes":"*_suggest"}},
+        _source: { excludes: '*_suggest' }
+      },
       headers: this._headers(),
       xhrFields: { withCredentials: true }
     }).then((results) => {

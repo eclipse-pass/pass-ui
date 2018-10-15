@@ -3,5 +3,12 @@
     Finish submission
   {{/link-to}}
 {{else}}
-  <span style="min-width: 130px;display: block;"><i>No actions available.</i></span>
+  {{debugger}}
+  {{#if (and (eq record.submissionStatus 'changes-requested') isPreparer)}}
+    {{#link-to 'submissions.new' (query-params submission=record.id) class="btn btn-outline-primary"}}
+      Edit submission
+    {{/link-to}}
+  {{else}}
+    <span style="min-width: 130px;display: block;"><i>No actions available.</i></span>
+  {{/if}}
 {{/if}}

@@ -26,6 +26,11 @@
         <i class="fas fa-info-circle"></i> {{status}}
       </span>
     {{/if}}
+    {{#if (eq status "Edits required")}}
+      <span tooltip-position="left" tooltip="The submitter has requested that you make some changes to the submission.">
+        <i class="fas fa-info-circle"></i> {{status}}
+      </span>
+    {{/if}}
     {{#if (eq status "See details")}}
       {{#link-to "submissions.detail" record.id}}
         <i class="fas fa-circle"></i> {{status}}
