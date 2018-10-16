@@ -102,15 +102,13 @@ export default WorkflowComponent.extend({
           headers: this._headers(),
           xhrFields: { withCredentials: true }
         }).then((res) => {
-          console.log(res);
           if (res.hits.hits.length > 0) {
-            this.get('store')
-              .findRecord('user', res.hits.hits[0]._source['@id'])
-              .then((u) => {
-                this.set('model.newSubmission.submitter', u);
-                const displayName = this.get('model.newSubmission.submitter.displayName');
-                toastr.success(`Submitter updated to ${displayName}.`);
-              });
+            const userId = res.hits.hits[0]._source['@id'];
+            this.get('store').findRecord('user', userId).then((u) => {
+              this.set('model.newSubmission.submitter', u);
+              const displayName = this.get('model.newSubmission.submitter.displayName');
+              toastr.success(`Submitter updated to ${displayName}.`);
+            });
           } else {
             toastr.error('Submitter not found.');
           }
@@ -124,6 +122,7 @@ export default WorkflowComponent.extend({
       const title = this.get('model.publication.title');
       const journal = this.get('model.publication.journal');
 
+      // booleans
       const newProxy = this.get('model.newSubmission.hasNewProxy');
       const currentUserIsNotSubmitter = this.get('model.newSubmission.submitter.id') !== this.get('currentUser.user.id');
       const proxySubmitterInfoExists = this.get('submitterEmail') && this.get('submitterName');
@@ -152,11 +151,11 @@ export default WorkflowComponent.extend({
         return;
       }
 
+      // If there's no submitter or submitter info and the submission is a new proxy submission:
       if (!(submitterExists || proxySubmitterInfoExists) && newProxy) {
         toastr.warning('You have indicated that you are submitting on behalf of someone else, but have not chosen that someone.');
         return;
       }
-      debugger; // eslint-disable-line
       if (newProxy) {
         // If the submitter is not the current user
         // OR there is information to be turned into a submitter later
@@ -166,13 +165,15 @@ export default WorkflowComponent.extend({
           this.get('model.newSubmission.preparers').addObject(this.get('currentUser.user'));
         }
       } else if (!this.get('hasProxy')) {
+        // Otherwise, if it is not a proxy submission, make the current user the submitter.
         this.set('model.newSubmission.submitter', this.get('currentUser.user'));
       }
-
+      // If there's no title in the information grabbed via DOI, use the title given by the user.
+      if (!this.get('doiInfo.title')) this.set('doiInfo.title', this.get('model.publication.title'));
+      // Move to the next form.
       this.send('next');
     },
     next() {
-      if (!this.get('doiInfo.title')) this.set('doiInfo.title', this.get('model.publication.title'));
       this.sendAction('next');
     },
     validateDOI() {
@@ -199,7 +200,7 @@ export default WorkflowComponent.extend({
     },
     validateTitle() {
       const title = this.get('model.publication.title');
-      if (title) {
+      if (title) { // if not null or empty, then valid
         this.set('validTitle', 'form-control is-valid');
       } else {
         this.set('validTitle', 'form-control is-invalid');
@@ -208,18 +209,9 @@ export default WorkflowComponent.extend({
     /** looks up the DIO and returns title and journal if avaiable */
     lookupDOI() {
       if (this.get('model.publication.doi')) {
-        this.set(
-          'model.publication.doi',
-          this.get('model.publication.doi').trim()
-        );
-        this.set(
-          'model.publication.doi',
-          this.get('model.publication.doi').replace(/doi:/gi, '')
-        );
-        this.set(
-          'model.publication.doi',
-          this.get('model.publication.doi').replace(/https?:\/\/(dx\.)?doi\.org\//gi, '')
-        );
+        this.set('model.publication.doi', this.get('model.publication.doi').trim());
+        this.set('model.publication.doi', this.get('model.publication.doi').replace(/doi:/gi, ''));
+        this.set('model.publication.doi', this.get('model.publication.doi').replace(/https?:\/\/(dx\.)?doi\.org\//gi, ''));
       }
       const publication = this.get('model.publication');
       if (publication) {
@@ -259,24 +251,24 @@ export default WorkflowComponent.extend({
             query.bool.must = { term: { issns: desiredIssn } };
           }
           // Must match ISSN, optionally match journalName
-          this.get('store')
-            .query('journal', { query })
-            .then((journals) => {
-              let journal =
-                journals.get('length') > 0 ? journals.objectAt(0) : false;
-              if (!journal) {
-                const newJournal = this.get('store').createRecord('journal', {
-                  journalName: doiInfo['container-title'].trim(),
-                  issns: doiInfo.ISSN,
-                  nlmta: doiInfo.nmlta
-                });
-                newJournal.save().then(j => publication.set('journal', j));
-              } else {
-                publication.set('journal', journal);
-              }
-            });
-        });
-      }
+          // If journal is found, set it to the publication's journal.
+          // If journal is not found, make a journal based off the provided info and
+          // set it to the publication's journal.
+          this.get('store').query('journal', { query }).then((journals) => {
+            let journal = journals.get('length') > 0 ? journals.objectAt(0) : false;
+            if (!journal) {
+              const newJournal = this.get('store').createRecord('journal', {
+                journalName: doiInfo['container-title'].trim(),
+                issns: doiInfo.ISSN,
+                nlmta: doiInfo.nmlta
+              });
+              newJournal.save().then(j => publication.set('journal', j));
+            } else {
+              publication.set('journal', journal);
+            }
+          });
+        }); // end resolve(publication).then()
+      } // end if (publication)
     },
 
     /** Sets the selected journal for the current publication.
@@ -284,10 +276,7 @@ export default WorkflowComponent.extend({
      */
     async selectJournal(journal) {
       let doiInfo = this.get('doiInfo');
-      doiInfo = {
-        'journal-title': journal.get('journalName'),
-        ISSN: journal.get('issns')
-      };
+      doiInfo = { 'journal-title': journal.get('journalName'), ISSN: journal.get('issns') };
 
       const nlmtaDump = await this.getNlmtaFromIssn(doiInfo);
       if (nlmtaDump) {
@@ -364,14 +353,10 @@ export default WorkflowComponent.extend({
   },
   getNLMTA(nlmid) {
     let idquery = nlmid;
-    if (Array.isArray(nlmid)) {
-      idquery = nlmid.join(',');
-    }
+    if (Array.isArray(nlmid)) idquery = nlmid.join(',');
     const url = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=nlmcatalog&retmode=json&rettype=abstract&id=${idquery}`;
-    return fetch(url)
-      .then(resp => resp.json().then(data => data.result))
-      .catch((e) => {
-        console.log('NLMTA lookup failed.', e);
-      });
+    return fetch(url).then(resp => resp.json().then(data => data.result)).catch((e) => {
+      console.log('NLMTA lookup failed.', e);
+    });
   }
 });
