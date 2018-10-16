@@ -119,9 +119,7 @@ export default WorkflowComponent.extend({
       }
 
       // if either is missing, end function early.
-      if (!journal.get('id') || !title) {
-        return;
-      }
+      if (!journal.get('id') || !title) return;
 
       // If there's no submitter or submitter info and the submission is a new proxy submission:
       if (!(submitterExists || proxySubmitterInfoExists) && newProxy) {
