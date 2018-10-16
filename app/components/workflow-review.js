@@ -52,28 +52,19 @@ export default WorkflowComponent.extend({
       return this.get('mustVisitWeblink') && !this.get('hasVisitedWeblink');
     }
   ),
-  userIsPreparer: Ember.computed(
-    'model.newSubmission',
-    'currentUser.user',
-    function () {
-      return (
-        this.get('hasProxy') &&
-        this.get('model.newSubmission.submitter.id') !==
-          this.get('currentUser.user')
-      );
-    }
-  ),
+  userIsPreparer: Ember.computed('model.newSubmission', 'currentUser.user', function () {
+    const hasProxy = this.get('hasProxy');
+    const isNotSubmitter = this.get('model.newSubmission.submitter.id') !== this.get('currentUser.user');
+    return (hasProxy && isNotSubmitter);
+  }),
   submitButtonText: Ember.computed('userIsPreparer', function () {
-    if (this.get('userIsPreparer')) {
-      return 'Request approval';
-    }
-    return 'Submit';
+    return this.get('userIsPreparer') ? 'Request approval' : 'Submit';
   }),
   actions: {
     submit() {
       $('.block-user-input').css('display', 'block');
       let disableSubmit = true;
-      let didNotAgree = true;
+      // let didNotAgree = true;
       // In case a crafty user edits the page HTML, don't submit when not allowed
       if (this.get('disableSubmit')) {
         if (!this.get('hasVisitedWeblink')) {
@@ -87,9 +78,9 @@ export default WorkflowComponent.extend({
         }
         disableSubmit = false;
       }
-      if (this.get('didNotAgree')) {
-        didNotAgree = false;
-      }
+      // if (this.get('didNotAgree')) {
+      //   didNotAgree = false;
+      // }
 
       if (!disableSubmit) {
         $('.block-user-input').css('display', 'none');
@@ -97,15 +88,9 @@ export default WorkflowComponent.extend({
       }
       this.sendAction('submit');
     },
-    agreeToDeposit() {
-      this.set('step', 5);
-    },
-    back() {
-      this.sendAction('back');
-    },
-    checkValidate() {
-      this.sendAction('validate');
-    },
+    agreeToDeposit() { this.set('step', 5); },
+    back() { this.sendAction('back'); },
+    checkValidate() { this.sendAction('validate'); },
     openWeblinkAlert(repo) {
       swal({
         title: 'Notice!',
@@ -120,7 +105,6 @@ export default WorkflowComponent.extend({
           return;
         }
         // Go to the weblink repo
-
         this.get('externalRepoMap')[repo.get('id')] = true;
         const allLinksVisited = Object.values(this.get('externalRepoMap')).every(val => val === true);
         if (allLinksVisited) {
@@ -131,9 +115,6 @@ export default WorkflowComponent.extend({
         var win = window.open(repo.get('url'), '_blank');
         win.focus();
       });
-    },
-    deleteComment(index) {
-      this.sendAction('deleteComment', index);
     }
   }
 });

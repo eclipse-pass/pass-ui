@@ -1,22 +1,6 @@
 import WorkflowComponent from './workflow-component';
 import { inject as service, } from '@ember/service';
-import EmberArray from '@ember/array';
 
-// function diff(array1, array2) {
-//   const retArray = [];
-//   array1.forEach((element1) => {
-//     let flag = false;
-//     array2.forEach((element2) => {
-//       if (element1.get('id') === element2.get('id')) {
-//         flag = true;
-//       }
-//     });
-//     if (!flag) {
-//       retArray.push(element1);
-//     }
-//   });
-//   return retArray;
-// }
 export default WorkflowComponent.extend({
   addedRepositories: [],
   router: service(),
@@ -85,52 +69,33 @@ export default WorkflowComponent.extend({
       repos = [repos[0]];
     }
     let result = [];
-    repos.forEach(r => result.push({
-      repo: r,
-      // funders: this.getFunderNamesForRepo(r)
-      funders: 'Johns Hopkins University'
-    }));
+    repos.forEach(r => result.push({ repo: r, funders: 'Johns Hopkins University' }));
     return result;
   }),
-  didRender() {
-    this._super(...arguments);
-  },
   actions: {
     next() {
       this.send('saveAll');
-      const that = this;
       if (this.get('model.newSubmission.repositories.length') == 0) {
         swal(
           'You\'re done!',
           'If you don\'t plan on submitting to any repositories, you can stop at this time.',
-          {
-            buttons: {
-              cancel: true,
-              confirm: true,
-            }
-          },
+          { buttons: { cancel: true, confirm: true } },
         ).then((value) => {
-          if (value.dismiss) {
-            return;
-          }
+          if (value.dismiss) return;
           this.get('router').transitionTo('dashboard');
         });
       } else {
         this.sendAction('next');
       }
     },
-    back() {
-      this.sendAction('back');
-    },
-    addRepo(repository) {
-      this.get('addedRepositories').push(repository);
-    },
+
+    back() { this.sendAction('back'); },
+    addRepo(repository) { this.get('addedRepositories').push(repository); },
+
     removeRepo(targetRepository) {
-      const repositories = this.get('addedRepositories');
-      repositories.forEach((repository, index) => {
-        if (targetRepository.get('id') === repository.get('id')) {
-          repositories.splice(index, 1);
-        }
+      const addedRepos = this.get('addedRepositories');
+      addedRepos.forEach((repository, index) => {
+        if (targetRepository.get('id') === repository.get('id')) addedRepos.splice(index, 1);
       });
     },
     saveAll() {
@@ -148,11 +113,8 @@ export default WorkflowComponent.extend({
       });
     },
     toggleRepository(repository) {
-      if (event.target.checked) {
-        this.send('addRepo', repository);
-      } else {
-        this.send('removeRepo', repository);
-      }
+      if (event.target.checked) this.send('addRepo', repository);
+      else this.send('removeRepo', repository);
     },
   },
 });

@@ -202,7 +202,6 @@ export default WorkflowComponent.extend({
           } else {
             schemas.addObject(form);
           }
-
         } catch (e) {
           console.log('ERROR:', e);
         }

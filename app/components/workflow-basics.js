@@ -6,21 +6,15 @@ function resolve(submission) {
   const base = 'https://doi.org/';
 
   let doi = submission.get('doi');
-  if (!doi) {
-    return Promise.reject(new Error('No DOI present'));
-  }
+  if (!doi) return Promise.reject(new Error('No DOI present'));
   doi = doi.replace(/https?:\/\/(dx\.)?doi\.org\//gi, '');
 
   return fetch(base + encodeURI(doi), {
     redirect: 'follow',
-    headers: {
-      Accept: 'application/vnd.citationstyles.csl+json'
-    }
+    headers: { Accept: 'application/vnd.citationstyles.csl+json' }
   })
     .then((response) => {
-      if (response.status >= 200 && response.status < 300) {
-        return response;
-      }
+      if (response.status >= 200 && response.status < 300) return response;
       const error = new Error(response.statusText);
       error.response = response;
       throw error;
@@ -38,30 +32,17 @@ export default WorkflowComponent.extend({
   validTitle: 'form-control',
   toast: service('toast'),
   errorHandler: service('error-handler'),
-  showProxyWindow: false,
   emailLookup: '',
   currentUser: service('current-user'),
-  nextDisabled: Ember.computed(
-    'model.publication.journal',
-    'model.publication.title',
-    'model.newSubmission.hasNewProxy',
-    'model.newSubmission.preparer',
+  nextDisabled: Ember.computed( // Used to determine whether the next button should be disabled
+    'model.publication.journal', 'model.publication.title', 'model.newSubmission.hasNewProxy',
     function () {
-      return (
-        this.get('model.publication.journal') &&
-        this.get('model.publication.title') &&
-        // if there's a proxy, there must also be either
-        // a submitter or (submitterName and submitterEmail)
-        (
-          (
-            this.get('model.newSubmission.hasNewProxy') &&
-            (
-              this.get('model.newSubmission.submitter.id') ||
-              (this.get('submitterName') && this.get('submitterEmail'))
-            )
-          ) ||
-          !this.get('model.newSubmission.hasNewProxy'))
-      );
+      const submitterExists = !!(this.get('model.newSubmission.submitter.id'));
+      const submitterInfoExists = this.get('submitterName') && this.get('submitterEmail');
+      const proxyAndSubmitter = this.get('model.newSubmission.hasNewProxy') && (submitterExists || submitterInfoExists);
+      const ifProxyThenSubmitter = !this.get('model.newSubmission.hasNewProxy') || proxyAndSubmitter;
+      const journalAndTitle = this.get('model.publication.journal') && this.get('model.publication.title');
+      return journalAndTitle && ifProxyThenSubmitter;
     }
   ),
   didRender() {
@@ -81,11 +62,7 @@ export default WorkflowComponent.extend({
     this._super(...arguments);
     this.send('lookupDOI');
   },
-  _headers() {
-    return {
-      'Content-Type': 'application/json; charset=utf-8'
-    };
-  },
+  headers: { 'Content-Type': 'application/json; charset=utf-8' },
   actions: {
     searchUsers() {
       const email = this.get('emailLookup');
@@ -99,7 +76,7 @@ export default WorkflowComponent.extend({
             },
             _source: { excludes: '*_suggest' }
           },
-          headers: this._headers(),
+          headers: this.get('headers'),
           xhrFields: { withCredentials: true }
         }).then((res) => {
           if (res.hits.hits.length > 0) {
@@ -109,14 +86,9 @@ export default WorkflowComponent.extend({
               const displayName = this.get('model.newSubmission.submitter.displayName');
               toastr.success(`Submitter updated to ${displayName}.`);
             });
-          } else {
-            toastr.error('Submitter not found.');
-          }
+          } else toastr.error('Submitter not found.');
         });
       }
-    },
-    toggleProxy(choice) {
-      this.set('hasProxy', choice);
     },
     validateNext() {
       const title = this.get('model.publication.title');
@@ -157,8 +129,8 @@ export default WorkflowComponent.extend({
         return;
       }
       if (newProxy) {
-        // If the submitter is not the current user
-        // OR there is information to be turned into a submitter later
+        // If (the submitter is not the current user
+        // OR there is information to be turned into a submitter later)
         // AND the current user is not already a preparer,
         if ((proxySubmitterExists || proxySubmitterInfoExists) && userIsNotPreparer) {
           // THEN add the current user to the preparers list
@@ -237,19 +209,13 @@ export default WorkflowComponent.extend({
 
           const desiredName = doiInfo['container-title'].trim();
           const desiredIssn = Array.isArray(doiInfo.ISSN) // eslint-disable-line
-            ? doiInfo['ISSN'][0] // eslint-disable-line
+            ? doiInfo.ISSN[0]
             : doiInfo.ISSN
               ? doiInfo.ISSN
               : '';
 
-          let query = {
-            bool: {
-              should: [{ match: { journalName: desiredName } }]
-            }
-          };
-          if (desiredIssn) {
-            query.bool.must = { term: { issns: desiredIssn } };
-          }
+          let query = { bool: { should: [{ match: { journalName: desiredName } }] } };
+          if (desiredIssn) query.bool.must = { term: { issns: desiredIssn } };
           // Must match ISSN, optionally match journalName
           // If journal is found, set it to the publication's journal.
           // If journal is not found, make a journal based off the provided info and

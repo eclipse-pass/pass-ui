@@ -4,23 +4,9 @@ import { inject as service } from '@ember/service';
 
 export default WorkflowComponent.extend({
   store: service('store'),
-
-  optionalGrants: Ember.computed('model', function () {
-    return this.get('model.grants');
-  }),
-
-  submissionGrants: Ember.computed('model.newSubmission', function () {
-    return this.get('model.newSubmission.grants');
-  }),
-  sortedGrants: Ember.computed('model.newSubmission.grants.[]', function () {
-    const subGrants = this.get('model.newSubmission.grants');
-    return this.get('model.grants').filter(grant => !subGrants || !subGrants.includes(grant));
-  }),
   init() {
     this._super(...arguments);
-    if (this.get('model.preLoadedGrant')) {
-      this.send('addGrant', this.get('model.preLoadedGrant'));
-    }
+    if (this.get('model.preLoadedGrant')) this.send('addGrant', this.get('model.preLoadedGrant'));
   },
   actions: {
     next() {
@@ -53,6 +39,8 @@ export default WorkflowComponent.extend({
       }
       const submission = this.get('model.newSubmission');
       submission.get('grants').removeObject(grant);
+
+      // undo progress, make user redo metadata step.
       this.set('maxStep', 2);
       submission.set('metadata', '[]');
     },

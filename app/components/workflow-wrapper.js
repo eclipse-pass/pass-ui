@@ -59,12 +59,9 @@ export default Component.extend({
         this.set('maxStep', this.get('step'));
       }
     },
-    back() {
-      this.decrementProperty('step');
-    },
-    submit() {
-      this.sendAction('submit');
-    },
+    back() { this.decrementProperty('step'); },
+    submit() { this.sendAction('submit'); },
+
     validate() {
       const tempValidateArray = [];
       this.set('isValidated', []);
@@ -77,17 +74,6 @@ export default Component.extend({
         }
       });
       this.set('isValidated', tempValidateArray);
-    },
-    addComment(comment) {
-      this.comments.unshiftObject(comment);
-      console.log(this.get('comments'));
-    },
-    saveComment(values) {
-      this.comments[values[0]] = values[1];
-    },
-    deleteComment(index) {
-      console.log('delete', index);
-      this.comments.removeAt(index);
     }
   }
 });
