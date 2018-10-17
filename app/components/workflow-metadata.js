@@ -454,10 +454,12 @@ export default WorkflowComponent.extend({
     },
     nextLogic() {
       const step = this.get('currentFormStep');
-      const metadata = JSON.parse(this.get('model.newSubmission.metadata'));
+      let metadata = JSON.parse(this.get('model.newSubmission.metadata'));
       const doiInfo = this.get('doiInfo');
       let commonMetadata = metadata.filter(md => md.id === 'common')[0];
       this.send('checkForAuthors');
+      // We need to reset the metadata because checkForAuthors changes it
+      metadata = JSON.parse(this.get('model.newSubmission.metadata'));
       // We are moving the form forward next button clicked
       if (step + 1 < this.get('schemas').length) {
         this.set('currentFormStep', step + 1);
@@ -469,28 +471,35 @@ export default WorkflowComponent.extend({
           commonMetadata.data['issn-map'] = doiInfo['issn-map'];
         }
 
-        metadata.push({
-          id: 'crossref',
-          data: {
-            doi: doiInfo.DOI,
-            publisher: doiInfo.publisher,
-            'journal-title-short': doiInfo['container-title-short']
-          },
-        });
+        if (!(metadata.filter(md => md.id === 'crossref')[0])) {
+          metadata.push({
+            id: 'crossref',
+            data: {
+              doi: doiInfo.DOI,
+              publisher: doiInfo.publisher,
+              'journal-title-short': doiInfo['container-title-short']
+            },
+          });
+        }
 
-        metadata.push({
-          id: 'pmc',
-          data: {
-            nlmta: doiInfo.nlmta
-          }
-        });
+        if (!(metadata.filter(md => md.id === 'pmc')[0])) {
+          metadata.push({
+            id: 'pmc',
+            data: {
+              nlmta: doiInfo.nlmta
+            }
+          });
+        }
 
-        metadata.push({
-          id: 'agent_information',
-          data: {
-            information: getBrowserInfo()
-          }
-        });
+        if (!(metadata.filter(md => md.id === 'agent_information')[0])) {
+          metadata.push({
+            id: 'agent_information',
+            data: {
+              information: getBrowserInfo()
+            }
+          });
+        }
+
 
         // Add metadata for external submissions
         const externalRepos = this.get('model.newSubmission.repositories').filter(repo =>
