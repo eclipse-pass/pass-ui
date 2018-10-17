@@ -147,34 +147,73 @@ export default Controller.extend({
       });
     },
     approveChanges() {
-      swal({
-        title: 'Deposit Agreement',
-        text: 'Agreement text goes here. By clicking \'I Agree\', I am confirming that I agree to this text on today\'s date.',
-        type: 'info',
+      // this.get('model.repos').forEach((repo) => {
+      // console.log(repo.get('agreementText'));
+
+      let reposWithAgreementText = _this2.get('model.repos').filter((repo) => {
+        if (repo.get('agreementText')) {
+          return repo;
+        }
+      });
+      debugger;
+      console.log(reposWithAgreementText);
+      // YOU have the agreement text now, figoure out how to get it in to the swal
+
+      swal.mixin({
+        input: 'text',
+        confirmButtonText: 'Next &rarr;',
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'I Agree',
-        cancelButtonText: 'Never mind'
-      }).then((result) => {
+        progressSteps: ['1', '2', '3']
+      }).queue([
+        {
+          title: 'Question 1',
+          text: 'Chaining swal2 modals is easy'
+        },
+        'Question 2',
+        'Question 3'
+      ]).then((result) => {
         if (result.value) {
-          let se = this.get('store').createRecord('submissionEvent', {
-            submission: this.get('model.sub'),
-            performedBy: this.get('currentUser.user'),
-            performedDate: new Date(),
-            comment: this.get('message'),
-            performerRole: 'submitter',
-            eventType: 'submitted'
-          });
-          se.save().then(() => {
-            let sub = this.get('model.sub');
-            sub.set('submissionStatus', 'submitted');
-            sub.set('submitted', true);
-            sub.save().then(() => {
-              window.location.reload(true);
-            });
+          swal({
+            title: 'All done!',
+            html: 'Your answers: <pre><code>' +
+              JSON.stringify(result.value) +
+              '</code></pre>',
+            confirmButtonText: 'Lovely!'
           });
         }
+        // });
+
+        // swal({
+        //   title: 'Deposit Agreement',
+        //   html: `<pre>${repo.get('agreementText')}</pre>`,
+        //   type: 'info',
+        //   showCancelButton: true,
+        //   confirmButtonColor: '#3085d6',
+        //   cancelButtonColor: '#d33',
+        //   confirmButtonText: 'I agree to this text on today\'s date',
+        //   cancelButtonText: 'Never mind'
+        // }).then((result) => {
+        //   console.log(result.value);
+        //   debugger;
+        //   if (result.value) {
+        //     let se = this.get('store').createRecord('submissionEvent', {
+        //       submission: this.get('model.sub'),
+        //       performedBy: this.get('currentUser.user'),
+        //       performedDate: new Date(),
+        //       comment: this.get('message'),
+        //       performerRole: 'submitter',
+        //       eventType: 'submitted'
+        //     });
+        //     se.save().then(() => {
+        //       let sub = this.get('model.sub');
+        //       sub.set('submissionStatus', 'submitted');
+        //       sub.set('submitted', true);
+        //       sub.save().then(() => {
+        //         window.location.reload(true);
+        //       });
+        //     });
+        //   }
+        // });
       });
     },
     cancelSubmission() {

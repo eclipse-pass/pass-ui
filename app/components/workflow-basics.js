@@ -184,6 +184,7 @@ export default WorkflowComponent.extend({
           this.get('model.newSubmission.preparers').addObject(this.get('currentUser.user'));
         }
       } else if (!this.get('hasProxy')) {
+        console.log('!has Proxy ', !this.get('hasProxy'));
         this.set('model.newSubmission.submitter', this.get('currentUser.user.id'));
       }
       if (validTitle && validJournal) {
@@ -285,10 +286,10 @@ export default WorkflowComponent.extend({
           publication.set('abstract', doiInfo.abstract);
 
           const desiredName = doiInfo['container-title'].trim();
-          const desiredIssn = Array.isArray(doiInfo.ISSN)
+          const desiredIssn = Array.isArray(doiInfo.ISSN) // eslint-disable-line
             ? doiInfo['ISSN'][0] // eslint-disable-line
-            : doiInfo.ISSN
-              ? doiInfo.ISSN
+            : doiInfo.ISSN // eslint-disable-line
+              ? doiInfo.ISSN // eslint-disable-line
               : ''; // eslint-disable-line
 
           let query = {

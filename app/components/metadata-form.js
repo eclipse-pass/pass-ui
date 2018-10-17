@@ -252,7 +252,41 @@ export default Ember.Component.extend({
         // }
       }
     }
+    debugger;
+    let currentUser = this.get('currentUser.user');
+    let hasAgreementText = false;
 
+    try {
+      this.get('model.repositories').filter(repo => repo.get('name') === newForm.id)[0].get('agreementText');
+      hasAgreementText = true;
+    } catch (e) {} // eslint-disable-line
+    if (hasAgreementText) {
+      // if the current user is not the preparer
+      if (!this.get('model.preparers').includes(currentUser)) {
+        // add agreement to schema 
+        newForm.options.fields.embargo = {
+          type: 'textarea',
+          label: 'Deposit Agreement',
+          disabled: true,
+          rows: '16',
+          hidden: false,
+        };
+        newForm.options.fields['agreement-to-deposit'] = {
+          type: 'checkbox',
+          rightLabel: 'I agree to the above statement on today\'s date',
+          fieldClass: 'col-12 text-right p-0',
+          hidden: false,
+        };
+
+        newForm.schema.properties.embargo = {
+          type: 'string',
+          default: this.get('model.repositories').filter(repo => repo.get('name') === newForm.id)[0].get('agreementText'),
+        };
+        newForm.schema.properties['agreement-to-deposit'] = {
+          type: 'string'
+        };
+      }
+    }
     $(document).ready(() => {
       $('#schemaForm').empty();
       $('#schemaForm').alpaca(newForm);
