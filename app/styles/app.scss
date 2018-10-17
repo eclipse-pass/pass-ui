@@ -374,6 +374,10 @@ input[type=date]::-webkit-outer-spin-button {
   -webkit-appearance: none;
 }
 
+.swal2-container {
+  z-index: 99999 !important;
+}
+
 ////////////////////////////
 // End Alpaca
 ////////////////////////////

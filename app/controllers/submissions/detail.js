@@ -146,75 +146,70 @@ export default Controller.extend({
         });
       });
     },
-    approveChanges() {
+    async approveChanges() {
+      const that = this;
       // this.get('model.repos').forEach((repo) => {
       // console.log(repo.get('agreementText'));
 
-      let reposWithAgreementText = _this2.get('model.repos').filter((repo) => {
+      let reposWithAgreementText = this.get('model.repos').map((repo) => {
         if (repo.get('agreementText')) {
-          return repo;
+          return {
+            id: repo.get('name'),
+            title: `Deposit requirements for ${repo.get('name')}`,
+            html: `<textarea rows="16" cols="40" name="embargo" class="alpaca-control form-control disabled" disabled="" autocomplete="off">${repo.get('agreementText')}</textarea>`
+          };
         }
       });
-      debugger;
-      console.log(reposWithAgreementText);
-      // YOU have the agreement text now, figoure out how to get it in to the swal
+      reposWithAgreementText.push({
+        id: 'some',
+        title: `Deposit requirements for `,
+        html: `<textarea rows="16" cols="40" name="embargo" class="alpaca-control form-control disabled" disabled="" autocomplete="off"></textarea>`
+      });
 
-      swal.mixin({
-        input: 'text',
+      const result = await swal.mixin({
+        input: 'checkbox',
+        inputPlaceholder: 'I agree to the above statement on today\'s date ',
         confirmButtonText: 'Next &rarr;',
         showCancelButton: true,
-        progressSteps: ['1', '2', '3']
-      }).queue([
-        {
-          title: 'Question 1',
-          text: 'Chaining swal2 modals is easy'
-        },
-        'Question 2',
-        'Question 3'
-      ]).then((result) => {
-        if (result.value) {
-          swal({
-            title: 'All done!',
-            html: 'Your answers: <pre><code>' +
-              JSON.stringify(result.value) +
-              '</code></pre>',
-            confirmButtonText: 'Lovely!'
-          });
-        }
-        // });
-
-        // swal({
-        //   title: 'Deposit Agreement',
-        //   html: `<pre>${repo.get('agreementText')}</pre>`,
-        //   type: 'info',
-        //   showCancelButton: true,
-        //   confirmButtonColor: '#3085d6',
-        //   cancelButtonColor: '#d33',
-        //   confirmButtonText: 'I agree to this text on today\'s date',
-        //   cancelButtonText: 'Never mind'
-        // }).then((result) => {
-        //   console.log(result.value);
-        //   debugger;
-        //   if (result.value) {
-        //     let se = this.get('store').createRecord('submissionEvent', {
-        //       submission: this.get('model.sub'),
-        //       performedBy: this.get('currentUser.user'),
-        //       performedDate: new Date(),
-        //       comment: this.get('message'),
-        //       performerRole: 'submitter',
-        //       eventType: 'submitted'
-        //     });
-        //     se.save().then(() => {
-        //       let sub = this.get('model.sub');
-        //       sub.set('submissionStatus', 'submitted');
-        //       sub.set('submitted', true);
-        //       sub.save().then(() => {
-        //         window.location.reload(true);
-        //       });
-        //     });
-        //   }
-        // });
-      });
+        progressSteps: reposWithAgreementText.map((repo, index) => index + 1),
+      }).queue(reposWithAgreementText);
+      if (result.value) {
+        let reposThatUserAgreedToDeposit = reposWithAgreementText.filter((repo, index) => {
+          // if the user agreed to depost to this repo === 1
+          if (result.value[index] === 1) {
+            return repo;
+          }
+        });
+        swal({
+          title: 'You agree to deposit to the following repositories',
+          html: `Your repositories: <pre><code> ${JSON.stringify(reposThatUserAgreedToDeposit.map(repo => repo.id)).replace(/[\[\]']/g, '')} </code></pre>`,
+          confirmButtonText: 'Submit',
+          showCancelButton: true,
+        }).then((result) => {
+          console.log(result.value);
+          debugger;
+          if (result.value) {
+            // TODO: REMOVE repos form sub
+            // save sub and send it 
+            let se = this.get('store').createRecord('submissionEvent', {
+              submission: this.get('model.sub'),
+              performedBy: this.get('currentUser.user'),
+              performedDate: new Date(),
+              comment: this.get('message'),
+              performerRole: 'submitter',
+              eventType: 'submitted'
+            });
+            se.save().then(() => {
+              let sub = this.get('model.sub');
+              sub.set('submissionStatus', 'submitted');
+              sub.set('submitted', true);
+              sub.save().then(() => {
+                window.location.reload(true);
+              });
+            });
+          }
+        });
+      }
     },
     cancelSubmission() {
       let se = this.get('store').createRecord('submissionEvent', {
