@@ -147,10 +147,6 @@ export default Controller.extend({
       });
     },
     async approveChanges() {
-      const that = this;
-      // this.get('model.repos').forEach((repo) => {
-      // console.log(repo.get('agreementText'));
-
       let reposWithAgreementText = this.get('model.repos').map((repo) => {
         if (repo.get('agreementText')) {
           return {
@@ -160,12 +156,11 @@ export default Controller.extend({
           };
         }
       });
-      reposWithAgreementText.push({
-        id: 'some',
-        title: `Deposit requirements for `,
-        html: `<textarea rows="16" cols="40" name="embargo" class="alpaca-control form-control disabled" disabled="" autocomplete="off"></textarea>`
-      });
-
+      // reposWithAgreementText.push({
+      //   id: 'some',
+      //   title: `Deposit requirements for `,
+      //   html: `<textarea rows="16" cols="40" name="embargo" class="alpaca-control form-control disabled" disabled="" autocomplete="off"></textarea>`
+      // });
       const result = await swal.mixin({
         input: 'checkbox',
         inputPlaceholder: 'I agree to the above statement on today\'s date ',
@@ -190,6 +185,17 @@ export default Controller.extend({
           debugger;
           if (result.value) {
             // TODO: REMOVE repos form sub
+            // Update metadata blob
+// this is not finished code
+this.get('model.sub.repositories').filter(repo => {
+  reposThatUserAgreedToDeposit.map(repo => repo.id)).forEach((r) => {
+  if (r.get('name') != repo.get('name')) {
+
+  }
+})
+})
+
+
             // save sub and send it 
             let se = this.get('store').createRecord('submissionEvent', {
               submission: this.get('model.sub'),
