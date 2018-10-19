@@ -1,40 +1,37 @@
-
-<div class="text-left">
-  <span class="status {{status}} pr-1">
-    {{#if (eq status "Complete")}}
-      <span tooltip-position="left" tooltip="All target repositories have received a copy of the Submission and verified that it is approved for publication">
-        <i class="fas fa-info-circle"></i> {{status}}
-      </span>
-    {{/if}}
-    {{#if (eq status "Manuscript expected")}}
+  <span class="status {{record.submissionStatus}} pr-1">
+    {{#if (eq record.submissionStatus "manuscript-required")}}
       <span tooltip-position="left" tooltip="Your funder is aware of this publication and is expecting the deposit of your manuscript.">
-        <i class="fas fa-info-circle"></i> {{status}}
+        <i class="fas fa-info-circle"></i> manuscript required
       </span>
     {{/if}}
-    {{#if (eq status "Submitted")}}
-      <span tooltip-position="left" tooltip="This submission has either been sent to all target repositories, or is in the queue and will be submitted shortly.">
-        <i class="fas fa-info-circle"></i> {{status}}
+    {{#if (eq record.submissionStatus "approval-requested")}}
+      <span tooltip-position="left" tooltip="This submission was been prepared on behalf of the designated submitter and is awaiting approval before being submitted.">
+        <i class="fas fa-info-circle"></i> approval requested
       </span>
     {{/if}}
-    {{#if (eq status "Stalled")}}
-      <span tooltip-position="left" tooltip="There is a problem with your submission in one or more of the target repositories. Check the Submission page for more details">
-        <i class="fas fa-info-circle"></i> {{status}}
+    {{#if (eq record.submissionStatus "changes-requested")}}
+      <span tooltip-position="left" tooltip="The designated submitter has requested changes to this submission">
+        <i class="fas fa-info-circle"></i> changes requested
       </span>
     {{/if}}
-    {{#if (eq status "Failed")}}
-      <span tooltip-position="left" tooltip="The system failed to receive the files for this submission. Please try again by starting a new submission">
-        <i class="fas fa-info-circle"></i> {{status}}
+    {{#if (eq record.submissionStatus  "cancelled")}}
+      <span tooltip-position="left" tooltip="This submission has been cancelled by the designated submitter">
+        <i class="fas fa-info-circle"></i> cancelled
       </span>
     {{/if}}
-    {{#if (eq status "Edits required")}}
-      <span tooltip-position="left" tooltip="The submitter has requested that you make some changes to the submission.">
-        <i class="fas fa-info-circle"></i> {{status}}
+    {{#if (eq record.submissionStatus  "submitted")}}
+      <span tooltip-position="left" tooltip="The submission was successfully created. PASS will deposit this work into the target repositories and provide a link and feedback where available">
+        <i class="fas fa-info-circle"></i> submitted
       </span>
     {{/if}}
-    {{#if (eq status "See details")}}
-      {{#link-to "submissions.detail" record.id}}
-        <i class="fas fa-circle"></i> {{status}}
-      {{/link-to}}
+    {{#if (eq record.submissionStatus  "needs-attention")}}
+      <span tooltip-position="left" tooltip="PASS has delivered the submission, but one or more repositories have indicated that there may be a need for further action before the submission is complete. View the submission for more details">
+        <i class="fas fa-info-circle"></i> needs attention
+      </span>
+    {{/if}}
+    {{#if (eq record.submissionStatus "complete")}}
+      <span tooltip-position="left" tooltip="The Submission was accepted by all target repositories and is either pending publication or already published">
+        <i class="fas fa-info-circle"></i> complete
+      </span>
     {{/if}}
   </span>
-</div>

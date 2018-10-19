@@ -778,3 +778,25 @@ footer {
   display: inline-flex!important;
   align-items: center!important;
 }
+
+// status buttons
+.status .fas {
+  display: inline;
+  font-size: 0.8em;
+  opacity: 0.9;
+  width: 15%;
+  padding-right:0.2rem;
+}
+.manuscript-required>.fa-circle, .manuscript-required .fa-info-circle, 
+.approval-requested>.fa-circle, .approval-requested .fa-info-circle, 
+.changes-requested>.fa-circle, .changes-requested .fa-info-circle,
+.needs-attention>.fa-circle, .needs-attention .fa-info-circle {
+  color: #FF9E1B;
+}
+.cancelled>.fa-circle, .cancelled .fa-info-circle {
+  color: #A7BCD6;
+}
+.submitted>.fa-circle, .submitted .fa-info-circle, 
+.complete>.fa-circle, .complete .fa-info-circle {
+  color: #00AB8E;
+}
