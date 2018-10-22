@@ -117,10 +117,6 @@ export default Controller.extend({
     }
   ),
   actions: {
-    deleteComment(index) {
-      console.log('delete', index);
-      this.comments.removeAt(index);
-    },
     requestMoreChanges() {
       if (!this.get('message')) {
         swal(
