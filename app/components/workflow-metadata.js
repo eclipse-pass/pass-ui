@@ -320,9 +320,15 @@ export default WorkflowComponent.extend({
           }
         }
       });
-
-      if ($('[name="agreement-to-deposit"]').length == 2) {
-        let value = $('[name="agreement-to-deposit"]')[1].checked;
+      let value = null;
+      if (this.get('schemas')[this.get('currentFormStep')].id === 'JScholarship') {
+        if ($('[name="agreement-to-deposit"]').length == 2) {
+          value = $('[name="agreement-to-deposit"]')[1].checked;
+        }
+        // if proxy sub then set value of deposit agreement = true to loet it pass.
+        if (this.get('model.newSubmission.hasNewProxy')) {
+          value = true;
+        }
         let jhuRepo = this.get('model.repositories').filter(repo => repo.get('name') === 'JScholarship');
         // if jhuRepo exists
         if (jhuRepo.length > 0) {
