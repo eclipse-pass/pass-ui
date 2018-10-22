@@ -7,7 +7,22 @@ export default WorkflowComponent.extend({
   init() {
     this._super(...arguments);
     if (this.get('model.preLoadedGrant')) this.send('addGrant', this.get('model.preLoadedGrant'));
+    if (this.get('model.newSubmission.submitter.id')) {
+      this.get('store').query('grant', {
+        query: {
+          term: {
+            pi: this.get('model.newSubmission.submitter.id')
+          }
+        }
+      }).then((results) => {
+        this.set('grants', results);
+      });
+    }
   },
+  grants: [],
+  filteredGrants: Ember.computed('grants', 'model.newSubmission.grants', function () {
+    return this.get('grants').filter(g => !this.get('model.newSubmission.grants').map(x => x.id).includes(g.get('id')));
+  }),
   actions: {
     next() {
       this.sendAction('next');
