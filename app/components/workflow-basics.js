@@ -34,6 +34,13 @@ export default WorkflowComponent.extend({
   errorHandler: service('error-handler'),
   emailLookup: '',
   currentUser: service('current-user'),
+  // modal fields
+  isShowingModal: false,
+  modalPageSize: 50,
+  modalTotalResults: 0,
+  modalUsers: null,
+  modalSearchInput: '',
+  // end modal fields
   nextDisabled: Ember.computed( // Used to determine whether the next button should be disabled
     'model.publication.journal', 'model.publication.title', 'model.newSubmission.hasNewProxy',
     function () {
@@ -64,31 +71,32 @@ export default WorkflowComponent.extend({
   },
   headers: { 'Content-Type': 'application/json; charset=utf-8' },
   actions: {
-    searchUsers() {
-      const email = this.get('emailLookup');
-      if (email) {
-        return this.get('ajax').post(this.get('base'), {
-          data: {
-            size: 500,
-            from: 0,
-            query: {
-              bool: { must: { term: { email } }, filter: { term: { '@type': 'User' } } }
-            },
-            _source: { excludes: '*_suggest' }
-          },
-          headers: this.get('headers'),
-          xhrFields: { withCredentials: true }
-        }).then((res) => {
-          if (res.hits.hits.length > 0) {
-            const userId = res.hits.hits[0]._source['@id'];
-            this.get('store').findRecord('user', userId).then((u) => {
-              this.set('model.newSubmission.submitter', u);
-              const displayName = this.get('model.newSubmission.submitter.displayName');
-              toastr.success(`Submitter updated to ${displayName}.`);
-            });
-          } else toastr.error('Submitter not found.');
-        });
-      }
+    removeCurrentSubmitter() {
+      this.set('model.newSubmission.submitter', null);
+    },
+    toggleModal() {
+      this.toggleProperty('isShowingModal');
+      console.log(`set isShowingModal to ${this.get('isShowingModal')}`);
+    },
+    searchForUsers() {
+      const size = this.get('modalPageSize');
+      let info = {};
+      let input = this.get('modalSearchInput');
+      this.get('store').query('user', {
+        query: {
+          multi_match: {
+            query: input,
+            fields: ['firstName', 'lastName', 'email', 'displayName']
+          }
+        },
+        from: 0,
+        size,
+        info
+      }).then((users) => {
+        this.set('users', users);
+        this.set('isShowingModal', true);
+        if (info.total !== null) this.set('modalTotalResults', info.total);
+      });
     },
     validateNext() {
       const title = this.get('model.publication.title');
@@ -121,6 +129,8 @@ export default WorkflowComponent.extend({
       // if either is missing, end function early.
       if (!journal.get('id') || !title) return;
 
+
+      debugger; // eslint-disable-line
       // If there's no submitter or submitter info and the submission is a new proxy submission:
       if (!(submitterExists || proxySubmitterInfoExists) && newProxy) {
         toastr.warning('You have indicated that you are submitting on behalf of someone else, but have not chosen that someone.');
