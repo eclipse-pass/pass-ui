@@ -4,7 +4,7 @@
 <div class="comment my-2 row">
     <div class="comment-content col-12">
         <p class="comment-meta">
-            <span class="lead"><a href="#">{{get (await submissionEvent.performedBy) 'displayName'}}</a></span>
+            <span class="lead"><a href="mailto:{{get (await submissionEvent.performedBy) 'email'}}">{{get (await submissionEvent.performedBy) 'displayName'}}</a></span>
             <span class="text-muted">({{format-date submissionEvent.performedDate}})</span>
         </p>
         <div class="comment-body">
