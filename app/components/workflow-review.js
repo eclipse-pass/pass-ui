@@ -42,14 +42,17 @@ export default WorkflowComponent.extend({
     repos.forEach(repo => (this.get('externalRepoMap')[repo.get('id')] = false)); // eslint-disable-line
     return repos;
   }),
-  mustVisitWeblink: Ember.computed('weblinkRepos', function () {
-    return this.get('weblinkRepos').get('length') > 0;
+  mustVisitWeblink: Ember.computed('weblinkRepos', 'model', function () {
+    const weblinkExists = this.get('weblinkRepos.length') > 0;
+    const isEdit = !!this.get('model.newSubmission.id');
+    return weblinkExists && !isEdit;
   }),
   disableSubmit: Ember.computed(
     'mustVisitWeblink',
     'hasVisitedWeblink',
     function () {
-      return this.get('mustVisitWeblink') && !this.get('hasVisitedWeblink');
+      const needsToVisitWeblink = this.get('mustVisitWeblink') && !this.get('hasVisitedWeblink');
+      return needsToVisitWeblink;
     }
   ),
   userIsPreparer: Ember.computed('model.newSubmission', 'currentUser.user', function () {
