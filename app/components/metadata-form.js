@@ -252,7 +252,6 @@ export default Ember.Component.extend({
         // }
       }
     }
-    debugger;
     let currentUser = this.get('currentUser.user');
     let hasAgreementText = false;
 
