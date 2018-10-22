@@ -95,8 +95,8 @@
                 </ul>
               </td>
             </tr>
-            {{#if mustVisitWeblink}}
 
+            {{#if mustVisitWeblink}}
             <tr>
               <td class="text-nowrap text-center" id="externalSubmission">External Submission Required
                 <br>
@@ -238,7 +238,7 @@
                   are requested by the {{model.newSubmission.submitter.displayName}}.
                 </p>
                 <hr>
-                {{commenting-block showMessageEntry=false submissionEvents=model.newSubmission.submissionEvents deleteComment=(action "deleteComment") }}
+                {{commenting-block submissionEvents=model.newSubmission.submissionEvents}}
                 {{textarea placeholder="add note..." value=comment class="form-control custom-control p-2" rows="2"
                 style="resize:none; min-height: 38px!important;"}}
               </td>
