@@ -175,46 +175,68 @@ export default Controller.extend({
             return repo;
           }
         });
-        swal({
-          title: 'You agree to deposit to the following repositories',
-          html: `Your repositories: <pre><code> ${JSON.stringify(reposThatUserAgreedToDeposit.map(repo => repo.id)).replace(/[\[\]']/g, '')} </code></pre>`,
-          confirmButtonText: 'Submit',
-          showCancelButton: true,
-        }).then((result) => {
-          console.log(result.value);
-          debugger;
-          if (result.value) {
-            // TODO: REMOVE repos form sub
-            // Update metadata blob
-// this is not finished code
-this.get('model.sub.repositories').filter(repo => {
-  reposThatUserAgreedToDeposit.map(repo => repo.id)).forEach((r) => {
-  if (r.get('name') != repo.get('name')) {
+        // make sure there are repos to submit to.
+        if (reposThatUserAgreedToDeposit.length > 0 && this.get('model.sub.repositories.length') > 0) {
+          swal({
+            title: 'You agree to deposit to the following repositories',
+            html: `Your repositories: <pre><code> ${JSON.stringify(reposThatUserAgreedToDeposit.map(repo => repo.id)).replace(/[\[\]']/g, '')} </code></pre>`,
+            confirmButtonText: 'Submit',
+            showCancelButton: true,
+          }).then((result) => {
+            console.log(result.value);
+            if (result.value) {
+              // Update repos to reflect repos that user agreed to deposit
+              this.set('model.sub.repositories', this.get('model.sub.repositories').filter((repo) => {
+                let temp = reposWithAgreementText.map(x => x.id).includes(repo.get('name'));
+                if (!temp) {
+                  return true;
+                } else if (reposThatUserAgreedToDeposit.map(r => r.id).includes(repo.get('name'))) {
+                  return true;
+                }
+                return false;
+              }));
+              // update Metadata blob to refelect changes in repos
+              this.set('model.sub.metadata', JSON.stringify(JSON.parse(this.get('model.sub.metadata')).filter((md) => {
+                let whiteListedMetadataKeys = ['common', 'crossref', 'pmc', 'agent_information'];
+                if (whiteListedMetadataKeys.includes(md.id)) {
+                  return md;
+                }
+                return this.get('model.sub.repositories').map(r => r.get('name')).includes(md.id);
+              })));
 
-  }
-})
-})
-
-
-            // save sub and send it 
-            let se = this.get('store').createRecord('submissionEvent', {
-              submission: this.get('model.sub'),
-              performedBy: this.get('currentUser.user'),
-              performedDate: new Date(),
-              comment: this.get('message'),
-              performerRole: 'submitter',
-              eventType: 'submitted'
-            });
-            se.save().then(() => {
-              let sub = this.get('model.sub');
-              sub.set('submissionStatus', 'submitted');
-              sub.set('submitted', true);
-              sub.save().then(() => {
-                window.location.reload(true);
+              // save sub and send it
+              let se = this.get('store').createRecord('submissionEvent', {
+                submission: this.get('model.sub'),
+                performedBy: this.get('currentUser.user'),
+                performedDate: new Date(),
+                comment: this.get('message'),
+                performerRole: 'submitter',
+                eventType: 'submitted'
               });
-            });
-          }
-        });
+              se.save().then(() => {
+                let sub = this.get('model.sub');
+                sub.set('submissionStatus', 'submitted');
+                sub.set('submitted', true);
+                sub.save().then(() => {
+                  window.location.reload(true);
+                });
+              });
+            }
+          });
+        } else {
+          swal({
+            title: 'You have not agreed to deposit to any repositories',
+            html: 'We are unable to submit this submission. Please go back end edit the information or cancel.',
+            confirmButtonText: 'Cancel submission',
+            showCancelButton: true,
+            cancelButtonText: 'Go back to edit information'
+          }).then((result) => {
+            console.log(result.value);
+            if (result.value) {
+              this.send('cancelSubmission');
+            }
+          });
+        }
       }
     },
     cancelSubmission() {
