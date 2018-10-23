@@ -13,7 +13,7 @@
     finalizing the submission and sending it to its corresponding repositories.</p>
   <p class="mb-0">Please indicate on behalf of whom this submission is being completed:</p>
     <div class="input-group pb-3">
-      {{input value=modalSearchInput class="form-control"}}
+      {{input enter='searchForUsers' value=modalSearchInput class="form-control"}}
       <span class="input-group-btn">
         <button class="btn btn-primary" {{action 'searchForUsers'}} type="button">Search</button>
       </span>
@@ -21,7 +21,7 @@
     {{#if model.newSubmission.submitter.id}}
     <p>
       Currently selected submitter:<br>{{model.newSubmission.submitter.firstName}} {{model.newSubmission.submitter.lastName}}
-       (<a href="mailto:{{model.newSubmission.submitter.email}}">{{model.newSubmission.submitter.email}}</a>) <a href="#" class="pull-right" {{action 'removeCurrentSubmitter'}}>Remove submitter</a>
+       (<a href="mailto:{{model.newSubmission.submitter.email}}">{{model.newSubmission.submitter.email}}</a>)<br>(<a href="#" {{action 'removeCurrentSubmitter'}}>Remove submitter</a>)
     </p>
     {{/if}}
   <p class="mb-0"><strong>If the person you are submitting for does not have an account with PASS</strong>, please

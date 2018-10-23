@@ -1,17 +1,15 @@
 <div style="min-width:600px;min-height:300px;" class="pt-4 pl-4 pr-4">
   <button style="position:absolute;right:15px;top:15px;border:none;" class="btn btn-outline-primary" {{action 'toggleModal'}}>X</button>
   <div class="container">
-    <div class="text-center">
     <h2>Search Users</h2>
     <p class="text-muted">Search by name or email and click on a user to assign them to the submitter role.</p>
     <div class="input-group pb-3">
-      {{input value=searchInput class="form-control"}}
+      {{input value=searchInput enter="searchForUsers" class="form-control"}}
       <span class="input-group-btn">
         <button class="btn btn-primary" {{action 'searchForUsers' 0}} type="button">Search</button>
       </span>
     </div>
-    </div>
-    <h3 class="mb-4">Results</h3>
+    <h3 class="my-4">Results</h3>
     {{#if filteredUsers}}
       <div class="row">
         {{#each filteredUsers as |user|}}
