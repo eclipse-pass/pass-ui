@@ -22,9 +22,12 @@
   <p class="mt-3 lead">Existing Files</p>
 {{/if}}
 {{#each model.files as |file|}}
-<div class="row">
-  <div class="col-6"><a href={{file.uri}}>{{file.name}}</a></div>
-  <div class="col-6"><button class="btn btn-outline-danger" {{action 'deleteExistingFile' file}}>Remove</button></div>
+  <div class="row">
+    <div class="col-12">
+      {{file.name}}
+      (<a href={{file.uri}}>Download</a>)
+      (<a href="#" {{action 'deleteExistingFile' file}}>Delete</a>)
+    </div>
   </div>
 {{/each}}
 </div>
