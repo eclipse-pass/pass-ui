@@ -8,25 +8,9 @@ export default Component.extend({
   isValidated: Ember.A(),
   doiInfo: [],
   includeNIHDeposit: true,
-  comments: Ember.A([
-    {
-      dateTime: 'date',
-      message:
-        'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae ',
-      user: {
-        username: 'nih-user@johnshopkins.edu',
-        displayName: 'Nihu Ser',
-        firstName: 'Alfredo',
-        lastName: 'Kirkwood',
-        email: 'nihuser@jhu.edu',
-        institutionalId: 'nih-user',
-        roles: ['submitter']
-      }
-    }
-  ]),
   init() {
     this._super(...arguments);
-    this.set('filesTemp', Ember.A());
+    this.get('filesTemp').clear();
   },
   userIsPreparer: Ember.computed(
     'currentUser.user',
@@ -53,7 +37,6 @@ export default Component.extend({
       this.set('includeNIHDeposit', bool);
     },
     next() {
-      let currentUser = this.get('currentUser.user');
       this.incrementProperty('step');
       if (this.get('maxStep') < this.get('step')) {
         this.set('maxStep', this.get('step'));
