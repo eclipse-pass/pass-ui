@@ -98,10 +98,10 @@ export default WorkflowComponent.extend({
       swal({
         title: 'Notice!',
         text:
-          'You are being redirected to an external site. This will open a new tab.',
+          'You are being sent to an external site. This will open a new tab.',
         showCancelButton: true,
         cancelButtonText: 'Cancel',
-        confirmButtonText: 'Redirect'
+        confirmButtonText: 'Open new tab'
       }).then((value) => {
         if (value.dismiss) {
           // Don't redirect
