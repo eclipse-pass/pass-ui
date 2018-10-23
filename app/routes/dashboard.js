@@ -26,7 +26,7 @@ export default CheckSessionRoute.extend({
       bool: {
         must: [
           { term: { submissionStatus: 'changes-requested' } },
-          { term: { preparer: this.get('currentUser.user.id') } }
+          { term: { preparers: this.get('currentUser.user.id') } }
         ],
         filter: { term: { '@type': 'Submission' } }
       },
