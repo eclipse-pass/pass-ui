@@ -37,7 +37,7 @@
     we just want to validate the last step because up untill this point its okay not to have all the data
     just let them fill out the forms then check that the data is right at the end
     --}}
-    {{workflow-review comment=comment userIsSubmitter=userIsSubmitter userIsPreparer=userIsPreparer comments=comments
+    {{workflow-review comment=comment userIsSubmitter=userIsSubmitter userIsPreparer=userIsPreparer
     hasProxy=hasProxy submitterName=submitterName submitterEmail=submitterEmail didNotAgree=didNotAgree model=model
     isValidated=isValidated validate=(action "validate") back=(action "back") submit=(action "submit")
     filesTemp=filesTemp step=step uploading=uploading waitingMessage=waitingMessage}}
@@ -46,13 +46,13 @@
 </div>
 
 {{#if (and model.submissionEvents hasProxy)}}
-{{#if model.newSubmission.id}}
-<div class="alert alert-info mt-3">
-  <h3 class="mt-3 mb-0">Comments</h3>
-  <hr class="mt-0">
-  {{commenting-block
-  submissionEvents=model.submissionEvents
-  }}
-</div>
-{{/if}}
+  {{#if model.newSubmission.id}}
+  <div class="alert alert-info mt-3">
+    <h3 class="mt-3 mb-0">Comments</h3>
+    <hr class="mt-0">
+    {{commenting-block
+    submissionEvents=model.submissionEvents
+    }}
+  </div>
+  {{/if}}
 {{/if}}
