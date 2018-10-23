@@ -143,36 +143,104 @@ export default Controller.extend({
         });
       }
     },
-    approveChanges() {
-      swal({
-        title: 'Deposit Agreement',
-        text: 'Agreement text goes here. By clicking \'I Agree\', I am confirming that I agree to this text on today\'s date.',
-        type: 'info',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'I Agree',
-        cancelButtonText: 'Nevermind'
-      }).then((result) => {
-        if (result.value) {
-          let se = this.get('store').createRecord('submissionEvent', {
-            submission: this.get('model.sub'),
-            performedBy: this.get('currentUser.user'),
-            performedDate: new Date(),
-            comment: this.get('message'),
-            performerRole: 'submitter',
-            eventType: 'submitted'
-          });
-          se.save().then(() => {
-            let sub = this.get('model.sub');
-            sub.set('submissionStatus', 'submitted');
-            sub.set('submitted', true);
-            sub.save().then(() => {
-              window.location.reload(true);
-            });
-          });
+    async approveChanges() {
+      let reposWithAgreementText = this.get('model.repos').map((repo) => {
+        if (repo.get('agreementText')) {
+          return {
+            id: repo.get('name'),
+            title: `Deposit requirements for ${repo.get('name')}`,
+            html: `<textarea rows="16" cols="40" name="embargo" class="alpaca-control form-control disabled" disabled="" autocomplete="off">${repo.get('agreementText')}</textarea>`
+          };
         }
       });
+      // INFO: this is used to testing more then 1 repo.
+      // reposWithAgreementText.push({
+      //   id: 'some',
+      //   title: `Deposit requirements for `,
+      //   html: `<textarea rows="16" cols="40" name="embargo" class="alpaca-control form-control disabled" disabled="" autocomplete="off"></textarea>`
+      // });
+      const result = await swal.mixin({
+        input: 'checkbox',
+        inputPlaceholder: 'I agree to the above statement on today\'s date ',
+        confirmButtonText: 'Next &rarr;',
+        showCancelButton: true,
+        progressSteps: reposWithAgreementText.map((repo, index) => index + 1),
+      }).queue(reposWithAgreementText);
+      if (result.value) {
+        let reposThatUserAgreedToDeposit = reposWithAgreementText.filter((repo, index) => {
+          // if the user agreed to depost to this repo === 1
+          if (result.value[index] === 1) {
+            return repo;
+          }
+        });
+        // make sure there are repos to submit to.
+        if (reposThatUserAgreedToDeposit.length > 0 && this.get('model.sub.repositories.length') > 0) {
+          swal({
+            title: 'You agree to deposit to the following repositories',
+            html: `Your repositories: <pre><code> ${JSON.stringify(reposThatUserAgreedToDeposit.map(repo => repo.id)).replace(/[\[\]']/g, '')} </code></pre>`,
+            confirmButtonText: 'Submit',
+            showCancelButton: true,
+          }).then((result) => {
+            console.log(result.value);
+            if (result.value) {
+              // Update repos to reflect repos that user agreed to deposit
+              this.set('model.sub.repositories', this.get('model.sub.repositories').filter((repo) => {
+                let temp = reposWithAgreementText.map(x => x.id).includes(repo.get('name'));
+                if (!temp) {
+                  return true;
+                } else if (reposThatUserAgreedToDeposit.map(r => r.id).includes(repo.get('name'))) {
+                  return true;
+                }
+                return false;
+              }));
+              // update Metadata blob to refelect changes in repos
+              this.set('model.sub.metadata', JSON.stringify(JSON.parse(this.get('model.sub.metadata')).filter((md) => {
+                let whiteListedMetadataKeys = ['common', 'crossref', 'pmc', 'agent_information'];
+                if (whiteListedMetadataKeys.includes(md.id)) {
+                  return md;
+                }
+                return this.get('model.sub.repositories').map(r => r.get('name')).includes(md.id);
+              })));
+
+              // save sub and send it
+              let se = this.get('store').createRecord('submissionEvent', {
+                submission: this.get('model.sub'),
+                performedBy: this.get('currentUser.user'),
+                performedDate: new Date(),
+                comment: this.get('message'),
+                performerRole: 'submitter',
+                eventType: 'submitted'
+              });
+              se.save().then(() => {
+                let sub = this.get('model.sub');
+                sub.set('submissionStatus', 'submitted');
+                sub.set('submitted', true);
+                sub.save().then(() => {
+                  window.location.reload(true);
+                });
+              });
+            }
+          });
+        } else {
+          let reposUserDidNotAgreeToDeposit = reposWithAgreementText.filter((repo) => {
+            if (!reposThatUserAgreedToDeposit.includes(repo)) {
+              return true;
+            }
+          });
+          swal({
+            title: 'Your submission cannot be submitted.',
+            html: `You declined to agree to the deposit agreement(s) for ${JSON.stringify(reposUserDidNotAgreeToDeposit.map(repo => repo.id)).replace(/[\[\]']/g, '')}. Therefore, this submission cannot be submitted. \n You can either (a) cancel the submission or (b) return to the submission to provide required input and try again.`,
+            confirmButtonText: 'Cancel submission',
+            showCancelButton: true,
+            cancelButtonText: 'Go back to edit information'
+          }).then((result) => {
+            console.log(result.value);
+            if (result.value) {
+              this.send('cancelSubmission');
+            }
+          });
+        }
+      }
     },
     cancelSubmission() {
       let se = this.get('store').createRecord('submissionEvent', {

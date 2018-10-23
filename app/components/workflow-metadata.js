@@ -29,11 +29,59 @@ function getBrowserInfo() {
 export default WorkflowComponent.extend({
   didAgree: false,
   router: service(),
+  // JScholarship: {
+  //   id: 'JScholarship',
+  //   schema: {
+  //     title: 'Deposit Details - JScholarship <br><p class=\'lead text-muted\'>Please provide the information and agreement required for JScholarship deposit.</p> <p class=\'lead text-muted\'> <i class=\'glyphicon glyphicon-info-sign\'></i> Fields that are not editable were populated using information associated with the provided DOI or were provided in a previous step. To edit authors list, please go back to “Publication Details” page via the “Back” button below.</p>',
+  //     type: 'object',
+  //     properties: {
+  //       authors: {
+  //         title: '<div class="row"><div class="col-6">Author(s) <small class="text-muted">(required)</small></div><div class="col-6 p-0"></div></div>',
+  //         type: 'array',
+  //         uniqueItems: true,
+  //         items: {
+  //           type: 'object',
+  //           properties: {
+  //             author: {
+  //               type: 'string',
+  //               fieldClass: 'body-text col-6 pull-left pl-0'
+  //             }
+  //           }
+  //         }
+  //       },
+  //       embargo: {
+  //         type: 'string',
+  //         default: 'NON-EXCLUSIVE LICENSE FOR USE OF MATERIALS This non-exclusive license defines the terms for the deposit of Materials in all formats into the digital repository of materials collected, preserved and made available through the Johns Hopkins Digital Repository, JScholarship. The Contributor hereby grants to Johns Hopkins a royalty free, non-exclusive worldwide license to use, re-use, display, distribute, transmit, publish, re-publish or copy the Materials, either digitally or in print, or in any other medium, now or hereafter known, for the purpose of including the Materials hereby licensed in the collection of materials in the Johns Hopkins Digital Repository for educational use worldwide. In some cases, access to content may be restricted according to provisions established in negotiation with the copyright holder. This license shall not authorize the commercial use of the Materials by Johns Hopkins or any other person or organization, but such Materials shall be restricted to non-profit educational use. Persons may apply for commercial use by contacting the copyright holder. Copyright and any other intellectual property right in or to the Materials shall not be transferred by this agreement and shall remain with the Contributor, or the Copyright holder if different from the Contributor. Other than this limited license, the Contributor or Copyright holder retains all rights, title, copyright and other interest in the images licensed. If the submission contains material for which the Contributor does not hold copyright, the Contributor represents that s/he has obtained the permission of the Copyright owner to grant Johns Hopkins the rights required by this license, and that such third-party owned material is clearly identified and acknowledged within the text or content of the submission. If the submission is based upon work that has been sponsored or supported by an agency or organization other than Johns Hopkins, the Contributor represents that s/he has fulfilled any right of review or other obligations required by such contract or agreement. Johns Hopkins will not make any alteration, other than as allowed by this license, to your submission. This agreement embodies the entire agreement of the parties. No modification of this agreement shall be of any effect unless it is made in writing and signed by all of the parties to the agreement.'
+  //       },
+  //       'agreement-to-deposit': {
+  //         type: 'string'
+  //       }
+  //     }
+  //   },
+  //   options: {
+  //     fields: {
+  //       authors: {
+  //         hidden: false
+  //       },
+  //       embargo: {
+  //         type: 'textarea',
+  //         label: 'Deposit Agreement',
+  //         disabled: true,
+  //         rows: '16'
+  //       },
+  //       'agreement-to-deposit': {
+  //         type: 'checkbox',
+  //         rightLabel: 'I agree to the above statement on today\'s date',
+  //         fieldClass: 'col-12 text-right p-0'
+  //       }
+  //     }
+  //   }
+  // },
   common: {
     id: 'common',
     data: {},
     schema: {
-      title: "Publication Details <br><p class='lead text-muted'>Please provide additional information about your article/manuscript below. If DOI was provided in the initial step of the submission, the metadata associated with that DOI was found and used to prepopulate this form. </p>",
+      title: "Publication Details <br><p class='lead text-muted'>Please provide additional information about your article/manuscript below. If DOI was provided in the initial step of the submission, the metadata associated with that DOI was found and used to prepopulate this form. </p> <p class='lead text-muted'> <i class='glyphicon glyphicon-info-sign'></i> Fields that are not editable were populated using metadata associated with the provided DOI. </p>",
       type: 'object',
       properties: {
         title: {
@@ -53,6 +101,9 @@ export default WorkflowComponent.extend({
         ISSN: {
           type: 'string'
         },
+        publisher: {
+          type: 'string'
+        },
         publicationDate: {
           title: 'Publication Date',
           description: 'Select your publication date',
@@ -65,7 +116,7 @@ export default WorkflowComponent.extend({
           type: 'string',
         },
         authors: {
-          title: '<div class="row"><div class="col-6">Author(s)</div><div class="col-6 p-0">ORCID(s)</div></div>',
+          title: '<div class="row"><div class="col-6">Author(s) <small class="text-muted">(optional)</small> </div><div class="col-6 p-0">ORCID(s)</div></div>',
           // required: true,
           type: 'array',
           uniqueItems: true,
@@ -100,51 +151,57 @@ export default WorkflowComponent.extend({
           cols: 100,
           label: 'Article / Manuscript Title',
           placeholder: 'Enter the manuscript title',
-          hidden: true,
+          hidden: false,
         },
         'journal-title': {
           type: 'text',
           label: 'Journal Title',
           placeholder: 'Enter the journal title',
-          hidden: true,
+          hidden: false,
         },
         volume: {
           type: 'text',
-          label: 'Volume',
+          label: 'Volume  <small class="text-muted">(optional)</small>',
           placeholder: 'Enter the volume',
-          hidden: true,
+          hidden: false,
         },
         issue: {
           type: 'text',
-          label: 'Issue',
+          label: 'Issue  <small class="text-muted">(optional)</small>',
           placeholder: 'Enter issue',
-          hidden: true,
+          hidden: false,
         },
         ISSN: {
           type: 'text',
-          label: 'ISSN',
+          label: 'ISSN <small class="text-muted">(optional)</small>',
           placeholder: 'ISSN',
-          hidden: true,
+          hidden: false,
+        },
+        publisher: {
+          type: 'text',
+          label: 'Publisher <small class="text-muted">(optional)</small>',
+          placeholder: 'Enter the Publisher',
+          hidden: false,
         },
         publicationDate: {
           type: 'text',
-          label: 'Publication Date',
+          label: 'Publication Date  <small class="text-muted">(optional)</small>',
           placeholder: 'mm/dd/yy',
-          hidden: true,
+          hidden: false,
         },
         abstract: {
           type: 'textarea',
-          label: 'Abstract',
+          label: 'Abstract <small class="text-muted">(optional)</small>',
           placeholder: 'Enter abstract',
           fieldClass: 'clearfix',
-          hidden: true,
+          hidden: false,
         },
         subjects: {
           type: 'text',
-          label: 'Keywords',
+          label: 'Keywords <small class="text-muted">(optional)</small>',
           placeholder: '',
           fieldClass: 'clearfix',
-          hidden: true
+          hidden: true,
         },
         authors: {
           hidden: false,
@@ -153,7 +210,7 @@ export default WorkflowComponent.extend({
           type: 'checkbox',
           rightLabel: 'The material being submitted is published under an embargo.',
           fieldClass: 'm-0 mt-4',
-          hidden: true,
+          hidden: false,
         },
         'Embargo-end-date': {
           type: 'date',
@@ -184,21 +241,27 @@ export default WorkflowComponent.extend({
     this.set('schemas', []);
 
 
-    this.get('metadataForms').forEach((form) => {
+    this.get('metadataForms').forEach((form, index) => {
       if (form) {
         try {
           // if Proxy is submitting dont show JScholarship to proxy
           console.log('form', form.id, this.get('model.newSubmission.hasNewProxy'));
           if (this.get('model.newSubmission.hasNewProxy')) {
             //  check to see if it is the  preparers, if it is hide deposit agreement
-            let currentUser = this.get('currentUser.user');
-            if (this.get('model.newSubmission.preparers').includes(currentUser)) {
-              if (form.id !== 'JScholarship') {
-                schemas.addObject(form);
-              }
-            } else {
-              schemas.addObject(form);
-            }
+            // let currentUser = this.get('currentUser.user');
+            // if (this.get('model.newSubmission.preparers').includes(currentUser)) {
+            // if (form.id === 'JScholarship') {
+            // schemas.addObject(form);
+            // delete this.get('metadataForms')[index].options.fields.embargo;
+            // delete this.get('metadataForms')[index].options.fields['agreement-to-deposit'];
+            // form.options.fields.embargo.hidden = true;
+            // form.options.fields['agreement-to-deposit'].hidden = true;
+
+            schemas.addObject(form);
+            // }
+            // } else {
+            //   schemas.addObject(form);
+            // }
           } else {
             schemas.addObject(form);
           }
@@ -223,8 +286,9 @@ export default WorkflowComponent.extend({
   metadataForms: Ember.computed('activeRepositories', function () {
     let retVal = this.get('activeRepositories').filterBy('formSchema');
     retVal = retVal.map(repository => JSON.parse(repository.get('formSchema')));
+    // TODO: REMOVE BEFORE PUSHING CODE THIS IS NOT SUPOSE TO BE PUSHED REMOVE THIS LINE OMG DO NOT LEAVE THIS LINE YOU BETTER NOT
+    // retVal.unshift(this.get('JScholarship'));
     retVal.unshift(this.get('common'));
-
     // NOTE: This is here to remove nih from the schmas array. remove this line once NIH has a better schema.
     return retVal.filter(x => x.id !== 'nih'); // return retval;
   }),
@@ -234,11 +298,46 @@ export default WorkflowComponent.extend({
   }),
   actions: {
     nextForm() {
-      if ($('[name="agreement-to-deposit"]').length == 2) {
-        let value = $('[name="agreement-to-deposit"]')[1].checked;
+      let commonAuthors = [];
+      let doAuthorsExist = false;
+      JSON.parse(this.get('model.newSubmission.metadata')).forEach((data) => {
+        if (data.id === 'JScholarship') {
+          // data.data.authors = temp;
+          if (data.data.authors && data.data.authors.length > 0) {
+            let containsTextArray = [];
+            data.data.authors.forEach((author) => {
+              if (author.author) {
+                containsTextArray.push(true);
+              } else {
+                doAuthorsExist = false;
+              }
+            });
+            if (containsTextArray.includes(true)) {
+              doAuthorsExist = true;
+            }
+          } else {
+            doAuthorsExist = false;
+          }
+        }
+      });
+      let value = null;
+      if (this.get('schemas')[this.get('currentFormStep')].id === 'JScholarship') {
+        if ($('[name="agreement-to-deposit"]').length == 2) {
+          value = $('[name="agreement-to-deposit"]')[1].checked;
+        }
+        // if proxy sub then set value of deposit agreement = true to loet it pass.
+        if (this.get('model.newSubmission.hasNewProxy')) {
+          value = true;
+        }
         let jhuRepo = this.get('model.repositories').filter(repo => repo.get('name') === 'JScholarship');
+        // if jhuRepo exists
         if (jhuRepo.length > 0) {
-          if (!value) {
+          // ----------------------------------------------------------------------
+          //
+          // if USER has not agreed to deposit but has one user
+          //
+          // ----------------------------------------------------------------------
+          if (doAuthorsExist && !value) {
             swal({
               title: 'Notice!',
               text: 'You added JScholarship as a repository but didn\'t agree to the deposit agreement, so your submission will not be submitted to JScholarship. To fix this, agree to the deposit agreement below.',
@@ -250,28 +349,105 @@ export default WorkflowComponent.extend({
                 // agree to deposit
                 return;
               }
-
-              // remove jscholarship from submission
-              this.set('model.newSubmission.repositories', this.get('model.newSubmission.repositories').filter(repo => repo.get('name') !== 'JScholarship'));
-
-              if (this.get('model.newSubmission.repositories.length') == 0) {
-                swal(
-                  'You\'re done!',
-                  'If you don\'t plan on submitting to any repositories, you can stop at this time.',
-                  {
-                    buttons: {
-                      cancel: true,
-                      confirm: true,
+              if (result.dismiss != 'overlay') {
+                // remove jscholarship from submission
+                this.set('model.newSubmission.repositories', this.get('model.newSubmission.repositories').filter(repo => repo.get('name') !== 'JScholarship'));
+                if (this.get('model.newSubmission.repositories.length') == 0) {
+                  swal({
+                    title: 'You\'re about to abort the submission!',
+                    text: 'The submission cannot proceed with out the required information by its target repository. Click "Abort" to confirm your exit.',
+                    showCancelButton: true,
+                    confirmButtonText: 'Abort',
+                    cancelButtonText: 'Go back to add information'
+                  }).then((value) => {
+                    if (value.dismiss) {
+                      return;
                     }
-                  },
-                ).then((value) => {
-                  if (value.dismiss) {
-                    return;
+                    this.get('router').transitionTo('dashboard');
+                  });
+                } else {
+                  if (result.dismiss != 'overlay') {
+                    this.send('nextLogic');
                   }
-                  this.get('router').transitionTo('dashboard');
-                });
-              } else {
-                this.send('nextLogic');
+                }
+              }
+            });
+            // ----------------------------------------------------------------------
+            //
+            // if USER has not added at least one author but has agreed to deposit
+            //
+            // ----------------------------------------------------------------------
+          } else if (value && !doAuthorsExist) {
+            swal({
+              title: 'Notice!',
+              text: 'You added JScholarship as a repository. JScholarship requires that you list at least ONE author who is a member of the Johns Hopkins community. Please provide the name of one or more authors for this manuscript." can be used when submitter is missing the name of the author only.',
+              showCancelButton: true,
+              confirmButtonText: 'Add Authors',
+              cancelButtonText: 'Proceed anyway'
+            }).then((result) => {
+              if (result.value) {
+                // agree to add authors
+                return;
+              }
+              if (result.dismiss != 'overlay') {
+                this.set('model.newSubmission.repositories', this.get('model.newSubmission.repositories').filter(repo => repo.get('name') !== 'JScholarship'));
+                if (this.get('model.newSubmission.repositories.length') == 0) {
+                  swal({
+                    title: 'You\'re about to abort the submission!',
+                    text: 'The submission cannot proceed with out the required information by its target repository. Click "Abort" to confirm your exit.',
+                    showCancelButton: true,
+                    confirmButtonText: 'Abort',
+                    cancelButtonText: 'Go back to add information'
+                  }).then((value) => {
+                    if (value.dismiss) {
+                      return;
+                    }
+                    this.get('router').transitionTo('dashboard');
+                  });
+                } else {
+                  if (result.dismiss != 'overlay') {
+                    this.send('nextLogic');
+                  }
+                }
+              }
+            });
+            // ----------------------------------------------------------------------
+            //
+            // if USER has not agreed to deposit and has not added at least one user
+            //
+            // ----------------------------------------------------------------------
+          } else if (!doAuthorsExist && !value) {
+            swal({
+              title: 'Notice!',
+              text: 'You added JScholarship as a repository. JScholarship requires that (a) you list at least ONE author who is a member of the Johns Hopkins community, and (b) you agree to the deposit statement. Please return to the form to provide the required information.',
+              showCancelButton: true,
+              confirmButtonText: 'Add author/Agree to deposit',
+              cancelButtonText: 'Proceed anyway'
+            }).then((result) => {
+              if (result.value) {
+                // agree to add authors
+                return;
+              }
+              if (result.dismiss != 'overlay') {
+                this.set('model.newSubmission.repositories', this.get('model.newSubmission.repositories').filter(repo => repo.get('name') !== 'JScholarship'));
+                if (this.get('model.newSubmission.repositories.length') == 0) {
+                  swal({
+                    title: 'You\'re about to abort the submission!',
+                    text: 'The submission cannot proceed with out the required information by its target repository. Click "Abort" to confirm your exit.',
+                    showCancelButton: true,
+                    confirmButtonText: 'Abort',
+                    cancelButtonText: 'Go back to add information'
+                  }).then((value) => {
+                    if (value.dismiss) {
+                      return;
+                    }
+                    this.get('router').transitionTo('dashboard');
+                  });
+                } else {
+                  if (result.dismiss != 'overlay') {
+                    this.send('nextLogic');
+                  }
+                }
               }
             });
           } else {
@@ -284,41 +460,52 @@ export default WorkflowComponent.extend({
     },
     nextLogic() {
       const step = this.get('currentFormStep');
+      let metadata = JSON.parse(this.get('model.newSubmission.metadata'));
+      const doiInfo = this.get('doiInfo');
+      let commonMetadata = metadata.filter(md => md.id === 'common')[0];
+      this.send('checkForAuthors');
+      // We need to reset the metadata because checkForAuthors changes it
+      metadata = JSON.parse(this.get('model.newSubmission.metadata'));
+      // We are moving the form forward next button clicked
       if (step + 1 < this.get('schemas').length) {
         this.set('currentFormStep', step + 1);
+        // Move to next form
         this.set('schema', this.get('schemas')[step + 1]);
       } else {
         // Add any crossref info that was not added through the metadata forms
-        const doiInfo = this.get('doiInfo');
-        let metadata = JSON.parse(this.get('model.newSubmission.metadata'));
-
-        const common = metadata.filter(md => md.id === 'common');
-        if (common.length > 0) {
-          common[0].data['issn-map'] = doiInfo['issn-map'];
+        if (commonMetadata.length > 0) {
+          commonMetadata.data['issn-map'] = doiInfo['issn-map'];
         }
 
-        metadata.push({
-          id: 'crossref',
-          data: {
-            doi: doiInfo.DOI,
-            publisher: doiInfo.publisher,
-            'journal-title-short': doiInfo['container-title-short']
-          },
-        });
+        if (!(metadata.filter(md => md.id === 'crossref')[0])) {
+          metadata.push({
+            id: 'crossref',
+            data: {
+              doi: doiInfo.DOI,
+              publisher: doiInfo.publisher,
+              'journal-title-short': doiInfo['container-title-short']
+            },
+          });
+        }
 
-        metadata.push({
-          id: 'pmc',
-          data: {
-            nlmta: doiInfo.nlmta
-          }
-        });
+        if (!(metadata.filter(md => md.id === 'pmc')[0])) {
+          metadata.push({
+            id: 'pmc',
+            data: {
+              nlmta: doiInfo.nlmta
+            }
+          });
+        }
 
-        metadata.push({
-          id: 'agent_information',
-          data: {
-            information: getBrowserInfo()
-          }
-        });
+        if (!(metadata.filter(md => md.id === 'agent_information')[0])) {
+          metadata.push({
+            id: 'agent_information',
+            data: {
+              information: getBrowserInfo()
+            }
+          });
+        }
+
 
         // Add metadata for external submissions
         const externalRepos = this.get('model.newSubmission.repositories').filter(repo =>
@@ -337,6 +524,7 @@ export default WorkflowComponent.extend({
     },
     previousForm() {
       const step = this.get('currentFormStep');
+      this.send('checkForAuthors');
       if (step > 0) {
         this.set('currentFormStep', step - 1);
         this.set('schema', this.get('schemas')[step - 1]);
@@ -344,5 +532,62 @@ export default WorkflowComponent.extend({
         this.sendAction('back');
       }
     },
+    checkForAuthors() {
+      let schemaId = this.get('schema').id;
+      // let currentFormStep = step;
+      let metadata = JSON.parse(this.get('model.newSubmission.metadata'));
+
+      let JScholarshipSchema = this.get('schemas').filter(md => md.id === 'JScholarship')[0];
+
+      let commonMetadata = metadata.filter(md => md.id === 'common')[0];
+      let JScholarshipMetadata = metadata.filter(md => md.id === 'JScholarship')[0];
+
+      if (schemaId === 'common') {
+        // update JScholarship
+        let JScholarshipFlag = false;
+        metadata.forEach((md, index) => {
+          if (md.id === 'JScholarship') {
+            JScholarshipFlag = true;
+            //  if We have Commen Metadata with authors array in it
+            if (commonMetadata && commonMetadata.data && commonMetadata.data.authors) {
+              // set the JScholarship Metadata authors array equal to commons
+              md.data = {
+                authors: commonMetadata.data.authors,
+                embargo: this.get('model.repositories').filter(repo => repo.get('name') === 'JScholarship')[0].get('agreementText'),
+              };
+            }
+          }
+        });
+        // if we haven't found metadata relating to JScholarship BUT JScholarshipSchema is there instantiate a new JScholarshipMetadata obj
+        if (!JScholarshipFlag && JScholarshipSchema) {
+          JScholarshipMetadata = {
+            id: 'JScholarship',
+            data: {
+              authors: commonMetadata.data.authors,
+              embargo: this.get('model.repositories').filter(repo => repo.get('name') === 'JScholarship')[0].get('agreementText'),
+            },
+          };
+          metadata.push(JScholarshipMetadata);
+        }
+      } else if (schemaId === 'JScholarship') {
+        // update common
+        metadata.forEach((md, index) => {
+          if (md.id === 'common') {
+            //  if We haveJScholarship Metadata with authors array in it
+            if (JScholarshipMetadata && JScholarshipMetadata.data && JScholarshipMetadata.data.authors) {
+              // set the common Metadata authors array equal to JScholarship
+              if (md.data) {
+                md.data.authors = JScholarshipMetadata.data.authors;
+              } else {
+                md.data = {
+                  authors: JScholarshipMetadata.data.authors,
+                };
+              }
+            }
+          }
+        });
+      }
+      this.set('model.newSubmission.metadata', JSON.stringify(metadata));
+    }
   },
 });

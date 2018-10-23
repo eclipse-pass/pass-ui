@@ -8,6 +8,9 @@ export default DS.Model.extend({
   weblinkOnly: Ember.computed('name', function () {
     return this.get('name');
   }),
+  agreementText: DS.attr('string', {
+    defaultValue: false
+  }),
 
   // policy: DS.belongsTo('policy'),
   // submissions: DS.hasMany('submission', { async: true }),
