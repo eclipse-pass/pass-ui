@@ -9,7 +9,7 @@ test('it renders', function (assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
 
-  this.render(hbs`{{submission-status-cell status="accepted"}}`);
+  this.render(hbs`{{submission-status-cell submissionStatus="submitted"}}`);
   assert.ok(true);
 
   // Template block usage:
