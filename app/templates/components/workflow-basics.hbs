@@ -20,8 +20,8 @@
     </div>
     {{#if model.newSubmission.submitter.id}}
     <p>
-      Currently selected submitter: {{model.newSubmission.submitter.firstName}} {{model.newSubmission.submitter.lastName}}
-       (<a href="mailto:{{model.newSubmission.submitter.email}}">{{model.newSubmission.submitter.email}}</a>) (<a href="#" {{action 'removeCurrentSubmitter'}}>Remove</a>)
+      Currently selected submitter:<br>{{model.newSubmission.submitter.firstName}} {{model.newSubmission.submitter.lastName}}
+       (<a href="mailto:{{model.newSubmission.submitter.email}}">{{model.newSubmission.submitter.email}}</a>) <a href="#" class="pull-right" {{action 'removeCurrentSubmitter'}}>Remove submitter</a>
     </p>
     {{/if}}
   <p class="mb-0"><strong>If the person you are submitting for does not have an account with PASS</strong>, please
