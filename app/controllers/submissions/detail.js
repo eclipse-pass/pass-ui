@@ -153,6 +153,7 @@ export default Controller.extend({
           };
         }
       });
+      // INFO: this is used to testing more then 1 repo.
       // reposWithAgreementText.push({
       //   id: 'some',
       //   title: `Deposit requirements for `,
@@ -221,9 +222,14 @@ export default Controller.extend({
             }
           });
         } else {
+          let reposUserDidNotAgreeToDeposit = reposWithAgreementText.filter((repo) => {
+            if (!reposThatUserAgreedToDeposit.includes(repo)) {
+              return true;
+            }
+          });
           swal({
-            title: 'You have not agreed to deposit to any repositories',
-            html: 'We are unable to submit this submission. Please go back end edit the information or cancel.',
+            title: 'Your submission cannot be submitted.',
+            html: `You declined to agree to the deposit agreement(s) for ${JSON.stringify(reposUserDidNotAgreeToDeposit.map(repo => repo.id)).replace(/[\[\]']/g, '')}. Therefore, this submission cannot be submitted. \n You can either (a) cancel the submission or (b) return to the submission to provide required input and try again.`,
             confirmButtonText: 'Cancel submission',
             showCancelButton: true,
             cancelButtonText: 'Go back to edit information'
