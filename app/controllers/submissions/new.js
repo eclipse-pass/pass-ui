@@ -57,6 +57,8 @@ export default Controller.extend({
       s.save().then(() => {
         subEvent.save().then(() => {
           this.set('uploading', false);
+          this.get('tempFiles').clear();
+          this.set('comment', '');
           this.transitionToRoute('thanks', { queryParams: { submission: s.get('id') } });
         });
       });
