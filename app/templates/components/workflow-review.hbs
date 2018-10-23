@@ -218,7 +218,7 @@
                 </table>
               </td>
             </tr>
-            {{#if (or model.newSubmission.hasNewProxy hasProxy)}}
+            {{#if hasProxy}}
             <tr>
               <td>Comments</td>
               <td>
@@ -230,13 +230,16 @@
                   {{submitterName}} (<a href="mailto:{{submitterEmail}}">{{submitterEmail}}</a>)
                   {{/if}}
                 </p>
+                {{!-- Show the following if not saved yet. --}}
+                {{#unless model.newSubmission.id}}
                 <p>
                   Once "Request approval" is clicked, a notification will be sent to
                   {{model.newSubmission.submitter.displayName}} (<a href="#">{{model.newSubmission.submitter.email}}</a>).
                   The submission will be sent to its target repositories upon approval, or be sent back to you if
                   additional edits
-                  are requested by the {{model.newSubmission.submitter.displayName}}.
+                  are requested by {{model.newSubmission.submitter.displayName}}.
                 </p>
+                {{/unless}}
                 <hr>
                 {{commenting-block submissionEvents=model.newSubmission.submissionEvents}}
                 {{textarea placeholder="add note..." value=comment class="form-control custom-control p-2" rows="2"

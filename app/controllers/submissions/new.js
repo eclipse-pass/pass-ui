@@ -23,6 +23,44 @@ export default Controller.extend({
     }
   ),
   actions: {
+    finishSubmission(s) {
+      debugger; // eslint-disable-line
+      let subEvent = this.store.createRecord('submissionEvent');
+      subEvent.set('performedBy', this.get('currentUser.user'));
+      subEvent.set('comment', this.get('comment'));
+      subEvent.set('performedDate', new Date());
+      subEvent.set('submission', s);
+
+      // If the person clicking submit *is* the submitter, actually submit the submission.
+      if (s.get('submitter.id') === this.get('currentUser.user.id')) {
+        s.set('submitted', true);
+        s.set('submissionStatus', 'submitted');
+        subEvent.set('performerRole', 'submitter');
+        subEvent.set('eventType', 'submitted');
+      } else {
+        // If they *aren't* the submitter, they're the preparer.
+        s.set('submissionStatus', 'approval-requested');
+        subEvent.set('performerRole', 'preparer');
+
+        // If a submitter is specified, it's a normal "approval-requested" scenario.
+        if (s.get('submitter')) {
+          subEvent.set('eventType', 'approval-requested');
+        } else if (this.get('submitterName') && this.get('submitterEmail')) {
+          // If not specified but a name and email are present, create a mailto link.
+          subEvent.set('eventType', 'approval-requested-newuser');
+          s.set('submitter', `mailto:${encodeURI(this.get('submitterEmail'))}`);
+          subEvent.set('link', `${ENV.rootURL}/submissions/${s.id}`);
+        } // end if
+      } // end if
+
+      // Save the updated submission, then save the submissionEvent, then you're done!
+      s.save().then(() => {
+        subEvent.save().then(() => {
+          this.set('uploading', false);
+          this.transitionToRoute('thanks', { queryParams: { submission: s.get('id') } });
+        });
+      });
+    },
     submit() {
       // Remove JHU as a repository if its deposit agreement is not signed.
       if (this.get('didNotAgree')) {
@@ -70,6 +108,11 @@ export default Controller.extend({
         sub.save().then((s) => {
           // For each file, load it as buffer, POST it to the submission object's URI, then generate
           // a File object in fedora that references the file blob.
+          debugger; // eslint-disable-line
+          if (this.get('filesTemp.length') == 0) {
+            this.send('finishSubmission', s);
+            return;
+          }
           this.get('filesTemp').forEach((file) => {
             var reader = new FileReader();
             reader.readAsArrayBuffer(file.get('_file'));
@@ -94,40 +137,35 @@ export default Controller.extend({
                     // once every file is uploaded:
                     if (ctr >= len) {
                       // Create new submissionEvent
-                      let subEvent = this.store.createRecord('submissionEvent');
-                      subEvent.set('performedBy', this.get('currentUser.user'));
-                      subEvent.set('comment', this.get('comment'));
-                      subEvent.set('performedDate', new Date());
-                      subEvent.set('submission', s);
+                      // debugger; // eslint-disable-line
+                      // let subEvent = this.store.createRecord('submissionEvent');
+                      // subEvent.set('performedBy', this.get('currentUser.user'));
+                      // subEvent.set('comment', this.get('comment'));
+                      // subEvent.set('performedDate', new Date());
+                      // subEvent.set('submission', s);
 
-                      // If the person clicking submit *is* the submitter, actually submit the submission.
-                      if (s.get('submitter.id') === this.get('currentUser.user.id')) {
-                        s.set('submitted', true);
-                        s.set('submissionStatus', 'submitted');
-                        subEvent.set('performerRole', 'submitter');
-                        subEvent.set('eventType', 'submitted');
-                      } else {
-                        // If they *aren't* the submitter, they're the preparer.
-                        s.set('submissionStatus', 'approval-requested');
-                        subEvent.set('performerRole', 'preparer');
+                      // // If the person clicking submit *is* the submitter, actually submit the submission.
+                      // if (s.get('submitter.id') === this.get('currentUser.user.id')) {
+                      //   s.set('submitted', true);
+                      //   s.set('submissionStatus', 'submitted');
+                      //   subEvent.set('performerRole', 'submitter');
+                      //   subEvent.set('eventType', 'submitted');
+                      // } else {
+                      //   // If they *aren't* the submitter, they're the preparer.
+                      //   s.set('submissionStatus', 'approval-requested');
+                      //   subEvent.set('performerRole', 'preparer');
 
-                        // If a submitter is specified, it's a normal "approval-requested" scenario.
-                        if (s.get('submitter')) {
-                          subEvent.set('eventType', 'approval-requested');
-                        } else if (this.get('submitterName') && this.get('submitterEmail')) {
-                          // If not specified but a name and email are present, create a mailto link.
-                          subEvent.set('eventType', 'approval-requested-newuser');
-                          s.set('submitter', `mailto:${encodeURI(this.get('submitterEmail'))}`);
-                          subEvent.set('link', `${ENV.rootURL}/submissions/${s.id}`);
-                        } // end if
-                      } // end if
-
-                      // Save the updated submission, then save the submissionEvent, then you're done!
-                      s.save().then(() => {
-                        subEvent.save().then(() => {
-                          this.transitionToRoute('thanks', { queryParams: { submission: s.get('id') } });
-                        });
-                      });
+                      //   // If a submitter is specified, it's a normal "approval-requested" scenario.
+                      //   if (s.get('submitter')) {
+                      //     subEvent.set('eventType', 'approval-requested');
+                      //   } else if (this.get('submitterName') && this.get('submitterEmail')) {
+                      //     // If not specified but a name and email are present, create a mailto link.
+                      //     subEvent.set('eventType', 'approval-requested-newuser');
+                      //     s.set('submitter', `mailto:${encodeURI(this.get('submitterEmail'))}`);
+                      //     subEvent.set('link', `${ENV.rootURL}/submissions/${s.id}`);
+                      //   } // end if
+                      // } // end if
+                      this.send('finishSubmission', s);
                     }
                   } else {
                     toastr.error('It looks like one or more of your files failed to upload. Please try again or contact support.');
