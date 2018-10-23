@@ -76,7 +76,6 @@ export default WorkflowComponent.extend({
     },
     toggleModal() {
       this.toggleProperty('isShowingModal');
-      console.log(`set isShowingModal to ${this.get('isShowingModal')}`);
     },
     searchForUsers() {
       const size = this.get('modalPageSize');
@@ -129,8 +128,6 @@ export default WorkflowComponent.extend({
       // if either is missing, end function early.
       if (!journal.get('id') || !title) return;
 
-
-      debugger; // eslint-disable-line
       // If there's no submitter or submitter info and the submission is a new proxy submission:
       if (!(submitterExists || proxySubmitterInfoExists) && newProxy) {
         toastr.warning('You have indicated that you are submitting on behalf of someone else, but have not chosen that someone.');
@@ -146,6 +143,10 @@ export default WorkflowComponent.extend({
         }
       } else if (!this.get('hasProxy')) {
         // Otherwise, if it is not a proxy submission, make the current user the submitter.
+        if (this.get('model.newSubmission.submitter.id')) {
+          this.get('model.newSubmission.grants').clear();
+          toastr.info('Because the submitter you\'ve chosen has different grants than the previous submitter, all existing grants have been detached from this submission.', 'All grants removed');
+        }
         this.set('model.newSubmission.submitter', this.get('currentUser.user'));
       }
       // If there's no title in the information grabbed via DOI, use the title given by the user.

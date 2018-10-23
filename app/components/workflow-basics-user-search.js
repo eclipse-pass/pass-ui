@@ -27,6 +27,10 @@ export default Component.extend({
       this.toggleProperty('isShowingModal');
     },
     searchForUsers(page) {
+      debugger; // eslint-disable-line
+      if (page === null || page === undefined) {
+        page = 0;
+      }
       this.set('page', page);
       const size = this.get('pageSize');
       let info = {};
@@ -47,6 +51,10 @@ export default Component.extend({
       });
     },
     pickSubmitter(submitter) {
+      if (this.get('model.newSubmission.submitter.id')) {
+        this.get('model.newSubmission.grants').clear();
+        toastr.info('Because the submitter you\'ve chosen has different grants than the previous submitter, all existing grants have been detached from this submission.', 'All grants removed');
+      }
       this.set('searchInput', '');
       this.set('submitterEmail', '');
       this.set('submitterName', '');
