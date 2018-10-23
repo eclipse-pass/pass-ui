@@ -24,51 +24,5 @@ function getDate() {
 }
 
 export default Component.extend({
-  // message: '',
-  currentUser: Ember.inject.service('current-user'),
-  // editModeArray: [],
-  actions: {
-    // addComment() {
-    //   if (this.message.replace(/(<([^>]+)>)/gi, '').trim().length > 0) {
-    //     let comment = {
-    //       dateTime: getDate(),
-    //       message: this.message.replace(/(<([^>]+)>)/gi, ''),
-    //       user: this.get('currentUser.user')
-    //     };
-    //     this.sendAction('addComment', comment);
-    //     this.set('message', '');
-    //   }
-    // },
-    // saveComment(orignalComment) {
-    //   let comment = {
-    //     dateTime: getDate(),
-    //     message: orignalComment.message.replace(/(<([^>]+)>)/gi, ''),
-    //     user: this.get('currentUser.user')
-    //   };
-    //   this.sendAction('saveComment', [
-    //     this.comments.indexOf(orignalComment),
-    //     comment
-    //   ]);
-    // },
-    // deleteComment(orignalComment) {
-    //   swal(
-    //     'Are you sure you want to delete this comment?',
-    //     'You will not be able to undo this.',
-    //     {
-    //       buttons: {
-    //         cancel: true,
-    //         confirm: true
-    //       }
-    //     }
-    //   ).then((value) => {
-    //     if (value.dismiss) {
-    //       return;
-    //     }
-    //     this.sendAction('deleteComment', this.comments.indexOf(orignalComment));
-    //     console.log('delete comment');
-    //   });
-    // },
-    // editComment(index) {
-    // }
-  }
+  currentUser: Ember.inject.service('current-user')
 });

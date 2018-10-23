@@ -31,19 +31,17 @@ export default Component.extend({
   userIsPreparer: Ember.computed(
     'currentUser.user',
     'model.newSubmission',
-    function() {
+    function () {
       return this.get('model.newSubmission.preparers')
         .map(x => x.id)
-        .includes(
-          this.get('currentUser.user.id') ||
-            (this.get('submitterEmail') && this.get('submitterName'))
-        );
+        .includes(this.get('currentUser.user.id') ||
+            (this.get('submitterEmail') && this.get('submitterName')));
     }
   ),
   userIsSubmitter: Ember.computed(
     'currentUser.user',
     'model.newSubmission',
-    function() {
+    function () {
       return (
         this.get('model.newSubmission.submitter') ===
         this.get('currentUser.user')
@@ -61,37 +59,21 @@ export default Component.extend({
         this.set('maxStep', this.get('step'));
       }
     },
-    back() {
-      this.decrementProperty('step');
-    },
-    submit() {
-      this.sendAction('submit');
-    },
+    back() { this.decrementProperty('step'); },
+    submit() { this.sendAction('submit'); },
+
     validate() {
       const tempValidateArray = [];
       this.set('isValidated', []);
-      Object.keys(this.get('model.newSubmission').toJSON()).forEach(
-        property => {
-          // TODO:  Add more logic here for better validation
-          if (this.get('model.newSubmission').get(property) !== undefined) {
-            tempValidateArray[property] = true;
-          } else {
-            tempValidateArray[property] = false;
-          }
+      Object.keys(this.get('model.newSubmission').toJSON()).forEach((property) => {
+        // TODO:  Add more logic here for better validation
+        if (this.get('model.newSubmission').get(property) !== undefined) {
+          tempValidateArray[property] = true;
+        } else {
+          tempValidateArray[property] = false;
         }
-      );
+      });
       this.set('isValidated', tempValidateArray);
-    },
-    addComment(comment) {
-      this.comments.unshiftObject(comment);
-      console.log(this.get('comments'));
-    },
-    saveComment(values) {
-      this.comments[values[0]] = values[1];
-    },
-    deleteComment(index) {
-      console.log('delete', index);
-      this.comments.removeAt(index);
     }
   }
 });

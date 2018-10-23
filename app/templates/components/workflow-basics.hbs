@@ -1,5 +1,5 @@
 {{yield}}
-{{#if (not model.newSubmission.id)}}
+{{#unless (or model.newSubmission.id model.preLoadedGrant)}}
 <div class="py-0 mt-2 alert alert-secondary">
   <p class="my-2 lead">I'm creating this submission on behalf of:
     {{radio-button class="ml-3 mr-1" value=false name='showProxyWindow' checked=model.newSubmission.hasNewProxy}} Myself
@@ -12,18 +12,28 @@
   <p>When a submission is created on someone's behalf, PASS will contact that person to acquire their approval before
     finalizing the submission and sending it to its corresponding repositories.</p>
   <p class="mb-0">Please indicate on behalf of whom this submission is being completed:</p>
-  <div style="max-width:400px;" class="mt-1 mb-3">
-    {{input class="mt-1 mb-3" value=emailLookup placeholder="Search user by email"}}<button class="btn btn-primary"
-      onclick={{action 'searchUsers'}}>Assign submitter</button>
-  </div>
+    <div class="input-group pb-3">
+      {{input value=modalSearchInput class="form-control"}}
+      <span class="input-group-btn">
+        <button class="btn btn-primary" {{action 'searchForUsers'}} type="button">Search</button>
+      </span>
+    </div>
+    {{#if model.newSubmission.submitter.id}}
+    <p>
+      Currently selected submitter:<br>{{model.newSubmission.submitter.firstName}} {{model.newSubmission.submitter.lastName}}
+       (<a href="mailto:{{model.newSubmission.submitter.email}}">{{model.newSubmission.submitter.email}}</a>) <a href="#" class="pull-right" {{action 'removeCurrentSubmitter'}}>Remove submitter</a>
+    </p>
+    {{/if}}
   <p class="mb-0"><strong>If the person you are submitting for does not have an account with PASS</strong>, please
-    provide their email address {{!-- and name --}} so we may notify them:
+    provide their email address and name so we may notify them:
   </p>
-  {{input class="mt-1 mb-3" value=submitterEmail placeholder=" Email address"}}
-  {{input class="mt-1 mb-3" value=submitterName placeholder=" Name"}}
+  <div class="form-inline">
+  {{input class="mt-1 mb-3 form-control w-50" disabled=model.newSubmission.submitter.id value=submitterEmail placeholder="Email address"}}
+  {{input class="mt-1 mb-3 form-control w-50" disabled=model.newSubmission.submitter.id value=submitterName placeholder="Name"}}
+  </div>
 </div>
 {{/if}}
-{{/if}}
+{{/unless}}
 <p class="lead text-muted">
   If the manuscript/article you are submitting has been assigned a Digital
   Object Identifier (DOI), please provide it now to pre-populate submission
@@ -85,3 +95,16 @@
 </div>
 {{#link-to 'submissions.index' class="btn btn-outline-primary"}}Back{{/link-to}}
 <button class="btn btn-primary pull-right next" {{action "validateNext"}}>Next</button>
+{{#if isShowingModal}}
+{{#modal-dialog translucentOverlay=true onClose="toggleModal" close="toggleModal"}}
+  {{workflow-basics-user-search
+    model=model
+    isShowingModal=isShowingModal
+    pageSize=modalPageSize
+    totalResults=modalTotalResults
+    searchInput=modalSearchInput
+    submitterEmail=submitterEmail
+    submitterName=submitterName
+    users=users}}
+{{/modal-dialog}}
+{{/if}}

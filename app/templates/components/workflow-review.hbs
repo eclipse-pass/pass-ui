@@ -95,8 +95,8 @@
                 </ul>
               </td>
             </tr>
-            {{#if mustVisitWeblink}}
 
+            {{#if mustVisitWeblink}}
             <tr>
               <td class="text-nowrap text-center" id="externalSubmission">External Submission Required
                 <br>
@@ -218,27 +218,30 @@
                 </table>
               </td>
             </tr>
-            {{#if (or model.newSubmission.hasNewProxy hasProxy)}}
+            {{#if hasProxy}}
             <tr>
               <td>Comments</td>
               <td>
                 <p>
                   This submission is prepared on behalf of
                   {{#if model.newSubmission.submitter}}
-                  {{model.newSubmission.submitter.displayName}} (<a href={{model.newSubmission.submitter.id}}>{{model.newSubmission.submitter.email}}</a>)
+                  {{model.newSubmission.submitter.displayName}} (<a href="mailto:{{model.newSubmission.submitter.email}}">{{model.newSubmission.submitter.email}}</a>)
                   {{else}}
                   {{submitterName}} (<a href="mailto:{{submitterEmail}}">{{submitterEmail}}</a>)
                   {{/if}}
                 </p>
+                {{!-- Show the following if not saved yet. --}}
+                {{#unless model.newSubmission.id}}
                 <p>
                   Once "Request approval" is clicked, a notification will be sent to
                   {{model.newSubmission.submitter.displayName}} (<a href="#">{{model.newSubmission.submitter.email}}</a>).
                   The submission will be sent to its target repositories upon approval, or be sent back to you if
                   additional edits
-                  are requested by the {{model.newSubmission.submitter.displayName}}.
+                  are requested by {{model.newSubmission.submitter.displayName}}.
                 </p>
+                {{/unless}}
                 <hr>
-                {{commenting-block showMessageEntry=false submissionEvents=model.newSubmission.submissionEvents deleteComment=(action "deleteComment") }}
+                {{commenting-block submissionEvents=model.newSubmission.submissionEvents}}
                 {{textarea placeholder="add note..." value=comment class="form-control custom-control p-2" rows="2"
                 style="resize:none; min-height: 38px!important;"}}
               </td>
@@ -251,8 +254,8 @@
   </div>
 </div>
 <button class="btn btn-outline-primary" {{action "back"}}>Back</button>
-{{#if model.uploading}}
-<button class="btn btn-primary pull-right submit" disabled>{{model.waitingMessage}}</button>
+{{#if uploading}}
+<button class="btn btn-primary pull-right submit" disabled>{{waitingMessage}}</button>
 {{else}}
 <button class="btn btn-primary pull-right submit" {{action "submit"}}>{{submitButtonText}}</button>
 {{/if}}
