@@ -5,7 +5,7 @@
       </span>
     {{/if}}
     {{#if (eq record.submissionStatus "approval-requested")}}
-      <span tooltip-position="left" tooltip="This submission was been prepared on behalf of the designated submitter and is awaiting approval before being submitted.">
+      <span tooltip-position="left" tooltip="This submission has been prepared on behalf of the designated submitter and is awaiting approval before being submitted.">
         <i class="fas fa-info-circle"></i> approval requested
       </span>
     {{/if}}
@@ -30,7 +30,7 @@
       </span>
     {{/if}}
     {{#if (eq record.submissionStatus "complete")}}
-      <span tooltip-position="left" tooltip="The Submission was accepted by all target repositories and is either pending publication or already published">
+      <span tooltip-position="left" tooltip="The submission was accepted by all target repositories and is either pending publication or already published">
         <i class="fas fa-info-circle"></i> complete
       </span>
     {{/if}}
