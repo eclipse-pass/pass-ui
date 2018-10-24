@@ -201,7 +201,7 @@ export default Controller.extend({
                 }
                 return this.get('model.sub.repositories').map(r => r.get('name')).includes(md.id);
               })));
-
+              $('.block-user-input').css('display', 'block');
               // save sub and send it
               let se = this.get('store').createRecord('submissionEvent', {
                 submission: this.get('model.sub'),
@@ -243,6 +243,7 @@ export default Controller.extend({
       }
     },
     cancelSubmission() {
+      $('.block-user-input').css('display', 'block');
       let se = this.get('store').createRecord('submissionEvent', {
         submission: this.get('model.sub'),
         performedBy: this.get('currentUser.user'),
