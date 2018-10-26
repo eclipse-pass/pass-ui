@@ -2,8 +2,6 @@ import Service from '@ember/service';
 import _ from 'lodash';
 
 
-
-
 export default Service.extend({
   getDisplayBlob(metadataBlob) {
     let metadataBlobNoKeys = [];

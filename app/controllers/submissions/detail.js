@@ -177,7 +177,7 @@ export default Controller.extend({
         if (reposThatUserAgreedToDeposit.length > 0 && this.get('model.sub.repositories.length') > 0) {
           swal({
             title: 'You agree to deposit to the following repositories',
-            html: `Your repositories: <pre><code> ${JSON.stringify(reposThatUserAgreedToDeposit.map(repo => repo.id)).replace(/[\[\]']/g, '')} </code></pre>`,
+            html: `Your repositories: <pre><code> ${JSON.stringify(reposThatUserAgreedToDeposit.map(repo => repo.id)).replace(/[\[\]']/g, '')} </code></pre>`, // eslint-disable-line
             confirmButtonText: 'Submit',
             showCancelButton: true,
           }).then((result) => {
@@ -243,22 +243,40 @@ export default Controller.extend({
       }
     },
     cancelSubmission() {
-      $('.block-user-input').css('display', 'block');
-      let se = this.get('store').createRecord('submissionEvent', {
-        submission: this.get('model.sub'),
-        performedBy: this.get('currentUser.user'),
-        performedDate: new Date(),
-        comment: this.get('message'),
-        performerRole: 'submitter',
-        eventType: 'cancelled'
-      });
-      se.save().then(() => {
-        let sub = this.get('model.sub');
-        sub.set('submissionStatus', 'cancelled');
-        sub.save().then(() => {
-          console.log('Submission cancelled.');
-          window.location.reload(true);
-        });
+      if (!this.get('message')) {
+        swal(
+          'Comment field empty',
+          'Please add a comment for your cancellation.',
+          'warning'
+        );
+        return;
+      }
+      swal({
+        title: 'Are you sure?',
+        text: 'If you cancel this submission, it will not be able to be resumed.',
+        confirmButtonText: 'Yes, cancel this submission',
+        confirmButtonColor: '#f86c6b',
+        cancelButtonText: 'Never mind',
+        showCancelButton: true,
+      }).then((result) => {
+        if (result.value) {
+          let se = this.get('store').createRecord('submissionEvent', {
+            submission: this.get('model.sub'),
+            performedBy: this.get('currentUser.user'),
+            performedDate: new Date(),
+            comment: this.get('message'),
+            performerRole: 'submitter',
+            eventType: 'cancelled'
+          });
+          se.save().then(() => {
+            let sub = this.get('model.sub');
+            sub.set('submissionStatus', 'cancelled');
+            sub.save().then(() => {
+              console.log('Submission cancelled.');
+              window.location.reload(true);
+            });
+          });
+        }
       });
     }
   }

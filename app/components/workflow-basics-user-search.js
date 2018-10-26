@@ -10,7 +10,6 @@ export default Component.extend({
   pageSize: 50,
   totalResults: 0,
   totalPages: Ember.computed('totalResults', 'pageSize', function () {
-    debugger; // eslint-disable-line
     return Math.ceil(this.get('totalResults') / this.get('pageSize'));
   }),
   pages: Ember.computed('page', 'pageSize', 'totalResults', 'totalPages', function () {
@@ -22,14 +21,19 @@ export default Component.extend({
   filteredUsers: Ember.computed('users', function () {
     return this.get('users').filter(u => u.id !== this.get('currentUser.user.id'));
   }),
+  previousDisabled: Ember.computed('page', function () {
+    return this.get('page') <= 0;
+  }),
+  nextDisabled: Ember.computed('page', function () {
+    return this.get('page') >= this.get('totalPages');
+  }),
   actions: {
     toggleModal() {
       this.toggleProperty('isShowingModal');
     },
     searchForUsers(page) {
-      debugger; // eslint-disable-line
-      if (page === null || page === undefined) {
-        page = 0;
+      if (page === null || page === undefined || !page) {
+        page = 1;
       }
       this.set('page', page);
       const size = this.get('pageSize');
@@ -42,7 +46,7 @@ export default Component.extend({
             fields: ['firstName', 'lastName', 'email', 'displayName']
           }
         },
-        from: page * size,
+        from: (page - 1) * size,
         size,
         info
       }).then((users) => {
@@ -52,7 +56,7 @@ export default Component.extend({
     },
     pickSubmitter(submitter) {
       if (this.get('model.newSubmission.submitter.id')) {
-        this.get('model.newSubmission.grants').clear();
+        this.set('model.newSubmission.grants', Ember.A());
         toastr.info('Because the submitter you\'ve chosen has different grants than the previous submitter, all existing grants have been detached from this submission.', 'All grants removed');
       }
       this.set('searchInput', '');

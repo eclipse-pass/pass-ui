@@ -127,13 +127,21 @@
                 {{#if (eq model.sub.source "other")}}
                 <i>This submission did not originate from PASS</i>
                 {{else}}
-                {{get (await model.sub.user) 'displayName'}}
-                {{#if (get (await model.sub.user) 'institutionalId')}}
-                ({{get (await model.sub.user) 'institutionalId'}})
+                {{get (await model.sub.submitter) 'displayName'}}
+                {{#if (get (await model.sub.submitter) 'institutionalId')}}
+                ({{get (await model.sub.submitter) 'institutionalId'}})
                 {{/if}}
                 {{/if}}
               </td>
             </tr>
+            {{#if (await model.sub.preparers)}}
+              <td class="text-nowrap"><strong>Preparer(s)</strong></td>
+              <td>
+                {{#each model.sub.preparers as |preparer index|}}
+                {{#if index}}, {{/if}} {{get (await model.sub.preparer) 'displayName'}}
+                {{/each}}
+              </td>
+            {{/if}}
             <tr>
               <td><strong>Details</strong></td>
               <td>

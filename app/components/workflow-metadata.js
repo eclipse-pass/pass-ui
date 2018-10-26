@@ -241,42 +241,13 @@ export default WorkflowComponent.extend({
     this.set('schemas', []);
 
 
-    this.get('metadataForms').forEach((form, index) => {
-      if (form) {
-        try {
-          // if Proxy is submitting dont show JScholarship to proxy
-          console.log('form', form.id, this.get('model.newSubmission.hasNewProxy'));
-          if (this.get('model.newSubmission.hasNewProxy')) {
-            //  check to see if it is the  preparers, if it is hide deposit agreement
-            // let currentUser = this.get('currentUser.user');
-            // if (this.get('model.newSubmission.preparers').includes(currentUser)) {
-            // if (form.id === 'JScholarship') {
-            // schemas.addObject(form);
-            // delete this.get('metadataForms')[index].options.fields.embargo;
-            // delete this.get('metadataForms')[index].options.fields['agreement-to-deposit'];
-            // form.options.fields.embargo.hidden = true;
-            // form.options.fields['agreement-to-deposit'].hidden = true;
-
-            schemas.addObject(form);
-            // }
-            // } else {
-            //   schemas.addObject(form);
-            // }
-          } else {
-            schemas.addObject(form);
-          }
-        } catch (e) {
-          console.log('ERROR:', e);
-        }
-      }
-    });
+    this.get('metadataForms').forEach((form) => { if (form) schemas.addObject(form); });
     this.set('schemas', _.uniqBy(schemas, 'id'));
     this.set('schema', this.get('metadataForms')[this.get('currentFormStep')]);
   },
 
   activeRepositories: Ember.computed('model.newSubmission', function () {
     const repos = Ember.A();
-    const policies = Ember.A();
     this.get('model.newSubmission.repositories').forEach((repository) => {
       repos.addObject(repository);
     });
@@ -298,7 +269,6 @@ export default WorkflowComponent.extend({
   }),
   actions: {
     nextForm() {
-      let commonAuthors = [];
       let doAuthorsExist = false;
       JSON.parse(this.get('model.newSubmission.metadata')).forEach((data) => {
         if (data.id === 'JScholarship') {
@@ -325,8 +295,8 @@ export default WorkflowComponent.extend({
         if ($('[name="agreement-to-deposit"]').length == 2) {
           value = $('[name="agreement-to-deposit"]')[1].checked;
         }
-        // if proxy sub then set value of deposit agreement = true to loet it pass.
-        if (this.get('model.newSubmission.hasNewProxy')) {
+        // if proxy sub then set value of deposit agreement = true to let it pass.
+        if (this.get('hasProxy')) {
           value = true;
         }
         let jhuRepo = this.get('model.repositories').filter(repo => repo.get('name') === 'JScholarship');

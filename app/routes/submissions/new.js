@@ -20,7 +20,6 @@ export default CheckSessionRoute.extend({
     return this.get('store').query(type, { query: { match_all: {} }, from: offset, size: count });
   },
   beforeModel(transition) {
-    debugger; // eslint-disable-line
     this.get('store').unloadAll('submissionEvent');
     this.get('store').unloadAll('file');
   },

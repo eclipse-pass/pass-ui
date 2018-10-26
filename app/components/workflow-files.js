@@ -13,15 +13,21 @@ export default WorkflowComponent.extend({
       this.set('nextDisabled', false);
     }
   },
-  nextDisabled: Ember.computed('files', 'model.files', function () {
+  nextDisabled: Ember.computed('files', 'files.[]', 'model.files', 'model.files.[]', 'filesTemp', 'filesTemp.[]', function () {
     // disable the button if there are no files already on the submission
     // or ready to be saved to the submission.
+    debugger; // eslint-disable-line
     let mFiles = this.get('model.files');
     let files = this.get('files');
-    return (!files || (files && files.length === 0)) && (!mFiles || mFiles.length === 0);
+    let tFiles = this.get('filesTemp');
+    return (
+      (!files || (files && files.length === 0)) &&
+      (!mFiles || (mFiles && mFiles.length === 0)) &&
+      (!tFiles || (tFiles && tFiles.length === 0)));
   }),
   actions: {
     next() {
+      debugger; // eslint-disable-line
       if (!this.get('nextDisabled')) {
         this.set('filesTemp', this.get('files'));
         this.sendAction('next');
@@ -84,7 +90,6 @@ export default WorkflowComponent.extend({
       files.removeObject(file);
       this.set('files', files);
       this.set('filesTemp', this.get('files'));
-      // this.set('nextDisabled', checkDisabled(this.get('files')));
     }
   },
 });

@@ -10,7 +10,7 @@ export default Component.extend({
   includeNIHDeposit: true,
   init() {
     this._super(...arguments);
-    this.get('filesTemp').clear();
+    this.set('filesTemp', Ember.A());
   },
   userIsPreparer: Ember.computed(
     'currentUser.user',

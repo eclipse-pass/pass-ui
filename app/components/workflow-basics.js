@@ -61,7 +61,7 @@ export default WorkflowComponent.extend({
       this.set('submitterEmail', '');
       this.set('submitterName', '');
       this.set('model.newSubmission.submitter', null);
-      this.get('model.newSubmission.preparers').clear();
+      this.set('model.newSubmission.preparers', Ember.A());
       this.set('emailLookup', '');
     }
   },
@@ -72,6 +72,22 @@ export default WorkflowComponent.extend({
   headers: { 'Content-Type': 'application/json; charset=utf-8' },
   actions: {
     removeCurrentSubmitter() {
+      if (this.get('model.newSubmission.grants.length') && this.get('model.newSubmission.grants.length') > 0) {
+        // TODO: add a swal here for better confirmation.
+        swal({
+          type: 'warning',
+          title: 'Are you sure?',
+          html: 'Removing this submitter will also <strong>remove all grants</strong> attached to your submission as a security measure. Any relevant grants will still be able to be re-added. Are you sure you want to proceed?',
+          showCancelButton: true,
+          cancelButtonText: 'Nevermind',
+          confirmButtonText: 'Yes, I\'m sure'
+        }).then((result) => {
+          if (result.value) {
+            this.set('model.newSubmission.grants', Ember.A());
+            toastr.info('Submitter and related grants removed from submission.');
+          }
+        });
+      }
       this.set('model.newSubmission.submitter', null);
     },
     toggleModal() {
@@ -144,7 +160,7 @@ export default WorkflowComponent.extend({
       } else if (!this.get('hasProxy')) {
         // Otherwise, if it is not a proxy submission, make the current user the submitter.
         if (this.get('model.newSubmission.submitter.id')) {
-          this.get('model.newSubmission.grants').clear();
+          this.set('model.newSubmission.grants', Ember.A());
           toastr.info('Because the submitter you\'ve chosen has different grants than the previous submitter, all existing grants have been detached from this submission.', 'All grants removed');
         }
         this.set('model.newSubmission.submitter', this.get('currentUser.user'));

@@ -5,23 +5,21 @@ export default WorkflowComponent.extend({
 
   init() {
     this._super(...arguments);
-    // // TODO:  add validation step here that checks the model each rerender
-    // this.set('isValidated', false)
     $('[data-toggle="tooltip"]').tooltip();
   },
 
   externalRepoMap: {},
-  // externalSubmission: Ember.computed('metadataBlobNoKeys', function () { // eslint-disable-line
-  //   if (this.get('metadataBlobNoKeys').Submission) {
-  //     return true;
-  //   }
-  //   return false;
-  // }),
-  parsedFiles: Ember.computed('filesTemp', function () {
-    return this.get('filesTemp');
+  parsedFiles: Ember.computed('filesTemp', 'model.files', function () {
+    let newArr = Ember.A();
+    if (this.get('filesTemp')) {
+      newArr.addObjects(this.get('filesTemp'));
+    }
+    if (this.get('model.files')) {
+      newArr.addObjects(this.get('model.files'));
+    }
+    return newArr;
   }),
   metadata: Ember.computed('model.newSubmission.metadata', function () {
-    // eslint-disable-line
     return JSON.parse(this.get('model.newSubmission.metadata'));
   }),
   metadataBlobNoKeys: Ember.computed(
@@ -67,7 +65,6 @@ export default WorkflowComponent.extend({
     submit() {
       $('.block-user-input').css('display', 'block');
       let disableSubmit = true;
-      // let didNotAgree = true;
       // In case a crafty user edits the page HTML, don't submit when not allowed
       if (this.get('disableSubmit')) {
         if (!this.get('hasVisitedWeblink')) {
@@ -81,9 +78,6 @@ export default WorkflowComponent.extend({
         }
         disableSubmit = false;
       }
-      // if (this.get('didNotAgree')) {
-      //   didNotAgree = false;
-      // }
 
       if (!disableSubmit) {
         $('.block-user-input').css('display', 'none');

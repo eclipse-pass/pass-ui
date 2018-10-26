@@ -73,7 +73,7 @@ export default Ember.Component.extend({
                 try {
                   doiInfo[doiEntry] = doiInfo[doiEntry].replace(/(<([^>]+)>)/ig, '');
                 } catch (e) {} // eslint-disable-line no-empty
-                console.log(doiEntry)
+                console.log(doiEntry);
                 if (doiEntry == 'author') {
                   doiInfo[doiEntry].forEach((author, index) => {
                     const name = `${doiInfo[doiEntry][index].given} ${doiInfo[doiEntry][index].family}`;
@@ -261,8 +261,8 @@ export default Ember.Component.extend({
     } catch (e) {} // eslint-disable-line
     if (hasAgreementText) {
       // if the current user is not the preparer
-      if (!this.get('model.preparers').includes(currentUser)) {
-        // add agreement to schema 
+      if (!this.get('model.preparers').map(x => x.id).includes(currentUser.get('id'))) {
+        // add agreement to schema
         newForm.options.fields.embargo = {
           type: 'textarea',
           label: 'Deposit Agreement',
