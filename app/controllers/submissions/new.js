@@ -22,6 +22,29 @@ export default Controller.extend({
       );
     }
   ),
+  userIsPreparer: Ember.computed(
+    'currentUser.user',
+    'model.newSubmission',
+    function () {
+      if (this.get('model.newSubmission.preparers')) {
+        return this.get('model.newSubmission.preparers')
+          .map(x => x.id)
+          .includes(this.get('currentUser.user.id') ||
+            (this.get('submitterEmail') && this.get('submitterName')));
+      }
+      return false;
+    }
+  ),
+  userIsSubmitter: Ember.computed(
+    'currentUser.user',
+    'model.newSubmission',
+    function () {
+      return (
+        this.get('model.newSubmission.submitter') ===
+        this.get('currentUser.user')
+      );
+    }
+  ),
   actions: {
     finishSubmission(s) {
       let subEvent = this.store.createRecord('submissionEvent');
@@ -56,8 +79,9 @@ export default Controller.extend({
       s.save().then(() => {
         subEvent.save().then(() => {
           this.set('uploading', false);
-          this.set('tempFiles', Ember.A());
+          this.set('filesTemp', Ember.A());
           this.set('comment', '');
+          debugger; // eslint-disable-line
           this.transitionToRoute('thanks', { queryParams: { submission: s.get('id') } });
         });
       });

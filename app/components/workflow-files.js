@@ -16,7 +16,6 @@ export default WorkflowComponent.extend({
   nextDisabled: Ember.computed('files', 'files.[]', 'model.files', 'model.files.[]', 'filesTemp', 'filesTemp.[]', function () {
     // disable the button if there are no files already on the submission
     // or ready to be saved to the submission.
-    debugger; // eslint-disable-line
     let mFiles = this.get('model.files');
     let files = this.get('files');
     let tFiles = this.get('filesTemp');
@@ -27,7 +26,6 @@ export default WorkflowComponent.extend({
   }),
   actions: {
     next() {
-      debugger; // eslint-disable-line
       if (!this.get('nextDisabled')) {
         this.set('filesTemp', this.get('files'));
         this.sendAction('next');

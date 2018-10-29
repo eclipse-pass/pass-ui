@@ -137,8 +137,8 @@
             {{#if (await model.sub.preparers)}}
               <td class="text-nowrap"><strong>Preparer(s)</strong></td>
               <td>
-                {{#each model.sub.preparers as |preparer index|}}
-                {{#if index}}, {{/if}} {{get (await model.sub.preparer) 'displayName'}}
+                {{#each (await model.sub.preparers) as |preparer index|}}
+                {{#if index}}, {{/if}} {{get (await preparer) 'displayName'}}
                 {{/each}}
               </td>
             {{/if}}
@@ -232,7 +232,7 @@
               <td>
                 {{commenting-block submissionEvents=model.submissionEvents}}
                 {{#if (or (and isSubmitter submissionNeedsSubmitter) (and isPreparer submissionNeedsPreparer))}}
-                {{textarea placeholder="add note..." value=message class="form-control custom-control p-2" rows="2"
+                {{textarea placeholder="Add comment" value=message class="form-control custom-control p-2" rows="2"
                 style="resize:none; min-height: 38px!important;"}}
                 {{/if}}
               </td>

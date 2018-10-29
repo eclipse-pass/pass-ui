@@ -12,26 +12,6 @@ export default Component.extend({
     this._super(...arguments);
     this.set('filesTemp', Ember.A());
   },
-  userIsPreparer: Ember.computed(
-    'currentUser.user',
-    'model.newSubmission',
-    function () {
-      return this.get('model.newSubmission.preparers')
-        .map(x => x.id)
-        .includes(this.get('currentUser.user.id') ||
-            (this.get('submitterEmail') && this.get('submitterName')));
-    }
-  ),
-  userIsSubmitter: Ember.computed(
-    'currentUser.user',
-    'model.newSubmission',
-    function () {
-      return (
-        this.get('model.newSubmission.submitter') ===
-        this.get('currentUser.user')
-      );
-    }
-  ),
   actions: {
     toggleNIHDeposit(bool) {
       this.set('includeNIHDeposit', bool);
