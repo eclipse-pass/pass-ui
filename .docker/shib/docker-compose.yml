@@ -63,7 +63,7 @@ services:
       - '443:443'
 
   idp:
-    image: oapass/idp:20180815@sha256:8cb8e3ac890200bd1611b1b9c82e3cebf7ace1007e5cdfab36eab3118f70be6b
+    image: oapass/idp:20181012@sha256:59d920bd4c6a51d12c0961717f38d743710f1bd8221c2b6c8dda6746ac224d7b
     container_name: idp
     depends_on:
       - ldap
@@ -83,13 +83,13 @@ services:
       - source: idp_sealer
 
   ldap:
-    image: oapass/ldap:201808706@sha256:89cdbc3e91917675d9e3da94447f05b74a8fa0b018965c8d97ff278273ab7971
+    image: oapass/ldap:20181012@sha256:813a0be4c301ade0d1f970fea5c51532ba5de90454aa406a5496169a564b0a5f
     container_name: ldap
     networks:
       - back
 
   sp:
-    image: oapass/sp:20180815@sha256:2882114242a7f3160605b3e0f0adfc348f5b74fe625e1eae8db1bb034200c2a8
+    image: oapass/sp:20181012@sha256:fc44a34b8e062eecab66726f4e6bc4da7b2388d1498d90e4ed573953f6885747
     container_name: sp
     networks:
       - back
@@ -125,7 +125,7 @@ services:
     depends_on:
       - assets
   assets:
-    image: birkland/assets:2018-10-09_3.1@sha256:e9d40e67d0ea784e4812e94ca93b0353c1466cdbd21546906ab14d98f2565001
+    image: birkland/assets:2018-10-17_3.1@sha256:76673a46123f121f35cffe6ef935b3fef7e59990ae91ff891f51e1ab653b9fcf
     volumes:
       - passdata:/data
 
