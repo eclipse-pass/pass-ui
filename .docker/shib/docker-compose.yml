@@ -83,7 +83,7 @@ services:
       - source: idp_sealer
 
   ldap:
-    image: oapass/ldap:20181012@sha256:813a0be4c301ade0d1f970fea5c51532ba5de90454aa406a5496169a564b0a5f
+    image: oapass/ldap:20181024@sha256:e9647247c0187011b5a7c5466103521b6640281bb74df650197b1603aed7e550
     container_name: ldap
     networks:
       - back
