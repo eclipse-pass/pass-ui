@@ -65,13 +65,16 @@ export default Controller.extend({
         subEvent.set('performerRole', 'preparer');
 
         // If a submitter is specified, it's a normal "approval-requested" scenario.
-        if (s.get('submitter')) {
+        if (s.get('submitter.id')) {
           subEvent.set('eventType', 'approval-requested');
         } else if (this.get('submitterName') && this.get('submitterEmail')) {
           // If not specified but a name and email are present, create a mailto link.
           subEvent.set('eventType', 'approval-requested-newuser');
-          s.set('submitter', `mailto:${encodeURI(this.get('submitterEmail'))}`);
-          subEvent.set('link', `${ENV.rootURL}/submissions/${s.id}`);
+          // TODO: UNCOMMENT THESE ONCE FCREPO IS UPDATED
+          // s.set('submitterEmail', `mailto:${this.get('submitterEmail')}`);
+          // s.set('submitterName', this.get('submitterName'));
+          let baseURL = window.location.href.replace(new RegExp(`${ENV.rootURL}.*`), '');
+          subEvent.set('link', `${baseURL}${ENV.rootURL}submissions/${s.id}`);
         } // end if
       } // end if
 
@@ -81,7 +84,6 @@ export default Controller.extend({
           this.set('uploading', false);
           this.set('filesTemp', Ember.A());
           this.set('comment', '');
-          debugger; // eslint-disable-line
           this.transitionToRoute('thanks', { queryParams: { submission: s.get('id') } });
         });
       });

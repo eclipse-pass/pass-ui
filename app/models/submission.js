@@ -6,16 +6,14 @@ export default DS.Model.extend({
     defaultValue: 'not-started'
   }),
   submittedDate: DS.attr('date'),
-  source: DS.attr('string', {
-    defaultValue: 'pass'
-  }),
-  metadata: DS.attr('string', {
-    defaultValue: '[]'
-  }), // Stringified JSON
-  submitted: DS.attr('boolean', {
-    defaultValue: false
-  }),
+  source: DS.attr('string', { defaultValue: 'pass' }),
+  metadata: DS.attr('string', { defaultValue: '[]' }), // Stringified JSON
+  submitted: DS.attr('boolean', { defaultValue: false }),
   submissionStatus: DS.attr('string'),
+
+  // TODO: UNCOMMENT WHEN THE TIME COMES
+  // submitterName: DS.attr('string'),
+  // submitterEmail: DS.attr('string'), // format: "mailto:jane@example.com"
   submitter: DS.belongsTo('user'),
   preparers: DS.hasMany('user'),
   publication: DS.belongsTo('publication'),
