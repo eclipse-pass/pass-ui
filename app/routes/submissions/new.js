@@ -19,10 +19,6 @@ export default CheckSessionRoute.extend({
   loadObjects(type, offset, count) {
     return this.get('store').query(type, { query: { match_all: {} }, from: offset, size: count });
   },
-  beforeModel(transition) {
-    // this.get('store').unloadAll('submissionEvent');
-    // this.get('store').unloadAll('file');
-  },
   model(params) {
     let preLoadedGrant = null;
     let newSubmission = null;

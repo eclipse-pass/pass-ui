@@ -113,7 +113,7 @@ export default WorkflowComponent.extend({
         if (info.total !== null) this.set('modalTotalResults', info.total);
       });
     },
-    validateNext() {
+    async validateNext() {
       const title = this.get('model.publication.title');
       const journal = this.get('model.publication.journal');
 
@@ -159,7 +159,7 @@ export default WorkflowComponent.extend({
         }
       } else if (!this.get('hasProxy')) {
         // Otherwise, if it is not a proxy submission, make the current user the submitter.
-        if (this.get('model.newSubmission.submitter.id')) {
+        if (this.get('model.newSubmission.submitter.id') && this.get('model.newSubmission.submitter.id') !== this.get('currentUser.user.id')) {
           this.set('model.newSubmission.grants', Ember.A());
           toastr.info('Because the submitter you\'ve chosen has different grants than the previous submitter, all existing grants have been detached from this submission.', 'All grants removed');
         }
