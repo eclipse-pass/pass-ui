@@ -272,9 +272,8 @@ export default WorkflowComponent.extend({
     const url = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nlmcatalog&term=${issn}[issn]&retmode=json`;
     return fetch(url)
       .then(resp => resp.json().then(data => data.esearchresult.idlist))
-      .catch(function(e) {
+      .catch((e) => {
         console.log('NLMTA lookup failed.', e);
-        return;
       });
   },
   getNLMTA(nlmid) {
@@ -285,9 +284,8 @@ export default WorkflowComponent.extend({
     const url = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=nlmcatalog&retmode=json&rettype=abstract&id=${idquery}`;
     return fetch(url)
       .then(resp => resp.json().then(data => data.result))
-      .catch(function(e) {
+      .catch((e) => {
         console.log('NLMTA lookup failed.', e);
-        return;
       });
   }
 });

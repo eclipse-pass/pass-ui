@@ -67,15 +67,15 @@ test('it shows the correct values according to the input', function (assert) {
     Ember.Object.create({
       copyStatus: 'complete'
     })
-  ]
+  ];
   deposits = [
     Ember.Object.create({})
-  ]
+  ];
   let result5 = service.calculateStatus(submission, repoCopies, deposits);
   assert.equal(result5, 'Complete');
 
-  repoCopies.push(Ember.Object.create({copyStatus: 'complete'}));
-  repoCopies.push(Ember.Object.create({copyStatus: 'incomplete'}));
+  repoCopies.push(Ember.Object.create({ copyStatus: 'complete' }));
+  repoCopies.push(Ember.Object.create({ copyStatus: 'incomplete' }));
   submission.set('source', 'other');
   let result6 = service.calculateStatus(submission, repoCopies, deposits);
   assert.equal(result6, 'Complete');
