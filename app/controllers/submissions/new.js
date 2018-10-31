@@ -68,11 +68,11 @@ export default Controller.extend({
         if (s.get('submitter.id')) {
           subEvent.set('eventType', 'approval-requested');
         } else if (this.get('submitterName') && this.get('submitterEmail')) {
+          debugger; // eslint-disable-line
           // If not specified but a name and email are present, create a mailto link.
           subEvent.set('eventType', 'approval-requested-newuser');
-          // TODO: UNCOMMENT THESE ONCE FCREPO IS UPDATED
-          // s.set('submitterEmail', `mailto:${this.get('submitterEmail')}`);
-          // s.set('submitterName', this.get('submitterName'));
+          s.set('submitterEmail', `mailto:${this.get('submitterEmail')}`);
+          s.set('submitterName', this.get('submitterName'));
           let baseURL = window.location.href.replace(new RegExp(`${ENV.rootURL}.*`), '');
           subEvent.set('link', `${baseURL}${ENV.rootURL}submissions/${s.id}`);
         } // end if

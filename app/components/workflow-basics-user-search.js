@@ -60,7 +60,7 @@ export default Component.extend({
       });
     },
     async pickSubmitter(submitter) {
-      if (this.get('model.newSubmission.submitter.id')) {
+      if (this.get('model.newSubmission.submitter.id') && this.get('model.newSubmission.grants.length') > 0) {
         let result = await swal({
           type: 'warning',
           title: 'Are you sure?',

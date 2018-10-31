@@ -192,7 +192,6 @@ export default WorkflowComponent.extend({
     let schemas = this.get('schemas');
     this.set('schemas', []);
 
-    debugger; // eslint-disable-line
     this.get('metadataForms').forEach((form) => { if (form) schemas.addObject(form); });
     this.set('schemas', _.uniqBy(schemas, 'id'));
     this.set('schema', this.get('metadataForms')[this.get('currentFormStep')]);
@@ -200,7 +199,6 @@ export default WorkflowComponent.extend({
 
   activeRepositories: Ember.computed('model.newSubmission', function () {
     const repos = Ember.A();
-    debugger; // eslint-disable-line
     this.get('model.newSubmission.repositories').forEach((repository) => {
       repos.addObject(repository);
     });
@@ -208,7 +206,6 @@ export default WorkflowComponent.extend({
   }),
 
   metadataForms: Ember.computed('activeRepositories', function () {
-    debugger; // eslint-disable-line
     let retVal = this.get('activeRepositories').filterBy('formSchema');
     retVal = retVal.map(repository => JSON.parse(repository.get('formSchema')));
     // TODO: REMOVE BEFORE PUSHING CODE THIS IS NOT SUPOSE TO BE PUSHED REMOVE THIS LINE OMG DO NOT LEAVE THIS LINE YOU BETTER NOT
@@ -261,7 +258,9 @@ export default WorkflowComponent.extend({
           // if USER has not agreed to deposit but has one user
           //
           // ----------------------------------------------------------------------
-          if (doAuthorsExist && !value && this.get('userIsSubmitter')) {
+          debugger; // eslint-disable-line
+          let userIsSubmitter = this.get('model.newSubmission.submitter.id') === this.get('currentUser.user.id');
+          if (doAuthorsExist && !value && userIsSubmitter) {
             swal({
               title: 'Notice!',
               text: 'You added JScholarship as a repository but didn\'t agree to the deposit agreement, so your submission will not be submitted to JScholarship. To fix this, agree to the deposit agreement below.',

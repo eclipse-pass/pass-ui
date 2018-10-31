@@ -26,7 +26,7 @@
     includeNIHDeposit=includeNIHDeposit}}
     {{/if}}
     {{#if (eq step 5)}}
-    {{workflow-metadata userIsSubmitter=userIsSubmitter currentUser=currentUser didNotAgree=didNotAgree model=model doiInfo=doiInfo step=step
+    {{workflow-metadata hasProxy=hasProxy userIsSubmitter=userIsSubmitter currentUser=currentUser didNotAgree=didNotAgree model=model doiInfo=doiInfo step=step
     next=(action "next") back=(action "back")}}
     {{/if}}
     {{#if (eq step 6)}}

@@ -120,7 +120,6 @@ export default WorkflowComponent.extend({
       });
     },
     async validateNext() {
-      debugger; // eslint-disable-line
       const title = this.get('model.publication.title');
       const journal = this.get('model.publication.journal');
 
@@ -165,18 +164,24 @@ export default WorkflowComponent.extend({
         // AND the current user is not already a preparer,
         if ((proxySubmitterExists || proxySubmitterInfoExists) && userIsNotPreparer) {
           // THEN add the current user to the preparers list
-          let result = await swal({
-            type: 'warning',
-            title: 'Are you sure?',
-            html: 'Adding a proxy submitter will also <strong>remove all grants</strong> attached to this submission as a security measure. Any relevant grants will still be able to be re-added. Are you sure you want to proceed?',
-            showCancelButton: true,
-            cancelButtonText: 'Nevermind',
-            confirmButtonText: 'Yes, I\'m sure'
-          });
+          let result = { value: true };
+          if (this.get('model.newSubmission.grants.length') > 0) {
+            result = await swal({
+              type: 'warning',
+              title: 'Are you sure?',
+              html: 'Adding a proxy submitter will also <strong>remove all grants</strong> attached to this submission as a security measure. Any relevant grants will still be able to be re-added. Are you sure you want to proceed?',
+              showCancelButton: true,
+              cancelButtonText: 'Nevermind',
+              confirmButtonText: 'Yes, I\'m sure'
+            });
+          }
           if (result.value) {
             this.set('model.newSubmission.grants', Ember.A());
             this.get('model.newSubmission.preparers').addObject(this.get('currentUser.user'));
+          } else {
+            return;
           }
+
         }
       } else if (!this.get('hasProxy')) {
         // Otherwise, if it is not a proxy submission, make the current user the submitter.

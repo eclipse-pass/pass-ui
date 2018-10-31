@@ -287,7 +287,6 @@ export default Ember.Component.extend({
       }
     }
     $(document).ready(() => {
-      debugger; // eslint-disable-line
       $('#schemaForm').empty();
       $('#schemaForm').alpaca(newForm);
     });
