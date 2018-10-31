@@ -85,6 +85,20 @@ export default WorkflowComponent.extend({
           this.get('router').transitionTo('dashboard');
         });
       } else {
+        debugger; // eslint-disable-line
+
+        // Remove any schemas not associated with the repositories attached to the submission or not on the whitelist.
+        // Whitelisted schemas are not associated with repositories but still required by deposit services.
+        let metadata;
+        if (this.get('model.newSubmission.metadata')) {
+          metadata = JSON.parse(this.get('model.newSubmission.metadata'));
+        } else {
+          metadata = [];
+        }
+        let schemaWhitelist = ['common', 'crossref', 'agent_information', 'pmc'];
+        let schemaIds = this.get('model.newSubmission.repositories').map(x => JSON.parse(x.get('formSchema')).id);
+        metadata = metadata.filter(md => schemaIds.includes(md.id) || schemaWhitelist.includes(md.id));
+        this.set('model.newSubmission.metadata', JSON.stringify(metadata));
         this.sendAction('next');
       }
     },

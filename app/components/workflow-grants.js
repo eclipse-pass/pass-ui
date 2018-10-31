@@ -35,19 +35,19 @@ export default WorkflowComponent.extend({
         const submission = this.get('model.newSubmission');
         submission.get('grants').pushObject(grant);
         this.set('maxStep', 2);
-        submission.set('metadata', '[]');
+        // submission.set('metadata', '[]');
       } else if (event && event.target.value) {
         this.get('store').findRecord('grant', event.target.value).then((g) => {
           g.get('primaryFunder.policy'); // Make sure policy is loaded in memory
           const submission = this.get('model.newSubmission');
           submission.get('grants').pushObject(g);
           this.set('maxStep', 2);
-          submission.set('metadata', '[]');
+          // submission.set('metadata', '[]');
           Ember.$('select')[0].selectedIndex = 0;
         });
       }
     },
-    removeGrant(grant) {
+    async removeGrant(grant) {
       // if grant is grant passed in from grant detail page remove query parms
       if (grant === this.get('model.preLoadedGrant')) {
         this.set('model.preLoadedGrant', null);
@@ -57,7 +57,9 @@ export default WorkflowComponent.extend({
 
       // undo progress, make user redo metadata step.
       this.set('maxStep', 2);
-      submission.set('metadata', '[]');
+      // submission.set('metadata', '[]');
+      // let newMetadata = submission.get('metadata');
+      // newMetadata = JSON.parse(newMetadata).filter(x => x.id);
     },
   },
 });

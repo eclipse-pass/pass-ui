@@ -41,9 +41,14 @@ export default Component.extend({
       let input = this.get('searchInput');
       this.get('store').query('user', {
         query: {
-          multi_match: {
-            query: input,
-            fields: ['firstName', 'lastName', 'email', 'displayName']
+          bool: {
+            filter: {
+              exists: { field: 'email' }
+            },
+            should: {
+              multi_match: { query: input, fields: ['firstName', 'middleName', 'lastName', 'email', 'displayName'] }
+            },
+            minimum_should_match: 1
           }
         },
         from: (page - 1) * size,
@@ -54,10 +59,20 @@ export default Component.extend({
         if (info.total !== null) this.set('totalResults', info.total);
       });
     },
-    pickSubmitter(submitter) {
+    async pickSubmitter(submitter) {
       if (this.get('model.newSubmission.submitter.id')) {
-        this.set('model.newSubmission.grants', Ember.A());
-        toastr.info('Because the submitter you\'ve chosen has different grants than the previous submitter, all existing grants have been detached from this submission.', 'All grants removed');
+        let result = await swal({
+          type: 'warning',
+          title: 'Are you sure?',
+          html: 'Picking a new submitter will also <strong>remove all grants</strong> attached to your submission as a security measure. <strong>Any relevant grants will still be able to be re-added.</strong> Are you sure you want to proceed?',
+          showCancelButton: true,
+          cancelButtonText: 'Nevermind',
+          confirmButtonText: 'Yes, I\'m sure'
+        });
+        if (result.value) {
+          this.set('model.newSubmission.grants', Ember.A());
+          toastr.info('All grants removed from submission.');
+        }
       }
       this.set('searchInput', '');
       this.set('submitterEmail', '');
