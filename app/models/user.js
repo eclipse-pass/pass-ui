@@ -17,10 +17,10 @@ export default DS.Model.extend({
   /** Possible values: admin, submitter */
   roles: DS.attr('set'),
 
-  isSubmitter: Ember.computed('roles', function () {
-    return this.get('roles').includes('submitter');
+  isSubmitter: Ember.computed('roles.[]', function () {
+    return this.get('roles') ? this.get('roles').includes('submitter') : false;
   }),
-  isAdmin: Ember.computed('roles', function () {
-    return this.get('roles').includes('admin');
+  isAdmin: Ember.computed('roles.[]', function () {
+    return this.get('roles') ? this.get('roles').includes('admin') : false;
   })
 });
