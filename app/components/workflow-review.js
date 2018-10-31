@@ -2,6 +2,7 @@ import WorkflowComponent from './workflow-component';
 
 export default WorkflowComponent.extend({
   metadataService: Ember.inject.service('metadata-blob'),
+  currentUser: Ember.inject.service('currentUser'),
 
   init() {
     this._super(...arguments);
@@ -42,8 +43,8 @@ export default WorkflowComponent.extend({
   }),
   mustVisitWeblink: Ember.computed('weblinkRepos', 'model', function () {
     const weblinkExists = this.get('weblinkRepos.length') > 0;
-    const isEdit = !!this.get('model.newSubmission.id');
-    return weblinkExists && !isEdit;
+    const isSubmitter = this.get('currentUser.user.id') === this.get('model.newSubmission.submitter.id');
+    return weblinkExists && isSubmitter;
   }),
   disableSubmit: Ember.computed(
     'mustVisitWeblink',
