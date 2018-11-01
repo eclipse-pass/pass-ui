@@ -805,3 +805,16 @@ footer {
 .complete>.fa-circle, .complete .fa-info-circle {
   color: #00AB8E;
 }
+
+.ember-modal-wrapper.emd-static.emd-wrapper-target-attachment-center .user-search-modal {
+  top: 5rem;
+  left: 50%;
+  transform: translate(-50%);
+  width: 90%;
+  min-width: 20rem;
+  max-width: 60rem;
+}
+
+.user-search-results .col-6 {
+  max-width:100%
+}

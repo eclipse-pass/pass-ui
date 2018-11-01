@@ -7,22 +7,23 @@ export default Component.extend({
   searchInput: '',
   users: [],
   page: 0,
-  pageSize: 50,
+  pageSize: 40,
   totalResults: 0,
   totalPages: Ember.computed('totalResults', 'pageSize', function () {
     return Math.ceil(this.get('totalResults') / this.get('pageSize'));
   }),
   pages: Ember.computed('page', 'pageSize', 'totalResults', 'totalPages', function () {
     let arr = [];
-    for (let i = 1; i <= this.get('totalPages') + 1; i += 1) {
+    for (let i = 1; i <= this.get('totalPages'); i += 1) {
       arr.push(i);
     }
+    // return arr;
   }),
   filteredUsers: Ember.computed('users', function () {
     return this.get('users').filter(u => u.id !== this.get('currentUser.user.id'));
   }),
   previousDisabled: Ember.computed('page', function () {
-    return this.get('page') <= 0;
+    return this.get('page') <= 1;
   }),
   nextDisabled: Ember.computed('page', function () {
     return this.get('page') >= this.get('totalPages');
@@ -32,7 +33,7 @@ export default Component.extend({
       this.toggleProperty('isShowingModal');
     },
     searchForUsers(page) {
-      if (page === null || page === undefined || !page) {
+      if (page === 0 || page === null || page === undefined || !page) {
         page = 1;
       }
       this.set('page', page);
@@ -66,7 +67,7 @@ export default Component.extend({
           title: 'Are you sure?',
           html: 'Picking a new submitter will also <strong>remove all grants</strong> attached to your submission as a security measure. <strong>Any relevant grants will still be able to be re-added.</strong> Are you sure you want to proceed?',
           showCancelButton: true,
-          cancelButtonText: 'Nevermind',
+          cancelButtonText: 'Never mind',
           confirmButtonText: 'Yes, I\'m sure'
         });
         if (result.value) {
