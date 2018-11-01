@@ -19,7 +19,7 @@ export default CheckSessionRoute.extend({
   },
 
   afterModel(model, transition) {
-    return this._loadCurrentUser(transition.queryParams['userToken']);
+    return this._loadCurrentUser(transition.queryParams.userToken);
   },
 
   _loadCurrentUser(userToken) {
