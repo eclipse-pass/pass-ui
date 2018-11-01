@@ -30,6 +30,36 @@ export default Controller.extend({
    * }
    * This map is then turned into an array for use in the template
    */
+  externalRepoMap: {},
+  hasVisitedWeblink: Ember.computed('externalRepoMap', function () {
+    return Object.values(this.get('externalRepoMap')).every(val => val === true);
+  }),
+  weblinkRepos: Ember.computed('model.sub.metadata', function () {
+    debugger; // eslint-disable-line
+    let externalRepos = JSON.parse(this.get('model.sub.metadata')).filter(x => x.id === 'external-submissions');
+    if (externalRepos.length > 0) {
+      let externalRepoList = externalRepos[0].data.submission;
+      externalRepoList.forEach((repo) => {
+        this.get('externalRepoMap')[repo.name] = false;
+      });
+      return externalRepoList;
+    }
+    return [];
+  }),
+  mustVisitWeblink: Ember.computed('weblinkRepos', 'model', 'hasProxy', function () {
+    const weblinkExists = this.get('weblinkRepos').length > 0;
+    const isSubmitter = this.get('currentUser.user.id') === this.get('model.sub.submitter.id');
+    const hasProxy = this.get('hasProxy');
+    return weblinkExists && isSubmitter && hasProxy;
+  }),
+  disableSubmit: Ember.computed(
+    'mustVisitWeblink',
+    'hasVisitedWeblink',
+    function () {
+      const needsToVisitWeblink = this.get('mustVisitWeblink') && !this.get('hasVisitedWeblink');
+      return needsToVisitWeblink;
+    }
+  ),
   repoMap: Ember.computed('model.deposits', 'model.repoCopies', function () {
     let hasStuff = false;
     const repos = this.get('model.repos');
@@ -117,6 +147,31 @@ export default Controller.extend({
     }
   ),
   actions: {
+    openWeblinkAlert(repo) {
+      swal({
+        title: 'Notice!',
+        text:
+          'You are being sent to an external site. This will open a new tab.',
+        showCancelButton: true,
+        cancelButtonText: 'Cancel',
+        confirmButtonText: 'Open new tab'
+      }).then((value) => {
+        if (value.dismiss) {
+          // Don't redirect
+          return;
+        }
+        // Go to the weblink repo
+        this.get('externalRepoMap')[repo.name] = true;
+        const allLinksVisited = Object.values(this.get('externalRepoMap')).every(val => val === true);
+        if (allLinksVisited) {
+          this.set('hasVisitedWeblink', true);
+        }
+        $('#externalSubmission').modal('hide');
+
+        var win = window.open(repo.url, '_blank');
+        win.focus();
+      });
+    },
     requestMoreChanges() {
       if (!this.get('message')) {
         swal(
@@ -144,6 +199,20 @@ export default Controller.extend({
       }
     },
     async approveChanges() {
+      // First, check if user has visited all required weblinks.
+      if (this.get('disableSubmit')) {
+        if (!this.get('hasVisitedWeblink')) {
+          $('.fa-exclamation-triangle').css('color', '#f86c6b');
+          $('.fa-exclamation-triangle').css('font-size', '2.2em');
+          setTimeout(() => {
+            $('.fa-exclamation-triangle').css('color', '#b0b0b0');
+            $('.fa-exclamation-triangle').css('font-size', '2em');
+          }, 4000);
+          toastr.warning('Please visit the listed web portal(s) to submit your manuscript directly. Metadata displayed on this page can be used to help in the submission process.');
+        }
+        return;
+      }
+
       let reposWithAgreementText = this.get('model.repos').map((repo) => {
         if (repo.get('agreementText')) {
           return {

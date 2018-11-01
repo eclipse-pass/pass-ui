@@ -142,6 +142,32 @@
                 {{/each}}
               </td>
             {{/if}}
+            {{#if mustVisitWeblink}}
+            <tr>
+              <td class="text-nowrap text-center" id="externalSubmission">External Submission Required
+                <br>
+                {{#if disableSubmit}}
+                <i class="fa fa-exclamation-triangle fa-2x mt-3 notice-triangle"></i>
+                {{/if}}
+              </td>
+              <td>
+                <label class="">
+                  Please visit the following web portal to submit your manuscript directly. Metadata displayed above
+                  could be used to aid in your submission progress.
+                </label>
+                <ul class="m-0">
+                  {{#each weblinkRepos as |repo|}}
+                  {{debugger}}
+                  <li>
+                    <button type="button" class="btn btn-link" {{action "openWeblinkAlert" repo}}>
+                      {{repo.url}}
+                    </button>
+                  </li>
+                  {{/each}}
+                </ul>
+              </td>
+            </tr>
+            {{/if}}
             <tr>
               <td><strong>Details</strong></td>
               <td>

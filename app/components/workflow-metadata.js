@@ -437,7 +437,11 @@ export default WorkflowComponent.extend({
           repo.get('url') === 'https://dec.usaid.gov/');
         if (externalRepos.get('length') > 0) {
           let md = { id: 'external-submissions', data: { submission: [] } };
-          externalRepos.forEach(repo => md.data.submission.push(`Deposit into ${repo.get('name')} was prompted`));
+          externalRepos.forEach(repo => md.data.submission.push({
+            message: `Deposit into ${repo.get('name')} was prompted`,
+            name: repo.get('name'),
+            url: repo.get('url')
+          }));
           // Push this new thing to the overall 'metadata' obj
           metadata.push(md);
         }

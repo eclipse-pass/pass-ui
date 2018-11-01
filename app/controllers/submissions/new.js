@@ -105,7 +105,6 @@ export default Controller.extend({
       sub.set('source', 'pass');
       sub.set('removeNIHDeposit', false);
       sub.set('aggregatedDepositStatus', 'not-started');
-
       sub.set(
         'repositories',
         sub.get('repositories').filter(repo =>

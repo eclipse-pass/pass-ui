@@ -181,7 +181,6 @@ export default WorkflowComponent.extend({
           } else {
             return;
           }
-
         }
       } else if (!this.get('hasProxy')) {
         // Otherwise, if it is not a proxy submission, make the current user the submitter.

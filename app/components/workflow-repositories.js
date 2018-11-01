@@ -85,7 +85,6 @@ export default WorkflowComponent.extend({
           this.get('router').transitionTo('dashboard');
         });
       } else {
-
         // Remove any schemas not associated with the repositories attached to the submission or not on the whitelist.
         // Whitelisted schemas are not associated with repositories but still required by deposit services.
         let metadata;
