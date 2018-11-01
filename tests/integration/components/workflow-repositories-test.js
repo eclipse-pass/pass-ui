@@ -16,6 +16,9 @@ module('Integration | Component | workflow repositories', (hooks) => {
       grants: [
         Ember.Object.create({
           primaryFunder: Ember.Object.create({
+            policy: Ember.Object.create({
+              repositories: []
+            })
           })
         }),
       ]

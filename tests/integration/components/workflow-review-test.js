@@ -1,15 +1,28 @@
-import { moduleForComponent, test } from 'ember-qunit';
+import { moduleForComponent, test, setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
+import { module } from 'qunit';
+import { render } from '@ember/test-helpers';
 
-moduleForComponent('workflow-review', 'Integration | Component | workflow review', {
-  integration: true
-});
 
-test('it renders', function (assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
+module('Integration | Component | workflow-review', (hooks) => {
+  setupRenderingTest(hooks);
+  test('it renders', function (assert) {
+    let model = {};
 
-  // Template usage:
-  this.render(hbs`{{workflow-review}}`);
-  assert.ok(true);
+    // TODO: add actual tests here
+    model = Ember.Object.create({
+      newSubmission: Ember.Object.create({
+        metadata: '[]',
+        repositories: []
+      })
+    });
+    let isValidated = true;
+    this.set('isValidated', isValidated);
+    let filesTemp = '[]';
+    this.set('filesTemp', filesTemp);
+    this.set('model', model);
+
+    render(hbs`{{workflow-review model=model isValidated=isValidated filesTemp=filesTemp}}`);
+    assert.ok(true);
+  });
 });
