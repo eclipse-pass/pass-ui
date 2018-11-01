@@ -1,15 +1,5 @@
 import WorkflowComponent from './workflow-component';
 
-function checkDisabled(files) {
-  if (!(files)) {
-    return true;
-  }
-  if (files && files.length === 0) {
-    return true;
-  }
-  return false;
-}
-
 export default WorkflowComponent.extend({
   store: Ember.inject.service('store'),
   files: Ember.A(),
@@ -23,11 +13,20 @@ export default WorkflowComponent.extend({
       this.set('nextDisabled', false);
     }
   },
-  nextDisabled: true,
+  nextDisabled: Ember.computed('files', 'files.[]', 'model.files', 'model.files.[]', 'filesTemp', 'filesTemp.[]', function () {
+    // disable the button if there are no files already on the submission
+    // or ready to be saved to the submission.
+    let mFiles = this.get('model.files');
+    let files = this.get('files');
+    let tFiles = this.get('filesTemp');
+    return (
+      (!files || (files && files.length === 0)) &&
+      (!mFiles || (mFiles && mFiles.length === 0)) &&
+      (!tFiles || (tFiles && tFiles.length === 0)));
+  }),
   actions: {
     next() {
-      let isDisabled = checkDisabled(this.get('files'));
-      if (!isDisabled) {
+      if (!this.get('nextDisabled')) {
         this.set('filesTemp', this.get('files'));
         this.sendAction('next');
       } else {
@@ -36,6 +35,22 @@ export default WorkflowComponent.extend({
     },
     back() {
       this.sendAction('back');
+    },
+    deleteExistingFile(file) {
+      swal({
+        title: 'Are you sure?',
+        text: 'If you delete this file, it will be gone forever.',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'I Agree',
+        cancelButtonText: 'Nevermind'
+      }).then((result) => {
+        if (result.value) {
+          file.destroyRecord();
+        }
+      });
     },
     getFiles() {
       const submission = this.get('model.newSubmission');
@@ -60,9 +75,9 @@ export default WorkflowComponent.extend({
                 newFile.set('fileRole', 'manuscript');
               }
               this.get('files').pushObject(newFile);
-              if (this.get('files').length === uploads.files.length) {
-                this.set('nextDisabled', checkDisabled(this.get('files')));
-              }
+              // if (this.get('files').length === uploads.files.length) {
+              //   this.set('nextDisabled', checkDisabled(this.get('files')));
+              // }
             }
           }
         }
@@ -73,7 +88,6 @@ export default WorkflowComponent.extend({
       files.removeObject(file);
       this.set('files', files);
       this.set('filesTemp', this.get('files'));
-      this.set('nextDisabled', checkDisabled(this.get('files')));
     }
   },
 });

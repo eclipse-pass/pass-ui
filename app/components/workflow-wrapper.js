@@ -17,18 +17,14 @@ export default Component.extend({
       this.set('includeNIHDeposit', bool);
     },
     next() {
-      let currentUser = this.get('currentUser.user');
       this.incrementProperty('step');
       if (this.get('maxStep') < this.get('step')) {
         this.set('maxStep', this.get('step'));
       }
     },
-    back() {
-      this.decrementProperty('step');
-    },
-    submit() {
-      this.sendAction('submit');
-    },
+    back() { this.decrementProperty('step'); },
+    submit() { this.sendAction('submit'); },
+
     validate() {
       const tempValidateArray = [];
       this.set('isValidated', []);
@@ -41,6 +37,6 @@ export default Component.extend({
         }
       });
       this.set('isValidated', tempValidateArray);
-    },
-  },
+    }
+  }
 });

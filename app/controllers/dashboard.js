@@ -1,8 +1,9 @@
 import Controller from '@ember/controller';
-import { computed } from '@ember/object';
+import ENV from 'pass-ember/config/environment';
 
 export default Controller.extend({
   currentUser: Ember.inject.service('current-user'),
-  isSubmitter: Ember.computed('currentUser', () =>
-    this.get('currentUser.user.roles').includes('submitter'))
+  isSubmitter: Ember.computed('currentUser', function () {
+    return this.get('currentUser.user.roles').includes('submitter');
+  }),
 });

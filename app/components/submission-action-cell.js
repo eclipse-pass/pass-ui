@@ -1,4 +1,10 @@
 import Component from '@ember/component';
 
 export default Component.extend({
+  currentUser: Ember.inject.service('current-user'),
+  isPreparer: Ember.computed('currentUser', 'record', function () {
+    let userId = this.get('currentUser.user.id');
+    let preparers = this.get('record.preparers');
+    return preparers.map(x => x.id).includes(userId);
+  })
 });

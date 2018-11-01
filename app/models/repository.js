@@ -5,8 +5,12 @@ export default DS.Model.extend({
   description: DS.attr('string'),
   url: DS.attr('string'),
   formSchema: DS.attr('string'),
+  integrationType: DS.attr('string'),
   weblinkOnly: Ember.computed('name', function () {
     return this.get('name');
+  }),
+  agreementText: DS.attr('string', {
+    defaultValue: false
   }),
 
   // policy: DS.belongsTo('policy'),

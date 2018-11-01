@@ -5,93 +5,184 @@ export default Controller.extend({
   currentUser: Ember.inject.service('current-user'),
   queryParams: ['grant', 'submission'],
   tempFiles: Ember.A(),
-  didNotAgree: false, // JHU included as a repository but removed before review because deposit agreement wasn't accepted
+  didNotAgree: false, // JHU was included as a repository but will be removed before review because the deposit agreement wasn't accepted
+  submitterEmail: '', // holds the email of a submitter not yet in the system.
+  submitterName: '', // Holds the name of a submitter not yet in the system.
+  comment: '', // Holds the comment that will be added to submissionEvent in the review step.
+  hasProxy: Ember.computed( // Definite check for if the submission is in fact a proxy submission.
+    'submitterEmail',
+    'submitterName',
+    'model.newSubmission.preparers',
+    'model.newSubmission.hasNewProxy',
+    function () {
+      return (
+        (this.get('submitterEmail') && this.get('submitterName')) ||
+        this.get('model.newSubmission.preparers.length') > 0 ||
+        this.get('model.newSubmission.hasNewProxy')
+      );
+    }
+  ),
+  userIsPreparer: Ember.computed(
+    'currentUser.user',
+    'model.newSubmission',
+    function () {
+      if (this.get('model.newSubmission.preparers')) {
+        return this.get('model.newSubmission.preparers')
+          .map(x => x.id)
+          .includes(this.get('currentUser.user.id') ||
+            (this.get('submitterEmail') && this.get('submitterName')));
+      }
+      return false;
+    }
+  ),
+  userIsSubmitter: Ember.computed(
+    'currentUser.user',
+    'model.newSubmission',
+    function () {
+      return (
+        this.get('model.newSubmission.submitter') ===
+        this.get('currentUser.user')
+      );
+    }
+  ),
   actions: {
+    finishSubmission(s) {
+      let subEvent = this.store.createRecord('submissionEvent');
+      subEvent.set('performedBy', this.get('currentUser.user'));
+      subEvent.set('comment', this.get('comment'));
+      subEvent.set('performedDate', new Date());
+      subEvent.set('submission', s);
+
+      // If the person clicking submit *is* the submitter, actually submit the submission.
+      if (s.get('submitter.id') === this.get('currentUser.user.id')) {
+        s.set('submitted', true);
+        s.set('submissionStatus', 'submitted');
+        subEvent.set('performerRole', 'submitter');
+        subEvent.set('eventType', 'submitted');
+      } else {
+        // If they *aren't* the submitter, they're the preparer.
+        s.set('submissionStatus', 'approval-requested');
+        subEvent.set('performerRole', 'preparer');
+
+        // If a submitter is specified, it's a normal "approval-requested" scenario.
+        if (s.get('submitter.id')) {
+          subEvent.set('eventType', 'approval-requested');
+        } else if (this.get('submitterName') && this.get('submitterEmail')) {
+          debugger; // eslint-disable-line
+          // If not specified but a name and email are present, create a mailto link.
+          subEvent.set('eventType', 'approval-requested-newuser');
+          s.set('submitterEmail', `mailto:${this.get('submitterEmail')}`);
+          s.set('submitterName', this.get('submitterName'));
+          let baseURL = window.location.href.replace(new RegExp(`${ENV.rootURL}.*`), '');
+          subEvent.set('link', `${baseURL}${ENV.rootURL}submissions/${s.id}`);
+        } // end if
+      } // end if
+
+      // Save the updated submission, then save the submissionEvent, then you're done!
+      s.save().then(() => {
+        subEvent.save().then(() => {
+          this.set('uploading', false);
+          this.set('filesTemp', Ember.A());
+          this.set('comment', '');
+          this.transitionToRoute('thanks', { queryParams: { submission: s.get('id') } });
+        });
+      });
+    },
     submit() {
+      // Remove JHU as a repository if its deposit agreement is not signed.
       if (this.get('didNotAgree')) {
-        let jhuRepo = that.get('model.newSubmission.repositories').filter(repo => repo.get('name') === 'JScholarship');
+        let jhuRepo = this.get('model.newSubmission.repositories').filter(repo => repo.get('name') === 'JScholarship');
         if (jhuRepo.length > 0) {
           jhuRepo = jhuRepo[0];
-          that.get('model.newSubmission.repositories').removeObject(jhuRepo);
+          this.get('model.newSubmission.repositories').removeObject(jhuRepo);
         }
       }
-      const sub = this.get('model.newSubmission');
-      sub.set('repositories', sub.get('repositories').filter((repo) => { // eslint-disable-line
-        // TODO the specific URL checks should be removed after Repository data is updated to
-        // include 'integrationType' property
-        return repo.get('integrationType') !== 'web-link' &&
-          repo.get('url') !== 'https://eric.ed.gov/' &&
-          repo.get('url') !== 'https://dec.usaid.gov/';
-      }));
 
-      this.set('model.uploading', true);
-      this.set('model.waitingMessage', 'Saving your submission');
+      // start setting variables on the new submission object.
+      const sub = this.get('model.newSubmission');
+      sub.set('submittedDate', new Date());
+      sub.set('submitted', false);
+      sub.set('source', 'pass');
+      sub.set('removeNIHDeposit', false);
+      sub.set('aggregatedDepositStatus', 'not-started');
+      sub.set(
+        'repositories',
+        sub.get('repositories').filter(repo =>
+          // TODO the specific URL checks should be removed after Repository data is updated to
+          // include 'integrationType' property
+          (
+            repo.get('integrationType') !== 'web-link' &&
+            repo.get('url') !== 'https://eric.ed.gov/' &&
+            repo.get('url') !== 'https://dec.usaid.gov/'
+          ))
+      );
+
+      this.set('uploading', true);
+      this.set('waitingMessage', 'Saving your submission');
+
       /*
        * Note for the code below, but also Ember in general::::
        * Seems that calling `obj.set('prop', obj2)` must be used in the case of:
        *    obj.prop: belongsTo('obj2')
        * Where calling `obj.set('prop', obj2.get('id'))` will not set the relationship
        */
-      const pub = this.get('model.publication');
-      sub.set('aggregatedDepositStatus', 'not-started');
-      sub.set('submittedDate', new Date());
-      sub.set('submitted', false);
-      sub.set('user', this.get('currentUser.user')); // this.get('currentUser.user.id') seems to break stuff
-      sub.set('source', 'pass');
-      pub.save().then((p) => {
-        sub.set('publication', p); // p.get('id') seems to break stuff
+
+      this.get('model.publication').save().then((p) => {
+        sub.set('publication', p);
         let ctr = 0;
         let len = this.get('filesTemp').length;
-        sub.set('removeNIHDeposit', false);
         sub.save().then((s) => {
+          // For each file, load it as buffer, POST it to the submission object's URI, then generate
+          // a File object in fedora that references the file blob.
+          if (this.get('filesTemp.length') == 0) {
+            this.send('finishSubmission', s);
+            return;
+          }
           this.get('filesTemp').forEach((file) => {
-            let contentType = file.get('_file.type') ? file.get('_file.type') : 'application/octet-stream';
             var reader = new FileReader();
             reader.readAsArrayBuffer(file.get('_file'));
             reader.onload = (evt) => {
               let data = evt.target.result;
+              // begin XHR setup
               let xhr = new XMLHttpRequest();
               xhr.open('POST', `${s.get('id')}`, true);
               xhr.setRequestHeader('Content-Disposition', `attachment; filename="${encodeURI(file.get('name'))}"`);
+              let contentType = file.get('_file.type') ? file.get('_file.type') : 'application/octet-stream';
               xhr.setRequestHeader('Content-Type', contentType);
-              if (ENV.environment === 'travis' || ENV.environment === 'development') {
-                xhr.withCredentials = true;
-                if (ENV.environment === 'development') {
-                  xhr.setRequestHeader('Authorization', 'Basic YWRtaW46bW9v');
-                }
-              }
-              this.set('model.waitingMessage', 'Uploading files');
+              if (ENV.environment === 'travis' || ENV.environment === 'development') xhr.withCredentials = true;
+              if (ENV.environment === 'development') xhr.setRequestHeader('Authorization', 'Basic YWRtaW46bW9v');
+              // end XHR setup
+              this.set('waitingMessage', 'Uploading files');
               xhr.onload = (results) => {
-                file.set('submission', s); // s.get('id') seems to break stuff
+                file.set('submission', s);
                 file.set('uri', results.target.response);
                 file.save().then((f) => {
                   if (f) {
                     ctr += 1;
-                    console.log(ctr);
+                    // once every file is uploaded:
                     if (ctr >= len) {
-                      s.set('submitted', true);
-                      s.save().then(() => {
-                        this.set('model.uploading', false);
-                        this.transitionToRoute('thanks', { queryParams: { submission: s.get('id') } });
-                      });
+                      this.send('finishSubmission', s);
                     }
                   } else {
                     toastr.error('It looks like one or more of your files failed to upload. Please try again or contact support.');
                   }
                 }).catch((e) => {
-                  this.set('model.uploading', false);
+                  this.set('uploading', false);
                   toastr.error(e);
                 });
               };
               xhr.send(data);
             };
             reader.onerror = function (evt) {
-              this.set('model.uploading', false);
+              this.set('uploading', false);
               toastr.error('Error reading file');
             };
           });
+        }).catch((e) => {
+          this.set('uploading', false);
+          toastr.error(e);
         });
       });
-    },
-  },
+    }
+  }
 });

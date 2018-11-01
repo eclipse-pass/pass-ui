@@ -50,3 +50,18 @@
     </div>
   </div>
 </div>
+{{#if (or model.numberAwaitingApproval model.numberAwaitingEdits)}}
+  <div class="row">
+    <div class="col-12">
+      <div class="alert alert-info">
+        You have:<br>
+        {{#if model.numberAwaitingApproval}}
+        {{#link-to 'submissions.index'}}{{model.numberAwaitingApproval}} submission(s){{/link-to}} awaiting your approval.<br>
+        {{/if}}
+        {{#if model.numberAwaitingEdits}}
+        {{#link-to 'submissions.index'}}{{model.numberAwaitingEdits}} submission(s){{/link-to}} with a submitter waiting for you to edit them.
+        {{/if}}
+      </div>
+    </div>
+  </div>
+{{/if}}

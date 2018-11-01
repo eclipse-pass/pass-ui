@@ -1,98 +1,202 @@
 import WorkflowComponent from './workflow-component';
-import { inject as service, } from '@ember/service';
-
+import { inject as service } from '@ember/service';
+import ENV from 'pass-ember/config/environment';
 
 function resolve(submission) {
   const base = 'https://doi.org/';
 
   let doi = submission.get('doi');
-  if (!doi) {
-    return Promise.reject(new Error('No DOI present'));
-  }
+  if (!doi) return Promise.reject(new Error('No DOI present'));
   doi = doi.replace(/https?:\/\/(dx\.)?doi\.org\//gi, '');
 
   return fetch(base + encodeURI(doi), {
     redirect: 'follow',
-    headers: {
-      Accept: 'application/vnd.citationstyles.csl+json',
-    },
-  }).then((response) => {
-    if (response.status >= 200 && response.status < 300) {
-      return response;
-    }
-    const error = new Error(response.statusText);
-    error.response = response;
-    throw error;
-  }).then(response => response.json());
+    headers: { Accept: 'application/vnd.citationstyles.csl+json' }
+  })
+    .then((response) => {
+      if (response.status >= 200 && response.status < 300) return response;
+      const error = new Error(response.statusText);
+      error.response = response;
+      throw error;
+    })
+    .then(response => response.json());
 }
 
 export default WorkflowComponent.extend({
   store: service('store'),
+  base: Ember.computed(() => ENV.fedora.elasticsearch),
+  ajax: Ember.inject.service(),
   doiJournal: false,
   validDOI: 'form-control',
   isValidDOI: false,
   validTitle: 'form-control',
   toast: service('toast'),
   errorHandler: service('error-handler'),
-  nextDisabled: Ember.computed('model.publication.journal', 'model.publication.title', function () {
-    if (
-      this.get('model.publication.journal') &&
-      this.get('model.publication.title')) {
-      return false;
+  emailLookup: '',
+  currentUser: service('current-user'),
+  // modal fields
+  isShowingModal: false,
+  modalPageSize: 50,
+  modalTotalResults: 0,
+  modalUsers: null,
+  modalSearchInput: '',
+  // end modal fields
+  nextDisabled: Ember.computed( // Used to determine whether the next button should be disabled
+    'model.publication.journal', 'model.publication.title', 'model.newSubmission.hasNewProxy',
+    function () {
+      const submitterExists = !!(this.get('model.newSubmission.submitter.id'));
+      const submitterInfoExists = this.get('submitterName') && this.get('submitterEmail');
+      const proxyAndSubmitter = this.get('model.newSubmission.hasNewProxy') && (submitterExists || submitterInfoExists);
+      const ifProxyThenSubmitter = !this.get('model.newSubmission.hasNewProxy') || proxyAndSubmitter;
+      const journalAndTitle = this.get('model.publication.journal') && this.get('model.publication.title');
+      return journalAndTitle && ifProxyThenSubmitter;
     }
-    return true;
-  }),
-  init() {
-    this._super(...arguments);
-  },
+  ),
   didRender() {
     this._super(...arguments);
     this.send('validateDOI');
+
+    // if there's no proxy, reset all proxy-popup-related fields
+    if (!this.get('model.newSubmission.hasNewProxy') && !this.get('hasProxy')) {
+      this.set('submitterEmail', '');
+      this.set('submitterName', '');
+      this.set('model.newSubmission.submitter', null);
+      this.set('model.newSubmission.preparers', Ember.A());
+      this.set('emailLookup', '');
+    }
   },
   didInsertElement() {
     this._super(...arguments);
     this.send('lookupDOI');
   },
+  headers: { 'Content-Type': 'application/json; charset=utf-8' },
   actions: {
-    validateNext() {
+    removeCurrentSubmitter() {
+      if (this.get('model.newSubmission.grants.length') && this.get('model.newSubmission.grants.length') > 0) {
+        // TODO: add a swal here for better confirmation.
+        swal({
+          type: 'warning',
+          title: 'Are you sure?',
+          html: 'Removing this submitter will also <strong>remove all grants</strong> attached to your submission as a security measure. Any relevant grants will still be able to be re-added. Are you sure you want to proceed?',
+          showCancelButton: true,
+          cancelButtonText: 'Nevermind',
+          confirmButtonText: 'Yes, I\'m sure'
+        }).then((result) => {
+          if (result.value) {
+            this.set('model.newSubmission.grants', Ember.A());
+            toastr.info('Submitter and related grants removed from submission.');
+          }
+          this.set('model.newSubmission.preparers', Ember.A());
+        });
+      }
+      this.set('model.newSubmission.submitter', null);
+    },
+    toggleModal() {
+      this.toggleProperty('isShowingModal');
+    },
+    searchForUsers() {
+      const size = this.get('modalPageSize');
+      let info = {};
+      let input = this.get('modalSearchInput');
+      this.get('store').query('user', {
+        query: {
+          bool: {
+            filter: {
+              exists: { field: 'email' }
+            },
+            should: {
+              multi_match: { query: input, fields: ['firstName', 'middleName', 'lastName', 'email', 'displayName'] }
+            },
+            minimum_should_match: 1
+          }
+        },
+        from: 0,
+        size,
+        info
+      }).then((users) => {
+        this.set('users', users);
+        this.set('isShowingModal', true);
+        if (info.total !== null) this.set('modalTotalResults', info.total);
+      });
+    },
+    async validateNext() {
       const title = this.get('model.publication.title');
       const journal = this.get('model.publication.journal');
-      let validTitle = false;
-      let validJournal = false;
 
-      if (journal.get('journalName') == null) {
+      // booleans
+      const newProxy = this.get('model.newSubmission.hasNewProxy');
+      const currentUserIsNotSubmitter = this.get('model.newSubmission.submitter.id') !== this.get('currentUser.user.id');
+      const proxySubmitterInfoExists = this.get('submitterEmail') && this.get('submitterName');
+      const userIsNotPreparer = !this.get('model.newSubmission.preparers').map(x => x.get('id')).includes(this.get('currentUser.user.id'));
+      const submitterExists = this.get('model.newSubmission.submitter.id');
+      const proxySubmitterExists = submitterExists && currentUserIsNotSubmitter;
+
+      if (!proxySubmitterInfoExists && !proxySubmitterExists) {
+        this.set('model.newSubmission.preparers', Ember.A());
+      }
+
+      // A journal and title must be present
+      if (!journal.get('id')) {
         toastr.warning('The journal must not be left blank');
-        validJournal = false;
         $('.ember-power-select-trigger').css('border-color', '#f86c6b');
       } else {
-        validJournal = true;
         $('.ember-power-select-trigger').css('border-color', '#4dbd74');
       }
 
-      if (title == null) {
+      if (!title) {
         toastr.warning('The title must not be left blank');
         this.set('validTitle', 'form-control is-invalid');
-        validTitle = false;
-      } else if (title.length > 3) {
-        validTitle = true;
-        this.set('validTitle', 'form-control is-valid');
       } else {
-        toastr.warning('Title must be longer then 3 characters');
-        validTitle = false;
-        this.set('validTitle', 'form-control is-invalid');
+        this.set('validTitle', 'form-control is-valid');
       }
 
-      if (validTitle && validJournal) {
-        this.send('next');
+      // if either is missing, end function early.
+      if (!journal.get('id') || !title) return;
+
+      // If there's no submitter or submitter info and the submission is a new proxy submission:
+      if (!(submitterExists || proxySubmitterInfoExists) && newProxy) {
+        toastr.warning('You have indicated that you are submitting on behalf of someone else, but have not chosen that someone.');
+        return;
       }
+      if (newProxy) {
+        // If (the submitter is not the current user
+        // OR there is information to be turned into a submitter later)
+        // AND the current user is not already a preparer,
+        if ((proxySubmitterExists || proxySubmitterInfoExists) && userIsNotPreparer) {
+          // THEN add the current user to the preparers list
+          let result = { value: true };
+          if (this.get('model.newSubmission.grants.length') > 0) {
+            result = await swal({
+              type: 'warning',
+              title: 'Are you sure?',
+              html: 'Adding a proxy submitter will also <strong>remove all grants</strong> attached to this submission as a security measure. Any relevant grants will still be able to be re-added. Are you sure you want to proceed?',
+              showCancelButton: true,
+              cancelButtonText: 'Nevermind',
+              confirmButtonText: 'Yes, I\'m sure'
+            });
+          }
+          if (result.value) {
+            this.set('model.newSubmission.grants', Ember.A());
+            this.get('model.newSubmission.preparers').addObject(this.get('currentUser.user'));
+          } else {
+            return;
+          }
+        }
+      } else if (!this.get('hasProxy')) {
+        // Otherwise, if it is not a proxy submission, make the current user the submitter.
+        if (this.get('model.newSubmission.submitter.id') && this.get('model.newSubmission.submitter.id') !== this.get('currentUser.user.id')) {
+          this.set('model.newSubmission.grants', Ember.A());
+          toastr.info('Because the submitter you\'ve chosen has different grants than the previous submitter, all existing grants have been detached from this submission.', 'All grants removed');
+        }
+        this.set('model.newSubmission.preparers', Ember.A());
+        this.set('model.newSubmission.submitter', this.get('currentUser.user'));
+      }
+      // If there's no title in the information grabbed via DOI, use the title given by the user.
+      if (!this.get('doiInfo.title')) this.set('doiInfo.title', this.get('model.publication.title'));
+      // Move to the next form.
+      this.send('next');
     },
     next() {
-      if (!this.get('doiInfo.title')) {
-        this.set('doiInfo.title', this.get('model.publication.title'));
-      }
-      // if (!this.get('doiInfo.author')) {
-      //   this.set('doiInfo.author', []);
-      // }
       this.sendAction('next');
     },
     validateDOI() {
@@ -104,13 +208,14 @@ export default WorkflowComponent.extend({
       if (doi == null || !doi) {
         this.set('validDOI', 'form-control');
         this.set('isValidDOI', false);
-      } else if (newDOIRegExp.test(doi) === true || ancientDOIRegExp.test(doi) === true) { // 1 - Accepted
+      } else if (newDOIRegExp.test(doi) === true || ancientDOIRegExp.test(doi) === true) {
+        // 1 - Accepted
         this.set('validDOI', 'form-control is-valid');
         $('.ember-power-select-trigger').css('border-color', '#4dbd74');
         this.set('validTitle', 'form-control is-valid');
         this.set('model.newSubmission.metadata', '[]');
         this.set('isValidDOI', true);
-        toastr.success('We\'ve pre-populated information from the DOI provided!');
+        toastr.success("We've pre-populated information from the DOI provided!");
       } else {
         this.set('validDOI', 'form-control is-invalid');
         this.set('isValidDOI', false);
@@ -118,11 +223,7 @@ export default WorkflowComponent.extend({
     },
     validateTitle() {
       const title = this.get('model.publication.title');
-      this.set('validTitle', title == null || title.length > 5);
-      // if(validTitle)
-      if (title == null) {
-        this.set('validTitle', 'form-control');
-      } else if (title.length > 3) {
+      if (title) { // if not null or empty, then valid
         this.set('validTitle', 'form-control is-valid');
       } else {
         this.set('validTitle', 'form-control is-invalid');
@@ -148,51 +249,43 @@ export default WorkflowComponent.extend({
             doiInfo.nlmta = nlmtaDump.nlmta;
             doiInfo['issn-map'] = nlmtaDump.map;
           }
-          // // Crappy hack to rename property 'container-title' (received from DOI)
-          // // to 'journal-title' that is expected by the back end services
           doiInfo['journal-title'] = doiInfo['container-title'];
-
           this.set('doiInfo', doiInfo);
-          // useful console.log
-          // console.log(doiInfo);
           publication.set('title', doiInfo.title);
-
           publication.set('submittedDate', doiInfo.deposited);
           publication.set('creationDate', doiInfo.created);
-
           publication.set('issue', doiInfo.issue);
           publication.set('volume', doiInfo.volume);
           publication.set('abstract', doiInfo.abstract);
 
           const desiredName = doiInfo['container-title'].trim();
-          const desiredIssn = Array.isArray(doiInfo['ISSN']) ? doiInfo['ISSN'][0] : // eslint-disable-line
-            (doiInfo['ISSN'] ? doiInfo['ISSN'] : ''); // eslint-disable-line
+          const desiredIssn = Array.isArray(doiInfo.ISSN) // eslint-disable-line
+            ? doiInfo.ISSN[0]
+            : doiInfo.ISSN
+              ? doiInfo.ISSN
+              : '';
 
-          let query = {
-            bool: {
-              should: [{ match: { journalName: desiredName } }],
-              // must: { term: { issns: desiredIssn } }
-            }
-          };
-          if (desiredIssn) {
-            query.bool.must = { term: { issns: desiredIssn } };
-          }
+          let query = { bool: { should: [{ match: { journalName: desiredName } }] } };
+          if (desiredIssn) query.bool.must = { term: { issns: desiredIssn } };
           // Must match ISSN, optionally match journalName
+          // If journal is found, set it to the publication's journal.
+          // If journal is not found, make a journal based off the provided info and
+          // set it to the publication's journal.
           this.get('store').query('journal', { query }).then((journals) => {
             let journal = journals.get('length') > 0 ? journals.objectAt(0) : false;
             if (!journal) {
               const newJournal = this.get('store').createRecord('journal', {
                 journalName: doiInfo['container-title'].trim(),
                 issns: doiInfo.ISSN,
-                nlmta: doiInfo.nmlta,
+                nlmta: doiInfo.nmlta
               });
               newJournal.save().then(j => publication.set('journal', j));
             } else {
               publication.set('journal', journal);
             }
           });
-        });
-      }
+        }); // end resolve(publication).then()
+      } // end if (publication)
     },
 
     /** Sets the selected journal for the current publication.
@@ -200,10 +293,7 @@ export default WorkflowComponent.extend({
      */
     async selectJournal(journal) {
       let doiInfo = this.get('doiInfo');
-      doiInfo = {
-        'journal-title': journal.get('journalName'),
-        ISSN: journal.get('issns')
-      };
+      doiInfo = { 'journal-title': journal.get('journalName'), ISSN: journal.get('issns') };
 
       const nlmtaDump = await this.getNlmtaFromIssn(doiInfo);
       if (nlmtaDump) {
@@ -215,7 +305,7 @@ export default WorkflowComponent.extend({
       const publication = this.get('model.publication');
       publication.set('journal', journal);
       $('.ember-power-select-trigger').css('border-color', '#4dbd74');
-    },
+    }
   },
 
   /**
@@ -246,7 +336,7 @@ export default WorkflowComponent.extend({
     // Map of NLMIDs to objects
     // Example: https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nlmcatalog&term=0006-2952[issn]
     const nlmidMap = await this.getNLMID(issn);
-    if (!nlmidMap || (nlmidMap.length === 0)) {
+    if (!nlmidMap || nlmidMap.length === 0) {
       return;
     }
     // Example: https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=nlmcatalog&retmode=json&rettype=abstract&id=101032
@@ -257,9 +347,11 @@ export default WorkflowComponent.extend({
         return;
       }
       issnMap.nlmta = data.medlineta;
-      data.issnlist.filter(item => item.issntype !== 'Linking').forEach((item) => {
-        issnMap.map[item.issn] = { 'pub-type': [item.issntype] };
-      });
+      data.issnlist
+        .filter(item => item.issntype !== 'Linking')
+        .forEach((item) => {
+          issnMap.map[item.issn] = { 'pub-type': [item.issntype] };
+        });
     });
 
     return issnMap;
@@ -272,22 +364,16 @@ export default WorkflowComponent.extend({
     const url = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nlmcatalog&term=${issn}[issn]&retmode=json`;
     return fetch(url)
       .then(resp => resp.json().then(data => data.esearchresult.idlist))
-      .catch(function(e) {
+      .catch((e) => {
         console.log('NLMTA lookup failed.', e);
-        return;
       });
   },
   getNLMTA(nlmid) {
     let idquery = nlmid;
-    if (Array.isArray(nlmid)) {
-      idquery = nlmid.join(',');
-    }
+    if (Array.isArray(nlmid)) idquery = nlmid.join(',');
     const url = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=nlmcatalog&retmode=json&rettype=abstract&id=${idquery}`;
-    return fetch(url)
-      .then(resp => resp.json().then(data => data.result))
-      .catch(function(e) {
-        console.log('NLMTA lookup failed.', e);
-        return;
-      });
+    return fetch(url).then(resp => resp.json().then(data => data.result)).catch((e) => {
+      console.log('NLMTA lookup failed.', e);
+    });
   }
 });
