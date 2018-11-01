@@ -1,9 +1,7 @@
 language: node_js
+dist: trusty
 node_js:
-  - node
-sudo: required
-services:
-  - docker
+  - "10"
 addons:
   chrome: stable
 env:
