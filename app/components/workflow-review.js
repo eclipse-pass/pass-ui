@@ -56,7 +56,7 @@ export default WorkflowComponent.extend({
   ),
   userIsPreparer: Ember.computed('model.newSubmission', 'currentUser.user', function () {
     const hasProxy = this.get('hasProxy');
-    const isNotSubmitter = this.get('model.newSubmission.submitter.id') !== this.get('currentUser.user');
+    const isNotSubmitter = this.get('model.newSubmission.submitter.id') !== this.get('currentUser.user.id');
     return (hasProxy && isNotSubmitter);
   }),
   submitButtonText: Ember.computed('userIsPreparer', function () {
