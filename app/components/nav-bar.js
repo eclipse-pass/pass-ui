@@ -17,8 +17,8 @@ export default Component.extend({
   },
   didRender() {
     this._super(...arguments);
-    if (window.location.search.indexOf("anchor=") == -1) {
-      window.scrollTo(0,0); 
+    if (window.location.search.indexOf('anchor=') == -1) {
+      window.scrollTo(0, 0);
     }
   }
 });

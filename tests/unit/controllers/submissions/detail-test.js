@@ -2,7 +2,7 @@ import { moduleFor, test } from 'ember-qunit';
 
 moduleFor('controller:submissions/detail', 'Unit | Controller | submissions/detail', {
   // Specify the other units that are required for this test.
-  needs: ['service:currentUser']
+  needs: ['service:currentUser', 'service:metadata-blob', 'service:toast']
 });
 
 // Replace this with your real tests.

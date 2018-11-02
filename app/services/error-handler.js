@@ -45,7 +45,7 @@ export default Service.extend({
       if (result.value) {
         window.location.reload(true);
       }
-    })
+    });
   },
 
   handleLoginFailure(error) {

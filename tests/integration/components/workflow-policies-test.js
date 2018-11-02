@@ -1,15 +1,24 @@
-import { moduleForComponent, test } from 'ember-qunit';
+import { moduleForComponent, test, setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
+import { module } from 'qunit';
+import { render } from '@ember/test-helpers';
 
-moduleForComponent('workflow-policies', 'Integration | Component | workflow policies', {
-  integration: true
-});
 
-test('it renders', function (assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
+module('Integration | Component | workflow policies', (hooks) => {
+  setupRenderingTest(hooks);
+  test('it renders', function (assert) {
+    let model = {};
 
-  // Template usage:
-  this.render(hbs`{{workflow-policies}}`);
-  assert.ok(true);
+    // TODO: add actual tests here
+    model.newSubmission = Ember.Object.create({
+      repositories: [],
+      grants: []
+    });
+    model.policies = [];
+
+    this.set('model', model);
+
+    render(hbs`{{workflow-policies model=model}}`);
+    assert.ok(true);
+  });
 });

@@ -372,8 +372,11 @@ export default WorkflowComponent.extend({
     let idquery = nlmid;
     if (Array.isArray(nlmid)) idquery = nlmid.join(',');
     const url = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=nlmcatalog&retmode=json&rettype=abstract&id=${idquery}`;
-    return fetch(url).then(resp => resp.json().then(data => data.result)).catch((e) => {
-      console.log('NLMTA lookup failed.', e);
-    });
+
+    return fetch(url)
+      .then(resp => resp.json().then(data => data.result))
+      .catch((e) => {
+        console.log('NLMTA lookup failed.', e);
+      });
   }
 });

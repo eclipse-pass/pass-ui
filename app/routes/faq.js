@@ -6,7 +6,7 @@ export default CheckSessionRoute.extend({
       refreshModel: true
     }
   },
-  model: function(params) {
+  model(params) {
     var faqController = this.controllerFor('faq');
     faqController.set('anchorLocation', params.anchor);
   }

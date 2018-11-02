@@ -6,10 +6,16 @@ moduleForComponent('workflow-wrapper', 'Integration | Component | workflow wrapp
 });
 
 test('it renders', function (assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
+  let model = {};
 
-  // Template usage:
-  this.render(hbs`{{workflow-wrapper}}`);
+  // TODO: add actual tests here
+  model = Ember.Object.create({
+    newSubmission: Ember.Object.create({
+    })
+  });
+
+  this.set('model', model);
+
+  this.render(hbs`{{workflow-wrapper model=model}}`);
   assert.ok(true);
 });

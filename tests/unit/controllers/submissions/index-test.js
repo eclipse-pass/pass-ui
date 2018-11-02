@@ -14,15 +14,15 @@ test('it exists', function (assert) {
 test('properly returns admin roles', function (assert) {
   let controller = this.subject();
   controller.set('currentUser.user', Ember.Object.create({
-    roles: ['admin']
+    isAdmin: true
   }));
-  assert.equal(controller.get('adminColumns'), controller.get('columns'));
+  assert.equal(controller.get('columns.length'), 6);
 });
 
 test('properly returns submitter roles', function (assert) {
   let controller = this.subject();
   controller.set('currentUser.user', Ember.Object.create({
-    roles: ['submitter']
+    isSubmitter: true
   }));
-  assert.equal(controller.get('piColumns'), controller.get('columns'));
+  assert.equal(controller.get('columns.length'), 7);
 });

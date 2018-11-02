@@ -11,16 +11,10 @@ module('Integration | Component | workflow grants', (hooks) => {
 
     // TODO: add actual tests here
     model.newSubmission = Ember.Object.create({
-      repositories: [
-      ],
-      grants: [
-        Ember.Object.create({
-          primaryFunder: Ember.Object.create({
-          })
-        }),
-      ]
+      repositories: [],
+      grants: []
     });
-    model.repositories = [];
+    model.grants = [];
     let maxStep = 2;
 
     this.set('model', model);
