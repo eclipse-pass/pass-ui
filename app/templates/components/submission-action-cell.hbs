@@ -2,12 +2,23 @@
   {{#link-to 'submissions.new' (query-params submission=record.id) class="btn btn-outline-primary"}}
     Finish submission
   {{/link-to}}
+{{else if (and (eq record.submissionStatus 'changes-requested') isSubmitter)}}
+  <span style="min-width: 130px;display: block;"><i>Awaiting changes. No actions available.</i></span>
+{{else if (and (eq record.submissionStatus 'changes-requested') isPreparer)}}
+  {{#link-to 'submissions.new' (query-params submission=record.id) class="btn btn-outline-primary"}}
+    Edit submission
+  {{/link-to}}
+{{else if (and (eq record.submissionStatus 'approval-requested') isSubmitter)}}
+  {{#link-to "submissions.detail" record.id class="btn btn-outline-primary"}}
+    Review submission
+  {{/link-to}}
+{{else if (and (eq record.submissionStatus 'approval-requested') isPreparer)}}
+  <span style="min-width: 130px;display: block;"><i>Awaiting approval. No actions available.</i></span>
+{{else if (and (eq record.submissionStatus 'needs-attention') isSubmitter)}}
+  {{#link-to "submissions.detail" record.id class="btn btn-outline-primary"}}
+    Review submission
+  {{/link-to}}
 {{else}}
-  {{#if (and (eq record.submissionStatus 'changes-requested') isPreparer)}}
-    {{#link-to 'submissions.new' (query-params submission=record.id) class="btn btn-outline-primary"}}
-      Edit submission
-    {{/link-to}}
-  {{else}}
-    <span style="min-width: 130px;display: block;"><i>No actions available.</i></span>
-  {{/if}}
+  <span style="min-width: 130px;display: block;"><i>No actions available.</i></span>
 {{/if}}
+
