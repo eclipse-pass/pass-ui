@@ -2,11 +2,10 @@ import WorkflowComponent from './workflow-component';
 import { inject as service } from '@ember/service';
 import ENV from 'pass-ember/config/environment';
 
-function resolve(submission) {
+function resolve(publication) {
   const base = 'https://doi.org/';
 
-  let doi = submission.get('doi');
-  if (!doi) return Promise.reject(new Error('No DOI present'));
+  let doi = publication.get('doi');
   doi = doi.replace(/https?:\/\/(dx\.)?doi\.org\//gi, '');
 
   return fetch(base + encodeURI(doi), {
@@ -15,9 +14,7 @@ function resolve(submission) {
   })
     .then((response) => {
       if (response.status >= 200 && response.status < 300) return response;
-      const error = new Error(response.statusText);
-      error.response = response;
-      throw error;
+      throw new Error(`DOI lookup failed on ${response.url} status ${response.status}`);
     })
     .then(response => response.json());
 }
@@ -26,7 +23,6 @@ export default WorkflowComponent.extend({
   store: service('store'),
   base: Ember.computed(() => ENV.fedora.elasticsearch),
   ajax: Ember.inject.service(),
-  doiJournal: false,
   validDOI: 'form-control',
   isValidDOI: false,
   validTitle: 'form-control',
@@ -197,6 +193,7 @@ export default WorkflowComponent.extend({
       this.send('next');
     },
     next() {
+      toastr.remove();
       this.sendAction('next');
     },
     validateDOI() {
@@ -237,9 +234,10 @@ export default WorkflowComponent.extend({
         this.set('model.publication.doi', this.get('model.publication.doi').replace(/https?:\/\/(dx\.)?doi\.org\//gi, ''));
       }
       const publication = this.get('model.publication');
-      if (publication) {
+
+      if (publication && publication.get('doi')) {
         this.send('validateDOI');
-        this.set('doiJournal', false);
+
         resolve(publication).then(async (doiInfo) => {
           if (doiInfo.isDestroyed) {
             return;
@@ -284,6 +282,8 @@ export default WorkflowComponent.extend({
               publication.set('journal', journal);
             }
           });
+        }, (error) => {
+          // console.log(error.message);
         }); // end resolve(publication).then()
       } // end if (publication)
     },
