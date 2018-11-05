@@ -1,4 +1,4 @@
-<div style="min-width:600px;min-height:300px;" class="p-4">
+<div style="min-height:300px;" class="p-4">
   <button style="position:absolute;right:15px;top:15px;border:none;" class="btn btn-outline-primary" {{action 'toggleModal'}}>X</button>
   <div class="container">
     <h2>Search Users</h2>
@@ -11,7 +11,7 @@
     </div>
     <h3 class="my-4">Results</h3>
     {{#if filteredUsers}}
-      <div class="row">
+      <div class="row user-search-results">
         {{#each filteredUsers as |user|}}
           <div class="col-6">
             <a href="#" {{action 'pickSubmitter' user}}>
