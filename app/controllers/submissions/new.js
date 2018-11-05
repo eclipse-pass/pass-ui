@@ -22,19 +22,6 @@ export default Controller.extend({
       );
     }
   ),
-  userIsPreparer: Ember.computed(
-    'currentUser.user',
-    'model.newSubmission',
-    function () {
-      if (this.get('model.newSubmission.preparers')) {
-        return this.get('model.newSubmission.preparers')
-          .map(x => x.id)
-          .includes(this.get('currentUser.user.id') ||
-            (this.get('submitterEmail') && this.get('submitterName')));
-      }
-      return false;
-    }
-  ),
   userIsSubmitter: Ember.computed(
     'currentUser.user',
     'model.newSubmission',
