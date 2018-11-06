@@ -48,6 +48,47 @@ export default WorkflowComponent.extend({
       return journalAndTitle && ifProxyThenSubmitter;
     }
   ),
+  proxyUserToggled: Ember.observer('model.newSubmission.hasNewProxy', function () {
+    let hasProxy = this.get('model.newSubmission.hasNewProxy');
+    let hasGrants = this.get('model.newSubmission.grants') && this.get('model.newSubmission.grants.length') > 0;
+    let hasPreparers = this.get('model.newSubmission.preparers') && this.get('model.newSubmission.preparers.length') > 0;
+    let doToggle = false;
+    // do only if the values indicate a switch of proxy
+    if (hasPreparers && !hasProxy || !hasPreparers && hasProxy) {
+      doToggle = true;
+      if (hasGrants) {
+        swal({
+          type: 'warning',
+          title: 'Are you sure?',
+          html: 'Changing the submitter will also <strong>remove any grants</strong> currently attached to your submission.  Are you sure you want to proceed?',
+          showCancelButton: true,
+          cancelButtonText: 'Never mind',
+          confirmButtonText: 'Yes, I\'m sure'
+        }).then((result) => {
+          if (result.value) {
+            this.set('model.newSubmission.grants', Ember.A());
+            toastr.info('Related grants removed from submission.');
+          }
+          if (result.dismiss) {
+            doToggle = false;
+            this.set('model.newSubmission.hasNewProxy', !hasProxy);
+          }
+        });
+      }
+    }
+    if (doToggle) {
+      this.set('maxStep', 1);
+      this.set('model.newSubmission.preparers', Ember.A());
+      if (hasProxy) {
+        this.set('submitterEmail', '');
+        this.set('submitterName', '');
+        this.set('emailLookup', '');
+        this.set('model.newSubmission.submitter', null);
+      } else {
+        this.set('model.newSubmission.submitter', this.get('currentUser.user'));
+      }
+    }
+  }),
   didRender() {
     this._super(...arguments);
     this.send('validateDOI');
@@ -56,7 +97,6 @@ export default WorkflowComponent.extend({
     if (!this.get('model.newSubmission.hasNewProxy') && !this.get('hasProxy')) {
       this.set('submitterEmail', '');
       this.set('submitterName', '');
-      this.set('model.newSubmission.submitter', null);
       this.set('model.newSubmission.preparers', Ember.A());
       this.set('emailLookup', '');
     }
@@ -68,24 +108,28 @@ export default WorkflowComponent.extend({
   headers: { 'Content-Type': 'application/json; charset=utf-8' },
   actions: {
     removeCurrentSubmitter() {
-      if (this.get('model.newSubmission.grants.length') && this.get('model.newSubmission.grants.length') > 0) {
+      if (this.get('model.newSubmission.grants') && this.get('model.newSubmission.grants.length') > 0) {
         // TODO: add a swal here for better confirmation.
         swal({
           type: 'warning',
           title: 'Are you sure?',
-          html: 'Removing this submitter will also <strong>remove all grants</strong> attached to your submission as a security measure. Any relevant grants will still be able to be re-added. Are you sure you want to proceed?',
+          html: 'Changing the submitter will also <strong>remove any grants</strong> currently attached to your submission.  Are you sure you want to proceed?',
           showCancelButton: true,
-          cancelButtonText: 'Nevermind',
+          cancelButtonText: 'Never mind',
           confirmButtonText: 'Yes, I\'m sure'
         }).then((result) => {
           if (result.value) {
             this.set('model.newSubmission.grants', Ember.A());
+            this.set('model.newSubmission.preparers', Ember.A());
+            this.set('model.newSubmission.submitter', null);
+            this.set('maxStep', 1);
             toastr.info('Submitter and related grants removed from submission.');
           }
-          this.set('model.newSubmission.preparers', Ember.A());
         });
+      } else {
+        this.set('model.newSubmission.submitter', null);
+        this.set('maxStep', 1);
       }
-      this.set('model.newSubmission.submitter', null);
     },
     toggleModal() {
       this.toggleProperty('isShowingModal');
@@ -154,36 +198,9 @@ export default WorkflowComponent.extend({
         toastr.warning('You have indicated that you are submitting on behalf of someone else, but have not chosen that someone.');
         return;
       }
-      if (newProxy) {
-        // If (the submitter is not the current user
-        // OR there is information to be turned into a submitter later)
-        // AND the current user is not already a preparer,
-        if ((proxySubmitterExists || proxySubmitterInfoExists) && userIsNotPreparer) {
-          // THEN add the current user to the preparers list
-          let result = { value: true };
-          if (this.get('model.newSubmission.grants.length') > 0) {
-            result = await swal({
-              type: 'warning',
-              title: 'Are you sure?',
-              html: 'Adding a proxy submitter will also <strong>remove all grants</strong> attached to this submission as a security measure. Any relevant grants will still be able to be re-added. Are you sure you want to proceed?',
-              showCancelButton: true,
-              cancelButtonText: 'Nevermind',
-              confirmButtonText: 'Yes, I\'m sure'
-            });
-          }
-          if (result.value) {
-            this.set('model.newSubmission.grants', Ember.A());
-            this.get('model.newSubmission.preparers').addObject(this.get('currentUser.user'));
-          } else {
-            return;
-          }
-        }
+      if (newProxy && userIsNotPreparer) {
+        this.get('model.newSubmission.preparers').addObject(this.get('currentUser.user'));
       } else if (!this.get('hasProxy')) {
-        // Otherwise, if it is not a proxy submission, make the current user the submitter.
-        if (this.get('model.newSubmission.submitter.id') && this.get('model.newSubmission.submitter.id') !== this.get('currentUser.user.id')) {
-          this.set('model.newSubmission.grants', Ember.A());
-          toastr.info('Because the submitter you\'ve chosen has different grants than the previous submitter, all existing grants have been detached from this submission.', 'All grants removed');
-        }
         this.set('model.newSubmission.preparers', Ember.A());
         this.set('model.newSubmission.submitter', this.get('currentUser.user'));
       }
