@@ -20,7 +20,7 @@ export default WorkflowComponent.extend({
     }
   },
   grants: [],
-  filteredGrants: Ember.computed('grants', 'model.newSubmission.grants', function () {
+  filteredGrants: Ember.computed('grants', 'model.newSubmission.grants.[]', function () {
     return this.get('grants').filter(g => !this.get('model.newSubmission.grants').map(x => x.id).includes(g.get('id')));
   }),
   actions: {
