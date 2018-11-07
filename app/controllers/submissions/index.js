@@ -44,7 +44,7 @@ export default Controller.extend({
             propertyName: 'submissionStatus',
             title: 'Status',
             className: 'status-column',
-            component: 'submission-status-cell'
+            component: 'submissions-status-cell'
           },
           {
             // propertyName: 'repoCopies',
@@ -84,7 +84,7 @@ export default Controller.extend({
             propertyName: 'submissionStatus',
             title: 'Status',
             className: 'status-column',
-            component: 'submission-status-cell'
+            component: 'submissions-status-cell'
           },
           {
             propertyName: 'repoCopies',

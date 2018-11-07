@@ -794,11 +794,15 @@ footer {
 }
 .manuscript-required>.fa-circle, .manuscript-required .fa-info-circle, 
 .approval-requested>.fa-circle, .approval-requested .fa-info-circle, 
-.changes-requested>.fa-circle, .changes-requested .fa-info-circle,
-.needs-attention>.fa-circle, .needs-attention .fa-info-circle {
+.changes-requested>.fa-circle, .changes-requested .fa-info-circle, 
+.needs-attention>.fa-circle, .needs-attention .fa-info-circle, 
+.stalled>.fa-circle, .stalled .fa-info-circle, 
+.failed>.fa-circle, .failed .fa-info-circle, 
+.rejected>.fa-circle, .rejected .fa-info-circle {
   color: #FF9E1B;
 }
-.cancelled>.fa-circle, .cancelled .fa-info-circle {
+.cancelled>.fa-circle, .cancelled .fa-info-circle,
+.not-submitted>.fa-circle, .not-submitted .fa-info-circle {
   color: #A7BCD6;
 }
 .submitted>.fa-circle, .submitted .fa-info-circle, 
