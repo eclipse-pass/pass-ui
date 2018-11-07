@@ -183,6 +183,7 @@ export default Controller.extend({
           'warning'
         );
       } else {
+        let s = this.get('model.sub');
         let se = this.get('store').createRecord('submissionEvent', {
           submission: this.get('model.sub'),
           performedBy: this.get('currentUser.user'),
@@ -278,6 +279,7 @@ export default Controller.extend({
               })));
               $('.block-user-input').css('display', 'block');
               // save sub and send it
+              let s = this.get('model.sub');
               let se = this.get('store').createRecord('submissionEvent', {
                 submission: this.get('model.sub'),
                 performedBy: this.get('currentUser.user'),
@@ -338,6 +340,7 @@ export default Controller.extend({
         showCancelButton: true,
       }).then((result) => {
         if (result.value) {
+          let s = this.get('model.sub');
           let se = this.get('store').createRecord('submissionEvent', {
             submission: this.get('model.sub'),
             performedBy: this.get('currentUser.user'),
