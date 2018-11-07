@@ -41,7 +41,7 @@ export default Controller.extend({
       subEvent.set('comment', this.get('comment'));
       subEvent.set('performedDate', new Date());
       subEvent.set('submission', s);
-      subEvent.set('link', `${baseURL}${ENV.rootURL}submissions/${s.id}`);
+      subEvent.set('link', `${baseURL}${ENV.rootURL}submissions/` + encodeURIComponent(`${s.id}`));
 
       // If the person clicking submit *is* the submitter, actually submit the submission.
       if (s.get('submitter.id') === this.get('currentUser.user.id')) {
