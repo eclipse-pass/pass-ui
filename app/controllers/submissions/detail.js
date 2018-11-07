@@ -1,4 +1,5 @@
 import Controller from '@ember/controller';
+import ENV from 'pass-ember/config/environment';
 // import swal from 'sweetalert2';
 
 export default Controller.extend({
