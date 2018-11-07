@@ -186,7 +186,8 @@ export default Controller.extend({
           performedDate: new Date(),
           comment: this.get('message'),
           performerRole: 'submitter',
-          eventType: 'changes-requested'
+          eventType: 'changes-requested',
+          link: `${baseURL}${ENV.rootURL}submissions/${s.id}`
         });
         se.save().then(() => {
           let sub = this.get('model.sub');
@@ -278,7 +279,8 @@ export default Controller.extend({
                 performedDate: new Date(),
                 comment: this.get('message'),
                 performerRole: 'submitter',
-                eventType: 'submitted'
+                eventType: 'submitted',
+                link: `${baseURL}${ENV.rootURL}submissions/${s.id}`
               });
               se.save().then(() => {
                 let sub = this.get('model.sub');
@@ -335,7 +337,8 @@ export default Controller.extend({
             performedDate: new Date(),
             comment: this.get('message'),
             performerRole: 'submitter',
-            eventType: 'cancelled'
+            eventType: 'cancelled',
+            link: `${baseURL}${ENV.rootURL}submissions/${s.id}`
           });
           se.save().then(() => {
             let sub = this.get('model.sub');

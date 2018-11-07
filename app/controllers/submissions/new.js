@@ -35,10 +35,13 @@ export default Controller.extend({
   actions: {
     finishSubmission(s) {
       let subEvent = this.store.createRecord('submissionEvent');
+      let baseURL = window.location.href.replace(new RegExp(`${ENV.rootURL}.*`), '');
+      
       subEvent.set('performedBy', this.get('currentUser.user'));
       subEvent.set('comment', this.get('comment'));
       subEvent.set('performedDate', new Date());
       subEvent.set('submission', s);
+      subEvent.set('link', `${baseURL}${ENV.rootURL}submissions/${s.id}`);
 
       // If the person clicking submit *is* the submitter, actually submit the submission.
       if (s.get('submitter.id') === this.get('currentUser.user.id')) {
@@ -60,8 +63,6 @@ export default Controller.extend({
           subEvent.set('eventType', 'approval-requested-newuser');
           s.set('submitterEmail', `mailto:${this.get('submitterEmail')}`);
           s.set('submitterName', this.get('submitterName'));
-          let baseURL = window.location.href.replace(new RegExp(`${ENV.rootURL}.*`), '');
-          subEvent.set('link', `${baseURL}${ENV.rootURL}submissions/${s.id}`);
         } // end if
       } // end if
 
