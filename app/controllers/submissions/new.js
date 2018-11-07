@@ -36,7 +36,7 @@ export default Controller.extend({
     finishSubmission(s) {
       let subEvent = this.store.createRecord('submissionEvent');
       let baseURL = window.location.href.replace(new RegExp(`${ENV.rootURL}.*`), '');
-      
+
       subEvent.set('performedBy', this.get('currentUser.user'));
       subEvent.set('comment', this.get('comment'));
       subEvent.set('performedDate', new Date());

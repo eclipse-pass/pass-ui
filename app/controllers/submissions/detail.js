@@ -174,7 +174,7 @@ export default Controller.extend({
     },
     requestMoreChanges() {
       let baseURL = window.location.href.replace(new RegExp(`${ENV.rootURL}.*`), '');
-      
+
       if (!this.get('message')) {
         swal(
           'Comment field empty',
