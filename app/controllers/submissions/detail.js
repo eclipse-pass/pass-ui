@@ -1,4 +1,5 @@
 import Controller from '@ember/controller';
+import ENV from 'pass-ember/config/environment';
 // import swal from 'sweetalert2';
 
 export default Controller.extend({
@@ -173,6 +174,8 @@ export default Controller.extend({
       });
     },
     requestMoreChanges() {
+      let baseURL = window.location.href.replace(new RegExp(`${ENV.rootURL}.*`), '');
+
       if (!this.get('message')) {
         swal(
           'Comment field empty',
@@ -180,13 +183,15 @@ export default Controller.extend({
           'warning'
         );
       } else {
+        let s = this.get('model.sub');
         let se = this.get('store').createRecord('submissionEvent', {
           submission: this.get('model.sub'),
           performedBy: this.get('currentUser.user'),
           performedDate: new Date(),
           comment: this.get('message'),
           performerRole: 'submitter',
-          eventType: 'changes-requested'
+          eventType: 'changes-requested',
+          link: `${baseURL}${ENV.rootURL}submissions/` + encodeURIComponent(`${s.id}`)
         });
         se.save().then(() => {
           let sub = this.get('model.sub');
@@ -199,6 +204,8 @@ export default Controller.extend({
       }
     },
     async approveChanges() {
+      let baseURL = window.location.href.replace(new RegExp(`${ENV.rootURL}.*`), '');
+
       // First, check if user has visited all required weblinks.
       if (this.get('disableSubmit')) {
         if (!this.get('hasVisitedWeblink')) {
@@ -272,13 +279,15 @@ export default Controller.extend({
               })));
               $('.block-user-input').css('display', 'block');
               // save sub and send it
+              let s = this.get('model.sub');
               let se = this.get('store').createRecord('submissionEvent', {
                 submission: this.get('model.sub'),
                 performedBy: this.get('currentUser.user'),
                 performedDate: new Date(),
                 comment: this.get('message'),
                 performerRole: 'submitter',
-                eventType: 'submitted'
+                eventType: 'submitted',
+                link: `${baseURL}${ENV.rootURL}submissions/` + encodeURIComponent(`${s.id}`)
               });
               se.save().then(() => {
                 let sub = this.get('model.sub');
@@ -312,6 +321,8 @@ export default Controller.extend({
       }
     },
     cancelSubmission() {
+      let baseURL = window.location.href.replace(new RegExp(`${ENV.rootURL}.*`), '');
+
       if (!this.get('message')) {
         swal(
           'Comment field empty',
@@ -329,13 +340,15 @@ export default Controller.extend({
         showCancelButton: true,
       }).then((result) => {
         if (result.value) {
+          let s = this.get('model.sub');
           let se = this.get('store').createRecord('submissionEvent', {
             submission: this.get('model.sub'),
             performedBy: this.get('currentUser.user'),
             performedDate: new Date(),
             comment: this.get('message'),
             performerRole: 'submitter',
-            eventType: 'cancelled'
+            eventType: 'cancelled',
+            link: `${baseURL}${ENV.rootURL}submissions/` + encodeURIComponent(`${s.id}`)
           });
           se.save().then(() => {
             let sub = this.get('model.sub');
