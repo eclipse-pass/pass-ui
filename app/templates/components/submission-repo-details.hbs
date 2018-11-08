@@ -27,7 +27,11 @@
         <div class="row">
           <strong class="col-5 px-0">Status: </strong>
           {{#if isExternalRepo}}
-            <span class="col">Deposit into {{repo.name}} was prompted.</span>
+            {{#if isSubmitted}}
+              <span class="col">Deposit into {{repo.name}} was prompted.</span>
+            {{else}}
+              <span class="col">Deposit into {{repo.name}} will be prompted.</span>
+            {{/if}}
           {{else}}
             <div class="col">
               {{#if tooltip}}
