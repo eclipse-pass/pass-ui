@@ -41,7 +41,7 @@ export default Controller.extend({
       subEvent.set('comment', this.get('comment'));
       subEvent.set('performedDate', new Date());
       subEvent.set('submission', s);
-      subEvent.set('link', `${baseURL}${ENV.rootURL}submissions/` + encodeURIComponent(`${s.id}`));
+      subEvent.set('link', `${baseURL}${ENV.rootURL}submissions/${encodeURIComponent(`${s.id}`)}`);
 
       // If the person clicking submit *is* the submitter, actually submit the submission.
       if (s.get('submitter.id') === this.get('currentUser.user.id')) {
@@ -58,7 +58,7 @@ export default Controller.extend({
         if (s.get('submitter.id')) {
           subEvent.set('eventType', 'approval-requested');
         } else if (this.get('submitterName') && this.get('submitterEmail')) {
-          debugger; // eslint-disable-line
+          // debugger; // eslint-disable-line
           // If not specified but a name and email are present, create a mailto link.
           subEvent.set('eventType', 'approval-requested-newuser');
           s.set('submitterEmail', `mailto:${this.get('submitterEmail')}`);
@@ -93,17 +93,13 @@ export default Controller.extend({
       sub.set('source', 'pass');
       sub.set('removeNIHDeposit', false);
       sub.set('aggregatedDepositStatus', 'not-started');
-      sub.set(
-        'repositories',
-        sub.get('repositories').filter(repo =>
-          // TODO the specific URL checks should be removed after Repository data is updated to
-          // include 'integrationType' property
-          (
-            repo.get('integrationType') !== 'web-link' &&
-            repo.get('url') !== 'https://eric.ed.gov/' &&
-            repo.get('url') !== 'https://dec.usaid.gov/'
-          ))
-      );
+
+      if (!this.get('hasProxy')) {
+        sub.set(
+          'repositories',
+          sub.get('repositories').filter(repo => (repo.get('integrationType') !== 'web-link'))
+        );
+      }
 
       this.set('uploading', true);
       this.set('waitingMessage', 'Saving your submission');
