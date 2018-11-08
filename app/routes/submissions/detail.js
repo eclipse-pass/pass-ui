@@ -17,16 +17,15 @@ export default CheckSessionRoute.extend({
     if (!intent) {
       return;
     }
+
     //encode decoded url, but preserve get properties
     if (intent.includes('https://')) {
       let q = intent.indexOf('?');
       if (q == -1) {
         q = intent.length;
       }
-
       const targetId = intent.substring(prefix.length, q);
-      const params = intent.substring(q);
-      this.replaceWith(`${prefix}${encodeURIComponent(targetId)}`, {queryParams: params});
+      this.replaceWith(`${prefix}${encodeURIComponent(targetId)}`);
     }
   },
   model(params) {
