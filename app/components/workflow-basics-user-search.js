@@ -65,7 +65,7 @@ export default Component.extend({
         let result = await swal({
           type: 'warning',
           title: 'Are you sure?',
-          html: 'Picking a new submitter will also <strong>remove all grants</strong> attached to your submission as a security measure. <strong>Any relevant grants will still be able to be re-added.</strong> Are you sure you want to proceed?',
+          html: 'Changing the submitter will also <strong>remove any grants</strong> currently attached to your submission.  Are you sure you want to proceed?',
           showCancelButton: true,
           cancelButtonText: 'Never mind',
           confirmButtonText: 'Yes, I\'m sure'
