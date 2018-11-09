@@ -11,7 +11,11 @@ export default Controller.extend({
   }.on('init'),
   currentUser: Ember.inject.service('current-user'),
   store: Ember.inject.service('store'),
-  externalSubmission: Ember.computed('externalSubmissionsMetadata', function () {
+  externalSubmission: Ember.computed('externalSubmissionsMetadata', 'model.sub.submitted', function () {
+    if (!this.get('model.sub.submitted')) {
+      return [];
+    }
+
     let md = this.get('externalSubmissionsMetadata');
 
     if (md) {
@@ -41,7 +45,21 @@ export default Controller.extend({
   hasVisitedWeblink: Ember.computed('externalRepoMap', function () {
     return Object.values(this.get('externalRepoMap')).every(val => val === true);
   }),
-  externalSubmissionsMetadata: Ember.computed('model.sub.respositories', function () {
+  /**
+   * If the submission is submitted, return external-submissions object from metadata.
+   * Otherwise generate what it should be from external repositories.
+   */
+  externalSubmissionsMetadata: Ember.computed('model.sub.respositories', 'model.sub.submitted', 'model.sub.metadata', function () {
+    if (this.get('model.sub.submitted')) {
+      let values = JSON.parse(this.get('model.sub.metadata')).filter(x => x.id === 'external-submissions');
+
+      if (values.length == 0) {
+        return null;
+      }
+
+      return values[0];
+    }
+
     const externalRepos = this.get('model.repos').filter(repo =>
       repo.get('integrationType') === 'web-link');
 
@@ -75,7 +93,8 @@ export default Controller.extend({
     const weblinkExists = this.get('weblinkRepos').length > 0;
     const isSubmitter = this.get('currentUser.user.id') === this.get('model.sub.submitter.id');
     const hasProxy = this.get('hasProxy');
-    return weblinkExists && isSubmitter && hasProxy;
+    const isSubmitted = this.get('model.sub.submitted');
+    return weblinkExists && isSubmitter && hasProxy && !isSubmitted;
   }),
   disableSubmit: Ember.computed(
     'mustVisitWeblink',
@@ -87,7 +106,7 @@ export default Controller.extend({
   ),
   repoMap: Ember.computed('model.deposits', 'model.repoCopies', function () {
     let hasStuff = false;
-    const repos = this.get('model.repos').filter(repo => (repo.get('integrationType') !== 'web-link'));
+    const repos = this.get('model.repos');
     const deps = this.get('model.deposits');
     const repoCopies = this.get('model.repoCopies');
     if (!repos) {
