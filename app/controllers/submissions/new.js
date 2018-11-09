@@ -47,6 +47,7 @@ export default Controller.extend({
       if (s.get('submitter.id') === this.get('currentUser.user.id')) {
         s.set('submitted', true);
         s.set('submissionStatus', 'submitted');
+        s.set('submittedDate', new Date());
         subEvent.set('performerRole', 'submitter');
         subEvent.set('eventType', 'submitted');
       } else {
@@ -88,7 +89,6 @@ export default Controller.extend({
 
       // start setting variables on the new submission object.
       const sub = this.get('model.newSubmission');
-      sub.set('submittedDate', new Date());
       sub.set('submitted', false);
       sub.set('source', 'pass');
       sub.set('removeNIHDeposit', false);

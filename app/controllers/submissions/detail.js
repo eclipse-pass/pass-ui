@@ -292,6 +292,7 @@ export default Controller.extend({
               se.save().then(() => {
                 let sub = this.get('model.sub');
                 sub.set('submissionStatus', 'submitted');
+                sub.set('submittedDate', new Date());
                 sub.set('submitted', true);
                 sub.save().then(() => {
                   window.location.reload(true);
