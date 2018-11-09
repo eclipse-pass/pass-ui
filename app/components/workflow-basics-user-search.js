@@ -6,18 +6,18 @@ export default Component.extend({
   currentUser: Ember.inject.service('current-user'),
   searchInput: '',
   users: [],
-  page: 0,
-  pageSize: 40,
+  page: 1,
+  pageSize: 30,
   totalResults: 0,
   totalPages: Ember.computed('totalResults', 'pageSize', function () {
     return Math.ceil(this.get('totalResults') / this.get('pageSize'));
   }),
-  pages: Ember.computed('page', 'pageSize', 'totalResults', 'totalPages', function () {
+  pages: Ember.computed('totalPages', function () {
     let arr = [];
     for (let i = 1; i <= this.get('totalPages'); i += 1) {
       arr.push(i);
     }
-    // return arr;
+    return arr;
   }),
   filteredUsers: Ember.computed('users', function () {
     return this.get('users').filter(u => u.id !== this.get('currentUser.user.id'));

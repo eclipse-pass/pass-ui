@@ -25,20 +25,13 @@
     {{/if}}
     {{#if pages}}
     <ul class="pagination mt-4 mx-auto mb-0 pb-0" style="justify-content:center;">
-      <li>
-        <a href="#" {{if (eq page 1) "disabled"}} aria-label="Previous">
-          <span aria-hidden="true">&laquo;</span>
-        </a>
-      </li>
       {{#each pages as |p|}}
-      {{!-- TODO: if page === p, disable the button --}}
-        <li {{if (eq p page) 'class="active"'}}><a href="#" {{action 'searchUsers' p}}>{{p}}</a></li>
+        {{#if (eq p page)}}
+          <li class="active"><a>{{p}}</a></li>
+        {{else}}
+          <li><a href="#" {{action 'searchForUsers' p}}>{{p}}</a></li>
+        {{/if}}
       {{/each}}
-      <li>
-        <a href="#" {{if (eq page totalPages) "disabled"}} aria-label="Next">
-          <span aria-hidden="true">&raquo;</span>
-        </a>
-      </li>
     </ul>
     {{/if}}
   </div>
