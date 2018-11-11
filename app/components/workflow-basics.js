@@ -32,7 +32,7 @@ export default WorkflowComponent.extend({
   currentUser: service('current-user'),
   // modal fields
   isShowingModal: false,
-  modalPageSize: 40,
+  modalPageSize: 30,
   modalTotalResults: 0,
   modalUsers: null,
   modalSearchInput: '',
