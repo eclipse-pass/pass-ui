@@ -258,7 +258,7 @@ export default WorkflowComponent.extend({
           // if USER has not agreed to deposit but has one user
           //
           // ----------------------------------------------------------------------
-          debugger; // eslint-disable-line
+          // debugger; // eslint-disable-line
           let userIsSubmitter = this.get('model.newSubmission.submitter.id') === this.get('currentUser.user.id');
           if (doAuthorsExist && !value && userIsSubmitter) {
             swal({
@@ -429,13 +429,10 @@ export default WorkflowComponent.extend({
           });
         }
 
-
         // Add metadata for external submissions
         const externalRepos = this.get('model.newSubmission.repositories').filter(repo =>
-          repo.get('integrationType') === 'web-link' ||
-          repo.get('url') === 'https://eric.ed.gov/' ||
-          repo.get('url') === 'https://dec.usaid.gov/');
-        if (externalRepos.get('length') > 0) {
+          repo.get('integrationType') === 'web-link');
+        if (!this.get('hasProxy') && externalRepos.get('length') > 0) {
           let md = { id: 'external-submissions', data: { submission: [] } };
           externalRepos.forEach(repo => md.data.submission.push({
             message: `Deposit into ${repo.get('name')} was prompted`,

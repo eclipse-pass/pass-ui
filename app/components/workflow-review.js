@@ -34,9 +34,7 @@ export default WorkflowComponent.extend({
   }),
   weblinkRepos: Ember.computed('model.newSubmission.repositories', function () {
     const repos = this.get('model.newSubmission.repositories').filter(repo =>
-      repo.get('integrationType') === 'web-link' ||
-        repo.get('url') === 'https://eric.ed.gov/' ||
-        repo.get('url') === 'https://dec.usaid.gov/');
+      repo.get('integrationType') === 'web-link');
 
     repos.forEach(repo => (this.get('externalRepoMap')[repo.get('id')] = false)); // eslint-disable-line
     return repos;

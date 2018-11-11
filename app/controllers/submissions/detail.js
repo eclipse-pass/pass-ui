@@ -11,8 +11,18 @@ export default Controller.extend({
   }.on('init'),
   currentUser: Ember.inject.service('current-user'),
   store: Ember.inject.service('store'),
-  externalSubmission: Ember.computed('metadataBlobNoKeys', function () {
-    return this.get('metadataBlobNoKeys').Submission;
+  externalSubmission: Ember.computed('externalSubmissionsMetadata', 'model.sub.submitted', function () {
+    if (!this.get('model.sub.submitted')) {
+      return [];
+    }
+
+    let md = this.get('externalSubmissionsMetadata');
+
+    if (md) {
+      return md.data.submission;
+    }
+
+    return [];
   }),
   hasProxy: Ember.computed(
     'model.sub.preparers',
@@ -35,23 +45,56 @@ export default Controller.extend({
   hasVisitedWeblink: Ember.computed('externalRepoMap', function () {
     return Object.values(this.get('externalRepoMap')).every(val => val === true);
   }),
-  weblinkRepos: Ember.computed('model.sub.metadata', function () {
-    debugger; // eslint-disable-line
-    let externalRepos = JSON.parse(this.get('model.sub.metadata')).filter(x => x.id === 'external-submissions');
-    if (externalRepos.length > 0) {
-      let externalRepoList = externalRepos[0].data.submission;
+  /**
+   * If the submission is submitted, return external-submissions object from metadata.
+   * Otherwise generate what it should be from external repositories.
+   */
+  externalSubmissionsMetadata: Ember.computed('model.sub.respositories', 'model.sub.submitted', 'model.sub.metadata', function () {
+    if (this.get('model.sub.submitted')) {
+      let values = JSON.parse(this.get('model.sub.metadata')).filter(x => x.id === 'external-submissions');
+
+      if (values.length == 0) {
+        return null;
+      }
+
+      return values[0];
+    }
+
+    const externalRepos = this.get('model.repos').filter(repo =>
+      repo.get('integrationType') === 'web-link');
+
+    if (externalRepos.get('length') == 0) {
+      return null;
+    }
+
+    let md = { id: 'external-submissions', data: { submission: [] } };
+    externalRepos.forEach(repo => md.data.submission.push({
+      message: `Deposit into ${repo.get('name')} was prompted`,
+      name: repo.get('name'),
+      url: repo.get('url')
+    }));
+
+    return md;
+  }),
+  weblinkRepos: Ember.computed('externalSubmissionsMetadata', function () {
+    let md = this.get('externalSubmissionsMetadata');
+
+    if (md) {
+      let externalRepoList = md.data.submission;
       externalRepoList.forEach((repo) => {
         this.get('externalRepoMap')[repo.name] = false;
       });
       return externalRepoList;
     }
+
     return [];
   }),
   mustVisitWeblink: Ember.computed('weblinkRepos', 'model', 'hasProxy', function () {
     const weblinkExists = this.get('weblinkRepos').length > 0;
     const isSubmitter = this.get('currentUser.user.id') === this.get('model.sub.submitter.id');
     const hasProxy = this.get('hasProxy');
-    return weblinkExists && isSubmitter && hasProxy;
+    const isSubmitted = this.get('model.sub.submitted');
+    return weblinkExists && isSubmitter && hasProxy && !isSubmitted;
   }),
   disableSubmit: Ember.computed(
     'mustVisitWeblink',
@@ -128,7 +171,7 @@ export default Controller.extend({
   isPreparer: Ember.computed('currentUser.user', 'model', function () {
     return this.get('model.sub.preparers')
       .map(x => x.get('id'))
-      .contains(this.get('currentUser.user.id'));
+      .includes(this.get('currentUser.user.id'));
   }),
   submissionNeedsPreparer: Ember.computed(
     'currentUser.user',
@@ -191,7 +234,7 @@ export default Controller.extend({
           comment: this.get('message'),
           performerRole: 'submitter',
           eventType: 'changes-requested',
-          link: `${baseURL}${ENV.rootURL}submissions/` + encodeURIComponent(`${s.id}`)
+          link: `${baseURL}${ENV.rootURL}submissions/${encodeURIComponent(`${s.id}`)}`
         });
         se.save().then(() => {
           let sub = this.get('model.sub');
@@ -220,7 +263,8 @@ export default Controller.extend({
         return;
       }
 
-      let reposWithAgreementText = this.get('model.repos').map((repo) => {
+      let reposWithAgreementText = this.get('model.repos').filter(repo =>
+        repo.get('integrationType') !== 'web-link').map((repo) => {
         if (repo.get('agreementText')) {
           return {
             id: repo.get('name'),
@@ -259,8 +303,13 @@ export default Controller.extend({
           }).then((result) => {
             console.log(result.value);
             if (result.value) {
+              const externalSubmissionsMetadata = this.get('externalSubmissionsMetadata');
+
               // Update repos to reflect repos that user agreed to deposit
               this.set('model.sub.repositories', this.get('model.sub.repositories').filter((repo) => {
+                if (repo.get('integrationType') === 'weblink') {
+                  return false;
+                }
                 let temp = reposWithAgreementText.map(x => x.id).includes(repo.get('name'));
                 if (!temp) {
                   return true;
@@ -277,6 +326,20 @@ export default Controller.extend({
                 }
                 return this.get('model.sub.repositories').map(r => r.get('name')).includes(md.id);
               })));
+
+              // Add external submissions metadata
+              if (externalSubmissionsMetadata) {
+                let md = JSON.parse(this.get('model.sub.metadata'));
+                md.push(externalSubmissionsMetadata);
+                this.set('model.sub.metadata', JSON.stringify(md));
+              }
+
+              // Remove external repositories
+              this.set(
+                'model.sub.repositories',
+                this.get('model.sub.repositories').filter(repo => (repo.get('integrationType') !== 'web-link'))
+              );
+
               $('.block-user-input').css('display', 'block');
               // save sub and send it
               let s = this.get('model.sub');
@@ -287,7 +350,7 @@ export default Controller.extend({
                 comment: this.get('message'),
                 performerRole: 'submitter',
                 eventType: 'submitted',
-                link: `${baseURL}${ENV.rootURL}submissions/` + encodeURIComponent(`${s.id}`)
+                link: `${baseURL}${ENV.rootURL}submissions/${encodeURIComponent(`${s.id}`)}`
               });
               se.save().then(() => {
                 let sub = this.get('model.sub');
@@ -349,7 +412,7 @@ export default Controller.extend({
             comment: this.get('message'),
             performerRole: 'submitter',
             eventType: 'cancelled',
-            link: `${baseURL}${ENV.rootURL}submissions/` + encodeURIComponent(`${s.id}`)
+            link: `${baseURL}${ENV.rootURL}submissions/${encodeURIComponent(`${s.id}`)}`
           });
           se.save().then(() => {
             let sub = this.get('model.sub');
