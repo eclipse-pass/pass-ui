@@ -429,19 +429,22 @@ export default WorkflowComponent.extend({
           });
         }
 
-        // Add metadata for external submissions
+        // Add metadata for external submissions only if the user is the submitter
         const externalRepos = this.get('model.newSubmission.repositories').filter(repo =>
           repo.get('integrationType') === 'web-link');
-        if (!this.get('hasProxy') && externalRepos.get('length') > 0) {
+
+        if (this.get('model.newSubmission.submitter.id') === this.get('currentUser.user.id') &&
+          externalRepos.get('length') > 0) {
           let md = { id: 'external-submissions', data: { submission: [] } };
           externalRepos.forEach(repo => md.data.submission.push({
             message: `Deposit into ${repo.get('name')} was prompted`,
             name: repo.get('name'),
             url: repo.get('url')
           }));
-          // Push this new thing to the overall 'metadata' obj
+
           metadata.push(md);
         }
+
         this.set('model.newSubmission.metadata', JSON.stringify(metadata));
         this.sendAction('next');
       }
