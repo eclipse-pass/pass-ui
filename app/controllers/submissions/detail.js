@@ -263,16 +263,19 @@ export default Controller.extend({
         return;
       }
 
-      let reposWithAgreementText = this.get('model.repos').filter(repo =>
-        repo.get('integrationType') !== 'web-link').map((repo) => {
-        if (repo.get('agreementText')) {
-          return {
-            id: repo.get('name'),
-            title: `Deposit requirements for ${repo.get('name')}`,
-            html: `<textarea rows="16" cols="40" name="embargo" class="alpaca-control form-control disabled" disabled="" autocomplete="off">${repo.get('agreementText')}</textarea>`
-          };
-        }
-      });
+      let reposWithAgreementText = this.get('model.repos')
+        .filter(repo => (repo.get('integrationType') !== 'web-link') && repo.get('agreementText'))
+        .map(repo => ({
+          id: repo.get('name'),
+          title: `Deposit requirements for ${repo.get('name')}`,
+          html: `<textarea rows="16" cols="40" name="embargo" class="alpaca-control form-control disabled" disabled="" autocomplete="off">${repo.get('agreementText')}</textarea>`
+        }));
+
+      let reposWithoutAgreementText = this.get('model.repos')
+        .filter(repo => repo.get('integrationType') !== 'web-link' && !repo.get('agreementText'))
+        .map(repo => ({
+          id: repo.get('name')
+        }));
       // INFO: this is used to testing more then 1 repo.
       // reposWithAgreementText.push({
       //   id: 'some',
@@ -294,10 +297,10 @@ export default Controller.extend({
           }
         });
         // make sure there are repos to submit to.
-        if (reposThatUserAgreedToDeposit.length > 0 && this.get('model.sub.repositories.length') > 0) {
+        if ((reposWithoutAgreementText.length > 0 || reposThatUserAgreedToDeposit.length > 0) && this.get('model.sub.repositories.length') > 0) {
           swal({
-            title: 'You agree to deposit to the following repositories',
-            html: `Your repositories: <pre><code> ${JSON.stringify(reposThatUserAgreedToDeposit.map(repo => repo.id)).replace(/[\[\]']/g, '')} </code></pre>`, // eslint-disable-line
+            title: 'You are about to submit to:',
+            html: `<pre><code> ${JSON.stringify(reposThatUserAgreedToDeposit.map(repo => repo.id)).replace(/[\[\]']/g, '')} ${JSON.stringify(reposWithoutAgreementText.map(repo => repo.id)).replace(/[\[\]']/g, '')} </code></pre>`, // eslint-disable-line
             confirmButtonText: 'Submit',
             showCancelButton: true,
           }).then((result) => {
