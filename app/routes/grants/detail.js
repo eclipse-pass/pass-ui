@@ -29,7 +29,7 @@ export default CheckSessionRoute.extend({
       return;
     }
 
-    //encode decoded url, but preserve get properties
+    // encode decoded url, but remove get properties from qs
     if (intent.includes('https://')) {
       let q = intent.indexOf('?');
       if (q == -1) {
