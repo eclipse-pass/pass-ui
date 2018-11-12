@@ -172,7 +172,7 @@ export default WorkflowComponent.extend({
       const proxySubmitterExists = submitterExists && currentUserIsNotSubmitter;
 
       if (!proxySubmitterInfoExists && !proxySubmitterExists) {
-        this.set('model.newSubmission.preparers', Ember.A());
+        // this.set('model.newSubmission.preparers', Ember.A());
       }
 
       // A journal and title must be present
