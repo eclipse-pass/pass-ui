@@ -26,9 +26,9 @@ export default WorkflowComponent.extend({
   validDOI: 'form-control',
   isValidDOI: false,
   validTitle: 'form-control',
+  validEmail: '',
   toast: service('toast'),
   errorHandler: service('error-handler'),
-  emailLookup: '',
   currentUser: service('current-user'),
   // modal fields
   isShowingModal: false,
@@ -82,7 +82,6 @@ export default WorkflowComponent.extend({
       if (hasProxy) {
         this.set('submitterEmail', '');
         this.set('submitterName', '');
-        this.set('emailLookup', '');
         this.set('model.newSubmission.submitter', null);
       } else {
         this.set('model.newSubmission.submitter', this.get('currentUser.user'));
@@ -98,7 +97,6 @@ export default WorkflowComponent.extend({
       this.set('submitterEmail', '');
       this.set('submitterName', '');
       this.set('model.newSubmission.preparers', Ember.A());
-      this.set('emailLookup', '');
     }
   },
   didInsertElement() {
@@ -166,6 +164,7 @@ export default WorkflowComponent.extend({
       // booleans
       const newProxy = this.get('model.newSubmission.hasNewProxy');
       const currentUserIsNotSubmitter = this.get('model.newSubmission.submitter.id') !== this.get('currentUser.user.id');
+      const submitterEmail = this.get('submitterEmail');
       const proxySubmitterInfoExists = this.get('submitterEmail') && this.get('submitterName');
       const userIsNotPreparer = !this.get('model.newSubmission.preparers').map(x => x.get('id')).includes(this.get('currentUser.user.id'));
       const submitterExists = this.get('model.newSubmission.submitter.id');
@@ -198,6 +197,12 @@ export default WorkflowComponent.extend({
         toastr.warning('You have indicated that you are submitting on behalf of someone else, but have not chosen that someone.');
         return;
       }
+
+      if (this.get('validEmail') === 'is-invalid') {
+        toastr.warning('The email address you entered is invalid. Please verify the value and try again.');
+        return;
+      }
+
       if (newProxy && userIsNotPreparer) {
         this.get('model.newSubmission.preparers').addObject(this.get('currentUser.user'));
       } else if (!this.get('hasProxy')) {
@@ -241,6 +246,17 @@ export default WorkflowComponent.extend({
         this.set('validTitle', 'form-control is-valid');
       } else {
         this.set('validTitle', 'form-control is-invalid');
+      }
+    },
+    validateEmail() {
+      const email = this.get('submitterEmail');
+      let emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+      if (email && emailPattern.test(email)) { 
+        this.set('validEmail', 'is-valid');
+      } else if (email) {
+        this.set('validEmail', 'is-invalid');
+      } else {
+        this.set('validEmail', '');
       }
     },
     /** looks up the DIO and returns title and journal if avaiable */
