@@ -247,7 +247,7 @@ export default WorkflowComponent.extend({
     validateEmail() {
       const email = this.get('submitterEmail');
       let emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-      if (email && emailPattern.test(email)) { 
+      if (email && emailPattern.test(email)) {
         this.set('validEmail', 'is-valid');
       } else if (email) {
         this.set('validEmail', 'is-invalid');

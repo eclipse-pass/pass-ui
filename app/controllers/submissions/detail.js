@@ -236,6 +236,7 @@ export default Controller.extend({
           eventType: 'changes-requested',
           link: `${baseURL}${ENV.rootURL}submissions/${encodeURIComponent(`${s.id}`)}`
         });
+        $('.block-user-input').css('display', 'block');
         se.save().then(() => {
           let sub = this.get('model.sub');
           sub.set('submissionStatus', 'changes-requested');
@@ -414,6 +415,7 @@ export default Controller.extend({
             eventType: 'cancelled',
             link: `${baseURL}${ENV.rootURL}submissions/${encodeURIComponent(`${s.id}`)}`
           });
+          $('.block-user-input').css('display', 'block');
           se.save().then(() => {
             let sub = this.get('model.sub');
             sub.set('submissionStatus', 'cancelled');
