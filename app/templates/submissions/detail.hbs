@@ -132,11 +132,13 @@
               <td>
                 {{#if (eq model.sub.source "other")}}
                 <i>This submission did not originate from PASS</i>
-                {{else}}
+                {{else if (await model.sub.submitter)}}
                 {{get (await model.sub.submitter) 'displayName'}}
                 {{#if (get (await model.sub.submitter) 'institutionalId')}}
                 ({{get (await model.sub.submitter) 'institutionalId'}})
                 {{/if}}
+                {{else}}
+                {{model.sub.submitterName}}
                 {{/if}}
               </td>
             </tr>
