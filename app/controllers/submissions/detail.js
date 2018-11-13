@@ -31,7 +31,7 @@ export default Controller.extend({
     }
   ),
   /**
-   * Ugly way to generate date for the template to use.
+   * Ugly way to generate data for the template to use.
    * {
    *    'repository-id': {
    *      repo: { }, // repository obj
@@ -190,6 +190,24 @@ export default Controller.extend({
       );
     }
   ),
+  displaySubmitterName: Ember.computed('model.sub', function () {
+    if (this.get('model.sub.submitter.displayName')) {
+      return this.get('model.sub.submitter.displayName');
+    } else if (this.get('model.sub.submitter.firstName')) {
+      return `${this.get('model.sub.submitter.firstName')} ${this.get('model.sub.submitter.lastName')}`;
+    } else if (this.get('model.sub.submitterName')) {
+      return this.get('model.sub.submitterName');
+    }
+    return '';
+  }),
+  displaySubmitterEmail: Ember.computed('model.sub', function () {
+    if (this.get('model.sub.submitter.email')) {
+      return this.get('model.sub.submitter.email');
+    } else if (this.get('model.sub.submitterEmail')) {
+      return this.get('model.sub.submitterEmail').replace('mailto:', '');
+    }
+    return '';
+  }),
   actions: {
     openWeblinkAlert(repo) {
       swal({

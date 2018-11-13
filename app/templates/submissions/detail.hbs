@@ -132,13 +132,11 @@
               <td>
                 {{#if (eq model.sub.source "other")}}
                 <i>This submission did not originate from PASS</i>
-                {{else if (await model.sub.submitter)}}
-                {{get (await model.sub.submitter) 'displayName'}}
-                {{#if (get (await model.sub.submitter) 'institutionalId')}}
-                ({{get (await model.sub.submitter) 'institutionalId'}})
+                {{else if displaySubmitterName}}
+                {{displaySubmitterName}}
                 {{/if}}
-                {{else}}
-                {{model.sub.submitterName}}
+                {{#if displaySubmitterEmail}}
+                &nbsp;(<a href="mailto:{{displaySubmitterEmail}}">{{displaySubmitterEmail}}</a>)
                 {{/if}}
               </td>
             </tr>
@@ -147,6 +145,9 @@
               <td>
                 {{#each (await model.sub.preparers) as |preparer index|}}
                 {{#if index}}, {{/if}} {{get (await preparer) 'displayName'}}
+                {{#if (get (await preparer) 'email')}}
+                &nbsp;(<a href="mailto:{{get (await preparer) 'email'}}">{{get (await preparer) 'email'}}</a>)
+                {{/if}}
                 {{/each}}
               </td>
             {{/if}}
