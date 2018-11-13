@@ -170,10 +170,6 @@ export default WorkflowComponent.extend({
       const submitterExists = this.get('model.newSubmission.submitter.id');
       const proxySubmitterExists = submitterExists && currentUserIsNotSubmitter;
 
-      if (!proxySubmitterInfoExists && !proxySubmitterExists) {
-        this.set('model.newSubmission.preparers', Ember.A());
-      }
-
       // A journal and title must be present
       if (!journal.get('id')) {
         toastr.warning('The journal must not be left blank');

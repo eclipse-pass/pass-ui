@@ -48,6 +48,11 @@ export default Controller.extend({
         s.set('submitted', true);
         s.set('submissionStatus', 'submitted');
         s.set('submittedDate', new Date());
+        s.set(
+          'repositories',
+          s.get('repositories').filter(repo => (repo.get('integrationType') !== 'web-link'))
+        );
+
         subEvent.set('performerRole', 'submitter');
         subEvent.set('eventType', 'submitted');
       } else {
@@ -93,13 +98,6 @@ export default Controller.extend({
       sub.set('source', 'pass');
       sub.set('removeNIHDeposit', false);
       sub.set('aggregatedDepositStatus', 'not-started');
-
-      if (!this.get('hasProxy')) {
-        sub.set(
-          'repositories',
-          sub.get('repositories').filter(repo => (repo.get('integrationType') !== 'web-link'))
-        );
-      }
 
       this.set('uploading', true);
       this.set('waitingMessage', 'Saving your submission');
