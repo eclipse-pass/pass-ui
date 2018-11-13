@@ -15,7 +15,7 @@ services:
       - back
 
   fcrepo:
-    image: oapass/fcrepo:4.7.5-3.2@sha256:bb5e0eab6486c6ce0c4896c5903f0231444a131230fc8a847c6059adc29fbdbc
+    image: oapass/fcrepo:4.7.5-3.2-2@sha256:d06ff883b93da52e784e40315cb7f9f10fa38a0d529e83d89a0a120086bf18d8
     container_name: fcrepo
     env_file: .env
     ports:
@@ -43,7 +43,7 @@ services:
       - back
 
   static-html:
-    image: oapass/static-html:20180816-23df535@sha256:556085172c39877c4167a92c7464d595b9bbb48da2abae6a8f6377a79429c22e
+    image: oapass/static-html:20181101-c7be0f8@sha256:38e3098807e250141d5efd4a3db511e248932353d29d887b4c6dd789725447c4
     container_name: static-html
     env_file: .env
     ports:
@@ -83,7 +83,7 @@ services:
       - source: idp_sealer
 
   ldap:
-    image: oapass/ldap:20181012@sha256:813a0be4c301ade0d1f970fea5c51532ba5de90454aa406a5496169a564b0a5f
+    image: oapass/ldap:20181106@sha256:065b91e74de5565df7d4459590c51986368ee157f73d81eb10232c7dadcb98e4
     container_name: ldap
     networks:
       - back
