@@ -58,7 +58,6 @@ export default CheckSessionRoute.extend({
   },
 
   _loadCurrentUser(userToken) {
-    console.log(`userToken: ${userToken}`);
     return this.get('currentUser').load(userToken);
   }
 });
