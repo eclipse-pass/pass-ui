@@ -19,6 +19,9 @@ export default Component.extend({
     }
     return arr;
   }),
+  moreThanOnePage: Ember.computed('pages', function () {
+    return (this.get('pages') ? (this.get('pages').length > 1) : false);
+  }),
   filteredUsers: Ember.computed('users', function () {
     return this.get('users').filter(u => u.id !== this.get('currentUser.user.id'));
   }),

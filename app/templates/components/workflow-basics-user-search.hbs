@@ -23,7 +23,7 @@
       {{else}}
       <p>No results found.</p>
     {{/if}}
-    {{#if pages}}
+    {{#if moreThanOnePage }}
     <ul class="pagination mt-4 mx-auto mb-0 pb-0" style="justify-content:center;">
       {{#each pages as |p|}}
         {{#if (eq p page)}}
