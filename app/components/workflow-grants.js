@@ -1,25 +1,103 @@
 import WorkflowComponent from './workflow-component';
 import { Promise, } from 'rsvp';
 import { inject as service } from '@ember/service';
+import Bootstrap4Theme from 'ember-models-table/themes/bootstrap4';
 
 export default WorkflowComponent.extend({
   store: service('store'),
+  pageNumber: 1,
+  pageCount: 0,
+  pageSize: 10,
+  grants: null,
+  totalGrants: 0,
+  themeInstance: Bootstrap4Theme.create(),
+
+  // Matches numbered starting at 1. Return number of first match on current page.
+  pageFirstMatchNumber: Ember.computed('totalGrants', 'pageNumber', 'pageSize', function () {
+    return ((this.get('pageNumber') - 1) * this.get('pageSize')) + 1;
+  }),
+
+  // Matches numbered starting at 1. Return number of last match on current page.
+  pageLastMatchNumber: Ember.computed('totalGrants', 'pageNumber', 'pageSize', function () {
+    let result = this.get('pageNumber') * this.get('pageSize');
+    let total = this.get('totalGrants');
+
+    if (result > total) {
+      result = total;
+    }
+
+    return result;
+  }),
   init() {
     this._super(...arguments);
     if (this.get('model.preLoadedGrant')) this.send('addGrant', this.get('model.preLoadedGrant'));
-    if (this.get('model.newSubmission.submitter.id')) {
-      this.get('store').query('grant', {
-        query: {
-          term: {
-            pi: this.get('model.newSubmission.submitter.id')
-          }
-        }
-      }).then((results) => {
-        this.set('grants', results);
-      });
-    }
+    if (this.get('model.newSubmission.submitter.id')) this.updateGrants();
   },
-  grants: [],
+  updateGrants() {
+    let info = {};
+
+    this.get('store').query('grant', {
+      query: {
+        bool: {
+          must: [
+            { range: { endDate: { gte: '2011-01-01' } } },
+            {
+              bool: {
+                should: [
+                  { term: { pi: this.get('model.newSubmission.submitter.id') } },
+                  { term: { coPis: this.get('model.newSubmission.submitter.id') } }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      from: (this.get('pageNumber') - 1) * this.get('pageSize'),
+      size: this.get('pageSize'),
+      sort: [{ endDate: 'desc' }],
+      info
+    }).then((results) => {
+      this.set('grants', results);
+      this.set('totalGrants', info.total);
+      this.set('pageCount', Math.ceil(info.total / this.get('pageSize')));
+    });
+  },
+  grantColumns: [
+    {
+      propertyName: 'awardNumber',
+      title: 'Award Number',
+      className: 'awardnum-column',
+      disableSorting: true,
+    },
+    {
+      propertyName: 'projectName',
+      title: 'Project Name',
+      disableSorting: true
+    },
+    {
+      propertyName: 'primaryFunder.name',
+      title: 'Funder',
+      disableSorting: true
+    },
+    {
+      propertyName: 'startDate',
+      title: 'Start',
+      disableSorting: true,
+      className: 'date-column',
+      component: 'date-cell'
+    },
+    {
+      propertyName: 'endDate',
+      title: 'End',
+      disableSorting: true,
+      className: 'date-column',
+      component: 'date-cell'
+    },
+    {
+      component: 'select-row-toggle',
+      mayBeHidden: false
+    }
+  ],
   filteredGrants: Ember.computed('grants', 'model.newSubmission.grants.[]', function () {
     return this.get('grants').filter(g => !this.get('model.newSubmission.grants').map(x => x.id).includes(g.get('id')));
   }),
@@ -30,19 +108,33 @@ export default WorkflowComponent.extend({
     back() {
       this.sendAction('back');
     },
+    prevPage() {
+      let i = this.get('pageNumber');
+
+      if (i > 1) {
+        this.set('pageNumber', i - 1);
+        this.updateGrants();
+      }
+    },
+    nextPage() {
+      let i = this.get('pageNumber');
+
+      if (i < this.get('pageCount')) {
+        this.set('pageNumber', i + 1);
+        this.updateGrants();
+      }
+    },
     addGrant(grant, event) {
       if (grant) {
         const submission = this.get('model.newSubmission');
         submission.get('grants').pushObject(grant);
         this.set('maxStep', 2);
-        // submission.set('metadata', '[]');
       } else if (event && event.target.value) {
         this.get('store').findRecord('grant', event.target.value).then((g) => {
           g.get('primaryFunder.policy'); // Make sure policy is loaded in memory
           const submission = this.get('model.newSubmission');
           submission.get('grants').pushObject(g);
           this.set('maxStep', 2);
-          // submission.set('metadata', '[]');
           Ember.$('select')[0].selectedIndex = 0;
         });
       }
@@ -57,9 +149,6 @@ export default WorkflowComponent.extend({
 
       // undo progress, make user redo metadata step.
       this.set('maxStep', 2);
-      // submission.set('metadata', '[]');
-      // let newMetadata = submission.get('metadata');
-      // newMetadata = JSON.parse(newMetadata).filter(x => x.id);
     },
   },
 });
