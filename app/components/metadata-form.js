@@ -73,7 +73,7 @@ export default Ember.Component.extend({
                 try {
                   doiInfo[doiEntry] = doiInfo[doiEntry].replace(/(<([^>]+)>)/ig, '');
                 } catch (e) {} // eslint-disable-line no-empty
-                console.log(doiEntry)
+                console.log(doiEntry);
                 if (doiEntry == 'author') {
                   doiInfo[doiEntry].forEach((author, index) => {
                     const name = `${doiInfo[doiEntry][index].given} ${doiInfo[doiEntry][index].family}`;
@@ -252,7 +252,40 @@ export default Ember.Component.extend({
         // }
       }
     }
+    let currentUser = this.get('currentUser.user');
+    let hasAgreementText = false;
 
+    try {
+      this.get('model.repositories').filter(repo => repo.get('name') === newForm.id)[0].get('agreementText');
+      hasAgreementText = true;
+    } catch (e) {} // eslint-disable-line
+    if (hasAgreementText) {
+      // if the current user is not the preparer
+      if (!this.get('model.preparers').map(x => x.id).includes(currentUser.get('id'))) {
+        // add agreement to schema
+        newForm.options.fields.embargo = {
+          type: 'textarea',
+          label: 'Deposit Agreement',
+          disabled: true,
+          rows: '16',
+          hidden: false,
+        };
+        newForm.options.fields['agreement-to-deposit'] = {
+          type: 'checkbox',
+          rightLabel: 'I agree to the above statement on today\'s date',
+          fieldClass: 'col-12 text-right p-0',
+          hidden: false,
+        };
+
+        newForm.schema.properties.embargo = {
+          type: 'string',
+          default: this.get('model.repositories').filter(repo => repo.get('name') === newForm.id)[0].get('agreementText'),
+        };
+        newForm.schema.properties['agreement-to-deposit'] = {
+          type: 'string'
+        };
+      }
+    }
     $(document).ready(() => {
       $('#schemaForm').empty();
       $('#schemaForm').alpaca(newForm);

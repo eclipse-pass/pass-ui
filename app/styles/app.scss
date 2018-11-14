@@ -374,6 +374,10 @@ input[type=date]::-webkit-outer-spin-button {
   -webkit-appearance: none;
 }
 
+.swal2-container {
+  z-index: 99999 !important;
+}
+
 ////////////////////////////
 // End Alpaca
 ////////////////////////////
@@ -773,4 +777,48 @@ footer {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.vertical-text {
+  display: inline-flex!important;
+  align-items: center!important;
+}
+
+// status buttons
+.status .fas {
+  display: inline;
+  font-size: 0.8em;
+  opacity: 0.9;
+  width: 15%;
+  padding-right:0.2rem;
+}
+.manuscript-required>.fa-circle, .manuscript-required .fa-info-circle, 
+.approval-requested>.fa-circle, .approval-requested .fa-info-circle, 
+.changes-requested>.fa-circle, .changes-requested .fa-info-circle, 
+.needs-attention>.fa-circle, .needs-attention .fa-info-circle, 
+.stalled>.fa-circle, .stalled .fa-info-circle, 
+.failed>.fa-circle, .failed .fa-info-circle, 
+.rejected>.fa-circle, .rejected .fa-info-circle {
+  color: #FF9E1B;
+}
+.cancelled>.fa-circle, .cancelled .fa-info-circle,
+.not-submitted>.fa-circle, .not-submitted .fa-info-circle {
+  color: #A7BCD6;
+}
+.submitted>.fa-circle, .submitted .fa-info-circle, 
+.complete>.fa-circle, .complete .fa-info-circle {
+  color: #00AB8E;
+}
+
+.ember-modal-wrapper.emd-static.emd-wrapper-target-attachment-center .user-search-modal {
+  top: 5rem;
+  left: 50%;
+  transform: translate(-50%);
+  width: 90%;
+  min-width: 20rem;
+  max-width: 60rem;
+}
+
+.user-search-results .col-6 {
+  max-width:100%
 }

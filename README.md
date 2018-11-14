@@ -28,24 +28,8 @@ You will need the following things properly installed on your computer.
 
 ## Running / Development
 
-There are two different docker configurations.
-
-### Configuration 1
-
-* `docker-compose up`
-  * Fedora repository at http://localhost:8080/fcrepo/ (admin:moo)
-  * Elasticsearch index at http://localhost:9200/pass/
-  * Wait for indexer container to create the index.
-  * In order to remove persisted data, stop all the containers and `docker system prune -f`
-* `ember serve`
-* Visit your app at [http://localhost:4200](http://localhost:4200).
-* Visit your tests at [http://localhost:4200/tests](http://localhost:4200/tests).
-
-### Configuration 2
-
-In this configuration all requests must pass through a Shibboleth proxy to access services
-available at https://pass/.
-
+A docker environement which relies on a Shibboleth proxy is in .docker/shib. All services should
+be available at https://pass.local/.
 
 * In .docker/shib/ run `docker-compose up`
   * Fedora repository at https://pass.local/fcrepo/ 

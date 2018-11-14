@@ -3,36 +3,33 @@ import Component from '@ember/component';
 export default Component.extend({
   store: Ember.inject.service(),
 
-  status: Ember.computed('deposit', 'repo', 'repoCopy', function () {
+  status: Ember.computed('deposit', 'repoCopy', function () {
     const deposit = this.get('deposit');
-    const repo = this.get('repo');
     const repoCopy = this.get('repoCopy');
     const source = this.get('submission.source');
     const isSubmitted = this.get('submission.submitted');
 
+    if (!isSubmitted) {
+      return 'not-submitted';
+    }
+
     if (repoCopy) {
       const cs = repoCopy.get('copyStatus');
-      if (cs === 'complete') {
-        return 'Complete';
-      } else if (cs === 'stalled') {
-        return 'Stalled';
-      } else if (cs === 'rejected') {
-        return 'Rejected';
+      if (cs === 'complete' || cs === 'stalled' || cs === 'rejected') {
+        return cs;
       }
-    } else if (source == 'other' && !isSubmitted) {
-      return 'Manuscript expected';
     }
 
     if (deposit && deposit.get('depositStatus') === 'failed') {
-      return 'Failed';
+      return 'failed';
     }
 
-    // Failed deposit means deposit never created??
+    // Failed aggregatedDepositStatus means deposit never created
     if (!deposit && source == 'pass' && this.get('submission.aggregatedDepositStatus') === 'failed') {
-      return 'Failed';
+      return 'failed';
     }
 
-    return 'Submitted';
+    return 'submitted';
   }),
 
   /**
@@ -40,18 +37,20 @@ export default Component.extend({
    */
   tooltip: Ember.computed('status', function () {
     switch (this.get('status')) {
-      case 'Complete':
+      case 'complete':
         return 'Submission was accepted and processed by the repository. ID(s) have been assigned to the submitted manuscript.';
-      case 'Stalled':
+      case 'stalled':
         return 'The repository has found a problem with your submission that has caused progress to stall. Please contact the repository for more details.';
-      case 'Submitted':
+      case 'submitted':
         return 'Your submission has been sent to the repository or is in queue to be sent.';
-      case 'Manuscript expected':
+      case 'manuscript-required':
         return 'Your funder is aware of this publication and is expecting the deposit of your manuscript.';
-      case 'Failed':
+      case 'failed':
         return 'The system failed to receive the files for this submission. Please try again by starting a new submission';
-      case 'Rejected':
+      case 'rejected':
         return 'This target repository has rejected your submission. Please contact us for more details or try to submit your manuscript again.';
+      case 'not-submitted':
+        return 'The submission has not been officially submitted to PASS. When the submitter approves the submission, the status will update to \'Submitted\'';
       default:
         return '';
     }
@@ -62,6 +61,10 @@ export default Component.extend({
    * (e.g. US Dept of Education submission system ERIC)
    */
   isExternalRepo: Ember.computed('repo', function () {
-    return this.get('repo.url') === 'https://eric.ed.gov/';
+    return this.get('repo.integrationType') === 'web-link';
+  }),
+
+  isSubmitted: Ember.computed('submission.submitted', function () {
+    return this.get('submission.submitted');
   })
 });

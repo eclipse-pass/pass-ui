@@ -1,4 +1,5 @@
 import { moduleFor, test } from 'ember-qunit';
+import User from 'pass-ember/models/user';
 
 moduleFor('controller:grants/index', 'Unit | Controller | grants/index', {
   // Specify the other units that are required for this test.
@@ -14,15 +15,17 @@ test('it exists', function (assert) {
 test('properly returns admin roles', function (assert) {
   let controller = this.subject();
   controller.set('currentUser.user', Ember.Object.create({
-    roles: ['admin']
+    isAdmin: true
   }));
+
   assert.equal(controller.get('adminColumns'), controller.get('columns'));
 });
 
 test('properly returns submitter roles', function (assert) {
   let controller = this.subject();
   controller.set('currentUser.user', Ember.Object.create({
-    roles: ['submitter']
+    isSubmitter: true
   }));
+
   assert.equal(controller.get('piColumns'), controller.get('columns'));
 });

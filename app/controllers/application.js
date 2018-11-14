@@ -3,6 +3,8 @@ import config from '../config/environment';
 
 export default Controller.extend({
   // session: Ember.inject.service('session'),
+  params: ['userToken'],
+  userToken: null,
   rootURL: config.rootURL,
   currentUser: Ember.inject.service('current-user'),
   notifications: Ember.inject.service('toast'),

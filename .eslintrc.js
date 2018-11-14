@@ -34,6 +34,7 @@ module.exports = {
       "no-restricted-globals": "off",
       "comma-dangle": "off",
       "array-callback-return": "off",
-      "no-lonely-if": "off"
+      "no-lonely-if": "off",
+      "no-useless-escape": "off"
     }
 };

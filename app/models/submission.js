@@ -2,23 +2,36 @@ import DS from 'ember-data';
 
 export default DS.Model.extend({
   /** Possible values: not-started, in-progress, accepted */
-  aggregatedDepositStatus: DS.attr('string', { defaultValue: 'not-started' }),
+  aggregatedDepositStatus: DS.attr('string', {
+    defaultValue: 'not-started'
+  }),
   submittedDate: DS.attr('date'),
   source: DS.attr('string', { defaultValue: 'pass' }),
   metadata: DS.attr('string', { defaultValue: '[]' }), // Stringified JSON
   submitted: DS.attr('boolean', { defaultValue: false }),
-
-  user: DS.belongsTo('user'),
+  submissionStatus: DS.attr('string'),
+  submitterName: DS.attr('string'),
+  submitterEmail: DS.attr('string'), // format: "mailto:jane@example.com"
+  submitter: DS.belongsTo('user'),
+  preparers: DS.hasMany('user'),
   publication: DS.belongsTo('publication'),
-  repositories: DS.hasMany('repository', { async: true }), // not on this model on API
+  repositories: DS.hasMany('repository', {
+    async: true
+  }), // not on this model on API
+  _submissionEvents: DS.hasMany('submissionEvent', {
+    async: true
+  }),
   /**
    * List of grants related to the item being submitted. The grant PI determines who can perform
    * the submission and in the case that there are mutliple associated grants, they all should
    * have the same PI. If a grant has a different PI, it should be a separate submission.
    */
-  grants: DS.hasMany('grant', { async: true }),
+  grants: DS.hasMany('grant', {
+    async: true
+  }),
 
   // don't get saved to database
+  hasNewProxy: false,
   removeNIHDeposit: false,
 
   // attributes needed for tables
@@ -45,4 +58,7 @@ export default DS.Model.extend({
   isStub: Ember.computed('source', 'submitted', function () {
     return this.get('source') === 'other' && !(this.get('submitted'));
   }),
+  // hasProxy: Ember.computed('submission', function () {
+  //   return !!(this.get('submission.preparer'));
+  // }),
 });

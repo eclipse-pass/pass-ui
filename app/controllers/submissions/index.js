@@ -41,10 +41,10 @@ export default Controller.extend({
             component: 'date-cell'
           },
           {
-            propertyName: 'aggregatedDepositStatus',
+            propertyName: 'submissionStatus',
             title: 'Status',
-            repoCopiesMap: this.get('model.repoCopiesMap'),
-            depositsMap: this.get('model.depositsMap')
+            className: 'status-column',
+            component: 'submissions-status-cell'
           },
           {
             // propertyName: 'repoCopies',
@@ -81,11 +81,10 @@ export default Controller.extend({
             component: 'date-cell'
           },
           {
-            propertyName: 'aggregatedDepositStatus',
+            propertyName: 'submissionStatus',
             title: 'Status',
-            component: 'submission-status-cell',
-            repoCopiesMap: this.get('model.repoCopiesMap'),
-            depositsMap: this.get('model.depositsMap')
+            className: 'status-column',
+            component: 'submissions-status-cell'
           },
           {
             propertyName: 'repoCopies',

@@ -9,7 +9,11 @@ export default Service.extend({
 
   user: null,
 
-  load() {
+  load(userToken = null) {
+    let params = userToken ? `?userToken=${userToken}` : null;
+    let url = `${this.get('whoamiUrl')}${params || ''}`;
+    this.set('whoamiUrl', url);
+    console.log(`getting url: ${url}`);
     return this.get('ajax').request(this.get('whoamiUrl', 'GET', {
       headers: {
         Accept: 'application/json; charset=utf-8',

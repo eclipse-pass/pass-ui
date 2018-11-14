@@ -11,10 +11,10 @@ test('it renders', function (assert) {
 
   this.render(hbs`{{grant-action-cell}}`);
 
-  assert.equal(this.$().text().trim(), 'New Submission');
+  assert.equal(this.$().text().trim(), 'New submission');
 
   // Template block usage:
   this.render(hbs`{{#grant-action-cell}}template block text{{/grant-action-cell}}`);
 
-  assert.equal(this.$().text().trim(), 'New Submission\ntemplate block text');
+  assert.equal(this.$().text().trim(), 'New submission\ntemplate block text');
 });

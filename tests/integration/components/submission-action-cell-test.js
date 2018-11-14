@@ -6,19 +6,25 @@ moduleForComponent('submission-action-cell', 'Integration | Component | submissi
 });
 
 test('it renders', function (assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
+  let record = {};
 
-  this.render(hbs`{{submission-action-cell}}`);
+  // TODO: add actual tests here
+  record = Ember.Object.create({
+    preparers: []
+  });
 
-  assert.equal(this.$().text().trim(), '');
+  this.set('record', record);
+
+  this.render(hbs`{{submission-action-cell record=record}}`);
+
+  assert.equal(this.$().text().trim(), 'No actions available.');
 
   // Template block usage:
   this.render(hbs`
-    {{#submission-action-cell}}
+    {{#submission-action-cell record=record}}
       template block text
     {{/submission-action-cell}}
   `);
 
-  assert.equal(this.$().text().trim(), 'template block text');
+  assert.equal(this.$().text().trim(), 'No actions available.');
 });

@@ -1,9 +1,7 @@
 language: node_js
+dist: trusty
 node_js:
-  - node
-sudo: required
-services:
-  - docker
+  - "10"
 addons:
   chrome: stable
 env:
@@ -14,10 +12,6 @@ before_install:
 - npm config set spin false
 install:
 - npm install
-before_script:
-  - docker-compose pull
-  - docker-compose up -d
-  - bash .docker/travis-wait.sh
 script:
   - ember test --test-port=4200 && echo "Reporting coveralls" && cat coverage/lcov.info | node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage
 before_deploy:

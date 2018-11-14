@@ -64,9 +64,9 @@ export default WorkflowComponent.extend({
         abstract: {
           type: 'string',
         },
-        subjects: {
-          type: 'string',
-        },
+        // subjects: {
+        //   type: 'string',
+        // },
         authors: {
           title: '<div class="row"><div class="col-6">Author(s) <small class="text-muted">(optional)</small> </div><div class="col-6 p-0">ORCID(s)</div></div>',
           // required: true,
@@ -148,13 +148,13 @@ export default WorkflowComponent.extend({
           fieldClass: 'clearfix',
           hidden: false,
         },
-        subjects: {
-          type: 'text',
-          label: 'Keywords <small class="text-muted">(optional)</small>',
-          placeholder: '',
-          fieldClass: 'clearfix',
-          hidden: true,
-        },
+        // subjects: {
+        //   type: 'text',
+        //   label: 'Keywords <small class="text-muted">(optional)</small>',
+        //   placeholder: '',
+        //   fieldClass: 'clearfix',
+        //   hidden: true,
+        // },
         authors: {
           hidden: false,
         },
@@ -191,22 +191,14 @@ export default WorkflowComponent.extend({
   willRender() {
     let schemas = this.get('schemas');
     this.set('schemas', []);
-    this.get('metadataForms').forEach((form) => {
-      if (form) {
-        try {
-          schemas.addObject(form);
-        } catch (e) {
-          console.log('ERROR:', e);
-        }
-      }
-    });
+
+    this.get('metadataForms').forEach((form) => { if (form) schemas.addObject(form); });
     this.set('schemas', _.uniqBy(schemas, 'id'));
     this.set('schema', this.get('metadataForms')[this.get('currentFormStep')]);
   },
 
   activeRepositories: Ember.computed('model.newSubmission', function () {
     const repos = Ember.A();
-    const policies = Ember.A();
     this.get('model.newSubmission.repositories').forEach((repository) => {
       repos.addObject(repository);
     });
@@ -216,6 +208,8 @@ export default WorkflowComponent.extend({
   metadataForms: Ember.computed('activeRepositories', function () {
     let retVal = this.get('activeRepositories').filterBy('formSchema');
     retVal = retVal.map(repository => JSON.parse(repository.get('formSchema')));
+    // TODO: REMOVE BEFORE PUSHING CODE THIS IS NOT SUPOSE TO BE PUSHED REMOVE THIS LINE OMG DO NOT LEAVE THIS LINE YOU BETTER NOT
+    // retVal.unshift(this.get('JScholarship'));
     retVal.unshift(this.get('common'));
     // NOTE: This is here to remove nih from the schmas array. remove this line once NIH has a better schema.
     return retVal.filter(x => x.id !== 'nih'); // return retval;
@@ -226,7 +220,6 @@ export default WorkflowComponent.extend({
   }),
   actions: {
     nextForm() {
-      let commonAuthors = [];
       let doAuthorsExist = false;
       JSON.parse(this.get('model.newSubmission.metadata')).forEach((data) => {
         if (data.id === 'JScholarship') {
@@ -248,9 +241,15 @@ export default WorkflowComponent.extend({
           }
         }
       });
-
-      if ($('[name="agreement-to-deposit"]').length == 2) {
-        let value = $('[name="agreement-to-deposit"]')[1].checked;
+      let value = null;
+      if (this.get('schemas')[this.get('currentFormStep')].id === 'JScholarship') {
+        if ($('[name="agreement-to-deposit"]').length == 2) {
+          value = $('[name="agreement-to-deposit"]')[1].checked;
+        }
+        // if proxy sub then set value of deposit agreement = true to let it pass.
+        if (this.get('hasProxy')) {
+          value = true;
+        }
         let jhuRepo = this.get('model.repositories').filter(repo => repo.get('name') === 'JScholarship');
         // if jhuRepo exists
         if (jhuRepo.length > 0) {
@@ -259,7 +258,9 @@ export default WorkflowComponent.extend({
           // if USER has not agreed to deposit but has one user
           //
           // ----------------------------------------------------------------------
-          if (doAuthorsExist && !value) {
+          // debugger; // eslint-disable-line
+          let userIsSubmitter = this.get('model.newSubmission.submitter.id') === this.get('currentUser.user.id');
+          if (doAuthorsExist && !value && userIsSubmitter) {
             swal({
               title: 'Notice!',
               text: 'You added JScholarship as a repository but didn\'t agree to the deposit agreement, so your submission will not be submitted to JScholarship. To fix this, agree to the deposit agreement below.',
@@ -338,7 +339,7 @@ export default WorkflowComponent.extend({
             // if USER has not agreed to deposit and has not added at least one user
             //
             // ----------------------------------------------------------------------
-          } else if (!doAuthorsExist && !value) {
+          } else if (!doAuthorsExist && !value && this.get('userIsSubmitter')) {
             swal({
               title: 'Notice!',
               text: 'You added JScholarship as a repository. JScholarship requires that (a) you list at least ONE author who is a member of the Johns Hopkins community, and (b) you agree to the deposit statement. Please return to the form to provide the required information.',
@@ -428,18 +429,22 @@ export default WorkflowComponent.extend({
           });
         }
 
-
-        // Add metadata for external submissions
+        // Add metadata for external submissions only if the user is the submitter
         const externalRepos = this.get('model.newSubmission.repositories').filter(repo =>
-          repo.get('integrationType') === 'web-link' ||
-          repo.get('url') === 'https://eric.ed.gov/' ||
-          repo.get('url') === 'https://dec.usaid.gov/');
-        if (externalRepos.get('length') > 0) {
+          repo.get('integrationType') === 'web-link');
+
+        if (this.get('model.newSubmission.submitter.id') === this.get('currentUser.user.id') &&
+          externalRepos.get('length') > 0) {
           let md = { id: 'external-submissions', data: { submission: [] } };
-          externalRepos.forEach(repo => md.data.submission.push(`Deposit into ${repo.get('name')} was prompted`));
-          // Push this new thing to the overall 'metadata' obj
+          externalRepos.forEach(repo => md.data.submission.push({
+            message: `Deposit into ${repo.get('name')} was prompted`,
+            name: repo.get('name'),
+            url: repo.get('url')
+          }));
+
           metadata.push(md);
         }
+
         this.set('model.newSubmission.metadata', JSON.stringify(metadata));
         this.sendAction('next');
       }
@@ -475,7 +480,7 @@ export default WorkflowComponent.extend({
               // set the JScholarship Metadata authors array equal to commons
               md.data = {
                 authors: commonMetadata.data.authors,
-                embargo: JScholarshipSchema.schema.properties.embargo.default,
+                embargo: this.get('model.repositories').filter(repo => repo.get('name') === 'JScholarship')[0].get('agreementText'),
               };
             }
           }
@@ -486,7 +491,7 @@ export default WorkflowComponent.extend({
             id: 'JScholarship',
             data: {
               authors: commonMetadata.data.authors,
-              embargo: JScholarshipSchema.schema.properties.embargo.default,
+              embargo: this.get('model.repositories').filter(repo => repo.get('name') === 'JScholarship')[0].get('agreementText'),
             },
           };
           metadata.push(JScholarshipMetadata);
