@@ -5,15 +5,15 @@ export default DS.Model.extend({
    * (Required)
    */
   username: DS.attr('string'),
-  displayName: DS.attr('string'),
   firstName: DS.attr('string'),
   middleName: DS.attr('string'),
   lastName: DS.attr('string'),
+  displayName: DS.attr('string'),
   email: DS.attr('string'),
 
-  institutionalId: DS.attr('string'),
-  orcidId: DS.attr('string'),
   affiliation: DS.attr('string'),
+  locatorIds: DS.attr('set'),
+  orcidId: DS.attr('string'),
   /** Possible values: admin, submitter */
   roles: DS.attr('set'),
 
