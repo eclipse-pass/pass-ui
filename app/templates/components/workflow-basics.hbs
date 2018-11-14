@@ -1,6 +1,6 @@
 {{yield}}
 {{#unless (or model.newSubmission.id model.preLoadedGrant)}}
-<div class="py-0 mt-2 alert alert-secondary">
+<div class="py-0 mt-2 alert alert-secondary" id="on-behalf-of-block">
   <p class="my-2 lead">I'm creating this submission on behalf of:
     {{radio-button class="ml-3 mr-1" value=false name='showProxyWindow' checked=model.newSubmission.hasNewProxy}} Myself
     {{radio-button class="ml-3 mr-1" value=true name='showProxyWindow' checked=model.newSubmission.hasNewProxy}} Someone
@@ -98,7 +98,14 @@
 {{#link-to 'submissions.index' class="btn btn-outline-primary"}}Back{{/link-to}}
 <button class="btn btn-primary pull-right next" {{action "validateNext"}}>Next</button>
 {{#if isShowingModal}}
-{{#modal-dialog translucentOverlay=true onClose="toggleModal" close="toggleModal" containerClass="user-search-modal"}}
+{{#modal-dialog 
+   translucentOverlay=true 
+   onClose="toggleModal" 
+   close="toggleModal" 
+   tetherTarget='#on-behalf-of-block'
+   attachment='top center'
+   targetAttachment='top center'
+   containerClass='user-search-modal'}}
   {{workflow-basics-user-search
     model=model
     isShowingModal=isShowingModal
