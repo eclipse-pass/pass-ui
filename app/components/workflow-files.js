@@ -27,6 +27,17 @@ export default WorkflowComponent.extend({
   actions: {
     next() {
       if (!this.get('nextDisabled')) {
+
+        // Update any *existing* files that have had their details modified
+        let files = this.get('model.files')
+        if (files) {
+          files.forEach( file => {
+            if (file.get('hasDirtyAttributes')) {
+              // Asynchronously save the updated file metadata.
+              file.save();
+            }
+          });
+        }
         this.set('filesTemp', this.get('files'));
         this.sendAction('next');
       } else {
