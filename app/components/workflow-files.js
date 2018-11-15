@@ -19,6 +19,19 @@ export default WorkflowComponent.extend({
     let mFiles = this.get('model.files');
     let files = this.get('files');
     let tFiles = this.get('filesTemp');
+
+    if (mFiles) {
+      console.log("Model files: " + mFiles.length);
+    }
+
+    if (files) {
+      console.log("Files: " + files.length);
+    }
+
+    if (tFiles) {
+      console.log("Temp files: " + files.length);
+    }
+
     return (
       (!files || (files && files.length === 0)) &&
       (!mFiles || (mFiles && mFiles.length === 0)) &&
@@ -59,6 +72,24 @@ export default WorkflowComponent.extend({
         cancelButtonText: 'Nevermind'
       }).then((result) => {
         if (result.value) {
+          let mFiles = this.get('model.files');
+          let files = this.get('files');
+          let tFiles = this.get('filesTemp');
+
+          // Remove the file from whatever array it's in
+          
+          if (mFiles) {
+            mFiles.removeObject(file);
+          }
+          
+          if (files) {
+            files.removeObject(file);
+          }
+
+          if (tFiles) {
+            tFiles.removeObject(file);
+          }
+          
           file.destroyRecord();
         }
       });
