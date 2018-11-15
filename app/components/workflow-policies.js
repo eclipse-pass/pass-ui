@@ -27,7 +27,7 @@ export default WorkflowComponent.extend({
     back() {
       this.sendAction('back');
     },
-    toggleRemoveNIHDeposit(bool) {
+    setRemoveNIHDeposit(bool) {
       this.set('model.newSubmission.removeNIHDeposit', bool);
     }
   },
