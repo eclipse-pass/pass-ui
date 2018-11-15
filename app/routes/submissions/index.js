@@ -37,12 +37,11 @@ export default CheckSessionRoute.extend({
 
   _doSubmitter(user) {
     return this.store.query('submission', {
-      sort: [{
-        submittedDate: {
-          missing: '_last',
-          order: 'desc'
-        }
-      }],
+      sort: [
+        { submitted: { missing: '_last', order: 'asc' } },
+        { submissionStatus: { missing: '_last', order: 'asc' } },
+        { submittedDate: { missing: '_last', order: 'desc' } }
+      ],
       query: {
         bool: {
           should: [
