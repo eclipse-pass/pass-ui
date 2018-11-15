@@ -10,41 +10,22 @@ export default WorkflowComponent.extend({
       this.get('filesTemp').forEach((file) => {
         this.get('files').pushObject(file);
       });
-      this.set('nextDisabled', false);
     }
   },
-  nextDisabled: Ember.computed('files', 'files.[]', 'model.files', 'model.files.[]', 'filesTemp', 'filesTemp.[]', function () {
-    // disable the button if there are no files already on the submission
-    // or ready to be saved to the submission.
-    let mFiles = this.get('model.files');
-    let files = this.get('files');
-    let tFiles = this.get('filesTemp');
-
-    if (mFiles) {
-      console.log("Model files: " + mFiles.length);
-    }
-
-    if (files) {
-      console.log("Files: " + files.length);
-    }
-
-    if (tFiles) {
-      console.log("Temp files: " + files.length);
-    }
-
-    return (
-      (!files || (files && files.length === 0)) &&
-      (!mFiles || (mFiles && mFiles.length === 0)) &&
-      (!tFiles || (tFiles && tFiles.length === 0)));
-  }),
   actions: {
     next() {
-      if (!this.get('nextDisabled')) {
+      let manuscriptFiles = [].concat(this.get('files'), this.get('model.files') && this.get('model.files').toArray())
+        .filter(file => file && file.get('fileRole') === 'manuscript');
 
+      if (manuscriptFiles.length == 0) {
+        toastr.warning('At least one manuscript file is required');
+      } else if (manuscriptFiles.length > 1) {
+        toastr.warning(`Only one file may be designated as the manuscript.  Instead, found ${manuscriptFiles.length}`);
+      } else {
         // Update any *existing* files that have had their details modified
-        let files = this.get('model.files')
+        let files = this.get('model.files');
         if (files) {
-          files.forEach( file => {
+          files.forEach((file) => {
             if (file.get('hasDirtyAttributes')) {
               // Asynchronously save the updated file metadata.
               file.save();
@@ -53,8 +34,6 @@ export default WorkflowComponent.extend({
         }
         this.set('filesTemp', this.get('files'));
         this.sendAction('next');
-      } else {
-        toastr.warning('Attach manuscript/article files to this submission.');
       }
     },
     back() {
@@ -73,23 +52,12 @@ export default WorkflowComponent.extend({
       }).then((result) => {
         if (result.value) {
           let mFiles = this.get('model.files');
-          let files = this.get('files');
-          let tFiles = this.get('filesTemp');
 
-          // Remove the file from whatever array it's in
-          
+          // Remove the file from the model
           if (mFiles) {
             mFiles.removeObject(file);
           }
-          
-          if (files) {
-            files.removeObject(file);
-          }
 
-          if (tFiles) {
-            tFiles.removeObject(file);
-          }
-          
           file.destroyRecord();
         }
       });
@@ -117,9 +85,6 @@ export default WorkflowComponent.extend({
                 newFile.set('fileRole', 'manuscript');
               }
               this.get('files').pushObject(newFile);
-              // if (this.get('files').length === uploads.files.length) {
-              //   this.set('nextDisabled', checkDisabled(this.get('files')));
-              // }
             }
           }
         }
