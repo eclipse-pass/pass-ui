@@ -25,6 +25,9 @@ export default WorkflowComponent.extend({
     }
     return '';
   },
+  usesPmcRepository(policyRepos) {
+    return policyRepos ? (policyRepos.filter(repo => repo.get('repositoryKey') === 'pmc').length > 0) : false;
+  },
   requiredRepositories: Ember.computed('model.repositories', function () {
     const grants = this.get('model.newSubmission.grants');
     let repos = Ember.A();
@@ -42,7 +45,7 @@ export default WorkflowComponent.extend({
 
       const shouldAddNIH = this.get('includeNIHDeposit');
       let anyInSubmission = grantRepos.any(grantRepo => this.get('model.newSubmission.repositories').includes(grantRepo));
-      if (shouldAddNIH || funder.get('policy.title').toUpperCase() !== 'NATIONAL INSTITUTES OF HEALTH PUBLIC ACCESS POLICY') {
+      if (shouldAddNIH || !this.usesPmcRepository(grantRepos)) {
         grantRepos.forEach((repo) => {
           repos.addObject({
             repo,

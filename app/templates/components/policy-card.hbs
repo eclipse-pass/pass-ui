@@ -21,8 +21,8 @@
         {{/if}}
 
         <br><br>
-        {{#if (or (eq policy.title 'National Institutes of Health Public Access Policy') (eq policy.title 'NIH'))}}
-          {{#if journal.isMethodA}}
+        {{#if usesPmcRepository}}
+          {{#if methodAJournal}}
             <div class="alert alert-success">
               The journal you published in participates in the PMC Method A program, and will submit the published article to PMC on your behalf.
               <em>You do not need to submit a manuscript to NIH Manuscript Submission System (NIHMS) as a part of this
@@ -33,7 +33,6 @@
               <p>Some journals would submit your article to PMC on your behalf, for a fee. Specific arrangements would be required. Please indicate below whether or not you have made an arrangement with the publisher to have your article deposited by your
                 journal/publisher.
               </p>
-              {{#if nihAndNotMethodAJournal}}
                 {{radio-button value=true name='removeNIHDeposit' checked=model.newSubmission.removeNIHDeposit}}
                 I have made (or intend to make) an arrangement with the publisher to
                 deposit my article directly to PMC. (You will not need to submit your
@@ -43,7 +42,6 @@
                 I will not make an arrangement with the publisher to deposit my article
                 directly to PMC. (You will need to submit your manuscript to NIHMS as
                 part of this process.)
-              {{/if}}
             </div>
           {{/if}}
         {{/if}}
