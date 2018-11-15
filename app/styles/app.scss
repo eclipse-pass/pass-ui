@@ -828,3 +828,13 @@ footer {
   background-color: #A7BCD6;
   cursor: pointer;
 }
+
+#grants-selection-nav ul li.active a {
+    color: white !important;
+    background-color: #418FDE;
+}
+
+#grants-selection-nav ul li a {
+    color: black !important;
+    background-color: white;
+}
