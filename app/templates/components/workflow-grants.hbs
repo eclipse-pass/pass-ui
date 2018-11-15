@@ -1,6 +1,8 @@
 <p class="lead text-muted">
-  PASS receives information about grants from the University grant management system, COEUS.
-  If you could not find your grant in the below dropdown list, {{#link-to "contact" target="_blank"}}please contact us{{/link-to}}.<br><br>
+    Review/provide information about the grant(s)/award(s) that funded this work.
+    This information will help determine which public access policies are applicable to your work.
+    <strong>If the work you’re about to submit was not supported by a grant, leave this
+    page blank and go to the next step.</strong>
 </p>
 
 {{#if model.newSubmission.grants}}
@@ -13,10 +15,9 @@
     <h2>Available grants</h2>
 
     <p>
-  Review/provide information about the grant(s)/award(s) that funded this work.
-  This information will help determine which public access policies are applicable to your work.
-  <strong>If the work you’re about to submit was not supported by a grant, leave this
-  page blank and go to the next step.</strong>
+      PASS receives information about grants from the University grant management system, COEUS.
+      Please select grants that should be associated with this submission.
+      If you could not find your grant in the below dropdown list, {{#link-to "contact" target="_blank"}}please contact us{{/link-to}}.
     </p>
 
     <h3 class="text-center">Showing {{pageFirstMatchNumber}}-{{pageLastMatchNumber}} of total {{totalGrants}}</h3>
