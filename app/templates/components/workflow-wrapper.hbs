@@ -18,7 +18,7 @@
     {{workflow-grants hasProxy=hasProxy model=model next=(action "next") maxStep=maxStep back=(action "back")}}
     {{/if}}
     {{#if (eq step 3)}}
-    {{workflow-policies hasProxy=hasProxy model=model next=(action "next") back=(action "back")
+    {{workflow-policies hasProxy=hasProxy model=model next=(action "next") maxStep=maxStep back=(action "back")
     toggleNIHDeposit=(action "toggleNIHDeposit")}}
     {{/if}}
     {{#if (eq step 4)}}
