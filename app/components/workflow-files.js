@@ -1,8 +1,10 @@
 import WorkflowComponent from './workflow-component';
+import { inject as service } from '@ember/service';
 
 export default WorkflowComponent.extend({
   store: Ember.inject.service('store'),
   files: Ember.A(),
+  currentUser: service('current-user'),
   init() {
     this._super(...arguments);
     this.set('files', Ember.A());
@@ -17,11 +19,7 @@ export default WorkflowComponent.extend({
       let manuscriptFiles = [].concat(this.get('files'), this.get('model.files') && this.get('model.files').toArray())
         .filter(file => file && file.get('fileRole') === 'manuscript');
 
-      if (manuscriptFiles.length == 0) {
-        toastr.warning('At least one manuscript file is required');
-      } else if (manuscriptFiles.length > 1) {
-        toastr.warning(`Only one file may be designated as the manuscript.  Instead, found ${manuscriptFiles.length}`);
-      } else {
+      let updateExistingFiles = () => {
         // Update any *existing* files that have had their details modified
         let files = this.get('model.files');
         if (files) {
@@ -34,6 +32,31 @@ export default WorkflowComponent.extend({
         }
         this.set('filesTemp', this.get('files'));
         this.sendAction('next');
+      };
+
+      let userIsSubmitter = this.get('model.newSubmission.submitter.id') === this.get('currentUser.user.id');
+
+      if (manuscriptFiles.length == 0 && !userIsSubmitter) {
+        swal({
+          title: 'No manuscript present',
+          text: 'If no manuscript is attached, the designated submitter will need to add one before final submission',
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel'
+        }).then((result) => {
+          if (result.value) {
+            updateExistingFiles();
+          }
+        });
+      } else if (manuscriptFiles.length == 0) {
+        toastr.warning('At least one manuscript file is required');
+      } else if (manuscriptFiles.length > 1) {
+        toastr.warning(`Only one file may be designated as the manuscript.  Instead, found ${manuscriptFiles.length}`);
+      } else {
+        updateExistingFiles();
       }
     },
     back() {
@@ -63,7 +86,6 @@ export default WorkflowComponent.extend({
       });
     },
     getFiles() {
-      const submission = this.get('model.newSubmission');
       const uploads = document.getElementById('file-multiple-input');
       if ('files' in uploads) {
         if (uploads.files.length !== 0) {
