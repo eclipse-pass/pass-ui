@@ -22,38 +22,36 @@
 
     <h3 class="text-center">Showing {{pageFirstMatchNumber}}-{{pageLastMatchNumber}} of total {{totalGrants}}</h3>
 
-    <div class="container">
-      {{models-table
-          id="grants-selection-table"
-          data=grants
-          columns=grantColumns
-          themeInstance=themeInstance
-          showColumnsDropdown=false
-          useFilteringByColumns=false
-          multipleColumnsSorting=false
-          showComponentFooter=false
-          showGlobalFilter=false
-          pageSize=pageSize
-          multipleSelect=true
-          selectedItems=model.newSubmission.grants
-        }}
+    {{models-table
+        id="grants-selection-table"
+        data=grants
+        columns=grantColumns
+        themeInstance=themeInstance
+        showColumnsDropdown=false
+        useFilteringByColumns=false
+        multipleColumnsSorting=false
+        showComponentFooter=false
+        showGlobalFilter=false
+        pageSize=pageSize
+        multipleSelect=true
+        selectedItems=model.newSubmission.grants
+      }}
 
-      {{#if (gt pageCount "1")}}
-        <nav id="grants-selection-nav" aria-label="...">
-          <ul class="pagination justify-content-center">
-            <li class="page-item active">
-              <a {{action "prevPage"}} class="fa fa-angle-left"></a>
-            </li>
-            <li class="page-item">
-              <a class="page-link">Page {{pageNumber}} of {{pageCount}}</a>
-            </li>
-            <li class="page-item active">
-              <a {{action "nextPage"}} class="fa fa-angle-right"></a>
-            </li>
-          </ul>
-        </nav>
-      {{/if}}
-    </div>
+    {{#if (gt pageCount "1")}}
+      <nav id="grants-selection-nav" aria-label="...">
+        <ul class="pagination justify-content-center">
+          <li class="page-item active">
+            <a {{action "prevPage"}} class="fa fa-angle-left"></a>
+          </li>
+          <li class="page-item">
+            <a class="page-link">Page {{pageNumber}} of {{pageCount}}</a>
+          </li>
+          <li class="page-item active">
+            <a {{action "nextPage"}} class="fa fa-angle-right"></a>
+          </li>
+        </ul>
+      </nav>
+    {{/if}}
 
 {{else}}
 <p>Because the person on behalf of whom who you're submitting is not yet in the system, that person has no grants attached to their account. Please click Next to continue.</p>
