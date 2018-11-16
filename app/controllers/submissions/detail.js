@@ -49,7 +49,7 @@ export default Controller.extend({
    * If the submission is submitted, return external-submissions object from metadata.
    * Otherwise generate what it should be from external repositories.
    */
-  externalSubmissionsMetadata: Ember.computed('model.sub.respositories', 'model.sub.submitted', 'model.sub.metadata', function () {
+  externalSubmissionsMetadata: Ember.computed('model.sub.submitted', 'model.sub.metadata', function () {
     if (this.get('model.sub.submitted')) {
       let values = JSON.parse(this.get('model.sub.metadata')).filter(x => x.id === 'external-submissions');
 
@@ -267,7 +267,6 @@ export default Controller.extend({
     },
     async approveChanges() {
       let baseURL = window.location.href.replace(new RegExp(`${ENV.rootURL}.*`), '');
-
       // First, check if user has visited all required weblinks.
       if (this.get('disableSubmit')) {
         if (!this.get('hasVisitedWeblink')) {
@@ -295,6 +294,13 @@ export default Controller.extend({
         .map(repo => ({
           id: repo.get('name')
         }));
+
+      let reposWithWebLink = this.get('model.repos')
+        .filter(repo => repo.get('integrationType') === 'web-link')
+        .map(repo => ({
+          id: repo.get('name')
+        }));
+
       // INFO: this is used to testing more then 1 repo.
       // reposWithAgreementText.push({
       //   id: 'some',
@@ -316,89 +322,110 @@ export default Controller.extend({
           }
         });
         // make sure there are repos to submit to.
-        if ((reposWithoutAgreementText.length > 0 || reposThatUserAgreedToDeposit.length > 0) && this.get('model.sub.repositories.length') > 0) {
-          swal({
-            title: 'You are about to submit to:',
-            html: `<pre><code> ${JSON.stringify(reposThatUserAgreedToDeposit.map(repo => repo.id)).replace(/[\[\]']/g, '')} ${JSON.stringify(reposWithoutAgreementText.map(repo => repo.id)).replace(/[\[\]']/g, '')} </code></pre>`, // eslint-disable-line
-            confirmButtonText: 'Submit',
-            showCancelButton: true,
-          }).then((result) => {
-            console.log(result.value);
-            if (result.value) {
-              const externalSubmissionsMetadata = this.get('externalSubmissionsMetadata');
+        if (this.get('model.sub.repositories.length') > 0) {
+          if (reposWithoutAgreementText.length > 0 || reposThatUserAgreedToDeposit.length > 0 || reposWithWebLink.length > 0) {
+            let swalMsg = 'Once you click confirm you will no longer be able to edit this submission or add repositories.<br/>';
+            if (reposWithoutAgreementText.length > 0 || reposThatUserAgreedToDeposit.length) {
+              swalMsg = `${swalMsg}You are about to submit your files to: <pre><code>${JSON.stringify(reposThatUserAgreedToDeposit.map(repo => repo.id)).replace(/[\[\]']/g, '')}${JSON.stringify(reposWithoutAgreementText.map(repo => repo.id)).replace(/[\[\]']/g, '')} </code></pre>`;
+            }
+            if (reposWithWebLink.length > 0) {
+              swalMsg = `${swalMsg}You were prompted to submit to: <code><pre>${JSON.stringify(reposWithWebLink.map(repo => repo.id)).replace(/[\[\]']/g, '')}</code></pre>`;
+            }
 
-              // Update repos to reflect repos that user agreed to deposit
-              this.set('model.sub.repositories', this.get('model.sub.repositories').filter((repo) => {
-                if (repo.get('integrationType') === 'weblink') {
+            swal({
+              title: 'Confirm submission',
+              html: swalMsg, // eslint-disable-line
+              confirmButtonText: 'Confirm',
+              showCancelButton: true,
+            }).then((result) => {
+              if (result.value) {
+                const externalSubmissionsMetadata = this.get('externalSubmissionsMetadata');
+                // Update repos to reflect repos that user agreed to deposit
+                this.set('model.sub.repositories', this.get('model.sub.repositories').filter((repo) => {
+                  if (repo.get('integrationType') === 'weblink') {
+                    return false;
+                  }
+                  let temp = reposWithAgreementText.map(x => x.id).includes(repo.get('name'));
+                  if (!temp) {
+                    return true;
+                  } else if (reposThatUserAgreedToDeposit.map(r => r.id).includes(repo.get('name'))) {
+                    return true;
+                  }
                   return false;
-                }
-                let temp = reposWithAgreementText.map(x => x.id).includes(repo.get('name'));
-                if (!temp) {
-                  return true;
-                } else if (reposThatUserAgreedToDeposit.map(r => r.id).includes(repo.get('name'))) {
-                  return true;
-                }
-                return false;
-              }));
-              // update Metadata blob to refelect changes in repos
-              this.set('model.sub.metadata', JSON.stringify(JSON.parse(this.get('model.sub.metadata')).filter((md) => {
-                let whiteListedMetadataKeys = ['common', 'crossref', 'pmc', 'agent_information'];
-                if (whiteListedMetadataKeys.includes(md.id)) {
-                  return md;
-                }
-                return this.get('model.sub.repositories').map(r => r.get('name')).includes(md.id);
-              })));
+                }));
+                // update Metadata blob to refelect changes in repos
+                this.set('model.sub.metadata', JSON.stringify(JSON.parse(this.get('model.sub.metadata')).filter((md) => {
+                  let whiteListedMetadataKeys = ['common', 'crossref', 'pmc', 'agent_information'];
+                  if (whiteListedMetadataKeys.includes(md.id)) {
+                    return md;
+                  }
+                  return this.get('model.sub.repositories').map(r => r.get('name')).includes(md.id);
+                })));
 
-              // Add external submissions metadata
-              if (externalSubmissionsMetadata) {
-                let md = JSON.parse(this.get('model.sub.metadata'));
-                md.push(externalSubmissionsMetadata);
-                this.set('model.sub.metadata', JSON.stringify(md));
-              }
+                // Add external submissions metadata
+                if (externalSubmissionsMetadata) {
+                  let md = JSON.parse(this.get('model.sub.metadata'));
+                  md.push(externalSubmissionsMetadata);
+                  this.set('model.sub.metadata', JSON.stringify(md));
+                }
 
-              // Remove external repositories
-              this.set(
-                'model.sub.repositories',
-                this.get('model.sub.repositories').filter(repo => (repo.get('integrationType') !== 'web-link'))
-              );
+                // Remove external repositories
+                this.set(
+                  'model.sub.repositories',
+                  this.get('model.sub.repositories').filter(repo => (repo.get('integrationType') !== 'web-link'))
+                );
 
-              $('.block-user-input').css('display', 'block');
-              // save sub and send it
-              let s = this.get('model.sub');
-              let se = this.get('store').createRecord('submissionEvent', {
-                submission: this.get('model.sub'),
-                performedBy: this.get('currentUser.user'),
-                performedDate: new Date(),
-                comment: this.get('message'),
-                performerRole: 'submitter',
-                eventType: 'submitted',
-                link: `${baseURL}${ENV.rootURL}submissions/${encodeURIComponent(`${s.id}`)}`
-              });
-              se.save().then(() => {
-                let sub = this.get('model.sub');
-                sub.set('submissionStatus', 'submitted');
-                sub.set('submittedDate', new Date());
-                sub.set('submitted', true);
-                sub.save().then(() => {
-                  window.location.reload(true);
+                $('.block-user-input').css('display', 'block');
+                // save sub and send it
+                let s = this.get('model.sub');
+                let se = this.get('store').createRecord('submissionEvent', {
+                  submission: this.get('model.sub'),
+                  performedBy: this.get('currentUser.user'),
+                  performedDate: new Date(),
+                  comment: this.get('message'),
+                  performerRole: 'submitter',
+                  eventType: 'submitted',
+                  link: `${baseURL}${ENV.rootURL}submissions/${encodeURIComponent(`${s.id}`)}`
                 });
-              });
-            }
-          });
+                se.save().then(() => {
+                  let sub = this.get('model.sub');
+                  sub.set('submissionStatus', 'submitted');
+                  sub.set('submittedDate', new Date());
+                  sub.set('submitted', true);
+                  sub.save().then(() => {
+                    window.location.reload(true);
+                  });
+                });
+              }
+            });
+          } else {
+            // there were repositories, but the user didn't sign any of the agreements
+            let reposUserDidNotAgreeToDeposit = reposWithAgreementText.filter((repo) => {
+              if (!reposThatUserAgreedToDeposit.includes(repo)) {
+                return true;
+              }
+            });
+            swal({
+              title: 'Your submission cannot be submitted.',
+              html: `You declined to agree to the deposit agreement(s) for ${JSON.stringify(reposUserDidNotAgreeToDeposit.map(repo => repo.id)).replace(/[\[\]']/g, '')}. Therefore, this submission cannot be submitted. \n You can either (a) cancel the submission or (b) return to the submission to provide required input and try again.`,
+              confirmButtonText: 'Cancel submission',
+              showCancelButton: true,
+              cancelButtonText: 'Go back to edit information'
+            }).then((result) => {
+              if (result.value) {
+                this.send('cancelSubmission');
+              }
+            });
+          }
         } else {
-          let reposUserDidNotAgreeToDeposit = reposWithAgreementText.filter((repo) => {
-            if (!reposThatUserAgreedToDeposit.includes(repo)) {
-              return true;
-            }
-          });
+          // no repositories associated with the submission
           swal({
             title: 'Your submission cannot be submitted.',
-            html: `You declined to agree to the deposit agreement(s) for ${JSON.stringify(reposUserDidNotAgreeToDeposit.map(repo => repo.id)).replace(/[\[\]']/g, '')}. Therefore, this submission cannot be submitted. \n You can either (a) cancel the submission or (b) return to the submission to provide required input and try again.`,
+            html: 'No repositories are associated with this submission. \n You can either (a) cancel the submission or (b) return to the submission and edit it to include a repository.',
             confirmButtonText: 'Cancel submission',
             showCancelButton: true,
             cancelButtonText: 'Go back to edit information'
           }).then((result) => {
-            console.log(result.value);
             if (result.value) {
               this.send('cancelSubmission');
             }

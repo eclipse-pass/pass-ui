@@ -79,7 +79,7 @@
             model.sub.submittedDate}}</small>{{/if}}
         </div>
         <p class="mb-1">DOI: {{#if model.sub.publication.doi}}{{model.sub.publication.doi}}{{else}}<span class="text-muted">None</span>{{/if}}</p>
-        <table class="table table-responsive-sm table-bordered w-100">
+        <table class="table table-responsive-sm table-bordered w-100 d-flex">
           <tbody>
             <tr>
               <td><strong>Submission status</strong></td>
@@ -117,7 +117,7 @@
             {{/if}}
             {{#if externalSubmission}}
             <tr>
-              <td class="text-nowrap"><strong>External Submission Repositories</strong></td>
+              <td><strong>External Submission Repositories</strong></td>
               <td>
                 <ul class="list-unstyled">
                   {{#each externalSubmission as |sub|}}
@@ -141,6 +141,7 @@
               </td>
             </tr>
             {{#if (await model.sub.preparers)}}
+            <tr>
               <td class="text-nowrap"><strong>Preparer(s)</strong></td>
               <td>
                 {{#each (await model.sub.preparers) as |preparer index|}}
@@ -150,13 +151,15 @@
                 {{/if}}
                 {{/each}}
               </td>
+            </tr>
             {{/if}}
             {{#if mustVisitWeblink}}
             <tr>
-              <td class="text-nowrap text-center" id="externalSubmission">External Submission Required
+              <td id="externalSubmission">
+                <strong>External Submission Required</strong>
                 <br>
                 {{#if disableSubmit}}
-                <i class="fa fa-exclamation-triangle fa-2x mt-3 notice-triangle"></i>
+                <i class="fa fa-exclamation-triangle fa-2x mt-3 ml-3 notice-triangle"></i>
                 {{/if}}
               </td>
               <td>
