@@ -20,8 +20,9 @@
       If you could not find your grant in the below dropdown list, {{#link-to "contact" target="_blank"}}please contact us{{/link-to}}.
     </p>
 
-    <h3 class="text-center">Showing {{pageFirstMatchNumber}}-{{pageLastMatchNumber}} of total {{totalGrants}}</h3>
-
+    {{#if (gt pageCount "1")}}
+    <p  class="font-italic">Showing {{pageFirstMatchNumber}}-{{pageLastMatchNumber}} of total {{totalGrants}}</p>
+    {{/if}}
     {{models-table
         id="grants-selection-table"
         data=grants
