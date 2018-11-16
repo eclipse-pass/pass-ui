@@ -67,31 +67,20 @@ export default WorkflowComponent.extend({
       propertyName: 'awardNumber',
       title: 'Award Number',
       className: 'awardnum-column',
+      component: 'grant-link-newtab-cell',
       disableSorting: true,
     },
     {
-      propertyName: 'projectName',
-      title: 'Project Name',
+      title: 'Project name (funding period)',
+      className: 'projectname-date-column',
+      component: 'grant-title-date-cell',
       disableSorting: true
     },
     {
       propertyName: 'primaryFunder.name',
       title: 'Funder',
+      className: 'funder-column',
       disableSorting: true
-    },
-    {
-      propertyName: 'startDate',
-      title: 'Start',
-      disableSorting: true,
-      className: 'date-column',
-      component: 'date-cell'
-    },
-    {
-      propertyName: 'endDate',
-      title: 'End',
-      disableSorting: true,
-      className: 'date-column',
-      component: 'date-cell'
     },
     {
       component: 'select-row-toggle',

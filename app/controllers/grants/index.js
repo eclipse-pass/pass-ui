@@ -31,11 +31,13 @@ export default Controller.extend({
     {
       propertyName: 'grant.projectName',
       title: 'Project Name',
+      className: 'projectname-column',
       component: 'grant-link-cell'
     },
     {
       propertyName: 'grant.primaryFunder.name',
       title: 'Funder',
+      className: 'funder-column',
       filterWithSelect: true,
       predefinedFilterOptions: ['NIH', 'DOE', 'NSF'],
     },
@@ -90,11 +92,13 @@ export default Controller.extend({
     {
       propertyName: 'grant.projectName',
       title: 'Project Name',
+      className: 'projectname-column',
       component: 'grant-link-cell'
     },
     {
       propertyName: 'grant.primaryFunder.name',
       title: 'Funder',
+      className: 'funder-column',
       filterWithSelect: true,
       predefinedFilterOptions: ['NIH', 'DOE', 'NSF'],
     },
