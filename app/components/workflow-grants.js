@@ -67,6 +67,7 @@ export default WorkflowComponent.extend({
       propertyName: 'awardNumber',
       title: 'Award Number',
       className: 'awardnum-column',
+      component: 'grant-link-newtab-cell',
       disableSorting: true,
     },
     {
