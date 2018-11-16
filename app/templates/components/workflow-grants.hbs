@@ -5,52 +5,56 @@
 {{#if model.newSubmission.grants}}
   <h5>Grants added to submission</h5>
   {{submission-funding-table grants=model.newSubmission.grants remove=(action "removeGrant")}}
+  <button class="btn btn-outline-primary" {{action "back"}}>Back</button>
+  <button class="btn btn-primary next pull-right" {{action "next"}}>Next</button>
+  <br>
+  <br>
 {{/if}}
 
 {{#if model.newSubmission.submitter.id}}
 
-    <h5>Available grants</h5>
+  <h5>Available grants</h5>
 
-    <p>
-      PASS receives information about grants from the University grant management system, COEUS. If your grant is not listed, {{#link-to "contact" target="_blank"}}please contact us{{/link-to}}.
-    </p>
+  <p>
+    PASS receives information about grants from the University grant management system, COEUS. If your grant is not listed, {{#link-to "contact" target="_blank"}}please contact us{{/link-to}}.
+  </p>
 
-    {{#if (gt pageCount "1")}}
-    <p  class="font-italic">Showing {{pageFirstMatchNumber}}-{{pageLastMatchNumber}} of total {{totalGrants}}</p>
-    {{/if}}
-    {{models-table
-        id="grants-selection-table"
-        data=grants
-        columns=grantColumns
-        themeInstance=themeInstance
-        showColumnsDropdown=false
-        useFilteringByColumns=false
-        multipleColumnsSorting=false
-        showComponentFooter=false
-        showGlobalFilter=false
-        pageSize=pageSize
-        multipleSelect=true
-        selectedItems=model.newSubmission.grants
-      }}
+  {{#if (gt pageCount "1")}}
+  <p  class="font-italic">Showing {{pageFirstMatchNumber}}-{{pageLastMatchNumber}} of total {{totalGrants}}</p>
+  {{/if}}
+  {{models-table
+    id="grants-selection-table"
+    data=grants
+    columns=grantColumns
+    themeInstance=themeInstance
+    showColumnsDropdown=false
+    useFilteringByColumns=false
+    multipleColumnsSorting=false
+    showComponentFooter=false
+    showGlobalFilter=false
+    pageSize=pageSize
+    multipleSelect=true
+    selectedItems=model.newSubmission.grants
+  }}
 
-    {{#if (gt pageCount "1")}}
-      <nav id="grants-selection-nav" aria-label="...">
-        <ul class="pagination justify-content-center">
-          <li class="page-item active">
-            <a {{action "prevPage"}} class="fa fa-angle-left"></a>
-          </li>
-          <li class="page-item">
-            <a class="page-link">Page {{pageNumber}} of {{pageCount}}</a>
-          </li>
-          <li class="page-item active">
-            <a {{action "nextPage"}} class="fa fa-angle-right"></a>
-          </li>
-        </ul>
-      </nav>
-    {{/if}}
+  {{#if (gt pageCount "1")}}
+    <nav id="grants-selection-nav" aria-label="...">
+      <ul class="pagination justify-content-center">
+        <li class="page-item active">
+          <a {{action "prevPage"}} class="fa fa-angle-left"></a>
+        </li>
+        <li class="page-item">
+          <a class="page-link">Page {{pageNumber}} of {{pageCount}}</a>
+        </li>
+        <li class="page-item active">
+          <a {{action "nextPage"}} class="fa fa-angle-right"></a>
+        </li>
+      </ul>
+    </nav>
+  {{/if}}
 
 {{else}}
-<p>Because the person on behalf of whom who you're submitting is not yet in the system, that person has no grants attached to their account. Please click Next to continue.</p>
+  <p>Because the person on behalf of whom who you're submitting is not yet in the system, that person has no grants attached to their account. Please click Next to continue.</p>
 {{/if}}
 <br>
 <button class="btn btn-outline-primary" {{action "back"}}>Back</button>
