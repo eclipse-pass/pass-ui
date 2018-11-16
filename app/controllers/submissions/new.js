@@ -83,88 +83,112 @@ export default Controller.extend({
       });
     },
     submit() {
-      // Remove JHU as a repository if its deposit agreement is not signed.
-      if (this.get('didNotAgree')) {
-        let jhuRepo = this.get('model.newSubmission.repositories').filter(repo => repo.get('name') === 'JScholarship');
-        if (jhuRepo.length > 0) {
-          jhuRepo = jhuRepo[0];
-          this.get('model.newSubmission.repositories').removeObject(jhuRepo);
-        }
-      }
+      let manuscriptFiles = [].concat(this.get('filesTemp'), this.get('model.files') && this.get('model.files').toArray())
+        .filter(file => file && file.get('fileRole') === 'manuscript');
 
-      // start setting variables on the new submission object.
-      const sub = this.get('model.newSubmission');
-      sub.set('submitted', false);
-      sub.set('source', 'pass');
-      sub.set('removeNIHDeposit', false);
-      sub.set('aggregatedDepositStatus', 'not-started');
+      let userIsSubmitter = this.get('model.newSubmission.submitter.id') === this.get('currentUser.user.id');
 
-      this.set('uploading', true);
-      this.set('waitingMessage', 'Saving your submission');
-
-      /*
-       * Note for the code below, but also Ember in general::::
-       * Seems that calling `obj.set('prop', obj2)` must be used in the case of:
-       *    obj.prop: belongsTo('obj2')
-       * Where calling `obj.set('prop', obj2.get('id'))` will not set the relationship
-       */
-
-      this.get('model.publication').save().then((p) => {
-        sub.set('publication', p);
-        let ctr = 0;
-        let len = this.get('filesTemp').length;
-        sub.save().then((s) => {
-          // For each file, load it as buffer, POST it to the submission object's URI, then generate
-          // a File object in fedora that references the file blob.
-          if (this.get('filesTemp.length') == 0) {
-            this.send('finishSubmission', s);
-            return;
+      let doSubmission = () => {
+        // Remove JHU as a repository if its deposit agreement is not signed.
+        if (this.get('didNotAgree')) {
+          let jhuRepo = this.get('model.newSubmission.repositories').filter(repo => repo.get('name') === 'JScholarship');
+          if (jhuRepo.length > 0) {
+            jhuRepo = jhuRepo[0];
+            this.get('model.newSubmission.repositories').removeObject(jhuRepo);
           }
-          this.get('filesTemp').forEach((file) => {
-            var reader = new FileReader();
-            reader.readAsArrayBuffer(file.get('_file'));
-            reader.onload = (evt) => {
-              let data = evt.target.result;
-              // begin XHR setup
-              let xhr = new XMLHttpRequest();
-              xhr.open('POST', `${s.get('id')}`, true);
-              xhr.setRequestHeader('Content-Disposition', `attachment; filename="${encodeURI(file.get('name'))}"`);
-              let contentType = file.get('_file.type') ? file.get('_file.type') : 'application/octet-stream';
-              xhr.setRequestHeader('Content-Type', contentType);
-              if (ENV.environment === 'travis' || ENV.environment === 'development') xhr.withCredentials = true;
-              if (ENV.environment === 'development') xhr.setRequestHeader('Authorization', 'Basic YWRtaW46bW9v');
-              // end XHR setup
-              this.set('waitingMessage', 'Uploading files');
-              xhr.onload = (results) => {
-                file.set('submission', s);
-                file.set('uri', results.target.response);
-                file.save().then((f) => {
-                  if (f) {
-                    ctr += 1;
-                    // once every file is uploaded:
-                    if (ctr >= len) {
-                      this.send('finishSubmission', s);
+        }
+
+        // start setting variables on the new submission object.
+        const sub = this.get('model.newSubmission');
+        sub.set('submitted', false);
+        sub.set('source', 'pass');
+        sub.set('removeNIHDeposit', false);
+        sub.set('aggregatedDepositStatus', 'not-started');
+
+        this.set('uploading', true);
+        this.set('waitingMessage', 'Saving your submission');
+
+        /*
+         * Note for the code below, but also Ember in general::::
+         * Seems that calling `obj.set('prop', obj2)` must be used in the case of:
+         *    obj.prop: belongsTo('obj2')
+         * Where calling `obj.set('prop', obj2.get('id'))` will not set the relationship
+         */
+
+        this.get('model.publication').save().then((p) => {
+          sub.set('publication', p);
+          let ctr = 0;
+          let len = this.get('filesTemp').length;
+          sub.save().then((s) => {
+            // For each file, load it as buffer, POST it to the submission object's URI, then generate
+            // a File object in fedora that references the file blob.
+            if (this.get('filesTemp.length') == 0) {
+              this.send('finishSubmission', s);
+              return;
+            }
+            this.get('filesTemp').forEach((file) => {
+              var reader = new FileReader();
+              reader.readAsArrayBuffer(file.get('_file'));
+              reader.onload = (evt) => {
+                let data = evt.target.result;
+                // begin XHR setup
+                let xhr = new XMLHttpRequest();
+                xhr.open('POST', `${s.get('id')}`, true);
+                xhr.setRequestHeader('Content-Disposition', `attachment; filename="${encodeURI(file.get('name'))}"`);
+                let contentType = file.get('_file.type') ? file.get('_file.type') : 'application/octet-stream';
+                xhr.setRequestHeader('Content-Type', contentType);
+                if (ENV.environment === 'travis' || ENV.environment === 'development') xhr.withCredentials = true;
+                if (ENV.environment === 'development') xhr.setRequestHeader('Authorization', 'Basic YWRtaW46bW9v');
+                // end XHR setup
+                this.set('waitingMessage', 'Uploading files');
+                xhr.onload = (results) => {
+                  file.set('submission', s);
+                  file.set('uri', results.target.response);
+                  file.save().then((f) => {
+                    if (f) {
+                      ctr += 1;
+                      // once every file is uploaded:
+                      if (ctr >= len) {
+                        this.send('finishSubmission', s);
+                      }
+                    } else {
+                      toastr.error('It looks like one or more of your files failed to upload. Please try again or contact support.');
                     }
-                  } else {
-                    toastr.error('It looks like one or more of your files failed to upload. Please try again or contact support.');
-                  }
-                }).catch((e) => {
-                  this.set('uploading', false);
-                  toastr.error(e);
-                });
+                  }).catch((e) => {
+                    this.set('uploading', false);
+                    toastr.error(e);
+                  });
+                };
+                xhr.send(data);
               };
-              xhr.send(data);
-            };
-            reader.onerror = function (evt) {
-              this.set('uploading', false);
-              toastr.error('Error reading file');
-            };
+              reader.onerror = function (evt) {
+                this.set('uploading', false);
+                toastr.error('Error reading file');
+              };
+            });
+          }).catch((e) => {
+            this.set('uploading', false);
+            toastr.error(e);
           });
-        }).catch((e) => {
-          this.set('uploading', false);
-          toastr.error(e);
         });
-      });
+      };
+
+
+      if (manuscriptFiles.length == 0 && userIsSubmitter) {
+        swal(
+          'Manuscript Is Missing',
+          'At least one manuscript file is required.  Please go back and add one',
+          'warning'
+        );
+      } else if (manuscriptFiles.length > 1) {
+        swal(
+          'Incorrect Manuscript Count',
+          `Only one file may be designated as the manuscript.  Instead, found ${manuscriptFiles.length}.  Please go back and edit the file list`,
+          'warning'
+        );
+      } else {
+        doSubmission();
+      }
     }
   }
 });
