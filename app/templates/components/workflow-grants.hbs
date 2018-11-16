@@ -1,20 +1,60 @@
 <p class="lead text-muted">
-  PASS receives information about grants from the University grant management system, COEUS.
-  If you could not find your grant in the below dropdown list, {{#link-to "contact" target="_blank"}}please contact us{{/link-to}}.<br><br>
-  Review/provide information about the grant(s)/award(s) that funded this work.
-  This information will help determine which public access policies are applicable to your work.
-  <strong>If the work you’re about to submit was not supported by a grant, leave this
-  page blank and go to the next step.</strong>
+    Review/provide information about the grant(s)/award(s) that funded this work.
+    This information will help determine which public access policies are applicable to your work.
+    <strong>If the work you’re about to submit was not supported by a grant, leave this
+    page blank and go to the next step.</strong>
 </p>
-{{submission-funding-table grants=model.newSubmission.grants remove=(action "removeGrant")}}
-<label>Add Grants:</label>
+
+{{#if model.newSubmission.grants}}
+  <h2>Grants added to submission</h2>
+  {{submission-funding-table grants=model.newSubmission.grants remove=(action "removeGrant")}}
+{{/if}}
+
 {{#if model.newSubmission.submitter.id}}
-<select onchange={{action "addGrant" null}} class="form-control">
-  <option value='default' selected disabled hidden>Select grants</option>
-  {{#each filteredGrants as |grantChoice|}}
-    <option value={{grantChoice.id}} selected={{eq grant grantChoice}}>{{grantChoice.awardNumber}}: {{grantChoice.projectName}} ({{format-date grantChoice.startDate}} - {{format-date grantChoice.endDate}})</option>
-  {{/each}}
-</select>
+
+    <h2>Available grants</h2>
+
+    <p>
+      PASS receives information about grants from the University grant management system, COEUS.
+      Please select grants that should be associated with this submission.
+      If you could not find your grant in the below dropdown list, {{#link-to "contact" target="_blank"}}please contact us{{/link-to}}.
+    </p>
+
+    <h3 class="text-center">Showing {{pageFirstMatchNumber}}-{{pageLastMatchNumber}} of total {{totalGrants}}</h3>
+
+    <div class="container">
+      {{models-table
+          id="grants-selection-table"
+          data=grants
+          columns=grantColumns
+          themeInstance=themeInstance
+          showColumnsDropdown=false
+          useFilteringByColumns=false
+          multipleColumnsSorting=false
+          showComponentFooter=false
+          showGlobalFilter=false
+          pageSize=pageSize
+          multipleSelect=true
+          selectedItems=model.newSubmission.grants
+        }}
+
+      {{#if (gt pageCount "1")}}
+        <nav id="grants-selection-nav" aria-label="...">
+          <ul class="pagination justify-content-center">
+            <li class="page-item active">
+              <a {{action "prevPage"}} class="fa fa-angle-left"></a>
+            </li>
+            <li class="page-item">
+              <a class="page-link">Page {{pageNumber}} of {{pageCount}}</a>
+            </li>
+            <li class="page-item active">
+              <a {{action "nextPage"}} class="fa fa-angle-right"></a>
+            </li>
+          </ul>
+        </nav>
+      {{/if}}
+    </div>
+
 {{else}}
 <p>Because the person on behalf of whom who you're submitting is not yet in the system, that person has no grants attached to their account. Please click Next to continue.</p>
 {{/if}}

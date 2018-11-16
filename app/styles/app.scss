@@ -792,12 +792,12 @@ footer {
   width: 15%;
   padding-right:0.2rem;
 }
-.manuscript-required>.fa-circle, .manuscript-required .fa-info-circle, 
-.approval-requested>.fa-circle, .approval-requested .fa-info-circle, 
-.changes-requested>.fa-circle, .changes-requested .fa-info-circle, 
-.needs-attention>.fa-circle, .needs-attention .fa-info-circle, 
-.stalled>.fa-circle, .stalled .fa-info-circle, 
-.failed>.fa-circle, .failed .fa-info-circle, 
+.manuscript-required>.fa-circle, .manuscript-required .fa-info-circle,
+.approval-requested>.fa-circle, .approval-requested .fa-info-circle,
+.changes-requested>.fa-circle, .changes-requested .fa-info-circle,
+.needs-attention>.fa-circle, .needs-attention .fa-info-circle,
+.stalled>.fa-circle, .stalled .fa-info-circle,
+.failed>.fa-circle, .failed .fa-info-circle,
 .rejected>.fa-circle, .rejected .fa-info-circle {
   color: #FF9E1B;
 }
@@ -805,7 +805,7 @@ footer {
 .not-submitted>.fa-circle, .not-submitted .fa-info-circle {
   color: #A7BCD6;
 }
-.submitted>.fa-circle, .submitted .fa-info-circle, 
+.submitted>.fa-circle, .submitted .fa-info-circle,
 .complete>.fa-circle, .complete .fa-info-circle {
   color: #00AB8E;
 }
@@ -817,4 +817,20 @@ footer {
 }
 .user-search-results .col-6 {
   max-width:100%
+}
+
+// Row selection in ember-models-table
+#grants-selection-table tr:hover td {
+  background-color: #A7BCD6;
+  cursor: pointer;
+}
+
+#grants-selection-nav ul li.active a {
+    color: white !important;
+    background-color: #418FDE;
+}
+
+#grants-selection-nav ul li a {
+    color: black !important;
+    background-color: white;
 }
