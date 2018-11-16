@@ -281,6 +281,26 @@ export default Controller.extend({
         return;
       }
 
+      // Validate manuscript files
+      let manuscriptFiles = [].concat(this.get('filesTemp'), this.get('model.files') && this.get('model.files').toArray())
+        .filter(file => file && file.get('fileRole') === 'manuscript');
+
+      if (manuscriptFiles.length == 0) {
+        swal(
+          'Manuscript is missing',
+          'At least one manuscript file is required.  Please Edit the submission to add one',
+          'warning'
+        );
+        return;
+      } else if (manuscriptFiles.length > 1) {
+        swal(
+          'Incorrect manuscript count',
+          `Only one file may be designated as the manuscript.  Instead, found ${manuscriptFiles.length}.  Please edit the file list`,
+          'warning'
+        );
+        return;
+      }
+
       let reposWithAgreementText = this.get('model.repos')
         .filter(repo => (repo.get('integrationType') !== 'web-link') && repo.get('agreementText'))
         .map(repo => ({
