@@ -21,6 +21,7 @@ export default Controller.extend({
           {
             propertyName: 'publication',
             title: 'Article',
+            className: 'title-column',
             component: 'submissions-article-cell'
           },
           {
@@ -49,6 +50,7 @@ export default Controller.extend({
           {
             // propertyName: 'repoCopies',
             title: 'Manuscript IDs',
+            className: 'msid-column',
             component: 'submissions-repoid-cell'
           }
         ];

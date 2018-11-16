@@ -72,11 +72,13 @@ export default WorkflowComponent.extend({
     {
       propertyName: 'projectName',
       title: 'Project Name',
+      className: 'projectname-column',
       disableSorting: true
     },
     {
       propertyName: 'primaryFunder.name',
       title: 'Funder',
+      className: 'funder-column',
       disableSorting: true
     },
     {

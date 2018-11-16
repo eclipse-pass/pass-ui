@@ -505,37 +505,35 @@ table td {
 }
 
 // Tables
-.submission-table {
-  // overflow-x: auto;
-}
+
 .grant-table table {
   th {
     min-width: 100px;
     font-size:0.9em;
   }
-  tbody tr td:nth-of-type(1)>div {
-    min-width: 200px;
-    max-width:250px;
-  }
-  tbody tr td:nth-of-type(2) {
-    min-width: 150px;
-    max-width:200px;
-  }
-
 }
 
-.submission-table {
-  table tbody tr td:nth-of-type(6) div,
-  table tbody tr td:nth-of-type(5) div,
-  table tbody tr td:nth-of-type(4) div {
-    // min-width: 100%;
-    width: 100px;
-  }
-  table tbody tr td:nth-of-type(1) div {
-    min-width: 200px;
-    max-width: 350px;
-  }
+.projectname-column {
+  min-width: 12.5rem;
 }
+.title-column {
+  min-width: 20rem;
+  max-width: 22rem;
+}
+.msid-column { min-width: 10rem; }
+.actions-column { min-width: 8rem; }
+.awardnum-column { min-width: 8rem; }
+.awardnum-funder-column {
+  min-width: 9.5rem;
+}
+.status-column {min-width: 7rem;}
+.funder-column {
+  min-width: 9.5rem;
+  max-width: 12.5rem;
+}
+.date-column { min-width: 7rem; }
+.repositories-column { min-width: 7.5rem; }
+
 
 .models-table-wrapper { // hides the "clear" button on models table search bar
   .input-group span.input-group-btn {
@@ -692,10 +690,6 @@ footer {
   min-width:300px;
 }
 
-.submission-table table th:nth-child(2) {
-  white-space: nowrap;
-}
-
 .repoid-cell {
   list-style: none;
   margin: 0;
@@ -706,13 +700,6 @@ footer {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.title-column { min-width: 24rem; }
-.msid-column { min-width: 10rem; }
-.actions-column { min-width: 8rem; }
-.awardnum-column { min-width: 8rem; }
-.awardnum-funder-column { min-width: 9.5rem; }
-.date-column { min-width: 7rem; }
-.repositories-column { min-width: 7.5rem; }
 #journal div {
   width: 100%;
 }
