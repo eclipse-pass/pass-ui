@@ -533,7 +533,9 @@ table td {
 }
 .date-column { min-width: 7rem; }
 .repositories-column { min-width: 7.5rem; }
-
+.projectname-date-column {
+  min-width: 14rem;
+}
 
 .models-table-wrapper { // hides the "clear" button on models table search bar
   .input-group span.input-group-btn {

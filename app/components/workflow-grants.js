@@ -70,9 +70,9 @@ export default WorkflowComponent.extend({
       disableSorting: true,
     },
     {
-      propertyName: 'projectName',
-      title: 'Project Name',
-      className: 'projectname-column',
+      title: 'Project name (funding period)',
+      className: 'projectname-date-column',
+      component: 'grant-title-date-cell',
       disableSorting: true
     },
     {
@@ -80,20 +80,6 @@ export default WorkflowComponent.extend({
       title: 'Funder',
       className: 'funder-column',
       disableSorting: true
-    },
-    {
-      propertyName: 'startDate',
-      title: 'Start',
-      disableSorting: true,
-      className: 'date-column',
-      component: 'date-cell'
-    },
-    {
-      propertyName: 'endDate',
-      title: 'End',
-      disableSorting: true,
-      className: 'date-column',
-      component: 'date-cell'
     },
     {
       component: 'select-row-toggle',
