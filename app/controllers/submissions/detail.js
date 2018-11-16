@@ -324,7 +324,7 @@ export default Controller.extend({
         // make sure there are repos to submit to.
         if (this.get('model.sub.repositories.length') > 0) {
           if (reposWithoutAgreementText.length > 0 || reposThatUserAgreedToDeposit.length > 0 || reposWithWebLink.length > 0) {
-            let swalMsg = 'Once you click submit you will no longer be able to edit this submission or add repositories.<br/>';
+            let swalMsg = 'Once you click confirm you will no longer be able to edit this submission or add repositories.<br/>';
             if (reposWithoutAgreementText.length > 0 || reposThatUserAgreedToDeposit.length) {
               swalMsg = `${swalMsg}You are about to submit your files to: <pre><code>${JSON.stringify(reposThatUserAgreedToDeposit.map(repo => repo.id)).replace(/[\[\]']/g, '')}${JSON.stringify(reposWithoutAgreementText.map(repo => repo.id)).replace(/[\[\]']/g, '')} </code></pre>`;
             }
@@ -335,7 +335,7 @@ export default Controller.extend({
             swal({
               title: 'Confirm submission',
               html: swalMsg, // eslint-disable-line
-              confirmButtonText: 'Submit',
+              confirmButtonText: 'Confirm',
               showCancelButton: true,
             }).then((result) => {
               if (result.value) {
