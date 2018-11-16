@@ -3,13 +3,13 @@
 </p>
 
 {{#if model.newSubmission.grants}}
-  <h2>Grants added to submission</h2>
+  <h5>Grants added to submission</h5>
   {{submission-funding-table grants=model.newSubmission.grants remove=(action "removeGrant")}}
 {{/if}}
 
 {{#if model.newSubmission.submitter.id}}
 
-    <h2>Available grants</h2>
+    <h5>Available grants</h5>
 
     <p>
       PASS receives information about grants from the University grant management system, COEUS. If your grant is not listed, {{#link-to "contact" target="_blank"}}please contact us{{/link-to}}.
