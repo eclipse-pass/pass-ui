@@ -39,8 +39,8 @@ export default CheckSessionRoute.extend({
     return this.store.query('submission', {
       sort: [
         { submitted: { missing: '_last', order: 'asc' } },
-        { submissionStatus: { missing: '_last', order: 'asc' } },
-        { submittedDate: { missing: '_last', order: 'desc' } }
+        { submittedDate: { missing: '_last', order: 'desc' } },
+        { submissionStatus: { missing: '_last', order: 'asc' } }
       ],
       query: {
         bool: {
