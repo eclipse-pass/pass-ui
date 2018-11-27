@@ -49,7 +49,7 @@ export default CheckSessionRoute.extend({
         q = intent.length;
       }
       const targetId = intent.substring(prefix.length, q);
-      this.replaceWith(`${prefix}${encodeURIComponent(targetId)}`);
+      this.replaceWith(intent.replace(targetId, `${encodeURIComponent(targetId)}`));
     }
   },
 

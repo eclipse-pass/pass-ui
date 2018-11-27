@@ -8,12 +8,6 @@
   </p>
 </div>
 {{#if model.newSubmission.hasNewProxy}}
-<style>
-.temp-hide {
-  visibility:hidden;
-  height:0px;
-}
-</style>
 <div class="alert alert-info">
   <p>When a submission is created on someone's behalf, PASS will contact that person to acquire their approval before
     finalizing the submission and sending it to its corresponding repositories.</p>
@@ -30,12 +24,12 @@
        (<a href="mailto:{{model.newSubmission.submitter.email}}">{{model.newSubmission.submitter.email}}</a>)<br>(<a href="#" {{action 'removeCurrentSubmitter'}}>Remove submitter</a>)
     </p>
     {{/if}}
-  <p class="mb-0 temp-hide"><strong>If the person you are submitting for does not have an account with PASS</strong>, please
+  <p class="mb-0"><strong>If the person you are submitting for does not have an account with PASS</strong>, please
     provide their email address and name so we may notify them:
   </p>
-  <div class="form-inline temp-hide">
-  {{input class=(concat "mt-1 mb-3 form-control w-50 temp-hide" validEmail) keyUp=(action "validateEmail") disabled=true value=submitterEmail placeholder="Email address"}}
-  {{input class="mt-1 mb-3 form-control w-50 temp-hide" disabled=true value=submitterName placeholder="Name"}}
+  <div class="form-inline">
+  {{input class=(concat "mt-1 mb-3 form-control w-50 " validEmail) keyUp=(action "validateEmail") disabled=model.newSubmission.submitter.id value=submitterEmail placeholder="Email address"}}
+  {{input class="mt-1 mb-3 form-control w-50" disabled=model.newSubmission.submitter.id value=submitterName placeholder="Name"}}
   </div>
 </div>
 {{/if}}
