@@ -32,13 +32,13 @@ A docker environement which relies on a Shibboleth proxy is in .docker/shib. All
 be available at https://pass.local/.
 
 * In .docker/shib/ run `docker-compose up`
-  * Fedora repository at https://pass.local/fcrepo/ 
-  * Elasticsearch index search endpoint at https://pass.local/es/
-  * Wait for containers to settle.
-  * In order to remove persisted data, stop all the containers and `docker system prune -f`
+* Wait for the containers to finish coming up, this could take 5-10 minutes. There will be a long pause while the `ember` container builds. When you see the "Build successful" message from `ember` and a small table listing the "Slowest Nodes" that indicates the application is ready to use
+* The local code runs in the `ember` container, and changes in the local code will be reflected there.
 * Visit your app at https://pass.local/app
 * Visit your tests at https://pass.local/app/tests
-* The local code runs in the`ember container.
+* Fedora repository is at https://pass.local/fcrepo/ 
+* Elasticsearch index search endpoint is at https://pass.local/es/
+* In order to remove persisted data, stop all the containers and `docker system prune -f`
 
 Note that ember test will not be able to run tests which make requests to services behind
 the Shibboleth proxy. The ember test client would have to go through the process of getting credentials first.
