@@ -7,5 +7,7 @@
   */
   "disableAnalytics": false,
 
-  "testPort": 4200
+  "testPort": 4200,
+  "watcher": "polling"
+
 }
