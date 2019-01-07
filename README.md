@@ -39,6 +39,9 @@ be available at https://pass.local/.
 * Fedora repository is at https://pass.local/fcrepo/ 
 * Elasticsearch index search endpoint is at https://pass.local/es/
 * In order to remove persisted data, stop all the containers and `docker system prune -f`
+* To see code changes in the development site, manually refresh the page
+
+Ember's livereload script that is used in the development environment to autodetect code changes does not work with this Docker setup. Code changes are still deployed to the Ember server, however, so a developer needs to manually refresh the site to pick up the code changes. This has no effects on other environments.
 
 Note that ember test will not be able to run tests which make requests to services behind
 the Shibboleth proxy. The ember test client would have to go through the process of getting credentials first.
