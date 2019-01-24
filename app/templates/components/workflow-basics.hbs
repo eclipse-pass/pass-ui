@@ -15,7 +15,7 @@
     <div class="input-group pb-3">
       {{input enter='searchForUsers' value=modalSearchInput class="form-control"}}
       <span class="input-group-btn">
-        <button class="btn btn-primary" {{action 'searchForUsers'}} type="button">Search</button>
+        <button id='search-for-users' class="btn btn-primary" {{action 'searchForUsers'}} type="button">Search</button>
       </span>
     </div>
     {{#if model.newSubmission.submitter.id}}
@@ -98,10 +98,10 @@
 {{#link-to 'submissions.index' class="btn btn-outline-primary"}}Back{{/link-to}}
 <button class="btn btn-primary pull-right next" {{action "validateNext"}}>Next</button>
 {{#if isShowingModal}}
-{{#modal-dialog 
-   translucentOverlay=true 
-   onClose="toggleModal" 
-   close="toggleModal" 
+{{#modal-dialog
+   translucentOverlay=true
+   onClose="toggleModal"
+   close="toggleModal"
    tetherTarget='#on-behalf-of-block'
    attachment='top center'
    targetAttachment='top center'
