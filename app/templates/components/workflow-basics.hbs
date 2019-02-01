@@ -2,9 +2,8 @@
 {{#unless (or model.newSubmission.id model.preLoadedGrant)}}
 <div class="py-0 mt-2 alert alert-secondary" id="on-behalf-of-block">
   <p class="my-2 lead">I'm creating this submission on behalf of:
-    {{radio-button class="ml-3 mr-1" value=false name='showProxyWindow' checked=model.newSubmission.hasNewProxy}} Myself
-    {{radio-button class="ml-3 mr-1" value=true name='showProxyWindow' checked=model.newSubmission.hasNewProxy}} Someone
-    else
+    <input type="radio" checked={{ not model.newSubmission.hasNewProxy }} onchange={{action 'onBehalfOfToggled' false}}/> Myself
+    <input type="radio" checked={{ model.newSubmission.hasNewProxy }} onchange={{action 'onBehalfOfToggled' true}}/> Someone else
   </p>
 </div>
 {{#if model.newSubmission.hasNewProxy}}
