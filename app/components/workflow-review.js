@@ -1,15 +1,18 @@
-import WorkflowComponent from './workflow-component';
+import Component from '@ember/component';
 
-export default WorkflowComponent.extend({
+export default Component.extend({
+  workflow: Ember.inject.service('workflow'),
   metadataService: Ember.inject.service('metadata-blob'),
   currentUser: Ember.inject.service('currentUser'),
-
+  isValidated: Ember.A(),
   init() {
     this._super(...arguments);
     $('[data-toggle="tooltip"]').tooltip();
   },
-
   externalRepoMap: {},
+  filesTemp: Ember.computed('workflow.filesTemp', function () {
+    return this.get('workflow').getFilesTemp();
+  }),
   parsedFiles: Ember.computed('filesTemp', 'model.files', function () {
     let newArr = Ember.A();
     if (this.get('filesTemp')) {
@@ -53,9 +56,8 @@ export default WorkflowComponent.extend({
     }
   ),
   userIsPreparer: Ember.computed('model.newSubmission', 'currentUser.user', function () {
-    const hasProxy = this.get('hasProxy');
     const isNotSubmitter = this.get('model.newSubmission.submitter.id') !== this.get('currentUser.user.id');
-    return (hasProxy && isNotSubmitter);
+    return (this.get('hasProxy') && isNotSubmitter);
   }),
   submitButtonText: Ember.computed('userIsPreparer', function () {
     return this.get('userIsPreparer') ? 'Request approval' : 'Submit';
@@ -86,7 +88,20 @@ export default WorkflowComponent.extend({
     },
     agreeToDeposit() { this.set('step', 5); },
     back() { this.sendAction('back'); },
-    checkValidate() { this.sendAction('validate'); },
+    checkValidate() {
+      // TODO: I don't think this ever does anything? It was moved from workflow-wrapper during refactoring
+      const tempValidateArray = [];
+      this.set('isValidated', []);
+      Object.keys(this.get('model.newSubmission').toJSON()).forEach((property) => {
+        // TODO:  Add more logic here for better validation
+        if (this.get('model.newSubmission').get(property) !== undefined) {
+          tempValidateArray[property] = true;
+        } else {
+          tempValidateArray[property] = false;
+        }
+      });
+      this.set('isValidated', tempValidateArray);
+    },
     openWeblinkAlert(repo) {
       swal({
         title: 'Notice!',

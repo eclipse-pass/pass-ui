@@ -6,46 +6,15 @@
   <div class="font-weight-light col-12" style="font-style:italic;">{{model.publication.title}}</div>
 </div>
 <div class="row">
-  {{submission-nav submission=model step=step maxStep=maxStep class="col-lg-12"}}
+  {{submission-nav submission=model loadTab=(action "loadTab") class="col-lg-12"}}
 </div>
 <div class="row justify-content-center">
   <main class="col-lg-12">
-    {{#if (eq step 1)}}
-    {{workflow-basics submitterEmail=submitterEmail submitterName=submitterName maxStep=maxStep hasProxy=hasProxy model=model
-    doiInfo=doiInfo next=(action "next") back=(action "back")}}
-    {{/if}}
-    {{#if (eq step 2)}}
-    {{workflow-grants hasProxy=hasProxy model=model next=(action "next") maxStep=maxStep back=(action "back")}}
-    {{/if}}
-    {{#if (eq step 3)}}
-    {{workflow-policies hasProxy=hasProxy model=model next=(action "next") maxStep=maxStep back=(action "back")
-    toggleNIHDeposit=(action "toggleNIHDeposit")}}
-    {{/if}}
-    {{#if (eq step 4)}}
-    {{workflow-repositories hasProxy=hasProxy model=model next=(action "next") back=(action "back")
-    includeNIHDeposit=includeNIHDeposit}}
-    {{/if}}
-    {{#if (eq step 5)}}
-    {{workflow-metadata hasProxy=hasProxy userIsSubmitter=userIsSubmitter currentUser=currentUser didNotAgree=didNotAgree model=model doiInfo=doiInfo step=step
-    next=(action "next") back=(action "back")}}
-    {{/if}}
-    {{#if (eq step 6)}}
-    {{workflow-files model=model next=(action "next") back=(action "back") filesTemp=filesTemp}}
-    {{/if}}
-    {{#if (eq step 7)}}
-    {{!--
-    we just want to validate the last step because up untill this point its okay not to have all the data
-    just let them fill out the forms then check that the data is right at the end
-    --}}
-    {{workflow-review comment=comment userIsSubmitter=userIsSubmitter hasProxy=hasProxy submitterName=submitterName 
-    submitterEmail=submitterEmail didNotAgree=didNotAgree model=model isValidated=isValidated validate=(action "validate") 
-    back=(action "back") submit=(action "submit")
-    filesTemp=filesTemp step=step uploading=uploading waitingMessage=waitingMessage}}
-    {{/if}}
+    {{yield}}
   </main>
 </div>
 
-{{#if (and model.submissionEvents hasProxy)}}
+{{#if (and model.submissionEvents model.newSubmission.isProxySubmission)}}
   {{#if model.newSubmission.id}}
   <div class="alert alert-info mt-3">
     <h3 class="mt-3 mb-0">Comments</h3>

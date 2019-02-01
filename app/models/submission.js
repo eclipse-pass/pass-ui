@@ -32,7 +32,19 @@ export default DS.Model.extend({
 
   // don't get saved to database
   hasNewProxy: false,
-  removeNIHDeposit: false,
+  isProxySubmission: Ember.computed( // determines whether submission is a proxy submission.
+    'submitterEmail',
+    'submitterName',
+    'preparers',
+    'hasNewProxy',
+    function () {
+      return (
+        (this.get('submitterEmail') && this.get('submitterName')) ||
+        this.get('preparers.length') > 0 ||
+        this.get('hasNewProxy')
+      );
+    }
+  ),
 
   // attributes needed for tables
   publicationTitle: Ember.computed('publication', function () {
@@ -57,8 +69,5 @@ export default DS.Model.extend({
   }),
   isStub: Ember.computed('source', 'submitted', function () {
     return this.get('source') === 'other' && !(this.get('submitted'));
-  }),
-  // hasProxy: Ember.computed('submission', function () {
-  //   return !!(this.get('submission.preparer'));
-  // }),
+  })
 });

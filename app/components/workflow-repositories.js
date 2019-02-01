@@ -1,10 +1,14 @@
-import WorkflowComponent from './workflow-component';
+import Component from '@ember/component';
 import { inject as service, } from '@ember/service';
 
-export default WorkflowComponent.extend({
+export default Component.extend({
   addedRepositories: [],
   router: service(),
-  store: service('store'),
+  store: service(),
+  workflow: service(),
+  pmcPublisherDeposit: Ember.computed('workflow.pmcPublisherDeposit', function () {
+    return this.get('workflow').getPmcPublisherDeposit();
+  }),
   isFirstTime: true,
   willRender() {
     this._super(...arguments);
@@ -43,9 +47,10 @@ export default WorkflowComponent.extend({
         return;
       }
 
-      const shouldAddNIH = this.get('includeNIHDeposit');
-      let anyInSubmission = grantRepos.any(grantRepo => this.get('model.newSubmission.repositories').includes(grantRepo));
-      if (shouldAddNIH || !this.usesPmcRepository(grantRepos)) {
+      let repoIsAlreadyInSubmission = grantRepos.any(grantRepo => this.get('model.newSubmission.repositories').includes(grantRepo));
+
+      // it's either not a PMC deposit or if it is one, the publisher won't deposit it so it must be included
+      if (!this.get('pmcPublisherDeposit') || !this.usesPmcRepository(grantRepos)) {
         grantRepos.forEach((repo) => {
           repos.addObject({
             repo,
@@ -53,7 +58,7 @@ export default WorkflowComponent.extend({
           });
           repos = repos.uniqBy('repo');
         });
-      } else if (anyInSubmission) {
+      } else if (repoIsAlreadyInSubmission) {
         // Remove it from the submission so that it can be re-added :)
         this.get('model.newSubmission.repositories').removeObjects(grantRepos.map(g => g.repo));
       }

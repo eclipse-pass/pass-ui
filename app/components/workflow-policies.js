@@ -1,6 +1,6 @@
-import WorkflowComponent from './workflow-component';
+import Component from '@ember/component';
 
-export default WorkflowComponent.extend({
+export default Component.extend({
   activePolicies: Ember.computed('model.newSubmission', function () {
     let policies = Ember.A();
     // policies can come from funders
@@ -21,14 +21,10 @@ export default WorkflowComponent.extend({
   }),
   actions: {
     next() {
-      this.sendAction('toggleNIHDeposit', !(this.get('model.newSubmission.removeNIHDeposit')));
       this.sendAction('next');
     },
     back() {
       this.sendAction('back');
-    },
-    setRemoveNIHDeposit(bool) {
-      this.set('model.newSubmission.removeNIHDeposit', bool);
     }
   },
 });

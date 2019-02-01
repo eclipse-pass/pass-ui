@@ -1,9 +1,9 @@
-import WorkflowComponent from './workflow-component';
+import Component from '@ember/component';
 import { Promise, } from 'rsvp';
 import { inject as service } from '@ember/service';
 import Bootstrap4Theme from 'ember-models-table/themes/bootstrap4';
 
-export default WorkflowComponent.extend({
+export default Component.extend({
   store: service('store'),
   pageNumber: 1,
   pageCount: 0,

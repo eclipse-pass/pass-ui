@@ -1,0 +1,17 @@
+{{#workflow-wrapper
+  model=model
+  loadTab=(action "loadTab")
+}}
+{{workflow-review
+  comment=comment
+  submitterName=submitterName
+  submitterEmail=submitterEmail
+  didNotAgree=didNotAgree
+  model=model
+  back=(action "loadPrevious")
+  submit=(action "submit")
+  uploading=uploading
+  waitingMessage=waitingMessage
+  hasProxy=hasProxy
+}}
+{{/workflow-wrapper}}
