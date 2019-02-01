@@ -2,10 +2,10 @@ import Controller from '@ember/controller';
 
 export default Controller.extend({
   parent: Ember.inject.controller('submissions.new'),
-  didNotAgree: Ember.computed('parent.didNotAgree', function() {
+  didNotAgree: Ember.computed('parent.didNotAgree', function () {
     return this.get('parent').get('didNotAgree');
   }),
-  hasProxy: Ember.computed('parent.hasProxy', function() {
+  hasProxy: Ember.computed('parent.hasProxy', function () {
     return this.get('parent').get('hasProxy');
   }),
   actions: {
