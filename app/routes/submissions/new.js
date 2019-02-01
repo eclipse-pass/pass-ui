@@ -1,11 +1,9 @@
 import CheckSessionRoute from '../check-session-route';
-
-const {
-  service,
-} = Ember.inject;
+import { inject as service } from '@ember/service';
 
 export default CheckSessionRoute.extend({
-  workflow: service(),
+  workflow: service('workflow'),
+  currentUser: service('current-user'),
   beforeModel() {
     if (this.get('workflow').getCurrentStep() === 0) {
       this.transitionTo('submissions.new');
@@ -19,7 +17,6 @@ export default CheckSessionRoute.extend({
     }
   },
 
-  currentUser: service(),
 
   // Return a promise to load count objects starting at offsefrom of given type.
   loadObjects(type, offset, count) {

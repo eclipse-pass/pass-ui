@@ -1,5 +1,6 @@
 import Component from '@ember/component';
 import EmberObject, { computed } from '@ember/object';
+import { inject as service } from '@ember/service';
 
 function getDate() {
   // Create a date object with the current time
@@ -24,5 +25,5 @@ function getDate() {
 }
 
 export default Component.extend({
-  currentUser: Ember.inject.service('current-user')
+  currentUser: service('current-user')
 });

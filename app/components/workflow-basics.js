@@ -20,17 +20,17 @@ function resolve(publication) {
 }
 
 export default Component.extend({
-  store: service(),
-  workflow: service(),
+  store: service('store'),
+  workflow: service('workflow'),
+  errorHandler: service('error-handler'),
+  currentUser: service('current-user'),
+  toast: service('toast'),
   base: Ember.computed(() => ENV.fedora.elasticsearch),
-  ajax: service(),
+  ajax: service('ajax'),
   validDOI: 'form-control',
   isValidDOI: false,
   validTitle: 'form-control',
   validEmail: '',
-  toast: service('toast'),
-  errorHandler: service('error-handler'),
-  currentUser: service('current-user'),
   // modal fields
   isShowingModal: false,
   modalPageSize: 30,
@@ -38,14 +38,14 @@ export default Component.extend({
   modalUsers: null,
   modalSearchInput: '',
   isProxySubmission: Ember.computed('model.newSubmission.isProxySubmission', function () {
-      return this.get('model.newSubmission.isProxySubmission');
+    return this.get('model.newSubmission.isProxySubmission');
   }),
   inputSubmitterEmail: Ember.computed('model.newSubmission.submitterEmail', {
     get(key) {
       return this.get('model.newSubmission.submitterEmail').replace('mailto:', '');
     },
     set(key, value) {
-      this.set('model.newSubmission.submitterEmail', "mailto:" + value);
+      this.set('model.newSubmission.submitterEmail', `mailto:${value}`);
       return value;
     }
   }),

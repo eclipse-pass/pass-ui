@@ -1,9 +1,10 @@
 import Component from '@ember/component';
+import { inject as service } from '@ember/service';
 
 export default Component.extend({
-  workflow: Ember.inject.service('workflow'),
-  metadataService: Ember.inject.service('metadata-blob'),
-  currentUser: Ember.inject.service('currentUser'),
+  workflow: service('workflow'),
+  metadataService: service('metadata-blob'),
+  currentUser: service('current-user'),
   isValidated: Ember.A(),
   init() {
     this._super(...arguments);
@@ -62,7 +63,7 @@ export default Component.extend({
   submitButtonText: Ember.computed('userIsPreparer', function () {
     return this.get('userIsPreparer') ? 'Request approval' : 'Submit';
   }),
-  displaySubmitterEmail: Ember.computed('model.newSubmission.submitterEmail', function() {
+  displaySubmitterEmail: Ember.computed('model.newSubmission.submitterEmail', function () {
     return this.get('model.newSubmission.submitterEmail').replace('mailto:', '');
   }),
   actions: {

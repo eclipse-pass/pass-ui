@@ -1,9 +1,10 @@
 import Controller from '@ember/controller';
 import ENV from 'pass-ember/config/environment';
+import { inject as service } from '@ember/service';
 
 export default Controller.extend({
-  currentUser: Ember.inject.service('current-user'),
-  workflow: Ember.inject.service('workflow'),
+  currentUser: service('current-user'),
+  workflow: service('workflow'),
   queryParams: ['grant', 'submission'],
   comment: '', // Holds the comment that will be added to submissionEvent in the review step.
   uploading: false,

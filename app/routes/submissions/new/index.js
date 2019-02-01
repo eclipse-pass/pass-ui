@@ -1,11 +1,8 @@
 import Route from '@ember/routing/route';
-
-const {
-  service,
-} = Ember.inject;
+import { inject as service } from '@ember/service';
 
 export default Route.extend({
-  workflow: service(),
+  workflow: service('workflow'),
   beforeModel() {
     this.get('workflow').resetWorkflow();
     this.replaceWith('submissions.new.basics');

@@ -2,7 +2,7 @@ import { helper } from '@ember/component/helper';
 import { inject as service } from '@ember/service';
 
 export default Ember.Helper.extend({
-  store: Ember.inject.service('store'),
+  store: service('store'),
 
   type: null,
   propertyName: null,

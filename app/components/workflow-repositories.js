@@ -3,9 +3,9 @@ import { inject as service, } from '@ember/service';
 
 export default Component.extend({
   addedRepositories: [],
-  router: service(),
-  store: service(),
-  workflow: service(),
+  router: service('router'),
+  store: service('store'),
+  workflow: service('workflow'),
   pmcPublisherDeposit: Ember.computed('workflow.pmcPublisherDeposit', function () {
     return this.get('workflow').getPmcPublisherDeposit();
   }),
