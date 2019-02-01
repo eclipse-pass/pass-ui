@@ -5,7 +5,6 @@ export default Controller.extend({
   currentUser: Ember.inject.service('current-user'),
   workflow: Ember.inject.service('workflow'),
   queryParams: ['grant', 'submission'],
-  didNotAgree: false, // JHU was included as a repository but will be removed before review because the deposit agreement wasn't accepted
   comment: '', // Holds the comment that will be added to submissionEvent in the review step.
   uploading: false,
   waitingMessage: '',
@@ -82,15 +81,6 @@ export default Controller.extend({
         .filter(file => file && file.get('fileRole') === 'manuscript');
 
       let doSubmission = () => {
-        // Remove JHU as a repository if its deposit agreement is not signed.
-        if (this.get('didNotAgree')) {
-          let jhuRepo = this.get('model.newSubmission.repositories').filter(repo => repo.get('name') === 'JScholarship');
-          if (jhuRepo.length > 0) {
-            jhuRepo = jhuRepo[0];
-            this.get('model.newSubmission.repositories').removeObject(jhuRepo);
-          }
-        }
-
         // start setting variables on the new submission object.
         const sub = this.get('model.newSubmission');
         sub.set('submitted', false);
