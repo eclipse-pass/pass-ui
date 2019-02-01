@@ -67,46 +67,6 @@ export default Component.extend({
       return journalAndTitle && ifProxyThenSubmitter;
     }
   ),
-  proxyUserToggled: Ember.observer('model.newSubmission.hasNewProxy', function () {
-    let hasProxy = this.get('model.newSubmission.hasNewProxy');
-    let hasGrants = this.get('model.newSubmission.grants') && this.get('model.newSubmission.grants.length') > 0;
-    let hasPreparers = this.get('model.newSubmission.preparers') && this.get('model.newSubmission.preparers.length') > 0;
-    let doToggle = false;
-    // do only if the values indicate a switch of proxy
-    if (hasPreparers && !hasProxy || !hasPreparers && hasProxy) {
-      doToggle = true;
-      if (hasGrants) {
-        swal({
-          type: 'warning',
-          title: 'Are you sure?',
-          html: 'Changing the submitter will also <strong>remove any grants</strong> currently attached to your submission.  Are you sure you want to proceed?',
-          showCancelButton: true,
-          cancelButtonText: 'Never mind',
-          confirmButtonText: 'Yes, I\'m sure'
-        }).then((result) => {
-          if (result.value) {
-            this.set('model.newSubmission.grants', Ember.A());
-            toastr.info('Related grants removed from submission.');
-          }
-          if (result.dismiss) {
-            doToggle = false;
-            this.set('model.newSubmission.hasNewProxy', !hasProxy);
-          }
-        });
-      }
-    }
-    if (doToggle) {
-      this.set('maxStep', 1);
-      this.set('model.newSubmission.preparers', Ember.A());
-      if (hasProxy) {
-        this.set('submitterEmail', '');
-        this.set('submitterName', '');
-        this.set('model.newSubmission.submitter', null);
-      } else {
-        this.set('model.newSubmission.submitter', this.get('currentUser.user'));
-      }
-    }
-  }),
   didRender() {
     this._super(...arguments);
     this.send('validateDOI');
@@ -124,6 +84,46 @@ export default Component.extend({
   },
   headers: { 'Content-Type': 'application/json; charset=utf-8' },
   actions: {
+    onBehalfOfToggled(onBehalfOfSomeoneElse) {
+      this.set('model.newSubmission.hasNewProxy', onBehalfOfSomeoneElse); //maintain the connection between model and hasNewProxy for now
+      let hasGrants = this.get('model.newSubmission.grants') && this.get('model.newSubmission.grants.length') > 0;
+      let hasPreparers = this.get('model.newSubmission.preparers') && this.get('model.newSubmission.preparers.length') > 0;
+      let doToggle = false;
+      // do only if the values indicate a switch of proxy
+      if (hasPreparers && !onBehalfOfSomeoneElse || !hasPreparers && onBehalfOfSomeoneElse) {
+        doToggle = true;
+        if (hasGrants) {
+          swal({
+            type: 'warning',
+            title: 'Are you sure?',
+            html: 'Changing the submitter will also <strong>remove any grants</strong> currently attached to your submission.  Are you sure you want to proceed?',
+            showCancelButton: true,
+            cancelButtonText: 'Never mind',
+            confirmButtonText: 'Yes, I\'m sure'
+          }).then((result) => {
+            if (result.value) {
+              this.set('model.newSubmission.grants', Ember.A());
+              toastr.info('Related grants removed from submission.');
+            }
+            if (result.dismiss) {
+              doToggle = false;
+              this.set('model.newSubmission.hasNewProxy', !onBehalfOfSomeoneElse);
+            }
+          });
+        }
+      }
+      if (doToggle) {
+        this.set('maxStep', 1);
+        this.set('model.newSubmission.preparers', Ember.A());
+        if (onBehalfOfSomeoneElse) {
+          this.set('submitterEmail', '');
+          this.set('submitterName', '');
+          this.set('model.newSubmission.submitter', null);
+        } else {
+          this.set('model.newSubmission.submitter', this.get('currentUser.user'));
+        }
+      }
+    },
     removeCurrentSubmitter() {
       if (this.get('model.newSubmission.grants') && this.get('model.newSubmission.grants.length') > 0) {
         // TODO: add a swal here for better confirmation.
