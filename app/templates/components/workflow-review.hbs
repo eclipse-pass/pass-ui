@@ -75,22 +75,7 @@
               <td>
                 <ul>
                   {{#each model.newSubmission.repositories as |repository|}}
-                  <li>
-                    {{#if (eq repository.name 'JScholarship')}}
-                    {{#if didNotAgree}}
-                    <div class="alert-danger" style="border-radius:2px; word-break:normal;  background-color: transparent;  border-color: transparent;">
-                      {{repository.name}}<br>
-                      <p class="text-danger text-left m-0"><strong>Warning:</strong> you added JScholarship as a
-                        repository but didn't agree to the deposit agreement, so your submission will not be submitted
-                        to JScholarship. To fix this, go back and agree to the deposit agreement.</p>
-                    </div>
-                    {{else}}
-                    {{repository.name}}
-                    {{/if}}
-                    {{else}}
-                    {{repository.name}}
-                    {{/if}}
-                  </li>
+                  <li>{{repository.name}}</li>
                   {{/each}}
                 </ul>
               </td>

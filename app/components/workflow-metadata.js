@@ -27,7 +27,6 @@ function getBrowserInfo() {
 
 
 export default Component.extend({
-  didAgree: false,
   router: service(),
   currentUser: service('current-user'),
   workflow: service(),
