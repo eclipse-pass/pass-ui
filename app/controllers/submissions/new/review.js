@@ -17,12 +17,6 @@ export default Controller.extend({
       return value;
     }
   }),
-  submitterName: Ember.computed('parent.submitterName', function () {
-    return this.get('parent').get('submitterName');
-  }),
-  submitterEmail: Ember.computed('parent.submitterEmail', function () {
-    return this.get('parent').get('submitterEmail');
-  }),
   hasProxy: Ember.computed('parent.hasProxy', function () {
     return this.get('parent').get('hasProxy');
   }),

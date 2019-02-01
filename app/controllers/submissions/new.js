@@ -6,17 +6,15 @@ export default Controller.extend({
   workflow: Ember.inject.service('workflow'),
   queryParams: ['grant', 'submission'],
   didNotAgree: false, // JHU was included as a repository but will be removed before review because the deposit agreement wasn't accepted
-  submitterEmail: '', // holds the email of a submitter not yet in the system.
-  submitterName: '', // Holds the name of a submitter not yet in the system.
   comment: '', // Holds the comment that will be added to submissionEvent in the review step.
   hasProxy: Ember.computed( // Definite check for if the submission is in fact a proxy submission.
-    'submitterEmail',
-    'submitterName',
+    'model.newSubmission.submitterEmail',
+    'model.newSubmission.submitterName',
     'model.newSubmission.preparers',
     'model.newSubmission.hasNewProxy',
     function () {
       return (
-        (this.get('submitterEmail') && this.get('submitterName')) ||
+        (this.get('model.newSubmission.submitterEmail') && this.get('model.newSubmission.submitterName')) ||
         this.get('model.newSubmission.preparers.length') > 0 ||
         this.get('model.newSubmission.hasNewProxy')
       );
@@ -75,12 +73,10 @@ export default Controller.extend({
         // If a submitter is specified, it's a normal "approval-requested" scenario.
         if (s.get('submitter.id')) {
           subEvent.set('eventType', 'approval-requested');
-        } else if (this.get('submitterName') && this.get('submitterEmail')) {
+        } else if (this.get('model.newSubmission.submitterName') && this.get('model.newSubmission.submitterEmail')) {
           // debugger; // eslint-disable-line
           // If not specified but a name and email are present, create a mailto link.
           subEvent.set('eventType', 'approval-requested-newuser');
-          s.set('submitterEmail', `mailto:${this.get('submitterEmail')}`);
-          s.set('submitterName', this.get('submitterName'));
         } // end if
       } // end if
 

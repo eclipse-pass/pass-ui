@@ -27,8 +27,8 @@
     provide their email address and name so we may notify them:
   </p>
   <div class="form-inline">
-  {{input class=(concat "mt-1 mb-3 form-control w-50 " validEmail) keyUp=(action "validateEmail") disabled=model.newSubmission.submitter.id value=submitterEmail placeholder="Email address"}}
-  {{input class="mt-1 mb-3 form-control w-50" disabled=model.newSubmission.submitter.id value=submitterName placeholder="Name"}}
+  {{input class=(concat "mt-1 mb-3 form-control w-50 " validEmail) keyUp=(action "validateEmail") disabled=model.newSubmission.submitter.id value=inputSubmitterEmail placeholder="Email address"}}
+  {{input class="mt-1 mb-3 form-control w-50" disabled=model.newSubmission.submitter.id value=model.newSubmission.submitterName placeholder="Name"}}
   </div>
 </div>
 {{/if}}
@@ -111,8 +111,6 @@
     pageSize=modalPageSize
     totalResults=modalTotalResults
     searchInput=modalSearchInput
-    submitterEmail=submitterEmail
-    submitterName=submitterName
     users=users}}
 {{/modal-dialog}}
 {{/if}}

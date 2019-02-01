@@ -79,8 +79,8 @@ export default Component.extend({
         }
       }
       this.set('searchInput', '');
-      this.set('submitterEmail', '');
-      this.set('submitterName', '');
+      this.set('model.newSubmission.submitterEmail', '');
+      this.set('model.newSubmission.submitterName', '');
       this.set('model.newSubmission.submitter', submitter);
       this.set('isShowingModal', false);
     }
