@@ -37,6 +37,9 @@ export default Component.extend({
   modalTotalResults: 0,
   modalUsers: null,
   modalSearchInput: '',
+  isProxySubmission: Ember.computed('model.newSubmission.isProxySubmission', function () {
+      return this.get('model.newSubmission.isProxySubmission');
+  }),
   inputSubmitterEmail: Ember.computed('model.newSubmission.submitterEmail', {
     get(key) {
       return this.get('model.newSubmission.submitterEmail').replace('mailto:', '');
@@ -66,12 +69,12 @@ export default Component.extend({
   }),
   // end modal fields
   nextDisabled: Ember.computed( // Used to determine whether the next button should be disabled
-    'model.publication.journal', 'model.publication.title', 'model.newSubmission.hasNewProxy',
+    'model.publication.journal', 'model.publication.title', 'isProxySubmission',
     function () {
       const submitterExists = !!(this.get('model.newSubmission.submitter.id'));
       const submitterInfoExists = this.get('model.newSubmission.submitterName') && this.get('model.newSubmission.submitterEmail');
-      const proxyAndSubmitter = this.get('model.newSubmission.hasNewProxy') && (submitterExists || submitterInfoExists);
-      const ifProxyThenSubmitter = !this.get('model.newSubmission.hasNewProxy') || proxyAndSubmitter;
+      const proxyAndSubmitter = this.get('isProxySubmission') && (submitterExists || submitterInfoExists);
+      const ifProxyThenSubmitter = !this.get('isProxySubmission') || proxyAndSubmitter;
       const journalAndTitle = this.get('model.publication.journal') && this.get('model.publication.title');
       return journalAndTitle && ifProxyThenSubmitter;
     }
@@ -81,7 +84,7 @@ export default Component.extend({
     this.send('validateDOI');
 
     // if there's no proxy, reset all proxy-popup-related fields
-    if (!this.get('model.newSubmission.hasNewProxy') && !this.get('hasProxy')) {
+    if (!this.get('isProxySubmission')) {
       this.set('model.newSubmission.submitterEmail', '');
       this.set('model.newSubmission.submitterName', '');
       this.set('model.newSubmission.preparers', Ember.A());
@@ -93,68 +96,43 @@ export default Component.extend({
   },
   headers: { 'Content-Type': 'application/json; charset=utf-8' },
   actions: {
-    onBehalfOfToggled(onBehalfOfSomeoneElse) {
-      this.set('model.newSubmission.hasNewProxy', onBehalfOfSomeoneElse); //maintain the connection between model and hasNewProxy for now
-      let hasGrants = this.get('model.newSubmission.grants') && this.get('model.newSubmission.grants.length') > 0;
-      let hasPreparers = this.get('model.newSubmission.preparers') && this.get('model.newSubmission.preparers.length') > 0;
-      let doToggle = false;
+    proxyStatusToggled(isProxySubmission) {
       // do only if the values indicate a switch of proxy
-      if (hasPreparers && !onBehalfOfSomeoneElse || !hasPreparers && onBehalfOfSomeoneElse) {
-        doToggle = true;
-        if (hasGrants) {
-          swal({
-            type: 'warning',
-            title: 'Are you sure?',
-            html: 'Changing the submitter will also <strong>remove any grants</strong> currently attached to your submission.  Are you sure you want to proceed?',
-            showCancelButton: true,
-            cancelButtonText: 'Never mind',
-            confirmButtonText: 'Yes, I\'m sure'
-          }).then((result) => {
-            if (result.value) {
-              this.set('model.newSubmission.grants', Ember.A());
-              toastr.info('Related grants removed from submission.');
-            }
-            if (result.dismiss) {
-              doToggle = false;
-              this.set('model.newSubmission.hasNewProxy', !onBehalfOfSomeoneElse);
-            }
-          });
-        }
-      }
-      if (doToggle) {
-        this.set('maxStep', 1);
-        this.set('model.newSubmission.preparers', Ember.A());
-        if (onBehalfOfSomeoneElse) {
-          this.set('model.newSubmission.submitterEmail', '');
-          this.set('model.newSubmission.submitterName', '');
-          this.set('model.newSubmission.submitter', null);
-        } else {
-          this.set('model.newSubmission.submitter', this.get('currentUser.user'));
-        }
+      if (this.get('isProxySubmission') && !isProxySubmission || !this.get('isProxySubmission') && isProxySubmission) {
+        this.send('resetSubmitter', isProxySubmission);
       }
     },
-    removeCurrentSubmitter() {
-      if (this.get('model.newSubmission.grants') && this.get('model.newSubmission.grants.length') > 0) {
-        // TODO: add a swal here for better confirmation.
+    resetSubmitter(isProxySubmission) {
+      let hasGrants = this.get('model.newSubmission.grants') && this.get('model.newSubmission.grants.length') > 0;
+      if (hasGrants) {
         swal({
           type: 'warning',
           title: 'Are you sure?',
-          html: 'Changing the submitter will also <strong>remove any grants</strong> currently attached to your submission.  Are you sure you want to proceed?',
+          html: 'Changing the submitter will also <strong>remove any grants</strong> currently attached to your submission. Are you sure you want to proceed?',
           showCancelButton: true,
           cancelButtonText: 'Never mind',
           confirmButtonText: 'Yes, I\'m sure'
         }).then((result) => {
           if (result.value) {
             this.set('model.newSubmission.grants', Ember.A());
-            this.set('model.newSubmission.preparers', Ember.A());
-            this.set('model.newSubmission.submitter', null);
-            this.set('maxStep', 1);
+            this.send('resetSubmitterModel', isProxySubmission);
             toastr.info('Submitter and related grants removed from submission.');
           }
         });
       } else {
+        this.send('resetSubmitterModel', isProxySubmission);
+      }
+    },
+    resetSubmitterModel(isProxySubmission) {
+      this.set('maxStep', 1);
+      this.set('model.newSubmission.submitterEmail', '');
+      this.set('model.newSubmission.submitterName', '');
+      if (isProxySubmission) {
         this.set('model.newSubmission.submitter', null);
-        this.set('maxStep', 1);
+        this.set('model.newSubmission.preparers', Ember.A([this.get('currentUser.user')]));
+      } else {
+        this.set('model.newSubmission.submitter', this.get('currentUser.user'));
+        this.set('model.newSubmission.preparers', Ember.A());
       }
     },
     toggleModal() {
@@ -188,9 +166,9 @@ export default Component.extend({
     async validateNext() {
       const title = this.get('model.publication.title');
       const journal = this.get('model.publication.journal');
+      const isProxySubmission = this.get('isProxySubmission');
 
       // booleans
-      const newProxy = this.get('model.newSubmission.hasNewProxy');
       const currentUserIsNotSubmitter = this.get('model.newSubmission.submitter.id') !== this.get('currentUser.user.id');
       const proxySubmitterInfoExists = this.get('model.newSubmission.submitterEmail') && this.get('model.newSubmission.submitterName');
       const userIsNotPreparer = !this.get('model.newSubmission.preparers').map(x => x.get('id')).includes(this.get('currentUser.user.id'));
@@ -216,7 +194,7 @@ export default Component.extend({
       if (!journal.get('id') || !title) return;
 
       // If there's no submitter or submitter info and the submission is a new proxy submission:
-      if (!(submitterExists || proxySubmitterInfoExists) && newProxy) {
+      if (!(submitterExists || proxySubmitterInfoExists) && isProxySubmission) {
         toastr.warning('You have indicated that you are submitting on behalf of someone else, but have not chosen that someone.');
         return;
       }
@@ -225,9 +203,9 @@ export default Component.extend({
         toastr.warning('The email address you entered is invalid. Please verify the value and try again.');
         return;
       }
-      if (newProxy && userIsNotPreparer) {
+      if (isProxySubmission && userIsNotPreparer) {
         this.get('model.newSubmission.preparers').addObject(this.get('currentUser.user'));
-      } else if (!this.get('hasProxy')) {
+      } else if (!isProxySubmission) {
         this.set('model.newSubmission.preparers', Ember.A());
         this.set('model.newSubmission.submitter', this.get('currentUser.user'));
       }

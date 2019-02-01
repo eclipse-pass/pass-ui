@@ -5,9 +5,6 @@ export default Controller.extend({
   didNotAgree: Ember.computed('parent.didNotAgree', function () {
     return this.get('parent').get('didNotAgree');
   }),
-  hasProxy: Ember.computed('parent.hasProxy', function () {
-    return this.get('parent').get('hasProxy');
-  }),
   actions: {
     loadNext() {
       this.send('loadTab', 'submissions.new.files');

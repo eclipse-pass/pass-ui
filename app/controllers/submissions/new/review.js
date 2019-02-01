@@ -17,9 +17,6 @@ export default Controller.extend({
       return value;
     }
   }),
-  hasProxy: Ember.computed('parent.hasProxy', function () {
-    return this.get('parent').get('hasProxy');
-  }),
   actions: {
     loadPrevious() {
       this.send('loadTab', 'submissions.new.files');
