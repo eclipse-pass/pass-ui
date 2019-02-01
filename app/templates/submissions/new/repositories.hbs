@@ -1,0 +1,9 @@
+{{#workflow-wrapper
+  model=model
+  loadTab=(action "loadTab")
+}}
+{{workflow-repositories
+  model=model
+  next=(action "loadNext")
+  back=(action "loadPrevious")}}
+{{/workflow-wrapper}}

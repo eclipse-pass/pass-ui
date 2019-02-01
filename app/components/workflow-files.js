@@ -1,10 +1,20 @@
-import WorkflowComponent from './workflow-component';
+import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 
-export default WorkflowComponent.extend({
-  store: Ember.inject.service('store'),
+export default Component.extend({
+  store: service('store'),
+  workflow: service('workflow'),
   files: Ember.A(),
   currentUser: service('current-user'),
+  filesTemp: Ember.computed('workflow.filesTemp', {
+    get(key) {
+      return this.get('workflow').getFilesTemp();
+    },
+    set(key, value) {
+      this.get('workflow').setFilesTemp(value);
+      return value;
+    }
+  }),
   init() {
     this._super(...arguments);
     this.set('files', Ember.A());

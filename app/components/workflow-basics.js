@@ -1,4 +1,4 @@
-import WorkflowComponent from './workflow-component';
+import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import ENV from 'pass-ember/config/environment';
 
@@ -19,10 +19,11 @@ function resolve(publication) {
     .then(response => response.json());
 }
 
-export default WorkflowComponent.extend({
-  store: service('store'),
+export default Component.extend({
+  store: service(),
+  workflow: service(),
   base: Ember.computed(() => ENV.fedora.elasticsearch),
-  ajax: Ember.inject.service(),
+  ajax: service(),
   validDOI: 'form-control',
   isValidDOI: false,
   validTitle: 'form-control',
@@ -36,6 +37,24 @@ export default WorkflowComponent.extend({
   modalTotalResults: 0,
   modalUsers: null,
   modalSearchInput: '',
+  doiInfo: Ember.computed('workflow.doiInfo', {
+    get(key) {
+      return this.get('workflow').getDoiInfo();
+    },
+    set(key, value) {
+      this.get('workflow').setDoiInfo(value);
+      return value;
+    }
+  }),
+  maxStep: Ember.computed('workflow.maxStep', {
+    get(key) {
+      return this.get('workflow').getMaxStep();
+    },
+    set(key, value) {
+      this.get('workflow').setMaxStep(value);
+      return value;
+    }
+  }),
   // end modal fields
   nextDisabled: Ember.computed( // Used to determine whether the next button should be disabled
     'model.publication.journal', 'model.publication.title', 'model.newSubmission.hasNewProxy',
@@ -198,7 +217,6 @@ export default WorkflowComponent.extend({
         toastr.warning('The email address you entered is invalid. Please verify the value and try again.');
         return;
       }
-
       if (newProxy && userIsNotPreparer) {
         this.get('model.newSubmission.preparers').addObject(this.get('currentUser.user'));
       } else if (!this.get('hasProxy')) {
@@ -208,7 +226,7 @@ export default WorkflowComponent.extend({
       // If there's no title in the information grabbed via DOI, use the title given by the user.
       if (!this.get('doiInfo.title')) this.set('doiInfo.title', this.get('model.publication.title'));
       // Move to the next form.
-      this.send('next');
+      this.sendAction('next');
     },
     next() {
       toastr.remove();

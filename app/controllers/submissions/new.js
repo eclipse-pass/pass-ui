@@ -3,8 +3,8 @@ import ENV from 'pass-ember/config/environment';
 
 export default Controller.extend({
   currentUser: Ember.inject.service('current-user'),
+  workflow: Ember.inject.service('workflow'),
   queryParams: ['grant', 'submission'],
-  tempFiles: Ember.A(),
   didNotAgree: false, // JHU was included as a repository but will be removed before review because the deposit agreement wasn't accepted
   submitterEmail: '', // holds the email of a submitter not yet in the system.
   submitterName: '', // Holds the name of a submitter not yet in the system.
@@ -22,6 +22,18 @@ export default Controller.extend({
       );
     }
   ),
+  uploading: false,
+  waitingMessage: '',
+
+  filesTemp: Ember.computed('workflow.filesTemp', {
+    get(key) {
+      return this.get('workflow').getFilesTemp();
+    },
+    set(key, value) {
+      this.get('workflow').setFilesTemp(value);
+      return value;
+    }
+  }),
   userIsSubmitter: Ember.computed(
     'currentUser.user',
     'model.newSubmission',
@@ -86,8 +98,6 @@ export default Controller.extend({
       let manuscriptFiles = [].concat(this.get('filesTemp'), this.get('model.files') && this.get('model.files').toArray())
         .filter(file => file && file.get('fileRole') === 'manuscript');
 
-      let userIsSubmitter = this.get('model.newSubmission.submitter.id') === this.get('currentUser.user.id');
-
       let doSubmission = () => {
         // Remove JHU as a repository if its deposit agreement is not signed.
         if (this.get('didNotAgree')) {
@@ -102,7 +112,6 @@ export default Controller.extend({
         const sub = this.get('model.newSubmission');
         sub.set('submitted', false);
         sub.set('source', 'pass');
-        sub.set('removeNIHDeposit', false);
         sub.set('aggregatedDepositStatus', 'not-started');
 
         this.set('uploading', true);
@@ -174,7 +183,7 @@ export default Controller.extend({
       };
 
 
-      if (manuscriptFiles.length == 0 && userIsSubmitter) {
+      if (manuscriptFiles.length == 0 && this.get('userIsSubmitter')) {
         swal(
           'Manuscript Is Missing',
           'At least one manuscript file is required.  Please go back and add one',

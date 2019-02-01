@@ -1,4 +1,4 @@
-import WorkflowComponent from './workflow-component';
+import Component from '@ember/component';
 import _ from 'lodash';
 import { inject as service, } from '@ember/service';
 
@@ -26,9 +26,11 @@ function getBrowserInfo() {
 }
 
 
-export default WorkflowComponent.extend({
+export default Component.extend({
   didAgree: false,
   router: service(),
+  currentUser: service('current-user'),
+  workflow: service(),
   common: {
     id: 'common',
     data: {},
@@ -217,6 +219,9 @@ export default WorkflowComponent.extend({
 
   displayFormStep: Ember.computed('currentFormStep', function () {
     return this.get('currentFormStep') + 1;
+  }),
+  doiInfo: Ember.computed('workflow.doiInfo', function () {
+    return this.get('workflow').getDoiInfo();
   }),
   actions: {
     nextForm() {

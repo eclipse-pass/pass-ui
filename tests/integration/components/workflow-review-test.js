@@ -16,12 +16,9 @@ module('Integration | Component | workflow-review', (hooks) => {
         repositories: []
       })
     });
-    let isValidated = true;
-    this.set('isValidated', isValidated);
-    this.set('filesTemp', Ember.A());
     this.set('model', model);
 
-    render(hbs`{{workflow-review model=model isValidated=isValidated filesTemp=filesTemp}}`);
+    render(hbs`{{workflow-review model=model}}`);
     assert.ok(true);
   });
 });

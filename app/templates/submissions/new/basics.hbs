@@ -1,0 +1,12 @@
+{{#workflow-wrapper
+  model=model
+  loadTab=(action "loadTab")
+}}
+{{workflow-basics
+  submitterEmail=submitterEmail
+  submitterName=submitterName
+  hasProxy=hasProxy
+  model=model
+  next=(action "loadNext")
+}}
+{{/workflow-wrapper}}
