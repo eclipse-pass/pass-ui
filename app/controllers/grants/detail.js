@@ -4,7 +4,7 @@ import Bootstrap4Theme from 'ember-models-table/themes/bootstrap4';
 import { computed } from '@ember/object';
 
 export default Controller.extend({
-  currentUser: Ember.inject.service('current-user'),
+  currentUser: service('current-user'),
 
   // Columns displayed depend on the user role
   columns: computed('currentUser', {

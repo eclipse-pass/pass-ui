@@ -1,9 +1,10 @@
 import Component from '@ember/component';
 import ENV from '../config/environment';
+import { inject as service } from '@ember/service';
 
 export default Component.extend({
-  store: Ember.inject.service('store'),
-  currentUser: Ember.inject.service('current-user'),
+  store: service('store'),
+  currentUser: service('current-user'),
   searchInput: '',
   users: [],
   page: 1,

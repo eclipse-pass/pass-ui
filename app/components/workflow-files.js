@@ -4,8 +4,8 @@ import { inject as service } from '@ember/service';
 export default Component.extend({
   store: service('store'),
   workflow: service('workflow'),
-  files: Ember.A(),
   currentUser: service('current-user'),
+  files: Ember.A(),
   filesTemp: Ember.computed('workflow.filesTemp', {
     get(key) {
       return this.get('workflow').getFilesTemp();

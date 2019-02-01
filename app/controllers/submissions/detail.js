@@ -1,16 +1,17 @@
 import Controller from '@ember/controller';
 import ENV from 'pass-ember/config/environment';
+import { inject as service } from '@ember/service';
 // import swal from 'sweetalert2';
 
 export default Controller.extend({
-  metadataService: Ember.inject.service('metadata-blob'),
+  metadataService: service('metadata-blob'),
+  currentUser: service('current-user'),
+  store: service('store'),
   tooltips: function () {
     $(() => {
       $('[data-toggle="tooltip"]').tooltip();
     });
   }.on('init'),
-  currentUser: Ember.inject.service('current-user'),
-  store: Ember.inject.service('store'),
   externalSubmission: Ember.computed('externalSubmissionsMetadata', 'model.sub.submitted', function () {
     if (!this.get('model.sub.submitted')) {
       return [];

@@ -27,9 +27,9 @@ function getBrowserInfo() {
 
 
 export default Component.extend({
-  router: service(),
+  router: service('router'),
   currentUser: service('current-user'),
-  workflow: service(),
+  workflow: service('workflow'),
   common: {
     id: 'common',
     data: {},

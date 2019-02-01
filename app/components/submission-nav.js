@@ -1,7 +1,8 @@
 import Component from '@ember/component';
+import { inject as service } from '@ember/service';
 
 export default Component.extend({
-  workflow: Ember.inject.service('workflow'),
+  workflow: service('workflow'),
   step: Ember.computed('workflow.currentStep', function () {
     return this.get('workflow').getCurrentStep();
   }),
