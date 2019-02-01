@@ -30,23 +30,20 @@ export default DS.Model.extend({
     async: true
   }),
 
-  // don't get saved to database
-  hasNewProxy: false,
+  // computed attributes for tables and to support some logic
   isProxySubmission: Ember.computed( // determines whether submission is a proxy submission.
-    'submitterEmail',
-    'submitterName',
-    'preparers',
-    'hasNewProxy',
+    'submitterEmail', 'submitterEmail.length',
+    'submitterName', 'submitterName.length',
+    'preparers', 'preparers.length',
     function () {
       return (
-        (this.get('submitterEmail') && this.get('submitterName')) ||
-        this.get('preparers.length') > 0 ||
-        this.get('hasNewProxy')
+        (this.get('submitterEmail') && this.get('submitterEmail.length') > 0
+          && this.get('submitterName') && this.get('submitterName.length') > 0
+        ) || (this.get('preparers') && this.get('preparers.length') > 0)
       );
     }
   ),
 
-  // attributes needed for tables
   publicationTitle: Ember.computed('publication', function () {
     return this.get('publication.title');
   }),

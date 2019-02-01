@@ -57,7 +57,7 @@ export default Component.extend({
   ),
   userIsPreparer: Ember.computed('model.newSubmission', 'currentUser.user', function () {
     const isNotSubmitter = this.get('model.newSubmission.submitter.id') !== this.get('currentUser.user.id');
-    return (this.get('hasProxy') && isNotSubmitter);
+    return (this.get('model.newSubmission.isProxySubmission') && isNotSubmitter);
   }),
   submitButtonText: Ember.computed('userIsPreparer', function () {
     return this.get('userIsPreparer') ? 'Request approval' : 'Submit';

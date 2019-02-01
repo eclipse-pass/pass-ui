@@ -2,11 +2,11 @@
 {{#unless (or model.newSubmission.id model.preLoadedGrant)}}
 <div class="py-0 mt-2 alert alert-secondary" id="on-behalf-of-block">
   <p class="my-2 lead">I'm creating this submission on behalf of:
-    <input type="radio" checked={{ not model.newSubmission.hasNewProxy }} onchange={{action 'onBehalfOfToggled' false}}/> Myself
-    <input type="radio" checked={{ model.newSubmission.hasNewProxy }} onchange={{action 'onBehalfOfToggled' true}}/> Someone else
+    <input type="radio" checked={{ not isProxySubmission }} onchange={{action 'proxyStatusToggled' false}}/> Myself
+    <input type="radio" checked={{ isProxySubmission }} onchange={{action 'proxyStatusToggled' true}}/> Someone else
   </p>
 </div>
-{{#if model.newSubmission.hasNewProxy}}
+{{#if isProxySubmission}}
 <div class="alert alert-info">
   <p>When a submission is created on someone's behalf, PASS will contact that person to acquire their approval before
     finalizing the submission and sending it to its corresponding repositories.</p>
@@ -20,7 +20,7 @@
     {{#if model.newSubmission.submitter.id}}
     <p>
       Currently selected submitter:<br>{{model.newSubmission.submitter.firstName}} {{model.newSubmission.submitter.lastName}}
-       (<a href="mailto:{{model.newSubmission.submitter.email}}">{{model.newSubmission.submitter.email}}</a>)<br>(<a href="#" {{action 'removeCurrentSubmitter'}}>Remove submitter</a>)
+       (<a href="mailto:{{model.newSubmission.submitter.email}}">{{model.newSubmission.submitter.email}}</a>)<br>(<a href="#" {{action 'resetSubmitter' isProxySubmission}}>Remove submitter</a>)
     </p>
     {{/if}}
   <p class="mb-0"><strong>If the person you are submitting for does not have an account with PASS</strong>, please

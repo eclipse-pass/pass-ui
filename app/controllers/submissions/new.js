@@ -7,19 +7,6 @@ export default Controller.extend({
   queryParams: ['grant', 'submission'],
   didNotAgree: false, // JHU was included as a repository but will be removed before review because the deposit agreement wasn't accepted
   comment: '', // Holds the comment that will be added to submissionEvent in the review step.
-  hasProxy: Ember.computed( // Definite check for if the submission is in fact a proxy submission.
-    'model.newSubmission.submitterEmail',
-    'model.newSubmission.submitterName',
-    'model.newSubmission.preparers',
-    'model.newSubmission.hasNewProxy',
-    function () {
-      return (
-        (this.get('model.newSubmission.submitterEmail') && this.get('model.newSubmission.submitterName')) ||
-        this.get('model.newSubmission.preparers.length') > 0 ||
-        this.get('model.newSubmission.hasNewProxy')
-      );
-    }
-  ),
   uploading: false,
   waitingMessage: '',
 

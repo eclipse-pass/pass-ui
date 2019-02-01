@@ -24,12 +24,6 @@ export default Controller.extend({
 
     return [];
   }),
-  hasProxy: Ember.computed(
-    'model.sub.preparers',
-    function () {
-      return this.get('model.sub.preparers.length') > 0;
-    }
-  ),
   /**
    * Ugly way to generate data for the template to use.
    * {
@@ -89,12 +83,12 @@ export default Controller.extend({
 
     return [];
   }),
-  mustVisitWeblink: Ember.computed('weblinkRepos', 'model', 'hasProxy', function () {
+  mustVisitWeblink: Ember.computed('weblinkRepos', 'model', function () {
     const weblinkExists = this.get('weblinkRepos').length > 0;
     const isSubmitter = this.get('currentUser.user.id') === this.get('model.sub.submitter.id');
-    const hasProxy = this.get('hasProxy');
+    const isProxySubmission = this.get('model.sub.isProxySubmission');
     const isSubmitted = this.get('model.sub.submitted');
-    return weblinkExists && isSubmitter && hasProxy && !isSubmitted;
+    return weblinkExists && isSubmitter && isProxySubmission && !isSubmitted;
   }),
   disableSubmit: Ember.computed(
     'mustVisitWeblink',

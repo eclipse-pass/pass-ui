@@ -252,7 +252,7 @@ export default Component.extend({
           value = $('[name="agreement-to-deposit"]')[1].checked;
         }
         // if proxy sub then set value of deposit agreement = true to let it pass.
-        if (this.get('hasProxy')) {
+        if (this.get('model.newSubmission.isProxySubmission')) {
           value = true;
         }
         let jhuRepo = this.get('model.repositories').filter(repo => repo.get('name') === 'JScholarship');
