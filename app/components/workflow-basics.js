@@ -37,6 +37,15 @@ export default Component.extend({
   modalTotalResults: 0,
   modalUsers: null,
   modalSearchInput: '',
+  inputSubmitterEmail: Ember.computed('model.newSubmission.submitterEmail', {
+    get(key) {
+      return this.get('model.newSubmission.submitterEmail').replace('mailto:', '');
+    },
+    set(key, value) {
+      this.set('model.newSubmission.submitterEmail', "mailto:" + value);
+      return value;
+    }
+  }),
   doiInfo: Ember.computed('workflow.doiInfo', {
     get(key) {
       return this.get('workflow').getDoiInfo();
@@ -60,7 +69,7 @@ export default Component.extend({
     'model.publication.journal', 'model.publication.title', 'model.newSubmission.hasNewProxy',
     function () {
       const submitterExists = !!(this.get('model.newSubmission.submitter.id'));
-      const submitterInfoExists = this.get('submitterName') && this.get('submitterEmail');
+      const submitterInfoExists = this.get('model.newSubmission.submitterName') && this.get('model.newSubmission.submitterEmail');
       const proxyAndSubmitter = this.get('model.newSubmission.hasNewProxy') && (submitterExists || submitterInfoExists);
       const ifProxyThenSubmitter = !this.get('model.newSubmission.hasNewProxy') || proxyAndSubmitter;
       const journalAndTitle = this.get('model.publication.journal') && this.get('model.publication.title');
@@ -73,8 +82,8 @@ export default Component.extend({
 
     // if there's no proxy, reset all proxy-popup-related fields
     if (!this.get('model.newSubmission.hasNewProxy') && !this.get('hasProxy')) {
-      this.set('submitterEmail', '');
-      this.set('submitterName', '');
+      this.set('model.newSubmission.submitterEmail', '');
+      this.set('model.newSubmission.submitterName', '');
       this.set('model.newSubmission.preparers', Ember.A());
     }
   },
@@ -116,8 +125,8 @@ export default Component.extend({
         this.set('maxStep', 1);
         this.set('model.newSubmission.preparers', Ember.A());
         if (onBehalfOfSomeoneElse) {
-          this.set('submitterEmail', '');
-          this.set('submitterName', '');
+          this.set('model.newSubmission.submitterEmail', '');
+          this.set('model.newSubmission.submitterName', '');
           this.set('model.newSubmission.submitter', null);
         } else {
           this.set('model.newSubmission.submitter', this.get('currentUser.user'));
@@ -183,8 +192,7 @@ export default Component.extend({
       // booleans
       const newProxy = this.get('model.newSubmission.hasNewProxy');
       const currentUserIsNotSubmitter = this.get('model.newSubmission.submitter.id') !== this.get('currentUser.user.id');
-      const submitterEmail = this.get('submitterEmail');
-      const proxySubmitterInfoExists = this.get('submitterEmail') && this.get('submitterName');
+      const proxySubmitterInfoExists = this.get('model.newSubmission.submitterEmail') && this.get('model.newSubmission.submitterName');
       const userIsNotPreparer = !this.get('model.newSubmission.preparers').map(x => x.get('id')).includes(this.get('currentUser.user.id'));
       const submitterExists = this.get('model.newSubmission.submitter.id');
       const proxySubmitterExists = submitterExists && currentUserIsNotSubmitter;
@@ -263,7 +271,7 @@ export default Component.extend({
       }
     },
     validateEmail() {
-      const email = this.get('submitterEmail');
+      const email = this.get('inputSubmitterEmail');
       let emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
       if (email && emailPattern.test(email)) {
         this.set('validEmail', 'is-valid');
