@@ -97,10 +97,10 @@
 {{#link-to 'submissions.index' class="btn btn-outline-primary"}}Back{{/link-to}}
 <button class="btn btn-primary pull-right next" {{action "validateNext"}}>Next</button>
 {{#if isShowingModal}}
-{{#modal-dialog 
-   translucentOverlay=true 
-   onClose="toggleModal" 
-   close="toggleModal" 
+{{#modal-dialog
+   translucentOverlay=true
+   onClose="toggleModal"
+   close="toggleModal"
    tetherTarget='#on-behalf-of-block'
    attachment='top center'
    targetAttachment='top center'
