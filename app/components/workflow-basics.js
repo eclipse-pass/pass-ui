@@ -68,17 +68,6 @@ export default Component.extend({
     }
   }),
   // end modal fields
-  nextDisabled: Ember.computed( // Used to determine whether the next button should be disabled
-    'model.publication.journal', 'model.publication.title', 'isProxySubmission',
-    function () {
-      const submitterExists = !!(this.get('model.newSubmission.submitter.id'));
-      const submitterInfoExists = this.get('model.newSubmission.submitterName') && this.get('model.newSubmission.submitterEmail');
-      const proxyAndSubmitter = this.get('isProxySubmission') && (submitterExists || submitterInfoExists);
-      const ifProxyThenSubmitter = !this.get('isProxySubmission') || proxyAndSubmitter;
-      const journalAndTitle = this.get('model.publication.journal') && this.get('model.publication.title');
-      return journalAndTitle && ifProxyThenSubmitter;
-    }
-  ),
   didRender() {
     this._super(...arguments);
     this.send('validateDOI');

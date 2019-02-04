@@ -26,12 +26,6 @@ export default Component.extend({
   filteredUsers: Ember.computed('users', function () {
     return this.get('users').filter(u => u.id !== this.get('currentUser.user.id'));
   }),
-  previousDisabled: Ember.computed('page', function () {
-    return this.get('page') <= 1;
-  }),
-  nextDisabled: Ember.computed('page', function () {
-    return this.get('page') >= this.get('totalPages');
-  }),
   actions: {
     toggleModal() {
       this.toggleProperty('isShowingModal');
