@@ -1,6 +1,8 @@
 {{#workflow-wrapper
-  model=model
-  loadTab=(action "loadTab")
+  title=publication.title
+  isProxySubmission=submission.isProxySubmission
+  submissionEvents=submissionEvents
+  loadTab=(action 'loadTab')
 }}
 {{workflow-grants
   submission=submission

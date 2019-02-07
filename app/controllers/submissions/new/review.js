@@ -5,6 +5,7 @@ export default Controller.extend({
   submission: alias('model.newSubmission'),
   files: alias('model.files'),
   publication: alias('model.publication'),
+  submissionEvents: alias('model.submissionEvents'),
   parent: Ember.inject.controller('submissions.new'),
   waitingMessage: Ember.computed('parent.waitingMessage', function () {
     return this.get('parent').get('waitingMessage');
