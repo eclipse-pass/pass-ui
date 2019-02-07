@@ -17,7 +17,6 @@ export default CheckSessionRoute.extend({
     }
   },
 
-
   // Return a promise to load count objects starting at offsefrom of given type.
   loadObjects(type, offset, count) {
     return this.get('store').query(type, { query: { match_all: {} }, from: offset, size: count });
@@ -36,7 +35,6 @@ export default CheckSessionRoute.extend({
     const querySize = 100;
 
     const repositories = this.loadObjects('repository', 0, 500);
-    const funders = this.loadObjects('funder', 0, 500);
     const policies = this.loadObjects('policy', 0, 500);
 
     if (params.submission) {
@@ -64,7 +62,6 @@ export default CheckSessionRoute.extend({
           submissionEvents,
           publication,
           policies,
-          funders,
           preLoadedGrant,
           files
         });
@@ -76,8 +73,6 @@ export default CheckSessionRoute.extend({
       newSubmission,
       publication,
       policies,
-      // journals,
-      funders,
       preLoadedGrant
     });
     return h;
