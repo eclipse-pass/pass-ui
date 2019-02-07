@@ -2,5 +2,12 @@
 <h4 class="font-weight-light pull-right" style="margin-top:6.5px;">
   Form {{displayFormStep}} of {{schemas.length}}
 </h4>
-{{metadata-form currentUser=currentUser schema=schema model=model.newSubmission doiInfo=doiInfo currentFormStep=currentFormStep nextForm=(action "nextForm") previousForm=(action "previousForm")}}
+{{metadata-form
+  currentUser=currentUser
+  schema=schema
+  submission=submission
+  doiInfo=doiInfo
+  currentFormStep=currentFormStep
+  nextForm=(action "nextForm")
+  previousForm=(action "previousForm")}}
 {{yield}}

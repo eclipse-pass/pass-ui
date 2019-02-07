@@ -12,10 +12,10 @@ export default Ember.Component.extend({
       newForm.options = {};
     }
     // Populate form with data if there is any to populate with.
-    if (!(this.get('model.metadata'))) {
-      this.set('model.metadata', '[]');
+    if (!(this.get('submission.metadata'))) {
+      this.set('submission.metadata', '[]');
     }
-    let metadata = JSON.parse(this.get('model.metadata'));
+    let metadata = JSON.parse(this.get('submission.metadata'));
     if (newForm.id) {
       let shouldFuzzyMatch = true;
 
@@ -108,7 +108,7 @@ export default Ember.Component.extend({
               id: newForm.id,
               data: prePopulateData,
             });
-            this.set('model.metadata', JSON.stringify(metadata));
+            this.set('submission.metadata', JSON.stringify(metadata));
           } catch (e) { console.log(e); }
         });
       }
@@ -183,7 +183,7 @@ export default Ember.Component.extend({
               // eslint-disable-next-line no-return-assign
               let filtered = source.reverse().filter(obj => !uniqIds[obj.id] && (uniqIds[obj.id] = true));
 
-              that.set('model.metadata', JSON.stringify(filtered));
+              that.set('submission.metadata', JSON.stringify(filtered));
               that.nextForm();
             }
           },
@@ -214,7 +214,7 @@ export default Ember.Component.extend({
               // eslint-disable-next-line no-return-assign
               let filtered = source.reverse().filter(obj => !uniqIds[obj.id] && (uniqIds[obj.id] = true));
 
-              that.set('model.metadata', JSON.stringify(filtered));
+              that.set('submission.metadata', JSON.stringify(filtered));
               that.previousForm();
             }
           },
@@ -256,12 +256,12 @@ export default Ember.Component.extend({
     let hasAgreementText = false;
 
     try {
-      this.get('model.repositories').filter(repo => repo.get('name') === newForm.id)[0].get('agreementText');
+      this.get('submission.repositories').filter(repo => repo.get('name') === newForm.id)[0].get('agreementText');
       hasAgreementText = true;
     } catch (e) {} // eslint-disable-line
     if (hasAgreementText) {
       // if the current user is not the preparer
-      if (!this.get('model.preparers').map(x => x.id).includes(currentUser.get('id'))) {
+      if (!this.get('submission.preparers').map(x => x.id).includes(currentUser.get('id'))) {
         // add agreement to schema
         newForm.options.fields.embargo = {
           type: 'textarea',
@@ -279,7 +279,7 @@ export default Ember.Component.extend({
 
         newForm.schema.properties.embargo = {
           type: 'string',
-          default: this.get('model.repositories').filter(repo => repo.get('name') === newForm.id)[0].get('agreementText'),
+          default: this.get('submission.repositories').filter(repo => repo.get('name') === newForm.id)[0].get('agreementText'),
         };
         newForm.schema.properties['agreement-to-deposit'] = {
           type: 'string'
