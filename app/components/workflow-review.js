@@ -14,30 +14,30 @@ export default Component.extend({
   filesTemp: Ember.computed('workflow.filesTemp', function () {
     return this.get('workflow').getFilesTemp();
   }),
-  parsedFiles: Ember.computed('filesTemp', 'model.files', function () {
+  parsedFiles: Ember.computed('filesTemp', 'previouslyUploadedFiles', function () {
     let newArr = Ember.A();
     if (this.get('filesTemp')) {
       newArr.addObjects(this.get('filesTemp'));
     }
-    if (this.get('model.files')) {
-      newArr.addObjects(this.get('model.files'));
+    if (this.get('previouslyUploadedFiles')) {
+      newArr.addObjects(this.get('previouslyUploadedFiles'));
     }
     return newArr;
   }),
-  metadata: Ember.computed('model.newSubmission.metadata', function () {
-    return JSON.parse(this.get('model.newSubmission.metadata'));
+  metadata: Ember.computed('submission.metadata', function () {
+    return JSON.parse(this.get('submission.metadata'));
   }),
   metadataBlobNoKeys: Ember.computed(
-    'model.newSubmission.metadata',
+    'submission.metadata',
     function () {
-      return this.get('metadataService').getDisplayBlob(this.get('model.newSubmission.metadata'));
+      return this.get('metadataService').getDisplayBlob(this.get('submission.metadata'));
     }
   ),
   hasVisitedWeblink: Ember.computed('externalRepoMap', function () {
     return Object.values(this.get('externalRepoMap')).every(val => val === true);
   }),
-  weblinkRepos: Ember.computed('model.newSubmission.repositories', function () {
-    const repos = this.get('model.newSubmission.repositories').filter(repo =>
+  weblinkRepos: Ember.computed('submission.repositories', function () {
+    const repos = this.get('submission.repositories').filter(repo =>
       repo.get('integrationType') === 'web-link');
 
     repos.forEach(repo => (this.get('externalRepoMap')[repo.get('id')] = false)); // eslint-disable-line
@@ -45,7 +45,7 @@ export default Component.extend({
   }),
   mustVisitWeblink: Ember.computed('weblinkRepos', 'model', function () {
     const weblinkExists = this.get('weblinkRepos.length') > 0;
-    const isSubmitter = this.get('currentUser.user.id') === this.get('model.newSubmission.submitter.id');
+    const isSubmitter = this.get('currentUser.user.id') === this.get('submission.submitter.id');
     return weblinkExists && isSubmitter;
   }),
   disableSubmit: Ember.computed(
@@ -56,15 +56,15 @@ export default Component.extend({
       return needsToVisitWeblink;
     }
   ),
-  userIsPreparer: Ember.computed('model.newSubmission', 'currentUser.user', function () {
-    const isNotSubmitter = this.get('model.newSubmission.submitter.id') !== this.get('currentUser.user.id');
-    return (this.get('model.newSubmission.isProxySubmission') && isNotSubmitter);
+  userIsPreparer: Ember.computed('submission', 'currentUser.user', function () {
+    const isNotSubmitter = this.get('submission.submitter.id') !== this.get('currentUser.user.id');
+    return (this.get('submission.isProxySubmission') && isNotSubmitter);
   }),
   submitButtonText: Ember.computed('userIsPreparer', function () {
     return this.get('userIsPreparer') ? 'Request approval' : 'Submit';
   }),
-  displaySubmitterEmail: Ember.computed('model.newSubmission.submitterEmail', function () {
-    return this.get('model.newSubmission.submitterEmail').replace('mailto:', '');
+  displaySubmitterEmail: Ember.computed('submission.submitterEmail', function () {
+    return this.get('submission.submitterEmail').replace('mailto:', '');
   }),
   actions: {
     submit() {
@@ -96,9 +96,9 @@ export default Component.extend({
       // TODO: I don't think this ever does anything? It was moved from workflow-wrapper during refactoring
       const tempValidateArray = [];
       this.set('isValidated', []);
-      Object.keys(this.get('model.newSubmission').toJSON()).forEach((property) => {
+      Object.keys(this.get('submission').toJSON()).forEach((property) => {
         // TODO:  Add more logic here for better validation
-        if (this.get('model.newSubmission').get(property) !== undefined) {
+        if (this.get('submission').get(property) !== undefined) {
           tempValidateArray[property] = true;
         } else {
           tempValidateArray[property] = false;
