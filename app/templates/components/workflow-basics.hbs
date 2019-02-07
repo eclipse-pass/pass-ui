@@ -12,15 +12,15 @@
     finalizing the submission and sending it to its corresponding repositories.</p>
   <p class="mb-0">Please indicate on behalf of whom this submission is being completed:</p>
     <div class="input-group pb-3">
-      {{input enter='searchForUsers' value=modalSearchInput class="form-control"}}
+      {{input enter=(action 'toggleUserSearchModal') value=userSearchTerm class="form-control"}}
       <span class="input-group-btn">
-        <button class="btn btn-primary" {{action 'searchForUsers'}} type="button">Search</button>
+        <button class="btn btn-primary" {{action 'toggleUserSearchModal'}} type="button">Search</button>
       </span>
     </div>
     {{#if model.newSubmission.submitter.id}}
     <p>
       Currently selected submitter:<br>{{model.newSubmission.submitter.firstName}} {{model.newSubmission.submitter.lastName}}
-       (<a href="mailto:{{model.newSubmission.submitter.email}}">{{model.newSubmission.submitter.email}}</a>)<br>(<a href="#" {{action 'resetSubmitter' isProxySubmission}}>Remove submitter</a>)
+       (<a href="mailto:{{model.newSubmission.submitter.email}}">{{model.newSubmission.submitter.email}}</a>)<br>(<a href="#" {{action 'changeSubmitter' isProxySubmission null}}>Remove submitter</a>)
     </p>
     {{/if}}
   <p class="mb-0"><strong>If the person you are submitting for does not have an account with PASS</strong>, please
@@ -64,7 +64,6 @@
   value=model.publication.doi
   keyUp=(action "lookupDOI")
   mouseUp=(action "lookupDOI")
-  mouseLeave=(action "lookupDOI")
   id="doi"
   placeholder="Leave blank if your manuscript or article has not yet been assigned a DOI"
   readonly=model.newSubmission.id
@@ -96,21 +95,18 @@
 </div>
 {{#link-to 'submissions.index' class="btn btn-outline-primary"}}Back{{/link-to}}
 <button class="btn btn-primary pull-right next" {{action "validateNext"}}>Next</button>
-{{#if isShowingModal}}
-{{#modal-dialog
-   translucentOverlay=true
-   onClose="toggleModal"
-   close="toggleModal"
-   tetherTarget='#on-behalf-of-block'
-   attachment='top center'
-   targetAttachment='top center'
-   containerClass='user-search-modal'}}
-  {{workflow-basics-user-search
-    model=model
-    isShowingModal=isShowingModal
-    pageSize=modalPageSize
-    totalResults=modalTotalResults
-    searchInput=modalSearchInput
-    users=users}}
-{{/modal-dialog}}
+{{#if isShowingUserSearchModal}}
+  {{#modal-dialog
+     translucentOverlay=true
+     tetherTarget='#on-behalf-of-block'
+     attachment='top center'
+     targetAttachment='top center'
+     containerClass='user-search-modal'}}
+    {{workflow-basics-user-search
+      model=model
+      toggleUserSearchModal=(action 'toggleUserSearchModal')
+      pickSubmitter=(action 'pickSubmitter')
+      searchInput=userSearchTerm
+      numPages=usersNumPages}}
+  {{/modal-dialog}}
 {{/if}}

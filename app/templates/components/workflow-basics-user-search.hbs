@@ -1,10 +1,10 @@
 <div style="min-height:300px;" class="p-4">
-  <button style="position:absolute;right:15px;top:15px;border:none;" class="btn btn-outline-primary" {{action 'toggleModal'}}>X</button>
+  <button style="position:absolute;right:15px;top:15px;border:none;" class="btn btn-outline-primary" {{action toggleUserSearchModal}}>X</button>
   <div class="container">
     <h2>Search Users</h2>
     <p class="text-muted">Search by name or email and click on a user to assign them to the submitter role.</p>
     <div class="input-group pb-3">
-      {{input value=searchInput enter=(action "searchForUsers" 1) class="form-control"}}
+      {{input value=searchInput enter=(action 'searchForUsers' 1) class="form-control"}}
       <span class="input-group-btn">
         <button class="btn btn-primary" {{action 'searchForUsers' 1}} type="button">Search</button>
       </span>
@@ -14,7 +14,7 @@
       <div class="row user-search-results">
         {{#each filteredUsers as |user|}}
           <div class="col-6">
-            <a href="#" {{action 'pickSubmitter' user}}>
+            <a href="#" {{action pickSubmitter user}}>
               {{user.firstName}} {{user.lastName}} {{#if user.email}}({{user.email}}){{/if}}
             </a>
           </div>
@@ -25,8 +25,8 @@
     {{/if}}
     {{#if moreThanOnePage }}
     <ul class="pagination mt-4 mx-auto mb-0 pb-0" style="justify-content:center;">
-      {{#each pages as |p|}}
-        {{#if (eq p page)}}
+      {{#each pageNumbers as |p|}}
+        {{#if (eq p currentPage)}}
           <li class="active"><a>{{p}}</a></li>
         {{else}}
           <li><a href="#" {{action 'searchForUsers' p}}>{{p}}</a></li>
