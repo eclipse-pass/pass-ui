@@ -19,12 +19,4 @@ export default Component.extend({
     policies = policies.uniqBy('id');
     return policies;
   }),
-  actions: {
-    next() {
-      this.sendAction('next');
-    },
-    back() {
-      this.sendAction('back');
-    }
-  },
 });

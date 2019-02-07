@@ -91,12 +91,6 @@ export default Component.extend({
     return this.get('grants').filter(g => !this.get('model.newSubmission.grants').map(x => x.id).includes(g.get('id')));
   }),
   actions: {
-    next() {
-      this.sendAction('next');
-    },
-    back() {
-      this.sendAction('back');
-    },
     prevPage() {
       let i = this.get('pageNumber');
 
