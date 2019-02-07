@@ -1,6 +1,5 @@
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
-import ENV from 'pass-ember/config/environment';
 
 function resolve(publication) {
   const base = 'https://doi.org/';
@@ -24,19 +23,14 @@ export default Component.extend({
   workflow: service('workflow'),
   errorHandler: service('error-handler'),
   currentUser: service('current-user'),
-  toast: service('toast'),
-  base: Ember.computed(() => ENV.fedora.elasticsearch),
+  toastr: service('toast'),
   ajax: service('ajax'),
   validDOI: 'form-control',
   isValidDOI: false,
   validTitle: 'form-control',
   validEmail: '',
   // modal fields
-  isShowingModal: false,
-  modalPageSize: 30,
-  modalTotalResults: 0,
-  modalUsers: null,
-  modalSearchInput: '',
+  isShowingUserSearchModal: false,
   isProxySubmission: Ember.computed('model.newSubmission.isProxySubmission', function () {
     return this.get('model.newSubmission.isProxySubmission');
   }),
@@ -67,15 +61,10 @@ export default Component.extend({
       return value;
     }
   }),
-  // end modal fields
   didRender() {
     this._super(...arguments);
-    this.send('validateDOI');
-
-    // if there's no proxy, reset all proxy-popup-related fields
     if (!this.get('isProxySubmission')) {
-      this.set('model.newSubmission.submitterEmail', '');
-      this.set('model.newSubmission.submitterName', '');
+      this.set('model.newSubmission.submitter', this.get('currentUser.user'));
       this.set('model.newSubmission.preparers', Ember.A());
     }
   },
@@ -88,10 +77,18 @@ export default Component.extend({
     proxyStatusToggled(isProxySubmission) {
       // do only if the values indicate a switch of proxy
       if (this.get('isProxySubmission') && !isProxySubmission || !this.get('isProxySubmission') && isProxySubmission) {
-        this.send('resetSubmitter', isProxySubmission);
+        this.send('changeSubmitter', isProxySubmission, null);
       }
     },
-    resetSubmitter(isProxySubmission) {
+    toggleUserSearchModal() {
+      this.toggleProperty('isShowingUserSearchModal');
+    },
+    pickSubmitter(submitter) {
+      this.send('changeSubmitter', true, submitter);
+      this.send('toggleUserSearchModal');
+      this.set('userSearchTerm', '');
+    },
+    async changeSubmitter(isProxySubmission, submitter) {
       let hasGrants = this.get('model.newSubmission.grants') && this.get('model.newSubmission.grants.length') > 0;
       if (hasGrants) {
         swal({
@@ -104,53 +101,25 @@ export default Component.extend({
         }).then((result) => {
           if (result.value) {
             this.set('model.newSubmission.grants', Ember.A());
-            this.send('resetSubmitterModel', isProxySubmission);
+            this.send('updateSubmitterModel', isProxySubmission, submitter);
             toastr.info('Submitter and related grants removed from submission.');
           }
         });
       } else {
-        this.send('resetSubmitterModel', isProxySubmission);
+        this.send('updateSubmitterModel', isProxySubmission, submitter);
       }
     },
-    resetSubmitterModel(isProxySubmission) {
+    updateSubmitterModel(isProxySubmission, submitter) {
       this.set('maxStep', 1);
       this.set('model.newSubmission.submitterEmail', '');
       this.set('model.newSubmission.submitterName', '');
       if (isProxySubmission) {
-        this.set('model.newSubmission.submitter', null);
+        this.set('model.newSubmission.submitter', submitter);
         this.set('model.newSubmission.preparers', Ember.A([this.get('currentUser.user')]));
       } else {
         this.set('model.newSubmission.submitter', this.get('currentUser.user'));
         this.set('model.newSubmission.preparers', Ember.A());
       }
-    },
-    toggleModal() {
-      this.toggleProperty('isShowingModal');
-    },
-    searchForUsers() {
-      const size = this.get('modalPageSize');
-      let info = {};
-      let input = this.get('modalSearchInput');
-      this.get('store').query('user', {
-        query: {
-          bool: {
-            filter: {
-              exists: { field: 'email' }
-            },
-            should: {
-              multi_match: { query: input, fields: ['firstName', 'middleName', 'lastName', 'email', 'displayName'] }
-            },
-            minimum_should_match: 1
-          }
-        },
-        from: 0,
-        size,
-        info
-      }).then((users) => {
-        this.set('users', users);
-        this.set('isShowingModal', true);
-        if (info.total !== null) this.set('modalTotalResults', info.total);
-      });
     },
     async validateNext() {
       const title = this.get('model.publication.title');
@@ -192,12 +161,6 @@ export default Component.extend({
         toastr.warning('The email address you entered is invalid. Please verify the value and try again.');
         return;
       }
-      if (isProxySubmission && userIsNotPreparer) {
-        this.get('model.newSubmission.preparers').addObject(this.get('currentUser.user'));
-      } else if (!isProxySubmission) {
-        this.set('model.newSubmission.preparers', Ember.A());
-        this.set('model.newSubmission.submitter', this.get('currentUser.user'));
-      }
       // If there's no title in the information grabbed via DOI, use the title given by the user.
       if (!this.get('doiInfo.title')) this.set('doiInfo.title', this.get('model.publication.title'));
       // Move to the next form.
@@ -223,7 +186,6 @@ export default Component.extend({
         this.set('validTitle', 'form-control is-valid');
         this.set('model.newSubmission.metadata', '[]');
         this.set('isValidDOI', true);
-        toastr.success("We've pre-populated information from the DOI provided!");
       } else {
         this.set('validDOI', 'form-control is-invalid');
         this.set('isValidDOI', false);
@@ -304,6 +266,7 @@ export default Component.extend({
               publication.set('journal', journal);
             }
           });
+          toastr.success("We've pre-populated information from the DOI provided!");
         }, (error) => {
           // console.log(error.message);
         }); // end resolve(publication).then()
