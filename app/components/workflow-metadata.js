@@ -198,9 +198,9 @@ export default Component.extend({
     this.set('schema', this.get('metadataForms')[this.get('currentFormStep')]);
   },
 
-  activeRepositories: Ember.computed('model.newSubmission', function () {
+  activeRepositories: Ember.computed('submission', function () {
     const repos = Ember.A();
-    this.get('model.newSubmission.repositories').forEach((repository) => {
+    this.get('submission.repositories').forEach((repository) => {
       repos.addObject(repository);
     });
     return repos.uniqBy('id');
@@ -225,7 +225,7 @@ export default Component.extend({
   actions: {
     nextForm() {
       let doAuthorsExist = false;
-      JSON.parse(this.get('model.newSubmission.metadata')).forEach((data) => {
+      JSON.parse(this.get('submission.metadata')).forEach((data) => {
         if (data.id === 'JScholarship') {
           // data.data.authors = temp;
           if (data.data.authors && data.data.authors.length > 0) {
@@ -251,10 +251,10 @@ export default Component.extend({
           value = $('[name="agreement-to-deposit"]')[1].checked;
         }
         // if proxy sub then set value of deposit agreement = true to let it pass.
-        if (this.get('model.newSubmission.isProxySubmission')) {
+        if (this.get('submission.isProxySubmission')) {
           value = true;
         }
-        let jhuRepo = this.get('model.repositories').filter(repo => repo.get('name') === 'JScholarship');
+        let jhuRepo = this.get('repositories').filter(repo => repo.get('name') === 'JScholarship');
         // if jhuRepo exists
         if (jhuRepo.length > 0) {
           // ----------------------------------------------------------------------
@@ -263,7 +263,7 @@ export default Component.extend({
           //
           // ----------------------------------------------------------------------
           // debugger; // eslint-disable-line
-          let userIsSubmitter = this.get('model.newSubmission.submitter.id') === this.get('currentUser.user.id');
+          let userIsSubmitter = this.get('submission.submitter.id') === this.get('currentUser.user.id');
           if (doAuthorsExist && !value && userIsSubmitter) {
             swal({
               title: 'Notice!',
@@ -278,8 +278,8 @@ export default Component.extend({
               }
               if (result.dismiss != 'overlay') {
                 // remove jscholarship from submission
-                this.set('model.newSubmission.repositories', this.get('activeRepositories').filter(repo => repo.get('name') !== 'JScholarship'));
-                if (this.get('model.newSubmission.repositories.length') == 0) {
+                this.set('submission.repositories', this.get('activeRepositories').filter(repo => repo.get('name') !== 'JScholarship'));
+                if (this.get('submission.repositories.length') == 0) {
                   swal({
                     title: 'You\'re about to abort the submission!',
                     text: 'The submission cannot proceed with out the required information by its target repository. Click "Abort" to confirm your exit.',
@@ -317,8 +317,8 @@ export default Component.extend({
                 return;
               }
               if (result.dismiss != 'overlay') {
-                this.set('model.newSubmission.repositories', this.get('activeRepositories').filter(repo => repo.get('name') !== 'JScholarship'));
-                if (this.get('model.newSubmission.repositories.length') == 0) {
+                this.set('submission.repositories', this.get('activeRepositories').filter(repo => repo.get('name') !== 'JScholarship'));
+                if (this.get('submission.repositories.length') == 0) {
                   swal({
                     title: 'You\'re about to abort the submission!',
                     text: 'The submission cannot proceed with out the required information by its target repository. Click "Abort" to confirm your exit.',
@@ -356,8 +356,8 @@ export default Component.extend({
                 return;
               }
               if (result.dismiss != 'overlay') {
-                this.set('model.newSubmission.repositories', this.get('activeRepositories').filter(repo => repo.get('name') !== 'JScholarship'));
-                if (this.get('model.newSubmission.repositories.length') == 0) {
+                this.set('submission.repositories', this.get('activeRepositories').filter(repo => repo.get('name') !== 'JScholarship'));
+                if (this.get('submission.repositories.length') == 0) {
                   swal({
                     title: 'You\'re about to abort the submission!',
                     text: 'The submission cannot proceed with out the required information by its target repository. Click "Abort" to confirm your exit.',
@@ -387,12 +387,12 @@ export default Component.extend({
     },
     nextLogic() {
       const step = this.get('currentFormStep');
-      let metadata = JSON.parse(this.get('model.newSubmission.metadata'));
+      let metadata = JSON.parse(this.get('submission.metadata'));
       const doiInfo = this.get('doiInfo');
       let commonMetadata = metadata.filter(md => md.id === 'common')[0];
       this.send('checkForAuthors');
       // We need to reset the metadata because checkForAuthors changes it
-      metadata = JSON.parse(this.get('model.newSubmission.metadata'));
+      metadata = JSON.parse(this.get('submission.metadata'));
       // We are moving the form forward next button clicked
       if (step + 1 < this.get('schemas').length) {
         this.set('currentFormStep', step + 1);
@@ -437,7 +437,7 @@ export default Component.extend({
         const externalRepos = this.get('activeRepositories').filter(repo =>
           repo.get('integrationType') === 'web-link');
 
-        if (this.get('model.newSubmission.submitter.id') === this.get('currentUser.user.id') &&
+        if (this.get('submission.submitter.id') === this.get('currentUser.user.id') &&
           externalRepos.get('length') > 0) {
           let md = { id: 'external-submissions', data: { submission: [] } };
           externalRepos.forEach(repo => md.data.submission.push({
@@ -449,7 +449,7 @@ export default Component.extend({
           metadata.push(md);
         }
 
-        this.set('model.newSubmission.metadata', JSON.stringify(metadata));
+        this.set('submission.metadata', JSON.stringify(metadata));
         this.sendAction('next');
       }
     },
@@ -466,7 +466,7 @@ export default Component.extend({
     checkForAuthors() {
       let schemaId = this.get('schema').id;
       // let currentFormStep = step;
-      let metadata = JSON.parse(this.get('model.newSubmission.metadata'));
+      let metadata = JSON.parse(this.get('submission.metadata'));
 
       let JScholarshipSchema = this.get('schemas').filter(md => md.id === 'JScholarship')[0];
 
@@ -484,7 +484,7 @@ export default Component.extend({
               // set the JScholarship Metadata authors array equal to commons
               md.data = {
                 authors: commonMetadata.data.authors,
-                embargo: this.get('model.repositories').filter(repo => repo.get('name') === 'JScholarship')[0].get('agreementText'),
+                embargo: this.get('repositories').filter(repo => repo.get('name') === 'JScholarship')[0].get('agreementText'),
               };
             }
           }
@@ -495,7 +495,7 @@ export default Component.extend({
             id: 'JScholarship',
             data: {
               authors: commonMetadata.data.authors,
-              embargo: this.get('model.repositories').filter(repo => repo.get('name') === 'JScholarship')[0].get('agreementText'),
+              embargo: this.get('repositories').filter(repo => repo.get('name') === 'JScholarship')[0].get('agreementText'),
             },
           };
           metadata.push(JScholarshipMetadata);
@@ -518,7 +518,7 @@ export default Component.extend({
           }
         });
       }
-      this.set('model.newSubmission.metadata', JSON.stringify(metadata));
+      this.set('submission.metadata', JSON.stringify(metadata));
     }
   },
 });
