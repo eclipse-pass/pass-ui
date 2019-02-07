@@ -8,7 +8,7 @@ export default Component.extend({
   pageNumber: 1,
   pageCount: 0,
   pageSize: 10,
-  grants: null,
+  submitterGrants: null,
   totalGrants: 0,
   themeInstance: Bootstrap4Theme.create(),
 
@@ -30,8 +30,8 @@ export default Component.extend({
   }),
   init() {
     this._super(...arguments);
-    if (this.get('model.preLoadedGrant')) this.send('addGrant', this.get('model.preLoadedGrant'));
-    if (this.get('model.newSubmission.submitter.id')) this.updateGrants();
+    if (this.get('preLoadedGrant')) this.send('addGrant', this.get('preLoadedGrant'));
+    if (this.get('submission.submitter.id')) this.updateGrants();
   },
   updateGrants() {
     let info = {};
@@ -44,8 +44,8 @@ export default Component.extend({
             {
               bool: {
                 should: [
-                  { term: { pi: this.get('model.newSubmission.submitter.id') } },
-                  { term: { coPis: this.get('model.newSubmission.submitter.id') } }
+                  { term: { pi: this.get('submission.submitter.id') } },
+                  { term: { coPis: this.get('submission.submitter.id') } }
                 ]
               }
             }
@@ -57,7 +57,7 @@ export default Component.extend({
       sort: [{ endDate: 'desc' }],
       info
     }).then((results) => {
-      this.set('grants', results);
+      this.set('submitterGrants', results);
       this.set('totalGrants', info.total);
       this.set('pageCount', Math.ceil(info.total / this.get('pageSize')));
     });
@@ -87,8 +87,8 @@ export default Component.extend({
       mayBeHidden: false
     }
   ],
-  filteredGrants: Ember.computed('grants', 'model.newSubmission.grants.[]', function () {
-    return this.get('grants').filter(g => !this.get('model.newSubmission.grants').map(x => x.id).includes(g.get('id')));
+  filteredGrants: Ember.computed('submitterGrants', 'submission.grants.[]', function () {
+    return this.get('submitterGrants').filter(g => !this.get('submission.grants').map(x => x.id).includes(g.get('id')));
   }),
   actions: {
     prevPage() {
@@ -108,14 +108,13 @@ export default Component.extend({
       }
     },
     addGrant(grant, event) {
+      const submission = this.get('submission');
       if (grant) {
-        const submission = this.get('model.newSubmission');
         submission.get('grants').pushObject(grant);
         this.set('maxStep', 2);
       } else if (event && event.target.value) {
         this.get('store').findRecord('grant', event.target.value).then((g) => {
           g.get('primaryFunder.policy'); // Make sure policy is loaded in memory
-          const submission = this.get('model.newSubmission');
           submission.get('grants').pushObject(g);
           this.set('maxStep', 2);
           Ember.$('select')[0].selectedIndex = 0;
@@ -124,10 +123,10 @@ export default Component.extend({
     },
     async removeGrant(grant) {
       // if grant is grant passed in from grant detail page remove query parms
-      if (grant === this.get('model.preLoadedGrant')) {
-        this.set('model.preLoadedGrant', null);
+      if (grant === this.get('preLoadedGrant')) {
+        this.set('preLoadedGrant', null);
       }
-      const submission = this.get('model.newSubmission');
+      const submission = this.get('submission');
       submission.get('grants').removeObject(grant);
 
       // undo progress, make user redo metadata step.
