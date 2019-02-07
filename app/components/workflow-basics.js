@@ -23,7 +23,7 @@ export default Component.extend({
   workflow: service('workflow'),
   errorHandler: service('error-handler'),
   currentUser: service('current-user'),
-  toastr: service('toast'),
+  toast: service('toast'),
   ajax: service('ajax'),
   validDOI: 'form-control',
   isValidDOI: false,
@@ -31,15 +31,15 @@ export default Component.extend({
   validEmail: '',
   // modal fields
   isShowingUserSearchModal: false,
-  isProxySubmission: Ember.computed('model.newSubmission.isProxySubmission', function () {
-    return this.get('model.newSubmission.isProxySubmission');
+  isProxySubmission: Ember.computed('submission.isProxySubmission', function () {
+    return this.get('submission.isProxySubmission');
   }),
-  inputSubmitterEmail: Ember.computed('model.newSubmission.submitterEmail', {
+  inputSubmitterEmail: Ember.computed('submission.submitterEmail', {
     get(key) {
-      return this.get('model.newSubmission.submitterEmail').replace('mailto:', '');
+      return this.get('submission.submitterEmail').replace('mailto:', '');
     },
     set(key, value) {
-      this.set('model.newSubmission.submitterEmail', `mailto:${value}`);
+      this.set('submission.submitterEmail', `mailto:${value}`);
       return value;
     }
   }),
@@ -64,8 +64,8 @@ export default Component.extend({
   didRender() {
     this._super(...arguments);
     if (!this.get('isProxySubmission')) {
-      this.set('model.newSubmission.submitter', this.get('currentUser.user'));
-      this.set('model.newSubmission.preparers', Ember.A());
+      this.set('submission.submitter', this.get('currentUser.user'));
+      this.set('submission.preparers', Ember.A());
     }
   },
   didInsertElement() {
@@ -89,7 +89,7 @@ export default Component.extend({
       this.set('userSearchTerm', '');
     },
     async changeSubmitter(isProxySubmission, submitter) {
-      let hasGrants = this.get('model.newSubmission.grants') && this.get('model.newSubmission.grants.length') > 0;
+      let hasGrants = this.get('submission.grants') && this.get('submission.grants.length') > 0;
       if (hasGrants) {
         swal({
           type: 'warning',
@@ -100,9 +100,9 @@ export default Component.extend({
           confirmButtonText: 'Yes, I\'m sure'
         }).then((result) => {
           if (result.value) {
-            this.set('model.newSubmission.grants', Ember.A());
+            this.set('submission.grants', Ember.A());
             this.send('updateSubmitterModel', isProxySubmission, submitter);
-            toastr.info('Submitter and related grants removed from submission.');
+            toast.info('Submitter and related grants removed from submission.');
           }
         });
       } else {
@@ -111,38 +111,38 @@ export default Component.extend({
     },
     updateSubmitterModel(isProxySubmission, submitter) {
       this.set('maxStep', 1);
-      this.set('model.newSubmission.submitterEmail', '');
-      this.set('model.newSubmission.submitterName', '');
+      this.set('submission.submitterEmail', '');
+      this.set('submission.submitterName', '');
       if (isProxySubmission) {
-        this.set('model.newSubmission.submitter', submitter);
-        this.set('model.newSubmission.preparers', Ember.A([this.get('currentUser.user')]));
+        this.set('submission.submitter', submitter);
+        this.set('submission.preparers', Ember.A([this.get('currentUser.user')]));
       } else {
-        this.set('model.newSubmission.submitter', this.get('currentUser.user'));
-        this.set('model.newSubmission.preparers', Ember.A());
+        this.set('submission.submitter', this.get('currentUser.user'));
+        this.set('submission.preparers', Ember.A());
       }
     },
     async validateNext() {
-      const title = this.get('model.publication.title');
-      const journal = this.get('model.publication.journal');
+      const title = this.get('publication.title');
+      const journal = this.get('publication.journal');
       const isProxySubmission = this.get('isProxySubmission');
 
       // booleans
-      const currentUserIsNotSubmitter = this.get('model.newSubmission.submitter.id') !== this.get('currentUser.user.id');
-      const proxySubmitterInfoExists = this.get('model.newSubmission.submitterEmail') && this.get('model.newSubmission.submitterName');
-      const userIsNotPreparer = !this.get('model.newSubmission.preparers').map(x => x.get('id')).includes(this.get('currentUser.user.id'));
-      const submitterExists = this.get('model.newSubmission.submitter.id');
+      const currentUserIsNotSubmitter = this.get('submission.submitter.id') !== this.get('currentUser.user.id');
+      const proxySubmitterInfoExists = this.get('submission.submitterEmail') && this.get('submission.submitterName');
+      const userIsNotPreparer = !this.get('submission.preparers').map(x => x.get('id')).includes(this.get('currentUser.user.id'));
+      const submitterExists = this.get('submission.submitter.id');
       const proxySubmitterExists = submitterExists && currentUserIsNotSubmitter;
 
       // A journal and title must be present
       if (!journal.get('id')) {
-        toastr.warning('The journal must not be left blank');
+        toast.warning('The journal must not be left blank');
         $('.ember-power-select-trigger').css('border-color', '#f86c6b');
       } else {
         $('.ember-power-select-trigger').css('border-color', '#4dbd74');
       }
 
       if (!title) {
-        toastr.warning('The title must not be left blank');
+        toast.warning('The title must not be left blank');
         this.set('validTitle', 'form-control is-invalid');
       } else {
         this.set('validTitle', 'form-control is-valid');
@@ -153,26 +153,26 @@ export default Component.extend({
 
       // If there's no submitter or submitter info and the submission is a new proxy submission:
       if (!(submitterExists || proxySubmitterInfoExists) && isProxySubmission) {
-        toastr.warning('You have indicated that you are submitting on behalf of someone else, but have not chosen that someone.');
+        toast.warning('You have indicated that you are submitting on behalf of someone else, but have not chosen that someone.');
         return;
       }
 
       if (this.get('validEmail') === 'is-invalid') {
-        toastr.warning('The email address you entered is invalid. Please verify the value and try again.');
+        toast.warning('The email address you entered is invalid. Please verify the value and try again.');
         return;
       }
       // If there's no title in the information grabbed via DOI, use the title given by the user.
-      if (!this.get('doiInfo.title')) this.set('doiInfo.title', this.get('model.publication.title'));
+      if (!this.get('doiInfo.title')) this.set('doiInfo.title', this.get('publication.title'));
       // Move to the next form.
       this.sendAction('next');
     },
     next() {
-      toastr.remove();
+      toast.remove();
       this.sendAction('next');
     },
     validateDOI() {
       // ref: https://www.crossref.org/blog/dois-and-matching-regular-expressions/
-      const doi = this.get('model.publication.doi');
+      const doi = this.get('publication.doi');
       const newDOIRegExp = /^(https?:\/\/(dx\.)?doi\.org\/)?10.\d{4,9}\/[-._;()/:A-Z0-9]+$/i;
       const ancientDOIRegExp = /^(https?:\/\/(dx\.)?doi\.org\/)?10.1002\/[^\s]+$/i;
       // 0 = no value
@@ -184,7 +184,7 @@ export default Component.extend({
         this.set('validDOI', 'form-control is-valid');
         $('.ember-power-select-trigger').css('border-color', '#4dbd74');
         this.set('validTitle', 'form-control is-valid');
-        this.set('model.newSubmission.metadata', '[]');
+        this.set('submission.metadata', '[]');
         this.set('isValidDOI', true);
       } else {
         this.set('validDOI', 'form-control is-invalid');
@@ -192,7 +192,7 @@ export default Component.extend({
       }
     },
     validateTitle() {
-      const title = this.get('model.publication.title');
+      const title = this.get('publication.title');
       if (title) { // if not null or empty, then valid
         this.set('validTitle', 'form-control is-valid');
       } else {
@@ -212,12 +212,12 @@ export default Component.extend({
     },
     /** looks up the DIO and returns title and journal if avaiable */
     lookupDOI() {
-      if (this.get('model.publication.doi')) {
-        this.set('model.publication.doi', this.get('model.publication.doi').trim());
-        this.set('model.publication.doi', this.get('model.publication.doi').replace(/doi:/gi, ''));
-        this.set('model.publication.doi', this.get('model.publication.doi').replace(/https?:\/\/(dx\.)?doi\.org\//gi, ''));
+      if (this.get('publication.doi')) {
+        this.set('publication.doi', this.get('publication.doi').trim());
+        this.set('publication.doi', this.get('publication.doi').replace(/doi:/gi, ''));
+        this.set('publication.doi', this.get('publication.doi').replace(/https?:\/\/(dx\.)?doi\.org\//gi, ''));
       }
-      const publication = this.get('model.publication');
+      const publication = this.get('publication');
 
       if (publication && publication.get('doi')) {
         this.send('validateDOI');
@@ -266,7 +266,7 @@ export default Component.extend({
               publication.set('journal', journal);
             }
           });
-          toastr.success("We've pre-populated information from the DOI provided!");
+          toast.success("We've pre-populated information from the DOI provided!");
         }, (error) => {
           // console.log(error.message);
         }); // end resolve(publication).then()
@@ -287,7 +287,7 @@ export default Component.extend({
       }
       this.set('doiInfo', doiInfo);
 
-      const publication = this.get('model.publication');
+      const publication = this.get('publication');
       publication.set('journal', journal);
       $('.ember-power-select-trigger').css('border-color', '#4dbd74');
     }

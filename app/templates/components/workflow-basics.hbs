@@ -1,5 +1,5 @@
 {{yield}}
-{{#unless (or model.newSubmission.id model.preLoadedGrant)}}
+{{#unless (or submission.id preLoadedGrant)}}
 <div class="py-0 mt-2 alert alert-secondary" id="on-behalf-of-block">
   <p class="my-2 lead">I'm creating this submission on behalf of:
     <input type="radio" checked={{ not isProxySubmission }} onchange={{action 'proxyStatusToggled' false}}/> Myself
@@ -17,18 +17,18 @@
         <button class="btn btn-primary" {{action 'toggleUserSearchModal'}} type="button">Search</button>
       </span>
     </div>
-    {{#if model.newSubmission.submitter.id}}
+    {{#if submission.submitter.id}}
     <p>
-      Currently selected submitter:<br>{{model.newSubmission.submitter.firstName}} {{model.newSubmission.submitter.lastName}}
-       (<a href="mailto:{{model.newSubmission.submitter.email}}">{{model.newSubmission.submitter.email}}</a>)<br>(<a href="#" {{action 'changeSubmitter' isProxySubmission null}}>Remove submitter</a>)
+      Currently selected submitter:<br>{{submission.submitter.firstName}} {{submission.submitter.lastName}}
+       (<a href="mailto:{{submission.submitter.email}}">{{submission.submitter.email}}</a>)<br>(<a href="#" {{action 'changeSubmitter' isProxySubmission null}}>Remove submitter</a>)
     </p>
     {{/if}}
   <p class="mb-0"><strong>If the person you are submitting for does not have an account with PASS</strong>, please
     provide their email address and name so we may notify them:
   </p>
   <div class="form-inline">
-  {{input class=(concat "mt-1 mb-3 form-control w-50 " validEmail) keyUp=(action "validateEmail") disabled=model.newSubmission.submitter.id value=inputSubmitterEmail placeholder="Email address"}}
-  {{input class="mt-1 mb-3 form-control w-50" disabled=model.newSubmission.submitter.id value=model.newSubmission.submitterName placeholder="Name"}}
+  {{input class=(concat "mt-1 mb-3 form-control w-50 " validEmail) keyUp=(action "validateEmail") disabled=submission.submitter.id value=inputSubmitterEmail placeholder="Email address"}}
+  {{input class="mt-1 mb-3 form-control w-50" disabled=submission.submitter.id value=submission.submitterName placeholder="Name"}}
   </div>
 </div>
 {{/if}}
@@ -61,12 +61,12 @@
   </div> --}}
   {{input
   class=validDOI
-  value=model.publication.doi
+  value=publication.doi
   keyUp=(action "lookupDOI")
   mouseUp=(action "lookupDOI")
   id="doi"
   placeholder="Leave blank if your manuscript or article has not yet been assigned a DOI"
-  readonly=model.newSubmission.id
+  readonly=submission.id
   }}
   <div class="text-danger">
     {{if (eq validDOI 2) 'Please provide a valid DOI'}}
@@ -74,7 +74,7 @@
 </div>
 <div class="form-group">
   <label>Manuscript/Article Title <span class="text-muted">(required)</span></label>
-  {{textarea value=model.publication.title cols="100%" rows="2" class=validTitle placeholder="Manuscript/Article Title"
+  {{textarea value=publication.title cols="100%" rows="2" class=validTitle placeholder="Manuscript/Article Title"
   keyUp=(action "validateTitle") id="title" readonly=isValidDOI }}
 </div>
 
@@ -86,10 +86,10 @@
   </div>
   <div class="w-100">
     {{#unless isValidDOI}}
-    {{find-journal id="journal" selectJournal=(action "selectJournal") value=model.publication.journal
+    {{find-journal id="journal" selectJournal=(action "selectJournal") value=publication.journal
     isValidDOI=isValidDOI}}
     {{else}}
-    <input type="text" class={{validTitle}} value={{await (get model.publication.journal 'journalName')}} readonly>
+    <input type="text" class={{validTitle}} value={{await (get publication.journal 'journalName')}} readonly>
     {{/unless}}
   </div>
 </div>
