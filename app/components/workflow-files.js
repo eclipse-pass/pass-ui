@@ -5,7 +5,7 @@ export default Component.extend({
   store: service('store'),
   workflow: service('workflow'),
   currentUser: service('current-user'),
-  files: Ember.A(),
+  newFiles: Ember.A(),
   filesTemp: Ember.computed('workflow.filesTemp', {
     get(key) {
       return this.get('workflow').getFilesTemp();
@@ -17,21 +17,20 @@ export default Component.extend({
   }),
   init() {
     this._super(...arguments);
-    this.set('files', Ember.A());
     if (this.get('filesTemp') && this.get('filesTemp').length > 0) {
       this.get('filesTemp').forEach((file) => {
-        this.get('files').pushObject(file);
+        this.get('newFiles').pushObject(file);
       });
     }
   },
   actions: {
     next() {
-      let manuscriptFiles = [].concat(this.get('files'), this.get('model.files') && this.get('model.files').toArray())
+      let manuscriptFiles = [].concat(this.get('newFiles'), this.get('previouslyUploadedFiles') && this.get('previouslyUploadedFiles').toArray())
         .filter(file => file && file.get('fileRole') === 'manuscript');
 
       let updateExistingFiles = () => {
         // Update any *existing* files that have had their details modified
-        let files = this.get('model.files');
+        let files = this.get('previouslyUploadedFiles');
         if (files) {
           files.forEach((file) => {
             if (file.get('hasDirtyAttributes')) {
@@ -40,11 +39,11 @@ export default Component.extend({
             }
           });
         }
-        this.set('filesTemp', this.get('files'));
+        this.set('filesTemp', this.get('newFiles'));
         this.sendAction('next');
       };
 
-      let userIsSubmitter = this.get('model.newSubmission.submitter.id') === this.get('currentUser.user.id');
+      let userIsSubmitter = this.get('submission.submitter.id') === this.get('currentUser.user.id');
 
       if (manuscriptFiles.length == 0 && !userIsSubmitter) {
         swal({
@@ -84,7 +83,7 @@ export default Component.extend({
         cancelButtonText: 'Nevermind'
       }).then((result) => {
         if (result.value) {
-          let mFiles = this.get('model.files');
+          let mFiles = this.get('previouslyUploadedFiles');
 
           // Remove the file from the model
           if (mFiles) {
@@ -113,20 +112,20 @@ export default Component.extend({
                 fileRole: 'supplemental',
                 _file: file
               });
-              if (this.get('files').length === 0) {
+              if (this.get('newFiles').length === 0) {
                 newFile.set('fileRole', 'manuscript');
               }
-              this.get('files').pushObject(newFile);
+              this.get('newFiles').pushObject(newFile);
             }
           }
         }
       }
     },
     removeFile(file) {
-      let files = this.get('files');
+      let files = this.get('newFiles');
       files.removeObject(file);
       this.set('files', files);
-      this.set('filesTemp', this.get('files'));
+      this.set('filesTemp', this.get('newFiles'));
     }
   },
 });
