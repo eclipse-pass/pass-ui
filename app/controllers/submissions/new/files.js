@@ -4,6 +4,8 @@ import { alias } from '@ember/object/computed';
 export default Controller.extend({
   submission: alias('model.newSubmission'),
   files: alias('model.files'),
+  publication: alias('model.publication'),
+  submissionEvents: alias('model.submissionEvents'),
   actions: {
     loadNext() {
       this.send('loadTab', 'submissions.new.review');
