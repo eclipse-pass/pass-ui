@@ -21,11 +21,11 @@ export default Controller.extend({
   }),
   userIsSubmitter: Ember.computed(
     'currentUser.user',
-    'model.newSubmission',
+    'model.newSubmission.submitter',
     function () {
       return (
-        this.get('model.newSubmission.submitter') ===
-        this.get('currentUser.user')
+        this.get('model.newSubmission.submitter.id') ===
+        this.get('currentUser.user.id')
       );
     }
   ),

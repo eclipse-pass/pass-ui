@@ -343,7 +343,7 @@ export default Component.extend({
             // if USER has not agreed to deposit and has not added at least one user
             //
             // ----------------------------------------------------------------------
-          } else if (!doAuthorsExist && !value && this.get('userIsSubmitter')) {
+          } else if (!doAuthorsExist && !value && userIsSubmitter) {
             swal({
               title: 'Notice!',
               text: 'You added JScholarship as a repository. JScholarship requires that (a) you list at least ONE author who is a member of the Johns Hopkins community, and (b) you agree to the deposit statement. Please return to the form to provide the required information.',
