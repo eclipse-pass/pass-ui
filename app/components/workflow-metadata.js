@@ -278,7 +278,7 @@ export default Component.extend({
               }
               if (result.dismiss != 'overlay') {
                 // remove jscholarship from submission
-                this.set('model.newSubmission.repositories', this.get('model.newSubmission.repositories').filter(repo => repo.get('name') !== 'JScholarship'));
+                this.set('model.newSubmission.repositories', this.get('activeRepositories').filter(repo => repo.get('name') !== 'JScholarship'));
                 if (this.get('model.newSubmission.repositories.length') == 0) {
                   swal({
                     title: 'You\'re about to abort the submission!',
@@ -317,7 +317,7 @@ export default Component.extend({
                 return;
               }
               if (result.dismiss != 'overlay') {
-                this.set('model.newSubmission.repositories', this.get('model.newSubmission.repositories').filter(repo => repo.get('name') !== 'JScholarship'));
+                this.set('model.newSubmission.repositories', this.get('activeRepositories').filter(repo => repo.get('name') !== 'JScholarship'));
                 if (this.get('model.newSubmission.repositories.length') == 0) {
                   swal({
                     title: 'You\'re about to abort the submission!',
@@ -356,7 +356,7 @@ export default Component.extend({
                 return;
               }
               if (result.dismiss != 'overlay') {
-                this.set('model.newSubmission.repositories', this.get('model.newSubmission.repositories').filter(repo => repo.get('name') !== 'JScholarship'));
+                this.set('model.newSubmission.repositories', this.get('activeRepositories').filter(repo => repo.get('name') !== 'JScholarship'));
                 if (this.get('model.newSubmission.repositories.length') == 0) {
                   swal({
                     title: 'You\'re about to abort the submission!',
@@ -434,7 +434,7 @@ export default Component.extend({
         }
 
         // Add metadata for external submissions only if the user is the submitter
-        const externalRepos = this.get('model.newSubmission.repositories').filter(repo =>
+        const externalRepos = this.get('activeRepositories').filter(repo =>
           repo.get('integrationType') === 'web-link');
 
         if (this.get('model.newSubmission.submitter.id') === this.get('currentUser.user.id') &&
