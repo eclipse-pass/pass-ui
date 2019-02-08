@@ -1,8 +1,0 @@
-{{#power-select
-  search=(action "searchGrants")
-  placeholder="Search all grants on PASS by Award Number"
-  onchange=(action "onSelect")
-  as |grant|
-}}
-  {{grant.awardNumber}}: {{grant.projectName}}
-{{/power-select}}

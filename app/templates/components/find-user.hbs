@@ -1,9 +1,0 @@
-{{#power-select
-  search=(action "searchUsers")
-  selected=value
-  placeholder="User"
-  onchange=(action "onSelect")
-  as |user|
-}}
-  {{get user 'lastName'}}
-{{/power-select}}
