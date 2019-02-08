@@ -44,6 +44,14 @@ export default DS.Model.extend({
     }
   ),
 
+  submitterEmailDisplay: Ember.computed('submitterEmail', function () {
+    if (this.get('submitterEmail')) {
+      return this.get('submitterEmail').replace('mailto:', '');
+    } else {
+      return this.get('submitterEmail');
+    }
+  }),
+
   publicationTitle: Ember.computed('publication', function () {
     return this.get('publication.title');
   }),
