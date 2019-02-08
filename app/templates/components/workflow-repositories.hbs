@@ -21,7 +21,7 @@
     {{#each optionalRepositories as |repoInfo|}}
       <li class="list-group-item d-flex align-items-center my-1">
         {{#if requiredRepositories.length}}
-          {{input type="checkbox" change=(action "toggleRepository" repoInfo.repo) checked=true name=repoInfo.repo.name}}
+          {{input type="checkbox" change=(action "toggleRepository" repoInfo.repo) checked=repoInfo.checked name=repoInfo.repo.name}}
         {{/if}}
         <label for="{{repoInfo.repo.name}}" class="mb-0 ml-2">{{repoInfo.repo.name}} - required by {{repoInfo.funders}}</label>
       </li>
@@ -29,5 +29,5 @@
   </ul>
 </div>
 {{/if}}
-<button class="btn btn-outline-primary mt-3" {{action "back"}}>Back</button>
-<button class="btn btn-primary next pull-right mt-3" {{action "next"}}>Next</button> {{yield}}
+<button class="btn btn-outline-primary mt-3" {{action back}}>Back</button>
+<button class="btn btn-primary next pull-right mt-3" {{action next}}>Next</button> {{yield}}

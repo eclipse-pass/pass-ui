@@ -6,7 +6,7 @@ export default Service.extend({
   pmcPublisherDeposit: false,
   doiInfo: [],
   filesTemp: [],
-  hasStarted: false,
+  defaultRepoLoaded: false, // you only want to load the default setting on first access, after that is should respect he user's choice.
 
   resetWorkflow() {
     this.setCurrentStep(0);
@@ -14,6 +14,7 @@ export default Service.extend({
     this.setPmcPublisherDeposit(false);
     this.setFilesTemp([]);
     this.setDoiInfo([]);
+    this.setDefaultRepoLoaded(false);
   },
   getCurrentStep() {
     return this.get('currentStep');
@@ -29,6 +30,8 @@ export default Service.extend({
   },
   setMaxStep(stepNumber) {
     this.set('maxStep', stepNumber);
+    //This ensures default repo is reloaded
+    if (stepNumber < 4) this.setDefaultRepoLoaded(false);
   },
   getPmcPublisherDeposit() {
     return this.get('pmcPublisherDeposit');
@@ -41,6 +44,12 @@ export default Service.extend({
   },
   setFilesTemp(filesTemp) {
     this.set('filesTemp', filesTemp);
+  },
+  getDefaultRepoLoaded() {
+    return this.get('defaultRepoLoaded');
+  },
+  setDefaultRepoLoaded(defaultRepoLoaded) {
+    this.set('defaultRepoLoaded', defaultRepoLoaded);
   },
   // putting doiInfo here temporarily, eventually will be moved to its own service
   getDoiInfo() {
