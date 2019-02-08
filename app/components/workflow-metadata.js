@@ -245,16 +245,16 @@ export default Component.extend({
           }
         }
       });
-      let value = null;
+      let agreementOk = null;
       if (this.get('schemas')[this.get('currentFormStep')].id === 'JScholarship') {
         if ($('[name="agreement-to-deposit"]').length == 2) {
-          value = $('[name="agreement-to-deposit"]')[1].checked;
+          agreementOk = $('[name="agreement-to-deposit"]')[1].checked;
         }
         // if proxy sub then set value of deposit agreement = true to let it pass.
         if (this.get('submission.isProxySubmission')) {
-          value = true;
+          agreementOk = true;
         }
-        let jhuRepo = this.get('repositories').filter(repo => repo.get('name') === 'JScholarship');
+        let jhuRepo = this.get('repositories').filter(repo => repo.get('repositoryKey') === 'jscholarship');
         // if jhuRepo exists
         if (jhuRepo.length > 0) {
           // ----------------------------------------------------------------------
@@ -264,7 +264,7 @@ export default Component.extend({
           // ----------------------------------------------------------------------
           // debugger; // eslint-disable-line
           let userIsSubmitter = this.get('submission.submitter.id') === this.get('currentUser.user.id');
-          if (doAuthorsExist && !value && userIsSubmitter) {
+          if (doAuthorsExist && !agreementOk && userIsSubmitter) {
             swal({
               title: 'Notice!',
               text: 'You added JScholarship as a repository but didn\'t agree to the deposit agreement, so your submission will not be submitted to JScholarship. To fix this, agree to the deposit agreement below.',
@@ -304,7 +304,7 @@ export default Component.extend({
             // if USER has not added at least one author but has agreed to deposit
             //
             // ----------------------------------------------------------------------
-          } else if (value && !doAuthorsExist) {
+          } else if (agreementOk && !doAuthorsExist) {
             swal({
               title: 'Notice!',
               text: 'You added JScholarship as a repository. JScholarship requires that you list at least ONE author who is a member of the Johns Hopkins community. Please provide the name of one or more authors for this manuscript." can be used when submitter is missing the name of the author only.',
@@ -343,7 +343,7 @@ export default Component.extend({
             // if USER has not agreed to deposit and has not added at least one user
             //
             // ----------------------------------------------------------------------
-          } else if (!doAuthorsExist && !value && userIsSubmitter) {
+          } else if (!doAuthorsExist && !agreementOk && userIsSubmitter) {
             swal({
               title: 'Notice!',
               text: 'You added JScholarship as a repository. JScholarship requires that (a) you list at least ONE author who is a member of the Johns Hopkins community, and (b) you agree to the deposit statement. Please return to the form to provide the required information.',
