@@ -199,7 +199,7 @@ export default Controller.extend({
     if (this.get('model.sub.submitter.email')) {
       return this.get('model.sub.submitter.email');
     } else if (this.get('model.sub.submitterEmail')) {
-      return this.get('model.sub.submitterEmail').replace('mailto:', '');
+      return this.get('model.sub.submitterEmailDisplay');
     }
     return '';
   }),

@@ -63,9 +63,6 @@ export default Component.extend({
   submitButtonText: Ember.computed('userIsPreparer', function () {
     return this.get('userIsPreparer') ? 'Request approval' : 'Submit';
   }),
-  displaySubmitterEmail: Ember.computed('submission.submitterEmail', function () {
-    return this.get('submission.submitterEmail').replace('mailto:', '');
-  }),
   actions: {
     submit() {
       $('.block-user-input').css('display', 'block');

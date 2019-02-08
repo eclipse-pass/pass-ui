@@ -202,7 +202,7 @@
                   {{#if submission.submitter}}
                   {{submission.submitter.displayName}} (<a href="mailto:{{submission.submitter.email}}">{{submission.submitter.email}}</a>)
                   {{else}}
-                  {{submission.submitterName}} (<a href="{{submission.submitterEmail}}">{{displaySubmitterEmail}}</a>)
+                  {{submission.submitterName}} (<a href="{{submission.submitterEmail}}">{{submission.submitterEmailDisplay}}</a>)
                   {{/if}}
                 </p>
                 {{!-- Show the following if not saved yet. --}}
@@ -212,7 +212,7 @@
                   {{#if submission.submitter.id}}
                   {{submission.submitter.displayName}} (<a href="mailto:{{submission.submitter.email}}">{{submission.submitter.email}}</a>)
                   {{else}}
-                  {{submission.submitterName}} (<a href="{{submission.submitterEmail}}">{{displaySubmitterEmail}}</a>)
+                  {{submission.submitterName}} (<a href="{{submission.submitterEmail}}">{{submission.submitterEmailDisplay}}</a>)
                   {{/if}}.
                   The submission will be sent to its target repositories upon approval, or be sent back to you if
                   additional edits
