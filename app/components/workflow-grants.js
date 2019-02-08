@@ -5,6 +5,7 @@ import Bootstrap4Theme from 'ember-models-table/themes/bootstrap4';
 
 export default Component.extend({
   store: service('store'),
+  workflow: service('workflow'),
   pageNumber: 1,
   pageCount: 0,
   pageSize: 10,
@@ -111,12 +112,12 @@ export default Component.extend({
       const submission = this.get('submission');
       if (grant) {
         submission.get('grants').pushObject(grant);
-        this.set('maxStep', 2);
+        this.get('workflow').setMaxStep(2);
       } else if (event && event.target.value) {
         this.get('store').findRecord('grant', event.target.value).then((g) => {
           g.get('primaryFunder.policy'); // Make sure policy is loaded in memory
           submission.get('grants').pushObject(g);
-          this.set('maxStep', 2);
+          this.get('workflow').setMaxStep(2);
           Ember.$('select')[0].selectedIndex = 0;
         });
       }
@@ -130,7 +131,7 @@ export default Component.extend({
       submission.get('grants').removeObject(grant);
 
       // undo progress, make user redo metadata step.
-      this.set('maxStep', 2);
+      this.get('workflow').setMaxStep(2);
     },
   },
 });
