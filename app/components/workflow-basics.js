@@ -21,15 +21,9 @@ function resolve(publication) {
 export default Component.extend({
   store: service('store'),
   workflow: service('workflow'),
-  errorHandler: service('error-handler'),
   currentUser: service('current-user'),
-  toast: service('toast'),
-  ajax: service('ajax'),
   validDOI: 'form-control',
   isValidDOI: false,
-  validTitle: 'form-control',
-  validEmail: '',
-  // modal fields
   isShowingUserSearchModal: false,
   isProxySubmission: Ember.computed('submission.isProxySubmission', function () {
     return this.get('submission.isProxySubmission');
@@ -40,24 +34,6 @@ export default Component.extend({
     },
     set(key, value) {
       this.set('submission.submitterEmail', `mailto:${value}`);
-      return value;
-    }
-  }),
-  doiInfo: Ember.computed('workflow.doiInfo', {
-    get(key) {
-      return this.get('workflow').getDoiInfo();
-    },
-    set(key, value) {
-      this.get('workflow').setDoiInfo(value);
-      return value;
-    }
-  }),
-  maxStep: Ember.computed('workflow.maxStep', {
-    get(key) {
-      return this.get('workflow').getMaxStep();
-    },
-    set(key, value) {
-      this.get('workflow').setMaxStep(value);
       return value;
     }
   }),
@@ -72,7 +48,15 @@ export default Component.extend({
     this._super(...arguments);
     this.send('lookupDOI');
   },
-  headers: { 'Content-Type': 'application/json; charset=utf-8' },
+  titleClass: Ember.computed('flaggedFields', function () {
+    return ((this.get('flaggedFields').indexOf('title') > -1) ? 'form-control is-invalid' : 'form-control');
+  }),
+  journalClass: Ember.computed('flaggedFields', function () {
+    return ((this.get('flaggedFields').indexOf('journal') > -1) ? 'is-invalid' : 'is-valid');
+  }),
+  submitterEmailClass: Ember.computed('flaggedFields', function () {
+    return ((this.get('flaggedFields').indexOf('submitterEmail') > -1) ? 'is-invalid' : '');
+  }),
   actions: {
     proxyStatusToggled(isProxySubmission) {
       // do only if the values indicate a switch of proxy
@@ -87,6 +71,7 @@ export default Component.extend({
       this.send('changeSubmitter', true, submitter);
       this.send('toggleUserSearchModal');
       this.set('userSearchTerm', '');
+      this.sendAction('validateSubmitterEmail'); // remove red border if there is one
     },
     async changeSubmitter(isProxySubmission, submitter) {
       let hasGrants = this.get('submission.grants') && this.get('submission.grants.length') > 0;
@@ -110,7 +95,7 @@ export default Component.extend({
       }
     },
     updateSubmitterModel(isProxySubmission, submitter) {
-      this.set('maxStep', 1);
+      this.get('workflow').setMaxStep(1);
       this.set('submission.submitterEmail', '');
       this.set('submission.submitterName', '');
       if (isProxySubmission) {
@@ -120,55 +105,6 @@ export default Component.extend({
         this.set('submission.submitter', this.get('currentUser.user'));
         this.set('submission.preparers', Ember.A());
       }
-    },
-    async validateNext() {
-      const title = this.get('publication.title');
-      const journal = this.get('publication.journal');
-      const isProxySubmission = this.get('isProxySubmission');
-
-      // booleans
-      const currentUserIsNotSubmitter = this.get('submission.submitter.id') !== this.get('currentUser.user.id');
-      const proxySubmitterInfoExists = this.get('submission.submitterEmail') && this.get('submission.submitterName');
-      const userIsNotPreparer = !this.get('submission.preparers').map(x => x.get('id')).includes(this.get('currentUser.user.id'));
-      const submitterExists = this.get('submission.submitter.id');
-      const proxySubmitterExists = submitterExists && currentUserIsNotSubmitter;
-
-      // A journal and title must be present
-      if (!journal.get('id')) {
-        toast.warning('The journal must not be left blank');
-        $('.ember-power-select-trigger').css('border-color', '#f86c6b');
-      } else {
-        $('.ember-power-select-trigger').css('border-color', '#4dbd74');
-      }
-
-      if (!title) {
-        toast.warning('The title must not be left blank');
-        this.set('validTitle', 'form-control is-invalid');
-      } else {
-        this.set('validTitle', 'form-control is-valid');
-      }
-
-      // if either is missing, end function early.
-      if (!journal.get('id') || !title) return;
-
-      // If there's no submitter or submitter info and the submission is a new proxy submission:
-      if (!(submitterExists || proxySubmitterInfoExists) && isProxySubmission) {
-        toast.warning('You have indicated that you are submitting on behalf of someone else, but have not chosen that someone.');
-        return;
-      }
-
-      if (this.get('validEmail') === 'is-invalid') {
-        toast.warning('The email address you entered is invalid. Please verify the value and try again.');
-        return;
-      }
-      // If there's no title in the information grabbed via DOI, use the title given by the user.
-      if (!this.get('doiInfo.title')) this.set('doiInfo.title', this.get('publication.title'));
-      // Move to the next form.
-      this.sendAction('next');
-    },
-    next() {
-      toast.remove();
-      this.sendAction('next');
     },
     validateDOI() {
       // ref: https://www.crossref.org/blog/dois-and-matching-regular-expressions/
@@ -182,32 +118,11 @@ export default Component.extend({
       } else if (newDOIRegExp.test(doi) === true || ancientDOIRegExp.test(doi) === true) {
         // 1 - Accepted
         this.set('validDOI', 'form-control is-valid');
-        $('.ember-power-select-trigger').css('border-color', '#4dbd74');
-        this.set('validTitle', 'form-control is-valid');
         this.set('submission.metadata', '[]');
         this.set('isValidDOI', true);
       } else {
         this.set('validDOI', 'form-control is-invalid');
         this.set('isValidDOI', false);
-      }
-    },
-    validateTitle() {
-      const title = this.get('publication.title');
-      if (title) { // if not null or empty, then valid
-        this.set('validTitle', 'form-control is-valid');
-      } else {
-        this.set('validTitle', 'form-control is-invalid');
-      }
-    },
-    validateEmail() {
-      const email = this.get('inputSubmitterEmail');
-      let emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-      if (email && emailPattern.test(email)) {
-        this.set('validEmail', 'is-valid');
-      } else if (email) {
-        this.set('validEmail', 'is-invalid');
-      } else {
-        this.set('validEmail', '');
       }
     },
     /** looks up the DIO and returns title and journal if avaiable */
@@ -267,6 +182,8 @@ export default Component.extend({
             }
           });
           toast.success("We've pre-populated information from the DOI provided!");
+          this.sendAction('validateTitle');
+          this.sendAction('validateJournal');
         }, (error) => {
           // console.log(error.message);
         }); // end resolve(publication).then()
@@ -289,7 +206,7 @@ export default Component.extend({
 
       const publication = this.get('publication');
       publication.set('journal', journal);
-      $('.ember-power-select-trigger').css('border-color', '#4dbd74');
+      this.sendAction('validateJournal');
     }
   },
 
