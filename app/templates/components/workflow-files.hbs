@@ -6,6 +6,7 @@
     width: 200px;
   }
 </style>
+
 {{#each submission.repositories as |repo| }}
   {{#if (eq repo.name "PubMed Central")}}
     <p class="lead text-muted">
@@ -17,7 +18,7 @@
     </p>
   {{/if}}
 {{/each}}
-
+{{#if (or previouslyUploadedFiles newFiles)}}
 <div class="row">
   <div class="col-lg-12">
     <table class="table table-responsive-sm table-sm">
@@ -81,8 +82,9 @@
   </div>
   <!--/.col-->
 </div>
+{{/if}}
 <!--/.row-->
-<p class="lead text-muted mb-2">Attach manuscript/article files to this submission.</p>
+<p class="lead text-muted">Attach manuscript/article files to this submission.</p>
 <p class="lead text-muted">Each individual file must be smaller than 100MB.</p>
 <div class="form-group row">
   <div class="col-md-12">
@@ -90,5 +92,5 @@
   </div>
 </div>
 <p><strong>Tip:</strong> Use the Control or the Shift key to select multiple files.</p>
-<button class="btn btn-outline-primary" {{action "back"}}>Back</button>
-<button class="btn btn-primary pull-right next" {{action "next"}}>Next</button>
+<button class="btn btn-outline-primary" {{action back}}>Back</button>
+<button class="btn btn-primary pull-right next" {{action next}}>Next</button>
