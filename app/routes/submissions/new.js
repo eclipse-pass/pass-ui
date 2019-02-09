@@ -32,8 +32,6 @@ export default CheckSessionRoute.extend({
       preLoadedGrant = this.get('store').findRecord('grant', params.grant);
     }
 
-    const querySize = 100;
-
     const repositories = this.loadObjects('repository', 0, 500);
     const policies = this.loadObjects('policy', 0, 500);
 
