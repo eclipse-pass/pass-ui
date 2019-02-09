@@ -5,72 +5,7 @@ export default Component.extend({
   store: service('store'),
   workflow: service('workflow'),
   currentUser: service('current-user'),
-  newFiles: Ember.A(),
-  filesTemp: Ember.computed('workflow.filesTemp', {
-    get(key) {
-      return this.get('workflow').getFilesTemp();
-    },
-    set(key, value) {
-      this.get('workflow').setFilesTemp(value);
-      return value;
-    }
-  }),
-  init() {
-    this._super(...arguments);
-    if (this.get('filesTemp') && this.get('filesTemp').length > 0) {
-      this.get('filesTemp').forEach((file) => {
-        this.get('newFiles').pushObject(file);
-      });
-    }
-  },
   actions: {
-    next() {
-      let manuscriptFiles = [].concat(this.get('newFiles'), this.get('previouslyUploadedFiles') && this.get('previouslyUploadedFiles').toArray())
-        .filter(file => file && file.get('fileRole') === 'manuscript');
-
-      let updateExistingFiles = () => {
-        // Update any *existing* files that have had their details modified
-        let files = this.get('previouslyUploadedFiles');
-        if (files) {
-          files.forEach((file) => {
-            if (file.get('hasDirtyAttributes')) {
-              // Asynchronously save the updated file metadata.
-              file.save();
-            }
-          });
-        }
-        this.set('filesTemp', this.get('newFiles'));
-        this.sendAction('next');
-      };
-
-      let userIsSubmitter = this.get('submission.submitter.id') === this.get('currentUser.user.id');
-
-      if (manuscriptFiles.length == 0 && !userIsSubmitter) {
-        swal({
-          title: 'No manuscript present',
-          text: 'If no manuscript is attached, the designated submitter will need to add one before final submission',
-          type: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'OK',
-          cancelButtonText: 'Cancel'
-        }).then((result) => {
-          if (result.value) {
-            updateExistingFiles();
-          }
-        });
-      } else if (manuscriptFiles.length == 0) {
-        toastr.warning('At least one manuscript file is required');
-      } else if (manuscriptFiles.length > 1) {
-        toastr.warning(`Only one file may be designated as the manuscript.  Instead, found ${manuscriptFiles.length}`);
-      } else {
-        updateExistingFiles();
-      }
-    },
-    back() {
-      this.sendAction('back');
-    },
     deleteExistingFile(file) {
       swal({
         title: 'Are you sure?',
@@ -80,7 +15,7 @@ export default Component.extend({
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
         confirmButtonText: 'I Agree',
-        cancelButtonText: 'Nevermind'
+        cancelButtonText: 'Never mind'
       }).then((result) => {
         if (result.value) {
           let mFiles = this.get('previouslyUploadedFiles');
@@ -125,7 +60,6 @@ export default Component.extend({
       let files = this.get('newFiles');
       files.removeObject(file);
       this.set('files', files);
-      this.set('filesTemp', this.get('newFiles'));
     }
   },
 });
