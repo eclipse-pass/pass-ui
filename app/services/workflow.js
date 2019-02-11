@@ -30,7 +30,7 @@ export default Service.extend({
   },
   setMaxStep(stepNumber) {
     this.set('maxStep', stepNumber);
-    //This ensures default repo is reloaded
+    // This ensures default repo is reloaded
     if (stepNumber < 4) this.setDefaultRepoLoaded(false);
   },
   getPmcPublisherDeposit() {
