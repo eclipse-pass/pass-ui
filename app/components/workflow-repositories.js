@@ -6,9 +6,7 @@ export default Component.extend({
   institutionRepos: Ember.computed('repositories', function () {
     return this.get('repositories').filter(repo => repo.get('repositoryKey') === 'jscholarship');
   }),
-  institutionName: Ember.computed(function () {
-    return "Johns Hopkins University";
-  }),
+  institutionName: Ember.computed(() => 'Johns Hopkins University'),
   pmcPublisherDeposit: Ember.computed('workflow.pmcPublisherDeposit', function () {
     return this.get('workflow').getPmcPublisherDeposit();
   }),
@@ -20,7 +18,7 @@ export default Component.extend({
       this.send('addRepository', institRepo);
       workflow.setDefaultRepoLoaded(true);
     }
-    //start by synching the submission with what you can see on the page
+    // start by synching the submission with what you can see on the page
     this.set('submission.repositories', this.get('combinedRepoList'));
   },
   getFunderNamesForRepo(repo) {
@@ -37,7 +35,7 @@ export default Component.extend({
   usesPmcRepository(policyRepos) {
     return policyRepos ? (policyRepos.filter(repo => repo.get('repositoryKey') === 'pmc').length > 0) : false;
   },
-  requiredRepositories: Ember.computed('submission.grants','pmcPublisherDeposit', 'optionalRepositories', function () {
+  requiredRepositories: Ember.computed('submission.grants', 'pmcPublisherDeposit', 'optionalRepositories', function () {
     const grants = this.get('submission.grants');
     let repos = Ember.A();
     grants.forEach((grant) => {
@@ -71,12 +69,12 @@ export default Component.extend({
     let institName = this.get('institutionName');
     institRepos.forEach((repo) => {
       let submissionIncludesRepo = this.get('submission.repositories').includes(repo);
-      result.addObject({repo: repo, funders: institName, checked: submissionIncludesRepo});
+      result.addObject({ repo, funders: institName, checked: submissionIncludesRepo });
     });
     return result;
   }),
-  combinedRepoList: Ember.computed('optionalRepositories', 'requiredRepositories', function() {
-    //this combines the required repositories with those selected in the optional list
+  combinedRepoList: Ember.computed('optionalRepositories', 'requiredRepositories', function () {
+    // this combines the required repositories with those selected in the optional list
     let repos = Ember.A();
     this.get('requiredRepositories').forEach((r) => {
       repos.pushObject(r.repo);

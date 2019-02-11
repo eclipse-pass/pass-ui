@@ -26,7 +26,7 @@ export default Component.extend({
     let users = this.get('matchingUsers');
     return users.filter(u => u.id !== this.get('currentUser.user.id'));
   }),
-  init () {
+  init() {
     this._super(...arguments);
     if (this.get('searchInput')) {
       this.send('searchForUsers', 1);
@@ -54,7 +54,7 @@ export default Component.extend({
           }
         },
         from: (page - 1) * size,
-        size: size,
+        size,
         info
       }).then((users) => {
         this.set('matchingUsers', users);

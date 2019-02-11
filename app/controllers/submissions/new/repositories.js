@@ -26,7 +26,7 @@ export default Controller.extend({
     loadTab(gotoRoute) {
       this.send('updateRelatedData');
       this.transitionToRoute(gotoRoute);
-      this.set('loadingNext', false); //reset for next time
+      this.set('loadingNext', false); // reset for next time
     },
     validateAndLoadTab(gotoRoute) {
       let needValidation = this.get('needValidation');
@@ -44,7 +44,7 @@ export default Controller.extend({
             this.transitionToRoute('dashboard');
           }
         });
-        //do nothing
+        // do nothing
       } else {
         this.send('loadTab', gotoRoute);
       }

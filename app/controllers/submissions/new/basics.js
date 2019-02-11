@@ -9,7 +9,7 @@ export default Controller.extend({
   preLoadedGrant: alias('model.preLoadedGrant'),
   submissionEvents: alias('model.submissionEvents'),
 
-  //these errors start as false since you don't want to immediately have all fields turn red
+  // these errors start as false since you don't want to immediately have all fields turn red
   titleError: false,
   journalError: false,
   submitterEmailError: false,
@@ -31,7 +31,7 @@ export default Controller.extend({
     }
   }),
   titleIsInvalid: Ember.computed('publication.title', function () {
-    return (this.get('publication.title')) ? false : true;
+    return !(this.get('publication.title'));
   }),
   journalIsInvalid: Ember.computed('publication.journal.id', 'publication.journal.journalName', function () {
     return !(this.get('publication.journal.id') || this.get('publication.journal.journalName'));
@@ -40,9 +40,10 @@ export default Controller.extend({
     'submission.submitter.id',
     'submission.submitterEmail',
     'submission.submitterName', function () {
-    return (!this.get('submission.submitter.id')
-            &&  (!this.get('submission.submitterEmail') || !this.get('submission.submitterName')));
-  }),
+      return (!this.get('submission.submitter.id')
+            && (!this.get('submission.submitterEmail') || !this.get('submission.submitterName')));
+    }
+  ),
   submitterEmailIsInvalid: Ember.computed('submission.submitterEmailDisplay', 'submission.submitter.id', function () {
     let emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     let email = this.get('submission.submitterEmailDisplay');
@@ -76,7 +77,7 @@ export default Controller.extend({
 
       if (titleIsInvalid || journalIsInvalid) return; // end here
 
-      //non proxy submission will always have current user as submitter, so only need to validate this for proxy submission
+      // non proxy submission will always have current user as submitter, so only need to validate this for proxy submission
       if (this.get('submission.isProxySubmission')) {
         // If there's no submitter or submitter info and the submission is a new proxy submission:
         if (this.get('submitterIsInvalid')) {
