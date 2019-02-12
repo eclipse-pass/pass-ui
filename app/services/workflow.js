@@ -51,7 +51,6 @@ export default Service.extend({
   setDefaultRepoLoaded(defaultRepoLoaded) {
     this.set('defaultRepoLoaded', defaultRepoLoaded);
   },
-  // putting doiInfo here temporarily, eventually will be moved to its own service
   getDoiInfo() {
     return this.get('doiInfo');
   },
