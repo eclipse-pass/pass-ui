@@ -1,16 +1,12 @@
-import { moduleForComponent, test, setupRenderingTest } from 'ember-qunit';
+import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
-import { module } from 'qunit';
-import { render } from '@ember/test-helpers';
-
+import { module, test } from 'qunit';
 
 module('Integration | Component | metadata-form', (hooks) => {
   setupRenderingTest(hooks);
-  test('it renders', function (assert) {
-    let model = {};
 
-    // TODO: add actual tests here
-    model = Ember.Object.create({
+  test('it renders', async function (assert) {
+    let submission = Ember.Object.create({
       metadata: '[]'
     });
     let schema = {
@@ -33,14 +29,19 @@ module('Integration | Component | metadata-form', (hooks) => {
     };
 
     this.set('schema', schema);
-    this.set('model', model);
+    this.set('submission', submission);
 
     let doiInfo = [];
     this.set('doiInfo', doiInfo);
     let currentFormStep = 0;
     this.set('currentFormStep', currentFormStep);
 
-    render(hbs`{{metadata-form schema=schema model=model doiInfo=doiInfo currentFormStep=currentFormStep}}`);
+    this.render(hbs`{{metadata-form
+        currentUser=currentUser
+        schema=schema
+        submission=submission
+        doiInfo=doiInfo
+        currentFormStep=currentFormStep}}`);
     assert.ok(true);
   });
 });

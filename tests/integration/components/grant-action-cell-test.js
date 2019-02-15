@@ -1,20 +1,21 @@
-import { moduleForComponent, test } from 'ember-qunit';
+import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
+import { module, test } from 'qunit';
 
-moduleForComponent('grant-action-cell', 'Integration | Component | grant action cell', {
-  integration: true
-});
+module('Integration | Component | grant action cell', (hooks) => {
+  setupRenderingTest(hooks);
 
-test('it renders', function (assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
+  test('it renders', async function (assert) {
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.on('myAction', function(val) { ... });
 
-  this.render(hbs`{{grant-action-cell}}`);
+    await this.render(hbs`{{grant-action-cell}}`);
 
-  assert.equal(this.$().text().trim(), 'New submission');
+    assert.equal(this.$().text().trim(), 'New submission');
 
-  // Template block usage:
-  this.render(hbs`{{#grant-action-cell}}template block text{{/grant-action-cell}}`);
+    // Template block usage:
+    await this.render(hbs`{{#grant-action-cell}}template block text{{/grant-action-cell}}`);
 
-  assert.equal(this.$().text().trim(), 'New submission\ntemplate block text');
+    assert.equal(this.$().text().trim(), 'New submission\ntemplate block text');
+  });
 });
