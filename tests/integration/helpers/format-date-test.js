@@ -1,15 +1,16 @@
-import { moduleForComponent, test } from 'ember-qunit';
+import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
+import { module, test } from 'qunit';
 
-moduleForComponent('format-date', 'helper:format-date', {
-  integration: true
-});
+module('Integration | Helper | format date', (hooks) => {
+  setupRenderingTest(hooks);
 
-// Replace this with your real tests.
-test('it renders', function(assert) { // eslint-disable-line
-  this.set('inputValue', 'August 19, 1975 23:15:30');
+  // Replace this with your real tests.
+  test('it renders', async function(assert) { // eslint-disable-line
+    this.set('inputValue', 'August 19, 1975 23:15:30');
 
-  this.render(hbs`{{format-date inputValue}}`);
+    await this.render(hbs`{{format-date inputValue}}`);
 
-  assert.equal(this.$().text().trim(), '08/19/1975');
+    assert.equal(this.$().text().trim(), '08/19/1975');
+  });
 });
