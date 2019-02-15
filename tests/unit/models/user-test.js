@@ -1,25 +1,24 @@
-import { moduleForModel, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
 import { run } from '@ember/runloop';
 
-moduleForModel('user', 'Unit | Model | user', {
-  // Specify the other units that are required for this test.
-  needs: ['model:submission']
-});
+module('Unit | Model | user', (hooks) => {
+  setupTest(hooks);
 
-test('it exists', function (assert) {
-  let model = this.subject();
+  test('it exists', function (assert) {
+    const user = run(() => this.owner.lookup('service:store').createRecord('user'));
+    assert.ok(user);
 
-  assert.ok(!!model);
+    return run(() => {
+      assert.equal(user.get('isAdmin'), false);
+      assert.equal(user.get('isSubmitter'), false);
 
-  return run(() => {
-    assert.equal(model.get('isAdmin'), false);
-    assert.equal(model.get('isSubmitter'), false);
+      user.set('roles', ['admin']);
+      assert.equal(user.get('isAdmin'), true);
 
-    model.set('roles', ['admin']);
-    assert.equal(model.get('isAdmin'), true);
-
-    model.get('roles').push('submitter');
-    assert.equal(model.get('isSubmitter'), true);
-    assert.equal(model.get('isAdmin'), true);
+      user.get('roles').push('submitter');
+      assert.equal(user.get('isSubmitter'), true);
+      assert.equal(user.get('isAdmin'), true);
+    });
   });
 });
