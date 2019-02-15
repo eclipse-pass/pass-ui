@@ -1,11 +1,12 @@
-import { moduleFor, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
 
-moduleFor('route:submissions/detail', 'Unit | Route | submissions/detail', {
-  // Specify the other units that are required for this test.
-  needs: ['service:toast', 'service:error-handler']
-});
+module('Unit | Route | submissions/detail', (hooks) => {
+  setupTest(hooks);
 
-test('it exists', function (assert) {
-  let route = this.subject();
-  assert.ok(route);
+  // Replace this with your real tests.
+  test('it exists', function (assert) {
+    let route = this.owner.lookup('route:submissions/detail');
+    assert.ok(route);
+  });
 });
