@@ -1,0 +1,13 @@
+{{!-- takes in a schema and the model to save the schema to--}}
+<h4 class="font-weight-light pull-right" style="margin-top:6.5px;">
+  Form {{displayFormStep}} of {{schemas.length}}
+</h4>
+{{metadata-form
+  currentUser=currentUser
+  schema=schema
+  submission=submission
+  doiInfo=doiInfo
+  currentFormStep=currentFormStep
+  nextForm=(action "nextForm")
+  previousForm=(action "previousForm")}}
+{{yield}}
