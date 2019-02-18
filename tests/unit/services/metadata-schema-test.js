@@ -11,8 +11,6 @@ module('Unit | Service | metadata-schema', (hooks) => {
     }
   };
 
-
-
   test('it exists', function (assert) {
     const service = this.owner.lookup('service:metadata-schema');
     assert.ok(service);

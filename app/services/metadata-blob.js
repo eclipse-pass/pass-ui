@@ -1,8 +1,29 @@
 import Service from '@ember/service';
 import _ from 'lodash';
 
-
+/**
+ * Service for manipulating a submission metadata blob.
+ */
 export default Service.extend({
+
+  /**
+   * Merge data from metadata blob2 into metadata blob1 and output the result as a new
+   * object (this operation will not mutate either input objects). Broken out here in
+   * case special logic needs to be assigned.
+   *
+   * @param {object} blob1 arbitrary JSON object representing metadata for a submission
+   * @param {object} blob2 arbitrary JSON object representing metadata for a submission
+   */
+  mergeBlobs(blob1, blob2) {
+    return Object.assign(blob1, blob2);
+  },
+
+  /**
+   * Transform a given metadata object into another object with keys/values suitable for dislplay
+   * to a user in the UI.
+   *
+   * @param {object} metadataBlob arbitrary JSON object representing the metadata for a submission
+   */
   getDisplayBlob(metadataBlob) {
     let metadataBlobNoKeys = [];
     JSON.parse(metadataBlob).forEach((ele) => {

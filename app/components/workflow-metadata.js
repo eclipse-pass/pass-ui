@@ -198,6 +198,10 @@ export default Component.extend({
     this.set('schema', this.get('metadataForms')[this.get('currentFormStep')]);
   },
 
+  /**
+   * John A Annotation
+   * Get currently active repositories from the Submission object
+   */
   activeRepositories: Ember.computed('submission', function () {
     const repos = Ember.A();
     this.get('submission.repositories').forEach((repository) => {
@@ -206,6 +210,14 @@ export default Component.extend({
     return repos.uniqBy('id');
   }),
 
+  /**
+   * Gets metadata schemas for the currently active repositories in this Submission.
+   *
+   * - Responds to changes in the new Submission obj, getting Submission.repositories property
+   * - Parse all stringified schemas
+   * - Prepend the 'common' schema
+   * - Return all but 'nih' schema (because NIH did not have a well defined schema?)
+   */
   metadataForms: Ember.computed('activeRepositories', function () {
     let retVal = this.get('activeRepositories').filterBy('formSchema');
     retVal = retVal.map(repository => JSON.parse(repository.get('formSchema')));
@@ -223,7 +235,15 @@ export default Component.extend({
     return this.get('workflow').getDoiInfo();
   }),
   actions: {
+    /**
+     * Proceed to next form. Always calls 'nextLogic' action.
+     * This seems to do various checks against JScholarship agreement specifically,
+     * so can likely be entirely skipped.
+     */
     nextForm() {
+      // ===================================================================================================
+      // TODO: do we need this author information in the schemas?
+      // Looks like this author logic relates only to agreements logic below
       let doAuthorsExist = false;
       JSON.parse(this.get('submission.metadata')).forEach((data) => {
         if (data.id === 'JScholarship') {
@@ -245,6 +265,8 @@ export default Component.extend({
           }
         }
       });
+      // ====================================================================================================
+      // Agreement logic not needed here : agreement stuff moved to the REVIEW step of the workflow
       let agreementOk = null;
       if (this.get('schemas')[this.get('currentFormStep')].id === 'JScholarship') {
         if ($('[name="agreement-to-deposit"]').length == 2) {
@@ -381,10 +403,17 @@ export default Component.extend({
             this.send('nextLogic');
           }
         }
+      // ============================================================================================================
       } else {
         this.send('nextLogic');
       }
     },
+    /**
+     * Business logic performed between steps, such as adding form data to metadata blob.
+     * Calls 'next' on last step to progress to the next workflow step
+     *
+     * - ONLY on last step, this dumps DOI info into metadata blob
+     */
     nextLogic() {
       const step = this.get('currentFormStep');
       let metadata = JSON.parse(this.get('submission.metadata'));
@@ -463,6 +492,9 @@ export default Component.extend({
         this.sendAction('back');
       }
     },
+    /**
+     * ??
+     */
     checkForAuthors() {
       let schemaId = this.get('schema').id;
       // let currentFormStep = step;
