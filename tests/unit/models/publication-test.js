@@ -1,12 +1,12 @@
-import { moduleForModel, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
+import { run } from '@ember/runloop';
 
-moduleForModel('publication', 'Unit | Model | publication', {
-  // Specify the other units that are required for this test.
-  needs: ['model:journal', 'model:submission']
-});
+module('Unit | Model | publication', (hooks) => {
+  setupTest(hooks);
 
-test('it exists', function (assert) {
-  let model = this.subject();
-  // let store = this.store();
-  assert.ok(!!model);
+  test('it exists', function (assert) {
+    const publication = run(() => this.owner.lookup('service:store').createRecord('publication'));
+    assert.ok(publication);
+  });
 });

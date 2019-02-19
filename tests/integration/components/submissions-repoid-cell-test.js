@@ -1,15 +1,30 @@
-import { moduleForComponent, test } from 'ember-qunit';
+import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
+import { module, test } from 'qunit';
+import { run } from '@ember/runloop';
 
-moduleForComponent('submissions-repoid-cell', 'Integration | Component | submissions repoid cell', {
-  integration: true
-});
+module('Integration | Component | submissions repoid cell', (hooks) => {
+  setupRenderingTest(hooks);
 
-test('it renders', function (assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
+  // Inject mocked store that on query returns a single user
+  hooks.beforeEach(function () {
+    let store = Ember.Service.extend({
+      query: (type, q) => Promise.resolve([Ember.Object.create({ id: 'test' })])
+    });
 
-  // Template usage:
-  this.render(hbs`{{submissions-repoid-cell}}`);
-  assert.ok(true);
+    run(() => {
+      this.owner.unregister('service:store');
+      this.owner.register('service:store', store);
+      this.store = this.owner.lookup('service:store');
+    });
+  });
+
+  test('it renders', async function (assert) {
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.on('myAction', function(val) { ... });
+
+    // Template usage:
+    await this.render(hbs`{{submissions-repoid-cell}}`);
+    assert.ok(true);
+  });
 });

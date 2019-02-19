@@ -1,21 +1,25 @@
-import { moduleForComponent, test } from 'ember-qunit';
+import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
+import { module, test } from 'qunit';
 
-moduleForComponent('workflow-wrapper', 'Integration | Component | workflow wrapper', {
-  integration: true
-});
+module('Integration | Component | workflow wrapper', (hooks) => {
+  setupRenderingTest(hooks);
 
-test('it renders', function (assert) {
-  let model = {};
+  test('it renders', function (assert) {
+    let submission = Ember.Object.create({ });
+    let publication = Ember.Object.create({ });
+    let submissionEvent = Ember.Object.create({ });
 
-  // TODO: add actual tests here
-  model = Ember.Object.create({
-    newSubmission: Ember.Object.create({
-    })
+    this.set('submission', submission);
+    this.set('publication', publication);
+    this.set('submissionEvents', [submissionEvent]);
+    this.set('validateAndLoadTab', (actual) => {});
+
+    this.render(hbs`{{workflow-wrapper
+      submission=submission
+      publication=publication
+      submissionEvents=submissionEvents
+      loadTab=(action validateAndLoadTab)}}`);
+    assert.ok(true);
   });
-
-  this.set('model', model);
-
-  this.render(hbs`{{workflow-wrapper model=model}}`);
-  assert.ok(true);
 });

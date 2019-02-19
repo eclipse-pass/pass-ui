@@ -1,12 +1,12 @@
-import { moduleFor, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
 
-moduleFor('service:error-handler', 'Unit | Service | error handler', {
-  // Specify the other units that are required for this test.
-  // needs: ['service:foo']
-});
+module('Unit | Service | error handler', (hooks) => {
+  setupTest(hooks);
 
-// Do to errors throwing a page redirect this can not be tested as a unit test.
-test('it exists', function (assert) {
-  let service = this.subject();
-  assert.ok(service);
+  // Replace this with your real tests.
+  test('it exists', function (assert) {
+    let service = this.owner.lookup('service:error-handler');
+    assert.ok(service);
+  });
 });

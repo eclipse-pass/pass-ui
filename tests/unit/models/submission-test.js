@@ -1,13 +1,36 @@
-import { moduleForModel, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
+import { run } from '@ember/runloop';
 
-moduleForModel('submission', 'Unit | Model | submission', {
-  // Specify the other units that are required for this test.
-  needs: ['model:journal', 'model:deposit', 'model:user', 'model:grant',
-    'model:publication', 'model:repository', 'model:file']
-});
+module('Unit | Model | submission', (hooks) => {
+  setupTest(hooks);
 
-test('it exists', function (assert) {
-  let model = this.subject();
-  // let store = this.store();
-  assert.ok(!!model);
+  test('submitterEmailDisplay should remove mailto from submitterEmail', function (assert) {
+    const submission = run(() => this.owner.lookup('service:store').createRecord('submission'));
+    run(() => submission.set('submitterEmail', 'mailto:test@test.com'));
+    assert.equal(submission.get('submitterEmailDisplay'), 'test@test.com');
+  });
+
+  test('isProxySubmission is correctly calculated', function (assert) {
+    const submission = run(() => this.owner.lookup('service:store').createRecord('submission'));
+    // it isn't any kind of submission yet, let alone a proxy submission!
+    assert.equal(submission.get('isProxySubmission'), false);
+
+    const user = run(() => this.owner.lookup('service:store').createRecord('user'));
+    run(() => user.set('id', 'test:user'));
+    run(() => submission.set('submitter', user));
+    // there is a submitter, but no preparer, still not a proxy submission
+    assert.equal(submission.get('isProxySubmission'), false);
+
+    run(() => submission.set('submitterName', 'Test Name'));
+    run(() => submission.set('submitterEmail', 'mailto:test@test.com'));
+    // a submitterEmail and submitterName has been entered, this is going to be a proxy submission.
+    assert.equal(submission.get('isProxySubmission'), true);
+
+    run(() => submission.set('submitterName', null));
+    run(() => submission.set('submitterEmail', null));
+    run(() => submission.set('preparers', Ember.A([user])));
+    // if there is one preparer, regardless of other values, it is a proxy submission
+    assert.equal(submission.get('isProxySubmission'), true);
+  });
 });

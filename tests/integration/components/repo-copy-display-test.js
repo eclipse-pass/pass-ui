@@ -1,15 +1,16 @@
-import { moduleForComponent, test } from 'ember-qunit';
+import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
+import { module, test } from 'qunit';
 
-moduleForComponent('repocopy-display', 'Integration | Component | repocopy display', {
-  integration: true
-});
+module('Integration | Component | repocopy display', (hooks) => {
+  setupRenderingTest(hooks);
 
-test('it renders', function (assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
+  test('it renders', function (assert) {
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.on('myAction', function(val) { ... });
 
-  // Template usage:
-  this.render(hbs`{{repocopy-display}}`);
-  assert.ok(true);
+    // Template usage:
+    this.render(hbs`{{repocopy-display}}`);
+    assert.ok(true);
+  });
 });
