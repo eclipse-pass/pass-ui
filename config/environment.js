@@ -78,7 +78,7 @@ module.exports = function (environment) {
   };
 
   ENV.schemaService = {
-    url: 'moo'
+    url: 'http://localhost:8080/services/schema'
   };
 
   if (process.env.EMBER_ROOT_URL) {
@@ -87,6 +87,10 @@ module.exports = function (environment) {
 
   if (process.env.USER_SERVICE_URL) {
     ENV.userService.url = process.env.USER_SERVICE_URL;
+  }
+
+  if (process.env.SCHEMA_SERVICE_URL) {
+    ENV.schemaService.url = process.env.SCHEMA_SERVICE_URL;
   }
 
   if (process.env.FEDORA_ADAPTER_BASE) {

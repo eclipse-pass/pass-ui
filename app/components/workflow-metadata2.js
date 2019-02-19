@@ -11,6 +11,8 @@ import { inject as service } from '@ember/service';
 export default Component.extend({
   router: service('router'), // Used to abort this step
   workflow: service('workflow'),
+  metadataService: service('metadata-blob'),
+  schemaService: service('metadata-schema'),
 
   currentFormStep: 0, // Current step #
 
@@ -32,15 +34,12 @@ export default Component.extend({
   },
 
   actions: {
-    nextForm() {
-      this.send('nextLogic');
-    },
-
-    nextLogic() {
+    nextForm(metadata) {
       const step = this.get('currentFormStep');
+      this.updateMetadata(metadata);
 
       if (this.get('currentFormStep') >= this.get('schemas').length) {
-        // TODO: finalize metadata blob and set 'submission.metadata'
+        this.finalizeMetadata(metadata);
         this.sendAction('next');
       } else {
         this.set('currentFormStep', step + 1);
@@ -48,7 +47,7 @@ export default Component.extend({
       }
     },
 
-    previousForm() {
+    previousForm(metadata) {
       const step = this.get('currentFormStep');
       if (steps > 0) {
         this.set('currentFormStep', step - 1);
@@ -57,12 +56,55 @@ export default Component.extend({
         this.sendAction('back');
       }
     },
+  },
 
-    /**
-     * I _think_ we can ignore this. It seems to shuffle and copy author information to various
-     * places of the final metadata blob. Since the new blob will be flattened, it should no
-     * matter.
-     */
-    checkForAuthors() {}
+  /**
+   * Add/update data in the current submission metadata blob based on information provided
+   * by a user from a metadata form.
+   *
+   * Impl note:
+   * The structure of the 'newMetadata' blob is determined by 'metadata-form.js'. It's
+   * metadata is provided to the #nextForm function call.
+   *
+   * @param {object} newMetadata metadata blob from a single metadata form
+   */
+  updateMetadata(newMetadata) {
+
+  },
+
+  /**
+   * Do any final processing of the submission's metadata blob here before moving on to the
+   * next submission step.
+   */
+  finalizeMetadata() {
+    let metadata = this.get('submission.metadata');
+
+    metadata.set('agent_information', this.getBrowserInfo());
+  },
+
+  /**
+   * Used to set some information in the metadata blob
+   */
+  getBrowserInfo() {
+    let ua = navigator.userAgent;
+    let tem;
+    let M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
+    if (/trident/i.test(M[1])) {
+      tem = /\brv[ :]+(\d+)/g.exec(ua) || [];
+      return { name: 'IE ', version: (tem[1] || '') };
+    }
+    if (M[1] === 'Chrome') {
+      tem = ua.match(/\bOPR\/(\d+)/);
+      if (tem != null) {
+        return { name: 'Opera', version: tem[1] };
+      }
+    }
+    M = M[2] ? [M[1], M[2]] : [navigator.appName, navigator.appVersion, '-?'];
+    //  eslint-disable-next-line
+    if((tem=ua.match(/version\/(\d+)/i))!=null) {M.splice(1,1,tem[1]);}
+    return {
+      name: M[0],
+      version: M[1]
+    };
   }
 });
