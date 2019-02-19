@@ -32,7 +32,10 @@ export default Service.extend({
    * @Returns {object} the modified schema
    */
   addDisplayData(schema, data, setReadOnly) {
-    schema.data = data;
+    if (!schema.data) {
+      schema.data = {};
+    }
+    schema.data = Object.assign(schema.data, data);
 
     if (setReadOnly) {
       Object.keys(data).forEach((key) => {
