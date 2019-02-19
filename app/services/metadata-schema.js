@@ -33,6 +33,15 @@ export default Service.extend({
    */
   addDisplayData(schema, data, setReadOnly) {
     schema.data = data;
+
+    if (setReadOnly) {
+      Object.keys(data).forEach((key) => {
+        if (schema.options.fields.hasOwnProperty(key)) {
+          schema.options.fields[key].readonly = true;
+        }
+      });
+    }
+
     return schema;
   }
 });
