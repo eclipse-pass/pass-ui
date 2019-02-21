@@ -6,7 +6,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
-    this.mockSchema = {
+    const mockSchema = {
       schema: {
         title: ' User Feedback',
         description: 'What do you think about Alpaca?',
@@ -36,8 +36,8 @@ module('Unit | Service | metadata-schema', (hooks) => {
         }
       }
     };
+    this.set('mockSchema', mockSchema);
 
-    const mockSchema = this.mockSchema;
     const mockAjax = Ember.Service.extend({
       request() {
         // return Promise.resolve({ data: 'This is a moo' });
@@ -55,6 +55,10 @@ module('Unit | Service | metadata-schema', (hooks) => {
     assert.ok(this.owner.lookup('service:metadata-schema'));
   });
 
+  /**
+   * Simple test showing that #getMetadataSchema uses the AJAX service to retrieve a
+   * set of schema
+   */
   test('Test against mocked AJAX', function (assert) {
     this.owner.lookup('service:metadata-schema').getMetadataSchemas()
       .then((result) => {
@@ -64,26 +68,32 @@ module('Unit | Service | metadata-schema', (hooks) => {
       });
   });
 
+  /**
+   * Test adding data to display in a schema
+   */
   test('Test adding display data, editable', function (assert) {
     const data = {
       name: 'Moo Jones',
       feedback: 'Feedbag'
     };
 
-    const result = this.owner.lookup('service:metadata-schema').addDisplayData(this.mockSchema, data);
+    const result = this.owner.lookup('service:metadata-schema').addDisplayData(this.get('mockSchema'), data);
 
     assert.ok(result.data, 'No data found in result');
     assert.ok(result.schema, 'Schema not found in result');
     assert.ok(result.options, 'options not found in result');
   });
 
+  /**
+   * Another test of adding display data to a schema, but marking them as read-only
+   */
   test('Test adding read-only display data', function (assert) {
     const data = {
       name: 'Moo Jones',
       feedback: 'Feedbag'
     };
 
-    const result = this.owner.lookup('service:metadata-schema').addDisplayData(this.mockSchema, data, true);
+    const result = this.owner.lookup('service:metadata-schema').addDisplayData(this.get('mockSchema'), data, true);
 
     assert.ok(result, 'No result found');
     assert.ok(result.data, 'No data found in result');
