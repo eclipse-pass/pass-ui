@@ -5,11 +5,8 @@ import { module, test } from 'qunit';
 module('Integration | Component | metadata-form', (hooks) => {
   setupRenderingTest(hooks);
 
-  test('it renders', async function (assert) {
-    let submission = Ember.Object.create({
-      metadata: '[]'
-    });
-    let schema = {
+  hooks.beforeEach(function () {
+    const schema = {
       id: 'nih',
       data: {},
       schema: {
@@ -27,21 +24,19 @@ module('Integration | Component | metadata-form', (hooks) => {
         }
       }
     };
-
     this.set('schema', schema);
-    this.set('submission', submission);
+  });
 
-    let doiInfo = [];
-    this.set('doiInfo', doiInfo);
-    let currentFormStep = 0;
-    this.set('currentFormStep', currentFormStep);
+  test('it renders', async function (assert) {
+    await this.render(hbs`{{metadata-form schema=schema}}`);
 
-    this.render(hbs`{{metadata-form
-        currentUser=currentUser
-        schema=schema
-        submission=submission
-        doiInfo=doiInfo
-        currentFormStep=currentFormStep}}`);
-    assert.ok(true);
+    const el = this.element.querySelector('#schemaForm');
+    assert.ok(el);
+
+    assert.equal(
+      2,
+      el.querySelectorAll('button').length,
+      'There should be two form control buttons (prev, next)'
+    );
   });
 });
