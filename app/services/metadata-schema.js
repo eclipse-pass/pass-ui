@@ -2,13 +2,17 @@ import Ember from 'ember';
 import Service from '@ember/service';
 import ENV from 'pass-ember/config/environment';
 
+/**
+ * Service to manipulate Alpaca schemas
+ */
 export default Service.extend({
   ajax: Ember.inject.service('ajax'),
   schemaService: ENV.schemaService,
 
   /**
    * TODO: don't know the actual API yet!
-   * @param {} repositories
+   * @param {array} repositories list of repositories (TODO: repo names or objects?)
+   * @returns {array} list of schemas relevant to the given repositories
    */
   getMetadataSchemas(repositories) {
     const url = this.get('url');

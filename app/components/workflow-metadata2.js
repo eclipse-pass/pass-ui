@@ -14,17 +14,33 @@ export default Component.extend({
   metadataService: service('metadata-blob'),
   schemaService: service('metadata-schema'),
 
+  /**
+   * Schema that is currently being shown to the user
+   */
+  currentSchema: Ember.computed('schemas', 'currentFormStep', function () {
+    const schemas = this.get('schemas');
+    if (schemas && schemas.length > 0) {
+      return schemas[this.get('currentFormStep')];
+    }
+  }),
   currentFormStep: 0, // Current step #
 
-  // Don't think this should be here
-  // userIsSubmitter: Ember.computed(this.get(submission.submitter.id) === this.get('currentUser.user.id')),
-
-  currentSchema: {},
   schemas: [],
 
-  init() {
+  async init() {
     this._super(...arguments);
-    this.set('schemas', []);
+    const repos = this.get('submission.repositories');
+
+    try {
+      const schemas = await this.get('schemaService').getMetadataSchemas(repos);
+
+      this.set('schemas', schemas);
+      this.set('currentFormStep', 0);
+      // this.set('currentSchema', schemas[0]);
+    } catch (e) {
+      console.log('%cFailed to get schemas', 'color:red;');
+      console.log(e);
+    }
   },
 
   // TODO: Likely we will have nothing to do here
@@ -44,6 +60,7 @@ export default Component.extend({
       } else {
         this.set('currentFormStep', step + 1);
         this.set('currentSchema', this.get('schemas')[step + 1]);
+        // TODO: Add display data / set read-only fields here?
       }
     },
 
@@ -59,17 +76,24 @@ export default Component.extend({
   },
 
   /**
-   * Add/update data in the current submission metadata blob based on information provided
-   * by a user from a metadata form.
+   * Add/update data in thedoiInfo current submission metadata blob based on information provided
+   * by a user from a metadata form. New metadata will be merged with the current metadata
+   * blob.
    *
    * Impl note:
-   * The structure of the 'newMetadata' blob is determined by 'metadata-form.js'. It's
+   * - The structure of the 'newMetadata' blob is determined by 'components/metadata-form.js'. It's
    * metadata is provided to the #nextForm function call.
+   * - Merging current and new blobs together is done in 'services/metadata-blob.js'
    *
    * @param {object} newMetadata metadata blob from a single metadata form
    */
   updateMetadata(newMetadata) {
+    const mergedBlob = this.get('metadataService').mergeBlobs(
+      this.get('submission.metadata'),
+      newMetadata
+    );
 
+    this.set('submission.metadata', mergedBlob);
   },
 
   /**
