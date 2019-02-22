@@ -10,13 +10,10 @@ export default Controller.extend({
   publication: alias('model.publication'),
   submissionEvents: alias('model.submissionEvents'),
   nextTabIsActive: Ember.computed('workflow.maxStep', function () {
-    console.log(`getMaxStep${this.get('workflow').getMaxStep()}` > 6);
     return (this.get('workflow').getMaxStep() > 6);
   }),
   loadingNext: false,
   needValidation: Ember.computed('nextTabIsActive', 'loadingNext', function () {
-    console.log(`nextTabIsActive${this.get('nextTabIsActive')}`);
-    console.log(`loadingNext${this.get('loadingNext')}`);
     return (this.get('nextTabIsActive') || this.get('loadingNext'));
   }),
   newFiles: Ember.computed('workflow.filesTemp', {
@@ -48,7 +45,6 @@ export default Controller.extend({
         let manuscriptFiles = [].concat(this.get('newFiles'), files && files.toArray())
           .filter(file => file && file.get('fileRole') === 'manuscript');
         let userIsSubmitter = this.get('parent').get('userIsSubmitter');
-        console.log(`userIsSubmitter${userIsSubmitter}`);
         if (manuscriptFiles.length == 0 && !userIsSubmitter) {
           swal({
             title: 'No manuscript present',
