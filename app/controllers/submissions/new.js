@@ -60,7 +60,7 @@ export default Controller.extend({
         // If a submitter is specified, it's a normal "approval-requested" scenario.
         if (s.get('submitter.id')) {
           subEvent.set('eventType', 'approval-requested');
-        } else if (this.get('model.newSubmission.submitterName') && this.get('model.newSubmission.submitterEmail')) {
+        } else if (s.get('submitterName') && s.get('submitterEmail')) {
           // debugger; // eslint-disable-line
           // If not specified but a name and email are present, create a mailto link.
           subEvent.set('eventType', 'approval-requested-newuser');
