@@ -25,6 +25,10 @@ export default Component.extend({
   }),
   currentFormStep: 0, // Current step #
 
+  displayFormStep: Ember.computed('currentFormStep', function () {
+    return this.get('currentFormStep') + 1;
+  }),
+
   schemas: [],
 
   async init() {

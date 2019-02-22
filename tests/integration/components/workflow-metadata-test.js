@@ -2,6 +2,7 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { run } from '@ember/runloop';
+import { click, render } from '@ember/test-helpers';
 
 module('Integration | Component | workflow-metadata', (hooks) => {
   setupRenderingTest(hooks);
@@ -73,10 +74,51 @@ module('Integration | Component | workflow-metadata', (hooks) => {
     });
   });
 
-  test('it renders', function (assert) {
-    const component = this.render(hbs`{{workflow-metadata submission=submission}}`);
+  test('it renders', (assert) => {
+    const component = render(hbs`{{workflow-metadata submission=submission}}`);
     assert.ok(component);
   });
 
-  // test('');
+  test('should display current and total number of pages', async function (assert) {
+    const expected = 'Form 1 of 2';
+    await render(hbs`{{workflow-metadata submission=submission}}`);
+
+    const header = this.element.querySelector('h4');
+    assert.ok(header);
+    assert.ok(header.textContent.includes(expected));
+  });
+
+  test('must show form nav buttons', async function (assert) {
+    await render(hbs`{{workflow-metadata submission=submission}}`);
+
+    const buttons = this.element.querySelectorAll('button');
+    assert.equal(2, buttons.length, 'should be two buttons');
+
+    Object.keys(buttons).map(key => buttons[key].textContent).forEach((btn) => {
+      assert.ok(btn === 'Back' || btn === 'Next');
+    });
+  });
+
+  test('first form should be NIHMS', async function (assert) {
+    await render(hbs`{{workflow-metadata submission=submission}}`);
+
+    assert.ok(
+      this.element.textContent.includes('NIH Manuscript Submission System'),
+      'NIHMS header not found'
+    );
+    assert.ok(
+      this.element.querySelector('input[name="journal-NLMTA-ID"]'),
+      'journal-NLMTA-ID input field not found'
+    );
+  });
+
+  test('second form should be J10P', async function (assert) {
+    await render(hbs`{{workflow-metadata submission=submission}}`);
+    await click('button[data-key="Next"]');
+
+    assert.ok(
+      this.element.textContent.includes('JScholarship Moo'),
+      'text in component should include "JScholarship"'
+    );
+  });
 });
