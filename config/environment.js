@@ -78,7 +78,8 @@ module.exports = function (environment) {
   };
 
   ENV.schemaService = {
-    url: 'http://localhost:8080/services/schema'
+    // url: 'http://localhost:8080/services/schema'
+    url: ''
   };
 
   if (process.env.EMBER_ROOT_URL) {

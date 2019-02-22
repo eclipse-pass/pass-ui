@@ -60,7 +60,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
    * set of schema
    */
   test('Test against mocked AJAX', function (assert) {
-    this.owner.lookup('service:metadata-schema').getMetadataSchemas()
+    this.owner.lookup('service:metadata-schema').getMetadataSchemas(['moo', 'too'])
       .then((result) => {
         assert.ok(result, 'No result found');
         assert.ok(result.schema, 'mockSchema.schema not found');

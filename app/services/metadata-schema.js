@@ -15,7 +15,16 @@ export default Service.extend({
    * @returns {array} list of schemas relevant to the given repositories
    */
   getMetadataSchemas(repositories) {
-    const url = this.get('url');
+    const areObjects = repositories.map(repos => typeof repos).includes('object');
+    if (areObjects) {
+      // If we've gotten repository objects, map them to their IDs
+      repositories = repositories.map(repo => repo.get('id'));
+    }
+    const url = this.get('schemaService.url');
+    // console.log('########### getMetadataSchemas');
+    // console.log(repositories);
+    // console.log(url);
+    // console.log(result);
     return this.get('ajax').request(url, 'GET', {
       headers: {
         Accept: 'application/json; charset=utf-8'
