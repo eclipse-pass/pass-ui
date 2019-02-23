@@ -6,7 +6,7 @@
     <div class="input-group pb-3">
       {{input value=searchInput enter=(action 'searchForUsers' 1) class="form-control"}}
       <span class="input-group-btn">
-        <button class="btn btn-primary" {{action 'searchForUsers' 1}} type="button">Search</button>
+        <button id='search-for-users' class="btn btn-primary" {{action 'searchForUsers' 1}} type="button">Search</button>
       </span>
     </div>
     <h3 class="my-4">Results</h3>
