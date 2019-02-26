@@ -14,7 +14,7 @@
     <div class="input-group pb-3">
       {{input enter=(action 'toggleUserSearchModal') value=userSearchTerm class="form-control"}}
       <span class="input-group-btn">
-        <button class="btn btn-primary" {{action 'toggleUserSearchModal'}} type="button">Search</button>
+        <button id='search-for-users' class="btn btn-primary" {{action 'toggleUserSearchModal'}} type="button">Search</button>
       </span>
     </div>
     {{#if submission.submitter.id}}
@@ -93,10 +93,8 @@
      targetAttachment='top center'
      containerClass='user-search-modal'}}
     {{workflow-basics-user-search
-      model=model
       toggleUserSearchModal=(action 'toggleUserSearchModal')
       pickSubmitter=(action 'pickSubmitter')
-      searchInput=userSearchTerm
-      numPages=usersNumPages}}
+      searchInput=userSearchTerm}}
   {{/modal-dialog}}
 {{/if}}

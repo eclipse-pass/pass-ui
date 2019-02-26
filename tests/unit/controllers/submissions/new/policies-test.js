@@ -9,4 +9,26 @@ module('Unit | Controller | submissions/new/policies', (hooks) => {
     let controller = this.owner.lookup('controller:submissions/new/policies');
     assert.ok(controller);
   });
+
+  test('loadPrevious triggers transition', function (assert) {
+    let controller = this.owner.lookup('controller:submissions/new/policies');
+    let loadTabAccessed = false;
+    controller.transitionToRoute = function (route) {
+      loadTabAccessed = true;
+      assert.equal('submissions.new.grants', route);
+    };
+    controller.send('loadPrevious');
+    assert.equal(loadTabAccessed, true);
+  });
+
+  test('loadNext triggers transition', function (assert) {
+    let controller = this.owner.lookup('controller:submissions/new/policies');
+    let loadTabAccessed = false;
+    controller.transitionToRoute = function (route) {
+      loadTabAccessed = true;
+      assert.equal('submissions.new.repositories', route);
+    };
+    controller.send('loadNext');
+    assert.equal(loadTabAccessed, true);
+  });
 });
