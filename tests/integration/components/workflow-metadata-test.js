@@ -58,8 +58,11 @@ module('Integration | Component | workflow-metadata', (hooks) => {
             }
           }
         ]);
+      },
+
+      addDisplayData(schema, data, readOnly) {
+        return schema;
       }
-      // addDisplayData(schema, data, setReadOnly) { return {}; }
     });
     const mockBlobService = Ember.Service.extend({
       mergeBlobs(b1, b2) { return {}; }
@@ -121,4 +124,37 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       'text in component should include "JScholarship"'
     );
   });
+
+  test('Back button on J10P form takes you back to NIH form', async function (assert) {
+    await render(hbs`{{workflow-metadata submission=submission}}`);
+    await click('button[data-key="Next"]');
+    await click('button[data-key="Back"]');
+
+    assert.ok(
+      this.element.textContent.includes('NIH Manuscript Submission System'),
+      'NIHMS header not found, we\'re supposed to have the NIH form rendered now'
+    );
+  });
+
+  /**
+   * Since the required service is mocked, we should either defer to the service unit test,
+   * or do this test in an acceptance test
+   */
+  // test('Test autofilling form fields', async function (assert) {
+  //   const expectedISSN = '123moo321';
+
+  //   await render(hbs`{{workflow-metadata submission=submission}}`);
+
+  //   // Set data in the inputs of Form 1
+  //   this.element.querySelector('input[name="journal-NLMTA-ID"]').textContent = 'nlmta-id-moo';
+  //   this.element.querySelector('input[name="ISSN"]').textContent = expectedISSN;
+
+  //   await click('button[data-key="Next"]');
+  //   // Check to see if relevant data is pre-populated into Form 2
+  //   assert.equal(
+  //     this.element.querySelector('input[name="ISSN"]').textContent,
+  //     expectedISSN,
+  //     'ISSN from Form 1 should appear in Form 2'
+  //   );
+  // });
 });

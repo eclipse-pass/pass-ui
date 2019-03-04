@@ -14,13 +14,17 @@ export default Component.extend({
   metadataService: service('metadata-blob'),
   schemaService: service('metadata-schema'),
 
+  doiInfo: Ember.computed('workflow.doiInfo', function () {
+    return this.get('workflow').getDoiInfo();
+  }),
+
   /**
    * Schema that is currently being shown to the user
    */
   currentSchema: Ember.computed('schemas', 'currentFormStep', function () {
     const schemas = this.get('schemas');
     if (schemas && schemas.length > 0) {
-      return schemas[this.get('currentFormStep')];
+      return this.preprocessSchema(schemas[this.get('currentFormStep')]);
     }
   }),
   currentFormStep: 0, // Current step #
@@ -39,7 +43,6 @@ export default Component.extend({
       const schemas = await this.get('schemaService').getMetadataSchemas(repos);
       this.set('schemas', schemas);
       this.set('currentFormStep', 0);
-      // this.set('currentSchema', schemas[0]);
     } catch (e) {
       console.log('%cFailed to get schemas', 'color:red;');
       console.log(e);
@@ -57,21 +60,19 @@ export default Component.extend({
       const step = this.get('currentFormStep');
       this.updateMetadata(metadata);
 
-      if (this.get('currentFormStep') >= this.get('schemas').length) {
+      if (step >= this.get('schemas').length) {
         this.finalizeMetadata(metadata);
         this.sendAction('next');
       } else {
-        this.set('currentFormStep', step + 1);
-        this.set('currentSchema', this.get('schemas')[step + 1]);
+        this.set('currentFormStep', step + 1); // Changing step # will update current schema
         // TODO: Add display data / set read-only fields here?
       }
     },
 
     previousForm(metadata) {
       const step = this.get('currentFormStep');
-      if (steps > 0) {
-        this.set('currentFormStep', step - 1);
-        this.set('currentSchema', this.get('schemas')[step - 1]);
+      if (step > 0) {
+        this.set('currentFormStep', step - 1); // Changing step # will update current schema
       } else {
         this.sendAction('back');
       }
@@ -79,7 +80,17 @@ export default Component.extend({
   },
 
   /**
-   * Add/update data in thedoiInfo current submission metadata blob based on information provided
+   * Process schema before displaying it to the user. Tasks during processing includes pre-populating
+   * appropriate data fields from current metadata, setting read-only fields, etc.
+   */
+  preprocessSchema(schema) {
+    const metadata = this.get('submission.metadata');
+
+    return this.get('schemaService').addDisplayData(schema, metadata);
+  },
+
+  /**
+   * Add/update data in the current submission metadata blob based on information provided
    * by a user from a metadata form. New metadata will be merged with the current metadata
    * blob.
    *
