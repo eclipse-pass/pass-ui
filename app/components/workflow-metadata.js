@@ -3,10 +3,17 @@ import _ from 'lodash';
 import { inject as service } from '@ember/service';
 
 /**
- * TODO: We might have to invoke the Schema service during #init to grab the list of schemas.
- * If we do, we will have to do some processing to set values for fields retreived from the
- * submission's DOI and make sure they are presented to the user as read-only (not editable)
- * fields.
+ * Currently, this component will look for ISSN and NLMTA ID data from the DOI data
+ * (found in workflow-service.getDoiInfo) into the submission's metadata blob. This
+ * is used to pre-populate fields in the metadata forms that will be displayed to
+ * the user.
+ *
+ * The schema service is invoked to retrieve appropriate metadata forms.
+ *
+ * 'currentSchema' is recalculated every time 'currentFormStep' is changed, which
+ * includes when the schemas are initially loaded. During this recalculation, the
+ * schema is processed to include any data for fields that we already have information
+ * present in the submission metadata blob.
  */
 export default Component.extend({
   router: service('router'), // Used to abort this step
@@ -32,11 +39,25 @@ export default Component.extend({
   displayFormStep: Ember.computed('currentFormStep', function () {
     return this.get('currentFormStep') + 1;
   }),
+  setNextReadonly: true,
 
   schemas: [],
 
+  metadata: {},
+
   async init() {
     this._super(...arguments);
+
+    // Add relevant fields from DOI data to submission metadata
+    const doiInfo = this.get('doiInfo');
+    this.updateMetadata({
+      // ISSN: doiInfo.ISSN,
+      nlmta: doiInfo.nlmta,
+      doi: doiInfo.DOI,
+      publisher: doiInfo.publisher,
+      'journal-title-short': doiInfo['container-title-short']
+    });
+
     const repos = this.get('submission.repositories');
 
     try {
@@ -49,12 +70,6 @@ export default Component.extend({
     }
   },
 
-  // TODO: Likely we will have nothing to do here
-  // Original code copies 'metadataForms' computed property into 'schemas' property
-  willRender() {
-
-  },
-
   actions: {
     nextForm(metadata) {
       const step = this.get('currentFormStep');
@@ -65,7 +80,6 @@ export default Component.extend({
         this.sendAction('next');
       } else {
         this.set('currentFormStep', step + 1); // Changing step # will update current schema
-        // TODO: Add display data / set read-only fields here?
       }
     },
 
@@ -84,9 +98,10 @@ export default Component.extend({
    * appropriate data fields from current metadata, setting read-only fields, etc.
    */
   preprocessSchema(schema) {
-    const metadata = this.get('submission.metadata');
+    const metadata = this.get('metadata');
+    const readonly = this.get('setNextReadonly');
 
-    return this.get('schemaService').addDisplayData(schema, metadata);
+    return this.get('schemaService').addDisplayData(schema, metadata, readonly);
   },
 
   /**
@@ -103,21 +118,26 @@ export default Component.extend({
    */
   updateMetadata(newMetadata) {
     const mergedBlob = this.get('metadataService').mergeBlobs(
-      this.get('submission.metadata'),
+      this.get('metadata'),
       newMetadata
     );
-
-    this.set('submission.metadata', mergedBlob);
+    this.set('metadata', mergedBlob);
   },
 
   /**
    * Do any final processing of the submission's metadata blob here before moving on to the
-   * next submission step.
+   * next submission step. The temporary metadata blob stored in this component will be
+   * processed and finally saved to the submission object. Processing can include adding or
+   * removing appropriate metadata properties.
    */
   finalizeMetadata() {
-    let metadata = this.get('submission.metadata');
+    this.updateMetadata({
+      agent_information: this.getBrowserInfo()
+    });
 
-    metadata.set('agent_information', this.getBrowserInfo());
+    const finalMetadata = this.get('metadata');
+
+    this.set('submission.metadata', finalMetadata);
   },
 
   /**

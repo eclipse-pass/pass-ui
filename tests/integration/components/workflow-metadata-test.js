@@ -18,6 +18,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
 
     Object.defineProperty(window.navigator, 'userAgent', { value: 'Chrome', configurable: true });
 
+    const realService = this.owner.lookup('service:metadata-schema');
     const mockSchemaService = Ember.Service.extend({
       getMetadataSchemas(repositories) {
         return Promise.resolve([
@@ -61,19 +62,16 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       },
 
       addDisplayData(schema, data, readOnly) {
+        if (realService && !!realService.addDisplayData) {
+          return realService.addDisplayData(...arguments);
+        }
         return schema;
       }
-    });
-    const mockBlobService = Ember.Service.extend({
-      mergeBlobs(b1, b2) { return {}; }
     });
 
     run(() => {
       this.owner.unregister('service:metadata-schema');
-      this.owner.unregister('service:metadata-blob');
-
       this.owner.register('service:metadata-schema', mockSchemaService);
-      this.owner.register('service:metadata-blob', mockBlobService);
     });
   });
 
@@ -140,21 +138,23 @@ module('Integration | Component | workflow-metadata', (hooks) => {
    * Since the required service is mocked, we should either defer to the service unit test,
    * or do this test in an acceptance test
    */
-  // test('Test autofilling form fields', async function (assert) {
-  //   const expectedISSN = '123moo321';
+  test('Test autofilling form fields', async function (assert) {
+    const expectedISSN = '123moo321';
 
-  //   await render(hbs`{{workflow-metadata submission=submission}}`);
+    await render(hbs`{{workflow-metadata submission=submission}}`);
 
-  //   // Set data in the inputs of Form 1
-  //   this.element.querySelector('input[name="journal-NLMTA-ID"]').textContent = 'nlmta-id-moo';
-  //   this.element.querySelector('input[name="ISSN"]').textContent = expectedISSN;
+    // Set data in the inputs of Form 1
+    this.element.querySelector('input[name="journal-NLMTA-ID"]').value = 'nlmta-id-moo';
+    this.element.querySelector('input[name="ISSN"]').value = expectedISSN;
 
-  //   await click('button[data-key="Next"]');
-  //   // Check to see if relevant data is pre-populated into Form 2
-  //   assert.equal(
-  //     this.element.querySelector('input[name="ISSN"]').textContent,
-  //     expectedISSN,
-  //     'ISSN from Form 1 should appear in Form 2'
-  //   );
-  // });
+    await click('button[data-key="Next"]');
+    // Check to see if relevant data is pre-populated into Form 2
+    const issnInput = this.element.querySelector('input[name="ISSN"]');
+    assert.ok(issnInput, 'No ISSN input found');
+    assert.equal(
+      issnInput.value,
+      expectedISSN,
+      'ISSN from Form 1 should appear in Form 2'
+    );
+  });
 });

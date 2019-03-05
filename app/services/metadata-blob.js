@@ -11,10 +11,13 @@ export default Service.extend({
    * object (this operation will not mutate either input objects). Broken out here in
    * case special logic needs to be assigned.
    *
+   * Impl note: each blob now has a default value set of an empty object because
+   * Object.assign will die if any arguments is undefined
+   *
    * @param {object} blob1 arbitrary JSON object representing metadata for a submission
    * @param {object} blob2 arbitrary JSON object representing metadata for a submission
    */
-  mergeBlobs(blob1, blob2) {
+  mergeBlobs(blob1 = {}, blob2 = {}) {
     return Object.assign(blob1, blob2);
   },
 
