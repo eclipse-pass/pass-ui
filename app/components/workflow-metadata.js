@@ -41,33 +41,58 @@ export default Component.extend({
   }),
   setNextReadonly: true,
 
-  schemas: [],
+  // schemas: [],
+  schemas: Ember.computed('submission.repositories', async function () {
+    const repos = this.get('submission.repositories').map(repo => repo.get('id'));
+    try {
+      const schemas = await this.get('schemaService').getMetadataSchemas(repos);
+
+      this.set('globalSchema', schemas[0]);
+      schemas.splice(0, 1); // Remove leading element
+
+      // this.set('schemas', schemas);
+      this.set('currentFormStep', 0);
+      return schemas;
+    } catch (e) {
+      console.log('%cFailed to get schemas', 'color:red;');
+      console.log(e);
+    }
+  }),
 
   metadata: {},
 
-  async init() {
+  init() {
+    this._super(...arguments);
+    console.log('>>> workflow-metadata#init()');
+  },
+
+  async willRender() {
     this._super(...arguments);
 
     // Add relevant fields from DOI data to submission metadata
     const doiInfo = this.get('doiInfo');
     this.updateMetadata({
-      // ISSN: doiInfo.ISSN,
+      ISSN: doiInfo.ISSN,
       nlmta: doiInfo.nlmta,
       doi: doiInfo.DOI,
       publisher: doiInfo.publisher,
       'journal-title-short': doiInfo['container-title-short']
     });
+    // doi:10.1002/0470841559.ch1
+    // const repos = this.get('submission.repositories').map(repo => repo.get('id'));
 
-    const repos = this.get('submission.repositories');
+    // try {
+    //   const schemas = await this.get('schemaService').getMetadataSchemas(repos);
 
-    try {
-      const schemas = await this.get('schemaService').getMetadataSchemas(repos);
-      this.set('schemas', schemas);
-      this.set('currentFormStep', 0);
-    } catch (e) {
-      console.log('%cFailed to get schemas', 'color:red;');
-      console.log(e);
-    }
+    //   this.set('globalSchema', schemas[0]);
+    //   schemas.splice(0, 1); // Remove leading element
+
+    //   this.set('schemas', schemas);
+    //   this.set('currentFormStep', 0);
+    // } catch (e) {
+    //   console.log('%cFailed to get schemas', 'color:red;');
+    //   console.log(e);
+    // }
   },
 
   actions: {

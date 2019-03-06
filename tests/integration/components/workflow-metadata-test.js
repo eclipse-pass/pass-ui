@@ -22,6 +22,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
     const mockSchemaService = Ember.Service.extend({
       getMetadataSchemas(repositories) {
         return Promise.resolve([
+          {}, // Fake "global" schema that is returned by the service
           {
             id: 'nih',
             data: {},

@@ -30,6 +30,15 @@ services:
       - assets
       - activemq
 
+  schemaservice:
+    image: oapass/schema-service:latest
+    container_name: schemaservice
+    env_file: .env
+    ports:
+      - "${SCHEMA_SERVICE_PORT}:${SCHEMA_SERVICE_PORT}"
+    networks:
+      - back
+
   activemq:
     image: oapass/activemq:20180618@sha256:e3cd47a1bc4c21899fc34e5ac7198f6c069f4148296bad0ce619cc2bdda5f435
     container_name: activemq
@@ -53,7 +62,8 @@ services:
       - front
 
   proxy:
-    image: oapass/httpd-proxy:20180815@sha256:f2aeead1df34ddb8d22b8251a7ef2542f7aedb75952c57a8caecf4c74fd79bb7
+    # image: oapass/httpd-proxy:20180815@sha256:f2aeead1df34ddb8d22b8251a7ef2542f7aedb75952c57a8caecf4c74fd79bb7
+    image: oapass/httpd-proxy:moo
     container_name: proxy
     networks:
       - front

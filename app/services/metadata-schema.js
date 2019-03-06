@@ -10,8 +10,8 @@ export default Service.extend({
   schemaService: ENV.schemaService,
 
   /**
-   * TODO: don't know the actual API yet!
-   * @param {array} repositories list of repositories (TODO: repo names or objects?)
+   *
+   * @param {array} repositories list of repository URIs
    * @returns {array} list of schemas relevant to the given repositories
    */
   getMetadataSchemas(repositories) {
@@ -21,17 +21,18 @@ export default Service.extend({
       repositories = repositories.map(repo => repo.get('id'));
     }
     const url = this.get('schemaService.url');
-    // console.log('########### getMetadataSchemas');
-    // console.log(repositories);
-    // console.log(url);
+    console.log('########### getMetadataSchemas');
+    console.log(repositories);
+    console.log(url);
+    console.log(ENV);
     // console.log(result);
-    return this.get('ajax').request(url, 'GET', {
+    return this.get('ajax').request(url, {
+      method: 'POST',
       headers: {
-        Accept: 'application/json; charset=utf-8'
+        'Content-Type': 'application/json; charset=utf-8'
       },
-      data: {
-        repositories
-      }
+      processData: false,
+      data: repositories
     });
   },
 

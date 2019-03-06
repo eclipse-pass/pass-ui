@@ -78,8 +78,8 @@ module.exports = function (environment) {
   };
 
   ENV.schemaService = {
-    // url: 'http://localhost:8080/services/schema'
-    url: ''
+    url: 'https://pass.local:8086'
+    // url: ''
   };
 
   if (process.env.EMBER_ROOT_URL) {
