@@ -54,12 +54,13 @@ export default Component.extend({
     this._super(...arguments);
 
     // doi:10.1002/0470841559.ch1
+    // 10.4137/CMC.S38446
     if (!this.get('schemas')) {
       // Add relevant fields from DOI data to submission metadata
       const doiInfo = this.get('doiInfo');
       this.updateMetadata({
-        ISSN: doiInfo.ISSN,
-        nlmta: doiInfo.nlmta,
+        issns: doiInfo.ISSN,
+        'journal-NLMTA-ID': doiInfo.nlmta,
         doi: doiInfo.DOI,
         publisher: doiInfo.publisher,
         'journal-title-short': doiInfo['container-title-short']
@@ -110,9 +111,14 @@ export default Component.extend({
    * appropriate data fields from current metadata, setting read-only fields, etc.
    */
   preprocessSchema(schema) {
+    const service = this.get('schemaService');
+
+    let processed = service.alpacafySchema(schema);
+
     const metadata = this.get('metadata');
     const readonly = this.get('setNextReadonly');
-    return this.get('schemaService').addDisplayData(schema, metadata, readonly);
+
+    return service.addDisplayData(processed, metadata, readonly);
   },
 
   /**

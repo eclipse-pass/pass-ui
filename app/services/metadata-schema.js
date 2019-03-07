@@ -21,11 +21,7 @@ export default Service.extend({
       repositories = repositories.map(repo => repo.get('id'));
     }
     const url = this.get('schemaService.url');
-    // console.log('########### getMetadataSchemas');
-    // console.log(repositories);
-    // console.log(url);
-    // console.log(ENV);
-    // console.log(result);
+
     return this.get('ajax').request(url, {
       method: 'POST',
       headers: {
@@ -50,7 +46,8 @@ export default Service.extend({
       schema.data = {};
     }
     schema.data = Object.assign(schema.data, data);
-
+    console.log('#addDisplayData');
+    console.log(schema);
     if (setReadOnly) {
       Object.keys(data).forEach((key) => {
         if (schema.options.fields.hasOwnProperty(key)) {
@@ -60,5 +57,17 @@ export default Service.extend({
     }
 
     return schema;
+  },
+
+  /**
+   * Map a JSON schema to on that Alpaca will recognize.
+   *
+   * @param {object} schema JSON schema from the schema service
+   */
+  alpacafySchema(schema) {
+    return {
+      schema: schema.definitions.form,
+      options: schema.definitions.options
+    };
   }
 });
