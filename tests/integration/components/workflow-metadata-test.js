@@ -22,40 +22,61 @@ module('Integration | Component | workflow-metadata', (hooks) => {
     const mockSchemaService = Ember.Service.extend({
       getMetadataSchemas(repositories) {
         return Promise.resolve([
-          {}, // Fake "global" schema that is returned by the service
+          {
+            id: 'common',
+            definitions: {
+              form: {
+                title: 'Common schema title moo',
+                properties: {
+                  'journal-NLMTA-ID': { type: 'string', required: true },
+                  ISSN: { type: 'string', required: true }
+                },
+                options: {
+                  fields: {
+                    'journal-NLMTA-ID': { type: 'text', label: 'Journal NLMTA ID', placeholder: '' },
+                    ISSN: { type: 'text', label: 'ISSN', placeholder: '' }
+                  }
+                }
+              }
+            }
+          }, // Fake "global" schema that is returned by the service
           {
             id: 'nih',
             data: {},
-            schema: {
-              title: 'NIH Manuscript Submission System (NIHMS) <br><p class="lead text-muted">The following metadata fields will be part of the NIHMS submission.</p>',
-              type: 'object',
-              properties: {
-                'journal-NLMTA-ID': { type: 'string', required: true },
-                ISSN: { type: 'string', required: true }
-              }
-            },
-            options: {
-              fields: {
-                'journal-NLMTA-ID': { type: 'text', label: 'Journal NLMTA ID', placeholder: '' },
-                ISSN: { type: 'text', label: 'ISSN', placeholder: '' }
+            definitions: {
+              form: {
+                title: 'NIH Manuscript Submission System (NIHMS) <br><p class="lead text-muted">The following metadata fields will be part of the NIHMS submission.</p>',
+                type: 'object',
+                properties: {
+                  'journal-NLMTA-ID': { type: 'string', required: true },
+                  ISSN: { type: 'string', required: true }
+                }
+              },
+              options: {
+                fields: {
+                  'journal-NLMTA-ID': { type: 'text', label: 'Journal NLMTA ID', placeholder: '' },
+                  ISSN: { type: 'text', label: 'ISSN', placeholder: '' }
+                }
               }
             }
           },
           {
             id: 'jscholarship',
             data: {},
-            schema: {
-              title: 'JScholarship Moo',
-              type: 'object',
-              properties: {
-                mooName: { type: 'string', required: true },
-                ISSN: { type: 'string', required: true }
-              }
-            },
-            options: {
-              fields: {
-                mooName: { type: 'text', label: 'Journal NLMTA ID', placeholder: '' },
-                ISSN: { type: 'text', label: 'ISSN', placeholder: '' }
+            definitions: {
+              form: {
+                title: 'JScholarship Moo',
+                type: 'object',
+                properties: {
+                  mooName: { type: 'string', required: true },
+                  ISSN: { type: 'string', required: true }
+                }
+              },
+              options: {
+                fields: {
+                  mooName: { type: 'text', label: 'Journal NLMTA ID', placeholder: '' },
+                  ISSN: { type: 'text', label: 'ISSN', placeholder: '' }
+                }
               }
             }
           }
@@ -65,6 +86,13 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       addDisplayData(schema, data, readOnly) {
         if (realService && !!realService.addDisplayData) {
           return realService.addDisplayData(...arguments);
+        }
+        return schema;
+      },
+
+      alpacafySchema(schema) {
+        if (realService && !!realService.alpacafySchema) {
+          return realService.alpacafySchema(schema);
         }
         return schema;
       }
@@ -81,8 +109,13 @@ module('Integration | Component | workflow-metadata', (hooks) => {
     assert.ok(component);
   });
 
+  test('should render common schema', async function (assert) {
+    await render(hbs`{{workflow-metadata submission=submission}}`);
+    assert.ok(this.element.textContent.includes('Common schema'));
+  });
+
   test('should display current and total number of pages', async function (assert) {
-    const expected = 'Form 1 of 2';
+    const expected = 'Form 1 of 3';
     await render(hbs`{{workflow-metadata submission=submission}}`);
 
     const header = this.element.querySelector('h4');
@@ -101,8 +134,9 @@ module('Integration | Component | workflow-metadata', (hooks) => {
     });
   });
 
-  test('first form should be NIHMS', async function (assert) {
+  test('second form should be NIHMS', async function (assert) {
     await render(hbs`{{workflow-metadata submission=submission}}`);
+    await click('button[data-key="Next"]');
 
     assert.ok(
       this.element.textContent.includes('NIH Manuscript Submission System'),
@@ -114,8 +148,9 @@ module('Integration | Component | workflow-metadata', (hooks) => {
     );
   });
 
-  test('second form should be J10P', async function (assert) {
+  test('third form should be J10P', async function (assert) {
     await render(hbs`{{workflow-metadata submission=submission}}`);
+    await click('button[data-key="Next"]');
     await click('button[data-key="Next"]');
 
     assert.ok(
@@ -126,6 +161,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
 
   test('Back button on J10P form takes you back to NIH form', async function (assert) {
     await render(hbs`{{workflow-metadata submission=submission}}`);
+    await click('button[data-key="Next"]');
     await click('button[data-key="Next"]');
     await click('button[data-key="Back"]');
 
@@ -143,6 +179,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
     const expectedISSN = '123moo321';
 
     await render(hbs`{{workflow-metadata submission=submission}}`);
+    await click('button[data-key="Next"]');
 
     // Set data in the inputs of Form 1
     this.element.querySelector('input[name="journal-NLMTA-ID"]').value = 'nlmta-id-moo';

@@ -66,7 +66,7 @@ export default Service.extend({
   alpacafySchema(schema) {
     return {
       schema: schema.definitions.form,
-      options: schema.definitions.options
+      options: schema.definitions.options || schema.definitions.form.options
     };
   }
 });

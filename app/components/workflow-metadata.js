@@ -25,6 +25,8 @@ export default Component.extend({
     return this.get('workflow').getDoiInfo();
   }),
 
+  // renderGlobalSchema: false,
+
   /**
    * Schema that is currently being shown to the user
    */
@@ -68,11 +70,15 @@ export default Component.extend({
 
       const repos = this.get('submission.repositories').map(repo => repo.get('id'));
 
+      // Load schemas by calling the Schema service
       try {
         const schemas = await this.get('schemaService').getMetadataSchemas(repos);
 
         this.set('globalSchema', schemas[0]);
-        schemas.splice(0, 1); // Remove leading element
+
+        // if (!this.get('renderGlobalSchema')) {
+        //   schemas.splice(0, 1); // Remove leading element if it will not be rendered
+        // }
 
         this.set('schemas', schemas);
         this.set('currentFormStep', 0);
