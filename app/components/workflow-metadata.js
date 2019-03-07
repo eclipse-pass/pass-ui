@@ -60,8 +60,18 @@ export default Component.extend({
     if (!this.get('schemas')) {
       // Add relevant fields from DOI data to submission metadata
       const doiInfo = this.get('doiInfo');
+      // console.log(doiInfo);
+      // console.log(this.get('submission.publication'));
+      let issns = [];
+      if (doiInfo['issn-map']) {
+        Object.keys(doiInfo['issn-map']).forEach(issn => issns.push({
+          issn,
+          pubType: doiInfo['issn-map'][issn]['pub-type'][0]
+        }));
+      }
+
       this.updateMetadata({
-        issns: doiInfo.ISSN,
+        issns,
         'journal-NLMTA-ID': doiInfo.nlmta,
         doi: doiInfo.DOI,
         publisher: doiInfo.publisher,
