@@ -4,7 +4,6 @@ import _ from 'lodash';
 
 export default Ember.Component.extend({
   didRender() {
-    console.log('metadata-form#didRender');
     this._super(...arguments);
     const that = this;
     const originalForm = this.get('schema');
@@ -12,8 +11,6 @@ export default Ember.Component.extend({
     if (!originalForm.options) {
       newForm.options = {};
     }
-
-    console.log(newForm);
 
     // form ctrls
     newForm.options.form = {

@@ -46,8 +46,7 @@ export default Service.extend({
       schema.data = {};
     }
     schema.data = Object.assign(schema.data, data);
-    console.log('#addDisplayData');
-    console.log(schema);
+
     if (setReadOnly) {
       Object.keys(data).forEach((key) => {
         if (schema.options.fields.hasOwnProperty(key)) {
