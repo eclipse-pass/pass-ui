@@ -18,7 +18,9 @@ export default Service.extend({
    * @param {object} blob2 arbitrary JSON object representing metadata for a submission
    */
   mergeBlobs(blob1 = {}, blob2 = {}) {
-    return Object.assign(blob1, blob2);
+    let blob = Object.assign(blob1, blob2);
+    Object.keys(blob).filter(key => !blob[key]).forEach(key => delete blob[key]);
+    return blob;
   },
 
   /**

@@ -21,10 +21,10 @@ export default Service.extend({
       repositories = repositories.map(repo => repo.get('id'));
     }
     const url = this.get('schemaService.url');
-    console.log('########### getMetadataSchemas');
-    console.log(repositories);
-    console.log(url);
-    console.log(ENV);
+    // console.log('########### getMetadataSchemas');
+    // console.log(repositories);
+    // console.log(url);
+    // console.log(ENV);
     // console.log(result);
     return this.get('ajax').request(url, {
       method: 'POST',

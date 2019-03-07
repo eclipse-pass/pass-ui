@@ -31,7 +31,8 @@ export default Component.extend({
   currentSchema: Ember.computed('schemas', 'currentFormStep', function () {
     const schemas = this.get('schemas');
     if (schemas && schemas.length > 0) {
-      return this.preprocessSchema(schemas[this.get('currentFormStep')]);
+      const newSchema = this.preprocessSchema(schemas[this.get('currentFormStep')]);
+      return newSchema;
     }
   }),
   currentFormStep: 0, // Current step #
@@ -41,58 +42,44 @@ export default Component.extend({
   }),
   setNextReadonly: true,
 
-  // schemas: [],
-  schemas: Ember.computed('submission.repositories', async function () {
-    const repos = this.get('submission.repositories').map(repo => repo.get('id'));
-    try {
-      const schemas = await this.get('schemaService').getMetadataSchemas(repos);
-
-      this.set('globalSchema', schemas[0]);
-      schemas.splice(0, 1); // Remove leading element
-
-      // this.set('schemas', schemas);
-      this.set('currentFormStep', 0);
-      return schemas;
-    } catch (e) {
-      console.log('%cFailed to get schemas', 'color:red;');
-      console.log(e);
-    }
-  }),
+  schemas: undefined,
 
   metadata: {},
 
   init() {
     this._super(...arguments);
-    console.log('>>> workflow-metadata#init()');
   },
 
   async willRender() {
     this._super(...arguments);
 
-    // Add relevant fields from DOI data to submission metadata
-    const doiInfo = this.get('doiInfo');
-    this.updateMetadata({
-      ISSN: doiInfo.ISSN,
-      nlmta: doiInfo.nlmta,
-      doi: doiInfo.DOI,
-      publisher: doiInfo.publisher,
-      'journal-title-short': doiInfo['container-title-short']
-    });
     // doi:10.1002/0470841559.ch1
-    // const repos = this.get('submission.repositories').map(repo => repo.get('id'));
+    if (!this.get('schemas')) {
+      // Add relevant fields from DOI data to submission metadata
+      const doiInfo = this.get('doiInfo');
+      this.updateMetadata({
+        ISSN: doiInfo.ISSN,
+        nlmta: doiInfo.nlmta,
+        doi: doiInfo.DOI,
+        publisher: doiInfo.publisher,
+        'journal-title-short': doiInfo['container-title-short']
+      });
 
-    // try {
-    //   const schemas = await this.get('schemaService').getMetadataSchemas(repos);
+      const repos = this.get('submission.repositories').map(repo => repo.get('id'));
 
-    //   this.set('globalSchema', schemas[0]);
-    //   schemas.splice(0, 1); // Remove leading element
+      try {
+        const schemas = await this.get('schemaService').getMetadataSchemas(repos);
 
-    //   this.set('schemas', schemas);
-    //   this.set('currentFormStep', 0);
-    // } catch (e) {
-    //   console.log('%cFailed to get schemas', 'color:red;');
-    //   console.log(e);
-    // }
+        this.set('globalSchema', schemas[0]);
+        schemas.splice(0, 1); // Remove leading element
+
+        this.set('schemas', schemas);
+        this.set('currentFormStep', 0);
+      } catch (e) {
+        console.log('%cFailed to get schemas', 'color:red;');
+        console.log(e);
+      }
+    }
   },
 
   actions: {
@@ -125,7 +112,6 @@ export default Component.extend({
   preprocessSchema(schema) {
     const metadata = this.get('metadata');
     const readonly = this.get('setNextReadonly');
-
     return this.get('schemaService').addDisplayData(schema, metadata, readonly);
   },
 
