@@ -25,8 +25,6 @@ export default Component.extend({
     return this.get('workflow').getDoiInfo();
   }),
 
-  // renderGlobalSchema: false,
-
   /**
    * Schema that is currently being shown to the user
    */
@@ -42,7 +40,7 @@ export default Component.extend({
   displayFormStep: Ember.computed('currentFormStep', function () {
     return this.get('currentFormStep') + 1;
   }),
-  setNextReadonly: true,
+  setNextReadonly: false,
 
   schemas: undefined,
 
@@ -86,10 +84,6 @@ export default Component.extend({
 
         this.set('globalSchema', schemas[0]);
 
-        // if (!this.get('renderGlobalSchema')) {
-        //   schemas.splice(0, 1); // Remove leading element if it will not be rendered
-        // }
-
         this.set('schemas', schemas);
         this.set('currentFormStep', 0);
       } catch (e) {
@@ -104,7 +98,7 @@ export default Component.extend({
       const step = this.get('currentFormStep');
       this.updateMetadata(metadata);
 
-      if (step >= this.get('schemas').length) {
+      if (step >= this.get('schemas').length - 1) {
         this.finalizeMetadata(metadata);
         this.sendAction('next');
       } else {
@@ -162,6 +156,8 @@ export default Component.extend({
    * next submission step. The temporary metadata blob stored in this component will be
    * processed and finally saved to the submission object. Processing can include adding or
    * removing appropriate metadata properties.
+   *
+   * This should only be called once before the app transitions to the next workflow step.
    */
   finalizeMetadata() {
     this.updateMetadata({
@@ -169,6 +165,12 @@ export default Component.extend({
     });
 
     const finalMetadata = this.get('metadata');
+
+    // Remove fields that shouldn't be in the final blob
+    const fields = this.get('schemaService').getFields(this.get('schemas'));
+    Object.keys(finalMetadata)
+      .filter(key => !fields.includes(key))
+      .forEach(badKey => delete finalMetadata[badKey]);
 
     this.set('submission.metadata', finalMetadata);
   },

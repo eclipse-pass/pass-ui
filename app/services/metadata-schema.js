@@ -64,9 +64,30 @@ export default Service.extend({
    * @param {object} schema JSON schema from the schema service
    */
   alpacafySchema(schema) {
+    if (!schema.hasOwnProperty('definitions')) {
+      return schema;
+    }
     return {
       schema: schema.definitions.form,
       options: schema.definitions.options || schema.definitions.form.options
     };
+  },
+
+  /**
+   * Get all unique field names across a set of schema. For each schema,
+   *
+   * @param {array} schemas array of schemas
+   */
+  getFields(schemas) {
+    let fields = [];
+
+    schemas.map(schema => this.alpacafySchema(schema))
+      .forEach((schema) => {
+        Object.keys(schema.options.fields)
+          .filter(key => !fields.includes(key))
+          .forEach(key => fields.push(key));
+      });
+
+    return fields;
   }
 });
