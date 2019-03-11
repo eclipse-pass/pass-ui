@@ -82,7 +82,7 @@ export default Component.extend({
       try {
         const schemas = await this.get('schemaService').getMetadataSchemas(repos);
 
-        this.set('globalSchema', schemas[0]);
+        // this.set('globalSchema', schemas[0]);
 
         this.set('schemas', schemas);
         this.set('currentFormStep', 0);
@@ -97,6 +97,17 @@ export default Component.extend({
     nextForm(metadata) {
       const step = this.get('currentFormStep');
       this.updateMetadata(metadata);
+
+      const schemaService = this.get('schemaService');
+      const schema = this.get('schemas')[this.get('currentFormStep')];
+
+      const validation = schemaService.validate(schema, this.get('metadata'));
+
+      if (!validation) {
+        console.log('%cError(s) found while validating data', 'color:red;');
+        console.log(schemaService.getErrors());
+        return;
+      }
 
       if (step >= this.get('schemas').length - 1) {
         this.finalizeMetadata(metadata);

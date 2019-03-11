@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import Service from '@ember/service';
 import ENV from 'pass-ember/config/environment';
+import Ajv from 'ajv'; // https://github.com/epoberezkin/ajv
 
 /**
  * Service to manipulate Alpaca schemas
@@ -8,6 +9,9 @@ import ENV from 'pass-ember/config/environment';
 export default Service.extend({
   ajax: Ember.inject.service('ajax'),
   schemaService: ENV.schemaService,
+
+  // JSON schema validator
+  validator: undefined,
 
   /**
    *
@@ -21,6 +25,8 @@ export default Service.extend({
       repositories = repositories.map(repo => repo.get('id'));
     }
     const url = this.get('schemaService.url');
+
+    this.set('validator', new Ajv());
 
     return this.get('ajax').request(url, {
       method: 'POST',
@@ -71,6 +77,14 @@ export default Service.extend({
       schema: schema.definitions.form,
       options: schema.definitions.options || schema.definitions.form.options
     };
+  },
+
+  validate(schema, data) {
+    return this.get('validator').validate(data, schema);
+  },
+
+  getErrors() {
+    return this.get('validator').errors;
   },
 
   /**

@@ -18,9 +18,8 @@ module('Integration | Component | workflow-metadata', (hooks) => {
 
     Object.defineProperty(window.navigator, 'userAgent', { value: 'Chrome', configurable: true });
 
-    const realService = this.owner.lookup('service:metadata-schema');
-    const mockSchemaService = Ember.Service.extend({
-      getMetadataSchemas(repositories) {
+    const mockAjax = Ember.Service.extend({
+      request() {
         return Promise.resolve([
           {
             id: 'common',
@@ -81,26 +80,12 @@ module('Integration | Component | workflow-metadata', (hooks) => {
             }
           }
         ]);
-      },
-
-      addDisplayData(schema, data, readOnly) {
-        if (realService && !!realService.addDisplayData) {
-          return realService.addDisplayData(...arguments);
-        }
-        return schema;
-      },
-
-      alpacafySchema(schema) {
-        if (realService && !!realService.alpacafySchema) {
-          return realService.alpacafySchema(schema);
-        }
-        return schema;
       }
     });
 
     run(() => {
-      this.owner.unregister('service:metadata-schema');
-      this.owner.register('service:metadata-schema', mockSchemaService);
+      this.owner.unregister('service:ajax');
+      this.owner.register('service:ajax', mockAjax);
     });
   });
 
