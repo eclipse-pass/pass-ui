@@ -41,6 +41,7 @@ export default Component.extend({
   displayFormStep: Ember.computed('currentFormStep', function () {
     return this.get('currentFormStep') + 1;
   }),
+
   setNextReadonly: false,
 
   schemas: undefined,
