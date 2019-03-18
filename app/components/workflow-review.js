@@ -64,7 +64,7 @@ export default Component.extend({
     return this.get('userIsPreparer') ? 'Request approval' : 'Submit';
   }),
   actions: {
-    submit() {
+    async submit() {
       $('.block-user-input').css('display', 'block');
       let disableSubmit = true;
       // In case a crafty user edits the page HTML, don't submit when not allowed
@@ -85,24 +85,140 @@ export default Component.extend({
         $('.block-user-input').css('display', 'none');
         return;
       }
-      this.sendAction('submit');
+
+      if (this.get('submission.submitter.id') !== this.get('currentUser.user.id')) {
+        this.sendAction('submit');
+        return;
+      }
+
+      // User is submitting on own behalf. Must get repository agreements.
+
+      let reposWithAgreementText = this.get('submission.repositories')
+        .filter(repo => (repo.get('integrationType') !== 'web-link') && repo.get('agreementText'))
+        .map(repo => ({
+          id: repo.get('name'),
+          title: `Deposit requirements for ${repo.get('name')}`,
+          html: `<textarea rows="16" cols="40" name="embargo" class="alpaca-control form-control disabled" disabled="" autocomplete="off">${repo.get('agreementText')}</textarea>`
+        }));
+
+      let reposWithoutAgreementText = this.get('submission.repositories')
+        .filter(repo => repo.get('integrationType') !== 'web-link' && !repo.get('agreementText'))
+        .map(repo => ({
+          id: repo.get('name')
+        }));
+
+      let reposWithWebLink = this.get('submission.repositories')
+        .filter(repo => repo.get('integrationType') === 'web-link')
+        .map(repo => ({
+          id: repo.get('name')
+        }));
+
+      const result = await swal.mixin({
+        input: 'checkbox',
+        inputPlaceholder: 'I agree to the above statement on today\'s date ',
+        confirmButtonText: 'Next &rarr;',
+        showqutton: true,
+        progressSteps: reposWithAgreementText.map((repo, index) => index + 1),
+      }).queue(reposWithAgreementText);
+      if (result.value) {
+        let reposThatUserAgreedToDeposit = reposWithAgreementText.filter((repo, index) => {
+          // if the user agreed to depost to this repo === 1
+          if (result.value[index] === 1) {
+            return repo;
+          }
+        });
+        // make sure there are repos to submit to.
+        if (this.get('submission.repositories.length') > 0) {
+          if (reposWithoutAgreementText.length > 0 || reposThatUserAgreedToDeposit.length > 0 || reposWithWebLink.length > 0) {
+            let swalMsg = 'Once you click confirm you will no longer be able to edit this submission or add repositories.<br/>';
+            if (reposWithoutAgreementText.length > 0 || reposThatUserAgreedToDeposit.length) {
+              swalMsg = `${swalMsg}You are about to submit your files to: <pre><code>${JSON.stringify(reposThatUserAgreedToDeposit.map(repo => repo.id)).replace(/[\[\]']/g, '')}${JSON.stringify(reposWithoutAgreementText.map(repo => repo.id)).replace(/[\[\]']/g, '')} </code></pre>`;
+            }
+            if (reposWithWebLink.length > 0) {
+              swalMsg = `${swalMsg}You were prompted to submit to: <code><pre>${JSON.stringify(reposWithWebLink.map(repo => repo.id)).replace(/[\[\]']/g, '')}</code></pre>`;
+            }
+
+            swal({
+              title: 'Confirm submission',
+              html: swalMsg, // eslint-disable-line
+              confirmButtonText: 'Confirm',
+              showCancelButton: true,
+            }).then((result) => {
+              if (result.value) {
+                // Update repos to reflect repos that user agreed to deposit
+                this.set('submission.repositories', this.get('submission.repositories').filter((repo) => {
+                  if (repo.get('integrationType') === 'weblink') {
+                    return false;
+                  }
+                  let temp = reposWithAgreementText.map(x => x.id).includes(repo.get('name'));
+                  if (!temp) {
+                    return true;
+                  } else if (reposThatUserAgreedToDeposit.map(r => r.id).includes(repo.get('name'))) {
+                    return true;
+                  }
+                  return false;
+                }));
+
+                const externalRepos = this.get('submission.repositories').filter(repo =>
+                  repo.get('integrationType') === 'web-link');
+
+                if (externalRepos.get('length') > 0) {
+                  let md = { id: 'external-submissions', data: { submission: [] } };
+                  externalRepos.forEach(repo => md.data.submission.push({
+                    message: `Deposit into ${repo.get('name')} was prompted`,
+                    name: repo.get('name'),
+                    url: repo.get('url')
+                  }));
+
+                  let metadata = JSON.parse(this.get('submission.metadata'));
+                  metadata.push(md);
+                  this.set('submission.metadata', JSON.stringify(metadata));
+                }
+
+                $('.block-user-input').css('display', 'block');
+
+                this.sendAction('submit');
+              }
+            });
+          } else {
+            // there were repositories, but the user didn't sign any of the agreements
+            let reposUserDidNotAgreeToDeposit = reposWithAgreementText.filter((repo) => {
+              if (!reposThatUserAgreedToDeposit.includes(repo)) {
+                return true;
+              }
+            });
+            swal({
+              title: 'Your submission cannot be submitted.',
+              html: `You declined to agree to the deposit agreement(s) for ${JSON.stringify(reposUserDidNotAgreeToDeposit.map(repo => repo.id)).replace(/[\[\]']/g, '')}. Therefore, this submission cannot be submitted. \n You can either (a) cancel the submission or (b) return to the submission to provide required input and try again.`,
+              confirmButtonText: 'Cancel submission',
+              showCancelButton: true,
+              cancelButtonText: 'Go back to edit information'
+            }).then((result) => {
+              if (result.value) {
+                // TODO
+                // this.send('cancelSubmission');
+              }
+            });
+          }
+        } else {
+          // no repositories associated with the submission
+          swal({
+            title: 'Your submission cannot be submitted.',
+            html: 'No repositories are associated with this submission. \n You can either (a) cancel the submission or (b) return to the submission and edit it to include a repository.',
+            confirmButtonText: 'Cancel submission',
+            showCancelButton: true,
+            cancelButtonText: 'Go back to edit information'
+          }).then((result) => {
+            if (result.value) {
+              // TODO
+              // this.send('cancelSubmission');
+            }
+          });
+        }
+      }
     },
     agreeToDeposit() { this.set('step', 5); },
     back() { this.sendAction('back'); },
-    checkValidate() {
-      // TODO: I don't think this ever does anything? It was moved from workflow-wrapper during refactoring
-      const tempValidateArray = [];
-      this.set('isValidated', []);
-      Object.keys(this.get('submission').toJSON()).forEach((property) => {
-        // TODO:  Add more logic here for better validation
-        if (this.get('submission').get(property) !== undefined) {
-          tempValidateArray[property] = true;
-        } else {
-          tempValidateArray[property] = false;
-        }
-      });
-      this.set('isValidated', tempValidateArray);
-    },
     openWeblinkAlert(repo) {
       swal({
         title: 'Notice!',
