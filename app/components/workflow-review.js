@@ -145,20 +145,7 @@ export default Component.extend({
               showCancelButton: true,
             }).then((result) => {
               if (result.value) {
-                // Update repos to reflect repos that user agreed to deposit
-                this.set('submission.repositories', this.get('submission.repositories').filter((repo) => {
-                  if (repo.get('integrationType') === 'weblink') {
-                    return false;
-                  }
-                  let temp = reposWithAgreementText.map(x => x.id).includes(repo.get('name'));
-                  if (!temp) {
-                    return true;
-                  } else if (reposThatUserAgreedToDeposit.map(r => r.id).includes(repo.get('name'))) {
-                    return true;
-                  }
-                  return false;
-                }));
-
+                // Update external-submissions metadata for weblink repos
                 const externalRepos = this.get('submission.repositories').filter(repo =>
                   repo.get('integrationType') === 'web-link');
 
@@ -174,6 +161,21 @@ export default Component.extend({
                   metadata.push(md);
                   this.set('submission.metadata', JSON.stringify(metadata));
                 }
+
+                // Update repos to reflect repos that user agreed to deposit
+                this.set('submission.repositories', this.get('submission.repositories').filter((repo) => {
+                  if (repo.get('integrationType') === 'weblink') {
+                    return false;
+                  }
+                  let temp = reposWithAgreementText.map(x => x.id).includes(repo.get('name'));
+                  if (!temp) {
+                    return true;
+                  } else if (reposThatUserAgreedToDeposit.map(r => r.id).includes(repo.get('name'))) {
+                    return true;
+                  }
+                  return false;
+                }));
+
 
                 $('.block-user-input').css('display', 'block');
 
