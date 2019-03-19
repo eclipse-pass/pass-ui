@@ -113,40 +113,7 @@
             <tr>
               <td>Details</td>
               <td>
-                <ul class="list-unstyled">
-                  {{#each-in metadataBlobNoKeys as |key data|}}
-                  {{!-- TODO: Look in to making the ifs in to one if --}}
-                  {{#if (not-eq key 'Embargo')}}
-                  {{#if (not-eq key 'Information')}}
-                  {{#if (not-eq key 'Under-embargo')}}
-                  {{#if (not-eq key 'Embargo-end-date')}}
-                  {{#if (not-eq key 'Agreement-to-embargo')}}
-                  {{#if (not-eq key 'Submission')}}
-                  {{#if (eq key 'Author(s)')}}
-                  <li><b>{{key}}</b>:
-                    <ul>
-                      {{#each data as |author|}}
-                      <li>{{author.author}}
-                        {{#if author.orcid}} (<a href={{author.orcid}} target="_blank">{{author.orcid}}</a>){{/if}}
-                      </li>
-                      {{/each}}
-                    </ul>
-                  </li>
-                  {{else}}
-                  {{#if (eq key 'URL')}}
-                  <li><b>{{key}}</b>: <a href={{data}} target="_blank">{{data}}</a></li>
-                  {{else}}
-                  <li><b>{{key}}</b>: {{{data}}}</li>
-                  {{/if}}
-                  {{/if}}
-                  {{/if}}
-                  {{/if}}
-                  {{/if}}
-                  {{/if}}
-                  {{/if}}
-                  {{/if}}
-                  {{/each-in}}
-                </ul>
+                {{display-metadata-keys submission=submission}}
               </td>
             </tr>
 
