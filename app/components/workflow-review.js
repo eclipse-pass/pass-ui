@@ -189,30 +189,16 @@ export default Component.extend({
             });
             swal({
               title: 'Your submission cannot be submitted.',
-              html: `You declined to agree to the deposit agreement(s) for ${JSON.stringify(reposUserDidNotAgreeToDeposit.map(repo => repo.id)).replace(/[\[\]']/g, '')}. Therefore, this submission cannot be submitted. \n You can either (a) cancel the submission or (b) return to the submission to provide required input and try again.`,
-              confirmButtonText: 'Cancel submission',
-              showCancelButton: true,
-              cancelButtonText: 'Go back to edit information'
-            }).then((result) => {
-              if (result.value) {
-                // TODO
-                // this.send('cancelSubmission');
-              }
+              html: `You declined to agree to the deposit agreement(s) for ${JSON.stringify(reposUserDidNotAgreeToDeposit.map(repo => repo.id)).replace(/[\[\]']/g, '')}. Therefore, this submission cannot be submitted.`,
+              confirmButtonText: 'Ok',
             });
           }
         } else {
           // no repositories associated with the submission
           swal({
             title: 'Your submission cannot be submitted.',
-            html: 'No repositories are associated with this submission. \n You can either (a) cancel the submission or (b) return to the submission and edit it to include a repository.',
-            confirmButtonText: 'Cancel submission',
-            showCancelButton: true,
-            cancelButtonText: 'Go back to edit information'
-          }).then((result) => {
-            if (result.value) {
-              // TODO
-              // this.send('cancelSubmission');
-            }
+            html: 'No repositories are associated with this submission. \n Return to the submission and edit it to include a repository.',
+            confirmButtonText: 'Ok',
           });
         }
       }
