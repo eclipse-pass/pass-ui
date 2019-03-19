@@ -2,16 +2,18 @@
   {{#each (await displayData) as |data|}}
     <li>
       {{#if data.isArray}}
-        <b>{{data.label}}</b>
-        <ul>
-          {{#each data.value as |moo|}}
-            <li>
-              {{#each-in moo as |key val|}}
-                <span class="col-6"><b>{{key}}</b>: {{val}}</span>
-              {{/each-in}}
-            </li>
-          {{/each}}
-        </ul>
+        <span class="col-6">
+          <b>{{data.label}}</b>
+          <ul>
+            {{#each data.value as |moo|}}
+              <li>
+                {{#each-in moo as |key val|}}
+                  <span class="col-6"><b>{{key}}</b>: {{val}}</span>
+                {{/each-in}}
+              </li>
+            {{/each}}
+          </ul>
+        </span>
       {{else}}
         <span class="col-6"><b>{{data.label}}</b>: {{{data.value}}}</span>
       {{/if}}
