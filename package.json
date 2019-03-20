@@ -16,6 +16,7 @@
     "test": "ember test"
   },
   "devDependencies": {
+    "@ember/jquery": "^0.6.0",
     "ajv": "^6.10.0",
     "coveralls": "^3.0.2",
     "ember-auto-import": "^1.2.21",
