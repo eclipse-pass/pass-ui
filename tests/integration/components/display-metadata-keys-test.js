@@ -29,7 +29,7 @@ module('Integration | Component | display-metadata-keys', (hooks) => {
       'journal-title': 'Journal moo'
     };
     const submission = Ember.Object.create({
-      metadata: mockData
+      metadata: JSON.stringify(mockData)
     });
 
     this.set('submission', submission);
