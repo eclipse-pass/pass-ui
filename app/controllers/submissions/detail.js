@@ -46,13 +46,21 @@ export default Controller.extend({
    */
   externalSubmissionsMetadata: Ember.computed('model.sub.submitted', 'model.sub.metadata', function () {
     if (this.get('model.sub.submitted')) {
-      let values = JSON.parse(this.get('model.sub.metadata')).filter(x => x.id === 'external-submissions');
+      const metadata = JSON.parse(this.get('model.sub.metadata'));
+      let values = Ember.A();
 
-      if (values.length == 0) {
-        return null;
+      // Old style metadata blob :(
+      if (Array.isArray(metadata)) {
+        values = metadata.filter(x => x.id === 'external-submissions');
+
+        if (values.length == 0) {
+          return null;
+        }
+
+        return values[0];
       }
 
-      return values[0];
+      return metadata['external-submissions'];
     }
 
     const externalRepos = this.get('model.repos').filter(repo =>
@@ -155,9 +163,9 @@ export default Controller.extend({
 
     return null;
   }),
-  metadataBlobNoKeys: Ember.computed('model.sub.metadata', function () {
-    return this.get('metadataService').getDisplayBlob(this.get('model.sub.metadata'));
-  }),
+  // metadataBlobNoKeys: Ember.computed('model.sub.metadata', function () {
+  //   return this.get('metadataService').getDisplayBlob(this.get('model.sub.metadata'));
+  // }),
   isSubmitter: Ember.computed('currentUser.user', 'model', function () {
     return (
       this.get('model.sub.submitter.id') === this.get('currentUser.user.id')

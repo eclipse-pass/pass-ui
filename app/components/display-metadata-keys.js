@@ -4,7 +4,7 @@ import _ from 'lodash';
 export default Component.extend({
 
   metadata: Ember.computed('submission', function () {
-    return this.get('submission.metadata');
+    return JSON.parse(this.get('submission.metadata'));
   }),
 
   // TODO: could be changed to get the real label from relevant metadata schema!

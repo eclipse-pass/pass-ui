@@ -183,7 +183,7 @@ export default Component.extend({
       .filter(key => !fields.includes(key))
       .forEach(badKey => delete finalMetadata[badKey]);
 
-    this.set('submission.metadata', finalMetadata);
+    this.set('submission.metadata', JSON.stringify(finalMetadata));
   },
 
   /**
