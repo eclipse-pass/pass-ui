@@ -24,6 +24,36 @@ export default Service.extend({
   },
 
   /**
+   * Get a metadata blob containing information about external repositories. The resulting
+   * object can be merged into the larger metadata blob with #mergeBlobs.
+   *
+   * result['external-submissions'] array will always be defined.
+   *
+   * @param {object} repositories list of Repository model objects
+   * @returns {
+   *    'external-repositories': [
+   *      {
+   *        message: '',  // Message to show to the user about this repo
+   *        name: '', // Name of this external repository
+   *        url: '' // URL of this external repository
+   *      }
+   *    ]
+   * }
+   */
+  getExternalReposBlob(repositories) {
+    const result = [];
+    const externalRepos = repositories.filter(repo => repo.get('integrationType') === 'web-link');
+    externalRepos.forEach(repo => result.push({
+      message: `Deposit into ${repo.get('name')} was prompted`,
+      name: repo.get('name'),
+      url: repo.get('url')
+    }));
+    return {
+      'external-submissions': result
+    };
+  },
+
+  /**
    * Transform a given metadata object into another object with keys/values suitable for dislplay
    * to a user in the UI.
    *

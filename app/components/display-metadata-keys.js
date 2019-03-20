@@ -2,6 +2,8 @@ import Component from '@ember/component';
 import _ from 'lodash';
 
 export default Component.extend({
+  // Metadata keys to ignore (not display)
+  ignoreList: ['agent_information', 'external-submissions'],
 
   metadata: Ember.computed('submission', function () {
     return JSON.parse(this.get('submission.metadata'));
@@ -9,11 +11,12 @@ export default Component.extend({
 
   // TODO: could be changed to get the real label from relevant metadata schema!
   displayData: Ember.computed('metadata', function () {
+    const ignoreList = this.get('ignoreList');
     const metadata = this.get('metadata');
     const result = [];
 
     // Basically recreate the madness from 'metadata-blob#getDisplayBlob'
-    Object.keys(metadata).forEach((key) => {
+    Object.keys(metadata).filter(key => !ignoreList.includes(key)).forEach((key) => {
       let value = metadata[key];
       const isArray = Array.isArray(value);
 

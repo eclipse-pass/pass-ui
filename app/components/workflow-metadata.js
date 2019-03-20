@@ -16,6 +16,7 @@ import { inject as service } from '@ember/service';
  * present in the submission metadata blob.
  */
 export default Component.extend({
+  currentUser: service('current-user'),
   router: service('router'), // Used to abort this step
   workflow: service('workflow'),
   metadataService: service('metadata-blob'),
@@ -169,20 +170,25 @@ export default Component.extend({
    * removing appropriate metadata properties.
    *
    * This should only be called once before the app transitions to the next workflow step.
+   *
+   * IMPL NOTE:
+   * The final metadata blob will include some extra data sourced from outside the metadata
+   * forms, include (browser) agent info and "external repository" info.
    */
   finalizeMetadata() {
     this.updateMetadata({
       agent_information: this.getBrowserInfo()
     });
 
+    // Add metadata for external submissions only if the user is the submitter
+    const externalRepos = this.get('metadataService').getExternalReposBlob(this.get('submission.repositories'));
+    const isSubmitter = this.get('submission.submitter.id') === this.get('currentUser.user.id');
+
+    if (isSubmitter && externalRepos['external-submissions'].length > 0) {
+      this.updateMetadata(externalRepos);
+    }
+
     const finalMetadata = this.get('metadata');
-
-    // Remove fields that shouldn't be in the final blob
-    const fields = this.get('schemaService').getFields(this.get('schemas'));
-    Object.keys(finalMetadata)
-      .filter(key => !fields.includes(key))
-      .forEach(badKey => delete finalMetadata[badKey]);
-
     this.set('submission.metadata', JSON.stringify(finalMetadata));
   },
 
