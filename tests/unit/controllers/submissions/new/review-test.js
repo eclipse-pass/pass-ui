@@ -21,7 +21,7 @@ module('Unit | Controller | submissions/new/review', (hooks) => {
     assert.equal(loadTabAccessed, true);
   });
 
-  test('parent properties are retreived', function (assert) {
+  test('parent properties are retrieved', function (assert) {
     let controller = this.owner.lookup('controller:submissions/new/review');
     let submitTriggered = false;
     this.owner.register('controller:submissions/new', Ember.Object.extend({
