@@ -117,7 +117,6 @@ export default Component.extend({
         input: 'checkbox',
         inputPlaceholder: 'I agree to the above statement on today\'s date ',
         confirmButtonText: 'Next &rarr;',
-        showqutton: true,
         progressSteps: reposWithAgreementText.map((repo, index) => index + 1),
       }).queue(reposWithAgreementText);
       if (result.value) {
@@ -164,7 +163,7 @@ export default Component.extend({
 
                 // Update repos to reflect repos that user agreed to deposit
                 this.set('submission.repositories', this.get('submission.repositories').filter((repo) => {
-                  if (repo.get('integrationType') === 'weblink') {
+                  if (repo.get('integrationType') === 'web-link') {
                     return false;
                   }
                   let temp = reposWithAgreementText.map(x => x.id).includes(repo.get('name'));
@@ -175,7 +174,6 @@ export default Component.extend({
                   }
                   return false;
                 }));
-
 
                 $('.block-user-input').css('display', 'block');
 
@@ -229,7 +227,10 @@ export default Component.extend({
         $('#externalSubmission').modal('hide');
 
         var win = window.open(repo.get('url'), '_blank');
-        win.focus();
+
+        if (win) {
+          win.focus();
+        }
       });
     }
   }
