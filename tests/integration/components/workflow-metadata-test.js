@@ -83,9 +83,22 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       }
     });
 
+    // const mockDoiService = Ember.Service.extend({
+    //   doiToMetadata() {
+    //     return {
+    //       ISSN: '1234-4321',
+    //       'journal-NLMTA-ID': 'MOO JOURNAL',
+    //       mooName: 'This is a moo'
+    //     };
+    //   }
+    // });
+
     run(() => {
       this.owner.unregister('service:ajax');
       this.owner.register('service:ajax', mockAjax);
+
+      // this.owner.unregister('service:doi');
+      // this.owner.register('service:doi', mockDoiService);
     });
   });
 
@@ -178,6 +191,43 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       issnInput.value,
       expectedISSN,
       'ISSN from Form 1 should appear in Form 2'
+    );
+  });
+
+  test('DOI info should autofill into forms', async function (assert) {
+    const mockDoiService = Ember.Service.extend({
+      doiToMetadata() {
+        return {
+          ISSN: '1234-4321',
+          'journal-NLMTA-ID': 'MOO JOURNAL',
+          mooName: 'This is a moo'
+        };
+      }
+    });
+
+    run(() => {
+      this.owner.unregister('service:doi');
+      this.owner.register('service:doi', mockDoiService);
+    });
+
+    await render(hbs`{{workflow-metadata submission=submission}}`);
+    assert.ok(true, 'Failed to render');
+
+    // On render, check the 'journal-NLMTA-ID' field value in UI
+    assert.equal(
+      this.element.querySelector('input[name="journal-NLMTA-ID"]').value,
+      'MOO JOURNAL',
+      'Unexpected "journal-NLMTA-ID" value found'
+    );
+
+    await click('button[data-key="Next"]');
+    await click('button[data-key="Next"]');
+
+    // On third form, check the 'mooName' field in the UI
+    assert.equal(
+      this.element.querySelector('input[name="mooName"]').value,
+      'This is a moo',
+      'Unexpected value for "mooName" found'
     );
   });
 });

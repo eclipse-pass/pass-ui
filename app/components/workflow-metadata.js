@@ -25,6 +25,7 @@ export default Component.extend({
   doiInfo: Ember.computed('workflow.doiInfo', function () {
     return this.get('workflow').getDoiInfo();
   }),
+  doiService: service('doi'),
 
   /**
    * Schema that is currently being shown to the user
@@ -57,34 +58,17 @@ export default Component.extend({
 
     // doi:10.1002/0470841559.ch1
     // 10.4137/CMC.S38446
+    // 10.1039/c7an01256j
     if (!this.get('schemas')) {
       // Add relevant fields from DOI data to submission metadata
-      const doiInfo = this.get('doiInfo');
-      // console.log(doiInfo);
-      // console.log(this.get('submission.publication'));
-      let issns = [];
-      if (doiInfo['issn-map']) {
-        Object.keys(doiInfo['issn-map']).forEach(issn => issns.push({
-          issn,
-          pubType: doiInfo['issn-map'][issn]['pub-type'][0]
-        }));
-      }
-
-      this.updateMetadata({
-        issns,
-        'journal-NLMTA-ID': doiInfo.nlmta,
-        doi: doiInfo.DOI,
-        publisher: doiInfo.publisher,
-        'journal-title-short': doiInfo['container-title-short']
-      });
+      const metadataFromDoi = this.get('doiService').doiToMetadata(this.get('doiInfo'));
+      this.updateMetadata(metadataFromDoi);
 
       const repos = this.get('submission.repositories').map(repo => repo.get('id'));
 
       // Load schemas by calling the Schema service
       try {
         const schemas = await this.get('schemaService').getMetadataSchemas(repos);
-
-        // this.set('globalSchema', schemas[0]);
 
         this.set('schemas', schemas);
         this.set('currentFormStep', 0);
