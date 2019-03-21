@@ -24,15 +24,15 @@ export default Component.extend({
     }
     return newArr;
   }),
-  metadata: Ember.computed('submission.metadata', function () {
-    return JSON.parse(this.get('submission.metadata'));
-  }),
-  metadataBlobNoKeys: Ember.computed(
-    'submission.metadata',
-    function () {
-      return this.get('metadataService').getDisplayBlob(this.get('submission.metadata'));
-    }
-  ),
+  // metadata: Ember.computed('submission.metadata', function () {
+  //   return JSON.parse(this.get('submission.metadata'));
+  // }),
+  // metadataBlobNoKeys: Ember.computed(
+  //   'submission.metadata',
+  //   function () {
+  //     return this.get('metadataService').getDisplayBlob(this.get('submission.metadata'));
+  //   }
+  // ),
   hasVisitedWeblink: Ember.computed('externalRepoMap', function () {
     return Object.values(this.get('externalRepoMap')).every(val => val === true);
   }),

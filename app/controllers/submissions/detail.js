@@ -20,7 +20,7 @@ export default Controller.extend({
     let md = this.get('externalSubmissionsMetadata');
 
     if (md) {
-      return md.data.submission;
+      return md['external-submissions'];
     }
 
     return [];
@@ -46,36 +46,31 @@ export default Controller.extend({
    */
   externalSubmissionsMetadata: Ember.computed('model.sub.submitted', 'model.sub.metadata', function () {
     if (this.get('model.sub.submitted')) {
-      let values = JSON.parse(this.get('model.sub.metadata')).filter(x => x.id === 'external-submissions');
+      const metadata = JSON.parse(this.get('model.sub.metadata'));
+      let values = Ember.A();
 
-      if (values.length == 0) {
-        return null;
+      // Old style metadata blob :(
+      if (Array.isArray(metadata)) {
+        values = metadata.filter(x => x.id === 'external-submissions');
+
+        if (values.length == 0) {
+          return null;
+        }
+
+        return values[0];
       }
 
-      return values[0];
+      return metadata;
     }
 
-    const externalRepos = this.get('model.repos').filter(repo =>
-      repo.get('integrationType') === 'web-link');
-
-    if (externalRepos.get('length') == 0) {
-      return null;
-    }
-
-    let md = { id: 'external-submissions', data: { submission: [] } };
-    externalRepos.forEach(repo => md.data.submission.push({
-      message: `Deposit into ${repo.get('name')} was prompted`,
-      name: repo.get('name'),
-      url: repo.get('url')
-    }));
-
-    return md;
+    const repos = this.get('model.repos');
+    return this.get('metadataService').getExternalReposBlob(repos);
   }),
   weblinkRepos: Ember.computed('externalSubmissionsMetadata', function () {
     let md = this.get('externalSubmissionsMetadata');
 
     if (md) {
-      let externalRepoList = md.data.submission;
+      let externalRepoList = md['external-submissions'];
       externalRepoList.forEach((repo) => {
         this.get('externalRepoMap')[repo.name] = false;
       });
@@ -155,9 +150,9 @@ export default Controller.extend({
 
     return null;
   }),
-  metadataBlobNoKeys: Ember.computed('model.sub.metadata', function () {
-    return this.get('metadataService').getDisplayBlob(this.get('model.sub.metadata'));
-  }),
+  // metadataBlobNoKeys: Ember.computed('model.sub.metadata', function () {
+  //   return this.get('metadataService').getDisplayBlob(this.get('model.sub.metadata'));
+  // }),
   isSubmitter: Ember.computed('currentUser.user', 'model', function () {
     return (
       this.get('model.sub.submitter.id') === this.get('currentUser.user.id')
@@ -368,19 +363,25 @@ export default Controller.extend({
                   }
                   return false;
                 }));
-                // update Metadata blob to refelect changes in repos
-                this.set('model.sub.metadata', JSON.stringify(JSON.parse(this.get('model.sub.metadata')).filter((md) => {
-                  let whiteListedMetadataKeys = ['common', 'crossref', 'pmc', 'agent_information'];
-                  if (whiteListedMetadataKeys.includes(md.id)) {
-                    return md;
-                  }
-                  return this.get('model.sub.repositories').map(r => r.get('name')).includes(md.id);
-                })));
+                // update Metadata blob to refelect changes in repos TODO: ??????????????????????????
+                // this.set('model.sub.metadata', JSON.stringify(JSON.parse(this.get('model.sub.metadata')).filter((md) => {
+                //   // ------------------------------------------------------------------------------------
+                //   // I'm not entirely sure what this massive function does, but this commented block is
+                //   // broken after changing the metadata blob structure
+                //   //
+                //   // let whiteListedMetadataKeys = ['common', 'crossref', 'pmc', 'agent_information'];
+                //   // if (whiteListedMetadataKeys.includes(md.id)) {
+                //   //   return md;
+                //   // }
+                //   // ------------------------------------------------------------------------------------
+                //   return this.get('model.sub.repositories').map(r => r.get('name')).includes(md.id);
+                // })));
 
                 // Add external submissions metadata
                 if (externalSubmissionsMetadata) {
                   let md = JSON.parse(this.get('model.sub.metadata'));
-                  md.push(externalSubmissionsMetadata);
+                  // md.push(externalSubmissionsMetadata);
+                  this.get('metadataService').mergeBlobs(md, externalSubmissionsMetadata);
                   this.set('model.sub.metadata', JSON.stringify(md));
                 }
 
