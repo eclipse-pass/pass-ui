@@ -122,6 +122,13 @@ module.exports = function (environment) {
     ENV.fedora.password = 'moo';
   }
 
+  ENV.brand = {
+    mailto: 'pass@jhu.edu'
+  };
+
+  if (process.env.BRAND_MAILTO) {
+    ENV.brand.mailto = process.env.BRAND_MAILTO;
+  }
 
   return ENV;
 };

@@ -1,21 +1,49 @@
 import Service from '@ember/service';
+import ENV from 'pass-ember/config/environment';
+
 /**
  * Sample DOI data as JSON: https://gist.github.com/jabrah/c268c6b027bd2646595e266f872c883c
  */
 export default Service.extend({
-  resolveDOI(doi) {
-    const base = 'https://doi.org/';
-    doi = this.formatDOI(doi);
+  base: 'https://api.crossref.org/',
 
-    return fetch(base + encodeURI(doi), {
-      redirect: 'follow',
-      headers: { Accept: 'application/vnd.citationstyles.csl+json' }
+  // Crossref API has multiple 'prefixes' you can use to get different pieces of information
+  // At the moment, we only care about 'works'
+  basicPrefix: 'works/',
+
+  /**
+   * Crossref API strongly suggests attaching at least some mailto credentials to requests.
+   * Without this information, Crossref will throttle requests.
+   */
+  userAgent() {
+    return `OA-PASS (mailto:${ENV.brand.mailto})`;
+  },
+
+  /**
+   * NOTE: There may be a browser bug in Chrome(?) that prevents us from setting the 'User-Agent'
+   * header. For now, we can attach 'mailto' info as URI query parameter, per the Crossref API.
+   *
+   * Sample Crossref response can is linked above
+   *
+   * IMPL NOTE: Rerturning the JSON object is done in two stages (two separate 'then') because
+   * `response.json()` returns a Promise
+   *
+   * @param {string} doi DOI URI
+   * @returns {promise} get a promise that will returned a parsed JSON object
+   */
+  resolveDOI(doi) {
+    const eDoi = encodeURI(doi);
+    const url = `${this.get('base')}${this.get('basicPrefix')}${eDoi}?mailto=${ENV.brand.mailto}`;
+    // const headers = new Headers({
+    //   'User-Agent': this.userAgent()
+    // });
+
+    return fetch(url, {
+      method: 'GET',
+      // headers // There may be a bug in Chrome that prevents setting the 'User-Agent' header
     })
-      .then((response) => {
-        if (response.status >= 200 && response.status < 300) return response;
-        throw new Error(`DOI lookup failed on ${response.url} status ${response.status}`);
-      })
-      .then(response => response.json());
+      .then(response => response.json()) // TODO: should we do some preprocessing of the DOI data here?
+      .then(json => json.message);
   },
 
   isValidDOI(doi) {
@@ -76,6 +104,11 @@ export default Service.extend({
         .forEach(key => delete doiCopy[key]);
     }
 
+    // Misc manual translation
+    doiCopy['journal-NLMTA-ID'] = doiCopy.nlmta;
+    doiCopy['journal-title-short'] = doiCopy['container-title-short'];
+    doiCopy.doi = doiCopy.DOI;
+
     return doiCopy;
     // Manual mapping of DOI data to fields expected by our metadata forms
     // return {
@@ -91,5 +124,14 @@ export default Service.extend({
     //   issue: doiInfo.issue,
     //   volume: doiInfo.volume
     // };
+  },
+
+  getJournalTitle(doiInfo) {
+    const containerTitle = doiInfo['container-title'];
+
+    if (Array.isArray(containerTitle)) {
+      return containerTitle[0].trim();
+    }
+    return containerTitle.trim();
   }
 });

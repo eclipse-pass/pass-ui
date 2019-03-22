@@ -8,7 +8,10 @@ export default Component.extend({
   currentUser: service('current-user'),
   doiService: service('doi'),
   nlmtaService: service('nlmta'),
+
+  inFlight: false,
   isShowingUserSearchModal: false,
+
   isProxySubmission: Ember.computed('submission.isProxySubmission', function () {
     return this.get('submission.isProxySubmission');
   }),
@@ -104,6 +107,10 @@ export default Component.extend({
     },
     /** looks up the DIO and returns title and journal if avaiable */
     lookupDOI() {
+      if (this.get('inFlight')) {
+        console.log('%cA request is already in flight, ignoring this call', 'color:blue;');
+        return;
+      }
       const publication = this.get('publication');
       if (!publication || !publication.get('doi')) {
         return;
@@ -118,6 +125,7 @@ export default Component.extend({
       publication.set('doi', doi);
       this.set('submission.metadata', '[]');
 
+      this.set('inFlight', true);
       doiService.resolveDOI(doi).then(async (doiInfo) => {
         if (doiInfo.isDestroyed) {
           return;
@@ -136,7 +144,7 @@ export default Component.extend({
         publication.set('volume', doiInfo.volume);
         publication.set('abstract', doiInfo.abstract);
 
-        const desiredName = doiInfo['container-title'].trim();
+        let desiredName = doiService.getJournalTitle(doiInfo);
         const desiredIssn = Array.isArray(doiInfo.ISSN) // eslint-disable-line
           ? doiInfo.ISSN[0]
           : doiInfo.ISSN
@@ -153,7 +161,7 @@ export default Component.extend({
           let journal = journals.get('length') > 0 ? journals.objectAt(0) : false;
           if (!journal) {
             const newJournal = this.get('store').createRecord('journal', {
-              journalName: doiInfo['container-title'].trim(),
+              journalName: doiService.getJournalTitle(doiInfo),
               issns: doiInfo.ISSN,
               nlmta: doiInfo.nmlta
             });
@@ -167,7 +175,8 @@ export default Component.extend({
         this.sendAction('validateJournal');
       }, (error) => {
         // console.log(error.message);
-      }); // end resolve(publication).then()
+      })
+        .finally(() => this.set('inFlight', false)); // end resolve(publication).then()
     },
 
     /** Sets the selected journal for the current publication.
