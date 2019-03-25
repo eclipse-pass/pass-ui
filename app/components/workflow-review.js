@@ -144,23 +144,6 @@ export default Component.extend({
               showCancelButton: true,
             }).then((result) => {
               if (result.value) {
-                // Update external-submissions metadata for weblink repos
-                const externalRepos = this.get('submission.repositories').filter(repo =>
-                  repo.get('integrationType') === 'web-link');
-
-                if (externalRepos.get('length') > 0) {
-                  let md = { id: 'external-submissions', data: { submission: [] } };
-                  externalRepos.forEach(repo => md.data.submission.push({
-                    message: `Deposit into ${repo.get('name')} was prompted`,
-                    name: repo.get('name'),
-                    url: repo.get('url')
-                  }));
-
-                  let metadata = JSON.parse(this.get('submission.metadata'));
-                  metadata.push(md);
-                  this.set('submission.metadata', JSON.stringify(metadata));
-                }
-
                 // Update repos to reflect repos that user agreed to deposit
                 this.set('submission.repositories', this.get('submission.repositories').filter((repo) => {
                   if (repo.get('integrationType') === 'web-link') {
