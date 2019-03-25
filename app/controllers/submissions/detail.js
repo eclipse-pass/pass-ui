@@ -69,7 +69,7 @@ export default Controller.extend({
   weblinkRepos: Ember.computed('externalSubmissionsMetadata', function () {
     let md = this.get('externalSubmissionsMetadata');
 
-    if (md) {
+    if (md && md['external-submissions']) {
       let externalRepoList = md['external-submissions'];
       externalRepoList.forEach((repo) => {
         this.get('externalRepoMap')[repo.name] = false;
