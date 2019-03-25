@@ -84,9 +84,6 @@ module('Integration | Component | workflow review', (hooks) => {
 
     assert.equal(submitted, true);
 
-    // No metadata for web-link repo
-    assert.equal(submission.get('metadata').includes('external-submissions'), false);
-
     // Both repositories present
     assert.equal(submission.get('repositories.length'), 2);
   });
@@ -151,9 +148,6 @@ module('Integration | Component | workflow review', (hooks) => {
     await click('.swal2-confirm');
 
     assert.equal(submitted, true);
-
-    // Metadata added for web-link repo
-    assert.equal(submission.get('metadata').includes('external-submissions'), true);
 
     // Submission to full repo only
     assert.equal(submission.get('repositories.length'), 1);
