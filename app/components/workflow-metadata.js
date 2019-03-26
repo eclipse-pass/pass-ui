@@ -60,15 +60,20 @@ export default Component.extend({
     // 10.4137/CMC.S38446
     // 10.1039/c7an01256j
     if (!this.get('schemas')) {
-      // Add relevant fields from DOI data to submission metadata
-      const metadataFromDoi = this.get('doiService').doiToMetadata(this.get('doiInfo'));
-      this.updateMetadata(metadataFromDoi);
-
       const repos = this.get('submission.repositories').map(repo => repo.get('id'));
 
       // Load schemas by calling the Schema service
       try {
         const schemas = await this.get('schemaService').getMetadataSchemas(repos);
+
+        const doiInfo = this.get('doiInfo');
+        // Add relevant fields from DOI data to submission metadata
+        const metadataFromDoi = this.get('doiService').doiToMetadata(
+          doiInfo,
+          this.get('schemaService').getFields(schemas)
+        );
+
+        this.updateMetadata(metadataFromDoi);
 
         this.set('schemas', schemas);
         this.set('currentFormStep', 0);

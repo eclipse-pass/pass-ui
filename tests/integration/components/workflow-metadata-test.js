@@ -230,4 +230,37 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       'Unexpected value for "mooName" found'
     );
   });
+
+  /**
+   * DOI data should have invalid keys removed when translated to the 'workflow-metadata'
+   * metadata property. The mock Schema Service defined in #beforeEach above will define
+   * a set of valid fields that does NOT include the property 'badMoo'. This property
+   * then should not exist in the component's metadata blob.
+   */
+  test('DOI data should be trimmed', async function (assert) {
+    const mockWorkflow = Ember.Service.extend({
+      getDoiInfo() {
+        return {
+          ISSN: '1234-4321',
+          'journal-NLMTA-ID': 'MOO JOURNAL',
+          mooName: 'This is a moo',
+          badMoo: 'Sad moo'
+        };
+      }
+    });
+
+    run(() => {
+      this.owner.unregister('service:workflow');
+      this.owner.register('service:workflow', mockWorkflow);
+    });
+
+    await render(hbs`{{workflow-metadata submission=submission }}`);
+    assert.ok(true, 'Failed to render');
+
+    const component = this.owner.lookup('component:workflow-metadata');
+    const metadata = component.get('metadata');
+
+    assert.ok(metadata, 'No component metadata found');
+    assert.notOk(metadata.badMoo, 'metadata.badMoo property should not be found on the metadata object');
+  });
 });

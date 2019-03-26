@@ -1,5 +1,7 @@
 import Service from '@ember/service';
-
+/**
+ * Sample DOI data as JSON: https://gist.github.com/jabrah/c268c6b027bd2646595e266f872c883c
+ */
 export default Service.extend({
   resolveDOI(doi) {
     const base = 'https://doi.org/';
@@ -39,47 +41,55 @@ export default Service.extend({
    * Translate data from the DOI to a metadata blob that can be attached to a submission.
    *
    * @param {object} doiInfo data retreived from the DOI
+   * @param {array} validFields OPTIONAL array of accepted property names on final metadata object
    * @returns {object} metadata blob seeded with DOI data
    */
-  doiToMetadata(doiInfo) {
+  doiToMetadata(doiInfo, validFields) {
+    const doiCopy = Object.assign({}, doiInfo);
     // Massage ISSN data
     let issns = [];
-    if (doiInfo['issn-map']) {
-      Object.keys(doiInfo['issn-map']).forEach(issn => issns.push({
+    if (doiCopy['issn-map']) {
+      Object.keys(doiCopy['issn-map']).forEach(issn => issns.push({
         issn,
-        pubType: doiInfo['issn-map'][issn]['pub-type'][0]
+        pubType: doiCopy['issn-map'][issn]['pub-type'][0]
       }));
     }
 
     // Massage 'authors' information
     // Add expected properties and copy the field from 'author' to 'authors'
-    if (Array.isArray(doiInfo.author)) {
-      doiInfo.authors = [];
-      doiInfo.author.forEach((author) => {
+    if (Array.isArray(doiCopy.author)) {
+      doiCopy.authors = [];
+      doiCopy.author.forEach((author) => {
         let a = {
           author: `${author.given} ${author.family}`,
           orcid: author.ORCID
         };
-        doiInfo.authors.push(Object.assign(a, author));
+        doiCopy.authors.push(Object.assign(a, author));
       });
     }
 
-    doiInfo.issns = issns;
-    // return doiInfo;
-    // TODO: I don't really like this sort of manual copying, since we don't necessarily know what
-    // future metadata forms are expecting
-    return {
-      abstract: doiInfo.abstract,
-      authors: doiInfo.authors,
-      issns,
-      'journal-NLMTA-ID': doiInfo.nlmta,
-      doi: doiInfo.DOI,
-      publisher: doiInfo.publisher,
-      'journal-title-short': doiInfo['container-title-short'],
-      'journal-title': doiInfo['journal-title'],
-      title: doiInfo.title,
-      issue: doiInfo.issue,
-      volume: doiInfo.volume
-    };
+    doiCopy.issns = issns;
+
+    // Remove "invalid" properties if given a list of valid fields
+    if (validFields && Array.isArray(validFields) && validFields.length > 0) {
+      Object.keys(doiCopy).filter(key => !validFields.includes(key))
+        .forEach(key => delete doiCopy[key]);
+    }
+
+    return doiCopy;
+    // Manual mapping of DOI data to fields expected by our metadata forms
+    // return {
+    //   abstract: doiInfo.abstract,
+    //   authors: doiInfo.authors,
+    //   issns,
+    //   'journal-NLMTA-ID': doiInfo.nlmta,
+    //   doi: doiInfo.DOI,
+    //   publisher: doiInfo.publisher,
+    //   'journal-title-short': doiInfo['container-title-short'],
+    //   'journal-title': doiInfo['journal-title'],
+    //   title: doiInfo.title,
+    //   issue: doiInfo.issue,
+    //   volume: doiInfo.volume
+    // };
   }
 });
