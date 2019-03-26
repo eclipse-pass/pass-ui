@@ -31,7 +31,7 @@ services:
       - activemq
 
   schemaservice:
-    image: oapass/schema-service:v0.1.0
+    image: oapass/schema-service:v0.1.1
     container_name: schemaservice
     env_file: .env
     ports:
