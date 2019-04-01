@@ -98,16 +98,16 @@ export default Service.extend({
 
     doiCopy.issns = issns;
 
+    // Misc manual translation
+    doiCopy['journal-NLMTA-ID'] = doiCopy.nlmta;
+    doiCopy['journal-title-short'] = doiCopy['container-title-short'];
+    doiCopy.doi = doiCopy.DOI;
+
     // Remove "invalid" properties if given a list of valid fields
     if (validFields && Array.isArray(validFields) && validFields.length > 0) {
       Object.keys(doiCopy).filter(key => !validFields.includes(key))
         .forEach(key => delete doiCopy[key]);
     }
-
-    // Misc manual translation
-    doiCopy['journal-NLMTA-ID'] = doiCopy.nlmta;
-    doiCopy['journal-title-short'] = doiCopy['container-title-short'];
-    doiCopy.doi = doiCopy.DOI;
 
     return doiCopy;
     // Manual mapping of DOI data to fields expected by our metadata forms
