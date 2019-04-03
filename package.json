@@ -55,7 +55,7 @@
     "ember-composable-helpers": "^2.1.0",
     "ember-data": "^2.18.5",
     "ember-export-application-global": "^2.0.0",
-    "ember-fedora-adapter": "git+https://github.com/OA-PASS/ember-fedora-adapter.git#master",
+    "ember-fedora-adapter": "0.0.3",
     "ember-font-awesome": "^4.0.0-rc.4",
     "ember-load-initializers": "^1.1.0",
     "ember-modal-dialog": "^2.4.4",
