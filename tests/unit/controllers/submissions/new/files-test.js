@@ -82,10 +82,7 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
 
   test('Valid files page does transition', function (assert) {
     let controller = this.owner.lookup('controller:submissions/new/files');
-    let loadTabAccessed = false;
-    let file = Ember.Object.create({
-      fileRole: 'manuscript'
-    });
+
     this.owner.register('controller:submissions.new', Ember.Object.extend({
       userIsSubmitter: false
     }));
@@ -95,15 +92,29 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
       },
       getMaxStep() { return 7; }
     }));
-    let files = [file];
-    let model = { files };
+
+    let subSaved = false;
+
+    let file = Ember.Object.create({
+      fileRole: 'manuscript'
+    });
+
+    let model = {
+      files: [file],
+      newSubmission: Ember.Object.create({
+        save: () => {
+          subSaved = true;
+          return Promise.resolve();
+        }
+      })
+    };
     controller.set('model', model);
     controller.transitionToRoute = function () {
-      loadTabAccessed = true;
+      assert.ok(subSaved, 'Submission was not saved');
+      assert.equal(controller.get('workflow').getFilesTemp().length, 0);
+      assert.equal(controller.get('model.files').length, 1);
     };
-    assert.equal(controller.get('workflow').getFilesTemp().length, 0);
-    assert.equal(controller.get('model.files').length, 1);
+
     controller.send('validateAndLoadTab', 'submissions.new.basics');
-    assert.equal(loadTabAccessed, true);
   });
 });

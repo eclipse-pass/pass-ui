@@ -51,19 +51,19 @@ export default Controller.extend({
         this.send('loadTab', gotoRoute);
       }
     },
-    updateRelatedData() {
-      // Remove any schemas not associated with the repositories attached to the submission or not on the whitelist.
-      // Whitelisted schemas are not associated with repositories but still required by deposit services.
-      let metadata;
-      if (this.get('submission.metadata')) {
-        metadata = JSON.parse(this.get('submission.metadata'));
-      } else {
-        metadata = [];
-      }
-      let schemaWhitelist = ['common', 'crossref', 'agent_information', 'pmc'];
-      let schemaIds = this.get('submission.repositories').map(x => JSON.parse(x.get('formSchema')).id);
-      metadata = metadata.filter(md => schemaIds.includes(md.id) || schemaWhitelist.includes(md.id));
-      this.set('submission.metadata', JSON.stringify(metadata));
-    }
+    // updateRelatedData() {
+    //   // Remove any schemas not associated with the repositories attached to the submission or not on the whitelist.
+    //   // Whitelisted schemas are not associated with repositories but still required by deposit services.
+    //   let metadata;
+    //   if (this.get('submission.metadata')) {
+    //     metadata = JSON.parse(this.get('submission.metadata'));
+    //   } else {
+    //     metadata = [];
+    //   }
+    //   let schemaWhitelist = ['common', 'crossref', 'agent_information', 'pmc'];
+    //   let schemaIds = this.get('submission.repositories').map(x => JSON.parse(x.get('formSchema')).id);
+    //   metadata = metadata.filter(md => schemaIds.includes(md.id) || schemaWhitelist.includes(md.id));
+    //   this.set('submission.metadata', JSON.stringify(metadata));
+    // }
   }
 });

@@ -12,23 +12,44 @@ module('Unit | Controller | submissions/new/metadata', (hooks) => {
 
   test('loadPrevious triggers transition', function (assert) {
     let controller = this.owner.lookup('controller:submissions/new/metadata');
-    let loadTabAccessed = false;
+
+    let subSaved = false;
+
+    const model = Ember.Object.create({
+      newSubmission: Ember.Object.create({
+        save: () => {
+          subSaved = true;
+          return Promise.resolve();
+        }
+      })
+    });
+
+    controller.set('model', model);
     controller.transitionToRoute = function (route) {
-      loadTabAccessed = true;
+      assert.ok(subSaved, 'submission was not saved');
       assert.equal('submissions.new.repositories', route);
     };
     controller.send('loadPrevious');
-    assert.equal(loadTabAccessed, true);
   });
 
   test('loadNext triggers transition', function (assert) {
     let controller = this.owner.lookup('controller:submissions/new/metadata');
-    let loadTabAccessed = false;
+
+    let subSaved = false;
+    const model = Ember.Object.create({
+      newSubmission: Ember.Object.create({
+        save: () => {
+          subSaved = true;
+          return Promise.resolve();
+        }
+      })
+    });
+
+    controller.set('model', model);
     controller.transitionToRoute = function (route) {
-      loadTabAccessed = true;
+      assert.ok(subSaved, 'submission was not saved');
       assert.equal('submissions.new.files', route);
     };
     controller.send('loadNext');
-    assert.equal(loadTabAccessed, true);
   });
 });
