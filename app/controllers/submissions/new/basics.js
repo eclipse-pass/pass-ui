@@ -57,7 +57,8 @@ export default Controller.extend({
     loadTab(gotoRoute) {
       if (!this.get('doiInfo.title')) this.set('doiInfo.title', this.get('publication.title'));
       toastr.remove();
-      this.transitionToRoute(gotoRoute);
+
+      this.get('submission').save().then(() => this.transitionToRoute(gotoRoute));
     },
     validateAndLoadTab(gotoRoute) {
       this.set('titleError', false);

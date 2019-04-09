@@ -15,7 +15,7 @@ export default Controller.extend({
     },
     loadTab(gotoRoute) {
       // add validation, processing
-      this.transitionToRoute(gotoRoute);
+      this.get('submission').save().then(() => this.transitionToRoute(gotoRoute));
     }
   }
 });

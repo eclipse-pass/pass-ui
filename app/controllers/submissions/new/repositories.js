@@ -24,9 +24,11 @@ export default Controller.extend({
       this.send('loadTab', 'submissions.new.policies');
     },
     loadTab(gotoRoute) {
-      this.send('updateRelatedData');
-      this.transitionToRoute(gotoRoute);
-      this.set('loadingNext', false); // reset for next time
+      // this.send('updateRelatedData'); // I think this is only relevant for old style metadata blob
+      this.get('submission').save().then(() => {
+        this.transitionToRoute(gotoRoute);
+        this.set('loadingNext', false); // reset for next time
+      });
     },
     validateAndLoadTab(gotoRoute) {
       let needValidation = this.get('needValidation');

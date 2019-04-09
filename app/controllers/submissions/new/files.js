@@ -35,8 +35,10 @@ export default Controller.extend({
     },
     loadTab(gotoRoute) {
       this.send('updateRelatedData');
-      this.transitionToRoute(gotoRoute);
-      this.set('loadingNext', false); // reset for next time
+      this.get('submission').save().then(() => {
+        this.transitionToRoute(gotoRoute);
+        this.set('loadingNext', false); // reset for next time
+      });
     },
     validateAndLoadTab(gotoTab) {
       let needValidation = this.get('needValidation');
