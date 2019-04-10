@@ -76,4 +76,39 @@ module('Unit | Service | doi', (hooks) => {
     assert.ok(result);
     assert.notOk(result.invalid);
   });
+
+  test('should stringify array values', function (assert) {
+    const mockDoi = {
+      publisher: 'Royal Society of Chemistry (RSC)',
+      issue: 1,
+      'short-container-title': 'Analyst',
+      abstract: '<p>The investigators report a dramatically improved chemoselective analysis for carbonyls in crude biological extracts by turning to a catalyst and freezing conditions for derivatization.</p>',
+      DOI: '10.1039/c7an01256j',
+      type: 'journal-article',
+      page: '311-322',
+      'update-policy': 'http://dx.doi.org/10.1039/rsc_crossmark_policy',
+      source: 'Crossref',
+      'is-referenced-by-count': 5,
+      title: [
+        'Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS'
+      ],
+      prefix: '10.1039',
+      volume: '143',
+      'container-title': ['The Analyst'],
+      'original-title': [],
+      language: 'en',
+      ISSN: ['0003-2654', '1364-5528'],
+      'issn-type': [
+        { value: '0003-2654', type: 'print' },
+        { value: '1364-5528', type: 'electronic' }
+      ],
+    };
+
+    const result = this.owner.lookup('service:doi')._processRawDoi(mockDoi);
+    assert.ok(result);
+    assert.equal(typeof result['journal-title'], 'string', '"journal-title" should be a string');
+    assert.equal(typeof result.title, 'string', '"title" should be a string');
+    assert.equal(typeof result['short-container-title'], 'string', '"short-container-title" should be a string');
+    assert.notEqual(typeof result.ISSN, 'string', 'Should not stringify this array value');
+  });
 });
