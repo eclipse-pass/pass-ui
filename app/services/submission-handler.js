@@ -1,15 +1,21 @@
 import Service from '@ember/service';
 import ENV from 'pass-ember/config/environment';
 
+
+/**
+ * Service to manage submissions.
+ */
 export default Service.extend({
   store: Ember.inject.service('store'),
   currentUser: Ember.inject.service('current-user'),
   metadataService: Ember.inject.service('metadata-blob'),
 
   /**
-  * Internal method which returns the URL to view a submission.
-  *
-  */
+   * _getSubmissionView - Internal method which returns the URL to view a submission.
+   *
+   * @param  {Submission} submission
+   * @returns {string} URL to submission details page
+   */
   _getSubmissionView(submission) {
     let baseURL = window.location.href.replace(new RegExp(`${ENV.rootURL}.*`), '');
 
@@ -17,10 +23,15 @@ export default Service.extend({
   },
 
   /**
-  * Internal method to finish a submission which has had all its files uploaded.
-  * Adds a submitted event with the given comment.
-  * Returns a promise which resolves to the updated submission.
-  */
+   * _finishSubmission - Internal method to finish a submission which has had all
+   *   its files uploaded. Adds a submitted event with the given comment. Submission
+   *   is either prepared or actually submitted. If actually submitted, web-link
+   *   repos are removed.
+   *
+   * @param  {Submission} submission
+   * @param  {string} comment    Added to SubmissionEvent
+   * @returns {Promise}          Promise resolves to the updated submission.
+   */
   _finishSubmission(submission, comment) {
     let subEvent = this.store.createRecord('submissionEvent');
 
@@ -61,11 +72,15 @@ export default Service.extend({
   },
 
   /**
-  * Internal method which adds a file to a submission.
-  * The bytes of the local file corresponding to the File object are read and
-  * uploaded to the Submission container. The modified File object is updated.
-  * Returns a promise which resolves to the File object.
-  */
+   * _uploadFile - Internal method which adds a file to a submission in the
+   *  repository. The bytes of the local file corresponding to the File object
+   *  are read and uploaded to the Submission container. The modified File object
+   *  is persisted.
+   *
+   * @param  {Submission} sub
+   * @param  {File} file   Local file uploaded.
+   * @returns {Promise}    Promise resolves to the File object.
+   */
   _uploadFile(sub, file) {
     return new Promise((resolve, reject) => {
       var reader = new FileReader();
@@ -113,14 +128,18 @@ export default Service.extend({
   },
 
   /**
-  * Perform a submission.
-  * Persists the publication, associate the submission with the saved publication,
-  * modify the submission appropriately, uploads files, and finally persists the submission
-  * with an appropraite event to hold the comment.
-
-  * Return a promise that does these things. See _uploadFile for how various errors may
-  * be reported.
-  */
+   * submit - Perform or prepares a submission. Persists the publication, associate
+   *   the submission with the saved publication, modify the submission appropriately,
+   *   uploads files, and finally persists the submission with an appropraite event
+   *   to hold the comment. The metadata is not modified. Repositories of type
+   *   web-link are removed if submission is actually submitted.
+   *
+   * @param  {Submission} submission
+   * @param  {Publication} publication Persisted and associated with Submission.
+   * @param  {Files} files             Local files to upload and add to Submission.
+   * @param  {String} comment          Comment added as to SubmissionEvent.
+   * @returns {Promise}                Promise to perform the operation.
+   */
   submit(submission, publication, files, comment) {
     return publication.save().then((p) => {
       submission.set('submitted', false);
@@ -133,9 +152,13 @@ export default Service.extend({
   },
 
   /**
-  * If the submission is submitted, return external-submissions object from metadata.
-  * Otherwise generate what it should be from external repositories.
-  */
+   * _getExternalSubmissionsMetadata - If the submission is submitted, return
+   *  external-submissions object from metadata. Otherwise generate what it
+   *  should be from external repositories.
+   *
+   * @param  {Submission} submission
+   * @returns {Object}          Object with external-submissions key.
+   */
   _getExternalSubmissionsMetadata(submission) {
     if (submission.get('submitted')) {
       const metadata = JSON.parse(submission.get('metadata'));
@@ -158,14 +181,18 @@ export default Service.extend({
     return this.get('metadataService').getExternalReposBlob(submission.get('repositories'));
   },
 
-  // Submitter approves submission.
-  // Metadata is added to external-submissions for all web-link repos and those
-  // repos are removed.
-  // Attaches a SubmissionEvent of type submitted with the given comment and
-  // sets the status of the Submission to changes-requested.
-  // Returns a promise that makes those changes.
+  /**
+   * approveSubmission - Submitter approves submission. Metadata is added to
+   *  external-submissions for all web-link repos and those repos are removed.
+   *  Attaches a SubmissionEvent of type submitted with the given comment and
+   *  sets the status of the Submission to changes-requested.
+   *
+   * @param  {Submission} submission
+   * @param  {string} comment  Comment is added to SubmissionEvent.
+   * @returns {Promise}        Promise which performs the operation.
+   */
   approveSubmission(submission, comment) {
-    const extmd = _getExternalSubmissionsMetadata(submission);
+    const extmd = this._getExternalSubmissionsMetadata(submission);
 
     // Add external submissions metadata
     if (extmd) {
@@ -199,11 +226,14 @@ export default Service.extend({
   },
 
   /**
-  * Request that submission be changed before approval on behalf of submitter.
-  * Attaches a SubmissionEvent of type changes-requested with the given comment and
-  * sets the status of the Submission to changes-requested.
-  * Returns a promise that makes those changes.
-  */
+   * requestSubmissionChanges - Request that submission be changed before approval
+   *  on behalf of submitter. Attaches a SubmissionEvent of type changes-requested
+   *  with the given comment and sets the status of the Submission to changes-requested.
+   *
+   * @param  {Submission} submission
+   * @param  {string} comment    Comment is added to submission event.
+   * @returns {Promise}          Promise which performs the operation.
+   */
   requestSubmissionChanges(submission, comment) {
     let se = this.get('store').createRecord('submissionEvent', {
       submission,
@@ -222,11 +252,14 @@ export default Service.extend({
   },
 
   /**
-  * Cancel a prepared submission on behalf of submitter.
-  * Attaches a SubmissionEvent of type cancelled with the given comment and
-  * sets the status of the Submission to cancelled.
-  * Returns a promise that makes those changes.
-  */
+   * cancelSubmission - Cancel a prepared submission on behalf of submitter.
+   *  Attaches a SubmissionEvent of type cancelled with the given comment and
+   *  sets the status of the Submission to cancelled.
+   *
+   * @param  {Submission} submission
+   * @param  {string} comment      Comment is added to SubmissionEvent.
+   * @returns {Promise}            Promise which performs the operation.
+   */
   cancelSubmission(submission, comment) {
     let se = this.get('store').createRecord('submissionEvent', {
       submission,
