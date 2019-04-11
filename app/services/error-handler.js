@@ -12,6 +12,8 @@ export default Service.extend({
 
     if (error.stack) {
       console.log(error.stack);
+    } else {
+      console.log(error);
     }
 
     if (error.name == 'TransitionAborted') {

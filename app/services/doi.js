@@ -43,7 +43,7 @@ export default Service.extend({
       // headers // There may be a bug in Chrome that prevents setting the 'User-Agent' header
     })
       .then(response => response.json()) // TODO: should we do some preprocessing of the DOI data here?
-      .then(json => json.message);
+      .then(json => this._processRawDoi(json.message));
   },
 
   isValidDOI(doi) {
@@ -127,11 +127,50 @@ export default Service.extend({
   },
 
   getJournalTitle(doiInfo) {
-    const containerTitle = doiInfo['container-title'];
+    return this._maybeArrayToString('journal-title', doiInfo);
+  },
 
-    if (Array.isArray(containerTitle)) {
-      return containerTitle[0].trim();
+  getTitle(doiInfo) {
+    return this._maybeArrayToString('title', doiInfo);
+  },
+
+  /**
+   * Crossref seems to like having properties set to arrays of strings, even if you expect a
+   * simple string, like for 'title' or 'journal name'. Here, if you know that a certain
+   * Crossref property is an array of strings, just stringify the array ...
+   *
+   * @param {string} prop desired property name
+   * @param {object} doiInfo data from Crossref
+   * @returns {string} get a stringified value from a possible array of strings
+   */
+  _maybeArrayToString(prop, doiInfo) {
+    const val = doiInfo[prop];
+
+    if (Array.isArray(val)) {
+      return val.join(' ');
+    } else if (typeof val === 'string') {
+      return val.trim();
     }
-    return containerTitle.trim();
+
+    return undefined;
+  },
+
+  /**
+   * Process the DOI data object by 'transforming' select arrays to string values.
+   *
+   * @param {object} data DOI data from Crossref
+   * @returns {object} return the processed DOI data
+   */
+  _processRawDoi(data) {
+    const toProcess = ['container-title', 'short-container-title', 'title', 'original-title', 'short-title'];
+
+    toProcess.filter(key => data.hasOwnProperty(key))
+      .forEach((key) => {
+        data[key] = this._maybeArrayToString(key, data);
+      });
+
+    data['journal-title'] = data['container-title'];
+
+    return data;
   }
 });
