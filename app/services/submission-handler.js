@@ -33,7 +33,7 @@ export default Service.extend({
    * @returns {Promise}          Promise resolves to the updated submission.
    */
   _finishSubmission(submission, comment) {
-    let subEvent = this.store.createRecord('submissionEvent');
+    let subEvent = this.get('store').createRecord('submissionEvent');
 
     subEvent.set('performedBy', this.get('currentUser.user'));
     subEvent.set('comment', comment);
@@ -83,7 +83,7 @@ export default Service.extend({
    */
   _uploadFile(sub, file) {
     return new Promise((resolve, reject) => {
-      var reader = new FileReader();
+      let reader = new FileReader();
 
       reader.onload = (evt) => {
         let data = evt.target.result;
@@ -118,7 +118,7 @@ export default Service.extend({
         xhr.send(data);
       };
 
-      reader.onerror = (event) => {
+      reader.onerror = (error) => {
         console.log(error);
         reject(new Error(`Error reading file: ${error.message}`));
       };
@@ -148,7 +148,7 @@ export default Service.extend({
       submission.set('publication', p);
 
       return submission.save();
-    }).then(s => Promise.all(files.map(f => this._uploadFile(f))).then(() => this._finishSubmission(s, comment)));
+    }).then(s => Promise.all(files.map(f => this._uploadFile(s, f))).then(() => this._finishSubmission(s, comment)));
   },
 
   /**
