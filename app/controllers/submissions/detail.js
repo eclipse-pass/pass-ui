@@ -7,6 +7,8 @@ export default Controller.extend({
   metadataService: service('metadata-blob'),
   currentUser: service('current-user'),
   store: service('store'),
+  submissionHandler: service('submission-handler'),
+
   tooltips: function () {
     $(() => {
       $('[data-toggle="tooltip"]').tooltip();
@@ -225,34 +227,18 @@ export default Controller.extend({
       });
     },
     requestMoreChanges() {
-      let baseURL = window.location.href.replace(new RegExp(`${ENV.rootURL}.*`), '');
+      let sub = this.get('model.sub');
+      let message = this.get('message');
 
-      if (!this.get('message')) {
+      if (!message) {
         swal(
           'Comment field empty',
           'Please add a comment before requesting changes.',
           'warning'
         );
       } else {
-        let s = this.get('model.sub');
-        let se = this.get('store').createRecord('submissionEvent', {
-          submission: this.get('model.sub'),
-          performedBy: this.get('currentUser.user'),
-          performedDate: new Date(),
-          comment: this.get('message'),
-          performerRole: 'submitter',
-          eventType: 'changes-requested',
-          link: `${baseURL}${ENV.rootURL}submissions/${encodeURIComponent(`${s.id}`)}`
-        });
         $('.block-user-input').css('display', 'block');
-        se.save().then(() => {
-          let sub = this.get('model.sub');
-          sub.set('submissionStatus', 'changes-requested');
-          sub.save().then(() => {
-            console.log('Requested more changes from preparer.');
-            window.location.reload(true);
-          });
-        });
+        this.get('submissionHandler').requestSubmissionChanges(sub, message).then(() => window.location.reload(true));
       }
     },
     async approveChanges() {
@@ -349,11 +335,11 @@ export default Controller.extend({
               showCancelButton: true,
             }).then((result) => {
               if (result.value) {
-                const externalSubmissionsMetadata = this.get('externalSubmissionsMetadata');
-                // Update repos to reflect repos that user agreed to deposit
+                // Update repos to reflect repos that user agreed to deposit.
+                // Must keep web-link repos.
                 this.set('model.sub.repositories', this.get('model.sub.repositories').filter((repo) => {
                   if (repo.get('integrationType') === 'weblink') {
-                    return false;
+                    return true;
                   }
                   let temp = reposWithAgreementText.map(x => x.id).includes(repo.get('name'));
                   if (!temp) {
@@ -363,55 +349,10 @@ export default Controller.extend({
                   }
                   return false;
                 }));
-                // update Metadata blob to refelect changes in repos TODO: ??????????????????????????
-                // this.set('model.sub.metadata', JSON.stringify(JSON.parse(this.get('model.sub.metadata')).filter((md) => {
-                //   // ------------------------------------------------------------------------------------
-                //   // I'm not entirely sure what this massive function does, but this commented block is
-                //   // broken after changing the metadata blob structure
-                //   //
-                //   // let whiteListedMetadataKeys = ['common', 'crossref', 'pmc', 'agent_information'];
-                //   // if (whiteListedMetadataKeys.includes(md.id)) {
-                //   //   return md;
-                //   // }
-                //   // ------------------------------------------------------------------------------------
-                //   return this.get('model.sub.repositories').map(r => r.get('name')).includes(md.id);
-                // })));
 
-                // Add external submissions metadata
-                if (externalSubmissionsMetadata) {
-                  let md = JSON.parse(this.get('model.sub.metadata'));
-                  // md.push(externalSubmissionsMetadata);
-                  this.get('metadataService').mergeBlobs(md, externalSubmissionsMetadata);
-                  this.set('model.sub.metadata', JSON.stringify(md));
-                }
-
-                // Remove external repositories
-                this.set(
-                  'model.sub.repositories',
-                  this.get('model.sub.repositories').filter(repo => (repo.get('integrationType') !== 'web-link'))
-                );
-
-                $('.block-user-input').css('display', 'block');
-                // save sub and send it
-                let s = this.get('model.sub');
-                let se = this.get('store').createRecord('submissionEvent', {
-                  submission: this.get('model.sub'),
-                  performedBy: this.get('currentUser.user'),
-                  performedDate: new Date(),
-                  comment: this.get('message'),
-                  performerRole: 'submitter',
-                  eventType: 'submitted',
-                  link: `${baseURL}${ENV.rootURL}submissions/${encodeURIComponent(`${s.id}`)}`
-                });
-                se.save().then(() => {
-                  let sub = this.get('model.sub');
-                  sub.set('submissionStatus', 'submitted');
-                  sub.set('submittedDate', new Date());
-                  sub.set('submitted', true);
-                  sub.save().then(() => {
-                    window.location.reload(true);
-                  });
-                });
+                let sub = this.get('model.sub');
+                let message = this.get('message');
+                this.get('submissionHandler').approveSubmission(sub, message);
               }
             });
           } else {
@@ -450,9 +391,10 @@ export default Controller.extend({
       }
     },
     cancelSubmission() {
-      let baseURL = window.location.href.replace(new RegExp(`${ENV.rootURL}.*`), '');
+      let message = this.get('message');
+      let sub = this.get('model.sub');
 
-      if (!this.get('message')) {
+      if (!message) {
         swal(
           'Comment field empty',
           'Please add a comment for your cancellation.',
@@ -460,6 +402,7 @@ export default Controller.extend({
         );
         return;
       }
+
       swal({
         title: 'Are you sure?',
         text: 'If you cancel this submission, it will not be able to be resumed.',
@@ -469,25 +412,8 @@ export default Controller.extend({
         showCancelButton: true,
       }).then((result) => {
         if (result.value) {
-          let s = this.get('model.sub');
-          let se = this.get('store').createRecord('submissionEvent', {
-            submission: this.get('model.sub'),
-            performedBy: this.get('currentUser.user'),
-            performedDate: new Date(),
-            comment: this.get('message'),
-            performerRole: 'submitter',
-            eventType: 'cancelled',
-            link: `${baseURL}${ENV.rootURL}submissions/${encodeURIComponent(`${s.id}`)}`
-          });
           $('.block-user-input').css('display', 'block');
-          se.save().then(() => {
-            let sub = this.get('model.sub');
-            sub.set('submissionStatus', 'cancelled');
-            sub.save().then(() => {
-              console.log('Submission cancelled.');
-              window.location.reload(true);
-            });
-          });
+          this.get('submissionHandler').cancelSubmission(sub, message).then(() => window.location.reload(true));
         }
       });
     }
