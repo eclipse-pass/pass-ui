@@ -10,6 +10,10 @@ export default Component.extend({
     this._super(...arguments);
 
     const publicationId = this.get('record.publication.id');
+    if (!publicationId) {
+      this.set('repoCopies', Ember.A());
+      return;
+    }
     this.get('store').query('repositoryCopy', {
       query: {
         term: { publication: publicationId }
