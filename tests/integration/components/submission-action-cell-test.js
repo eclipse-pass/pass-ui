@@ -10,7 +10,8 @@ module('Integration | Component | submission action cell', (hooks) => {
 
     // TODO: add actual tests here
     record = Ember.Object.create({
-      preparers: []
+      preparers: [],
+      submitted: true
     });
 
     this.set('record', record);
