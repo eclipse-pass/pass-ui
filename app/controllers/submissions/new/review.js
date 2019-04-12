@@ -28,7 +28,8 @@ export default Controller.extend({
     },
     loadTab(gotoRoute) {
       // add validation, processing
-      this.get('submission').save().then(() => this.transitionToRoute(gotoRoute));
+      // this.get('submission').save().then(() => this.transitionToRoute(gotoRoute));
+      this.transitionToRoute(gotoRoute);
     },
     submit() {
       this.get('parent').send('submit');
