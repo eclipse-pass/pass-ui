@@ -19,12 +19,16 @@ export default Component.extend({
 
   actions: {
     /**
-     * TODO: when things are merged, call 'submission-handler' to remove this submission
+     * Delete the specified submission record from Fedora.
+     *
+     * Note: `ember-fedora-adapter#deleteRecord` behaves like `ember-data#destroyRecord`
+     * in that the deletion is pushed to the back end automatically, such that a
+     * subsequent 'save()' will fail.
+     *
      * @param {object} submission model object to be removed
      */
     deleteSubmission(submission) {
-      console.log('Will delete submission');
-      console.log(submission);
+      submission.deleteRecord();
     }
   }
 });
