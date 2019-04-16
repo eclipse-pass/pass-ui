@@ -1,5 +1,6 @@
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
+import swal from 'sweetalert2';
 
 export default Component.extend({
   currentUser: service('current-user'),
@@ -10,11 +11,6 @@ export default Component.extend({
   }),
   isSubmitter: Ember.computed('currentUser', 'record', function () {
     return this.get('currentUser.user.id') === this.get('record.submitter.id');
-  }),
-  submissionIsDraft: Ember.computed('record', function () {
-    // TODO: after model update, we can just check if submission status === 'draft'
-    // return this.get('record.submissinoStatus') === 'draft';
-    return !this.get('record.submitted') && !this.get('record.submissionStatus');
   }),
 
   actions: {
@@ -28,7 +24,24 @@ export default Component.extend({
      * @param {object} submission model object to be removed
      */
     deleteSubmission(submission) {
-      submission.deleteRecord();
+      swal({
+        // title: 'Are you sure?',
+        text: 'Are you sure you want to delete this draft submission? This cannot be undone.',
+        confirmButtonText: 'Delete',
+        confirmButtonColor: '#f86c6b',
+        showCancelButton: true,
+        // buttonsStyling: false,
+        // confirmButtonClass: 'btn btn-danger',
+        // cancelButtonText: 'No',
+        // customClass: {
+        //   confirmButton: 'btn btn-danger'
+        // }
+      }).then((result) => {
+        if (result.value) {
+          submission.deleteRecord();
+          submission.save();
+        }
+      });
     }
   }
 });

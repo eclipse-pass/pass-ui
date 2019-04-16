@@ -18,11 +18,11 @@
   {{#link-to "submissions.detail" record.id class="btn btn-outline-primary"}}
     Review submission
   {{/link-to}}
-{{else if submissionIsDraft}}
+{{else if record.isDraft}}
   {{#link-to "submissions.new" (query-params submission=record.id) class="btn btn-outline-primary w-100 mb-2"}}
     Edit
   {{/link-to}}
-  <a class="btn btn-outline-danger text-danger w-100" {{action "deleteSubmission" record}}>
+  <a class="btn btn-outline-danger text-danger w-100 delete-button" {{action "deleteSubmission" record}}>
     Delete
   </a>
 {{else}}

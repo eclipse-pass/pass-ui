@@ -1,7 +1,7 @@
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
-import { render, findAll } from '@ember/test-helpers';
+import { render, click } from '@ember/test-helpers';
 
 module('Integration | Component | submission action cell', (hooks) => {
   setupRenderingTest(hooks);
@@ -33,26 +33,34 @@ module('Integration | Component | submission action cell', (hooks) => {
 
   /**
    * Make sure that the 'deleteSubmission' action calls `submission#deleteRecord` on the
-   * supplied submission
+   * supplied submission, then `#save()` should be called
    */
-  test('should delete submission', async function (assert) {
-    assert.expect(1);
+  test('should delete and persist submission', async function (assert) {
+    assert.expect(2);
 
     const record = Ember.Object.create({
+      preparers: Ember.A(),
+      isDraft: true,
       deleteRecord() {
         assert.ok(true);
+      },
+      save() {
+        assert.ok(true);
+        return Promise.resolve();
       }
     });
 
-    const component = this.owner.lookup('component:submission-action-cell');
-    component.send('deleteSubmission', record);
+    this.set('record', record);
+
+    await render(hbs`{{#submission-action-cell record=record}}{{/submission-action-cell}}`);
+    await click('a.delete-button');
+    await click('.swal2-confirm');
   });
 
   test('Draft submissions should display Edit and Delete buttons', async function (assert) {
     const record = Ember.Object.create({
       preparers: Ember.A(),
-      submitted: false,
-      submissionStatus: undefined,
+      isDraft: true
       // submissionStatus: 'draft'
     });
     this.set('record', record);
