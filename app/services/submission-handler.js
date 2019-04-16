@@ -275,5 +275,22 @@ export default Service.extend({
       submission.set('submissionStatus', 'cancelled');
       return submission.save();
     });
+  },
+
+  /**
+   * Delete a draft submission object and it's associated Publication object,
+   * if applicable.
+   *
+   * @param {Submission} submission submission to delete
+   */
+  deleteSubmission(submission) {
+    const pub = submission.get('publication');
+    if (pub) {
+      pub.deleteRecord();
+      pub.save();
+    }
+
+    submission.deleteRecord();
+    submission.save();
   }
 });

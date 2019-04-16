@@ -1,5 +1,6 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
+import { run } from '@ember/runloop';
 
 module('Unit | Service | doi', (hooks) => {
   setupTest(hooks);
@@ -111,4 +112,69 @@ module('Unit | Service | doi', (hooks) => {
     assert.equal(typeof result['short-container-title'], 'string', '"short-container-title" should be a string');
     assert.notEqual(typeof result.ISSN, 'string', 'Should not stringify this array value');
   });
+
+//   test('should create a valid publication', function (assert) {
+//     const mockDoi = {
+//       publisher: 'Royal Society of Chemistry (RSC)',
+//       issue: '1',
+//       'short-container-title': 'Analyst',
+//       abstract: '<p>The investigators report a dramatically improved chemoselective analysis for carbonyls in crude biological extracts by turning to a catalyst and freezing conditions for derivatization.</p>',
+//       DOI: '10.1039/c7an01256j',
+//       type: 'journal-article',
+//       page: '311-322',
+//       'update-policy': 'http://dx.doi.org/10.1039/rsc_crossmark_policy',
+//       source: 'Crossref',
+//       'is-referenced-by-count': 5,
+//       title: [
+//         'Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS'
+//       ],
+//       prefix: '10.1039',
+//       volume: '143',
+//       'container-title': ['The Analyst'],
+//       'original-title': [],
+//       language: 'en',
+//       ISSN: ['0003-2654', '1364-5528'],
+//       'issn-type': [
+//         { value: '0003-2654', type: 'print' },
+//         { value: '1364-5528', type: 'electronic' }
+//       ]
+//     };
+
+//     const mockStore = ({
+//       createRecord(type) {
+//         return Ember.Object.create({
+//           save() {
+//             return Promise.resolve();
+//           }
+//         });
+//       }
+//     });
+
+//     const expected = {
+//       doi: '10.1039/c7an01256j',
+//       title: 'Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS',
+//       issue: '1',
+//       volume: '143',
+//       abstract: '<p>The investigators report a dramatically improved chemoselective analysis for carbonyls in crude biological extracts by turning to a catalyst and freezing conditions for derivatization.</p>'
+//     };
+
+//     run(async () => {
+//       // this.owner.unregister('store');
+//       // this.owner.register('store', mockStore);
+
+//       const service = this.owner.lookup('service:doi');
+//       assert.ok(service, 'service not found');
+
+//       service.set('store', mockStore);
+
+//       const result = await service.createPublication(mockDoi);
+// debugger
+//       assert.ok(result, 'no publication object was created');
+//       assert.equal(result.get('title'), expected.title, 'unexpected title found');
+//       assert.equal(result.get('doi'), expected.doi, 'unexpected doi value found');
+//       assert.equal(result.get('issue'), expected.issue, 'unexpected issue found');
+//       assert.equal(result.get('volume'), expected.volume, 'unexpected volume found');
+//       assert.equal(result.get('abstract'), expected.abstract, 'unexpected abstract found');
+//     });
+//   });
 });
