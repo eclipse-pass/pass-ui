@@ -63,9 +63,16 @@
   </div>
   <div class="col-6 text-right">
     {{#if model.sub.isStub}}
-    {{#link-to 'submissions.new' (query-params submission=record.id) class="btn btn-outline-primary text-right" }}
-    Finish submission
-    {{/link-to}}
+      {{#link-to 'submissions.new' (query-params submission=model.sub.id) class="btn btn-outline-primary text-right" }}
+        Finish submission
+      {{/link-to}}
+    {{else if model.sub.isDraft}}
+      {{#link-to 'submissions.new' (query-params submission=model.sub.id) class="btn btn-outline-primary text-right"}}
+        Edit submission
+      {{/link-to}}
+      {{#link-to (action 'deleteSubmission' model.sub) class="btn btn-outline-danger text-right"}}
+        Delete
+      {{/link-to}}
     {{/if}}
   </div>
 </div>
