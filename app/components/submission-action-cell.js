@@ -4,6 +4,8 @@ import swal from 'sweetalert2';
 
 export default Component.extend({
   currentUser: service('current-user'),
+  submissionHandler: service('submission-handler'),
+
   isPreparer: Ember.computed('currentUser', 'record', function () {
     let userId = this.get('currentUser.user.id');
     let preparers = this.get('record.preparers');
@@ -38,8 +40,7 @@ export default Component.extend({
         // }
       }).then((result) => {
         if (result.value) {
-          submission.deleteRecord();
-          submission.save();
+          this.get('submissionHandler').deleteSubmission(submission);
         }
       });
     }

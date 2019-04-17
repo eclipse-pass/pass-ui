@@ -279,13 +279,14 @@ export default Service.extend({
 
   /**
    * Delete a draft submission object and it's associated Publication object,
-   * if applicable.
+   * if applicable. Persist all changes.
    *
    * @param {Submission} submission submission to delete
+   * @returns {Promise} that returns once the submission deletion is persisted
    */
   deleteSubmission(submission) {
     const pub = submission.get('publication');
-    if (pub) {
+    if (pub && pub.hasOwnProperty('deleteRecord')) {
       pub.deleteRecord();
       pub.save();
     }

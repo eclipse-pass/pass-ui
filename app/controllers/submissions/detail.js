@@ -425,8 +425,7 @@ export default Controller.extend({
         showCancelButton: true
       }).then((result) => {
         if (result.value) {
-          submission.deleteRecord();
-          submission.save();
+          this.get('submissionHandler').deleteSubmission(submission);
         }
       });
     }
