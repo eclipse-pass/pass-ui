@@ -66,6 +66,22 @@ export default Controller.extend({
           this.transitionToRoute('thanks', { queryParams: { submission: sub.get('id') } });
         });
       }
+    },
+    abort() {
+      const submission = this.get('model.newSubmission');
+
+      swal({
+        title: 'Discard Draft',
+        text: 'This will abort the current submission and discard progress you\'ve made. This cannot be undone.',
+        confirmButtonText: 'Abort',
+        confirmButtonColor: '#f86c6b',
+        showCancelButton: true
+      }).then((result) => {
+        if (result.value) {
+          this.get('submissionHandler').deleteSubmission(submission);
+          this.transitionToRoute('submissions');
+        }
+      });
     }
   }
 });
