@@ -29,6 +29,13 @@ export default Ember.Component.extend({
             that.previousForm(this.getValue());
           },
         },
+        Abort: {
+          label: 'Abort',
+          styles: 'pull-left btn btn-outline-danger ml-2',
+          click() {
+            that.cancel();
+          }
+        }
       },
     };
 
