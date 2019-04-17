@@ -280,4 +280,35 @@ module('Unit | Service | submission-handler', (hooks) => {
       assert.ok(submissionEvent.get('link').includes(submission.get('id')));
     });
   });
+
+  /**
+   * `#destroyRecord` should be called on the given Submission object
+   * Associated files should be queried from the Store
+   */
+  test('delete submission', function (assert) {
+    assert.expect(4);
+
+    const service = this.owner.lookup('service:submission-handler');
+
+    service.set('store', Ember.Object.create({
+      query(type, query) {
+        assert.equal(type, 'file', 'Unexpected store query found');
+        assert.ok(query);
+        return Promise.resolve(Ember.A());
+      }
+    }));
+
+    const sub = Ember.Object.create({
+      // publication: Ember.Object.create()
+      destroyRecord() {
+        assert.ok(true);
+        return Promise.resolve();
+      }
+    });
+
+    const result = service.deleteSubmission(sub);
+    result.then(() => {
+      assert.ok(true);
+    });
+  });
 });
