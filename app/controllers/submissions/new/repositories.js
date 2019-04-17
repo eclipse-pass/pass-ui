@@ -8,6 +8,8 @@ export default Controller.extend({
   repositories: alias('model.repositories'),
   publication: alias('model.publication'),
   submissionEvents: alias('model.submissionEvents'),
+  parent: Ember.inject.controller('submissions.new'),
+
   nextTabIsActive: Ember.computed('workflow.maxStep', function () {
     return (this.get('workflow').getMaxStep() > 4);
   }),
@@ -36,7 +38,7 @@ export default Controller.extend({
         swal({
           type: 'warning',
           title: 'No repositories selected',
-          html: 'If you don\'t plan on submitting to any repositories, you can stop at this time. Click "Exit '
+          html: 'If you don\'t pan on submitting to any repositories, you can stop at this time. Click "Exit '
                 + 'submission" to return to the dashboard, or "Continue submission" to go back and select a repository',
           showCancelButton: true,
           cancelButtonText: 'Exit Submission',
@@ -65,5 +67,8 @@ export default Controller.extend({
     //   metadata = metadata.filter(md => schemaIds.includes(md.id) || schemaWhitelist.includes(md.id));
     //   this.set('submission.metadata', JSON.stringify(metadata));
     // }
+    abort() {
+      this.get('parent').send('abort');
+    }
   }
 });
