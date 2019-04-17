@@ -215,6 +215,9 @@ export default Component.extend({
           win.focus();
         }
       });
+    },
+    cancel() {
+      this.sendAction('abort');
     }
   }
 });

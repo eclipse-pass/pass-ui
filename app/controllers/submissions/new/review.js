@@ -33,6 +33,9 @@ export default Controller.extend({
     },
     submit() {
       this.get('parent').send('submit');
+    },
+    abort() {
+      this.get('parent').send('abort');
     }
   }
 });
