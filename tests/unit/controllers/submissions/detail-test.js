@@ -10,8 +10,8 @@ module('Unit | Controller | submissions/detail', (hooks) => {
     assert.ok(controller);
   });
 
-  test('delete action should trigger delete and save on model object', function (assert) {
-    assert.expect(3);
+  test('delete action should trigger destroy on model object', function (assert) {
+    assert.expect(2);
 
     // Mock the global SweetAlert object to always return immediately
     swal = () => Promise.resolve({
@@ -19,11 +19,12 @@ module('Unit | Controller | submissions/detail', (hooks) => {
     });
 
     const submission = {
-      deleteRecord() {
-        assert.ok(true);
+      get() {
+        return undefined;
       },
-      save() {
+      destroyRecord() {
         assert.ok(true);
+        return Promise.resolve();
       }
     };
 

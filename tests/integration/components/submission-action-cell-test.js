@@ -2,9 +2,23 @@ import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
 import { render, click } from '@ember/test-helpers';
+import { run } from '@ember/runloop';
 
 module('Integration | Component | submission action cell', (hooks) => {
   setupRenderingTest(hooks);
+
+  hooks.beforeEach(function () {
+    const mockStore = Ember.Service.extend({
+      query() {
+        return Promise.resolve(Ember.A());
+      }
+    });
+
+    run(() => {
+      this.owner.unregister('service:store');
+      this.owner.register('service:store', mockStore);
+    });
+  });
 
   test('it renders', async function (assert) {
     let record = {};
@@ -36,18 +50,15 @@ module('Integration | Component | submission action cell', (hooks) => {
    * supplied submission, then `#save()` should be called
    */
   test('should delete and persist submission', async function (assert) {
-    assert.expect(2);
+    assert.expect(1);
 
     const record = Ember.Object.create({
       preparers: Ember.A(),
       isDraft: true,
-      deleteRecord() {
-        assert.ok(true);
-      },
-      save() {
+      destroyRecord() {
         assert.ok(true);
         return Promise.resolve();
-      }
+      },
     });
 
     this.set('record', record);
