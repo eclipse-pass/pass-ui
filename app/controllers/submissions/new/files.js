@@ -82,6 +82,9 @@ export default Controller.extend({
           }
         });
       }
+    },
+    abort() {
+      this.get('parent').send('abort');
     }
   }
 

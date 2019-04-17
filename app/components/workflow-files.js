@@ -60,6 +60,9 @@ export default Component.extend({
       let files = this.get('newFiles');
       files.removeObject(file);
       this.set('files', files);
+    },
+    cancel() {
+      this.sendAction('abort');
     }
   },
 });
