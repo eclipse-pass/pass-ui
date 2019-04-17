@@ -67,7 +67,7 @@
         Finish submission
       {{/link-to}}
     {{else if model.sub.isDraft}}
-      {{#link-to 'submissions.new' (query-params submission=model.sub.id) class="btn btn-outline-primary text-right"}}
+      {{#link-to 'submissions.new' (query-params submission=model.sub.id) disabled=true class="btn btn-outline-primary text-right"}}
         Edit submission
       {{/link-to}}
       {{#link-to (action 'deleteSubmission' model.sub) class="btn btn-outline-danger text-right"}}
