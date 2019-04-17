@@ -292,6 +292,6 @@ export default Service.extend({
     }
 
     submission.deleteRecord();
-    submission.save();
+    return submission.save();
   }
 });
