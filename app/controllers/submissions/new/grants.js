@@ -6,6 +6,8 @@ export default Controller.extend({
   preLoadedGrant: alias('model.preLoadedGrant'),
   publication: alias('model.publication'),
   submissionEvents: alias('model.submissionEvents'),
+  parent: Ember.inject.controller('submissions.new'),
+
   actions: {
     loadNext() {
       this.send('loadTab', 'submissions.new.policies');
@@ -16,6 +18,9 @@ export default Controller.extend({
     loadTab(gotoRoute) {
       // add validation, processing
       this.get('submission').save().then(() => this.transitionToRoute(gotoRoute));
+    },
+    abort() {
+      this.get('parent').send('abort');
     }
   }
 });

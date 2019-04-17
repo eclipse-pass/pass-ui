@@ -284,14 +284,11 @@ export default Service.extend({
    * @param {Submission} submission submission to delete
    * @returns {Promise} that returns once the submission deletion is persisted
    */
-  deleteSubmission(submission) {
+  async deleteSubmission(submission) {
     const pub = submission.get('publication');
-    if (pub && pub.hasOwnProperty('deleteRecord')) {
-      pub.deleteRecord();
-      pub.save();
+    if (pub && pub.hasOwnProperty('destroyRecord')) {
+      await pub.destroyRecord();
     }
-
-    submission.deleteRecord();
-    return submission.save();
+    return submission.destroyRecord();
   }
 });

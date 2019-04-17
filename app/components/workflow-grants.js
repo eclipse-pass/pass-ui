@@ -133,5 +133,9 @@ export default Component.extend({
       // undo progress, make user redo metadata step.
       this.get('workflow').setMaxStep(2);
     },
+
+    abortSubmission() {
+      this.sendAction('abort');
+    }
   },
 });

@@ -78,8 +78,8 @@ export default Controller.extend({
         showCancelButton: true
       }).then((result) => {
         if (result.value) {
-          this.get('submissionHandler').deleteSubmission(submission);
-          this.transitionToRoute('submissions');
+          this.get('submissionHandler').deleteSubmission(submission)
+            .then(() => this.transitionToRoute('submissions'));
         }
       });
     }
