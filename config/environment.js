@@ -82,6 +82,12 @@ module.exports = function (environment) {
     // url: ''
   };
 
+  ENV.policyService = {
+    url: 'https://pass.local:xxxx/policy-service',
+    policySuffix: '/policies',
+    repoSuffix: '/repositories'
+  };
+
   if (process.env.EMBER_ROOT_URL) {
     ENV.rootURL = process.env.EMBER_ROOT_URL;
   }
