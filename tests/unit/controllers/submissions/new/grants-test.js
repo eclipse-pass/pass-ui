@@ -11,24 +11,59 @@ module('Unit | Controller | submissions/new/grants', (hooks) => {
   });
 
   test('loadPrevious triggers transition', function (assert) {
-    let controller = this.owner.lookup('controller:submissions/new/grants');
-    let loadTabAccessed = false;
+    assert.expect(2);
+
+    const controller = this.owner.lookup('controller:submissions/new/grants');
+    const model = Ember.Object.create({
+      newSubmission: Ember.Object.create({
+        save: () => Promise.resolve(assert.ok(true))
+      })
+    });
+
+    controller.set('model', model);
+
     controller.transitionToRoute = function (route) {
-      loadTabAccessed = true;
       assert.equal('submissions.new.basics', route);
     };
     controller.send('loadPrevious');
-    assert.equal(loadTabAccessed, true);
   });
 
   test('loadNext triggers transition', function (assert) {
+    assert.expect(2);
+
     let controller = this.owner.lookup('controller:submissions/new/grants');
-    let loadTabAccessed = false;
+    const model = Ember.Object.create({
+      newSubmission: Ember.Object.create({
+        save: () => Promise.resolve(assert.ok(true))
+      })
+    });
+
+    controller.set('model', model);
+
     controller.transitionToRoute = function (route) {
-      loadTabAccessed = true;
       assert.equal('submissions.new.policies', route);
     };
     controller.send('loadNext');
-    assert.equal(loadTabAccessed, true);
+  });
+
+  /**
+   * Assertions are called only when the mock submission object is saved. This should happen
+   * once for each action sent to the controller.
+   */
+  test('transitions to other workflow steps saves the in progress submission', function (assert) {
+    assert.expect(2);
+
+    const controller = this.owner.lookup('controller:submissions/new/grants');
+    const model = Ember.Object.create({
+      newSubmission: Ember.Object.create({
+        save: () => Promise.resolve(assert.ok(true))
+      })
+    });
+
+    controller.set('model', model);
+    controller.set('transitionToRoute', () => {});
+
+    controller.send('loadNext');
+    controller.send('loadPrevious');
   });
 });

@@ -73,5 +73,14 @@ export default DS.Model.extend({
   }),
   isStub: Ember.computed('source', 'submitted', function () {
     return this.get('source') === 'other' && !(this.get('submitted'));
+  }),
+
+  /**
+   * @returns {boolean} is this a draft submission?
+   */
+  isDraft: Ember.computed('submitted', 'submissionStatus', function () {
+    // TODO: after model update, we can just check if submission status === 'draft'
+    // return this.get('record.submissinoStatus') === 'draft';
+    return !this.get('submitted') && !this.get('submissionStatus');
   })
 });

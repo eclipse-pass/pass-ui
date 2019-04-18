@@ -161,13 +161,19 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
   test('check validateAndLoadTab accepts complete information', function (assert) {
     assert.expect(10);
 
+    let subSaved = false;
+
     let controller = this.owner.lookup('controller:submissions/new/basics');
-    let loadTabAccessed = false;
     let submission = Ember.Object.create({
       isProxySubmission: true,
       submitterName: 'Test Submitter',
       submitterEmail: 'mailto:test@email.com',
-      submitterEmailDisplay: 'test@email.com'
+      submitterEmailDisplay: 'test@email.com',
+      save: () => {
+        assert.ok(true);
+        subSaved = true;
+        return Promise.resolve();
+      }
     });
     let publication = Ember.Object.create({
       title: 'Test publication title',
@@ -181,22 +187,47 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
     };
 
     controller.set('model', model);
-    controller.transitionToRoute = function () {
-      assert.ok(true);
-      loadTabAccessed = true;
-    };
+    controller.set('transitionToRoute', (route) => {
+      // no errors and loadTab accessed
+      assert.equal(controller.get('submitterIsInvalid'), false);
+      assert.equal(controller.get('titleError'), false);
+      assert.equal(controller.get('journalError'), false);
+      assert.equal(controller.get('submitterEmailError'), false);
+      assert.equal(controller.get('flaggedFields').indexOf('journal'), -1);
+      assert.equal(controller.get('flaggedFields').indexOf('title'), -1);
+      assert.equal(controller.get('flaggedFields').indexOf('submitterEmail'), -1);
+
+      assert.ok(subSaved, 'submission was not saved');
+    });
 
     assert.equal(controller.get('model.newSubmission.isProxySubmission'), true);
     controller.send('validateAndLoadTab', 'submissions.new.basics');
+  });
 
-    // no errors and loadTab accessed
-    assert.equal(controller.get('submitterIsInvalid'), false);
-    assert.equal(controller.get('titleError'), false);
-    assert.equal(controller.get('journalError'), false);
-    assert.equal(controller.get('submitterEmailError'), false);
-    assert.equal(controller.get('flaggedFields').indexOf('journal'), -1);
-    assert.equal(controller.get('flaggedFields').indexOf('title'), -1);
-    assert.equal(controller.get('flaggedFields').indexOf('submitterEmail'), -1);
-    assert.equal(loadTabAccessed, true);
+  /**
+   * Mock the submission model object with a custom `#save()` function. This test makes
+   * sure that the custom save function is called exactly once when the 'loadNext'
+   * action is sent to the controller.
+   */
+  test('make sure submission is saved', function (assert) {
+    assert.expect(1);
+
+    const controller = this.owner.lookup('controller:submissions/new/basics');
+    const model = {
+      publication: Ember.Object.create({
+        title: 'This is the moo-iest',
+        journal: Ember.Object.create({
+          id: 'journal:id'
+        })
+      }),
+      newSubmission: Ember.Object.create({
+        save: () => Promise.resolve(assert.ok(true))
+      })
+    };
+
+    controller.set('transitionToRoute', (route) => {});
+
+    controller.set('model', model);
+    controller.send('loadNext');
   });
 });

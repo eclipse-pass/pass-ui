@@ -125,10 +125,10 @@ module('Integration | Component | workflow-metadata', (hooks) => {
     await render(hbs`{{workflow-metadata submission=submission}}`);
 
     const buttons = this.element.querySelectorAll('button');
-    assert.equal(2, buttons.length, 'should be two buttons');
+    assert.equal(3, buttons.length, 'should be two buttons');
 
     Object.keys(buttons).map(key => buttons[key].textContent).forEach((btn) => {
-      assert.ok(btn === 'Back' || btn === 'Next');
+      assert.ok(btn === 'Back' || btn === 'Next' || btn === 'Abort');
     });
   });
 

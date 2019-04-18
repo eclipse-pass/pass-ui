@@ -19,4 +19,10 @@ export default Component.extend({
     policies = policies.uniqBy('id');
     return policies;
   }),
+
+  actions: {
+    cancel() {
+      this.sendAction('abort');
+    }
+  }
 });

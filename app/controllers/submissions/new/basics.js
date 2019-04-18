@@ -8,6 +8,7 @@ export default Controller.extend({
   publication: alias('model.publication'),
   preLoadedGrant: alias('model.preLoadedGrant'),
   submissionEvents: alias('model.submissionEvents'),
+  parent: Ember.inject.controller('submissions.new'),
 
   // these errors start as false since you don't want to immediately have all fields turn red
   titleError: false,
@@ -57,7 +58,8 @@ export default Controller.extend({
     loadTab(gotoRoute) {
       if (!this.get('doiInfo.title')) this.set('doiInfo.title', this.get('publication.title'));
       toastr.remove();
-      this.transitionToRoute(gotoRoute);
+
+      this.get('submission').save().then(() => this.transitionToRoute(gotoRoute));
     },
     validateAndLoadTab(gotoRoute) {
       this.set('titleError', false);
@@ -104,6 +106,9 @@ export default Controller.extend({
     },
     validateSubmitterEmail() {
       this.set('submitterEmailError', this.get('submitterEmailIsInvalid'));
+    },
+    abort() {
+      this.get('parent').send('abort');
     }
   }
 });

@@ -275,5 +275,39 @@ export default Service.extend({
       submission.set('submissionStatus', 'cancelled');
       return submission.save();
     });
+  },
+
+  /**
+   * @param {string} submissionId
+   * @returns {array} query result set of all files linked to the given submission ID
+   */
+  _getFiles(submissionId) {
+    return this.get('store').query('file', {
+      term: { submission: submissionId }
+    });
+  },
+
+  /**
+   * Delete a draft submission object and it's associated Publication object,
+   * if applicable. Persist all changes.
+   *
+   * @param {Submission} submission submission to delete
+   * @returns {Promise} that returns once the submission deletion is persisted
+   */
+  async deleteSubmission(submission) {
+    const result = [];
+
+    const pub = submission.get('publication');
+    if (pub && pub.hasOwnProperty('destroyRecord')) {
+      result.push(pub.destroyRecord());
+    }
+
+    // eslint-disable-next-line function-paren-newline
+    result.push(
+      this._getFiles(submission.get('id')).then(files => files.map(file => file.destroyRecord()))
+    ); // eslint-disable-line function-paren-newline
+
+    result.push(submission.destroyRecord());
+    return Promise.all(result);
   }
 });

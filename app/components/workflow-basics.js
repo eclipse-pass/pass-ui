@@ -196,6 +196,10 @@ export default Component.extend({
       const publication = this.get('publication');
       publication.set('journal', journal);
       this.sendAction('validateJournal');
+    },
+
+    cancel() {
+      this.sendAction('abort');
     }
   }
 });

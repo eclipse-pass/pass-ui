@@ -107,5 +107,8 @@ export default Component.extend({
       if (event.target.checked) this.send('addRepository', repository);
       else this.send('removeRepository', repository);
     },
+    cancel() {
+      this.sendAction('abort');
+    }
   }
 });

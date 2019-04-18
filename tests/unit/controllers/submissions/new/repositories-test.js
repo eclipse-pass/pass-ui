@@ -33,6 +33,8 @@ module('Unit | Controller | submissions/new/repositories', (hooks) => {
   });
 
   test('transition if there are repositories', function (assert) {
+    assert.ok(2);
+
     let controller = this.owner.lookup('controller:submissions/new/repositories');
     this.owner.register('service:workflow', Ember.Object.extend({
       getMaxStep() { return 5; }
@@ -42,42 +44,78 @@ module('Unit | Controller | submissions/new/repositories', (hooks) => {
       id: 'test:repo',
       formSchema: '{ "id": "nih", "title": "med data" }'
     });
-    let submission = Ember.Object.create({
-      repositories: Ember.A([repository])
-    });
-    let model = Ember.Object.create({
-      newSubmission: submission
+    const model = Ember.Object.create({
+      newSubmission: Ember.Object.create({
+        repositories: Ember.A([repository]),
+        save: () => Promise.resolve(assert.ok(true))
+      })
     });
     controller.set('model', model);
-    let loadTabAccessed = false;
+
     controller.transitionToRoute = function () {
-      loadTabAccessed = true;
+      assert.ok(true);
     };
     controller.send('validateAndLoadTab');
-    assert.equal(loadTabAccessed, true);
   });
 
-  test('updateRelatedData removes metadata for repos not assigned', function (assert) {
-    let controller = this.owner.lookup('controller:submissions/new/repositories');
-    let repository = Ember.Object.create({
-      id: 'test:repo',
-      formSchema: '{ "id": "nih", "title": "med data" }'
+  // test('updateRelatedData removes metadata for repos not assigned', function (assert) {
+  //   let controller = this.owner.lookup('controller:submissions/new/repositories');
+  //   let repository = Ember.Object.create({
+  //     id: 'test:repo',
+  //     formSchema: '{ "id": "nih", "title": "med data" }'
+  //   });
+
+  //   let md = '[{"id": "foo", "title": "bar"}, {"id": "nih", "title": "med data"}]';
+  //   let submission = Ember.Object.create({
+  //     repositories: Ember.A([repository]),
+  //     metadata: md
+  //   });
+  //   let model = Ember.Object.create({
+  //     newSubmission: submission
+  //   });
+  //   controller.set('model', model);
+  //   assert.equal(controller.get('submission.metadata'), md);
+  //   controller.send('updateRelatedData');
+  //   // check the metadata that does not match a repo has been removed.
+  //   let updatedMetadata = JSON.parse(controller.get('submission.metadata'));
+  //   assert.equal(updatedMetadata[0].id, 'nih');
+  //   assert.equal(updatedMetadata.length, 1);
+  // });
+
+  test('should save submission on transition', function (assert) {
+    assert.ok(4);
+
+    let subSaved = false;
+
+    const controller = this.owner.lookup('controller:submissions/new/repositories');
+
+    const repositories = Ember.A([
+      Ember.Object.create({
+        id: 'test:repo',
+        formSchema: '{ "id": "nih", "title": "med data" }'
+      })
+    ]);
+    const model = Ember.Object.create({
+      newSubmission: Ember.Object.create({
+        repositories,
+        save: () => {
+          subSaved = true;
+          return Promise.resolve();
+        }
+      })
     });
 
-    let md = '[{"id": "foo", "title": "bar"}, {"id": "nih", "title": "med data"}]';
-    let submission = Ember.Object.create({
-      repositories: Ember.A([repository]),
-      metadata: md
-    });
-    let model = Ember.Object.create({
-      newSubmission: submission
-    });
     controller.set('model', model);
-    assert.equal(controller.get('submission.metadata'), md);
-    controller.send('updateRelatedData');
-    // check the metadata that does not match a repo has been removed.
-    let updatedMetadata = JSON.parse(controller.get('submission.metadata'));
-    assert.equal(updatedMetadata[0].id, 'nih');
-    assert.equal(updatedMetadata.length, 1);
+    controller.set(
+      'transitionToRoute',
+      route => assert.ok(['submissions.new.metadata', 'submissions.new.policies'].includes(route))
+    );
+
+    controller.send('loadNext');
+    assert.ok(subSaved);
+
+    subSaved = false;
+    controller.send('loadPrevious');
+    assert.ok(subSaved);
   });
 });

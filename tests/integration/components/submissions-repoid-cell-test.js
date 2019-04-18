@@ -27,4 +27,24 @@ module('Integration | Component | submissions repoid cell', (hooks) => {
     await this.render(hbs`{{submissions-repoid-cell}}`);
     assert.ok(true);
   });
+
+  /**
+   * Make sure the component renders when `record.publication.id` returns no value
+   */
+  test('it renders with when data is missing', async function (assert) {
+    assert.expect(1);
+
+    this.set('store', Ember.Service.extend({
+      query(type, q) {
+        assert.ok(true);
+      }
+    }));
+    const record = Ember.Object.create({
+      publication: Ember.Object.create({})
+    });
+    this.set('record', record);
+
+    await this.render(hbs`{{submission-repoid-cell}}`);
+    assert.ok(true);
+  });
 });

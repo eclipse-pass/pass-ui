@@ -1,3 +1,5 @@
-{{#link-to "submissions.detail" record.id class="moo"}}
-  {{get record 'publication.title'}}
-{{/link-to}}
+{{#if (get record 'publication')}}
+  {{#link-to "submissions.detail" record.id class="moo"}}
+    {{get record 'publication.title'}}
+  {{/link-to}}
+{{/if}}

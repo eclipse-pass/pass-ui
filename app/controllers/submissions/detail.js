@@ -416,6 +416,18 @@ export default Controller.extend({
           this.get('submissionHandler').cancelSubmission(sub, message).then(() => window.location.reload(true));
         }
       });
+    },
+    deleteSubmission(submission) {
+      swal({
+        text: 'Are you sure you want to delete this draft submission? This cannot be undone.',
+        confirmButtonText: 'Delete',
+        confirmButtonColor: '#f86c6b',
+        showCancelButton: true
+      }).then((result) => {
+        if (result.value) {
+          this.get('submissionHandler').deleteSubmission(submission);
+        }
+      });
     }
   }
 });

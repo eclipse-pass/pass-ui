@@ -116,6 +116,10 @@ export default Component.extend({
         this.sendAction('back');
       }
     },
+
+    cancel() {
+      this.sendAction('abort');
+    }
   },
 
   /**

@@ -8,6 +8,8 @@ export default Controller.extend({
   repositories: alias('model.repositories'),
   publication: alias('model.publication'),
   submissionEvents: alias('model.submissionEvents'),
+  parent: Ember.inject.controller('submissions.new'),
+
   nextTabIsActive: Ember.computed('workflow.maxStep', function () {
     return (this.get('workflow').getMaxStep() > 4);
   }),
@@ -24,9 +26,11 @@ export default Controller.extend({
       this.send('loadTab', 'submissions.new.policies');
     },
     loadTab(gotoRoute) {
-      this.send('updateRelatedData');
-      this.transitionToRoute(gotoRoute);
-      this.set('loadingNext', false); // reset for next time
+      // this.send('updateRelatedData'); // I think this is only relevant for old style metadata blob
+      this.get('submission').save().then(() => {
+        this.transitionToRoute(gotoRoute);
+        this.set('loadingNext', false); // reset for next time
+      });
     },
     validateAndLoadTab(gotoRoute) {
       let needValidation = this.get('needValidation');
@@ -34,7 +38,7 @@ export default Controller.extend({
         swal({
           type: 'warning',
           title: 'No repositories selected',
-          html: 'If you don\'t plan on submitting to any repositories, you can stop at this time. Click "Exit '
+          html: 'If you don\'t pan on submitting to any repositories, you can stop at this time. Click "Exit '
                 + 'submission" to return to the dashboard, or "Continue submission" to go back and select a repository',
           showCancelButton: true,
           cancelButtonText: 'Exit Submission',
@@ -49,19 +53,22 @@ export default Controller.extend({
         this.send('loadTab', gotoRoute);
       }
     },
-    updateRelatedData() {
-      // Remove any schemas not associated with the repositories attached to the submission or not on the whitelist.
-      // Whitelisted schemas are not associated with repositories but still required by deposit services.
-      let metadata;
-      if (this.get('submission.metadata')) {
-        metadata = JSON.parse(this.get('submission.metadata'));
-      } else {
-        metadata = [];
-      }
-      let schemaWhitelist = ['common', 'crossref', 'agent_information', 'pmc'];
-      let schemaIds = this.get('submission.repositories').map(x => JSON.parse(x.get('formSchema')).id);
-      metadata = metadata.filter(md => schemaIds.includes(md.id) || schemaWhitelist.includes(md.id));
-      this.set('submission.metadata', JSON.stringify(metadata));
+    // updateRelatedData() {
+    //   // Remove any schemas not associated with the repositories attached to the submission or not on the whitelist.
+    //   // Whitelisted schemas are not associated with repositories but still required by deposit services.
+    //   let metadata;
+    //   if (this.get('submission.metadata')) {
+    //     metadata = JSON.parse(this.get('submission.metadata'));
+    //   } else {
+    //     metadata = [];
+    //   }
+    //   let schemaWhitelist = ['common', 'crossref', 'agent_information', 'pmc'];
+    //   let schemaIds = this.get('submission.repositories').map(x => JSON.parse(x.get('formSchema')).id);
+    //   metadata = metadata.filter(md => schemaIds.includes(md.id) || schemaWhitelist.includes(md.id));
+    //   this.set('submission.metadata', JSON.stringify(metadata));
+    // }
+    abort() {
+      this.get('parent').send('abort');
     }
   }
 });

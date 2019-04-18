@@ -259,4 +259,45 @@ module('Unit | Controller | submissions/new', (hooks) => {
 
     controller.send('submit');
   });
+
+  /**
+   * Three things are mocked, each of which run an assertion (that always passes). This
+   * test passes when exactly 3 assertions are run, and the controller tries to transition
+   * to the expected route.
+   *
+   * This action should first create a SweetAlert (swal), then call 'deleteSubmission' in the
+   * submission handler, finally call 'transitionToRoute' to transition to the 'submissions'
+   * route.
+   */
+  test('abort should delete submission and transition', async function (assert) {
+    assert.expect(3);
+
+    const model = Ember.Object.create({
+      newSubmission: Ember.Object.create()
+    });
+    const controller = this.owner.lookup('controller:submissions/new');
+
+    controller.set('model', model);
+
+    // Mock global 'swal' for this test
+    swal = () => {
+      assert.ok(true);
+      return Promise.resolve({
+        value: 'moo'
+      });
+    };
+
+    // Having this mocked function run shows that the service will delete the submission
+    controller.set('submissionHandler', Ember.Object.create({
+      deleteSubmission(sub) {
+        assert.ok(sub);
+        return Promise.resolve();
+      }
+    }));
+    controller.set('transitionToRoute', (name) => {
+      assert.equal(name, 'submissions', 'unexpected transition was named');
+    });
+
+    controller.send('abort');
+  });
 });

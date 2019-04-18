@@ -11,24 +11,56 @@ module('Unit | Controller | submissions/new/policies', (hooks) => {
   });
 
   test('loadPrevious triggers transition', function (assert) {
-    let controller = this.owner.lookup('controller:submissions/new/policies');
-    let loadTabAccessed = false;
+    assert.expect(2);
+
+    const controller = this.owner.lookup('controller:submissions/new/policies');
+    const model = Ember.Object.create({
+      newSubmission: Ember.Object.create({
+        save: () => Promise.resolve(assert.ok(true))
+      })
+    });
+
+    controller.set('model', model);
     controller.transitionToRoute = function (route) {
-      loadTabAccessed = true;
       assert.equal('submissions.new.grants', route);
     };
     controller.send('loadPrevious');
-    assert.equal(loadTabAccessed, true);
   });
 
   test('loadNext triggers transition', function (assert) {
-    let controller = this.owner.lookup('controller:submissions/new/policies');
-    let loadTabAccessed = false;
+    assert.expect(2);
+
+    const controller = this.owner.lookup('controller:submissions/new/policies');
+    const model = Ember.Object.create({
+      newSubmission: Ember.Object.create({
+        save: () => Promise.resolve(assert.ok(true))
+      })
+    });
+
+    controller.set('model', model);
     controller.transitionToRoute = function (route) {
-      loadTabAccessed = true;
       assert.equal('submissions.new.repositories', route);
     };
     controller.send('loadNext');
-    assert.equal(loadTabAccessed, true);
+  });
+
+  test('navigating to other workflow steps should save the submission', function (assert) {
+    assert.expect(4);
+
+    const controller = this.owner.lookup('controller:submissions/new/policies');
+    const model = Ember.Object.create({
+      newSubmission: Ember.Object.create({
+        save: () => Promise.resolve(assert.ok(true))
+      })
+    });
+
+    controller.set('model', model);
+    controller.set(
+      'transitionToRoute',
+      route => assert.ok(route === 'submissions.new.repositories' || route === 'submissions.new.grants')
+    );
+
+    controller.send('loadNext');
+    controller.send('loadPrevious');
   });
 });
