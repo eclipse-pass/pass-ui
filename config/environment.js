@@ -77,9 +77,12 @@ module.exports = function (environment) {
     url: 'https://localhost:8080/pass-user-service/whoami'
   };
 
+  ENV.journalService = {
+    url: 'https://localhost:8080/journal-service/'
+  };
+
   ENV.schemaService = {
     url: 'https://pass.local:8086'
-    // url: ''
   };
 
   ENV.policyService = {
