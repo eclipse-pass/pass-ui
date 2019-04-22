@@ -12,7 +12,7 @@ module('Integration | Component | workflow basics', (hooks) => {
       repositories: [],
       grants: []
     });
-    let publication = Ember.Object.create({});
+    let publication = Ember.Object.create({ doi: 'test' });
     let preLoadedGrant = Ember.Object.create({});
     let flaggedFields = [];
     let doiInfo = [];
@@ -30,27 +30,36 @@ module('Integration | Component | workflow basics', (hooks) => {
     const mockDoiService = Ember.Service.extend({
       resolveDOI(doi) {
         return Promise.resolve({
-          publisher: 'Royal Society of Chemistry (RSC)',
-          issue: 1,
-          'short-container-title': 'Analyst',
-          abstract: '<p>The investigators report a dramatically improved chemoselective analysis for carbonyls in crude biological extracts by turning to a catalyst and freezing conditions for derivatization.</p>',
-          DOI: '10.1039/c7an01256j',
-          type: 'journal-article',
-          page: '311-322',
-          'update-policy': 'http://dx.doi.org/10.1039/rsc_crossmark_policy',
-          source: 'Crossref',
-          'is-referenced-by-count': 5,
-          title: 'Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS',
-          prefix: '10.1039',
-          volume: '143',
-          'container-title': 'The Analyst',
-          'original-title': '',
-          language: 'en',
-          ISSN: ['0003-2654', '1364-5528'],
-          'issn-type': [
-            { value: '0003-2654', type: 'print' },
-            { value: '1364-5528', type: 'electronic' }
-          ],
+          doiInfo: {
+            publisher: 'Royal Society of Chemistry (RSC)',
+            issue: 1,
+            'short-container-title': 'Analyst',
+            abstract: '<p>The investigators report a dramatically improved chemoselective analysis for carbonyls in crude biological extracts by turning to a catalyst and freezing conditions for derivatization.</p>',
+            DOI: '10.1039/c7an01256j',
+            type: 'journal-article',
+            page: '311-322',
+            'update-policy': 'http://dx.doi.org/10.1039/rsc_crossmark_policy',
+            source: 'Crossref',
+            'is-referenced-by-count': 5,
+            title: 'Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS',
+            prefix: '10.1039',
+            volume: '143',
+            'container-title': 'The Analyst',
+            'original-title': '',
+            language: 'en',
+            ISSN: ['0003-2654', '1364-5528'],
+            'issn-type': [
+              { value: '0003-2654', type: 'print' },
+              { value: '1364-5528', type: 'electronic' }
+            ],
+          },
+          publication: Ember.Object.create({
+            abstract: '<p>The investigators report a dramatically improved chemoselective analysis for carbonyls in crude biological extracts by turning to a catalyst and freezing conditions for derivatization.</p>',
+            doi: '1234/4321',
+            issue: 1,
+            title: 'Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS',
+            volume: '143'
+          })
         });
       },
       formatDOI(doi) {
@@ -116,19 +125,7 @@ module('Integration | Component | workflow basics', (hooks) => {
     assert.ok(true);
   });
 
-  test('lookupDOI should create valid Publication', async function (assert) {
-    const origPub = Ember.Object.create({ doi: 'fake-doi' });
-    const publication = Ember.Object.create({
-      doi: 'fake-doi'
-    });
-    const submission = Ember.Object.create({
-      repositories: Ember.A(),
-      grants: Ember.A()
-    });
-
-    this.set('submission', submission);
-    this.set('publication', publication);
-
+  test('lookupDOI should set doiInfo and publication', async function (assert) {
     // this.set('lookupDOI', () => assert.ok(true));
     this.set('validateTitle', () => assert.ok(true));
 
@@ -146,17 +143,8 @@ module('Integration | Component | workflow basics', (hooks) => {
     // Add a DOI to UI
     await fillIn('#doi', '1234/4321');
 
-    assert.notDeepEqual(publication, origPub);
-    assert.deepEqual(
-      publication.getProperties(['abstract', 'doi', 'issue', 'title', 'volume']),
-      {
-        abstract: '<p>The investigators report a dramatically improved chemoselective analysis for carbonyls in crude biological extracts by turning to a catalyst and freezing conditions for derivatization.</p>',
-        doi: '1234/4321',
-        issue: 1,
-        title: 'Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS',
-        volume: '143'
-      },
-      'Unexpected publication data found'
-    );
+    assert.equal(this.get('doiInfo').DOI, '10.1039/c7an01256j');
+    assert.equal(this.get('publication.doi'), '1234/4321');
+    assert.equal(this.get('publication.issue'), '1');
   });
 });
