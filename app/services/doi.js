@@ -10,46 +10,55 @@ import ENV from 'pass-ember/config/environment';
  */
 export default Service.extend({
   store: Ember.inject.service('store'),
+  ajax: Ember.inject.service(),
 
-  base: 'https://api.crossref.org/',
-
-  // Crossref API has multiple 'prefixes' you can use to get different pieces of information
-  // At the moment, we only care about 'works'
-  basicPrefix: 'works/',
+  journalServiceUrl: ENV.journalService.url,
 
   /**
-   * Crossref API strongly suggests attaching at least some mailto credentials to requests.
-   * Without this information, Crossref will throttle requests.
-   */
-  userAgent() {
-    return `OA-PASS (mailto:${ENV.brand.mailto})`;
-  },
+  * resolveDOI - Lookup information about a DOI. Return that information along
+  * with a publication. The publication will have a journal set. The doiInfo
+  * is normalized and has nlmta data added.
+  *
+  * @param  {string} doi
+  * @returns {object}    Object with doiInfo and publication
+  */
+  async resolveDOI(doi) {
+    let url = `${this.get('whoamiUrl')}?doi=${encodeURIComponent(doi)}`;
 
-  /**
-   * NOTE: There may be a browser bug in Chrome(?) that prevents us from setting the 'User-Agent'
-   * header. For now, we can attach 'mailto' info as URI query parameter, per the Crossref API.
-   *
-   * Sample Crossref response can is linked above
-   *
-   * IMPL NOTE: Rerturning the JSON object is done in two stages (two separate 'then') because
-   * `response.json()` returns a Promise
-   *
-   * @param {string} doi DOI URI
-   * @returns {promise} get a promise that will returned a parsed JSON object
-   */
-  resolveDOI(doi) {
-    const eDoi = encodeURI(doi);
-    const url = `${this.get('base')}${this.get('basicPrefix')}${eDoi}?mailto=${ENV.brand.mailto}`;
-    // const headers = new Headers({
-    //   'User-Agent': this.userAgent()
-    // });
+    return this.get('ajax').request(url, 'GET', {
+      headers: {
+        Accept: 'application/json; charset=utf-8',
+        withCredentials: 'include'
+      }
+    }).then(async (response) => {
+      let journal = await this.get('store').findRecord('journal', response['journal-id']);
 
-    return fetch(url, {
-      method: 'GET',
-      // headers // There may be a bug in Chrome that prevents setting the 'User-Agent' header
-    })
-      .then(response => response.json()) // TODO: should we do some preprocessing of the DOI data here?
-      .then(json => this._processRawDoi(json.message));
+      let doiInfo = this._processRawDoi(response.crossref.message);
+      let nlmtaDump = await this.get('nlmtaService').getNlmtaFromIssn(doiInfo);
+
+      if (nlmtaDump) {
+        doiInfo.nlmta = nlmtaDump.nlmta;
+        doiInfo['issn-map'] = nlmtaDump.map;
+      }
+
+      doiInfo['journal-title'] = doiInfo['container-title'];
+
+      let publication = this.get('store').createRecord('publication', {
+        doi,
+        journal,
+        title: doiInfo.title,
+        submittedDate: doiInfo.deposited,
+        creationDate: doiInfo.created,
+        issue: doiInfo.issue,
+        volume: doiInfo.volume,
+        abstract: doiInfo.abstract,
+      });
+
+      return {
+        publication,
+        doiInfo
+      };
+    });
   },
 
   isValidDOI(doi) {
@@ -164,7 +173,7 @@ export default Service.extend({
   /**
    * Process the DOI data object by 'transforming' select arrays to string values.
    *
-   * @param {object} data DOI data from Crossref
+   * @param {object} data DOI data from Crossref in message key
    * @returns {object} return the processed DOI data
    */
   _processRawDoi(data) {
