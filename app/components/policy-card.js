@@ -38,6 +38,18 @@ export default Component.extend({
     }
   },
   actions: {
+    /**
+     * Toggles whether or not the user claims the publication is taken care of
+     * by the publisher. If TRUE, PASS is not responsible for ensuring policy
+     * compliance.
+     *
+     * IMPL NOTE: This action sets the 'pmcPublisherDeposit' status in the
+     * 'workflow' service. The 'workflow' service can be accessed in other
+     * submission workflow steps to get this information back. This is done
+     * to avoid having to bubble an event up the stack (I guess).
+     *
+     * @param {boolean} choice
+     */
     pmcPublisherDepositToggled(choice) {
       this.set('pmcPublisherDeposit', choice);
       this.set('maxStep', 3);
