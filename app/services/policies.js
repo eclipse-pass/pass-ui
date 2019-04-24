@@ -81,6 +81,23 @@ export default Service.extend({
 
         throw new Error(`Recieved response ${response.status} : ${response.statusText}`);
       });
+  },
+
+  /**
+   * Get an Ember array containing referenced Repository objects
+   *
+   * @param {array} refs reference objects {
+   *    url: '',
+   *    selected: true|false
+   * }
+   * @param {string} type object type (example: 'repository')
+   * @returns {array} where Repository ID resolved to an Ember model object
+   */
+  resolveReferences(type, refs) {
+    refs.map((ref) => {
+      ref[type] = this.get('store').findRecord(type, ref.url || ref.id);
+      return ref;
+    });
   }
 
 });

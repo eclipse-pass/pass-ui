@@ -87,4 +87,45 @@ module('Unit | Service | policies', (hooks) => {
 
     service.getRepositories(sub).catch(e => assert.ok(e.message.includes('404'), 'unexpected error caught'));
   });
+
+  /**
+   *
+   */
+  test('should get an EmberArray of resolved references', function (assert) {
+    assert.expect(9);
+
+    const rules = [
+      {
+        url: 'moo-1',
+        selected: true
+      },
+      {
+        url: 'moo-2',
+        selected: false
+      }
+    ];
+    const type = 'Moo-model';
+
+    const store = Ember.Object.create({
+      findRecord(type, id) {
+        assert.equal(type, 'Moo-model', 'unexpected type found');
+        assert.ok(id.startsWith('moo'), 'unexpected record ID found');
+        return Ember.Object.create({
+          id
+        });
+      }
+    });
+
+    const service = this.owner.lookup('service:policies');
+    assert.ok(service, 'service not found');
+
+    service.set('store', store);
+
+    const result = service.resolveReferences(type, rules);
+
+    assert.ok(result, 'No result found :(');
+    assert.equal(result.length, 2, `Expecting result length of 2, but found ${result.length}`);
+    assert.ok(result[0]['Moo-model'], 'No model object found');
+    assert.equal(result[0]['Moo-model'].get('id'), 'moo-1', 'unexpected object ID found');
+  });
 });
