@@ -1,3 +1,76 @@
+# Policy Service Moo Test Notes
+
+### Prerequisites
+
+Some changes were made externally to enable this setup to work. Both `sp` and `proxy` Docker images were modified and built from `pass-docker`
+
+`pass-docker/httpd-proxy/etc-httpd/conf.d/httpd.conf`
+
+```
+ProxyPass /policyservice http://sp/policyservice
+ProxyPassReverse /policyservice http://sp/policyservice
+```
+
+`/home/john/workspace/dc/pass-docker/sp/2.6.1/etc-httpd/conf.d/sp.conf`
+
+```
+ProxyPassReverse /policyservice http://policyservice:8088
+ProxyPass /policyservice http://policyservice:8088
+```
+
+Both `proxy` and `sp` were re-tagged locally.
+
+`pass-docker/docker-compose.yml`
+
+```
+  proxy:
+    build: ./httpd-proxy/
+    image: oapass/httpd-proxy:moo
+    container_name: proxy
+    networks:
+     - front
+     - back
+    ports:
+     - "80:80"
+     - "443:443"
+
+  sp:
+    build: ./sp/2.6.1
+    image: oapass/sp:moo
+    container_name: sp
+    networks:
+     - back
+    secrets:
+     - source: sp_key
+```
+
+Finally, these two containers were rebuilt using `docker-compose build` to be made available locally to the `pass-ember` Docker setup.
+
+After the above changes were made, I simply navigated to `pass-ember/.docker/shib` and ran `docker-compose up` as normal and waited for things to settle. Everything will be ready to test when you see a table in the logs that looks similar to:
+
+```
+ember            | Build successful (1350ms) – Serving on http://localhost:81/app/
+ember            |
+ember            |
+ember            |
+ember            | Slowest Nodes (totalTime => 5% )              | Total (avg)
+ember            | ----------------------------------------------+---------------------
+ember            | Package /assets/vendor.js (1)                 | 165ms
+ember            | Pod Templates (1)                             | 127ms
+ember            | Packaged Application Javascript (1)           | 124ms
+ember            | BroccoliMergeTrees (19)                       | 96ms (5 ms)
+ember            | SassCompiler (1)                              | 84ms
+ember            | broccoli-persistent-filter:EslintValid... (3) | 76ms (25 ms)
+ember            |
+
+```
+
+### Manual testing
+
+Click on the `Start new submission` button to launch the new submission workflow. Enter whatever info you want and click Next. In the Grants step, select one or more grants, then click Next. The policy service is invoked after the Grants route is done, but before the application transitions to the Policies step (in the policies route `model()` hook). Basically as soon as you click the Next button from the Grants step, the service should be invoked. It is at this point where I get the error.
+
+--------------------------------------------------------------
+
 # pass-ember
 [![Build Status](https://travis-ci.org/OA-PASS/pass-ember.png?branch=master)](https://travis-ci.org/OA-PASS/pass-ember)
 [![Coverage Status](https://coveralls.io/repos/github/OA-PASS/pass-ember/badge.svg)](https://coveralls.io/github/OA-PASS/pass-ember)
@@ -36,7 +109,7 @@ be available at https://pass.local/.
 * The local code runs in the `ember` container, and changes in the local code will be reflected there.
 * Visit your app at https://pass.local/app
 * Visit your tests at https://pass.local/app/tests
-* Fedora repository is at https://pass.local/fcrepo/ 
+* Fedora repository is at https://pass.local/fcrepo/
 * Elasticsearch index search endpoint is at https://pass.local/es/
 * In order to remove persisted data, stop all the containers and `docker system prune -f`
 
