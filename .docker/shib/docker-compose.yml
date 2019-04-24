@@ -63,7 +63,7 @@ services:
       - front
 
   proxy:
-    image: oapass/httpd-proxy:20190306@sha256:63770ee48bfaf251565b2e3ffd593284ed3783ef1b1c44390a60d57c9764009c
+    image: oapass/httpd-proxy:moo
     container_name: proxy
     networks:
       - front
@@ -99,7 +99,7 @@ services:
       - back
 
   sp:
-    image: oapass/sp:20190306@sha256:6df4a3307fcee68c3f9b1e7fecaa58c0357da1713450a63173ab8a2c79cf14d5
+    image: oapass/sp:moo
     container_name: sp
     networks:
       - back
@@ -139,6 +139,16 @@ services:
     image: birkland/assets:2019-03-06_3.3@sha256:e4c59e625eaf28cb4524dbe54a4e5dbf11adf71347470afb8810a75274f596c7
     volumes:
       - passdata:/data
+
+  policyservice:
+    image: oapass/policy-service:latest
+    container_name: policyservice
+    ports:
+      - '${POLICY_SERVICE_PORT}:${POLICY_SERVICE_PORT}'
+    networks:
+      - front
+      - back
+    env_file: .env
 
 volumes:
   passdata:

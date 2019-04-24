@@ -83,7 +83,8 @@ module.exports = function (environment) {
   };
 
   ENV.policyService = {
-    url: 'https://pass.local:xxxx/policy-service',
+    // url: 'https://pass.local:8088',
+    url: 'https://pass.local/policyservice',
     policySuffix: '/policies',
     repoSuffix: '/repositories'
   };
