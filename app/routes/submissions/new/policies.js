@@ -6,6 +6,10 @@ export default CheckSessionRoute.extend({
   policyService: service('policies'),
 
   /**
+   * First call the Policy Service to get the list of applicable policy IDs.
+   * Then for each of the returned policies, do not resolve this function until all
+   * policy model objects have been retrieved from the Store.
+   *
    * @returns {object} /submissions/new/policies model
    * {
    *  newSubmission,
@@ -14,25 +18,29 @@ export default CheckSessionRoute.extend({
    *  preLoadedGrant,
    *  policies: [
    *    {
+   *      id: '',
    *      type: 'funder|institution', // type string
    *      policy: {} // Ember.Object - the actual policy model object
    *    }
    *  ]
    * }
    */
-  model() {
+  async model() {
     const parentModel = this.modelFor('submissions.new');
     const submission = parentModel.newSubmission;
-    // TODO: will the 'policy' promise resolve correctly??
-    const policyPromise = this.get('policyService').getPolicies(submission)
-      .then(results => this.get('policyService').resolveReferences('policy', results));
+
+    let policies = await this.get('policyService').getPolicies(submission);
+
+    policies = this.get('policyService').resolveReferences('policy', policies);
+    const policyPromise = policies.map(p => p.policy);
 
     return Ember.RSVP.hash({
       repositories: parentModel.repositories,
       newSubmission: parentModel.newSubmission,
       publication: parentModel.publication,
       preLoadedGrant: parentModel.preLoadedGrant,
-      policies: policyPromise
+      policyPromise,
+      policies
     });
   },
 
