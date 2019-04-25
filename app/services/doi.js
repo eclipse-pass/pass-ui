@@ -46,7 +46,7 @@ export default Service.extend({
       let publication = this.get('store').createRecord('publication', {
         doi,
         journal,
-        title: doiInfo.title,
+        title: Array.isArray(doiInfo.title) ? doiInfo.title.join(', ') : doiInfo.title,
         submittedDate: doiInfo.deposited,
         creationDate: doiInfo.created,
         issue: doiInfo.issue,
@@ -173,7 +173,7 @@ export default Service.extend({
   /**
    * Process the DOI data object by 'transforming' select arrays to string values.
    *
-   * @param {object} data DOI data from Crossref in message key
+   * @param {object} data DOI data from Crossref
    * @returns {object} return the processed DOI data
    */
   _processRawDoi(data) {
@@ -187,32 +187,5 @@ export default Service.extend({
     data['journal-title'] = data['container-title'];
 
     return data;
-  },
-
-  /**
-   * Create a new Publication object based on Crossref data OR data entered by
-   * the user. This is intended to be called after getting the associated journal
-   * so it can be immediately associated with the publication object before it is
-   * persisted. However, this association can always be persisted later.
-   *
-   * @param {object} xrefData JSON blob retrieved from Crossref
-   *                          or a JSON blob with user-entered data
-   * @param {Journal} journal the Journal object to associate with the new Publication
-   * @returns {Promise} Publication object, persisted
-   */
-  createPublication(data, journal) {
-    let publication = this.get('store').createRecord('publication');
-
-    publication.set('doi', data.DOI);
-    publication.set('title', Array.isArray(data.title) ? data.title.join(', ') : data.title);
-    // publication.set('submittedDate', data.deposited['date-time']);
-    // publication.set('createdDate', data.created['date-time']);
-    publication.set('issue', data.issue);
-    publication.set('volume', data.volume);
-    publication.set('abstract', data.abstract);
-
-    publication.set('journal', journal);
-
-    return publication.save().then(pub => pub);
   }
 });
