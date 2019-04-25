@@ -10,31 +10,6 @@ export default Controller.extend({
   submissionEvents: alias('model.submissionEvents'),
   parent: Ember.inject.controller('submissions.new'),
 
-  // TODO: Might need this if calling store.findRecord doesn't work right in the Route
-  // /**
-  //  * Required repositories
-  //  */
-  // requiredRepos: Ember.computed('repoRules', function () {
-  //   const rules = this.get('repoRules');
-  // }),
-
-  // /**
-  //  * Completely optional repositories
-  //  */
-  // optionalRepos: Ember.computed('repoRules', function () {
-  //   const rules = this.get('repoRules');
-  // }),
-
-  // /**
-  //  * Repository choices. Array of arrays of repositories
-  //  * This array contains arrays that represent choice groups. A user can select
-  //  * one or more from within a group, but must select at least one from each
-  //  * group.
-  //  */
-  // choiceRepos: Ember.computed('repoRules', function () {
-  //   const rules = this.get('repoRules');
-  // }),
-
   nextTabIsActive: Ember.computed('workflow.maxStep', function () {
     return (this.get('workflow').getMaxStep() > 4);
   }),
@@ -63,7 +38,7 @@ export default Controller.extend({
         swal({
           type: 'warning',
           title: 'No repositories selected',
-          html: 'If you don\'t pan on submitting to any repositories, you can stop at this time. Click "Exit '
+          html: 'If you don\'t plan on submitting to any repositories, you can stop at this time. Click "Exit '
                 + 'submission" to return to the dashboard, or "Continue submission" to go back and select a repository',
           showCancelButton: true,
           cancelButtonText: 'Exit Submission',
