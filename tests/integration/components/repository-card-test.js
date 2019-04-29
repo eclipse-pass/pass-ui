@@ -1,24 +1,31 @@
-import { moduleForComponent, test } from 'ember-qunit';
+import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
+import { module, test } from 'qunit';
+import { render, click } from '@ember/test-helpers';
 
-moduleForComponent('repository-card', 'Integration | Component | repository card', {
-  integration: true
-});
+module('Integration | Component | repository card', (hooks) => {
+  setupRenderingTest(hooks);
 
-test('it renders', (assert) => {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
+  test('it renders', async function (assert) {
+    const repository = Ember.Object.create();
+    this.set('repository', repository);
+    await render(hbs`{{repository-card repository=repository}}`);
 
-  this.render(hbs`{{repository-card}}`);
+    assert.ok(true);
+  });
 
-  assert.equal(this.$().text().trim(), '');
+  test('Choice repo renders a checkbox', async function (assert) {
+    assert.expect(2);
 
-  // Template block usage:
-  this.render(hbs`
-    {{#repository-card}}
-      template block text
-    {{/repository-card}}
-  `);
+    this.set('selected', true);
+    this.set('repository', Ember.Object.create());
 
-  assert.equal(this.$().text().trim(), 'template block text');
+    await render(hbs`{{repository-card
+      repository=repository
+      choice=true
+      selected=selected}}`);
+
+    assert.ok(this.element.textContent.includes('required by'), 'Failed to render');
+    assert.ok(this.element.querySelector('input[type="checkbox"]'), 'No checkbox found');
+  });
 });

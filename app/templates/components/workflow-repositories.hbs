@@ -25,6 +25,7 @@
         repository=repoInfo.repository
         selected=repoInfo.selected
         funders=repoInfo.funders
+        choice="true"
         onChange=(action "toggleRepository" repoInfo type="choice")}}
     {{/each}}
   </ul>
@@ -47,6 +48,7 @@
           repository=repoInfo.repository
           selected=repoInfo.selected
           funders=repoInfo.funders
+          choice="true"
           onChange=(action "toggleRepository" repoInfo type="optional")}}
       {{/each}}
     </ul>
@@ -55,6 +57,6 @@
 
 {{yield}}
 
-<button class="btn btn-outline-primary mt-3" {{action back}}>Back</button>
+<button class="btn btn-outline-primary mt-3" {{action "back"}}>Back</button>
 <button class="btn btn-outline-danger ml-2 mt-3" {{action "cancel"}}>Abort</button>
-<button class="btn btn-primary next pull-right mt-3" {{action next}}>Next</button>
+<button class="btn btn-primary next pull-right mt-3" {{action "next"}}>Next</button>
