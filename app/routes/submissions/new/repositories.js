@@ -37,6 +37,15 @@ export default CheckSessionRoute.extend({
       }
     }
 
+    /**
+     * Once 'requiredRepositories' 'optionalRepositories' and 'choiceRepositories', each ultimate
+     * element should look like:
+     * {
+     *    url: '',
+     *    repository: {}, // Ember model object
+     *    selected: true|false
+     * }
+     */
     if (rules.hasOwnProperty('required')) {
       requiredRepositories = policyService.resolveReferences('repository', rules.required);
     }

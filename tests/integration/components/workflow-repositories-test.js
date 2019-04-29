@@ -6,36 +6,7 @@ import { render } from '@ember/test-helpers';
 module('Integration | Component | workflow repositories', (hooks) => {
   setupRenderingTest(hooks);
 
-  // test('it renders', function (assert) {
-  //   let submission = Ember.Object.create({
-  //     repositories: [
-  //     ],
-  //     grants: [
-  //       Ember.Object.create({
-  //         primaryFunder: Ember.Object.create({
-  //           policy: Ember.Object.create({
-  //             repositories: []
-  //           })
-  //         })
-  //       }),
-  //     ]
-  //   });
-  //   let repositories = [];
-
-  //   this.set('repositories', repositories);
-  //   this.set('submission', submission);
-  //   this.set('loadPrevious', (actual) => {});
-  //   this.set('loadNext', (actual) => {});
-
-  //   this.render(hbs`{{workflow-repositories
-  //     submission=submission
-  //     repositories=repositories
-  //     next=(action loadNext)
-  //     back=(action loadPrevious)}}`);
-  //   assert.ok(true);
-  // });
-
-  test('it renders', async function (assert) {
+  hooks.beforeEach(function () {
     const submission = Ember.Object.create();
     const req = Ember.A();
     const opt = Ember.A();
@@ -45,7 +16,9 @@ module('Integration | Component | workflow repositories', (hooks) => {
     this.set('requiredRepositories', req);
     this.set('optionalRepositories', opt);
     this.set('choiceRepositories', choice);
+  });
 
+  test('it renders', async (assert) => {
     await render(hbs`{{workflow-repositories
       submission=submission
       requiredRepositories=requiredRepositories
@@ -53,4 +26,12 @@ module('Integration | Component | workflow repositories', (hooks) => {
       choiceRepositories=choiceRepositories}}`);
     assert.ok(true);
   });
+
+  // Should display required repos without checkbox
+
+  // Should display optional/choice with checkbox
+
+  // User cannot deselect all choice repos
+
+  // Selecting an optional repo adds it to submission
 });

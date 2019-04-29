@@ -1,0 +1,31 @@
+{{!--
+  model: {
+    url: '',
+    selected: true|false
+    repository: { // Ember model obj
+      name,
+      description,
+      url
+    },
+    funders: '', // String of funder names that list this repository
+    choice: true|false, // Is this repo selectable?
+    onChange: f(), // onChange handler for selecting this repo
+  }
+--}}
+<li class="list-group-item d-flex justify-content-between align-items-center my-1">
+  {{#if choice}}
+    {{input type="checkbox" change=(action "toggleRepository" repo) checked=checked name=repository.name}}
+    <label for="{{repoInfo.repository.name}}" class="mb-0 ml-2">
+      {{repository.name}} - required by {{funders}}
+    </label>
+  {{else}}
+    {{repository.name}} - required by {{funders}}
+  {{/if}}
+
+  {{#if repository.description}}
+    <p>
+      {{repository.description}}
+    </p>
+  {{/if}}
+  {{yield}}
+</li>

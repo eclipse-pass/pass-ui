@@ -32,10 +32,14 @@ export default Service.extend({
    * ]
    */
   getPolicies(submission) {
-    const url = `${this.get('policyUrl')}?submission=${submission.get('id')}}`;
+    const url = `${this.get('policyUrl')}?submission=${submission.get('id')}`;
 
     return fetch(url, {
-      method: 'GET'
+      method: 'GET',
+      headers: {
+        // 'Content-Type': 'application/json'
+        credentials: 'include'
+      }
     })
       .then((response) => {
         if (response.ok) {
@@ -72,7 +76,10 @@ export default Service.extend({
     const url = `${this.get('repoUrl')}?submission=${submission.get('id')}`;
 
     return fetch(url, {
-      method: 'GET'
+      method: 'GET',
+      headers: {
+        credentials: 'include'
+      }
     })
       .then((response) => {
         if (response.ok) {
@@ -95,9 +102,11 @@ export default Service.extend({
    */
   resolveReferences(type, refs) {
     refs.map((ref) => {
-      ref[type] = this.get('store').findRecord(type, ref.url || ref.id);
+      const url = ref.url || ref.id;
+      ref[type] = this.get('store').findRecord(type, url);
       return ref;
     });
+    return refs;
   }
 
 });
