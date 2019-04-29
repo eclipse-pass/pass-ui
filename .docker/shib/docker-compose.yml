@@ -63,7 +63,7 @@ services:
       - front
 
   proxy:
-    image: oapass/httpd-proxy:moo
+    image: oapass/httpd-proxy:201900424@sha256:e960fa8c6df45dcfb062ca80e355fb97809f2ce9274b50fd36f672a1703463ee
     container_name: proxy
     networks:
       - front
@@ -99,7 +99,7 @@ services:
       - back
 
   sp:
-    image: oapass/sp:moo
+    image: oapass/sp:20190426@sha256:91f3cd23618f81b2be56d7760bb6dc0e22885ee1c000d14352686500f30595ee
     container_name: sp
     networks:
       - back
@@ -141,14 +141,14 @@ services:
       - passdata:/data
 
   policyservice:
-    image: oapass/policy-service:latest
+    image: oapass/policy-service:v0.1.0
     container_name: policyservice
+    env_file: .env
     ports:
-      - '${POLICY_SERVICE_PORT}:${POLICY_SERVICE_PORT}'
+      - "${POLICY_SERVICE_PORT}:${POLICY_SERVICE_PORT}"
     networks:
       - front
       - back
-    env_file: .env
 
 volumes:
   passdata:
