@@ -3,8 +3,8 @@
       Based on the information you provided so far, these are the public access
       policies that are applicable to your work:
     </p>
-    {{#each policies as |policy|}}
-      {{policy-card policy=policy.policy journal=publication.journal}}
+    {{#each policies as |policyInfo|}}
+      {{policy-card policy=policyInfo.policy journal=publication.journal submission=submission}}
     {{/each}}
 </div>
 

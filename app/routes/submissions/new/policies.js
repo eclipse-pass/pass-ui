@@ -31,9 +31,9 @@ export default CheckSessionRoute.extend({
 
     let results = await this.get('policyService').getPolicies(submission);
 
-    // Weed out duplicates
+    // Weed out duplicates, while also resolving Policy objects
     let policies = Ember.A();
-    results.forEach((res) => {
+    results.forEach(async (res) => {
       if (!policies.isAny('id', res.id)) {
         policies.push(res);
       }
@@ -47,7 +47,7 @@ export default CheckSessionRoute.extend({
      * The model objects are then available here OR in the 'policies' array
      * though the user of 'policies' is preferred
      */
-    const policyPromise = policies.map(p => p.policy);
+    const policyPromise = Promise.all(policies.map(p => p.policy));
 
     return Ember.RSVP.hash({
       repositories: parentModel.repositories,

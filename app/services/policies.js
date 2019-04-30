@@ -91,7 +91,8 @@ export default Service.extend({
   },
 
   /**
-   * Get an Ember array containing referenced Repository objects
+   * Get an Ember array containing referenced Repository objects. Resolve the reference ID
+   * from the Ember Store, then add the model object to the reference when done.
    *
    * @param {array} refs reference objects {
    *    url: '',
@@ -103,7 +104,7 @@ export default Service.extend({
   resolveReferences(type, refs) {
     refs.map((ref) => {
       const url = ref.url || ref.id;
-      ref[type] = this.get('store').findRecord(type, url);
+      ref[type] = this.get('store').findRecord(type, url).then((obj) => { ref[type] = obj; });
       return ref;
     });
     return refs;

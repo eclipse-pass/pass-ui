@@ -3,6 +3,7 @@ import { inject as service } from '@ember/service';
 
 export default Component.extend({
   workflow: service('workflow'),
+
   pmcPublisherDeposit: Ember.computed('workflow.pmcPublisherDeposit', {
     get(key) {
       return this.get('workflow').getPmcPublisherDeposit();
@@ -31,10 +32,19 @@ export default Component.extend({
   policyIsJHU: Ember.computed(function () { // eslint-ignore-line
     return this.get('policy.title') === 'Johns Hopkins University (JHU) Open Access Policy';
   }),
+
+  /**
+   * On render, add this policy to 'submission.effectivePolicies' unless it is a PMC repo
+   * coupled with a Method A journal.
+   */
   didRender() {
     this._super(...arguments);
     if (this.get('methodAJournal')) {
       this.set('pmcPublisherDeposit', true);
+    }
+
+    if (!this.get('usesPmcRepository') || !this.get('pmcPublisherDeposit')) {
+      this._addEffectivePolicy(this.get('policy'));
     }
   },
   actions: {
@@ -42,6 +52,8 @@ export default Component.extend({
      * Toggles whether or not the user claims the publication is taken care of
      * by the publisher. If TRUE, PASS is not responsible for ensuring policy
      * compliance.
+     *
+     * Add or remove the policy in 'submission.effectivePolicies'
      *
      * IMPL NOTE: This action sets the 'pmcPublisherDeposit' status in the
      * 'workflow' service. The 'workflow' service can be accessed in other
@@ -53,6 +65,30 @@ export default Component.extend({
     pmcPublisherDepositToggled(choice) {
       this.set('pmcPublisherDeposit', choice);
       this.set('maxStep', 3);
+
+      const policy = this.get('policy');
+
+      if (this._hasEffectivePolicy(policy.get('id'))) {
+        this._removeEffectivePolicy(policy);
+      } else {
+        this._addEffectivePolicy(policy);
+      }
     }
+  },
+
+  _addEffectivePolicy(policy) {
+    // Only add the policy if it is not already in the list of effective policies
+    if (!this._hasEffectivePolicy(policy.get('id'))) {
+      this.get('submission.effectivePolicies').pushObject(policy);
+    }
+  },
+
+  _removeEffectivePolicy(policy) {
+    this.get('submission.effectivePolicies').removeObject(policy);
+  },
+
+  _hasEffectivePolicy(policyId) {
+    return this.get('submission.effectivePolicies') &&
+      this.get('submission.effectivePolicies').isAny('id', policyId);
   }
 });

@@ -3,6 +3,10 @@ import Service from '@ember/service';
 export default Service.extend({
   currentStep: 0,
   maxStep: 1,
+  /**
+   * Flag that represents whether the Publisher is responsible for PMC submission. If FALSE,
+   * then PASS must handle the submission for NIH compliance.
+   */
   pmcPublisherDeposit: false,
   doiInfo: [],
   filesTemp: [],
