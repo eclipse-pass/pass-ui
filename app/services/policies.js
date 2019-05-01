@@ -103,7 +103,7 @@ export default Service.extend({
    */
   resolveReferences(type, refs) {
     refs.map((ref) => {
-      const url = ref.url || ref.id;
+      const url = ref.url || ref.id || ref['repository-id'];
       ref[type] = this.get('store').findRecord(type, url).then((obj) => { ref[type] = obj; });
       return ref;
     });

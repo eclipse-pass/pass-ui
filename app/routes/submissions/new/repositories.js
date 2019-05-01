@@ -9,8 +9,8 @@ export default CheckSessionRoute.extend({
     const parentModel = this.modelFor('submissions.new');
     const submission = parentModel.newSubmission;
 
-    let requiredRepositories;
-    let optionalRepositories;
+    let requiredRepositories = Ember.A();
+    let optionalRepositories = Ember.A();
     let choiceRepositories = Ember.A();
 
     const policyService = this.get('policyService');
@@ -37,6 +37,9 @@ export default CheckSessionRoute.extend({
       }
     }
 
+    // Delay progressing until repositories have loaded
+    const promise = [];
+
     /**
      * Once 'requiredRepositories' 'optionalRepositories' and 'choiceRepositories', each ultimate
      * element should look like:
@@ -47,14 +50,17 @@ export default CheckSessionRoute.extend({
      * }
      */
     if (rules.hasOwnProperty('required')) {
-      requiredRepositories = policyService.resolveReferences('repository', rules.required);
+      requiredRepositories = policyService.resolveReferences('repository', Ember.A(rules.required));
+      promise.push(requiredRepositories.map(req => req.repository));
     }
     if (rules.hasOwnProperty('optional')) {
-      optionalRepositories = policyService.resolveReferences('repository', rules.optional);
+      optionalRepositories = policyService.resolveReferences('repository', Ember.A(rules.optional));
+      promise.push(optionalRepositories.map(opt => opt.repository));
     }
     if (rules.hasOwnProperty('one-of')) {
       rules['one-of'].forEach((choiceSet) => {
-        choiceRepositories.push(policyService.resolveReferences('repository', choiceSet));
+        choiceRepositories.push(policyService.resolveReferences('repository', Ember.A(choiceSet)));
+        promise.push(choiceRepositories.map(repo => repo.repository));
       });
     }
 
@@ -64,7 +70,8 @@ export default CheckSessionRoute.extend({
       preLoadedGrant: parentModel.preLoadedGrant,
       requiredRepositories,
       optionalRepositories,
-      choiceRepositories
+      choiceRepositories,
+      promise: Promise.all(promise)
     });
   },
 
