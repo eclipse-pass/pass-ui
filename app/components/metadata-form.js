@@ -39,9 +39,9 @@ export default Ember.Component.extend({
       },
     };
 
-    $(document).ready(() => {
-      $('#schemaForm').empty();
-      $('#schemaForm').alpaca(newForm);
-    });
+    // $(document).ready(() => {
+    $('#schemaForm').empty();
+    $('#schemaForm').alpaca(newForm);
+    // });
   }
 });
