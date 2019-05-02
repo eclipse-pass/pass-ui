@@ -14,7 +14,7 @@
 --}}
 <li class="list-group-item d-flex align-items-center my-1">
   {{#if choice}}
-    {{input type="checkbox" change=onChange checked=selected name=repository.name}}
+    {{input type="checkbox" change=(action "toggle") checked=selected name=repository.name}}
     <label for="{{repoInfo.repository.name}}" class="mb-0 ml-2">
       {{repository.name}}{{#if funders}} - {{funders}}{{/if}}
     </label>

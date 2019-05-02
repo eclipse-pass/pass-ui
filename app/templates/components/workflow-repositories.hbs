@@ -9,7 +9,8 @@
       {{repository-card
         repository=repoInfo.repository
         selected=repoInfo.selected
-        funders=repoInfo.funders}}
+        funders=repoInfo.funders
+        type="required"}}
     {{/each}}
   </ul>
 {{/if}}
@@ -20,6 +21,9 @@
     You must submit to at least one repository from each group.
   </p>
   {{#each choiceRepositories as |repoGroup|}}
+    {{choice-repositories-card
+      choiceGroup=repoGroup
+      toggleRepository=(action "toggleRepository")}}
     <ul class="list-group">
       {{#each repoGroup as |repoInfo|}}
         {{repository-card
@@ -27,7 +31,8 @@
           selected=repoInfo.selected
           funders=repoInfo.funders
           choice="true"
-          onChange=(action "toggleRepository" repoInfo type="choice")}}
+          type="choice"
+          toggleRepository=(action "toggleRepository")}}
       {{/each}}
     </ul>
   {{/each}}
@@ -52,7 +57,8 @@
           selected=repoInfo.selected
           funders=repoInfo.funders
           choice="true"
-          onChange=(action "toggleRepository" repoInfo type="optional")}}
+          type="optional"
+          toggleRepository=(action "toggleRepository")}}
       {{/each}}
     </ul>
   </div>

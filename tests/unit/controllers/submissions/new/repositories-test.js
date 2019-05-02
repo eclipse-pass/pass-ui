@@ -118,4 +118,42 @@ module('Unit | Controller | submissions/new/repositories', (hooks) => {
     controller.send('loadPrevious');
     assert.ok(subSaved);
   });
+
+  test('Moo', async function (assert) {
+    const repo1 = Ember.Object.create({ name: 'Moo repo 1' });
+    const repo2 = Ember.Object.create({ name: 'Moo repo 2' });
+
+    const funder1 = Ember.Object.create({
+      name: 'Moo funder 1',
+      repositories: Ember.A([repo1])
+    });
+    const funder2 = Ember.Object.create({
+      name: 'Moo funder 2',
+      repositories: Ember.A([repo1, repo2])
+    });
+
+
+    const grants = Ember.A([
+      Ember.Object.create({
+        primaryFunder: funder1,
+        directFunder: funder1
+      }),
+      Ember.Object.create({
+        primaryFunder: funder2,
+        directFunder: funder2
+      })
+    ]);
+
+    const model = Ember.Object.create({
+      newSubmission: Ember.Object.create({
+        repositories: Ember.A(),
+        grants
+      })
+    });
+
+    this.set('model', model);
+
+    const router = this.owner.lookup('router:submission.new.repositories');
+    assert.ok(router, 'No router found');
+  });
 });
