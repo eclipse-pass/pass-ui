@@ -72,37 +72,23 @@ export default Component.extend({
     /**
      * Toggle a repository on/off of this submission.
      *
-     * If the clicked repository was from a "choice" group, do some more interrogation
-     * of the group to make sure at least one is selected (and part of submission.repositories).
-     * Prevent the user from being able to de-select the repo if it is the last one in
-     * it's group.
+     * NOTE:
+     * Normally, we would have to make sure that there is at least one repository from
+     * each "choice group" selected.
+     * Do not worry about checking things for "choice" groups, since that logic is done
+     * in the 'choice-repositories-card' component. That component will only bubble the
+     * toggle action to here if such an action is logically possible.
      *
-     * @param {object} repoInfo {
-     *    repository: {}, // Ember model object
-     *    selected: true|false
-     *    repository-id: ''
-     * }
+     * @param {Repository} repository
      * @param {boolean} selected - has the repo been selected or deselected?
      *    TRUE = repo was selected, FALSE = repo was deselected
      * @param {string} type required|optional|choice
      */
-    toggleRepository(repoInfo, selected, type) {
-      debugger
-      const checked = event.target.checked;
-      repoInfo.selected = checked;
-      if (checked) {
-        this.addRepository(repoInfo);
-      } else if (type === 'choice') {
-        /*
-         * We need to find the choice group that this repo belongs to, then make sure
-         * there is at least repo selected from the group after removing this one. If
-         * there would be zero repositories selected after removing this one, don't
-         * remove it.
-         */
-        const choice = this.get('choiceRepositories');
-
+    toggleRepository(repository, selected, type) {
+      if (selected) {
+        this.addRepository(repository);
       } else {
-        this.removeRepository(repoInfo);
+        this.removeRepository(repository);
       }
     },
 
