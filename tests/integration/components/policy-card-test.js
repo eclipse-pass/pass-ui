@@ -17,12 +17,16 @@ module('Integration | Component | policy card', (hooks) => {
     const journal = Ember.Object.create({
       isMethodA: false
     });
+    const submission = Ember.Object.create({
+      effectivePolicies: Ember.A()
+    });
 
     // this.set('workflow', workflow);
     this.set('policy', policy);
     this.set('journal', journal);
+    this.set('submission', submission);
 
-    await render(hbs`{{policy-card policy=policy journal=journal}}`);
+    await render(hbs`{{policy-card policy=policy journal=journal submission=submission}}`);
     assert.ok(true);
 
     const text = this.element.textContent;
@@ -44,14 +48,18 @@ module('Integration | Component | policy card', (hooks) => {
     const journal = Ember.Object.create({
       isMethodA: false
     });
+    const submission = Ember.Object.create({
+      effectivePolicies: Ember.A()
+    });
 
     this.set('policy', policy);
     this.set('journal', journal);
+    this.set('submission', submission);
 
     // this.set('usesPmcRepository', true);
     this.set('methodAJournal', false);
 
-    await render(hbs`{{policy-card policy=policy journal=journal}}`);
+    await render(hbs`{{policy-card policy=policy journal=journal submission=submission}}`);
     assert.ok(true);
 
     const inputs = this.element.querySelectorAll('input');

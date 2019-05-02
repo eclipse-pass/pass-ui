@@ -52,7 +52,7 @@ module('Integration | Component | choice repositories card', (hooks) => {
       })
     ]));
 
-    await render(hbs`{{choice-repositories-card choiceGroup=choiceGroup toggleRepository=toggleRepository}}`);
+    await render(hbs`{{choice-repositories-card choiceGroup=choiceGroup}}`);
     assert.ok(this.element, 'failed to render');
 
     const checkbox = this.element.querySelector('input[type="checkbox"]');

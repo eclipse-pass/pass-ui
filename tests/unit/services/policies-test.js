@@ -110,9 +110,9 @@ module('Unit | Service | policies', (hooks) => {
       findRecord(type, id) {
         assert.equal(type, 'Moo-model', 'unexpected type found');
         assert.ok(id.startsWith('moo'), 'unexpected record ID found');
-        return Ember.Object.create({
+        return Promise.resolve(Ember.Object.create({
           id
-        });
+        }));
       }
     });
 
@@ -126,6 +126,8 @@ module('Unit | Service | policies', (hooks) => {
     assert.ok(result, 'No result found :(');
     assert.equal(result.length, 2, `Expecting result length of 2, but found ${result.length}`);
     assert.ok(result[0]['Moo-model'], 'No model object found');
-    assert.equal(result[0]['Moo-model'].get('id'), 'moo-1', 'unexpected object ID found');
+    result[0]['Moo-model'].then(() => {
+      assert.equal(result[0]['Moo-model'].get('id'), 'moo-1', 'unexpected object ID found');
+    });
   });
 });
