@@ -1,8 +1,9 @@
 import CheckSessionRoute from '../check-session-route';
 import RSVP from 'rsvp';
+import { inject as service } from '@ember/service';
 
 export default CheckSessionRoute.extend({
-  currentUser: Ember.inject.service('current-user'),
+  currentUser: service('current-user'),
 
   model() {
     const user = this.get('currentUser.user');

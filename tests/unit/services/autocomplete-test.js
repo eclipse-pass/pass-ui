@@ -3,7 +3,7 @@ import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import RSVP from 'rsvp';
 
-module('service:autocomplete', 'Unit | Service | autocomplete', (hooks) => {
+module('Unit | Service | autocomplete', (hooks) => {
   setupTest(hooks);
 
   test('it exists and posts', function (assert) {

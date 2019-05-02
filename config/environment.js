@@ -77,12 +77,21 @@ module.exports = function (environment) {
     url: 'https://localhost:8080/pass-user-service/whoami'
   };
 
+  ENV.schemaService = {
+    url: 'https://pass.local:8086'
+    // url: ''
+  };
+
   if (process.env.EMBER_ROOT_URL) {
     ENV.rootURL = process.env.EMBER_ROOT_URL;
   }
 
   if (process.env.USER_SERVICE_URL) {
     ENV.userService.url = process.env.USER_SERVICE_URL;
+  }
+
+  if (process.env.SCHEMA_SERVICE_URL) {
+    ENV.schemaService.url = process.env.SCHEMA_SERVICE_URL;
   }
 
   if (process.env.FEDORA_ADAPTER_BASE) {
@@ -113,6 +122,13 @@ module.exports = function (environment) {
     ENV.fedora.password = 'moo';
   }
 
+  ENV.brand = {
+    mailto: 'pass@jhu.edu'
+  };
+
+  if (process.env.BRAND_MAILTO) {
+    ENV.brand.mailto = process.env.BRAND_MAILTO;
+  }
 
   return ENV;
 };

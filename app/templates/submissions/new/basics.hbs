@@ -1,0 +1,19 @@
+{{#workflow-wrapper
+  submission=submission
+  publication=publication
+  submissionEvents=submissionEvents
+  loadTab=(action "validateAndLoadTab")
+}}
+{{workflow-basics
+  submission=submission
+  publication=publication
+  preLoadedGrant=preLoadedGrant
+  doiInfo=doiInfo
+  flaggedFields=flaggedFields
+  validateTitle=(action "validateTitle")
+  validateJournal=(action "validateJournal")
+  validateSubmitterEmail=(action "validateSubmitterEmail")
+  next=(action "loadNext")
+  abort=(action "abort")
+}}
+{{/workflow-wrapper}}

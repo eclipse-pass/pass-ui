@@ -1,13 +1,13 @@
 import Controller from '@ember/controller';
 import config from '../config/environment';
+import { inject as service } from '@ember/service';
 
 export default Controller.extend({
-  // session: Ember.inject.service('session'),
+  currentUser: service('current-user'),
+  notifications: service('toast'),
   params: ['userToken'],
   userToken: null,
   rootURL: config.rootURL,
-  currentUser: Ember.inject.service('current-user'),
-  notifications: Ember.inject.service('toast'),
   institution: '',
   wideRoutes: ['grants.index', 'grants.detail', 'submissions.index'],
   fullWidth: Ember.computed('currentRouteName', function () {

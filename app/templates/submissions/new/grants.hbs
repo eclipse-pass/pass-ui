@@ -1,0 +1,14 @@
+{{#workflow-wrapper
+  title=publication.title
+  isProxySubmission=submission.isProxySubmission
+  submissionEvents=submissionEvents
+  loadTab=(action 'loadTab')
+}}
+{{workflow-grants
+  submission=submission
+  preLoadedGrant=preLoadedGrant
+  next=(action "loadNext")
+  back=(action "loadPrevious")
+  abort=(action "abort")
+}}
+{{/workflow-wrapper}}

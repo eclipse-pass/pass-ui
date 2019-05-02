@@ -1,12 +1,9 @@
 import CheckSessionRoute from './check-session-route';
 import RSVP from 'rsvp';
-
-const {
-  service
-} = Ember.inject;
+import { inject as service } from '@ember/service';
 
 export default CheckSessionRoute.extend({
-  currentUser: service(),
+  currentUser: service('current-user'),
 
   /* Used as route-action in templates */
   actions: {

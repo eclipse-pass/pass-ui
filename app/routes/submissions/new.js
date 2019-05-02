@@ -1,10 +1,14 @@
 import CheckSessionRoute from '../check-session-route';
-
-const {
-  service,
-} = Ember.inject;
+import { inject as service } from '@ember/service';
 
 export default CheckSessionRoute.extend({
+  workflow: service('workflow'),
+  currentUser: service('current-user'),
+  beforeModel() {
+    if (this.get('workflow').getCurrentStep() === 0) {
+      this.transitionTo('submissions.new');
+    }
+  },
   resetController(controller, isExiting, transition) {
     // Explicitly clear the 'grant' query parameter when reloading this route
     if (isExiting) {
@@ -12,8 +16,6 @@ export default CheckSessionRoute.extend({
       this.get('store').peekAll('submission').forEach(s => s.rollbackAttributes());
     }
   },
-
-  currentUser: service(),
 
   // Return a promise to load count objects starting at offsefrom of given type.
   loadObjects(type, offset, count) {
@@ -30,33 +32,7 @@ export default CheckSessionRoute.extend({
       preLoadedGrant = this.get('store').findRecord('grant', params.grant);
     }
 
-    const querySize = 100;
-
     const repositories = this.loadObjects('repository', 0, 500);
-    const funders = this.loadObjects('funder', 0, 500);
-    const grants = this.get('store').query('grant', {
-      sort: [
-        { endDate: 'desc' }
-      ],
-      query: {
-        bool: {
-          must: [
-            { range: { endDate: { gte: '2011-01-01' } } },
-            {
-              bool: {
-                should: [
-                  { term: { pi: this.get('currentUser.user.id') } },
-                  { term: { coPis: this.get('currentUser.user.id') } }
-                ]
-              }
-            }
-          ]
-        }
-      },
-      from: 0,
-      size: 500,
-    });
-
     const policies = this.loadObjects('policy', 0, 500);
 
     if (params.submission) {
@@ -83,9 +59,7 @@ export default CheckSessionRoute.extend({
           newSubmission,
           submissionEvents,
           publication,
-          grants,
           policies,
-          funders,
           preLoadedGrant,
           files
         });
@@ -96,10 +70,7 @@ export default CheckSessionRoute.extend({
       repositories,
       newSubmission,
       publication,
-      grants,
       policies,
-      // journals,
-      funders,
       preLoadedGrant
     });
     return h;

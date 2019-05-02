@@ -4,28 +4,85 @@ import { setupTest } from 'ember-qunit';
 module('Unit | Service | current-user', (hooks) => {
   setupTest(hooks);
 
-  // const mockStore = {
-  //   moo: 'Moo',
-  //   findAll() {
-  //     return Ember.A(Ember.Object.create({
-  //       username: 'hvu',
-  //       email: 'hvu@example.com'
-  //     }));
-  //   }
-  // };
-
-  test('it exists', function (assert) {
+  test('load without userToken', function (assert) {
     const service = this.owner.lookup('service:current-user');
     assert.ok(service);
+
+    let user = Ember.Object.create({
+      id: 0,
+      username: 'hvu',
+      email: 'hvu@example.com'
+    });
+
+    let result = {
+      '@id': user.get('id')
+    };
+
+    service.set('ajax', Ember.Object.create({
+      request(url, method, options) {
+        assert.ok(true);
+        assert.equal(url.includes('userToken'), false);
+
+        return new Promise(resolve => resolve(result));
+      }
+    }));
+
+    service.set('store', Ember.Object.create({
+      findRecord(type, id) {
+        assert.ok(true);
+        assert.equal(type, 'user');
+        assert.equal(id, user.get('id'));
+
+        return new Promise(resolve => resolve(user));
+      }
+    }));
+
+    assert.expect(7);
+
+    return service.load().then(() => {
+      assert.equal(service.get('user.id'), user.get('id'));
+    });
   });
 
-  // test('loading authenticated user returns user data', function (assert) {
-  //   const service = this.owner.factoryFor('service:current-user')
-  //     .create({
-  //       store: mockStore,
-  //       session: { isAuthenticated: true }
-  //     });
-  //   service.load().then(user => console.log(user));
-  //   assert.ok(true);
-  // });
+  test('load with userToken', function (assert) {
+    const service = this.owner.lookup('service:current-user');
+    assert.ok(service);
+
+    let userToken = 'blah';
+
+    let user = Ember.Object.create({
+      id: 0,
+      username: 'hvu',
+      email: 'hvu@example.com'
+    });
+
+    let result = {
+      '@id': user.get('id')
+    };
+
+    service.set('ajax', Ember.Object.create({
+      request(url, method, options) {
+        assert.ok(true);
+        assert.equal(url.includes(userToken), true);
+
+        return new Promise(resolve => resolve(result));
+      }
+    }));
+
+    service.set('store', Ember.Object.create({
+      findRecord(type, id) {
+        assert.ok(true);
+        assert.equal(type, 'user');
+        assert.equal(id, user.get('id'));
+
+        return new Promise(resolve => resolve(user));
+      }
+    }));
+
+    assert.expect(7);
+
+    return service.load(userToken).then(() => {
+      assert.equal(service.get('user.id'), user.get('id'));
+    });
+  });
 });

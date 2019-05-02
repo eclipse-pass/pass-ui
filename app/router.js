@@ -15,7 +15,15 @@ Router.map(function () {
   this.route('submissions', function () {
     this.route('detail', { path: '/*path' });
     this.route('detail', { path: '/:submission_id' });
-    this.route('new');
+    this.route('new', function () {
+      this.route('grants');
+      this.route('policies');
+      this.route('repositories');
+      this.route('metadata');
+      this.route('files');
+      this.route('review');
+      this.route('basics');
+    });
   });
   this.route('grants', function () {
     this.route('detail', { path: '/*path' });

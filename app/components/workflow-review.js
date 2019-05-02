@@ -1,39 +1,43 @@
-import WorkflowComponent from './workflow-component';
+import Component from '@ember/component';
+import { inject as service } from '@ember/service';
 
-export default WorkflowComponent.extend({
-  metadataService: Ember.inject.service('metadata-blob'),
-  currentUser: Ember.inject.service('currentUser'),
-
+export default Component.extend({
+  workflow: service('workflow'),
+  metadataService: service('metadata-blob'),
+  currentUser: service('current-user'),
+  isValidated: Ember.A(),
   init() {
     this._super(...arguments);
     $('[data-toggle="tooltip"]').tooltip();
   },
-
   externalRepoMap: {},
-  parsedFiles: Ember.computed('filesTemp', 'model.files', function () {
+  filesTemp: Ember.computed('workflow.filesTemp', function () {
+    return this.get('workflow').getFilesTemp();
+  }),
+  parsedFiles: Ember.computed('filesTemp', 'previouslyUploadedFiles', function () {
     let newArr = Ember.A();
     if (this.get('filesTemp')) {
       newArr.addObjects(this.get('filesTemp'));
     }
-    if (this.get('model.files')) {
-      newArr.addObjects(this.get('model.files'));
+    if (this.get('previouslyUploadedFiles')) {
+      newArr.addObjects(this.get('previouslyUploadedFiles'));
     }
     return newArr;
   }),
-  metadata: Ember.computed('model.newSubmission.metadata', function () {
-    return JSON.parse(this.get('model.newSubmission.metadata'));
-  }),
-  metadataBlobNoKeys: Ember.computed(
-    'model.newSubmission.metadata',
-    function () {
-      return this.get('metadataService').getDisplayBlob(this.get('model.newSubmission.metadata'));
-    }
-  ),
+  // metadata: Ember.computed('submission.metadata', function () {
+  //   return JSON.parse(this.get('submission.metadata'));
+  // }),
+  // metadataBlobNoKeys: Ember.computed(
+  //   'submission.metadata',
+  //   function () {
+  //     return this.get('metadataService').getDisplayBlob(this.get('submission.metadata'));
+  //   }
+  // ),
   hasVisitedWeblink: Ember.computed('externalRepoMap', function () {
     return Object.values(this.get('externalRepoMap')).every(val => val === true);
   }),
-  weblinkRepos: Ember.computed('model.newSubmission.repositories', function () {
-    const repos = this.get('model.newSubmission.repositories').filter(repo =>
+  weblinkRepos: Ember.computed('submission.repositories', function () {
+    const repos = this.get('submission.repositories').filter(repo =>
       repo.get('integrationType') === 'web-link');
 
     repos.forEach(repo => (this.get('externalRepoMap')[repo.get('id')] = false)); // eslint-disable-line
@@ -41,7 +45,7 @@ export default WorkflowComponent.extend({
   }),
   mustVisitWeblink: Ember.computed('weblinkRepos', 'model', function () {
     const weblinkExists = this.get('weblinkRepos.length') > 0;
-    const isSubmitter = this.get('currentUser.user.id') === this.get('model.newSubmission.submitter.id');
+    const isSubmitter = this.get('currentUser.user.id') === this.get('submission.submitter.id');
     return weblinkExists && isSubmitter;
   }),
   disableSubmit: Ember.computed(
@@ -52,16 +56,15 @@ export default WorkflowComponent.extend({
       return needsToVisitWeblink;
     }
   ),
-  userIsPreparer: Ember.computed('model.newSubmission', 'currentUser.user', function () {
-    const hasProxy = this.get('hasProxy');
-    const isNotSubmitter = this.get('model.newSubmission.submitter.id') !== this.get('currentUser.user.id');
-    return (hasProxy && isNotSubmitter);
+  userIsPreparer: Ember.computed('submission', 'currentUser.user', function () {
+    const isNotSubmitter = this.get('submission.submitter.id') !== this.get('currentUser.user.id');
+    return (this.get('submission.isProxySubmission') && isNotSubmitter);
   }),
   submitButtonText: Ember.computed('userIsPreparer', function () {
     return this.get('userIsPreparer') ? 'Request approval' : 'Submit';
   }),
   actions: {
-    submit() {
+    async submit() {
       $('.block-user-input').css('display', 'block');
       let disableSubmit = true;
       // In case a crafty user edits the page HTML, don't submit when not allowed
@@ -82,11 +85,109 @@ export default WorkflowComponent.extend({
         $('.block-user-input').css('display', 'none');
         return;
       }
-      this.sendAction('submit');
+
+      if (this.get('submission.submitter.id') !== this.get('currentUser.user.id')) {
+        this.sendAction('submit');
+        return;
+      }
+
+      // User is submitting on own behalf. Must get repository agreements.
+
+      let reposWithAgreementText = this.get('submission.repositories')
+        .filter(repo => (repo.get('integrationType') !== 'web-link') && repo.get('agreementText'))
+        .map(repo => ({
+          id: repo.get('name'),
+          title: `Deposit requirements for ${repo.get('name')}`,
+          html: `<textarea rows="16" cols="40" name="embargo" class="alpaca-control form-control disabled" disabled="" autocomplete="off">${repo.get('agreementText')}</textarea>`
+        }));
+
+      let reposWithoutAgreementText = this.get('submission.repositories')
+        .filter(repo => repo.get('integrationType') !== 'web-link' && !repo.get('agreementText'))
+        .map(repo => ({
+          id: repo.get('name')
+        }));
+
+      let reposWithWebLink = this.get('submission.repositories')
+        .filter(repo => repo.get('integrationType') === 'web-link')
+        .map(repo => ({
+          id: repo.get('name')
+        }));
+
+      const result = await swal.mixin({
+        input: 'checkbox',
+        inputPlaceholder: 'I agree to the above statement on today\'s date ',
+        confirmButtonText: 'Next &rarr;',
+        progressSteps: reposWithAgreementText.map((repo, index) => index + 1),
+      }).queue(reposWithAgreementText);
+      if (result.value) {
+        let reposThatUserAgreedToDeposit = reposWithAgreementText.filter((repo, index) => {
+          // if the user agreed to depost to this repo === 1
+          if (result.value[index] === 1) {
+            return repo;
+          }
+        });
+        // make sure there are repos to submit to.
+        if (this.get('submission.repositories.length') > 0) {
+          if (reposWithoutAgreementText.length > 0 || reposThatUserAgreedToDeposit.length > 0 || reposWithWebLink.length > 0) {
+            let swalMsg = 'Once you click confirm you will no longer be able to edit this submission or add repositories.<br/>';
+            if (reposWithoutAgreementText.length > 0 || reposThatUserAgreedToDeposit.length) {
+              swalMsg = `${swalMsg}You are about to submit your files to: <pre><code>${JSON.stringify(reposThatUserAgreedToDeposit.map(repo => repo.id)).replace(/[\[\]']/g, '')}${JSON.stringify(reposWithoutAgreementText.map(repo => repo.id)).replace(/[\[\]']/g, '')} </code></pre>`;
+            }
+            if (reposWithWebLink.length > 0) {
+              swalMsg = `${swalMsg}You were prompted to submit to: <code><pre>${JSON.stringify(reposWithWebLink.map(repo => repo.id)).replace(/[\[\]']/g, '')}</code></pre>`;
+            }
+
+            swal({
+              title: 'Confirm submission',
+              html: swalMsg, // eslint-disable-line
+              confirmButtonText: 'Confirm',
+              showCancelButton: true,
+            }).then((result) => {
+              if (result.value) {
+                // Update repos to reflect repos that user agreed to deposit
+                this.set('submission.repositories', this.get('submission.repositories').filter((repo) => {
+                  if (repo.get('integrationType') === 'web-link') {
+                    return false;
+                  }
+                  let temp = reposWithAgreementText.map(x => x.id).includes(repo.get('name'));
+                  if (!temp) {
+                    return true;
+                  } else if (reposThatUserAgreedToDeposit.map(r => r.id).includes(repo.get('name'))) {
+                    return true;
+                  }
+                  return false;
+                }));
+
+                $('.block-user-input').css('display', 'block');
+
+                this.sendAction('submit');
+              }
+            });
+          } else {
+            // there were repositories, but the user didn't sign any of the agreements
+            let reposUserDidNotAgreeToDeposit = reposWithAgreementText.filter((repo) => {
+              if (!reposThatUserAgreedToDeposit.includes(repo)) {
+                return true;
+              }
+            });
+            swal({
+              title: 'Your submission cannot be submitted.',
+              html: `You declined to agree to the deposit agreement(s) for ${JSON.stringify(reposUserDidNotAgreeToDeposit.map(repo => repo.id)).replace(/[\[\]']/g, '')}. Therefore, this submission cannot be submitted.`,
+              confirmButtonText: 'Ok',
+            });
+          }
+        } else {
+          // no repositories associated with the submission
+          swal({
+            title: 'Your submission cannot be submitted.',
+            html: 'No repositories are associated with this submission. \n Return to the submission and edit it to include a repository.',
+            confirmButtonText: 'Ok',
+          });
+        }
+      }
     },
     agreeToDeposit() { this.set('step', 5); },
     back() { this.sendAction('back'); },
-    checkValidate() { this.sendAction('validate'); },
     openWeblinkAlert(repo) {
       swal({
         title: 'Notice!',
@@ -109,8 +210,14 @@ export default WorkflowComponent.extend({
         $('#externalSubmission').modal('hide');
 
         var win = window.open(repo.get('url'), '_blank');
-        win.focus();
+
+        if (win) {
+          win.focus();
+        }
       });
+    },
+    cancel() {
+      this.sendAction('abort');
     }
   }
 });

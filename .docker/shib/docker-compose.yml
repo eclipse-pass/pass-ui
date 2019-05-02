@@ -15,7 +15,7 @@ services:
       - back
 
   fcrepo:
-    image: oapass/fcrepo:4.7.5-3.2-2@sha256:d06ff883b93da52e784e40315cb7f9f10fa38a0d529e83d89a0a120086bf18d8
+    image: oapass/fcrepo:4.7.5-3.3@sha256:0d0e007409fd03f9bd4e65657d3198381c4cce3d7c62a1c0be1a53cb8123461d
     container_name: fcrepo
     env_file: .env
     ports:
@@ -29,6 +29,16 @@ services:
     depends_on:
       - assets
       - activemq
+
+  schemaservice:
+    image: oapass/schema-service:v0.1.1
+    container_name: schemaservice
+    env_file: .env
+    ports:
+      - "${SCHEMA_SERVICE_PORT}:${SCHEMA_SERVICE_PORT}"
+    networks:
+      - front
+      - back
 
   activemq:
     image: oapass/activemq:20180618@sha256:e3cd47a1bc4c21899fc34e5ac7198f6c069f4148296bad0ce619cc2bdda5f435
@@ -53,7 +63,7 @@ services:
       - front
 
   proxy:
-    image: oapass/httpd-proxy:20180815@sha256:f2aeead1df34ddb8d22b8251a7ef2542f7aedb75952c57a8caecf4c74fd79bb7
+    image: oapass/httpd-proxy:20190306@sha256:63770ee48bfaf251565b2e3ffd593284ed3783ef1b1c44390a60d57c9764009c
     container_name: proxy
     networks:
       - front
@@ -89,7 +99,7 @@ services:
       - back
 
   sp:
-    image: oapass/sp:20181012@sha256:fc44a34b8e062eecab66726f4e6bc4da7b2388d1498d90e4ed573953f6885747
+    image: oapass/sp:20190306@sha256:6df4a3307fcee68c3f9b1e7fecaa58c0357da1713450a63173ab8a2c79cf14d5
     container_name: sp
     networks:
       - back
@@ -124,8 +134,9 @@ services:
       - back
     depends_on:
       - assets
+
   assets:
-    image: birkland/assets:2018-11-13_3.2@sha256:60310d68c7ab910096f471bf6636b35487c52ab6db970fc280959f49eec0f465
+    image: birkland/assets:2019-03-06_3.3@sha256:e4c59e625eaf28cb4524dbe54a4e5dbf11adf71347470afb8810a75274f596c7
     volumes:
       - passdata:/data
 

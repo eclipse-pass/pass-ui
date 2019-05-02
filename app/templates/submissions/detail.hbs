@@ -63,9 +63,16 @@
   </div>
   <div class="col-6 text-right">
     {{#if model.sub.isStub}}
-    {{#link-to 'submissions.new' (query-params submission=record.id) class="btn btn-outline-primary text-right" }}
-    Finish submission
-    {{/link-to}}
+      {{#link-to 'submissions.new' (query-params submission=model.sub.id) class="btn btn-outline-primary text-right" }}
+        Finish submission
+      {{/link-to}}
+    {{else if model.sub.isDraft}}
+      {{#link-to 'submissions.new' (query-params submission=model.sub.id) disabled=true class="btn btn-outline-primary text-right"}}
+        Edit submission
+      {{/link-to}}
+      {{#link-to (action 'deleteSubmission' model.sub) class="btn btn-outline-danger text-right"}}
+        Delete
+      {{/link-to}}
     {{/if}}
   </div>
 </div>
@@ -182,34 +189,8 @@
             <tr>
               <td><strong>Details</strong></td>
               <td>
-                <ul class="list-unstyled">
-                  {{#each-in metadataBlobNoKeys as |key data|}}
-                  {{!-- TODO: Look in to making the ifs in to one if --}}
-                  {{#if (and (not-eq key 'Embargo') (not-eq key 'Information'))}}
-                  {{#if (and (not-eq key 'Under-embargo') (not-eq key 'Embargo-end-date'))}}
-                  {{#if (and (not-eq key 'Agreement-to-embargo') (not-eq key 'Submission'))}}
-                  {{#if (eq key 'Author(s)')}}
-                  <li><b>{{key}}</b>:
-                    <ul>
-                      {{#each data as |author|}}
-                      <li>{{author.author}}
-                        {{#if author.orcid}} (<a href={{author.orcid}} target="_blank">{{author.orcid}}</a>){{/if}}
-                      </li>
-                      {{/each}}
-                    </ul>
-                  </li>
-                  {{else}}
-                  {{#if (eq key 'URL')}}
-                  <li><b>{{key}}</b>: <a href={{data}} target="_blank">{{data}}</a></li>
-                  {{else}}
-                  <li><b>{{key}}</b>: {{{data}}}</li>
-                  {{/if}}
-                  {{/if}}
-                  {{/if}}
-                  {{/if}}
-                  {{/if}}
-                  {{/each-in}}
-                </ul>
+                {{!-- <DisplayMetadataKeys @submission={{submission}}/> --}}
+                {{display-metadata-keys submission=model.sub}}
               </td>
             </tr>
             <tr>

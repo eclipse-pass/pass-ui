@@ -1,12 +1,12 @@
-import { moduleFor, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
+import { run } from '@ember/runloop';
 
-moduleFor('adapter:application', 'Unit | Adapter | application', {
-  // Specify the other units that are required for this test.
-  needs: ['service:currentUser']
-});
+module('Unit | Adapter | application', (hooks) => {
+  setupTest(hooks);
 
-// Replace this with your real tests.
-test('it exists', function (assert) {
-  let adapter = this.subject();
-  assert.ok(adapter);
+  test('it exists', function (assert) {
+    let adapter = this.owner.lookup('adapter:application');
+    assert.ok(adapter);
+  });
 });

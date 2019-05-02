@@ -1,14 +1,15 @@
-import WorkflowComponent from './workflow-component';
+import Component from '@ember/component';
 import { Promise, } from 'rsvp';
 import { inject as service } from '@ember/service';
 import Bootstrap4Theme from 'ember-models-table/themes/bootstrap4';
 
-export default WorkflowComponent.extend({
+export default Component.extend({
   store: service('store'),
+  workflow: service('workflow'),
   pageNumber: 1,
   pageCount: 0,
   pageSize: 10,
-  grants: null,
+  submitterGrants: null,
   totalGrants: 0,
   themeInstance: Bootstrap4Theme.create(),
 
@@ -30,8 +31,8 @@ export default WorkflowComponent.extend({
   }),
   init() {
     this._super(...arguments);
-    if (this.get('model.preLoadedGrant')) this.send('addGrant', this.get('model.preLoadedGrant'));
-    if (this.get('model.newSubmission.submitter.id')) this.updateGrants();
+    if (this.get('preLoadedGrant')) this.send('addGrant', this.get('preLoadedGrant'));
+    if (this.get('submission.submitter.id')) this.updateGrants();
   },
   updateGrants() {
     let info = {};
@@ -44,8 +45,8 @@ export default WorkflowComponent.extend({
             {
               bool: {
                 should: [
-                  { term: { pi: this.get('model.newSubmission.submitter.id') } },
-                  { term: { coPis: this.get('model.newSubmission.submitter.id') } }
+                  { term: { pi: this.get('submission.submitter.id') } },
+                  { term: { coPis: this.get('submission.submitter.id') } }
                 ]
               }
             }
@@ -57,7 +58,7 @@ export default WorkflowComponent.extend({
       sort: [{ endDate: 'desc' }],
       info
     }).then((results) => {
-      this.set('grants', results);
+      this.set('submitterGrants', results);
       this.set('totalGrants', info.total);
       this.set('pageCount', Math.ceil(info.total / this.get('pageSize')));
     });
@@ -87,16 +88,10 @@ export default WorkflowComponent.extend({
       mayBeHidden: false
     }
   ],
-  filteredGrants: Ember.computed('grants', 'model.newSubmission.grants.[]', function () {
-    return this.get('grants').filter(g => !this.get('model.newSubmission.grants').map(x => x.id).includes(g.get('id')));
+  filteredGrants: Ember.computed('submitterGrants', 'submission.grants.[]', function () {
+    return this.get('submitterGrants').filter(g => !this.get('submission.grants').map(x => x.id).includes(g.get('id')));
   }),
   actions: {
-    next() {
-      this.sendAction('next');
-    },
-    back() {
-      this.sendAction('back');
-    },
     prevPage() {
       let i = this.get('pageNumber');
 
@@ -114,30 +109,33 @@ export default WorkflowComponent.extend({
       }
     },
     addGrant(grant, event) {
+      const submission = this.get('submission');
       if (grant) {
-        const submission = this.get('model.newSubmission');
         submission.get('grants').pushObject(grant);
-        this.set('maxStep', 2);
+        this.get('workflow').setMaxStep(2);
       } else if (event && event.target.value) {
         this.get('store').findRecord('grant', event.target.value).then((g) => {
           g.get('primaryFunder.policy'); // Make sure policy is loaded in memory
-          const submission = this.get('model.newSubmission');
           submission.get('grants').pushObject(g);
-          this.set('maxStep', 2);
+          this.get('workflow').setMaxStep(2);
           Ember.$('select')[0].selectedIndex = 0;
         });
       }
     },
     async removeGrant(grant) {
       // if grant is grant passed in from grant detail page remove query parms
-      if (grant === this.get('model.preLoadedGrant')) {
-        this.set('model.preLoadedGrant', null);
+      if (grant === this.get('preLoadedGrant')) {
+        this.set('preLoadedGrant', null);
       }
-      const submission = this.get('model.newSubmission');
+      const submission = this.get('submission');
       submission.get('grants').removeObject(grant);
 
       // undo progress, make user redo metadata step.
-      this.set('maxStep', 2);
+      this.get('workflow').setMaxStep(2);
     },
+
+    abortSubmission() {
+      this.sendAction('abort');
+    }
   },
 });

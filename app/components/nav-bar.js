@@ -1,7 +1,8 @@
 import Component from '@ember/component';
+import { inject as service } from '@ember/service';
 
 export default Component.extend({
-  currentUser: Ember.inject.service('current-user'),
+  currentUser: service('current-user'),
 
   /**
    * Do we have a valid user loaded into the user service?

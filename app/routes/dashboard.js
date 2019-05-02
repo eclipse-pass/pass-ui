@@ -1,9 +1,10 @@
 import CheckSessionRoute from './check-session-route';
 import ENV from 'pass-ember/config/environment';
+import { inject as service } from '@ember/service';
 
 export default CheckSessionRoute.extend({
-  currentUser: Ember.inject.service('current-user'),
-  ajax: Ember.inject.service(),
+  currentUser: service('current-user'),
+  ajax: service('ajax'),
   headers: { 'Content-Type': 'application/json; charset=utf-8' },
   async model() {
     const query = {

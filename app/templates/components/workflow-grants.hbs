@@ -2,16 +2,16 @@
     Please select the grant(s)/award(s) that funded this work. This information will help determine which public access policies are applicable to your work. If the work you’re about to submit was not supported by a grant, leave this page blank and go to the next step.
 </p>
 
-{{#if model.newSubmission.grants}}
+{{#if submission.grants}}
   <h5>Grants added to submission</h5>
-  {{submission-funding-table grants=model.newSubmission.grants remove=(action "removeGrant")}}
-  <button class="btn btn-outline-primary" {{action "back"}}>Back</button>
-  <button class="btn btn-primary next pull-right" {{action "next"}}>Next</button>
+  {{submission-funding-table grants=submission.grants remove=(action "removeGrant")}}
+  <button class="btn btn-outline-primary" {{action back}}>Back</button>
+  <button class="btn btn-primary next pull-right" {{action next}}>Next</button>
   <br>
   <br>
 {{/if}}
 
-{{#if model.newSubmission.submitter.id}}
+{{#if submission.submitter.id}}
 
   <h5>Available grants</h5>
 
@@ -24,7 +24,7 @@
   {{/if}}
   {{models-table
     id="grants-selection-table"
-    data=grants
+    data=submitterGrants
     columns=grantColumns
     themeInstance=themeInstance
     showColumnsDropdown=false
@@ -34,7 +34,7 @@
     showGlobalFilter=false
     pageSize=pageSize
     multipleSelect=true
-    selectedItems=model.newSubmission.grants
+    selectedItems=submission.grants
   }}
 
   {{#if (gt pageCount "1")}}
@@ -57,6 +57,7 @@
   <p>Because the person you are submitting on behalf of is not yet in our system, PASS does not have information about his/her grant(s) and cannot associate this submission with a grant. Please click Next to continue.</p>
 {{/if}}
 <br>
-<button class="btn btn-outline-primary" {{action "back"}}>Back</button>
-<button class="btn btn-primary next pull-right" {{action "next"}}>Next</button>
+<button class="btn btn-outline-primary" {{action back}}>Back</button>
+<button class="btn btn-outline-danger ml-2" {{action "abortSubmission"}}>Abort</button>
+<button class="btn btn-primary next pull-right" {{action next}}>Next</button>
 {{yield}}

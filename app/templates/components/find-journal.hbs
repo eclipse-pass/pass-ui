@@ -1,3 +1,19 @@
+<!-- triggerClass param doesn't appear to work, this is a workaround-->
+{{#if (eq journalClass 'is-invalid')}}
+<style>
+.ember-power-select-trigger {
+  border-color: #f86c6b;
+}
+</style>
+{{/if}}
+{{#if (eq journalClass 'is-valid')}}
+<style>
+.ember-power-select-trigger {
+  border-color: #aaaaaa;
+}
+</style>
+{{/if}}
+
 {{#power-select
   search=(action "searchJournals")
   selected=value

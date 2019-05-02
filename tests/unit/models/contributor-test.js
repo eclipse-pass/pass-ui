@@ -1,12 +1,12 @@
-import { moduleForModel, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
+import { run } from '@ember/runloop';
 
-moduleForModel('contributor', 'Unit | Model | contributor', {
-  // Specify the other units that are required for this test.
-  needs: ['model:publication', 'model:user']
-});
+module('Unit | Model | contributor', (hooks) => {
+  setupTest(hooks);
 
-test('it exists', function (assert) {
-  let model = this.subject();
-  // let store = this.store();
-  assert.ok(!!model);
+  test('it exists', function (assert) {
+    const contributor = run(() => this.owner.lookup('service:store').createRecord('contributor'));
+    assert.ok(contributor);
+  });
 });

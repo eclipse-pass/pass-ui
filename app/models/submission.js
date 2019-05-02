@@ -30,11 +30,27 @@ export default DS.Model.extend({
     async: true
   }),
 
-  // don't get saved to database
-  hasNewProxy: false,
-  removeNIHDeposit: false,
+  // computed attributes for tables and to support some logic
+  isProxySubmission: Ember.computed( // determines whether submission is a proxy submission.
+    'submitterEmail', 'submitterEmail.length',
+    'submitterName', 'submitterName.length',
+    'preparers', 'preparers.length',
+    function () {
+      return (
+        (this.get('submitterEmail') && this.get('submitterEmail.length') > 0
+          && this.get('submitterName') && this.get('submitterName.length') > 0
+        ) || (this.get('preparers') && this.get('preparers.length') > 0)
+      );
+    }
+  ),
 
-  // attributes needed for tables
+  submitterEmailDisplay: Ember.computed('submitterEmail', function () {
+    if (this.get('submitterEmail')) {
+      return this.get('submitterEmail').replace('mailto:', '');
+    }
+    return this.get('submitterEmail');
+  }),
+
   publicationTitle: Ember.computed('publication', function () {
     return this.get('publication.title');
   }),
@@ -58,7 +74,13 @@ export default DS.Model.extend({
   isStub: Ember.computed('source', 'submitted', function () {
     return this.get('source') === 'other' && !(this.get('submitted'));
   }),
-  // hasProxy: Ember.computed('submission', function () {
-  //   return !!(this.get('submission.preparer'));
-  // }),
+
+  /**
+   * @returns {boolean} is this a draft submission?
+   */
+  isDraft: Ember.computed('submitted', 'submissionStatus', function () {
+    // TODO: after model update, we can just check if submission status === 'draft'
+    // return this.get('record.submissinoStatus') === 'draft';
+    return !this.get('submitted') && !this.get('submissionStatus');
+  })
 });

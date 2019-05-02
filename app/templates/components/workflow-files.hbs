@@ -6,7 +6,8 @@
     width: 200px;
   }
 </style>
-{{#each model.newSubmission.repositories as |repo| }}
+
+{{#each submission.repositories as |repo| }}
   {{#if (eq repo.name "PubMed Central")}}
     <p class="lead text-muted">
       <a href="https://www.ncbi.nlm.nih.gov/pmc/about/public-access/" target="_blank">National Institutes of Health (NIH) and other PubMed Central-supported funding agencies</a> require funded authors to submit the Author's Accepted Manuscripts. For clarification
@@ -17,7 +18,7 @@
     </p>
   {{/if}}
 {{/each}}
-
+{{#if (or previouslyUploadedFiles newFiles)}}
 <div class="row">
   <div class="col-lg-12">
     <table class="table table-responsive-sm table-sm">
@@ -34,7 +35,7 @@
         </tr>
       </thead>
       <tbody>
-        {{#each model.files as |file|}}
+        {{#each previouslyUploadedFiles as |file|}}
           <tr>
             <td class="vertical-align-middle">
               <a href="{{file.uri}}">{{file.name}}</a>
@@ -55,7 +56,7 @@
             </td>
           </tr>
         {{/each}}
-        {{#each files as |file|}}
+        {{#each newFiles as |file|}}
           <tr>
             <td class="vertical-align-middle">
               {{file.name}}
@@ -81,8 +82,9 @@
   </div>
   <!--/.col-->
 </div>
+{{/if}}
 <!--/.row-->
-<p class="lead text-muted mb-2">Attach manuscript/article files to this submission.</p>
+<p class="lead text-muted">Attach manuscript/article files to this submission.</p>
 <p class="lead text-muted">Each individual file must be smaller than 100MB.</p>
 <div class="form-group row">
   <div class="col-md-12">
@@ -90,5 +92,6 @@
   </div>
 </div>
 <p><strong>Tip:</strong> Use the Control or the Shift key to select multiple files.</p>
-<button class="btn btn-outline-primary" {{action "back"}}>Back</button>
-<button class="btn btn-primary pull-right next" {{action "next"}}>Next</button>
+<button class="btn btn-outline-primary" {{action back}}>Back</button>
+<button class="btn btn-outline-danger ml-2" {{action "cancel"}}>Abort</button>
+<button class="btn btn-primary pull-right next" {{action next}}>Next</button>

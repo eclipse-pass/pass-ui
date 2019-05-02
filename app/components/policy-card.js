@@ -1,8 +1,25 @@
 import Component from '@ember/component';
+import { inject as service } from '@ember/service';
 
 export default Component.extend({
-  toggleRemoveNIHDeposit: Ember.observer('model.newSubmission.removeNIHDeposit', function () {
-    this.set('maxStep', 3);
+  workflow: service('workflow'),
+  pmcPublisherDeposit: Ember.computed('workflow.pmcPublisherDeposit', {
+    get(key) {
+      return this.get('workflow').getPmcPublisherDeposit();
+    },
+    set(key, value) {
+      this.get('workflow').setPmcPublisherDeposit(value);
+      return value;
+    }
+  }),
+  maxStep: Ember.computed('workflow.maxStep', {
+    get(key) {
+      return this.get('workflow').getMaxStep();
+    },
+    set(key, value) {
+      this.get('workflow').setMaxStep(value);
+      return value;
+    }
   }),
   // checks if the radio buttons need to be displayed
   usesPmcRepository: Ember.computed('policy.repositories', function () {
@@ -16,8 +33,14 @@ export default Component.extend({
   }),
   didRender() {
     this._super(...arguments);
-    if (this.get('methodAJournal') && !this.get('removeNIHDeposit')) {
-      this.sendAction('setRemoveNIHDeposit', true);
+    if (this.get('methodAJournal')) {
+      this.set('pmcPublisherDeposit', true);
+    }
+  },
+  actions: {
+    pmcPublisherDepositToggled(choice) {
+      this.set('pmcPublisherDeposit', choice);
+      this.set('maxStep', 3);
     }
   }
 });

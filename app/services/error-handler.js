@@ -8,6 +8,14 @@ export default Service.extend({
   handleError(error) {
     console.log(`Handling error: ${JSON.stringify(error.message)}`);
 
+    // Error stack is non-standard. Show if available.
+
+    if (error.stack) {
+      console.log(error.stack);
+    } else {
+      console.log(error);
+    }
+
     if (error.name == 'TransitionAborted') {
       // Ignore
     } else if (error.message === 'shib302') {

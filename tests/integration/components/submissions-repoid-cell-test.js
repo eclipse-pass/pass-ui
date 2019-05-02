@@ -1,15 +1,50 @@
-import { moduleForComponent, test } from 'ember-qunit';
+import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
+import { module, test } from 'qunit';
+import { run } from '@ember/runloop';
 
-moduleForComponent('submissions-repoid-cell', 'Integration | Component | submissions repoid cell', {
-  integration: true
-});
+module('Integration | Component | submissions repoid cell', (hooks) => {
+  setupRenderingTest(hooks);
 
-test('it renders', function (assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
+  // Inject mocked store that on query returns a single user
+  hooks.beforeEach(function () {
+    let store = Ember.Service.extend({
+      query: (type, q) => Promise.resolve([Ember.Object.create({ id: 'test' })])
+    });
 
-  // Template usage:
-  this.render(hbs`{{submissions-repoid-cell}}`);
-  assert.ok(true);
+    run(() => {
+      this.owner.unregister('service:store');
+      this.owner.register('service:store', store);
+      this.store = this.owner.lookup('service:store');
+    });
+  });
+
+  test('it renders', async function (assert) {
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.on('myAction', function(val) { ... });
+
+    // Template usage:
+    await this.render(hbs`{{submissions-repoid-cell}}`);
+    assert.ok(true);
+  });
+
+  /**
+   * Make sure the component renders when `record.publication.id` returns no value
+   */
+  test('it renders with when data is missing', async function (assert) {
+    assert.expect(1);
+
+    this.set('store', Ember.Service.extend({
+      query(type, q) {
+        assert.ok(true);
+      }
+    }));
+    const record = Ember.Object.create({
+      publication: Ember.Object.create({})
+    });
+    this.set('record', record);
+
+    await this.render(hbs`{{submission-repoid-cell}}`);
+    assert.ok(true);
+  });
 });

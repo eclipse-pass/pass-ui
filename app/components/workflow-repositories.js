@@ -1,21 +1,28 @@
-import WorkflowComponent from './workflow-component';
+import Component from '@ember/component';
 import { inject as service, } from '@ember/service';
 
-export default WorkflowComponent.extend({
-  addedRepositories: [],
-  router: service(),
-  store: service('store'),
-  isFirstTime: true,
+export default Component.extend({
+  workflow: service('workflow'),
+  institutionRepos: Ember.computed('repositories', function () {
+    return this.get('repositories').filter(repo => repo.get('repositoryKey') === 'jscholarship');
+  }),
+  institutionName: Ember.computed(() => 'Johns Hopkins University'),
+  pmcPublisherDeposit: Ember.computed('workflow.pmcPublisherDeposit', function () {
+    return this.get('workflow').getPmcPublisherDeposit();
+  }),
   willRender() {
     this._super(...arguments);
-    this.set('addedRepositories', []);
-    if (!(this.get('addedRepositories').findBy('name', 'JScholarship'))) {
-      let jScholarships = this.get('model.repositories').filter(repo => repo.get('name') === 'JScholarship');
-      this.get('addedRepositories').pushObject(jScholarships[0]);
+    let workflow = this.get('workflow');
+    let institRepo = this.get('institutionRepos')[0];
+    if (!workflow.getDefaultRepoLoaded() && institRepo) {
+      this.send('addRepository', institRepo);
+      workflow.setDefaultRepoLoaded(true);
     }
+    // start by synching the submission with what you can see on the page
+    this.set('submission.repositories', this.get('combinedRepoList'));
   },
   getFunderNamesForRepo(repo) {
-    const funders = this.get('model.newSubmission.grants').map(grant => grant.get('primaryFunder'));
+    const funders = this.get('submission.grants').map(grant => grant.get('primaryFunder'));
     const fundersWithRepos = funders.filter(funder => funder.get('policy.repositories'));
     const fundersWithOurRepo = fundersWithRepos.filter(funder => funder.get('policy') &&
       funder.get('policy.repositories') && funder.get('policy.repositories').includes(repo));
@@ -28,8 +35,8 @@ export default WorkflowComponent.extend({
   usesPmcRepository(policyRepos) {
     return policyRepos ? (policyRepos.filter(repo => repo.get('repositoryKey') === 'pmc').length > 0) : false;
   },
-  requiredRepositories: Ember.computed('model.repositories', function () {
-    const grants = this.get('model.newSubmission.grants');
+  requiredRepositories: Ember.computed('submission.grants', 'pmcPublisherDeposit', 'optionalRepositories', function () {
+    const grants = this.get('submission.grants');
     let repos = Ember.A();
     grants.forEach((grant) => {
       const funder = grant.get('primaryFunder');
@@ -43,9 +50,8 @@ export default WorkflowComponent.extend({
         return;
       }
 
-      const shouldAddNIH = this.get('includeNIHDeposit');
-      let anyInSubmission = grantRepos.any(grantRepo => this.get('model.newSubmission.repositories').includes(grantRepo));
-      if (shouldAddNIH || !this.usesPmcRepository(grantRepos)) {
+      // it's either not a PMC deposit or if it is one, the publisher won't deposit it so it must be included
+      if (!this.get('pmcPublisherDeposit') || !this.usesPmcRepository(grantRepos)) {
         grantRepos.forEach((repo) => {
           repos.addObject({
             repo,
@@ -53,83 +59,56 @@ export default WorkflowComponent.extend({
           });
           repos = repos.uniqBy('repo');
         });
-      } else if (anyInSubmission) {
-        // Remove it from the submission so that it can be re-added :)
-        this.get('model.newSubmission.repositories').removeObjects(grantRepos.map(g => g.repo));
       }
     });
-    // STEP 2
-    repos.forEach((repo) => {
-      this.send('addRepo', repo.repo);
-    });
-
-    // STEP 3
     return repos;
   }),
-  optionalRepositories: Ember.computed('requiredRepositories', function () {
-    let repos = this.get('model.repositories').filter(repo => repo.get('name') === 'JScholarship');
-    if (repos.length > 1) {
-      repos = [repos[0]];
-    }
-    let result = [];
-    repos.forEach(r => result.push({ repo: r, funders: 'Johns Hopkins University' }));
+  optionalRepositories: Ember.computed('institutionRepos', 'institutionName', function () {
+    let result = Ember.A();
+    let institRepos = this.get('institutionRepos');
+    let institName = this.get('institutionName');
+    institRepos.forEach((repo) => {
+      let submissionIncludesRepo = this.get('submission.repositories').includes(repo);
+      result.addObject({ repo, funders: institName, checked: submissionIncludesRepo });
+    });
     return result;
   }),
+  combinedRepoList: Ember.computed('optionalRepositories', 'requiredRepositories', function () {
+    // this combines the required repositories with those selected in the optional list
+    let repos = Ember.A();
+    this.get('requiredRepositories').forEach((r) => {
+      repos.pushObject(r.repo);
+    });
+    this.get('optionalRepositories').forEach((r) => {
+      if (r.checked) repos.pushObject(r.repo);
+    });
+    return repos;
+  }),
   actions: {
-    next() {
-      this.send('saveAll');
-      if (this.get('model.newSubmission.repositories.length') == 0) {
-        swal(
-          'You\'re done!',
-          'If you don\'t plan on submitting to any repositories, you can stop at this time.',
-          { buttons: { cancel: true, confirm: true } },
-        ).then((value) => {
-          if (value.dismiss) return;
-          this.get('router').transitionTo('dashboard');
-        });
-      } else {
-        // Remove any schemas not associated with the repositories attached to the submission or not on the whitelist.
-        // Whitelisted schemas are not associated with repositories but still required by deposit services.
-        let metadata;
-        if (this.get('model.newSubmission.metadata')) {
-          metadata = JSON.parse(this.get('model.newSubmission.metadata'));
-        } else {
-          metadata = [];
-        }
-        let schemaWhitelist = ['common', 'crossref', 'agent_information', 'pmc'];
-        let schemaIds = this.get('model.newSubmission.repositories').map(x => JSON.parse(x.get('formSchema')).id);
-        metadata = metadata.filter(md => schemaIds.includes(md.id) || schemaWhitelist.includes(md.id));
-        this.set('model.newSubmission.metadata', JSON.stringify(metadata));
-        this.sendAction('next');
+    addRepository(repositoryToAdd) {
+      let submissionIncludesRepo = this.get('submission.repositories').includes(repositoryToAdd);
+      if (!submissionIncludesRepo) {
+        this.get('submission.repositories').pushObject(repositoryToAdd);
       }
+      this.get('workflow').setMaxStep(4);
     },
-
-    back() { this.sendAction('back'); },
-    addRepo(repository) { this.get('addedRepositories').push(repository); },
-
-    removeRepo(targetRepository) {
-      const addedRepos = this.get('addedRepositories');
-      addedRepos.forEach((repository, index) => {
-        if (targetRepository.get('id') === repository.get('id')) addedRepos.splice(index, 1);
-      });
-    },
-    saveAll() {
-      // remove all repos from submission
-      let tempRepos = this.get('model.newSubmission.repositories');
-      this.get('model.newSubmission.repositories').forEach((repo) => {
-        tempRepos.removeObject(repo);
-      });
-      this.set('model.newSubmission.repositories', tempRepos);
-      // add back the ones the user selected
-      this.get('addedRepositories').forEach((repositoryToAdd) => {
-        if (!((this.get('model.newSubmission.repositories').includes(repositoryToAdd)))) {
-          this.get('model.newSubmission.repositories').addObject(repositoryToAdd);
+    removeRepository(repositoryToRemove) {
+      let addedRepos = this.get('submission.repositories');
+      let updatedRepos = Ember.A();
+      addedRepos.forEach((repository) => {
+        if (repositoryToRemove.get('id') !== repository.get('id')) {
+          updatedRepos.pushObject(repository);
         }
       });
+      this.set('submission.repositories', updatedRepos);
+      this.get('workflow').setMaxStep(4);
     },
     toggleRepository(repository) {
-      if (event.target.checked) this.send('addRepo', repository);
-      else this.send('removeRepo', repository);
+      if (event.target.checked) this.send('addRepository', repository);
+      else this.send('removeRepository', repository);
     },
-  },
+    cancel() {
+      this.sendAction('abort');
+    }
+  }
 });

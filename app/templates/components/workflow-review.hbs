@@ -1,9 +1,7 @@
 <style>
-
   .text-gray {
     color: gray;
   }
-
   .file {
     background-color: #fdfdfd;
     background-clip: border-box;
@@ -12,30 +10,23 @@
     max-height: 50px;
     color: gray;
   }
-
   .line-height-50 {
     line-height: 50px;
     overflow: hidden;
   }
-
   .line-height-35 {
     line-height: 35px;
   }
-
   .zoom-in {
     cursor: zoom-in;
   }
-
-
   table td {
     border: 1px dotted silver;
     word-break: break-all;
   }
-
   .min-review-type-width {
     min-width: 100px;
   }
-
   .max-width {
     max-width: 300px !important;
     white-space: nowrap;
@@ -44,24 +35,23 @@
     font-size: 30px!important;
     margin-top: 4px;
   }
-
   tbody.striped tr:nth-of-type(odd) {
     background-color: white;
   }
   tbody.striped tr {
     background: #fdfdfd;
   }
-
 </style>
+
 <div class="form-group row">
   <div class="col-md-12">
     <div class="list-group">
       <div href="#" class="list-group-item flex-column align-items-start">
         <div class="d-flex w-100 justify-content-between">
-          <h5 class="mb-1"> {{model.publication.title}}</h5>
-          <small class="text-muted">{{model.newSubmission.dateSubmitted.date-time}}<br>{{model.newSubmission.dateCreated.date-time}}</small>
+          <h5 class="mb-1"> {{publication.title}}</h5>
+          <small class="text-muted">{{submission.dateSubmitted.date-time}}<br>{{submission.dateCreated.date-time}}</small>
         </div>
-        <p class="mb-1">{{model.publication.doi}}</p>
+        <p class="mb-1">{{publication.doi}}</p>
         <div class="text-muted">Please review the information below</div>
         <table class="table table-responsive-sm table-bordered w-100">
           <tbody>
@@ -74,23 +64,8 @@
               </td>
               <td>
                 <ul>
-                  {{#each model.newSubmission.repositories as |repository|}}
-                  <li>
-                    {{#if (eq repository.name 'JScholarship')}}
-                    {{#if didNotAgree}}
-                    <div class="alert-danger" style="border-radius:2px; word-break:normal;  background-color: transparent;  border-color: transparent;">
-                      {{repository.name}}<br>
-                      <p class="text-danger text-left m-0"><strong>Warning:</strong> you added JScholarship as a
-                        repository but didn't agree to the deposit agreement, so your submission will not be submitted
-                        to JScholarship. To fix this, go back and agree to the deposit agreement.</p>
-                    </div>
-                    {{else}}
-                    {{repository.name}}
-                    {{/if}}
-                    {{else}}
-                    {{repository.name}}
-                    {{/if}}
-                  </li>
+                  {{#each submission.repositories as |repository|}}
+                  <li>{{repository.name}}</li>
                   {{/each}}
                 </ul>
               </td>
@@ -125,10 +100,10 @@
               <td>Grants</td>
               <td>
                 <ul class="list-unstyled">
-                  {{#each model.newSubmission.grants as |grant|}}
+                  {{#each submission.grants as |grant|}}
                   <li><b>{{grant.awardNumber}}</b> : {{grant.projectName}}</li>
                   <li><b>Funder</b> : {{grant.primaryFunder.name}}</li>
-                  {{#if (not-eq grant model.newSubmission.grants.lastObject)}}
+                  {{#if (not-eq grant submission.grants.lastObject)}}
                   <hr>
                   {{/if}}
                   {{/each}}
@@ -138,40 +113,7 @@
             <tr>
               <td>Details</td>
               <td>
-                <ul class="list-unstyled">
-                  {{#each-in metadataBlobNoKeys as |key data|}}
-                  {{!-- TODO: Look in to making the ifs in to one if --}}
-                  {{#if (not-eq key 'Embargo')}}
-                  {{#if (not-eq key 'Information')}}
-                  {{#if (not-eq key 'Under-embargo')}}
-                  {{#if (not-eq key 'Embargo-end-date')}}
-                  {{#if (not-eq key 'Agreement-to-embargo')}}
-                  {{#if (not-eq key 'Submission')}}
-                  {{#if (eq key 'Author(s)')}}
-                  <li><b>{{key}}</b>:
-                    <ul>
-                      {{#each data as |author|}}
-                      <li>{{author.author}}
-                        {{#if author.orcid}} (<a href={{author.orcid}} target="_blank">{{author.orcid}}</a>){{/if}}
-                      </li>
-                      {{/each}}
-                    </ul>
-                  </li>
-                  {{else}}
-                  {{#if (eq key 'URL')}}
-                  <li><b>{{key}}</b>: <a href={{data}} target="_blank">{{data}}</a></li>
-                  {{else}}
-                  <li><b>{{key}}</b>: {{{data}}}</li>
-                  {{/if}}
-                  {{/if}}
-                  {{/if}}
-                  {{/if}}
-                  {{/if}}
-                  {{/if}}
-                  {{/if}}
-                  {{/if}}
-                  {{/each-in}}
-                </ul>
+                {{display-metadata-keys submission=submission}}
               </td>
             </tr>
 
@@ -218,34 +160,34 @@
                 </table>
               </td>
             </tr>
-            {{#if hasProxy}}
+            {{#if submission.isProxySubmission}}
             <tr>
               <td>Comments</td>
               <td>
                 <p>
                   This submission is prepared on behalf of
-                  {{#if model.newSubmission.submitter}}
-                  {{model.newSubmission.submitter.displayName}} (<a href="mailto:{{model.newSubmission.submitter.email}}">{{model.newSubmission.submitter.email}}</a>)
+                  {{#if submission.submitter}}
+                  {{submission.submitter.displayName}} (<a href="mailto:{{submission.submitter.email}}">{{submission.submitter.email}}</a>)
                   {{else}}
-                  {{submitterName}} (<a href="mailto:{{submitterEmail}}">{{submitterEmail}}</a>)
+                  {{submission.submitterName}} (<a href="{{submission.submitterEmail}}">{{submission.submitterEmailDisplay}}</a>)
                   {{/if}}
                 </p>
                 {{!-- Show the following if not saved yet. --}}
-                {{#unless model.newSubmission.id}}
+                {{#unless submission.id}}
                 <p>
                   Once "Request approval" is clicked, a notification will be sent to
-                  {{#if model.newSubmission.submitter.id}}
-                  {{model.newSubmission.submitter.displayName}} (<a href="mailto:{{model.newSubmission.submitter.email}}">{{model.newSubmission.submitter.email}}</a>)
+                  {{#if submission.submitter.id}}
+                  {{submission.submitter.displayName}} (<a href="mailto:{{submission.submitter.email}}">{{submission.submitter.email}}</a>)
                   {{else}}
-                  {{submitterName}} (<a href="mailto:{{submitterEmail}}">{{submitterEmail}}</a>)
+                  {{submission.submitterName}} (<a href="{{submission.submitterEmail}}">{{submission.submitterEmailDisplay}}</a>)
                   {{/if}}.
                   The submission will be sent to its target repositories upon approval, or be sent back to you if
                   additional edits
-                  are requested by {{model.newSubmission.submitter.displayName}}.
+                  are requested by {{submission.submitter.displayName}}.
                 </p>
                 {{/unless}}
                 <hr>
-                {{commenting-block submissionEvents=model.newSubmission.submissionEvents}}
+                {{commenting-block submissionEvents=submission.submissionEvents}}
                 {{textarea placeholder="Add comment" value=comment class="form-control custom-control p-2" rows="2"
                 style="resize:none; min-height: 38px!important;"}}
               </td>
@@ -258,6 +200,7 @@
   </div>
 </div>
 <button class="btn btn-outline-primary" {{action "back"}}>Back</button>
+<button class="btn btn-outline-danger ml-2" {{action "cancel"}}>Abort</button>
 {{#if uploading}}
 <button class="btn btn-primary pull-right submit" disabled>{{waitingMessage}}</button>
 {{else}}

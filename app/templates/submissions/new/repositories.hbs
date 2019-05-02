@@ -1,0 +1,13 @@
+{{#workflow-wrapper
+  title=publication.title
+  isProxySubmission=submission.isProxySubmission
+  submissionEvents=submissionEvents
+  loadTab=(action 'validateAndLoadTab')
+}}
+{{workflow-repositories
+  submission=submission
+  repositories=repositories
+  next=(action "loadNext")
+  back=(action "loadPrevious")
+  abort=(action "abort")}}
+{{/workflow-wrapper}}

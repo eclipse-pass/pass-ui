@@ -34,4 +34,9 @@
         <i class="fas fa-info-circle"></i> complete
       </span>
     {{/if}}
+    {{#if (eq submissionStatus "draft")}}
+      <span tooltip-position="left" tooltip="This submission is a draft. No action will be taken on this submission until it is completed.">
+        <i class="fas fa-info-circle"></i> draft
+      </span>
+    {{/if}}
   </span>

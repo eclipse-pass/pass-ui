@@ -1,19 +1,12 @@
-import { moduleForComponent, test, setupRenderingTest } from 'ember-qunit';
+import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
-import { module } from 'qunit';
-import { render } from '@ember/test-helpers';
-
+import { module, test } from 'qunit';
 
 module('Integration | Component | metadata-form', (hooks) => {
   setupRenderingTest(hooks);
-  test('it renders', function (assert) {
-    let model = {};
 
-    // TODO: add actual tests here
-    model = Ember.Object.create({
-      metadata: '[]'
-    });
-    let schema = {
+  hooks.beforeEach(function () {
+    const schema = {
       id: 'nih',
       data: {},
       schema: {
@@ -31,16 +24,19 @@ module('Integration | Component | metadata-form', (hooks) => {
         }
       }
     };
-
     this.set('schema', schema);
-    this.set('model', model);
+  });
 
-    let doiInfo = [];
-    this.set('doiInfo', doiInfo);
-    let currentFormStep = 0;
-    this.set('currentFormStep', currentFormStep);
+  test('it renders', async function (assert) {
+    await this.render(hbs`{{metadata-form schema=schema}}`);
 
-    render(hbs`{{metadata-form schema=schema model=model doiInfo=doiInfo currentFormStep=currentFormStep}}`);
-    assert.ok(true);
+    const el = this.element.querySelector('#schemaForm');
+    assert.ok(el);
+
+    assert.equal(
+      3,
+      el.querySelectorAll('button').length,
+      'There should be three form control buttons (prev, abort, next)'
+    );
   });
 });

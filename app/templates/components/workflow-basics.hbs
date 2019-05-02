@@ -1,35 +1,34 @@
 {{yield}}
-{{#unless (or model.newSubmission.id model.preLoadedGrant)}}
+{{#unless (or submission.id preLoadedGrant)}}
 <div class="py-0 mt-2 alert alert-secondary" id="on-behalf-of-block">
   <p class="my-2 lead">I'm creating this submission on behalf of:
-    {{radio-button class="ml-3 mr-1" value=false name='showProxyWindow' checked=model.newSubmission.hasNewProxy}} Myself
-    {{radio-button class="ml-3 mr-1" value=true name='showProxyWindow' checked=model.newSubmission.hasNewProxy}} Someone
-    else
+    <input type="radio" checked={{ not isProxySubmission }} onchange={{action 'proxyStatusToggled' false}}/> Myself
+    <input type="radio" checked={{ isProxySubmission }} onchange={{action 'proxyStatusToggled' true}}/> Someone else
   </p>
 </div>
-{{#if model.newSubmission.hasNewProxy}}
+{{#if isProxySubmission}}
 <div class="alert alert-info">
   <p>When a submission is created on someone's behalf, PASS will contact that person to acquire their approval before
     finalizing the submission and sending it to its corresponding repositories.</p>
   <p class="mb-0">Please indicate on behalf of whom this submission is being completed:</p>
     <div class="input-group pb-3">
-      {{input enter='searchForUsers' value=modalSearchInput class="form-control"}}
+      {{input enter=(action 'toggleUserSearchModal') value=userSearchTerm class="form-control"}}
       <span class="input-group-btn">
-        <button class="btn btn-primary" {{action 'searchForUsers'}} type="button">Search</button>
+        <button id='search-for-users' class="btn btn-primary" {{action 'toggleUserSearchModal'}} type="button">Search</button>
       </span>
     </div>
-    {{#if model.newSubmission.submitter.id}}
+    {{#if submission.submitter.id}}
     <p>
-      Currently selected submitter:<br>{{model.newSubmission.submitter.firstName}} {{model.newSubmission.submitter.lastName}}
-       (<a href="mailto:{{model.newSubmission.submitter.email}}">{{model.newSubmission.submitter.email}}</a>)<br>(<a href="#" {{action 'removeCurrentSubmitter'}}>Remove submitter</a>)
+      Currently selected submitter:<br>{{submission.submitter.firstName}} {{submission.submitter.lastName}}
+       (<a href="mailto:{{submission.submitter.email}}">{{submission.submitter.email}}</a>)<br>(<a href="#" {{action 'changeSubmitter' isProxySubmission null}}>Remove submitter</a>)
     </p>
     {{/if}}
   <p class="mb-0"><strong>If the person you are submitting for does not have an account with PASS</strong>, please
     provide their email address and name so we may notify them:
   </p>
   <div class="form-inline">
-  {{input class=(concat "mt-1 mb-3 form-control w-50 " validEmail) keyUp=(action "validateEmail") disabled=model.newSubmission.submitter.id value=submitterEmail placeholder="Email address"}}
-  {{input class="mt-1 mb-3 form-control w-50" disabled=model.newSubmission.submitter.id value=submitterName placeholder="Name"}}
+  {{input class=(concat "mt-1 mb-3 form-control w-50 " submitterEmailClass) keyUp=(action validateSubmitterEmail) disabled=submission.submitter.id value=inputSubmitterEmail placeholder="Email address"}}
+  {{input class="mt-1 mb-3 form-control w-50" disabled=submission.submitter.id value=submission.submitterName placeholder="Name"}}
   </div>
 </div>
 {{/if}}
@@ -51,33 +50,23 @@
     </i>
   </p>
 
-  {{!-- <div style="color:red">
-    <div style="font-style: italic">no pmc:</div>10.1103/PhysRevFluids.1.073604
-  </div>
-  <div style="color:red">
-    <div style="font-style: italic">method A:</div>10.1021/acsmedchemlett.7b00397
-  </div>
-  <div style="color:red">
-    <div style="font-style: italic">method B:</div>10.1039/c7fo01251a
-  </div> --}}
   {{input
-  class=validDOI
-  value=model.publication.doi
+  class=doiClass
+  value=publication.doi
   keyUp=(action "lookupDOI")
   mouseUp=(action "lookupDOI")
-  mouseLeave=(action "lookupDOI")
   id="doi"
   placeholder="Leave blank if your manuscript or article has not yet been assigned a DOI"
-  readonly=model.newSubmission.id
+  readonly=submission.id
   }}
   <div class="text-danger">
-    {{if (eq validDOI 2) 'Please provide a valid DOI'}}
+    {{if (and publication.doi (not isValidDOI)) 'Please provide a valid DOI'}}
   </div>
 </div>
 <div class="form-group">
   <label>Manuscript/Article Title <span class="text-muted">(required)</span></label>
-  {{textarea value=model.publication.title cols="100%" rows="2" class=validTitle placeholder="Manuscript/Article Title"
-  keyUp=(action "validateTitle") id="title" readonly=isValidDOI }}
+  {{textarea value=publication.title cols="100%" rows="2" class=titleClass placeholder="Manuscript/Article Title"
+    keyUp=(action validateTitle) id="title" readonly=isValidDOI }}
 </div>
 
 <div class="form-group">
@@ -88,32 +77,25 @@
   </div>
   <div class="w-100">
     {{#unless isValidDOI}}
-    {{find-journal id="journal" selectJournal=(action "selectJournal") value=model.publication.journal
-    isValidDOI=isValidDOI}}
+    {{find-journal id="journal" selectJournal=(action "selectJournal") value=publication.journal journalClass=journalClass isValidDOI=isValidDOI}}
     {{else}}
-    <input type="text" class={{validTitle}} value={{await (get model.publication.journal 'journalName')}} readonly>
+    <input type="text" class="form-control" value={{publication.journal.journalName}} readonly>
     {{/unless}}
   </div>
 </div>
 {{#link-to 'submissions.index' class="btn btn-outline-primary"}}Back{{/link-to}}
-<button class="btn btn-primary pull-right next" {{action "validateNext"}}>Next</button>
-{{#if isShowingModal}}
-{{#modal-dialog 
-   translucentOverlay=true 
-   onClose="toggleModal" 
-   close="toggleModal" 
-   tetherTarget='#on-behalf-of-block'
-   attachment='top center'
-   targetAttachment='top center'
-   containerClass='user-search-modal'}}
-  {{workflow-basics-user-search
-    model=model
-    isShowingModal=isShowingModal
-    pageSize=modalPageSize
-    totalResults=modalTotalResults
-    searchInput=modalSearchInput
-    submitterEmail=submitterEmail
-    submitterName=submitterName
-    users=users}}
-{{/modal-dialog}}
+<button class="btn btn-outline-danger ml-2" {{action 'cancel'}}>Abort</button>
+<button class="btn btn-primary pull-right next" {{action next}}>Next</button>
+{{#if isShowingUserSearchModal}}
+  {{#modal-dialog
+     translucentOverlay=true
+     tetherTarget='#on-behalf-of-block'
+     attachment='top center'
+     targetAttachment='top center'
+     containerClass='user-search-modal'}}
+    {{workflow-basics-user-search
+      toggleUserSearchModal=(action 'toggleUserSearchModal')
+      pickSubmitter=(action 'pickSubmitter')
+      searchInput=userSearchTerm}}
+  {{/modal-dialog}}
 {{/if}}

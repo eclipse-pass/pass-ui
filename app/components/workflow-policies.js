@@ -1,17 +1,17 @@
-import WorkflowComponent from './workflow-component';
+import Component from '@ember/component';
 
-export default WorkflowComponent.extend({
-  activePolicies: Ember.computed('model.newSubmission', function () {
+export default Component.extend({
+  activePolicies: Ember.computed('submission.grants', function () {
     let policies = Ember.A();
     // policies can come from funders
-    this.get('model.newSubmission.grants').forEach((grant) => {
+    this.get('submission.grants').forEach((grant) => {
       if (grant.get('primaryFunder.policy.content')) {
         policies.addObject(grant.get('primaryFunder.policy'));
       }
     });
 
     // Always add the JHU policy
-    let required = this.get('model.policies')
+    let required = this.get('policies')
       .filter(repo => repo.get('policyUrl') === 'https://provost.jhu.edu/about/open-access/');
     if (required.length > 0) {
       policies.addObject(required[0]);
@@ -19,16 +19,10 @@ export default WorkflowComponent.extend({
     policies = policies.uniqBy('id');
     return policies;
   }),
+
   actions: {
-    next() {
-      this.sendAction('toggleNIHDeposit', !(this.get('model.newSubmission.removeNIHDeposit')));
-      this.sendAction('next');
-    },
-    back() {
-      this.sendAction('back');
-    },
-    setRemoveNIHDeposit(bool) {
-      this.set('model.newSubmission.removeNIHDeposit', bool);
+    cancel() {
+      this.sendAction('abort');
     }
-  },
+  }
 });

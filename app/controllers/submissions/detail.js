@@ -1,16 +1,19 @@
 import Controller from '@ember/controller';
 import ENV from 'pass-ember/config/environment';
+import { inject as service } from '@ember/service';
 // import swal from 'sweetalert2';
 
 export default Controller.extend({
-  metadataService: Ember.inject.service('metadata-blob'),
+  metadataService: service('metadata-blob'),
+  currentUser: service('current-user'),
+  store: service('store'),
+  submissionHandler: service('submission-handler'),
+
   tooltips: function () {
     $(() => {
       $('[data-toggle="tooltip"]').tooltip();
     });
   }.on('init'),
-  currentUser: Ember.inject.service('current-user'),
-  store: Ember.inject.service('store'),
   externalSubmission: Ember.computed('externalSubmissionsMetadata', 'model.sub.submitted', function () {
     if (!this.get('model.sub.submitted')) {
       return [];
@@ -19,17 +22,11 @@ export default Controller.extend({
     let md = this.get('externalSubmissionsMetadata');
 
     if (md) {
-      return md.data.submission;
+      return md['external-submissions'];
     }
 
     return [];
   }),
-  hasProxy: Ember.computed(
-    'model.sub.preparers',
-    function () {
-      return this.get('model.sub.preparers.length') > 0;
-    }
-  ),
   /**
    * Ugly way to generate data for the template to use.
    * {
@@ -51,36 +48,31 @@ export default Controller.extend({
    */
   externalSubmissionsMetadata: Ember.computed('model.sub.submitted', 'model.sub.metadata', function () {
     if (this.get('model.sub.submitted')) {
-      let values = JSON.parse(this.get('model.sub.metadata')).filter(x => x.id === 'external-submissions');
+      const metadata = JSON.parse(this.get('model.sub.metadata'));
+      let values = Ember.A();
 
-      if (values.length == 0) {
-        return null;
+      // Old style metadata blob :(
+      if (Array.isArray(metadata)) {
+        values = metadata.filter(x => x.id === 'external-submissions');
+
+        if (values.length == 0) {
+          return null;
+        }
+
+        return values[0];
       }
 
-      return values[0];
+      return metadata;
     }
 
-    const externalRepos = this.get('model.repos').filter(repo =>
-      repo.get('integrationType') === 'web-link');
-
-    if (externalRepos.get('length') == 0) {
-      return null;
-    }
-
-    let md = { id: 'external-submissions', data: { submission: [] } };
-    externalRepos.forEach(repo => md.data.submission.push({
-      message: `Deposit into ${repo.get('name')} was prompted`,
-      name: repo.get('name'),
-      url: repo.get('url')
-    }));
-
-    return md;
+    const repos = this.get('model.repos');
+    return this.get('metadataService').getExternalReposBlob(repos);
   }),
   weblinkRepos: Ember.computed('externalSubmissionsMetadata', function () {
     let md = this.get('externalSubmissionsMetadata');
 
-    if (md) {
-      let externalRepoList = md.data.submission;
+    if (md && md['external-submissions']) {
+      let externalRepoList = md['external-submissions'];
       externalRepoList.forEach((repo) => {
         this.get('externalRepoMap')[repo.name] = false;
       });
@@ -89,12 +81,12 @@ export default Controller.extend({
 
     return [];
   }),
-  mustVisitWeblink: Ember.computed('weblinkRepos', 'model', 'hasProxy', function () {
+  mustVisitWeblink: Ember.computed('weblinkRepos', 'model', function () {
     const weblinkExists = this.get('weblinkRepos').length > 0;
     const isSubmitter = this.get('currentUser.user.id') === this.get('model.sub.submitter.id');
-    const hasProxy = this.get('hasProxy');
+    const isProxySubmission = this.get('model.sub.isProxySubmission');
     const isSubmitted = this.get('model.sub.submitted');
-    return weblinkExists && isSubmitter && hasProxy && !isSubmitted;
+    return weblinkExists && isSubmitter && isProxySubmission && !isSubmitted;
   }),
   disableSubmit: Ember.computed(
     'mustVisitWeblink',
@@ -160,9 +152,9 @@ export default Controller.extend({
 
     return null;
   }),
-  metadataBlobNoKeys: Ember.computed('model.sub.metadata', function () {
-    return this.get('metadataService').getDisplayBlob(this.get('model.sub.metadata'));
-  }),
+  // metadataBlobNoKeys: Ember.computed('model.sub.metadata', function () {
+  //   return this.get('metadataService').getDisplayBlob(this.get('model.sub.metadata'));
+  // }),
   isSubmitter: Ember.computed('currentUser.user', 'model', function () {
     return (
       this.get('model.sub.submitter.id') === this.get('currentUser.user.id')
@@ -204,7 +196,7 @@ export default Controller.extend({
     if (this.get('model.sub.submitter.email')) {
       return this.get('model.sub.submitter.email');
     } else if (this.get('model.sub.submitterEmail')) {
-      return this.get('model.sub.submitterEmail').replace('mailto:', '');
+      return this.get('model.sub.submitterEmailDisplay');
     }
     return '';
   }),
@@ -235,34 +227,18 @@ export default Controller.extend({
       });
     },
     requestMoreChanges() {
-      let baseURL = window.location.href.replace(new RegExp(`${ENV.rootURL}.*`), '');
+      let sub = this.get('model.sub');
+      let message = this.get('message');
 
-      if (!this.get('message')) {
+      if (!message) {
         swal(
           'Comment field empty',
           'Please add a comment before requesting changes.',
           'warning'
         );
       } else {
-        let s = this.get('model.sub');
-        let se = this.get('store').createRecord('submissionEvent', {
-          submission: this.get('model.sub'),
-          performedBy: this.get('currentUser.user'),
-          performedDate: new Date(),
-          comment: this.get('message'),
-          performerRole: 'submitter',
-          eventType: 'changes-requested',
-          link: `${baseURL}${ENV.rootURL}submissions/${encodeURIComponent(`${s.id}`)}`
-        });
         $('.block-user-input').css('display', 'block');
-        se.save().then(() => {
-          let sub = this.get('model.sub');
-          sub.set('submissionStatus', 'changes-requested');
-          sub.save().then(() => {
-            console.log('Requested more changes from preparer.');
-            window.location.reload(true);
-          });
-        });
+        this.get('submissionHandler').requestSubmissionChanges(sub, message).then(() => window.location.reload(true));
       }
     },
     async approveChanges() {
@@ -359,11 +335,11 @@ export default Controller.extend({
               showCancelButton: true,
             }).then((result) => {
               if (result.value) {
-                const externalSubmissionsMetadata = this.get('externalSubmissionsMetadata');
-                // Update repos to reflect repos that user agreed to deposit
+                // Update repos to reflect repos that user agreed to deposit.
+                // Must keep web-link repos.
                 this.set('model.sub.repositories', this.get('model.sub.repositories').filter((repo) => {
                   if (repo.get('integrationType') === 'weblink') {
-                    return false;
+                    return true;
                   }
                   let temp = reposWithAgreementText.map(x => x.id).includes(repo.get('name'));
                   if (!temp) {
@@ -373,49 +349,10 @@ export default Controller.extend({
                   }
                   return false;
                 }));
-                // update Metadata blob to refelect changes in repos
-                this.set('model.sub.metadata', JSON.stringify(JSON.parse(this.get('model.sub.metadata')).filter((md) => {
-                  let whiteListedMetadataKeys = ['common', 'crossref', 'pmc', 'agent_information'];
-                  if (whiteListedMetadataKeys.includes(md.id)) {
-                    return md;
-                  }
-                  return this.get('model.sub.repositories').map(r => r.get('name')).includes(md.id);
-                })));
 
-                // Add external submissions metadata
-                if (externalSubmissionsMetadata) {
-                  let md = JSON.parse(this.get('model.sub.metadata'));
-                  md.push(externalSubmissionsMetadata);
-                  this.set('model.sub.metadata', JSON.stringify(md));
-                }
-
-                // Remove external repositories
-                this.set(
-                  'model.sub.repositories',
-                  this.get('model.sub.repositories').filter(repo => (repo.get('integrationType') !== 'web-link'))
-                );
-
-                $('.block-user-input').css('display', 'block');
-                // save sub and send it
-                let s = this.get('model.sub');
-                let se = this.get('store').createRecord('submissionEvent', {
-                  submission: this.get('model.sub'),
-                  performedBy: this.get('currentUser.user'),
-                  performedDate: new Date(),
-                  comment: this.get('message'),
-                  performerRole: 'submitter',
-                  eventType: 'submitted',
-                  link: `${baseURL}${ENV.rootURL}submissions/${encodeURIComponent(`${s.id}`)}`
-                });
-                se.save().then(() => {
-                  let sub = this.get('model.sub');
-                  sub.set('submissionStatus', 'submitted');
-                  sub.set('submittedDate', new Date());
-                  sub.set('submitted', true);
-                  sub.save().then(() => {
-                    window.location.reload(true);
-                  });
-                });
+                let sub = this.get('model.sub');
+                let message = this.get('message');
+                this.get('submissionHandler').approveSubmission(sub, message);
               }
             });
           } else {
@@ -454,9 +391,10 @@ export default Controller.extend({
       }
     },
     cancelSubmission() {
-      let baseURL = window.location.href.replace(new RegExp(`${ENV.rootURL}.*`), '');
+      let message = this.get('message');
+      let sub = this.get('model.sub');
 
-      if (!this.get('message')) {
+      if (!message) {
         swal(
           'Comment field empty',
           'Please add a comment for your cancellation.',
@@ -464,6 +402,7 @@ export default Controller.extend({
         );
         return;
       }
+
       swal({
         title: 'Are you sure?',
         text: 'If you cancel this submission, it will not be able to be resumed.',
@@ -473,25 +412,20 @@ export default Controller.extend({
         showCancelButton: true,
       }).then((result) => {
         if (result.value) {
-          let s = this.get('model.sub');
-          let se = this.get('store').createRecord('submissionEvent', {
-            submission: this.get('model.sub'),
-            performedBy: this.get('currentUser.user'),
-            performedDate: new Date(),
-            comment: this.get('message'),
-            performerRole: 'submitter',
-            eventType: 'cancelled',
-            link: `${baseURL}${ENV.rootURL}submissions/${encodeURIComponent(`${s.id}`)}`
-          });
           $('.block-user-input').css('display', 'block');
-          se.save().then(() => {
-            let sub = this.get('model.sub');
-            sub.set('submissionStatus', 'cancelled');
-            sub.save().then(() => {
-              console.log('Submission cancelled.');
-              window.location.reload(true);
-            });
-          });
+          this.get('submissionHandler').cancelSubmission(sub, message).then(() => window.location.reload(true));
+        }
+      });
+    },
+    deleteSubmission(submission) {
+      swal({
+        text: 'Are you sure you want to delete this draft submission? This cannot be undone.',
+        confirmButtonText: 'Delete',
+        confirmButtonColor: '#f86c6b',
+        showCancelButton: true
+      }).then((result) => {
+        if (result.value) {
+          this.get('submissionHandler').deleteSubmission(submission);
         }
       });
     }

@@ -1,16 +1,16 @@
-
-import { moduleForComponent, test } from 'ember-qunit';
+import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
+import { module, test } from 'qunit';
 
-moduleForComponent('format-oap-compliance', 'helper:format-oap-compliance', {
-  integration: true
-});
+module('Integration | Helper | format oap compliance', (hooks) => {
+  setupRenderingTest(hooks);
 
-// Replace this with your real tests.
-test('it renders', function (assert) {
-  this.set('inputValue', 'Yes');
+  // Replace this with your real tests.
+  test('it renders', async function(assert) { // eslint-disable-line
+    this.set('inputValue', 'Yes');
 
-  this.render(hbs`{{format-oap-compliance inputValue}}`);
+    await this.render(hbs`{{format-oap-compliance inputValue}}`);
 
-  assert.equal(this.$().text().trim(), 'Yes');
+    assert.equal(this.$().text().trim(), 'Yes');
+  });
 });

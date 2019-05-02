@@ -1,7 +1,8 @@
 import Component from '@ember/component';
+import { inject as service } from '@ember/service';
 
 export default Component.extend({
-  store: Ember.inject.service(),
+  store: service('store'),
   repoCopies: null,
   jscholarshipCheckString: '/handle/',
 
@@ -9,6 +10,10 @@ export default Component.extend({
     this._super(...arguments);
 
     const publicationId = this.get('record.publication.id');
+    if (!publicationId) {
+      this.set('repoCopies', Ember.A());
+      return;
+    }
     this.get('store').query('repositoryCopy', {
       query: {
         term: { publication: publicationId }
