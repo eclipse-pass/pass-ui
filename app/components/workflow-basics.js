@@ -7,7 +7,6 @@ export default Component.extend({
   workflow: service('workflow'),
   currentUser: service('current-user'),
   doiService: service('doi'),
-  nlmtaService: service('nlmta'),
 
   inFlight: false,
   isShowingUserSearchModal: false,
@@ -149,11 +148,6 @@ export default Component.extend({
       let doiInfo = this.get('doiInfo');
       doiInfo = { 'journal-title': journal.get('journalName'), ISSN: journal.get('issns') };
 
-      const nlmtaDump = await this.get('nlmtaService').getNlmtaFromIssn(doiInfo);
-      if (nlmtaDump) {
-        doiInfo.nlmta = nlmtaDump.nlmta;
-        doiInfo['issn-map'] = nlmtaDump.map;
-      }
       this.set('doiInfo', doiInfo);
 
       const publication = this.get('publication');
