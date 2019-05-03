@@ -28,27 +28,28 @@ module('Integration | Component | repository card', (hooks) => {
     assert.ok(this.element.querySelector('input[type="checkbox"]'), 'No checkbox found');
   });
 
-  // test('Clicking bubbles the "toggleRepository" action with a Repository and status', async function (assert) {
-  //   assert.expect(3);
+  test('Clicking bubbles the "toggleRepository" action with a Repository and status', async function (assert) {
+    assert.expect(4);
 
-  //   const repo = Ember.Object.create({ name: 'Moo-pository' });
-  //   this.set('repository', repo);
+    const repo = Ember.Object.create({ name: 'Moo-pository' });
+    this.set('repository', repo);
 
-  //   this.set('toggleRepository', (repository, status) => {
-  //     // assert.equal(action, 'toggleRepository', 'unexpected action');
-  //     assert.equal(repository, repo, 'Unexpected repository found');
-  //     assert.ok(status, 'Unexpected status found');
-  //   });
+    this.set('toggleRepository', (repository, status) => {
+      // assert.equal(action, 'toggleRepository', 'unexpected action');
+      assert.equal(repository, repo, 'Unexpected repository found');
+      assert.ok(status, 'Unexpected status found');
+    });
 
-  //   await render(hbs`{{repository-card
-  //     repository=repository
-  //     choice="true"
-  //     selected="false"
-  //     toggleRepository=toggleRepository}}`);
-  //   assert.ok(true, 'failed to render');
+    await render(hbs`{{repository-card
+      repository=repository
+      choice="true"
+      selected=false
+      toggleRepository=toggleRepository}}`);
+    assert.ok(true, 'failed to render');
 
-  //   await click('input[type="checkbox"]');
-  //   // debugger
-  //   // The toggleRepository action should be triggered
-  // });
+    const checkbox = this.element.querySelector('input[type="checkbox"]');
+    assert.ok(checkbox, 'no checkbox found');
+    await click(checkbox);
+    // The toggleRepository action should be triggered
+  });
 });
