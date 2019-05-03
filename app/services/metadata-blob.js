@@ -77,8 +77,6 @@ export default Service.extend({
             }
           } else if (key === 'container-title') {
             metadataBlobNoKeys['journal-title'] = strippedData;
-          } else if (key === 'issn-map') {
-            // Do nothing
           } else {
             metadataBlobNoKeys[key] = strippedData;
           }
