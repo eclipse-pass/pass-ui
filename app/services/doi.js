@@ -15,9 +15,10 @@ export default Service.extend({
   journalServiceUrl: ENV.journalService.url,
 
   /**
-  * resolveDOI - Lookup information about a DOI. Return that information along
-  * with a publication. The publication will have a journal set. The doiInfo
-  * is normalized and has nlmta data added.
+  * resolveDOI - Lookup information about a DOI using the PASS doi service. Return that information along
+  * with a publication. The publication will have a journal. The doi information is in a normalized
+  * crossref format. (The normalization collaspses the array values of some keys to string values.)
+  * The raw crossref format is defined here: https://github.com/CrossRef/rest-api-doc/blob/master/api_format.md
   *
   * @param  {string} doi
   * @returns {object}    Object with doiInfo and publication
@@ -34,13 +35,8 @@ export default Service.extend({
       let journal = await this.get('store').findRecord('journal', response['journal-id']);
 
       let doiInfo = this._processRawDoi(response.crossref.message);
-      let nlmtaDump = await this.get('nlmtaService').getNlmtaFromIssn(doiInfo);
 
-      if (nlmtaDump) {
-        doiInfo.nlmta = nlmtaDump.nlmta;
-        doiInfo['issn-map'] = nlmtaDump.map;
-      }
-
+      // Needed by schemas
       doiInfo['journal-title'] = doiInfo['container-title'];
 
       let publication = this.get('store').createRecord('publication', {
@@ -81,7 +77,9 @@ export default Service.extend({
   },
 
   /**
-   * Translate data from the DOI to a metadata blob that can be attached to a submission.
+   * Transform crossref metadata to a metadata blob that can be attached to a submission.
+   * Generally the keys are just copied as is, but in some case they are transformed so
+   * the blob matches the form expected by the repository schemas.
    *
    * @param {object} doiInfo data retreived from the DOI
    * @param {array} validFields OPTIONAL array of accepted property names on final metadata object
@@ -89,12 +87,17 @@ export default Service.extend({
    */
   doiToMetadata(doiInfo, validFields) {
     const doiCopy = Object.assign({}, doiInfo);
-    // Massage ISSN data
-    let issns = [];
-    if (doiCopy['issn-map']) {
-      Object.keys(doiCopy['issn-map']).forEach(issn => issns.push({
-        issn,
-        pubType: doiCopy['issn-map'][issn]['pub-type'][0]
+
+    // Add issns key in expected format
+    doiCopy.issns = [];
+    if (Array.isArray(doiCopy['issn-type'])) {
+      Object.keys(doiCopy['issn-type']).forEach(issn => doiCopy.issns.push({
+        issn: issn.value,
+        pubType: issn.type
+      }));
+    } else if (Array.isArray(doiCopy.ISSN)) {
+      Object.keys(doiCopy.ISSN).forEach(issn => doiCopy.issns.push({
+        issn
       }));
     }
 
@@ -110,8 +113,6 @@ export default Service.extend({
         doiCopy.authors.push(Object.assign(a, author));
       });
     }
-
-    doiCopy.issns = issns;
 
     // Misc manual translation
     doiCopy['journal-NLMTA-ID'] = doiCopy.nlmta;
