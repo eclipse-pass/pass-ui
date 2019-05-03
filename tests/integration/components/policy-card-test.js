@@ -1,7 +1,7 @@
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
-import { render } from '@ember/test-helpers';
+import { render, click } from '@ember/test-helpers';
 
 module('Integration | Component | policy card', (hooks) => {
   setupRenderingTest(hooks);
@@ -36,33 +36,63 @@ module('Integration | Component | policy card', (hooks) => {
     assert.ok(text.includes('moo-scription'), 'Description fragment not found');
   });
 
-  test('PMC journal displays user input', async function (assert) {
-    // TODO: May have to change after fully integrating Policy service
-    const policy = Ember.Object.create({
-      repositories: Ember.A([Ember.Object.create({
-        repositoryKey: 'pmc'
-      })]),
-      description: 'This is a moo-scription',
-      title: 'Moo title'
+  module('PMC tests', (hooks) => {
+    hooks.beforeEach(function () {
+      const policy = Ember.Object.create({
+        repositories: Ember.A([Ember.Object.create({
+          repositoryKey: 'pmc'
+        })]),
+        description: 'This is a moo-scription',
+        title: 'Moo title'
+      });
+      const journal = Ember.Object.create({
+        isMethodA: false
+      });
+      const submission = Ember.Object.create({
+        effectivePolicies: Ember.A()
+      });
+
+      this.set('policy', policy);
+      this.set('journal', journal);
+      this.set('submission', submission);
     });
-    const journal = Ember.Object.create({
-      isMethodA: false
+
+    test('PMC journal displays user input', async function (assert) {
+      await render(hbs`{{policy-card policy=policy journal=journal submission=submission}}`);
+      assert.ok(true);
+
+      const inputs = this.element.querySelectorAll('input');
+      assert.equal(inputs.length, 2, `Found ${inputs.length} inputs, but was expecting 2`);
+
+      const effectivePolicies = this.get('submission.effectivePolicies');
+      assert.equal(effectivePolicies.length, 1, 'Should be ONE effective policy on submission');
+      assert.ok(effectivePolicies.isAny('title', 'Moo title'));
     });
-    const submission = Ember.Object.create({
-      effectivePolicies: Ember.A()
+
+    test('PMC non-type A can be removed', async function (assert) {
+      await render(hbs`{{policy-card policy=policy journal=journal submission=submission}}`);
+      assert.ok(true);
+
+      const inputs = this.element.querySelectorAll('input');
+      assert.equal(inputs.length, 2, `Found ${inputs.length} inputs, but was expecting 2`);
+
+      // Select option to remove this policy
+      await click(inputs[0]);
+
+      const effectivePolicies = this.get('submission.effectivePolicies');
+      assert.equal(effectivePolicies.length, 0, 'Should be ZERO effective policies');
     });
 
-    this.set('policy', policy);
-    this.set('journal', journal);
-    this.set('submission', submission);
+    test('PMC type A journal as no inputs and is not added to submission', async function (assert) {
+      this.set('journal', Ember.Object.create({ isMethodA: true }));
 
-    // this.set('usesPmcRepository', true);
-    this.set('methodAJournal', false);
+      await render(hbs`policy-card policy=policy journal=journal submission=submission`);
+      assert.ok(this.element, 'failed to render');
 
-    await render(hbs`{{policy-card policy=policy journal=journal submission=submission}}`);
-    assert.ok(true);
+      const inputs = this.element.querySelectorAll('input');
+      assert.equal(inputs.length, 0, 'should be ZERO input options rendered');
 
-    const inputs = this.element.querySelectorAll('input');
-    assert.equal(inputs.length, 2, `Found ${inputs.length} inputs, but was expecting 2`);
+      assert.equal(this.get('submission.effectivePolicies').length, 0, 'should be ZERO effective policies set');
+    });
   });
 });
