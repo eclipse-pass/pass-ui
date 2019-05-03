@@ -26,6 +26,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
             definitions: {
               form: {
                 title: 'Common schema title moo',
+                type: 'object',
                 properties: {
                   'journal-NLMTA-ID': { type: 'string' },
                   ISSN: { type: 'string' }
@@ -91,7 +92,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
               },
               options: {
                 fields: {
-                  mooName: { type: 'text', label: 'Journal NLMTA ID', placeholder: '' },
+                  mooName: { type: 'text', label: 'MOO Name', placeholder: '' },
                   ISSN: { type: 'text', label: 'ISSN', placeholder: '' }
                 }
               }
@@ -99,6 +100,16 @@ module('Integration | Component | workflow-metadata', (hooks) => {
           }
         ]);
       }
+    });
+
+    const workflowService = this.owner.lookup('service:workflow');
+
+    workflowService.set('doiInfo', {
+      title: 'title',
+      'journal-title': 'journal title',
+      mooName: 'bessie',
+      ISSN: ['abracadabra'],
+      'journal-NLMTA-ID': 'triumph'
     });
 
     this.owner.register('service:ajax', mockAjax);

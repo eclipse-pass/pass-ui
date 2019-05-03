@@ -151,15 +151,7 @@ module('Unit | Service | doi', (hooks) => {
       }
     }));
 
-    service.set('nlmtaService', Ember.Object.create({
-      getNlmtaFromIssn(info) {
-        assert.ok(true);
-
-        return new Promise(resolve => resolve(null));
-      }
-    }));
-
-    assert.expect(9);
+    assert.expect(8);
 
     return service.resolveDOI(doiInfo.DOI).then((result) => {
       assert.ok(result.publication);
