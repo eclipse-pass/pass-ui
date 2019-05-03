@@ -26,7 +26,7 @@ import { inject as service, } from '@ember/service';
 export default Component.extend({
   workflow: service('workflow'),
 
-  didRender() {
+  willRender() {
     this._super(...arguments);
 
     const currentRepos = this.get('submission.repositories');
@@ -55,14 +55,16 @@ export default Component.extend({
        * as well as any other repositories marked as 'selected'
        */
       if (req) {
-        req.forEach(repoInfo => this.addRepository(repoInfo));
+        req.forEach(repoInfo => this.addRepository(repoInfo.repository));
       }
       if (opt) {
-        opt.filter(repoInfo => repoInfo.selected).forEach(repoInfo => this.addRepository(repoInfo));
+        opt.filter(repoInfo => repoInfo.selected)
+          .forEach(repoInfo => this.addRepository(repoInfo.repository));
       }
       if (choice) {
         choice.forEach((group) => {
-          group.filter(repoInfo => repoInfo.selected).forEach(repoInfo => this.addRepository(repoInfo));
+          group.filter(repoInfo => repoInfo.selected)
+            .forEach(repoInfo => this.addRepository(repoInfo.repository));
         });
       }
     }
@@ -108,14 +110,9 @@ export default Component.extend({
   /**
    * Add a repository to the submission only if it is not already included
    *
-   * @param {object} repoInfo {
-   *    repository: {}, // Ember model object
-   *    selected: true|false
-   *    repository-id: ''
-   * }
+   * @param {Repository} repository
    */
-  addRepository(repoInfo) {
-    const repository = repoInfo.repository;
+  addRepository(repository) {
     const subRepos = this.get('submission.repositories');
 
     if (!subRepos.includes(repository)) {
@@ -127,23 +124,10 @@ export default Component.extend({
   /**
    * Remove a repository from the submission
    *
-   * @param {object} repoInfo {
-   *    repository: {}, // Ember model object
-   *    selected: true|false
-   *    repository-id: ''
-   * }
+   * @param {Repository} repository
    */
-  removeRepository(repoInfo) {
-    const repositoryToRemove = repoInfo.repository;
-
-    let addedRepos = this.get('submission.repositories');
-    let updatedRepos = Ember.A();
-    addedRepos.forEach((repository) => {
-      if (repositoryToRemove.get('id') !== repository.get('id')) {
-        updatedRepos.pushObject(repository);
-      }
-    });
-    this.set('submission.repositories', updatedRepos);
+  removeRepository(repository) {
+    this.get('submission.repositories').removeObject(repository);
     this.get('workflow').setMaxStep(4);
   },
 });

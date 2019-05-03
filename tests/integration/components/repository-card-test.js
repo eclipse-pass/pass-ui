@@ -28,6 +28,20 @@ module('Integration | Component | repository card', (hooks) => {
     assert.ok(this.element.querySelector('input[type="checkbox"]'), 'No checkbox found');
   });
 
+  test('Selected repos are checked by default', async function (assert) {
+    this.set('repository', Ember.Object.create());
+    this.set('selected', true);
+    await render(hbs`{{repository-card repository=repository selected=selected choice=true}}`);
+    assert.ok(this.element.querySelector('input[type="checkbox"]').checked, 'Checkbox should be checked');
+  });
+
+  test('Repos that are not "selected" are unchecked by default', async function (assert) {
+    this.set('repository', Ember.Object.create());
+    this.set('selected', false);
+    await render(hbs`{{repository-card repository=repository selected=selected choice=true}}`);
+    assert.notOk(this.element.querySelector('input[type="checkbox"]').checked, 'Checkbox should NOT be checked');
+  });
+
   test('Clicking bubbles the "toggleRepository" action with a Repository and status', async function (assert) {
     assert.expect(4);
 

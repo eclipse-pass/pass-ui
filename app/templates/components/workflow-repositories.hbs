@@ -16,7 +16,7 @@
 {{/if}}
 
 {{#if choiceRepositories}}
-  <p class="lead">
+  <p class="lead text-muted">
     Based on the grant and journal information provided, you can choose between the repositories below.
     You must submit to at least one repository from each group.
   </p>
@@ -24,17 +24,6 @@
     {{choice-repositories-card
       choiceGroup=repoGroup
       toggleRepository=(action "toggleRepository")}}
-    <ul class="list-group">
-      {{#each repoGroup as |repoInfo|}}
-        {{repository-card
-          repository=repoInfo.repository
-          selected=repoInfo.selected
-          funders=repoInfo.funders
-          choice="true"
-          type="choice"
-          toggleRepository=(action "toggleRepository")}}
-      {{/each}}
-    </ul>
   {{/each}}
 
 {{/if}}
