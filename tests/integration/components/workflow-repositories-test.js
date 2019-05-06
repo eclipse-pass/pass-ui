@@ -74,8 +74,8 @@ module('Integration | Component | workflow repositories', (hooks) => {
   test('User cannot deselect all choice repos', async function (assert) {
     this.set('choiceRepositories', Ember.A([
       Ember.A([
-        { selected: true, repository: Ember.Object.create({ name: 'Moo-pository 1' }) },
-        { selected: false, repository: Ember.Object.create({ name: 'Moo-pository 2' }) }
+        { repository: Ember.Object.create({ name: 'Moo-pository 1', _selected: true }) },
+        { repository: Ember.Object.create({ name: 'Moo-pository 2', _selected: false }) }
       ])
     ]));
 
@@ -104,8 +104,8 @@ module('Integration | Component | workflow repositories', (hooks) => {
     ]));
     this.set('choiceRepositories', Ember.A([
       Ember.A([
-        { selected: true, repository: Ember.Object.create({ name: 'Moo-pository 1' }) },
-        { selected: false, repository: Ember.Object.create({ name: 'Moo-pository 2' }) }
+        { repository: Ember.Object.create({ name: 'Moo-pository 1', _selected: true }) },
+        { repository: Ember.Object.create({ name: 'Moo-pository 2', _selected: false }) }
       ])
     ]));
     this.set('optionalRepositories', Ember.A([
@@ -138,12 +138,12 @@ module('Integration | Component | workflow repositories', (hooks) => {
     ]));
     this.set('choiceRepositories', Ember.A([
       Ember.A([
-        { selected: true, repository: Ember.Object.create({ name: 'Moo-pository 1' }) },
-        { selected: false, repository: Ember.Object.create({ name: 'Moo-pository 2' }) }
+        { repository: Ember.Object.create({ name: 'Moo-pository 1', _selected: true }) },
+        { repository: Ember.Object.create({ name: 'Moo-pository 2', _selected: false }) }
       ])
     ]));
     this.set('optionalRepositories', Ember.A([
-      { selected: true, repository: Ember.Object.create({ name: 'Moo-pository 00' }) }
+      { repository: Ember.Object.create({ name: 'Moo-pository 00', _selected: true }) }
     ]));
 
     await render(hbs`{{workflow-repositories

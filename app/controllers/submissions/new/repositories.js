@@ -25,24 +25,30 @@ export default Controller.extend({
   requiredRepositories: Ember.computed('model.requiredRepositories', function () {
     let req = this.get('model.requiredRepositories');
     const submission = this.get('submission');
-    req.forEach((repoInfo) => {
-      repoInfo.funders = this._getFunderNamesForRepo(repoInfo.repository, submission);
-    });
-    return req;
+
+    return req.map(repo => ({
+      repository: repo,
+      funders: this._getFunderNamesForRepo(repo, submission)
+    }));
   }),
   optionalRepositories: Ember.computed('model.optionalRepositories', function () {
     const submission = this.get('submission');
     let optionals = this.get('model.optionalRepositories');
-    optionals.forEach((repoInfo) => {
-      repoInfo.funders = this._getFunderNamesForRepo(repoInfo.repository, submission);
-    });
-    return optionals;
+
+    return optionals.map(repo => ({
+      repository: repo,
+      funders: this._getFunderNamesForRepo(repo, submission)
+    }));
   }),
   choiceRespositories: Ember.computed('model.choiceRepositories', function () {
     const submission = this.get('submission');
     let choices = this.get('model.choiceRepositories');
-    choices.forEach((repoInfo) => {
-      repoInfo.funders = this._getFunderNamesForRepo(repoInfo.repository, submission);
+
+    choices.forEach((group) => {
+      group.map(repo => ({
+        repository: repo,
+        funders: this._getFunderNamesForRepo(repo, submission)
+      }));
     });
     return choices;
   }),

@@ -16,13 +16,11 @@ module('Integration | Component | choice repositories card', (hooks) => {
     this.set('choiceGroup', Ember.A([
       Ember.Object.create({
         'repository-id': 'moo-1',
-        repository: Ember.Object.create({ name: 'Moo the First' }),
-        selected: true
+        repository: Ember.Object.create({ name: 'Moo the First', _selected: true })
       }),
       Ember.Object.create({
         'repository-id': 'moo-2',
-        repository: Ember.Object.create({ name: 'Moo the Second' }),
-        selected: false
+        repository: Ember.Object.create({ name: 'Moo the Second', _selected: false })
       })
     ]));
 
@@ -42,13 +40,11 @@ module('Integration | Component | choice repositories card', (hooks) => {
     this.set('choiceGroup', Ember.A([
       Ember.Object.create({
         'repository-id': 'moo-1',
-        repository: Ember.Object.create({ name: 'Moo the First' }),
-        selected: true
+        repository: Ember.Object.create({ name: 'Moo the First', _selected: true })
       }),
       Ember.Object.create({
         'repository-id': 'moo-2',
-        repository: Ember.Object.create({ name: 'Moo the Second' }),
-        selected: false
+        repository: Ember.Object.create({ name: 'Moo the Second', _selected: false })
       })
     ]));
 
@@ -68,13 +64,11 @@ module('Integration | Component | choice repositories card', (hooks) => {
     this.set('choiceGroup', Ember.A([
       Ember.Object.create({
         'repository-id': 'moo-1',
-        repository: Ember.Object.create({ name: 'Moo the First' }),
-        selected: true
+        repository: Ember.Object.create({ name: 'Moo the First', _selected: true })
       }),
       Ember.Object.create({
         'repository-id': 'moo-2',
-        repository: Ember.Object.create({ name: 'Moo the Second' }),
-        selected: false
+        repository: Ember.Object.create({ name: 'Moo the Second', _selected: false })
       })
     ]));
     this.set('toggleRepository', () => {

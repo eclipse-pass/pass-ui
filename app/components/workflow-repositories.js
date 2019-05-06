@@ -42,11 +42,13 @@ export default Component.extend({
        * lists.
        */
       if (opt) {
-        opt.forEach((opt) => { opt.selected = currentRepos.includes(opt.repository); });
+        opt.forEach((opt) => { opt.repository.set('_selected', currentRepos.includes(opt.repository)); });
       }
       if (choice) {
         choice.forEach((group) => {
-          group.forEach((repoInfo) => { repoInfo.selected = currentRepos.includes(repoInfo.repository); });
+          group.forEach((repoInfo) => {
+            repoInfo.repository.set('_selected', currentRepos.includes(repoInfo.repository));
+          });
         });
       }
     } else {
@@ -58,12 +60,12 @@ export default Component.extend({
         req.forEach(repoInfo => this.addRepository(repoInfo.repository));
       }
       if (opt) {
-        opt.filter(repoInfo => repoInfo.selected)
+        opt.filter(repoInfo => repoInfo.repository.get('_selected'))
           .forEach(repoInfo => this.addRepository(repoInfo.repository));
       }
       if (choice) {
         choice.forEach((group) => {
-          group.filter(repoInfo => repoInfo.selected)
+          group.filter(repoInfo => repoInfo.repository.get('_selected'))
             .forEach(repoInfo => this.addRepository(repoInfo.repository));
         });
       }

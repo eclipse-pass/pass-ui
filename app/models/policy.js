@@ -8,4 +8,6 @@ export default DS.Model.extend({
   repositories: DS.hasMany('repository'),
   institution: DS.attr('string'),
   // funder: DS.hasMany('funder'),
+
+  _type: DS.attr('string')
 });

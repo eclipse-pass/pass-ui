@@ -8,7 +8,6 @@
     {{#each requiredRepositories as |repoInfo|}}
       {{repository-card
         repository=repoInfo.repository
-        selected=repoInfo.selected
         funders=repoInfo.funders
         type="required"}}
     {{/each}}
@@ -43,7 +42,6 @@
       {{#each optionalRepositories as |repoInfo|}}
         {{repository-card
           repository=repoInfo.repository
-          selected=repoInfo.selected
           funders=repoInfo.funders
           choice="true"
           type="optional"

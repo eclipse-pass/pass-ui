@@ -17,11 +17,7 @@ export default CheckSessionRoute.extend({
    *  repositories, // ??
    *  preLoadedGrant,
    *  policies: [
-   *    {
-   *      id: '',
-   *      type: 'funder|institution', // type string
-   *      policy: {} // Ember.Object - the actual policy model object
-   *    }
+   *    Policy
    *  ]
    * }
    */
@@ -29,33 +25,22 @@ export default CheckSessionRoute.extend({
     const parentModel = this.modelFor('submissions.new');
     const submission = parentModel.newSubmission;
 
-    let results = await this.get('policyService').getPolicies(submission);
-
     // Weed out duplicates, while also resolving Policy objects
-    let policies = Ember.A();
-    results.forEach(async (res) => {
-      if (!policies.isAny('id', res.id)) {
-        policies.push(res);
-      }
-    });
+    // let policies = Ember.A();
+    // results.forEach(async (res) => {
+    //   if (!policies.isAny('id', res.id)) {
+    //     policies.push(res);
+    //   }
+    // });
 
-    policies = this.get('policyService').resolveReferences('policy', policies);
-
-    /*
-     * This holds references to the Promises that resolve each Policy model object
-     * and will pause the #model() function until they are finished
-     * The model objects are then available here OR in the 'policies' array
-     * though the user of 'policies' is preferred
-     */
-    const policyPromise = Promise.all(policies.map(p => p.policy));
+    const policies = await this.get('policyService').getPolicies(submission);
 
     return Ember.RSVP.hash({
       repositories: parentModel.repositories,
       newSubmission: parentModel.newSubmission,
       publication: parentModel.publication,
       preLoadedGrant: parentModel.preLoadedGrant,
-      policyPromise,
-      policies
+      policies: Promise.all(policies)
     });
   },
 

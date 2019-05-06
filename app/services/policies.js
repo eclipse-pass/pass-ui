@@ -23,31 +23,33 @@ export default Service.extend({
    * Use `.catch(e)` to act on the error, and not `try/catch`
    *
    * @param {Submission} submission
-   * @returns {Promise} list of typed policy references
-   * [
-   *    {
-   *      id: 'policy_id',
-   *      type: 'funder|institution'
-   *    }
-   * ]
+   * @returns {Promise} list of Policies
    */
-  getPolicies(submission) {
+  async getPolicies(submission) {
     const url = `${this.get('policyUrl')}?submission=${submission.get('id')}`;
 
-    return fetch(url, {
+    const result = await fetch(url, {
       method: 'GET',
       headers: {
         // 'Content-Type': 'application/json'
         credentials: 'include'
       }
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
+    });
 
-        throw new Error(`Recieved response ${response.status} : ${response.statusText}`);
-      });
+    if (!result.ok) {
+      throw new Error(`Recieved response ${result.status} : ${result.statusText}`);
+    }
+
+    /**
+     * Should be a good response - translate each item in list to a Promise of a Policy
+     */
+    const data = await result.json();
+
+    return data.map(policyInfo => this.get('store').findRecord('policy', policyInfo.id)
+      .then((pol) => {
+        pol.set('_type', policyInfo.type);
+        return pol;
+      }));
   },
 
   /**
@@ -60,34 +62,71 @@ export default Service.extend({
    * Use `.catch(e)` to act on the error, and not `try/catch`
    *
    * @param {Submission} submission with effectivePolicies set
-   * @returns {Promise} JSON object with repo selection DSL rules
+   * @returns {Promise} JSON object with repo selection DSL rules. Each section
+   *                  will contain Promises to Repository objects
    * {
    *    required: [
-   *      {
-   *        url: 'repo_id',
-   *        selected: true|false
-   *      }
+   *      Promise: Repository
    *    ],
    *    'one-of': [],
    *    'optional': []
    * }
    */
-  getRepositories(submission) {
+  async getRepositories(submission) {
     const url = `${this.get('repoUrl')}?submission=${submission.get('id')}`;
 
-    return fetch(url, {
+    const response = await fetch(url, {
       method: 'GET',
       headers: {
         credentials: 'include'
       }
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
+    });
 
-        throw new Error(`Recieved response ${response.status} : ${response.statusText}`);
-      });
+    if (!response.ok) {
+      throw new Error(`Recieved response ${response.status} : ${response.statusText}`);
+    }
+
+    /**
+     * For each DSL field (required, one-of, optional), transform each repository info object
+     * to a Promise for a Repository object from the Store
+     */
+    return response.json().then((dsl) => {
+      let result = {};
+
+      if (dsl.hasOwnProperty('required')) {
+        result.required = this._resolveRepos(dsl.required);
+      }
+
+      if (dsl.hasOwnProperty('one-of')) {
+        result['one-of'] = [];
+        dsl['one-of'].forEach((choiceGroup) => {
+          result['one-of'].push(this._resolveRepos(choiceGroup));
+        });
+      }
+
+      if (dsl.hasOwnProperty('optional')) {
+        result.optional = this._resolveRepos(dsl.optional);
+      }
+
+      return result;
+    });
+  },
+
+  /**
+   * Transform a list of repository information objects to Repository model objects
+   *
+   * @param {array} repoInfo {
+   *    'repository-id': '',
+   *    selected: true|false
+   * }
+   * @returns {array} list of Promises of Repository objects
+   */
+  _resolveRepos(repos) {
+    return repos.map(repoInfo => this.get('store').findRecord('repository', repoInfo['repository-id'])
+      .then((repo) => {
+        repo.set('_selected', repoInfo.selected);
+        return repo;
+      }));
   },
 
   /**
