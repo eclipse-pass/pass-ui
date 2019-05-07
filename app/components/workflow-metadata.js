@@ -1,6 +1,7 @@
 import Component from '@ember/component';
 import _ from 'lodash';
 import { inject as service } from '@ember/service';
+import swal from 'sweetalert2';
 
 /**
  * The schema service is invoked to retrieve appropriate metadata forms.
@@ -100,6 +101,12 @@ export default Component.extend({
       if (!validation) {
         console.log('%cError(s) found while validating data', 'color:red;');
         console.log(schemaService.getErrors());
+
+        swal({
+          type: 'error',
+          title: 'Form Validation Error',
+          text: this.validationErrorMsg(schemaService.getErrors())
+        });
         return;
       }
 
@@ -213,5 +220,15 @@ export default Component.extend({
       name: M[0],
       version: M[1]
     };
+  },
+
+  validationErrorMsg(errors) {
+    let msg = '<ul>';
+    errors.forEach((error) => {
+      msg += `<li>${error.message}</li>`;
+    });
+    msg += '</ul>';
+
+    return msg;
   }
 });
