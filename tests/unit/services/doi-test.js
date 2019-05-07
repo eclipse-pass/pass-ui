@@ -64,8 +64,10 @@ module('Unit | Service | doi', (hooks) => {
   test('check doi data processing', function (assert) {
     const service = this.owner.lookup('service:doi');
     const doiInfo = this.get('mockDoiInfo');
-
-    const result = service.doiToMetadata(doiInfo);
+    const journal = Ember.Object.create({
+      issns: ['odd', 'P:moo', 'O:chitter', 'malformed:', ':oddagain', ':'],
+    });
+    const result = service.doiToMetadata(doiInfo, journal);
 
     assert.ok(result, 'No result was returned');
     assert.ok(result.authors, 'Was expecting "authors" property to exist');
@@ -93,13 +95,36 @@ module('Unit | Service | doi', (hooks) => {
       ],
       'Unexpected "authors" found'
     );
+
+    assert.deepEqual(
+      result.issns,
+      [
+        {
+          issn: 'odd'
+        },
+        {
+          issn: 'moo',
+          pubType: 'Print'
+        },
+        {
+          issn: 'chitter',
+          pubType: 'Online'
+        },
+        {
+          issn: 'oddagain'
+        }
+      ],
+      'Unexpected "issns" found'
+    );
   });
 
   test('make sure we only get valid fields back', function (assert) {
     let doiInfo = this.get('mockDoiInfo');
     doiInfo.invalid = 'Bad moo';
-
-    const result = this.owner.lookup('service:doi').doiToMetadata(doiInfo, ['authors', 'issn-map']);
+    const journal = Ember.Object.create({
+      issns: ['P:moo'],
+    });
+    const result = this.owner.lookup('service:doi').doiToMetadata(doiInfo, journal, ['authors']);
     assert.ok(result);
     assert.notOk(result.invalid);
   });
