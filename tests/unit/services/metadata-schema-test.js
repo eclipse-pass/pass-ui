@@ -121,7 +121,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
   test('Validation should fail when "name" field is not present in data', function (assert) {
     const service = this.owner.lookup('service:metadata-schema');
 
-    assert.notOk(service.validate({}, this.get('mockSchema')), 'Should not validate');
+    assert.notOk(service.validate(this.get('mockSchema'), {}), 'Should not validate');
 
     const errors = service.getErrors();
     assert.equal(1, errors.length, 'Should be 1 error');
@@ -136,7 +136,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
       ranking: 'invalid-moo'
     };
     // debugger
-    assert.notOk(service.validate(data, this.get('mockSchema')), 'Validation should fail');
+    assert.notOk(service.validate(this.get('mockSchema'), data), 'Validation should fail');
 
     const errors = service.getErrors();
     assert.equal(1, errors.length, 'Should have found 1 error');
@@ -156,7 +156,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
       ]
     };
 
-    assert.notOk(service.validate(data, this.get('mockSchema')), 'Validation should fail');
+    assert.notOk(service.validate(this.get('mockSchema'), data), 'Validation should fail');
 
     const errors = service.getErrors();
     assert.equal(1, errors.length, 'Should have found 1 error');

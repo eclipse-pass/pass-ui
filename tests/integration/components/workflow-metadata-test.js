@@ -27,8 +27,8 @@ module('Integration | Component | workflow-metadata', (hooks) => {
               form: {
                 title: 'Common schema title moo',
                 properties: {
-                  'journal-NLMTA-ID': { type: 'string', required: true },
-                  ISSN: { type: 'string', required: true }
+                  'journal-NLMTA-ID': { type: 'string' },
+                  ISSN: { type: 'string' }
                 },
                 options: {
                   fields: {
@@ -41,15 +41,15 @@ module('Integration | Component | workflow-metadata', (hooks) => {
           }, // Fake "global" schema that is returned by the service
           {
             id: 'nih',
-            data: {},
             definitions: {
               form: {
                 title: 'NIH Manuscript Submission System (NIHMS) <br><p class="lead text-muted">The following metadata fields will be part of the NIHMS submission.</p>',
                 type: 'object',
                 properties: {
-                  'journal-NLMTA-ID': { type: 'string', required: true },
-                  ISSN: { type: 'string', required: true }
-                }
+                  'journal-NLMTA-ID': { type: 'string' },
+                  ISSN: { type: 'string' }
+                },
+                // required: ['ISSN']
               },
               options: {
                 fields: {
@@ -57,19 +57,37 @@ module('Integration | Component | workflow-metadata', (hooks) => {
                   ISSN: { type: 'text', label: 'ISSN', placeholder: '' }
                 }
               }
-            }
+            },
+            allOf: [
+              {
+                properties: {
+                  ISSN: { type: 'string' }
+                },
+                required: ['ISSN']
+              }
+            ]
           },
           {
             id: 'jscholarship',
-            data: {},
             definitions: {
               form: {
                 title: 'JScholarship Moo',
                 type: 'object',
                 properties: {
-                  mooName: { type: 'string', required: true },
-                  ISSN: { type: 'string', required: true }
-                }
+                  mooName: { type: 'string' },
+                  ISSN: { type: 'string' },
+                  issns: {
+                    type: 'array',
+                    items: {
+                      properties: {
+                        issn: { type: 'string' },
+                        pubType: { type: 'string', enum: ['Print', 'Online'] }
+                      },
+                      type: 'object'
+                    }
+                  }
+                },
+                required: ['issns']
               },
               options: {
                 fields: {
@@ -83,23 +101,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       }
     });
 
-    // const mockDoiService = Ember.Service.extend({
-    //   doiToMetadata() {
-    //     return {
-    //       ISSN: '1234-4321',
-    //       'journal-NLMTA-ID': 'MOO JOURNAL',
-    //       mooName: 'This is a moo'
-    //     };
-    //   }
-    // });
-
-    run(() => {
-      this.owner.unregister('service:ajax');
-      this.owner.register('service:ajax', mockAjax);
-
-      // this.owner.unregister('service:doi');
-      // this.owner.register('service:doi', mockDoiService);
-    });
+    this.owner.register('service:ajax', mockAjax);
   });
 
   test('it renders', (assert) => {
@@ -149,6 +151,10 @@ module('Integration | Component | workflow-metadata', (hooks) => {
   test('third form should be J10P', async function (assert) {
     await render(hbs`{{workflow-metadata submission=submission}}`);
     await click('button[data-key="Next"]');
+
+    // Need to fill out ISSN field
+    this.element.querySelector('input[name="ISSN"]').value = '1234';
+
     await click('button[data-key="Next"]');
 
     assert.ok(
@@ -160,6 +166,9 @@ module('Integration | Component | workflow-metadata', (hooks) => {
   test('Back button on J10P form takes you back to NIH form', async function (assert) {
     await render(hbs`{{workflow-metadata submission=submission}}`);
     await click('button[data-key="Next"]');
+    // Need to fill out ISSN field
+    this.element.querySelector('input[name="ISSN"]').value = '1234';
+
     await click('button[data-key="Next"]');
     await click('button[data-key="Back"]');
 
@@ -192,6 +201,17 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       expectedISSN,
       'ISSN from Form 1 should appear in Form 2'
     );
+  });
+
+  test('Should not proceed to 3rd form without ISSN specified', async function (assert) {
+    await render(hbs`{{workflow-metadata submission=submission}}`);
+    await click('button[data-key="Next"]');
+    // debugger
+    assert.ok(this.element.textContent.includes('NIHMS'), 'We should be on NIH form');
+
+    await click('button[data-key="Next"]');
+    // debugger
+    assert.ok(this.element.textContent.includes('NIHMS'), 'We should still be on NIH form');
   });
 
   module('test with mocked doi service', (hooks) => {
@@ -257,18 +277,18 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       }
     });
 
-    run(() => {
+    run(async () => {
       this.owner.unregister('service:workflow');
       this.owner.register('service:workflow', mockWorkflow);
+
+      await render(hbs`{{workflow-metadata submission=submission }}`);
+      assert.ok(true, 'Failed to render');
+
+      const component = this.owner.lookup('component:workflow-metadata');
+      const metadata = component.get('metadata');
+
+      assert.ok(metadata, 'No component metadata found');
+      assert.notOk(metadata.badMoo, 'metadata.badMoo property should not be found on the metadata object');
     });
-
-    await render(hbs`{{workflow-metadata submission=submission }}`);
-    assert.ok(true, 'Failed to render');
-
-    const component = this.owner.lookup('component:workflow-metadata');
-    const metadata = component.get('metadata');
-
-    assert.ok(metadata, 'No component metadata found');
-    assert.notOk(metadata.badMoo, 'metadata.badMoo property should not be found on the metadata object');
   });
 });
