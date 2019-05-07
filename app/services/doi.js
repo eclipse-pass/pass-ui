@@ -79,27 +79,41 @@ export default Service.extend({
   /**
    * Transform crossref metadata to a metadata blob that can be attached to a submission.
    * Generally the keys are just copied as is, but in some case they are transformed so
-   * the blob matches the form expected by the repository schemas.
+   * the blob matches the form expected by the repository schemas. ISSNs are grabbed from
+   * the Journal, not the crossref metadata.
    *
    * @param {object} doiInfo data retreived from the DOI
+   * @param {object} journal Journal associated with publication
    * @param {array} validFields OPTIONAL array of accepted property names on final metadata object
    * @returns {object} metadata blob seeded with DOI data
    */
-  doiToMetadata(doiInfo, validFields) {
+  doiToMetadata(doiInfo, journal, validFields) {
     const doiCopy = Object.assign({}, doiInfo);
 
-    // Add issns key in expected format
+    // Add issns key in expected format by parsing journal issns.
     doiCopy.issns = [];
-    if (Array.isArray(doiCopy['issn-type'])) {
-      Object.keys(doiCopy['issn-type']).forEach(issn => doiCopy.issns.push({
-        issn: issn.value,
-        pubType: issn.type
-      }));
-    } else if (Array.isArray(doiCopy.ISSN)) {
-      Object.keys(doiCopy.ISSN).forEach(issn => doiCopy.issns.push({
-        issn
-      }));
-    }
+    journal.issns.forEach((s) => {
+      let i = s.indexOf(':');
+      let value = {};
+
+      if (i == -1) {
+        value.issn = s;
+      } else {
+        let prefix = s.substring(0, i);
+
+        if (prefix === 'P') {
+          value.pubType = 'Print';
+        } else if (prefix === 'O') {
+          value.pubType = 'Online';
+        }
+
+        value.issn = s.substring(i + 1);
+      }
+
+      if (value.issn.length > 0) {
+        doiCopy.issns.push(value);
+      }
+    });
 
     // Massage 'authors' information
     // Add expected properties and copy the field from 'author' to 'authors'

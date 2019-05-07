@@ -74,6 +74,7 @@ export default Component.extend({
         // Add relevant fields from DOI data to submission metadata
         const metadataFromDoi = this.get('doiService').doiToMetadata(
           doiInfo,
+          this.get('publication.journal'),
           this.get('schemaService').getFields(schemas)
         );
 
