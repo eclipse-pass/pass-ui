@@ -53,6 +53,7 @@ export default Component.extend({
 
   init() {
     this._super(...arguments);
+    this.set('metadata', {});
   },
 
   async willRender() {

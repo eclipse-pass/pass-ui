@@ -83,7 +83,7 @@ export default Service.extend({
   },
 
   validate(schema, data) {
-    return this.get('validator').validate(data, schema);
+    return this.get('validator').validate(schema, data);
   },
 
   getErrors() {
