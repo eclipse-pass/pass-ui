@@ -15,7 +15,17 @@ export default Service.extend({
 
   init() {
     this._super(...arguments);
-    this.set('validator', new Ajv());
+    /**
+     * We can adjust logging for the JSON schema validator here.
+     *
+     * Currently, logging is simply disabled.
+     *
+     * We could set 'logger' to an object with `log`, `warn`, and `error` functions
+     * to handle these things, if there is a need.
+     */
+    this.set('validator', new Ajv({
+      logger: false
+    }));
   },
 
   /**
