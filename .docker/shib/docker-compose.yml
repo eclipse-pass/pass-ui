@@ -15,7 +15,7 @@ services:
       - back
 
   fcrepo:
-    image: oapass/fcrepo:4.7.5-3.3@sha256:0d0e007409fd03f9bd4e65657d3198381c4cce3d7c62a1c0be1a53cb8123461d
+    image: oapass/fcrepo:4.7.5-3.4@sha256:3e39b01edf56c149279cfc51b647df335c01f9ec38036f1724f337ae35d68fe8
     container_name: fcrepo
     env_file: .env
     ports:
@@ -63,7 +63,7 @@ services:
       - front
 
   proxy:
-    image: oapass/httpd-proxy:20190306@sha256:63770ee48bfaf251565b2e3ffd593284ed3783ef1b1c44390a60d57c9764009c
+    image: oapass/httpd-proxy:201900424@sha256:e960fa8c6df45dcfb062ca80e355fb97809f2ce9274b50fd36f672a1703463ee
     container_name: proxy
     networks:
       - front
@@ -99,7 +99,7 @@ services:
       - back
 
   sp:
-    image: oapass/sp:20190306@sha256:6df4a3307fcee68c3f9b1e7fecaa58c0357da1713450a63173ab8a2c79cf14d5
+    image: oapass/sp:20190426@sha256:91f3cd23618f81b2be56d7760bb6dc0e22885ee1c000d14352686500f30595ee
     container_name: sp
     networks:
       - back
@@ -136,9 +136,19 @@ services:
       - assets
 
   assets:
-    image: birkland/assets:2019-03-06_3.3@sha256:e4c59e625eaf28cb4524dbe54a4e5dbf11adf71347470afb8810a75274f596c7
+    image: birkland/assets:2019-04-08_3.4@sha256:7ec44bd52d7cf635ad05a3f509cf7439e187b7768b8a05abae81b49744ec9d5f
     volumes:
       - passdata:/data
+
+  policyservice:
+    image: oapass/policy-service:v0.1.1@sha256:7eec368c7da024c1a3a955e80c2185928f86188e2e870ed9bf11846dc0153980
+    container_name: policyservice
+    env_file: .env
+    ports:
+      - "${POLICY_SERVICE_PORT}:${POLICY_SERVICE_PORT}"
+    networks:
+      - front
+      - back
 
 volumes:
   passdata:

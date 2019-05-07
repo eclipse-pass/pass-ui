@@ -12,7 +12,9 @@ export default DS.Model.extend({
   agreementText: DS.attr('string', {
     defaultValue: false
   }),
-  repositoryKey: DS.attr('string')
+  repositoryKey: DS.attr('string'),
+
+  _selected: DS.attr('boolean')
   // policy: DS.belongsTo('policy'),
   // submissions: DS.hasMany('submission', { async: true }),
 });

@@ -1,114 +1,135 @@
 import Component from '@ember/component';
 import { inject as service, } from '@ember/service';
 
+/**
+ * Display required, optional, and choice repositories to a user. The user can interact with
+ * this list to select or deselect some repositories. The list of repositories selected by
+ * the user and those that are required are added to the submission.
+ *
+ * model: {
+ *  submission,
+ *  requiredRepositories,
+ *  optionalRepositories,
+ *  choiceRepositories
+ * }
+ *
+ * Required repositories are those that MUST be added to the submission according to policies
+ * that have already been applied.
+ *
+ * Optional repositories may be added to the submission. The user is free to pick whether or not
+ * they are added.
+ *
+ * "Choice" repositories refer to a set of repositories, from which the user must select one or
+ * more to be added to the submission. Choice repositories are provided to this component as an
+ * array of arrays of strings.
+ */
 export default Component.extend({
   workflow: service('workflow'),
-  institutionRepos: Ember.computed('repositories', function () {
-    return this.get('repositories').filter(repo => repo.get('repositoryKey') === 'jscholarship');
-  }),
-  institutionName: Ember.computed(() => 'Johns Hopkins University'),
-  pmcPublisherDeposit: Ember.computed('workflow.pmcPublisherDeposit', function () {
-    return this.get('workflow').getPmcPublisherDeposit();
-  }),
+
   willRender() {
     this._super(...arguments);
-    let workflow = this.get('workflow');
-    let institRepo = this.get('institutionRepos')[0];
-    if (!workflow.getDefaultRepoLoaded() && institRepo) {
-      this.send('addRepository', institRepo);
-      workflow.setDefaultRepoLoaded(true);
-    }
-    // start by synching the submission with what you can see on the page
-    this.set('submission.repositories', this.get('combinedRepoList'));
-  },
-  getFunderNamesForRepo(repo) {
-    const funders = this.get('submission.grants').map(grant => grant.get('primaryFunder'));
-    const fundersWithRepos = funders.filter(funder => funder.get('policy.repositories'));
-    const fundersWithOurRepo = fundersWithRepos.filter(funder => funder.get('policy') &&
-      funder.get('policy.repositories') && funder.get('policy.repositories').includes(repo));
-    if (fundersWithRepos && fundersWithOurRepo.length > 0) {
-      return fundersWithOurRepo.map(funder => funder.get('name'))
-        .filter((item, index, arr) => arr.indexOf(item) == index).join(', ');
-    }
-    return '';
-  },
-  usesPmcRepository(policyRepos) {
-    return policyRepos ? (policyRepos.filter(repo => repo.get('repositoryKey') === 'pmc').length > 0) : false;
-  },
-  requiredRepositories: Ember.computed('submission.grants', 'pmcPublisherDeposit', 'optionalRepositories', function () {
-    const grants = this.get('submission.grants');
-    let repos = Ember.A();
-    grants.forEach((grant) => {
-      const funder = grant.get('primaryFunder');
-      if (!funder.content || !funder.get('policy')) {
-        return;
-      }
 
-      // Grant has funder and that funder has a policy. Get the repositories tied to the policy
-      const grantRepos = funder.get('policy.repositories');
-      if (!grantRepos || grantRepos.length == 0) {
-        return;
-      }
+    const currentRepos = this.get('submission.repositories');
 
-      // it's either not a PMC deposit or if it is one, the publisher won't deposit it so it must be included
-      if (!this.get('pmcPublisherDeposit') || !this.usesPmcRepository(grantRepos)) {
-        grantRepos.forEach((repo) => {
-          repos.addObject({
-            repo,
-            funders: this.getFunderNamesForRepo(repo)
+    const opt = this.get('optionalRepositories');
+    const req = this.get('requiredRepositories');
+    const choice = this.get('choiceRepositories');
+
+    if (currentRepos && currentRepos.length > 0) {
+      /**
+       * Check returned repositories against any repositories already set in the current submission.
+       * Make sure all repositories present in the submission have `selected: true` in the returned
+       * lists.
+       */
+      if (opt) {
+        opt.forEach((opt) => { opt.repository.set('_selected', currentRepos.includes(opt.repository)); });
+      }
+      if (choice) {
+        choice.forEach((group) => {
+          group.forEach((repoInfo) => {
+            repoInfo.repository.set('_selected', currentRepos.includes(repoInfo.repository));
           });
-          repos = repos.uniqBy('repo');
         });
       }
-    });
-    return repos;
-  }),
-  optionalRepositories: Ember.computed('institutionRepos', 'institutionName', function () {
-    let result = Ember.A();
-    let institRepos = this.get('institutionRepos');
-    let institName = this.get('institutionName');
-    institRepos.forEach((repo) => {
-      let submissionIncludesRepo = this.get('submission.repositories').includes(repo);
-      result.addObject({ repo, funders: institName, checked: submissionIncludesRepo });
-    });
-    return result;
-  }),
-  combinedRepoList: Ember.computed('optionalRepositories', 'requiredRepositories', function () {
-    // this combines the required repositories with those selected in the optional list
-    let repos = Ember.A();
-    this.get('requiredRepositories').forEach((r) => {
-      repos.pushObject(r.repo);
-    });
-    this.get('optionalRepositories').forEach((r) => {
-      if (r.checked) repos.pushObject(r.repo);
-    });
-    return repos;
-  }),
-  actions: {
-    addRepository(repositoryToAdd) {
-      let submissionIncludesRepo = this.get('submission.repositories').includes(repositoryToAdd);
-      if (!submissionIncludesRepo) {
-        this.get('submission.repositories').pushObject(repositoryToAdd);
+    } else {
+      /**
+       * If no repositories have been saved to the submission yet, force add all required repositories
+       * as well as any other repositories marked as 'selected'
+       */
+      if (req) {
+        req.forEach(repoInfo => this.addRepository(repoInfo.repository));
       }
-      this.get('workflow').setMaxStep(4);
+      if (opt) {
+        opt.filter(repoInfo => repoInfo.repository.get('_selected'))
+          .forEach(repoInfo => this.addRepository(repoInfo.repository));
+      }
+      if (choice) {
+        choice.forEach((group) => {
+          group.filter(repoInfo => repoInfo.repository.get('_selected'))
+            .forEach(repoInfo => this.addRepository(repoInfo.repository));
+        });
+      }
+    }
+  },
+
+  actions: {
+    /**
+     * Toggle a repository on/off of this submission.
+     *
+     * NOTE:
+     * Normally, we would have to make sure that there is at least one repository from
+     * each "choice group" selected.
+     * Do not worry about checking things for "choice" groups, since that logic is done
+     * in the 'choice-repositories-card' component. That component will only bubble the
+     * toggle action to here if such an action is logically possible.
+     *
+     * @param {Repository} repository
+     * @param {boolean} selected - has the repo been selected or deselected?
+     *    TRUE = repo was selected, FALSE = repo was deselected
+     * @param {string} type required|optional|choice
+     */
+    toggleRepository(repository, selected, type) {
+      if (selected) {
+        this.addRepository(repository);
+      } else {
+        this.removeRepository(repository);
+      }
     },
-    removeRepository(repositoryToRemove) {
-      let addedRepos = this.get('submission.repositories');
-      let updatedRepos = Ember.A();
-      addedRepos.forEach((repository) => {
-        if (repositoryToRemove.get('id') !== repository.get('id')) {
-          updatedRepos.pushObject(repository);
-        }
-      });
-      this.set('submission.repositories', updatedRepos);
-      this.get('workflow').setMaxStep(4);
-    },
-    toggleRepository(repository) {
-      if (event.target.checked) this.send('addRepository', repository);
-      else this.send('removeRepository', repository);
-    },
+
     cancel() {
       this.sendAction('abort');
+    },
+
+    next() {
+      this.sendAction('next');
+    },
+
+    back() {
+      this.sendAction('back');
     }
-  }
+  },
+
+  /**
+   * Add a repository to the submission only if it is not already included
+   *
+   * @param {Repository} repository
+   */
+  addRepository(repository) {
+    const subRepos = this.get('submission.repositories');
+
+    if (!subRepos.includes(repository)) {
+      subRepos.pushObject(repository);
+    }
+    this.get('workflow').setMaxStep(4);
+  },
+
+  /**
+   * Remove a repository from the submission
+   *
+   * @param {Repository} repository
+   */
+  removeRepository(repository) {
+    this.get('submission.repositories').removeObject(repository);
+    this.get('workflow').setMaxStep(4);
+  },
 });

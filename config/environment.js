@@ -69,7 +69,7 @@ module.exports = function (environment) {
 
   ENV.fedora = {
     base: 'http://localhost:8080/fcrepo/rest/',
-    context: 'https://oa-pass.github.io/pass-data-model/src/main/resources/context-3.2.jsonld',
+    context: 'https://oa-pass.github.io/pass-data-model/src/main/resources/context-3.4.jsonld',
     data: 'http://oapass.org/ns/pass#',
     elasticsearch: 'http://localhost:9200/pass/_search'
   };
@@ -80,6 +80,13 @@ module.exports = function (environment) {
   ENV.schemaService = {
     url: 'https://pass.local:8086'
     // url: ''
+  };
+
+  ENV.policyService = {
+    // url: 'https://pass.local:8088',
+    url: 'https://pass.local/policyservice',
+    policySuffix: '/policies',
+    repoSuffix: '/repositories'
   };
 
   if (process.env.EMBER_ROOT_URL) {

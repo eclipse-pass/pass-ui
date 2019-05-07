@@ -1,34 +1,58 @@
 {{#if requiredRepositories}}
-  <h4 class="mt-3 font-weight-light">Funders' repositories</h4>
+  <h4 class="mt-3 font-weight-light">Required repositories</h4>
   <p class="lead text-muted">
-    Based on the grant and journal information provided, you are required to submit your manuscript to the repositories below. PASS will help you to create submissions for these in the following steps:
+    Based on the grant and journal information provided, you are required to submit your manuscript to the
+    repositories below. PASS will help you to create submissions for these in the following steps:
   </p>
   <ul class="list-group">
     {{#each requiredRepositories as |repoInfo|}}
-      <li class="list-group-item d-flex justify-content-between align-items-center my-1">
-        {{repoInfo.repo.name}} - required by {{repoInfo.funders}}
-      </li>
+      {{repository-card
+        repository=repoInfo.repository
+        funders=repoInfo.funders
+        type="required"}}
     {{/each}}
   </ul>
 {{/if}}
+
+{{#if choiceRepositories}}
+  <p class="lead text-muted">
+    Based on the grant and journal information provided, you can choose between the repositories below.
+    You must submit to at least one repository from each group.
+  </p>
+  {{#each choiceRepositories as |repoGroup|}}
+    {{choice-repositories-card
+      choiceGroup=repoGroup
+      toggleRepository=(action "toggleRepository")}}
+  {{/each}}
+
+{{/if}}
+
 {{#if optionalRepositories}}
-<h4 class="mt-3 font-weight-light">Institutional repositories</h4>
-<p class="lead text-muted">
-  A Submission to the following will put you in compliance with your {{#link-to "faq" (query-params anchor='#institution-policy')}}institution's open access policy{{/link-to}}. If you are already making your publication openly available elsewhere (e.g. PubMed Central), this may be optional.
-</p>
-<div id="local-deposit-list">
-  <ul class="list-group">
-    {{#each optionalRepositories as |repoInfo|}}
-      <li class="list-group-item d-flex align-items-center my-1">
-        {{#if requiredRepositories.length}}
-          {{input type="checkbox" change=(action "toggleRepository" repoInfo.repo) checked=repoInfo.checked name=repoInfo.repo.name}}
-        {{/if}}
-        <label for="{{repoInfo.repo.name}}" class="mb-0 ml-2">{{repoInfo.repo.name}} - required by {{repoInfo.funders}}</label>
-      </li>
-    {{/each}}
-  </ul>
-</div>
+  <h4 class="mt-3 font-weight-light">Optional repositories</h4>
+  <p class="lead text-muted">
+    {{!-- Text below is from previous version - not sure if we need to keep the text about "institutional" repos --}}
+    {{!-- A Submission to the following will put you in compliance with your
+    {{#link-to "faq" (query-params anchor='#institution-policy')}}institution's open access policy{{/link-to}}.
+    If you are already making your publication openly available elsewhere (e.g. PubMed Central), this may be optional. --}}
+    Choose whether you want to submit to zero or more of the following repositories. Selecting the repositories
+    below is optional.
+  </p>
+  <div id="local-deposit-list">
+    <ul class="list-group">
+      {{#each optionalRepositories as |repoInfo|}}
+        {{repository-card
+          repository=repoInfo.repository
+          funders=repoInfo.funders
+          choice="true"
+          type="optional"
+          toggleRepository=(action "toggleRepository")}}
+      {{/each}}
+    </ul>
+  </div>
 {{/if}}
-<button class="btn btn-outline-primary mt-3" {{action back}}>Back</button>
+
+{{yield}}
+
+<button class="btn btn-outline-primary mt-3" {{action "back"}}>Back</button>
 <button class="btn btn-outline-danger ml-2 mt-3" {{action "cancel"}}>Abort</button>
-<button class="btn btn-primary next pull-right mt-3" {{action next}}>Next</button> {{yield}}
+<button class="btn btn-primary next pull-right mt-3" {{action "next"}}>Next</button>

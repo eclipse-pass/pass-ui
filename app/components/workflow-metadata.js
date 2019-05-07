@@ -3,17 +3,19 @@ import _ from 'lodash';
 import { inject as service } from '@ember/service';
 
 /**
- * Currently, this component will look for ISSN and NLMTA ID data from the DOI data
- * (found in workflow-service.getDoiInfo) into the submission's metadata blob. This
- * is used to pre-populate fields in the metadata forms that will be displayed to
- * the user.
- *
  * The schema service is invoked to retrieve appropriate metadata forms.
  *
  * 'currentSchema' is recalculated every time 'currentFormStep' is changed, which
  * includes when the schemas are initially loaded. During this recalculation, the
  * schema is processed to include any data for fields that we already have information
  * present in the submission metadata blob.
+ *
+ * When a user first enters this step, metadata is pulled from the known DOI blob, if
+ * one exists. That metadata is processed to be compliant with known schemas. This becomes
+ * the submission metadata blob. Form fields for each metadata schema are prepopulated
+ * using the submission metadata. After each form, all of the input fields are grabbed
+ * from the metadata forms and used to update the submission metadata, making the values
+ * available to autofill subsequent forms.
  */
 export default Component.extend({
   currentUser: service('current-user'),

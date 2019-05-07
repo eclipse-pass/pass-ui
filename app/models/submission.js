@@ -17,7 +17,10 @@ export default DS.Model.extend({
   publication: DS.belongsTo('publication'),
   repositories: DS.hasMany('repository', {
     async: true
-  }), // not on this model on API
+  }),
+  effectivePolicies: DS.hasMany('policy', { async: true }),
+
+  // not on this model on API
   _submissionEvents: DS.hasMany('submissionEvent', {
     async: true
   }),
