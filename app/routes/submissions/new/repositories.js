@@ -11,23 +11,12 @@ export default CheckSessionRoute.extend({
 
     const repoPromise = await this.get('policyService').getRepositories(submission);
 
-    /**
-     * Can't directly use 'one-of' directly in the RSVP hash, because it is an array of arrays of Promises,
-     * so to force the RSVP hash to wait for them all, we need to flatten the weird structure.
-     */
-    const choices = [];
-    if (repoPromise['one-of']) {
-      repoPromise['one-of'].forEach((choiceGroup) => { choices.push(...choiceGroup); });
-    }
-
     return Ember.RSVP.hash({
       newSubmission: submission,
       preLoadedGrant: parentModel.preLoadedGrant,
-      requiredRepositories: Promise.all(repoPromise.required),
-      optionalRepositories: Promise.all(repoPromise.optional),
-      choiceRepositories: Promise.all(repoPromise['one-of']),
-      promise: Promise.all(choices)
-      // promise: Promise.all(promise)
+      requiredRepositories: repoPromise.required,
+      optionalRepositories: repoPromise.optional,
+      choiceRepositories: repoPromise['one-of']
     });
   },
 

@@ -1,6 +1,10 @@
+import RSVP from 'rsvp';
 import Service from '@ember/service';
 import ENV from 'pass-ember/config/environment';
 
+/**
+ * Service that can get policies and associated repositories for a submission
+ */
 export default Service.extend({
   policyUrl: '',
   repoUrl: '',
@@ -23,7 +27,10 @@ export default Service.extend({
    * Use `.catch(e)` to act on the error, and not `try/catch`
    *
    * @param {Submission} submission
-   * @returns {Promise} list of Policies
+   * @returns {Promise} list of Policies. Once the promise resolves, result =
+   * [
+   *    {Policy}, ...
+   * ]
    */
   async getPolicies(submission) {
     const url = `${this.get('policyUrl')}?submission=${submission.get('id')}`;
@@ -41,15 +48,17 @@ export default Service.extend({
     }
 
     /**
-     * Should be a good response - translate each item in list to a Promise of a Policy
+     * Should be a good response - translate each item in list of Policies
+     * NOTE: Promise.all() will consolidate all of the store.findRecord
+     * Promises and will ultimately return an array of Policy objects
      */
     const data = await result.json();
 
-    return data.map(policyInfo => this.get('store').findRecord('policy', policyInfo.id)
+    return Promise.all(data.map(policyInfo => this.get('store').findRecord('policy', policyInfo.id)
       .then((pol) => {
         pol.set('_type', policyInfo.type);
         return pol;
-      }));
+      })));
   },
 
   /**
@@ -63,10 +72,10 @@ export default Service.extend({
    *
    * @param {Submission} submission with effectivePolicies set
    * @returns {Promise} JSON object with repo selection DSL rules. Each section
-   *                  will contain Promises to Repository objects
+   *                  will contain Repository objects
    * {
    *    required: [
-   *      Promise: Repository
+   *      {Repository}
    *    ],
    *    'one-of': [],
    *    'optional': []
@@ -98,17 +107,18 @@ export default Service.extend({
       }
 
       if (dsl.hasOwnProperty('one-of')) {
-        result['one-of'] = [];
+        const choices = [];
         dsl['one-of'].forEach((choiceGroup) => {
-          result['one-of'].push(this._resolveRepos(choiceGroup));
+          choices.push(this._resolveRepos(choiceGroup));
         });
+        result['one-of'] = Promise.all(choices);
       }
 
       if (dsl.hasOwnProperty('optional')) {
         result.optional = this._resolveRepos(dsl.optional);
       }
 
-      return result;
+      return RSVP.hash(result);
     });
   },
 
@@ -122,31 +132,11 @@ export default Service.extend({
    * @returns {array} list of Promises of Repository objects
    */
   _resolveRepos(repos) {
-    return repos.map(repoInfo => this.get('store').findRecord('repository', repoInfo['repository-id'])
+    return Promise.all(repos.map(repoInfo => this.get('store').findRecord('repository', repoInfo['repository-id'])
       .then((repo) => {
         repo.set('_selected', repoInfo.selected);
         return repo;
-      }));
-  },
-
-  /**
-   * Get an Ember array containing referenced Repository objects. Resolve the reference ID
-   * from the Ember Store, then add the model object to the reference when done.
-   *
-   * @param {array} refs reference objects {
-   *    url: '',
-   *    selected: true|false
-   * }
-   * @param {string} type object type (example: 'repository')
-   * @returns {array} where Repository ID resolved to an Ember model object
-   */
-  resolveReferences(type, refs) {
-    refs.map((ref) => {
-      const url = ref.url || ref.id || ref['repository-id'];
-      ref[type] = this.get('store').findRecord(type, url).then((obj) => { ref[type] = obj; });
-      return ref;
-    });
-    return refs;
+      })));
   }
 
 });
