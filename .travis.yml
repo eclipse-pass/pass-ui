@@ -14,11 +14,3 @@ install:
 - npm install
 script:
   - ember test --test-port=4200
-before_deploy:
-  - ember build --environment=surge
-deploy:
-  provider: surge
-  project: "./dist/"
-  domain: pass-jhu.surge.sh
-  on: master
-  skip_cleanup: true
