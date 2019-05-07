@@ -13,6 +13,11 @@ export default Service.extend({
   // JSON schema validator
   validator: undefined,
 
+  init() {
+    this._super(...arguments);
+    this.set('validator', new Ajv());
+  },
+
   /**
    *
    * @param {array} repositories list of repository URIs
@@ -25,8 +30,6 @@ export default Service.extend({
       repositories = repositories.map(repo => repo.get('id'));
     }
     const url = this.get('schemaService.url');
-
-    this.set('validator', new Ajv());
 
     return this.get('ajax').request(url, {
       method: 'POST',

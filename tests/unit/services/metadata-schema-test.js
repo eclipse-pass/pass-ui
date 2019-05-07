@@ -7,34 +7,42 @@ module('Unit | Service | metadata-schema', (hooks) => {
 
   hooks.beforeEach(function () {
     const mockSchema = {
-      schema: {
-        title: ' User Feedback',
-        description: 'What do you think about Alpaca?',
-        type: 'object',
-        properties: {
-          name: { type: 'string', title: 'Name', required: true },
-          feedback: { type: 'string', title: 'Feedback' },
-          ranking: { type: 'string', title: 'Ranking', enum: ['excellent', 'ok'], required: true } // eslint-disable-line
+      definitions: {
+        form: {
+          options: {
+            fields: {
+              name: { helper: 'Please enter your name' },
+              feedback: { type: 'textarea' },
+              ranking: { type: 'select', optionLabels: ['Awesome', 'It\'s OK'] }
+            }
+          },
+          properties: {
+            name: { type: 'string' },
+            feedback: { type: 'string' },
+            ranking: {
+              type: 'string',
+              enum: ['excellent', 'ok', 'moo']
+            }
+          },
+          type: 'object'
         }
       },
-      options: {
-        form: {
-          attributes: { action: 'http://httpbin.org/post', method: 'post' },
-          buttons: { submit: {} }
-        },
-        helper: 'Tell us what you think about Alpaca!',
-        fields: {
-          name: { size: 20, helper: 'Please enter your name.' },
-          feedback: {
-            type: 'textarea',
-            name: 'your_feedback',
-            rows: 5,
-            cols: 40,
-            helper: 'Please enter your feedback.'
+      allOf: [
+        {
+          properties: {
+            name: { type: 'string' },
+            ranking: { type: 'string', enum: ['excellent', 'ok', 'moo'] },
+            issns: {
+              type: 'array',
+              items: {
+                properties: { issn: { type: 'string' }, pubType: { type: 'string', enum: ['Print', 'Online'] } },
+                type: 'object'
+              }
+            }
           },
-          ranking: { type: 'select', helper: 'Select your ranking.', optionLabels: ['Awesome!', 'It\'s Ok'] }
+          required: ['name', 'ranking']
         }
-      }
+      ]
     };
     this.set('mockSchema', mockSchema);
 
@@ -51,10 +59,6 @@ module('Unit | Service | metadata-schema', (hooks) => {
     });
   });
 
-  test('it exists', function (assert) {
-    assert.ok(this.owner.lookup('service:metadata-schema'));
-  });
-
   /**
    * Simple test showing that #getMetadataSchema uses the AJAX service to retrieve a
    * set of schema
@@ -63,9 +67,18 @@ module('Unit | Service | metadata-schema', (hooks) => {
     this.owner.lookup('service:metadata-schema').getMetadataSchemas(['moo', 'too'])
       .then((result) => {
         assert.ok(result, 'No result found');
-        assert.ok(result.schema, 'mockSchema.schema not found');
-        assert.ok(result.options, 'mockSchema.options not found');
+        assert.ok(result.definitions, 'mockSchema.definitions not found');
       });
+  });
+
+  test('Alpacafication works as expected', function (assert) {
+    const service = this.owner.lookup('service:metadata-schema');
+    service.getMetadataSchemas(['moo', 'two']).then((schema) => {
+      const alpa = service.alpacafySchema(schema);
+      assert.ok(alpa);
+      assert.ok(alpa.options);
+      assert.ok(alpa.schema);
+    });
   });
 
   /**
@@ -76,8 +89,9 @@ module('Unit | Service | metadata-schema', (hooks) => {
       name: 'Moo Jones',
       feedback: 'Feedbag'
     };
-
-    const result = this.owner.lookup('service:metadata-schema').addDisplayData(this.get('mockSchema'), data);
+    const service = this.owner.lookup('service:metadata-schema');
+    const schema = service.alpacafySchema(this.get('mockSchema'));
+    const result = this.owner.lookup('service:metadata-schema').addDisplayData(schema, data);
 
     assert.ok(result.data, 'No data found in result');
     assert.ok(result.schema, 'Schema not found in result');
@@ -93,12 +107,58 @@ module('Unit | Service | metadata-schema', (hooks) => {
       feedback: 'Feedbag'
     };
 
-    const result = this.owner.lookup('service:metadata-schema').addDisplayData(this.get('mockSchema'), data, true);
+    const service = this.owner.lookup('service:metadata-schema');
+    const schema = service.alpacafySchema(this.get('mockSchema'));
+    const result = service.addDisplayData(schema, data, true);
 
     assert.ok(result, 'No result found');
     assert.ok(result.data, 'No data found in result');
 
     assert.ok(result.options.fields.name.readonly, 'Property \'name\' not marked as read only');
     assert.ok(result.options.fields.feedback.readonly, 'Property \'feedback\' not marked as read only');
+  });
+
+  test('Validation should fail when "name" field is not present in data', function (assert) {
+    const service = this.owner.lookup('service:metadata-schema');
+
+    assert.notOk(service.validate({}, this.get('mockSchema')), 'Should not validate');
+
+    const errors = service.getErrors();
+    assert.equal(1, errors.length, 'Should be 1 error');
+    assert.equal(errors[0].message, 'should have required property \'name\'');
+  });
+
+  test('Validation should fail when "ranking" value is something not in enum', function (assert) {
+    const service = this.owner.lookup('service:metadata-schema');
+
+    const data = {
+      name: 'Moo Jones',
+      ranking: 'invalid-moo'
+    };
+    // debugger
+    assert.notOk(service.validate(data, this.get('mockSchema')), 'Validation should fail');
+
+    const errors = service.getErrors();
+    assert.equal(1, errors.length, 'Should have found 1 error');
+  });
+
+  test('Try validating bad ISSN info', function (assert) {
+    const service = this.owner.lookup('service:metadata-schema');
+
+    const data = {
+      name: 'Moo Jones',
+      ranking: 'moo',
+      issns: [
+        {
+          issn: '1234',
+          pubType: 'Electronic'
+        }
+      ]
+    };
+
+    assert.notOk(service.validate(data, this.get('mockSchema')), 'Validation should fail');
+
+    const errors = service.getErrors();
+    assert.equal(1, errors.length, 'Should have found 1 error');
   });
 });
