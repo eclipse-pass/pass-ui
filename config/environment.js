@@ -74,11 +74,11 @@ module.exports = function (environment) {
     elasticsearch: 'http://localhost:9200/pass/_search'
   };
   ENV.userService = {
-    url: 'https://localhost:8080/pass-user-service/whoami'
+    url: 'https://pass.local:8080/pass-user-service/whoami'
   };
 
-  ENV.journalService = {
-    url: 'https://localhost:8080/journal-service/'
+  ENV.doiService = {
+    url: 'https://pass.local/doiservice/journal'
   };
 
   ENV.schemaService = {
@@ -102,6 +102,10 @@ module.exports = function (environment) {
 
   if (process.env.SCHEMA_SERVICE_URL) {
     ENV.schemaService.url = process.env.SCHEMA_SERVICE_URL;
+  }
+
+  if (process.env.DOI_SERVICE_URL) {
+    ENV.doiService.url = process.env.DOI_SERVICE_URL;
   }
 
   if (process.env.FEDORA_ADAPTER_BASE) {

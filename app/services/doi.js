@@ -12,7 +12,7 @@ export default Service.extend({
   store: Ember.inject.service('store'),
   ajax: Ember.inject.service(),
 
-  journalServiceUrl: ENV.journalService.url,
+  doiServiceUrl: ENV.doiService.url,
 
   /**
   * resolveDOI - Lookup information about a DOI using the PASS doi service. Return that information along
@@ -24,7 +24,7 @@ export default Service.extend({
   * @returns {object}    Object with doiInfo and publication
   */
   async resolveDOI(doi) {
-    let url = `${this.get('whoamiUrl')}?doi=${encodeURIComponent(doi)}`;
+    let url = `${this.get('doiServiceUrl')}?doi=${encodeURIComponent(doi)}`;
 
     return this.get('ajax').request(url, 'GET', {
       headers: {
