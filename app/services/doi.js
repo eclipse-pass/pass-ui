@@ -13,6 +13,7 @@ export default Service.extend({
   ajax: Ember.inject.service(),
 
   doiServiceUrl: ENV.doiService.url,
+  metadataSchemaUri: ENV.metadataSchemaUri,
 
   /**
   * resolveDOI - Lookup information about a DOI using the PASS doi service. Return that information along
@@ -138,6 +139,8 @@ export default Service.extend({
       Object.keys(doiCopy).filter(key => !validFields.includes(key))
         .forEach(key => delete doiCopy[key]);
     }
+
+    doiCopy.$schema = this.get('metadataSchemaUri');
 
     return doiCopy;
     // Manual mapping of DOI data to fields expected by our metadata forms
