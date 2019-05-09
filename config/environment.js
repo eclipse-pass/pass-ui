@@ -92,6 +92,8 @@ module.exports = function (environment) {
     repoSuffix: '/repositories'
   };
 
+  ENV.metadataSchemaUri = 'https://oa-pass.github.io/metadata-schemas/jhu/global.json';
+
   if (process.env.EMBER_ROOT_URL) {
     ENV.rootURL = process.env.EMBER_ROOT_URL;
   }
@@ -122,6 +124,10 @@ module.exports = function (environment) {
 
   if (process.env.FEDORA_ADAPTER_ES) {
     ENV.fedora.elasticsearch = process.env.FEDORA_ADAPTER_ES;
+  }
+
+  if (process.env.METADATA_SCHEMA_URI) {
+    ENV.metadataSchemaUri = process.env.METADATA_SCHEMA_URI;
   }
 
   if ('FEDORA_ADAPTER_USER_NAME' in process.env) {
