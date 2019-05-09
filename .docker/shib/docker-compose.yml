@@ -63,7 +63,7 @@ services:
       - front
 
   proxy:
-    image: oapass/httpd-proxy:201900424@sha256:e960fa8c6df45dcfb062ca80e355fb97809f2ce9274b50fd36f672a1703463ee
+    image: oapass/httpd-proxy:201900508@sha256:a915ada2286a551d32b0494d4ce874ba7fe204c07f029cc9bba5e05b2a9087fc
     container_name: proxy
     networks:
       - front
@@ -99,7 +99,7 @@ services:
       - back
 
   sp:
-    image: oapass/sp:20190426@sha256:91f3cd23618f81b2be56d7760bb6dc0e22885ee1c000d14352686500f30595ee
+    image: oapass/sp:201900508@sha256:94eb4796da7bed604468e295422be23c94f0119591fb37e11b40ce0376bca49f
     container_name: sp
     networks:
       - back
@@ -146,6 +146,16 @@ services:
     env_file: .env
     ports:
       - "${POLICY_SERVICE_PORT}:${POLICY_SERVICE_PORT}"
+    networks:
+      - front
+      - back
+
+  doiservice:
+    image: oapass/doi-service:version0.0.2@sha256:08e8fc7dbd0eb366cf049dd80dd45ab983c155fa6a34ccd32b3dc2315332f65e
+    container_name: doiservice
+    env_file: .env
+    ports:
+      - "${PASS_DOI_SERVICE_PORT}:8080"
     networks:
       - front
       - back
