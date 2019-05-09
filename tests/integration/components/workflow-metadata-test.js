@@ -218,7 +218,11 @@ module('Integration | Component | workflow-metadata', (hooks) => {
   });
 
   test('Should not proceed to 3rd form without ISSN specified', async function (assert) {
-    await render(hbs`{{workflow-metadata submission=submission}}`);
+    // Validation should fail without doiInfo values.
+    const workflowService = this.owner.lookup('service:workflow');
+    workflowService.set('doiInfo', {});
+
+    await render(hbs`{{workflow-metadata submission=submission publication=publication}}`);
     await click('button[data-key="Next"]');
     // debugger
     assert.ok(this.element.textContent.includes('NIHMS'), 'We should be on NIH form');
