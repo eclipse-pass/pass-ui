@@ -7,7 +7,6 @@ export default Component.extend({
   workflow: service('workflow'),
   currentUser: service('current-user'),
   doiService: service('doi'),
-  nlmtaService: service('nlmta'),
 
   inFlight: false,
   isShowingUserSearchModal: false,
@@ -105,12 +104,16 @@ export default Component.extend({
         this.set('submission.preparers', Ember.A());
       }
     },
-    /** looks up the DIO and returns title and journal if avaiable */
+
+    /**
+     * lookupDOI - Set publication, publication journal, and doiInfo based on DOI.
+     */
     lookupDOI() {
       if (this.get('inFlight')) {
         console.log('%cA request is already in flight, ignoring this call', 'color:blue;');
         return;
       }
+
       const publication = this.get('publication');
       if (!publication || !publication.get('doi')) {
         return;
@@ -118,65 +121,26 @@ export default Component.extend({
 
       const doiService = this.get('doiService');
       let doi = publication.get('doi');
+
       doi = doiService.formatDOI(doi);
       if (!doi || doi === '' || doiService.isValidDOI(doi) === false) {
         return;
       }
+
       publication.set('doi', doi);
-      this.set('submission.metadata', '[]');
-
+      this.set('submission.metadata', '{}');
       this.set('inFlight', true);
-      doiService.resolveDOI(doi).then(async (doiInfo) => {
-        if (doiInfo.isDestroyed) {
-          return;
-        }
-        const nlmtaDump = await this.get('nlmtaService').getNlmtaFromIssn(doiInfo);
-        if (nlmtaDump) {
-          doiInfo.nlmta = nlmtaDump.nlmta;
-          doiInfo['issn-map'] = nlmtaDump.map;
-        }
-        doiInfo['journal-title'] = doiInfo['container-title'];
-        this.set('doiInfo', doiInfo);
-        publication.set('title', doiInfo.title);
-        publication.set('submittedDate', doiInfo.deposited);
-        publication.set('creationDate', doiInfo.created);
-        publication.set('issue', doiInfo.issue);
-        publication.set('volume', doiInfo.volume);
-        publication.set('abstract', doiInfo.abstract);
 
-        let desiredName = doiService.getJournalTitle(doiInfo);
-        const desiredIssn = Array.isArray(doiInfo.ISSN) // eslint-disable-line
-          ? doiInfo.ISSN[0]
-          : doiInfo.ISSN
-            ? doiInfo.ISSN
-            : '';
+      doiService.resolveDOI(doi).then(async (result) => {
+        this.set('publication', result.publication);
+        this.set('doiInfo', result.doiInfo);
 
-        let query = { bool: { should: [{ match: { journalName: desiredName } }] } };
-        if (desiredIssn) query.bool.must = { term: { issns: desiredIssn } };
-        // Must match ISSN, optionally match journalName
-        // If journal is found, set it to the publication's journal.
-        // If journal is not found, make a journal based off the provided info and
-        // set it to the publication's journal.
-        this.get('store').query('journal', { query }).then((journals) => {
-          let journal = journals.get('length') > 0 ? journals.objectAt(0) : false;
-          if (!journal) {
-            const newJournal = this.get('store').createRecord('journal', {
-              journalName: doiService.getJournalTitle(doiInfo),
-              issns: doiInfo.ISSN,
-              nlmta: doiInfo.nmlta
-            });
-            newJournal.save().then(j => publication.set('journal', j));
-          } else {
-            publication.set('journal', journal);
-          }
-        });
         toastr.success("We've pre-populated information from the DOI provided!");
         this.sendAction('validateTitle');
         this.sendAction('validateJournal');
-      }, (error) => {
-        // console.log(error.message);
-      })
-        .finally(() => this.set('inFlight', false)); // end resolve(publication).then()
+      }).catch((error) => {
+        console.log(`DOI service request failed: ${error.payload.error}`);
+      }).finally(() => this.set('inFlight', false));
     },
 
     /** Sets the selected journal for the current publication.
@@ -186,11 +150,6 @@ export default Component.extend({
       let doiInfo = this.get('doiInfo');
       doiInfo = { 'journal-title': journal.get('journalName'), ISSN: journal.get('issns') };
 
-      const nlmtaDump = await this.get('nlmtaService').getNlmtaFromIssn(doiInfo);
-      if (nlmtaDump) {
-        doiInfo.nlmta = nlmtaDump.nlmta;
-        doiInfo['issn-map'] = nlmtaDump.map;
-      }
       this.set('doiInfo', doiInfo);
 
       const publication = this.get('publication');

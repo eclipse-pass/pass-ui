@@ -10,46 +10,52 @@ import ENV from 'pass-ember/config/environment';
  */
 export default Service.extend({
   store: Ember.inject.service('store'),
+  ajax: Ember.inject.service(),
 
-  base: 'https://api.crossref.org/',
-
-  // Crossref API has multiple 'prefixes' you can use to get different pieces of information
-  // At the moment, we only care about 'works'
-  basicPrefix: 'works/',
+  doiServiceUrl: ENV.doiService.url,
+  metadataSchemaUri: ENV.metadataSchemaUri,
 
   /**
-   * Crossref API strongly suggests attaching at least some mailto credentials to requests.
-   * Without this information, Crossref will throttle requests.
-   */
-  userAgent() {
-    return `OA-PASS (mailto:${ENV.brand.mailto})`;
-  },
+  * resolveDOI - Lookup information about a DOI using the PASS doi service. Return that information along
+  * with a publication. The publication will have a persisted journal set, but will not itself be persisted. The doi information
+  * is in a normalized crossref format. (The normalization collaspses the array values of some keys to string values.)
+  * The raw crossref format is defined here: https://github.com/CrossRef/rest-api-doc/blob/master/api_format.md
+  *
+  * @param  {string} doi
+  * @returns {object}    Object with doiInfo and publication
+  */
+  async resolveDOI(doi) {
+    let url = `${this.get('doiServiceUrl')}?doi=${encodeURIComponent(doi)}`;
 
-  /**
-   * NOTE: There may be a browser bug in Chrome(?) that prevents us from setting the 'User-Agent'
-   * header. For now, we can attach 'mailto' info as URI query parameter, per the Crossref API.
-   *
-   * Sample Crossref response can is linked above
-   *
-   * IMPL NOTE: Rerturning the JSON object is done in two stages (two separate 'then') because
-   * `response.json()` returns a Promise
-   *
-   * @param {string} doi DOI URI
-   * @returns {promise} get a promise that will returned a parsed JSON object
-   */
-  resolveDOI(doi) {
-    const eDoi = encodeURI(doi);
-    const url = `${this.get('base')}${this.get('basicPrefix')}${eDoi}?mailto=${ENV.brand.mailto}`;
-    // const headers = new Headers({
-    //   'User-Agent': this.userAgent()
-    // });
+    return this.get('ajax').request(url, 'GET', {
+      headers: {
+        Accept: 'application/json; charset=utf-8',
+        withCredentials: 'include'
+      }
+    }).then(async (response) => {
+      let journal = await this.get('store').findRecord('journal', response['journal-id']);
 
-    return fetch(url, {
-      method: 'GET',
-      // headers // There may be a bug in Chrome that prevents setting the 'User-Agent' header
-    })
-      .then(response => response.json()) // TODO: should we do some preprocessing of the DOI data here?
-      .then(json => this._processRawDoi(json.message));
+      let doiInfo = this._processRawDoi(response.crossref.message);
+
+      // Needed by schemas
+      doiInfo['journal-title'] = doiInfo['container-title'];
+
+      let publication = this.get('store').createRecord('publication', {
+        doi,
+        journal,
+        title: Array.isArray(doiInfo.title) ? doiInfo.title.join(', ') : doiInfo.title,
+        submittedDate: doiInfo.deposited,
+        creationDate: doiInfo.created,
+        issue: doiInfo.issue,
+        volume: doiInfo.volume,
+        abstract: doiInfo.abstract,
+      });
+
+      return {
+        publication,
+        doiInfo
+      };
+    });
   },
 
   isValidDOI(doi) {
@@ -72,22 +78,43 @@ export default Service.extend({
   },
 
   /**
-   * Translate data from the DOI to a metadata blob that can be attached to a submission.
+   * Transform crossref metadata to a metadata blob that can be attached to a submission.
+   * Generally the keys are just copied as is, but in some case they are transformed so
+   * the blob matches the form expected by the repository schemas. ISSNs are grabbed from
+   * the Journal, not the crossref metadata.
    *
    * @param {object} doiInfo data retreived from the DOI
+   * @param {object} journal Journal associated with publication
    * @param {array} validFields OPTIONAL array of accepted property names on final metadata object
    * @returns {object} metadata blob seeded with DOI data
    */
-  doiToMetadata(doiInfo, validFields) {
+  doiToMetadata(doiInfo, journal, validFields) {
     const doiCopy = Object.assign({}, doiInfo);
-    // Massage ISSN data
-    let issns = [];
-    if (doiCopy['issn-map']) {
-      Object.keys(doiCopy['issn-map']).forEach(issn => issns.push({
-        issn,
-        pubType: doiCopy['issn-map'][issn]['pub-type'][0]
-      }));
-    }
+
+    // Add issns key in expected format by parsing journal issns.
+    doiCopy.issns = [];
+    journal.get('issns').forEach((s) => {
+      let i = s.indexOf(':');
+      let value = {};
+
+      if (i == -1) {
+        value.issn = s;
+      } else {
+        let prefix = s.substring(0, i);
+
+        if (prefix === 'Print') {
+          value.pubType = 'Print';
+        } else if (prefix === 'Online') {
+          value.pubType = 'Online';
+        }
+
+        value.issn = s.substring(i + 1);
+      }
+
+      if (value.issn.length > 0) {
+        doiCopy.issns.push(value);
+      }
+    });
 
     // Massage 'authors' information
     // Add expected properties and copy the field from 'author' to 'authors'
@@ -102,8 +129,6 @@ export default Service.extend({
       });
     }
 
-    doiCopy.issns = issns;
-
     // Misc manual translation
     doiCopy['journal-NLMTA-ID'] = doiCopy.nlmta;
     doiCopy['journal-title-short'] = doiCopy['container-title-short'];
@@ -114,6 +139,8 @@ export default Service.extend({
       Object.keys(doiCopy).filter(key => !validFields.includes(key))
         .forEach(key => delete doiCopy[key]);
     }
+
+    doiCopy.$schema = this.get('metadataSchemaUri');
 
     return doiCopy;
     // Manual mapping of DOI data to fields expected by our metadata forms
@@ -178,32 +205,5 @@ export default Service.extend({
     data['journal-title'] = data['container-title'];
 
     return data;
-  },
-
-  /**
-   * Create a new Publication object based on Crossref data OR data entered by
-   * the user. This is intended to be called after getting the associated journal
-   * so it can be immediately associated with the publication object before it is
-   * persisted. However, this association can always be persisted later.
-   *
-   * @param {object} xrefData JSON blob retrieved from Crossref
-   *                          or a JSON blob with user-entered data
-   * @param {Journal} journal the Journal object to associate with the new Publication
-   * @returns {Promise} Publication object, persisted
-   */
-  createPublication(data, journal) {
-    let publication = this.get('store').createRecord('publication');
-
-    publication.set('doi', data.DOI);
-    publication.set('title', Array.isArray(data.title) ? data.title.join(', ') : data.title);
-    // publication.set('submittedDate', data.deposited['date-time']);
-    // publication.set('createdDate', data.created['date-time']);
-    publication.set('issue', data.issue);
-    publication.set('volume', data.volume);
-    publication.set('abstract', data.abstract);
-
-    publication.set('journal', journal);
-
-    return publication.save().then(pub => pub);
   }
 });

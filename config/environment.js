@@ -74,12 +74,15 @@ module.exports = function (environment) {
     elasticsearch: 'http://localhost:9200/pass/_search'
   };
   ENV.userService = {
-    url: 'https://localhost:8080/pass-user-service/whoami'
+    url: 'https://pass.local:8080/pass-user-service/whoami'
+  };
+
+  ENV.doiService = {
+    url: 'https://pass.local/doiservice/journal'
   };
 
   ENV.schemaService = {
     url: 'https://pass.local:8086'
-    // url: ''
   };
 
   ENV.policyService = {
@@ -88,6 +91,8 @@ module.exports = function (environment) {
     policySuffix: '/policies',
     repoSuffix: '/repositories'
   };
+
+  ENV.metadataSchemaUri = 'https://oa-pass.github.io/metadata-schemas/jhu/global.json';
 
   if (process.env.EMBER_ROOT_URL) {
     ENV.rootURL = process.env.EMBER_ROOT_URL;
@@ -99,6 +104,10 @@ module.exports = function (environment) {
 
   if (process.env.SCHEMA_SERVICE_URL) {
     ENV.schemaService.url = process.env.SCHEMA_SERVICE_URL;
+  }
+
+  if (process.env.DOI_SERVICE_URL) {
+    ENV.doiService.url = process.env.DOI_SERVICE_URL;
   }
 
   if (process.env.FEDORA_ADAPTER_BASE) {
@@ -115,6 +124,10 @@ module.exports = function (environment) {
 
   if (process.env.FEDORA_ADAPTER_ES) {
     ENV.fedora.elasticsearch = process.env.FEDORA_ADAPTER_ES;
+  }
+
+  if (process.env.METADATA_SCHEMA_URI) {
+    ENV.metadataSchemaUri = process.env.METADATA_SCHEMA_URI;
   }
 
   if ('FEDORA_ADAPTER_USER_NAME' in process.env) {

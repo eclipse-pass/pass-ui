@@ -71,9 +71,12 @@ export default Component.extend({
         const schemas = await this.get('schemaService').getMetadataSchemas(repos);
 
         const doiInfo = this.get('doiInfo');
+        const journal = await this.get('publication.journal');
+
         // Add relevant fields from DOI data to submission metadata
         const metadataFromDoi = this.get('doiService').doiToMetadata(
           doiInfo,
+          journal,
           this.get('schemaService').getFields(schemas)
         );
 

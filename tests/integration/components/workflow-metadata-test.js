@@ -9,12 +9,20 @@ module('Integration | Component | workflow-metadata', (hooks) => {
 
   hooks.beforeEach(function () {
     const repositories = Ember.A();
+    const journal = Ember.Object.create({
+      issns: []
+    });
+    const publication = Ember.Object.create({
+      journal
+    });
     const submission = Ember.Object.create({
-      repositories
+      repositories,
+      publication
     });
 
     this.set('submission', submission);
     this.set('repositories', repositories);
+    this.set('publication', publication);
 
     Object.defineProperty(window.navigator, 'userAgent', { value: 'Chrome', configurable: true });
 
@@ -26,6 +34,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
             definitions: {
               form: {
                 title: 'Common schema title moo',
+                type: 'object',
                 properties: {
                   'journal-NLMTA-ID': { type: 'string' },
                   ISSN: { type: 'string' }
@@ -91,7 +100,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
               },
               options: {
                 fields: {
-                  mooName: { type: 'text', label: 'Journal NLMTA ID', placeholder: '' },
+                  mooName: { type: 'text', label: 'MOO Name', placeholder: '' },
                   ISSN: { type: 'text', label: 'ISSN', placeholder: '' }
                 }
               }
@@ -101,22 +110,27 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       }
     });
 
+    const workflowService = this.owner.lookup('service:workflow');
+
+    workflowService.set('doiInfo', {
+      title: 'title',
+      'journal-title': 'journal title',
+      mooName: 'bessie',
+      ISSN: ['abracadabra'],
+      'journal-NLMTA-ID': 'triumph'
+    });
+
     this.owner.register('service:ajax', mockAjax);
   });
 
-  test('it renders', (assert) => {
-    const component = render(hbs`{{workflow-metadata submission=submission}}`);
-    assert.ok(component);
-  });
-
   test('should render common schema', async function (assert) {
-    await render(hbs`{{workflow-metadata submission=submission}}`);
+    await render(hbs`{{workflow-metadata submission=submission publication=publication}}`);
     assert.ok(this.element.textContent.includes('Common schema'));
   });
 
   test('should display current and total number of pages', async function (assert) {
     const expected = 'Form 1 of 3';
-    await render(hbs`{{workflow-metadata submission=submission}}`);
+    await render(hbs`{{workflow-metadata submission=submission publication=publication}}`);
 
     const header = this.element.querySelector('h4');
     assert.ok(header);
@@ -124,7 +138,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
   });
 
   test('must show form nav buttons', async function (assert) {
-    await render(hbs`{{workflow-metadata submission=submission}}`);
+    await render(hbs`{{workflow-metadata submission=submission publication=publication}}`);
 
     const buttons = this.element.querySelectorAll('button');
     assert.equal(3, buttons.length, 'should be two buttons');
@@ -135,7 +149,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
   });
 
   test('second form should be NIHMS', async function (assert) {
-    await render(hbs`{{workflow-metadata submission=submission}}`);
+    await render(hbs`{{workflow-metadata submission=submission publication=publication}}`);
     await click('button[data-key="Next"]');
 
     assert.ok(
@@ -149,7 +163,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
   });
 
   test('third form should be J10P', async function (assert) {
-    await render(hbs`{{workflow-metadata submission=submission}}`);
+    await render(hbs`{{workflow-metadata submission=submission publication=publication}}`);
     await click('button[data-key="Next"]');
 
     // Need to fill out ISSN field
@@ -164,7 +178,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
   });
 
   test('Back button on J10P form takes you back to NIH form', async function (assert) {
-    await render(hbs`{{workflow-metadata submission=submission}}`);
+    await render(hbs`{{workflow-metadata submission=submission publication=publication}}`);
     await click('button[data-key="Next"]');
     // Need to fill out ISSN field
     this.element.querySelector('input[name="ISSN"]').value = '1234';
@@ -185,7 +199,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
   test('Test autofilling form fields', async function (assert) {
     const expectedISSN = '123moo321';
 
-    await render(hbs`{{workflow-metadata submission=submission}}`);
+    await render(hbs`{{workflow-metadata submission=submission publication=publication}}`);
     await click('button[data-key="Next"]');
 
     // Set data in the inputs of Form 1
@@ -204,7 +218,11 @@ module('Integration | Component | workflow-metadata', (hooks) => {
   });
 
   test('Should not proceed to 3rd form without ISSN specified', async function (assert) {
-    await render(hbs`{{workflow-metadata submission=submission}}`);
+    // Validation should fail without doiInfo values.
+    const workflowService = this.owner.lookup('service:workflow');
+    workflowService.set('doiInfo', {});
+
+    await render(hbs`{{workflow-metadata submission=submission publication=publication}}`);
     await click('button[data-key="Next"]');
     // debugger
     assert.ok(this.element.textContent.includes('NIHMS'), 'We should be on NIH form');
@@ -233,7 +251,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
     });
 
     test('DOI info should autofill into forms', async function (assert) {
-      await render(hbs`{{workflow-metadata submission=submission}}`);
+      await render(hbs`{{workflow-metadata submission=submission publication=publication}}`);
       assert.ok(true, 'Failed to render');
 
       // On render, check the 'journal-NLMTA-ID' field value in UI
@@ -281,7 +299,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       this.owner.unregister('service:workflow');
       this.owner.register('service:workflow', mockWorkflow);
 
-      await render(hbs`{{workflow-metadata submission=submission }}`);
+      await render(hbs`{{workflow-metadata submission=submission publication=publication}}`);
       assert.ok(true, 'Failed to render');
 
       const component = this.owner.lookup('component:workflow-metadata');

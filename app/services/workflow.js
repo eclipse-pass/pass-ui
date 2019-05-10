@@ -8,7 +8,7 @@ export default Service.extend({
    * then PASS must handle the submission for NIH compliance.
    */
   pmcPublisherDeposit: false,
-  doiInfo: [],
+  doiInfo: {},
   filesTemp: [],
   defaultRepoLoaded: false, // you only want to load the default setting on first access, after that is should respect he user's choice.
 
