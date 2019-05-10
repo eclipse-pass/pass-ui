@@ -151,7 +151,7 @@ services:
       - back
 
   doiservice:
-    image: oapass/doi-service:version0.0.2@sha256:08e8fc7dbd0eb366cf049dd80dd45ab983c155fa6a34ccd32b3dc2315332f65e
+    image: oapass/doi-service:version1.0.0@sha256:3f244a7e0d2bc8f47fa4cca792984cf2f2672eb28a9a650db72ae7beee7e9b4b
     container_name: doiservice
     env_file: .env
     ports:
