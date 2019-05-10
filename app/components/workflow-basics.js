@@ -138,6 +138,8 @@ export default Component.extend({
         toastr.success("We've pre-populated information from the DOI provided!");
         this.sendAction('validateTitle');
         this.sendAction('validateJournal');
+      }).catch((error) => {
+        console.log(`DOI service request failed: ${error.payload.error}`);
       }).finally(() => this.set('inFlight', false));
     },
 
