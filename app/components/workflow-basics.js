@@ -128,7 +128,7 @@ export default Component.extend({
       }
 
       publication.set('doi', doi);
-      this.set('submission.metadata', '[]');
+      this.set('submission.metadata', '{}');
       this.set('inFlight', true);
 
       doiService.resolveDOI(doi).then(async (result) => {
