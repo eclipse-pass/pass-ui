@@ -17,8 +17,8 @@ export default Service.extend({
 
   /**
   * resolveDOI - Lookup information about a DOI using the PASS doi service. Return that information along
-  * with a publication. The publication will have a journal. The doi information is in a normalized
-  * crossref format. (The normalization collaspses the array values of some keys to string values.)
+  * with a publication. The publication will have a persisted journal set, but will not itself be persisted. The doi information
+  * is in a normalized crossref format. (The normalization collaspses the array values of some keys to string values.)
   * The raw crossref format is defined here: https://github.com/CrossRef/rest-api-doc/blob/master/api_format.md
   *
   * @param  {string} doi
@@ -93,7 +93,7 @@ export default Service.extend({
 
     // Add issns key in expected format by parsing journal issns.
     doiCopy.issns = [];
-    journal.issns.forEach((s) => {
+    journal.get('issns').forEach((s) => {
       let i = s.indexOf(':');
       let value = {};
 
