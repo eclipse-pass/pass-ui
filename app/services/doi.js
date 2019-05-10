@@ -102,9 +102,9 @@ export default Service.extend({
       } else {
         let prefix = s.substring(0, i);
 
-        if (prefix === 'P') {
+        if (prefix === 'Print') {
           value.pubType = 'Print';
-        } else if (prefix === 'O') {
+        } else if (prefix === 'Online') {
           value.pubType = 'Online';
         }
 

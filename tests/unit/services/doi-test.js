@@ -65,7 +65,7 @@ module('Unit | Service | doi', (hooks) => {
     const service = this.owner.lookup('service:doi');
     const doiInfo = this.get('mockDoiInfo');
     const journal = Ember.Object.create({
-      issns: ['odd', 'P:moo', 'O:chitter', 'malformed:', ':oddagain', ':'],
+      issns: ['odd', 'Print:moo', 'Online:chitter', 'malformed:', ':oddagain', ':'],
     });
     const result = service.doiToMetadata(doiInfo, journal);
 
@@ -123,7 +123,7 @@ module('Unit | Service | doi', (hooks) => {
     let doiInfo = this.get('mockDoiInfo');
     doiInfo.invalid = 'Bad moo';
     const journal = Ember.Object.create({
-      issns: ['P:moo'],
+      issns: ['Print:moo'],
     });
     const result = this.owner.lookup('service:doi').doiToMetadata(doiInfo, journal, ['authors']);
     assert.ok(result);
