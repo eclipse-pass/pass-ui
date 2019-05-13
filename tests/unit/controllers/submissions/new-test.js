@@ -34,7 +34,9 @@ module('Unit | Controller | submissions/new', (hooks) => {
       createRecord() { return submissionEvent; }
     }));
 
-    let repository1 = Ember.Object.create({ id: 'test:repo1', integrationType: 'full' });
+    let repository1 = Ember.Object.create({
+      id: 'test:repo1', integrationType: 'full', name: 'moo', agreementText: 'Milk cows'
+    });
     let repository2 = Ember.Object.create({ id: 'test:repo2', integrationType: 'web-link' });
 
     let submission = Ember.Object.create({
@@ -42,6 +44,7 @@ module('Unit | Controller | submissions/new', (hooks) => {
       submitter: {
         id: 'submitter:test-id'
       },
+      metadata: '{}',
       repositories: Ember.A([repository1, repository2]),
       save() {
         submissionSaved = true;
@@ -69,7 +72,7 @@ module('Unit | Controller | submissions/new', (hooks) => {
       publication
     });
 
-    assert.expect(13);
+    assert.expect(16);
 
     // After the route transition to thanks, all promises should be resolved handler
     // and tests can be run.
@@ -92,6 +95,13 @@ module('Unit | Controller | submissions/new', (hooks) => {
       assert.equal(submissionEvent.performerRole, 'submitter');
       assert.equal(submissionEvent.comment, comment);
       assert.equal(submissionEvent.eventType, 'submitted');
+
+      let md = JSON.parse(submission.get('metadata'));
+      assert.ok(md.agreements);
+      assert.equal(md.agreements.length, 1);
+      assert.deepEqual(md.agreements[0], {
+        moo: 'Milk cows'
+      });
     });
 
     controller.set('model', model);
