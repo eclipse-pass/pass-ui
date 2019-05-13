@@ -54,6 +54,31 @@ export default Service.extend({
   },
 
   /**
+   * Get a metadata blob containing information about repository agreements. The resulting
+   * object can be merged into the larger metadata blob with #mergeBlobs.
+   *
+   * @param {object} repositories list of Repository model objects
+   * @returns {
+   *    'agreements': [
+   *      {
+   *        Repository.name: Repository.agreementText
+   *      }
+   *    ]
+   * }
+   */
+  getAgreementsBlob(repositories) {
+    const result = [];
+
+    repositories.filter(repo => repo.get('agreementText')).forEach(repo => result.push({
+      [repo.get('name')]: repo.get('agreementText')
+    }));
+
+    return {
+      agreements: result
+    };
+  },
+
+  /**
    * Transform a given metadata object into another object with keys/values suitable for dislplay
    * to a user in the UI.
    *
