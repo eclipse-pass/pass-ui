@@ -180,10 +180,10 @@ module('Unit | Service | submission-handler', (hooks) => {
       assert.equal(submission.get('submitted'), true);
       assert.equal(submission.get('submissionStatus'), 'submitted');
 
-      // web-link repo should be removed and external-submissions added
-      assert.equal(submission.get('repositories.length'), 1);
+      // web-link repo should NOT be removed and external-submissions added not on metadata
+      assert.equal(submission.get('repositories.length'), 2);
       assert.equal(submission.get('repositories.firstObject.id'), repo1.id);
-      assert.ok(submission.get('metadata').includes('external-submissions'));
+      assert.notOk(submission.get('metadata').includes('external-submissions'));
 
       assert.equal(submissionEvent.get('eventType'), 'submitted');
       assert.equal(submissionEvent.get('performerRole'), 'submitter');
