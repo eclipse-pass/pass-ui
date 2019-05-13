@@ -46,6 +46,16 @@ export default Service.extend({
       submission.set('submitted', true);
       submission.set('submissionStatus', 'submitted');
       submission.set('submittedDate', new Date());
+
+      // Add agreements metadata
+      const agreemd = this.get('metadataService').getAgreementsBlob(submission.get('repositories'));
+
+      if (agreemd) {
+        let md = JSON.parse(submission.get('metadata'));
+        this.get('metadataService').mergeBlobs(md, agreemd);
+        submission.set('metadata', JSON.stringify(md));
+      }
+
       submission.set(
         'repositories',
         submission.get('repositories').filter(repo => (repo.get('integrationType') !== 'web-link'))
@@ -131,8 +141,8 @@ export default Service.extend({
    * submit - Perform or prepares a submission. Persists the publication, associate
    *   the submission with the saved publication, modify the submission appropriately,
    *   uploads files, and finally persists the submission with an appropraite event
-   *   to hold the comment. The metadata is not modified. Repositories of type
-   *   web-link are removed if submission is actually submitted.
+   *   to hold the comment. Repositories of type web-link are removed if submission
+   *   is actually submitted.
    *
    * @param  {Submission} submission
    * @param  {Publication} publication Persisted and associated with Submission.
@@ -198,6 +208,15 @@ export default Service.extend({
     if (extmd) {
       let md = JSON.parse(submission.get('metadata'));
       this.get('metadataService').mergeBlobs(md, extmd);
+      submission.set('metadata', JSON.stringify(md));
+    }
+
+    // Add agreements metadata
+    const agreemd = this.get('metadataService').getAgreementsBlob(submission.get('repositories'));
+
+    if (agreemd) {
+      let md = JSON.parse(submission.get('metadata'));
+      this.get('metadataService').mergeBlobs(md, agreemd);
       submission.set('metadata', JSON.stringify(md));
     }
 
