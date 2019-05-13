@@ -162,36 +162,6 @@ export default Service.extend({
   },
 
   /**
-   * _getExternalSubmissionsMetadata - If the submission is submitted, return
-   *  external-submissions object from metadata. Otherwise generate what it
-   *  should be from external repositories.
-   *
-   * @param  {Submission} submission
-   * @returns {Object}          Object with external-submissions key.
-   */
-  _getExternalSubmissionsMetadata(submission) {
-    if (submission.get('submitted')) {
-      const metadata = JSON.parse(submission.get('metadata'));
-      let values = Ember.A();
-
-      // TODO Hack for old style metadata blob. Should remove later.
-      if (Array.isArray(metadata)) {
-        values = metadata.filter(x => x.id === 'external-submissions');
-
-        if (values.length == 0) {
-          return null;
-        }
-
-        return values[0];
-      }
-
-      return metadata;
-    }
-
-    return this.get('metadataService').getExternalReposBlob(submission.get('repositories'));
-  },
-
-  /**
    * approveSubmission - Submitter approves submission. Metadata is added to
    *  external-submissions for all web-link repos and those repos are removed.
    *  Attaches a SubmissionEvent of type submitted with the given comment and
@@ -202,6 +172,7 @@ export default Service.extend({
    * @returns {Promise}        Promise which performs the operation.
    */
   approveSubmission(submission, comment) {
+<<<<<<< HEAD
     const extmd = this._getExternalSubmissionsMetadata(submission);
 
     // Add external submissions metadata
@@ -226,6 +197,8 @@ export default Service.extend({
       submission.get('repositories').filter(repo => (repo.get('integrationType') !== 'web-link'))
     );
 
+=======
+>>>>>>> Remove 'external-submissions' from workflow
     let se = this.get('store').createRecord('submissionEvent', {
       submission,
       performedBy: this.get('currentUser.user'),

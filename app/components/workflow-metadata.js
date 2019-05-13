@@ -180,20 +180,12 @@ export default Component.extend({
    *
    * IMPL NOTE:
    * The final metadata blob will include some extra data sourced from outside the metadata
-   * forms, include (browser) agent info and "external repository" info.
+   * forms, include (browser) agent info.
    */
   finalizeMetadata() {
     this.updateMetadata({
       agent_information: this.getBrowserInfo()
     });
-
-    // Add metadata for external submissions only if the user is the submitter
-    const externalRepos = this.get('metadataService').getExternalReposBlob(this.get('submission.repositories'));
-    const isSubmitter = this.get('submission.submitter.id') === this.get('currentUser.user.id');
-
-    if (isSubmitter && externalRepos['external-submissions'].length > 0) {
-      this.updateMetadata(externalRepos);
-    }
 
     const finalMetadata = this.get('metadata');
     this.set('submission.metadata', JSON.stringify(finalMetadata));
