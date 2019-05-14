@@ -157,8 +157,8 @@ module('Integration | Component | workflow review', (hooks) => {
 
     assert.equal(submitted, true);
 
-    // Submission to full repo only
-    assert.equal(submission.get('repositories.length'), 1);
+    // Submission to full repo and web-link repo
+    assert.equal(submission.get('repositories.length'), 2);
     assert.equal(submission.get('repositories.firstObject.id'), repo1.id);
   });
 
