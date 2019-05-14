@@ -28,10 +28,10 @@ You will need the following things properly installed on your computer.
 
 ## Running / Development
 
-A docker environement which relies on a Shibboleth proxy is in .docker/shib. All services should
+A docker environement which relies on a Shibboleth proxy is in .docker/. All services should
 be available at https://pass.local/.
 
-* In .docker/shib/ run `docker-compose up`
+* In .docker/ run `docker-compose pull && docker-compose up -d`
 * Wait for the containers to finish coming up, this could take 5-10 minutes. There will be a long pause while the `ember` container builds. When you see the "Build successful" message from `ember` and a small table listing the "Slowest Nodes" that indicates the application is ready to use
 * The local code runs in the `ember` container, and changes in the local code will be reflected there.
 * Visit your app at https://pass.local/app
