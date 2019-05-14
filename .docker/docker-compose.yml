@@ -7,7 +7,7 @@ services:
     container_name: ember
     env_file: .env
     volumes:
-      - ../../:/app:Z
+      - ../:/app:Z
       - /app/node_modules
     ports:
       - '${EMBER_PORT}:${EMBER_PORT}'
@@ -15,7 +15,7 @@ services:
       - back
 
   fcrepo:
-    image: oapass/fcrepo:4.7.5-3.4@sha256:3e39b01edf56c149279cfc51b647df335c01f9ec38036f1724f337ae35d68fe8
+    image: oapass/fcrepo:4.7.5-3.4-1@sha256:56faf95a9753f2548665de0154888221a7c02ae2158489d08ec5499ed7ceb3fd
     container_name: fcrepo
     env_file: .env
     ports:
@@ -31,7 +31,7 @@ services:
       - activemq
 
   schemaservice:
-    image: oapass/schema-service:v0.2.1-1-gb28397e
+    image: oapass/schema-service:v0.2.1-1-gb28397@sha256:3a2435f58e7125ff2f5ad150c40fe6767ab1e1be428401b225f5204ed4d8cdda
     container_name: schemaservice
     env_file: .env
     ports:
@@ -53,7 +53,7 @@ services:
       - back
 
   static-html:
-    image: oapass/static-html:20181101-c7be0f8@sha256:38e3098807e250141d5efd4a3db511e248932353d29d887b4c6dd789725447c4
+    image: oapass/static-html:20181116-4ab9eb3@sha256:2c5a8f315783ab41205aaead6c82c6148f9d6334b1dc33b7bf31033cf008d2d6
     container_name: static-html
     env_file: .env
     ports:
@@ -107,7 +107,7 @@ services:
       - source: sp_key
 
   indexer:
-    image: oapass/indexer:0.0.17-3.2-SNAPSHOT@sha256:b572bb48814fb1624a29556fd648de7b4f432c9f65f904d609efcf7f8ac36948
+    image: oapass/indexer:0.0.18-3.4-1@sha256:3375ea702e0a1c7a5e0e7e06635d28e49af436aeb1c3d88a03d4cb494d7b40bf
     container_name: indexer
     env_file: .env
     networks:
