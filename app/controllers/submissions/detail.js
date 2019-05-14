@@ -19,8 +19,7 @@ export default Controller.extend({
     if (!this.get('model.sub.submitted')) {
       return [];
     }
-
-    return this.get('externalSubmissionMetadata') || [];
+    return this.get('externalSubmissionsMetadata') || [];
   }),
   /**
    * Ugly way to generate data for the template to use.
@@ -86,6 +85,12 @@ export default Controller.extend({
     }
   ),
 
+  /**
+   * Awkward object for use in the UI composing Repository objects with related
+   * Deposit and RepositoryCopy objects.
+   *
+   * Explicitly exclude 'web-link' repositories.
+   */
   repoMap: Ember.computed('model.deposits', 'model.repoCopies', function () {
     let hasStuff = false;
     const repos = this.get('model.repos');
@@ -95,7 +100,7 @@ export default Controller.extend({
       return null;
     }
     let map = {};
-    repos.forEach((r) => {
+    repos.filter(repo => !repo.get('_isWebLink')).forEach((r) => {
       (map[r.get('id')] = {
         repo: r
       });
