@@ -29,9 +29,8 @@ export default Component.extend({
     return Object.values(this.get('externalRepoMap')).every(val => val === true);
   }),
   weblinkRepos: Ember.computed('submission.repositories', function () {
-    const repos = this.get('submission.repositories').filter(repo =>
-      repo.get('integrationType') === 'web-link');
-
+    const repos = this.get('submission.repositories').filter(repo => repo.get('_isWebLink'));
+    // debugger
     repos.forEach(repo => (this.get('externalRepoMap')[repo.get('id')] = false)); // eslint-disable-line
     return repos;
   }),
@@ -40,14 +39,10 @@ export default Component.extend({
     const isSubmitter = this.get('currentUser.user.id') === this.get('submission.submitter.id');
     return weblinkExists && isSubmitter;
   }),
-  disableSubmit: Ember.computed(
-    'mustVisitWeblink',
-    'hasVisitedWeblink',
-    function () {
-      const needsToVisitWeblink = this.get('mustVisitWeblink') && !this.get('hasVisitedWeblink');
-      return needsToVisitWeblink;
-    }
-  ),
+  disableSubmit: Ember.computed('mustVisitWeblink', 'hasVisitedWeblink', function () {
+    const needsToVisitWeblink = this.get('mustVisitWeblink') && !this.get('hasVisitedWeblink');
+    return needsToVisitWeblink;
+  }),
   userIsPreparer: Ember.computed('submission', 'currentUser.user', function () {
     const isNotSubmitter = this.get('submission.submitter.id') !== this.get('currentUser.user.id');
     return (this.get('submission.isProxySubmission') && isNotSubmitter);
@@ -84,9 +79,8 @@ export default Component.extend({
       }
 
       // User is submitting on own behalf. Must get repository agreements.
-
       let reposWithAgreementText = this.get('submission.repositories')
-        .filter(repo => (repo.get('integrationType') !== 'web-link') && repo.get('agreementText'))
+        .filter(repo => (!repo.get('_isWebLink')) && repo.get('agreementText'))
         .map(repo => ({
           id: repo.get('name'),
           title: `Deposit requirements for ${repo.get('name')}`,
@@ -94,13 +88,13 @@ export default Component.extend({
         }));
 
       let reposWithoutAgreementText = this.get('submission.repositories')
-        .filter(repo => repo.get('integrationType') !== 'web-link' && !repo.get('agreementText'))
+        .filter(repo => !repo.get('_isWebLink') && !repo.get('agreementText'))
         .map(repo => ({
           id: repo.get('name')
         }));
 
       let reposWithWebLink = this.get('submission.repositories')
-        .filter(repo => repo.get('integrationType') === 'web-link')
+        .filter(repo => repo.get('_isWebLink'))
         .map(repo => ({
           id: repo.get('name')
         }));
@@ -138,7 +132,7 @@ export default Component.extend({
               if (result.value) {
                 // Update repos to reflect repos that user agreed to deposit
                 this.set('submission.repositories', this.get('submission.repositories').filter((repo) => {
-                  if (repo.get('integrationType') === 'web-link') {
+                  if (repo.get('_isWebLink')) {
                     return false;
                   }
                   let temp = reposWithAgreementText.map(x => x.id).includes(repo.get('name'));

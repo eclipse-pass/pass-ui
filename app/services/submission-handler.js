@@ -56,11 +56,6 @@ export default Service.extend({
         submission.set('metadata', JSON.stringify(md));
       }
 
-      submission.set(
-        'repositories',
-        submission.get('repositories').filter(repo => (repo.get('integrationType') !== 'web-link'))
-      );
-
       subEvent.set('performerRole', 'submitter');
       subEvent.set('eventType', 'submitted');
     } else {
@@ -172,16 +167,6 @@ export default Service.extend({
    * @returns {Promise}        Promise which performs the operation.
    */
   approveSubmission(submission, comment) {
-<<<<<<< HEAD
-    const extmd = this._getExternalSubmissionsMetadata(submission);
-
-    // Add external submissions metadata
-    if (extmd) {
-      let md = JSON.parse(submission.get('metadata'));
-      this.get('metadataService').mergeBlobs(md, extmd);
-      submission.set('metadata', JSON.stringify(md));
-    }
-
     // Add agreements metadata
     const agreemd = this.get('metadataService').getAgreementsBlob(submission.get('repositories'));
 
@@ -191,14 +176,6 @@ export default Service.extend({
       submission.set('metadata', JSON.stringify(md));
     }
 
-    // Remove external repositories
-    submission.set(
-      'repositories',
-      submission.get('repositories').filter(repo => (repo.get('integrationType') !== 'web-link'))
-    );
-
-=======
->>>>>>> Remove 'external-submissions' from workflow
     let se = this.get('store').createRecord('submissionEvent', {
       submission,
       performedBy: this.get('currentUser.user'),

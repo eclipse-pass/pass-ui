@@ -35,9 +35,17 @@ module('Unit | Controller | submissions/new', (hooks) => {
     }));
 
     let repository1 = Ember.Object.create({
-      id: 'test:repo1', integrationType: 'full', name: 'moo', agreementText: 'Milk cows'
+      id: 'test:repo1',
+      integrationType: 'full',
+      name: 'moo',
+      agreementText: 'Milk cows',
+      _isWebLink: false
     });
-    let repository2 = Ember.Object.create({ id: 'test:repo2', integrationType: 'web-link' });
+    let repository2 = Ember.Object.create({
+      id: 'test:repo2',
+      integrationType: 'web-link',
+      _isWebLink: true
+    });
 
     let submission = Ember.Object.create({
       id: 'sub:0',
@@ -86,8 +94,8 @@ module('Unit | Controller | submissions/new', (hooks) => {
       assert.equal(submission.submitted, true);
       assert.equal(submission.submissionStatus, 'submitted');
 
-      // check web-linked repo is removed
-      assert.equal(submission.repositories.length, 1);
+      // check web-linked repo is NOT removed
+      assert.equal(submission.repositories.length, 2);
       assert.equal(submission.repositories[0].id, 'test:repo1');
 
       assert.equal(submissionEvent.submission.submitter.id, 'submitter:test-id');

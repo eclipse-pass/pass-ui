@@ -21,16 +21,16 @@
         <div class="row">
           <strong class="col-5 px-0">Deposit status: </strong>
           {{#if isExternalRepo}}
-            {{#if isSubmitted}}
+            {{!-- {{#if isSubmitted}}
               <span class="col">Deposit into {{repo.name}} was prompted.</span>
             {{else}}
               <span class="col">Deposit into {{repo.name}} will be prompted.</span>
-            {{/if}}
+            {{/if}} --}}
           {{else}}
             <div class="col">
               {{#if tooltip}}
                 <span class="{{status}}" tooltip-position="left" tooltip="{{tooltip}}">
-                  <i class="fas fa-info-circle"></i> 
+                  <i class="fas fa-info-circle"></i>
                   {{#if (eq status "not-submitted")}}
                     n&#47;a
                   {{else}}

@@ -14,18 +14,13 @@ export default Controller.extend({
       $('[data-toggle="tooltip"]').tooltip();
     });
   }.on('init'),
+
   externalSubmission: Ember.computed('externalSubmissionsMetadata', 'model.sub.submitted', function () {
     if (!this.get('model.sub.submitted')) {
       return [];
     }
 
-    let md = this.get('externalSubmissionsMetadata');
-
-    if (md) {
-      return md['external-submissions'];
-    }
-
-    return [];
+    return this.get('externalSubmissionMetadata') || [];
   }),
   /**
    * Ugly way to generate data for the template to use.
@@ -42,45 +37,38 @@ export default Controller.extend({
   hasVisitedWeblink: Ember.computed('externalRepoMap', function () {
     return Object.values(this.get('externalRepoMap')).every(val => val === true);
   }),
+
   /**
-   * If the submission is submitted, return external-submissions object from metadata.
-   * Otherwise generate what it should be from external repositories.
+   * Get enough information about 'web-link' repositories to display to a user.
    */
-  externalSubmissionsMetadata: Ember.computed('model.sub.submitted', 'model.sub.metadata', function () {
-    if (this.get('model.sub.submitted')) {
-      const metadata = JSON.parse(this.get('model.sub.metadata'));
-      let values = Ember.A();
+  externalSubmissionsMetadata: Ember.computed('model.sub.submitted', 'model.sub.repositories', function () {
+    let result = [];
 
-      // Old style metadata blob :(
-      if (Array.isArray(metadata)) {
-        values = metadata.filter(x => x.id === 'external-submissions');
+    this.get('model.sub.repositories').filter(repo => repo.get('_isWebLink'))
+      .forEach((repo) => {
+        result.push({
+          message: `Deposit into ${repo.get('name')} was prompted`,
+          name: repo.get('name'),
+          url: repo.get('url')
+        });
+      });
 
-        if (values.length == 0) {
-          return null;
-        }
-
-        return values[0];
-      }
-
-      return metadata;
-    }
-
-    const repos = this.get('model.repos');
-    return this.get('metadataService').getExternalReposBlob(repos);
+    return result;
   }),
+
   weblinkRepos: Ember.computed('externalSubmissionsMetadata', function () {
     let md = this.get('externalSubmissionsMetadata');
 
-    if (md && md['external-submissions']) {
-      let externalRepoList = md['external-submissions'];
-      externalRepoList.forEach((repo) => {
+    if (Array.isArray(md) && md.length > 0) {
+      md.forEach((repo) => {
         this.get('externalRepoMap')[repo.name] = false;
       });
-      return externalRepoList;
+      return md;
     }
 
     return [];
   }),
+
   mustVisitWeblink: Ember.computed('weblinkRepos', 'model', function () {
     const weblinkExists = this.get('weblinkRepos').length > 0;
     const isSubmitter = this.get('currentUser.user.id') === this.get('model.sub.submitter.id');
@@ -88,6 +76,7 @@ export default Controller.extend({
     const isSubmitted = this.get('model.sub.submitted');
     return weblinkExists && isSubmitter && isProxySubmission && !isSubmitted;
   }),
+
   disableSubmit: Ember.computed(
     'mustVisitWeblink',
     'hasVisitedWeblink',
@@ -96,6 +85,7 @@ export default Controller.extend({
       return needsToVisitWeblink;
     }
   ),
+
   repoMap: Ember.computed('model.deposits', 'model.repoCopies', function () {
     let hasStuff = false;
     const repos = this.get('model.repos');
@@ -152,19 +142,19 @@ export default Controller.extend({
 
     return null;
   }),
-  // metadataBlobNoKeys: Ember.computed('model.sub.metadata', function () {
-  //   return this.get('metadataService').getDisplayBlob(this.get('model.sub.metadata'));
-  // }),
+
   isSubmitter: Ember.computed('currentUser.user', 'model', function () {
     return (
       this.get('model.sub.submitter.id') === this.get('currentUser.user.id')
     );
   }),
+
   isPreparer: Ember.computed('currentUser.user', 'model', function () {
     return this.get('model.sub.preparers')
       .map(x => x.get('id'))
       .includes(this.get('currentUser.user.id'));
   }),
+
   submissionNeedsPreparer: Ember.computed(
     'currentUser.user',
     'model',
@@ -172,6 +162,7 @@ export default Controller.extend({
       return this.get('model.sub.submissionStatus') === 'changes-requested';
     }
   ),
+
   submissionNeedsSubmitter: Ember.computed(
     'currentUser.user',
     'model',
@@ -182,6 +173,7 @@ export default Controller.extend({
       );
     }
   ),
+
   displaySubmitterName: Ember.computed('model.sub', function () {
     if (this.get('model.sub.submitter.displayName')) {
       return this.get('model.sub.submitter.displayName');
@@ -192,6 +184,7 @@ export default Controller.extend({
     }
     return '';
   }),
+
   displaySubmitterEmail: Ember.computed('model.sub', function () {
     if (this.get('model.sub.submitter.email')) {
       return this.get('model.sub.submitter.email');
@@ -200,6 +193,7 @@ export default Controller.extend({
     }
     return '';
   }),
+
   actions: {
     openWeblinkAlert(repo) {
       swal({
@@ -226,6 +220,7 @@ export default Controller.extend({
         win.focus();
       });
     },
+
     requestMoreChanges() {
       let sub = this.get('model.sub');
       let message = this.get('message');
@@ -241,6 +236,7 @@ export default Controller.extend({
         this.get('submissionHandler').requestSubmissionChanges(sub, message).then(() => window.location.reload(true));
       }
     },
+
     async approveChanges() {
       let baseURL = window.location.href.replace(new RegExp(`${ENV.rootURL}.*`), '');
       // First, check if user has visited all required weblinks.
@@ -278,7 +274,7 @@ export default Controller.extend({
       }
 
       let reposWithAgreementText = this.get('model.repos')
-        .filter(repo => (repo.get('integrationType') !== 'web-link') && repo.get('agreementText'))
+        .filter(repo => (!repo.get('_isWebLink')) && repo.get('agreementText'))
         .map(repo => ({
           id: repo.get('name'),
           title: `Deposit requirements for ${repo.get('name')}`,
@@ -286,23 +282,17 @@ export default Controller.extend({
         }));
 
       let reposWithoutAgreementText = this.get('model.repos')
-        .filter(repo => repo.get('integrationType') !== 'web-link' && !repo.get('agreementText'))
+        .filter(repo => !repo.get('_isWebLink') && !repo.get('agreementText'))
         .map(repo => ({
           id: repo.get('name')
         }));
 
       let reposWithWebLink = this.get('model.repos')
-        .filter(repo => repo.get('integrationType') === 'web-link')
+        .filter(repo => repo.get('_isWebLink'))
         .map(repo => ({
           id: repo.get('name')
         }));
 
-      // INFO: this is used to testing more then 1 repo.
-      // reposWithAgreementText.push({
-      //   id: 'some',
-      //   title: `Deposit requirements for `,
-      //   html: `<textarea rows="16" cols="40" name="embargo" class="alpaca-control form-control disabled" disabled="" autocomplete="off"></textarea>`
-      // });
       const result = await swal.mixin({
         input: 'checkbox',
         inputPlaceholder: 'I agree to the above statement on today\'s date ',
@@ -338,7 +328,7 @@ export default Controller.extend({
                 // Update repos to reflect repos that user agreed to deposit.
                 // Must keep web-link repos.
                 this.set('model.sub.repositories', this.get('model.sub.repositories').filter((repo) => {
-                  if (repo.get('integrationType') === 'weblink') {
+                  if (repo.get('_isWebLink')) {
                     return true;
                   }
                   let temp = reposWithAgreementText.map(x => x.id).includes(repo.get('name'));
@@ -390,6 +380,7 @@ export default Controller.extend({
         }
       }
     },
+
     cancelSubmission() {
       let message = this.get('message');
       let sub = this.get('model.sub');
@@ -417,6 +408,7 @@ export default Controller.extend({
         }
       });
     },
+
     deleteSubmission(submission) {
       swal({
         text: 'Are you sure you want to delete this draft submission? This cannot be undone.',
