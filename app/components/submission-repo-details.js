@@ -62,7 +62,7 @@ export default Component.extend({
    * (e.g. US Dept of Education submission system ERIC)
    */
   isExternalRepo: Ember.computed('repo', function () {
-    return this.get('repo.integrationType') === 'web-link';
+    return this.get('repo._isWebLink');
   }),
 
   isSubmitted: Ember.computed('submission.submitted', function () {

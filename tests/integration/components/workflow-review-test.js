@@ -93,10 +93,18 @@ module('Integration | Component | workflow review', (hooks) => {
     assert.ok(controller);
 
     let repo1 = Ember.Object.create({
-      id: 'test:repo1', integrationType: 'full', agreementText: 'Cows are the best', name: 'repo1'
+      id: 'test:repo1',
+      integrationType: 'full',
+      agreementText: 'Cows are the best',
+      name: 'repo1',
+      _isWebLink: false
     });
     let repo2 = Ember.Object.create({
-      id: 'test:repo2', integrationType: 'web-link', url: '', name: 'repo2'
+      id: 'test:repo2',
+      integrationType: 'web-link',
+      url: '',
+      name: 'repo2',
+      _isWebLink: true
     });
     let submitted = false;
 
@@ -158,7 +166,12 @@ module('Integration | Component | workflow review', (hooks) => {
     let controller = this.owner.lookup('controller:submissions/new/review');
     assert.ok(controller);
 
-    let repo2 = Ember.Object.create({ id: 'test:repo2', integrationType: 'web-link', name: 'repo2' });
+    let repo2 = Ember.Object.create({
+      id: 'test:repo2',
+      integrationType: 'web-link',
+      name: 'repo2',
+      _isWebLink: true
+    });
     let submitted = false;
 
     this.owner.register('service:current-user', Ember.Object.extend({
