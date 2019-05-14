@@ -30,7 +30,6 @@ export default Component.extend({
   }),
   weblinkRepos: Ember.computed('submission.repositories', function () {
     const repos = this.get('submission.repositories').filter(repo => repo.get('_isWebLink'));
-    // debugger
     repos.forEach(repo => (this.get('externalRepoMap')[repo.get('id')] = false)); // eslint-disable-line
     return repos;
   }),
@@ -130,10 +129,14 @@ export default Component.extend({
               showCancelButton: true,
             }).then((result) => {
               if (result.value) {
-                // Update repos to reflect repos that user agreed to deposit
+                /*
+                 * Update repos to reflect repos that user agreed to deposit
+                 * It is assumed that the user has done the necessary steps for each web-link repository,
+                 * so those are also kept in the list
+                 */
                 this.set('submission.repositories', this.get('submission.repositories').filter((repo) => {
                   if (repo.get('_isWebLink')) {
-                    return false;
+                    return true;
                   }
                   let temp = reposWithAgreementText.map(x => x.id).includes(repo.get('name'));
                   if (!temp) {
