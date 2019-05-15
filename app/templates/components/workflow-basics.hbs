@@ -51,13 +51,12 @@
   </p>
 
   {{input
-  class=doiClass
-  value=publication.doi
-  keyUp=(action "lookupDOI")
-  mouseUp=(action "lookupDOI")
-  id="doi"
-  placeholder="Leave blank if your manuscript or article has not yet been assigned a DOI"
-  readonly=submission.id
+    class=doiClass
+    value=publication.doi
+    keyUp=(action "lookupDOI")
+    mouseUp=(action "lookupDOI")
+    id="doi"
+    placeholder="Leave blank if your manuscript or article has not yet been assigned a DOI"
   }}
   <div class="text-danger">
     {{if (and publication.doi (not isValidDOI)) 'Please provide a valid DOI'}}

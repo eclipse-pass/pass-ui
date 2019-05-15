@@ -7,6 +7,7 @@ export default Component.extend({
   workflow: service('workflow'),
   currentUser: service('current-user'),
   doiService: service('doi'),
+  metadataService: service('metadata-blob'),
 
   inFlight: false,
   isShowingUserSearchModal: false,
@@ -33,6 +34,14 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
     this.send('lookupDOI');
+    /**
+     * If a Journal object exists in the model, then we have loaded an existing Submission
+     * with a Publication and a Journal. We need to make sure that this journal makes it
+     * into 'doiInfo' so it can be used in later steps.
+     */
+    if (this.get('journal')) {
+      this.send('selectJournal', this.get('journal'));
+    }
   },
   isValidDOI: Ember.computed('publication.doi', function () {
     return this.get('doiService').isValidDOI(this.get('publication.doi'));
@@ -146,9 +155,12 @@ export default Component.extend({
     /** Sets the selected journal for the current publication.
      * @param journal {DS.Model} The journal
      */
-    async selectJournal(journal) {
+    selectJournal(journal) {
       let doiInfo = this.get('doiInfo');
-      doiInfo = { 'journal-title': journal.get('journalName'), ISSN: journal.get('issns') };
+      // Formats metadata and adds journal metadata
+      let metadata = this.get('doiService').doiToMetadata(doiInfo, journal);
+      metadata['journal-title'] = journal.get('journalName');
+      doiInfo = this.get('metadataService').mergeBlobs(doiInfo, metadata);
 
       this.set('doiInfo', doiInfo);
 
