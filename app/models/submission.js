@@ -7,7 +7,7 @@ export default DS.Model.extend({
   }),
   submittedDate: DS.attr('date'),
   source: DS.attr('string', { defaultValue: 'pass' }),
-  metadata: DS.attr('string', { defaultValue: '[]' }), // Stringified JSON
+  metadata: DS.attr('string'), // Stringified JSON
   submitted: DS.attr('boolean', { defaultValue: false }),
   submissionStatus: DS.attr('string'),
   submitterName: DS.attr('string'),

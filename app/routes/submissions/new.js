@@ -39,6 +39,7 @@ export default CheckSessionRoute.extend({
       return this.get('store').findRecord('submission', params.submission).then((sub) => {
         newSubmission = this.get('store').findRecord('submission', params.submission);
         publication = sub.get('publication');
+        const journal = publication.get('journal');
         submissionEvents = this.get('store').query('submissionEvent', {
           sort: [
             { performedDate: 'asc' }
@@ -54,6 +55,13 @@ export default CheckSessionRoute.extend({
             submission: sub.get('id')
           }
         });
+
+        // Also seed workflow.doiInfo with metadata from the Submission
+        const metadata = sub.get('metadata');
+        if (metadata) {
+          this.get('workflow').setDoiInfo(JSON.parse(metadata));
+        }
+
         return Ember.RSVP.hash({
           repositories,
           newSubmission,
@@ -61,7 +69,8 @@ export default CheckSessionRoute.extend({
           publication,
           policies,
           preLoadedGrant,
-          files
+          files,
+          journal
         });
       });
     }
