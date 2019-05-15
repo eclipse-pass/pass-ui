@@ -96,6 +96,13 @@ export default Controller.extend({
           }
         }
       }
+
+      // After validation, we can save the publication to the Submission
+      const publication = this.get('publication');
+      publication.save().then(() => {
+        this.set('submission.publication', publication);
+      });
+
       this.send('loadTab', gotoRoute);
     },
     validateTitle() {
