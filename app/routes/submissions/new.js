@@ -65,7 +65,9 @@ export default CheckSessionRoute.extend({
         });
       });
     }
-    newSubmission = this.get('store').createRecord('submission');
+    newSubmission = this.get('store').createRecord('submission', {
+      submissionStatus: 'draft'
+    });
     const h = Ember.RSVP.hash({
       repositories,
       newSubmission,

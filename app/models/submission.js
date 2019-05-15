@@ -82,8 +82,7 @@ export default DS.Model.extend({
    * @returns {boolean} is this a draft submission?
    */
   isDraft: Ember.computed('submitted', 'submissionStatus', function () {
-    // TODO: after model update, we can just check if submission status === 'draft'
-    // return this.get('record.submissinoStatus') === 'draft';
-    return !this.get('submitted') && !this.get('submissionStatus');
+    return this.get('submissionStatus') === 'draft';
+    // return !this.get('submitted') && !this.get('submissionStatus');
   })
 });
