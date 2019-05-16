@@ -159,7 +159,7 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
   });
 
   test('check validateAndLoadTab accepts complete information', function (assert) {
-    assert.expect(10);
+    assert.expect(11);
 
     let subSaved = false;
 
@@ -179,6 +179,10 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
       title: 'Test publication title',
       journal: {
         id: 'journal:id'
+      },
+      save() {
+        assert.ok(true);
+        return Promise.resolve();
       }
     });
     let model = {
@@ -210,7 +214,7 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
    * action is sent to the controller.
    */
   test('make sure submission is saved', function (assert) {
-    assert.expect(1);
+    assert.expect(2);
 
     const controller = this.owner.lookup('controller:submissions/new/basics');
     const model = {
@@ -218,7 +222,8 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
         title: 'This is the moo-iest',
         journal: Ember.Object.create({
           id: 'journal:id'
-        })
+        }),
+        save: () => Promise.resolve(assert.ok(true))
       }),
       newSubmission: Ember.Object.create({
         save: () => Promise.resolve(assert.ok(true))
