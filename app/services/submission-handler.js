@@ -8,7 +8,7 @@ import ENV from 'pass-ember/config/environment';
 export default Service.extend({
   store: Ember.inject.service('store'),
   currentUser: Ember.inject.service('current-user'),
-  metadataService: Ember.inject.service('metadata-blob'),
+  schemaService: Ember.inject.service('metadata-schema'),
 
   /**
    * _getSubmissionView - Internal method which returns the URL to view a submission.
@@ -48,11 +48,11 @@ export default Service.extend({
       submission.set('submittedDate', new Date());
 
       // Add agreements metadata
-      const agreemd = this.get('metadataService').getAgreementsBlob(submission.get('repositories'));
+      const agreemd = this.get('schemaService').getAgreementsBlob(submission.get('repositories'));
 
       if (agreemd) {
         let md = JSON.parse(submission.get('metadata'));
-        this.get('metadataService').mergeBlobs(md, agreemd);
+        this.get('schemaService').mergeBlobs(md, agreemd);
         submission.set('metadata', JSON.stringify(md));
       }
 
@@ -170,11 +170,11 @@ export default Service.extend({
    */
   approveSubmission(submission, comment) {
     // Add agreements metadata
-    const agreemd = this.get('metadataService').getAgreementsBlob(submission.get('repositories'));
+    const agreemd = this.get('schemaService').getAgreementsBlob(submission.get('repositories'));
 
     if (agreemd) {
       let md = JSON.parse(submission.get('metadata'));
-      this.get('metadataService').mergeBlobs(md, agreemd);
+      this.get('schemaService').mergeBlobs(md, agreemd);
       submission.set('metadata', JSON.stringify(md));
     }
 
