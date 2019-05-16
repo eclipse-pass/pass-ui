@@ -1,7 +1,18 @@
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 
-
+/**
+ * IMPL NOTE:
+ * An interesting thing to consider: say a user goes through the submission workflow and ends up filling
+ * out some custom values in the metadata fields presented to them. The user then leaves the workflow
+ * leaving us with a 'draft' submission that can be resumed later. When we re-enter the submission
+ * workflow, we don't want to clobber the user-entered metadata.
+ *
+ * If submission metadata exists, it means the user at least made it past the metadata details step
+ * in the workflow. In this case, we should trust this metadata over data from the DOI service. Since
+ * data from the DOI is used to seed the metadata step, we can be sure that this data already exists
+ * in the submission metadata.
+ */
 export default Component.extend({
   store: service('store'),
   workflow: service('workflow'),
@@ -33,16 +44,26 @@ export default Component.extend({
   },
   didInsertElement() {
     this._super(...arguments);
-    this.send('lookupDOI');
     /**
-     * If a Journal object exists in the model, then we have loaded an existing Submission
-     * with a Publication and a Journal. We need to make sure that this journal makes it
-     * into 'doiInfo' so it can be used in later steps.
-     *
-     * Only do this if there is no publication DOI, as the DOI lookup will cover this case.
+     * See IMPL NOTE above regarding the existance of submission metadata
      */
-    if (!this.get('publication.doi') && this.get('journal')) {
-      this.send('selectJournal', this.get('journal'));
+    try {
+      JSON.parse(this.get('submission.metadata'));
+    } catch (e) {
+      /**
+       * Either 'metadata' is missing or malformed
+       */
+      this.send('lookupDOI');
+      /**
+       * If a Journal object exists in the model, then we have loaded an existing Submission
+       * with a Publication and a Journal. We need to make sure that this journal makes it
+       * into 'doiInfo' so it can be used in later steps.
+       *
+       * Only do this if there is no publication DOI, as the DOI lookup will cover this case.
+       */
+      if (!this.get('publication.doi') && this.get('journal')) {
+        this.send('selectJournal', this.get('journal'));
+      }
     }
   },
   isValidDOI: Ember.computed('publication.doi', function () {
