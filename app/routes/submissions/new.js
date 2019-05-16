@@ -37,7 +37,7 @@ export default CheckSessionRoute.extend({
 
     if (params.submission) {
       return this.get('store').findRecord('submission', params.submission).then((sub) => {
-        newSubmission = this.get('store').findRecord('submission', params.submission);
+        newSubmission = sub;
         publication = sub.get('publication');
         const journal = publication.get('journal');
         submissionEvents = this.get('store').query('submissionEvent', {
@@ -75,7 +75,8 @@ export default CheckSessionRoute.extend({
       });
     }
     newSubmission = this.get('store').createRecord('submission', {
-      submissionStatus: 'draft'
+      submissionStatus: 'draft',
+      publication
     });
     const h = Ember.RSVP.hash({
       repositories,
