@@ -38,8 +38,10 @@ export default Component.extend({
      * If a Journal object exists in the model, then we have loaded an existing Submission
      * with a Publication and a Journal. We need to make sure that this journal makes it
      * into 'doiInfo' so it can be used in later steps.
+     *
+     * Only do this if there is no publication DOI, as the DOI lookup will cover this case.
      */
-    if (this.get('journal')) {
+    if (!this.get('publication.doi') && this.get('journal')) {
       this.send('selectJournal', this.get('journal'));
     }
   },
