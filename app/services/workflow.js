@@ -17,7 +17,7 @@ export default Service.extend({
     this.setMaxStep(1);
     this.setPmcPublisherDeposit(false);
     this.setFilesTemp([]);
-    this.setDoiInfo([]);
+    this.setDoiInfo({});
     this.setDefaultRepoLoaded(false);
   },
   getCurrentStep() {

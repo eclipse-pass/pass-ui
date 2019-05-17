@@ -48,7 +48,12 @@ export default Component.extend({
      * See IMPL NOTE above regarding the existance of submission metadata
      */
     try {
-      JSON.parse(this.get('submission.metadata'));
+      /**
+       * Set workflow doiInfo because of some weird timing between `routes/submissions/new/index#beforeModel`
+       * and `routes/submissions/new#model()` causing the doiInfo in 'workflow' to reset after it is
+       * defined by the incoming submission
+       */
+      this.get('workflow').setDoiInfo(JSON.parse(this.get('submission.metadata')));
     } catch (e) {
       /**
        * Either 'metadata' is missing or malformed
