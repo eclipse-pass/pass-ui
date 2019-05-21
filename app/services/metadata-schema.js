@@ -110,9 +110,24 @@ export default Service.extend({
 
     schemas.map(schema => this.alpacafySchema(schema))
       .forEach((schema) => {
-        Object.keys(schema.options.fields)
+        Object.keys(schema.schema.properties)
           .filter(key => !fields.includes(key))
           .forEach(key => fields.push(key));
+      });
+
+    /**
+     * Add fields from properties defined in schema.allOf
+     * Make sure the top level `schema.additionalProperties` is not explicitly set to FALSE
+     */
+    schemas.filter(schema => (schema.additionalProperties !== false) && schema.allOf)
+      .map(schema => schema.allOf)
+      .forEach((allOf) => {
+        allOf.filter(schema => schema.properties)
+          .map(schema => schema.properties)
+          .forEach((props) => {
+            Object.keys(props).filter(key => !fields.includes(key))
+              .forEach(key => fields.push(key));
+          });
       });
 
     return fields;
