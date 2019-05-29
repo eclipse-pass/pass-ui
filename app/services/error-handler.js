@@ -6,6 +6,12 @@ import ENV from 'pass-ember/config/environment';
 
 export default Service.extend({
   handleError(error) {
+    if (error.name == 'TransitionAborted') {
+      // Ignore what seems to be spurious transition errors.
+      // See https://github.com/emberjs/ember.js/issues/12505
+      return;
+    }
+
     console.log(`Handling error: ${JSON.stringify(error.message)}`);
 
     // Error stack is non-standard. Show if available.
@@ -16,9 +22,7 @@ export default Service.extend({
       console.log(error);
     }
 
-    if (error.name == 'TransitionAborted') {
-      // Ignore
-    } else if (error.message === 'shib302') {
+    if (error.message === 'shib302') {
       // Sent from the session checker to indicate the session has timed out.
       this.handleSessionTimeout(error);
     } else if (error.message === 'didNotLoadData') {
