@@ -161,4 +161,12 @@ module('Unit | Service | metadata-schema', (hooks) => {
     const errors = service.getErrors();
     assert.equal(1, errors.length, 'Should have found 1 error');
   });
+
+  test('Get fields includes \'allOf\' properties', function (assert) {
+    const service = this.owner.lookup('service:metadata-schema');
+    const result = service.getFields([this.get('mockSchema')]);
+
+    assert.ok(result, 'No results found');
+    assert.ok(result.includes('issns'));
+  });
 });
