@@ -204,6 +204,46 @@ export default Service.extend({
   },
 
   /**
+   * Return metadata object as a set of label, string entries for display.
+   *
+   * @param {*} key
+   * @param {*} obj
+   */
+  _formatComplexMetadataObject(key, obj) {
+    if (key === 'issns') {
+      return { ISSN: `${obj.issn}(${obj.pubType})` };
+    } else if (key == 'authors') {
+      let author = obj.author;
+
+      if ('orcid' in obj) {
+        author += `(${obj.orcid})`;
+      }
+
+      return { Author: author };
+    }
+
+    return obj;
+  },
+
+  /**
+   * Return metadata value for display.
+   *
+   * @param {*} key
+   * @param {*} obj
+   */
+  _formatMetadata(key, val) {
+    if (Array.isArray(val)) {
+      return val.map(o => this._formatComplexMetadataObject(key, o));
+    } else if (typeof val === 'object') {
+      return this._formatComplexMetadataObject(key, val);
+    } else if (typeof val === 'string') {
+      return val;
+    }
+
+    return null;
+  },
+
+  /**
    * Returns an array of values suitable to display the metadata asscoiated with a
    * submission.
    *
@@ -211,30 +251,26 @@ export default Service.extend({
    * @returns [{label, value, isArray}]
    */
   async displayMetadata(submission) {
-      // Metadata keys to ignore (not display)
-    const ignoreList = ['agent_information', '$schema'];
+      // Metadata keys to display and the order to display them in.
+    const whiteList = ['authors', 'abstract', 'doi', 'Embargo-end-date', 'journal-NLMTA-ID', 'journal-title', 'journal-title-short', 'issue', 'issns',
+                        'publisher', 'publicationDate', 'title', 'volume'];
 
     const schemas = await this.getMetadataSchemas(submission.get('repositories'));
     const titleMap = this.getFieldTitleMap(schemas);
     const metadata = JSON.parse(submission.get('metadata'));
 
     const result = [];
-
-    Object.keys(metadata).filter(key => !ignoreList.includes(key)).forEach((key) => {
-      let value = metadata[key];
+    whiteList.filter(key => key in metadata).forEach((key) => {
+      const value = this._formatMetadata(key, metadata[key]);
       const isArray = Array.isArray(value);
 
-      if (!value || (isArray && value.length === 0)) {
-        return;
-      } else if (isArray && value.hasOwnProperty('toArray')) {
-        value = value.toArray();
+      if (value) {
+        result.push({
+          label: titleMap[key],
+          value,
+          isArray
+        });
       }
-
-      result.push({
-        label: titleMap[key],
-        value,
-        isArray
-      });
     });
 
     return result;
