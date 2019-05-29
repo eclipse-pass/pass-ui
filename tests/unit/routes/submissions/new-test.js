@@ -55,7 +55,7 @@ module('Unit | Route | submissions/new', (hooks) => {
    * Expect that createRecord and findRecord are each called once and that
    */
   test('The mock submission returned from model() when it\'s ID is included', async function (assert) {
-    assert.expect(7);
+    assert.expect(6);
 
     const mockSub = this.get('submission');
 
@@ -65,7 +65,7 @@ module('Unit | Route | submissions/new', (hooks) => {
       createRecord(type, data) {
         switch (type) {
           case 'publication':
-            assert.ok(true);
+            assert.ok(false, 'should not create a publication');
             return Promise.resolve(Ember.Object.create({ title: 'MockMoo' }));
           default:
             assert.ok(false, `unexpected 'createRecord' type found: ${type}`);
