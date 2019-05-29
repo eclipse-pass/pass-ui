@@ -41,7 +41,7 @@ export default CheckSessionRoute.extend({
       // Operating on existing submission
 
       newSubmission = await this.get('store').findRecord('submission', params.submission);
-      publication = newSubmission.get('publication');
+      publication = await newSubmission.get('publication');
       journal = publication.get('journal');
 
       submissionEvents = this.get('store').query('submissionEvent', {
