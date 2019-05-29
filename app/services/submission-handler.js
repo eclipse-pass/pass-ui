@@ -266,8 +266,8 @@ export default Service.extend({
   async deleteSubmission(submission) {
     const result = [];
 
-    const pub = submission.get('publication');
-    if (pub && pub.hasOwnProperty('destroyRecord')) {
+    const pub = await submission.get('publication');
+    if (pub) {
       result.push(pub.destroyRecord());
     }
 
