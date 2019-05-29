@@ -317,49 +317,20 @@ td {
   content: "\f05a";
 }
 
-.alpaca-field-array .alpaca-container-label {
-  font-size: 1em!important;
-}
-.alpaca-array-actionbar-bottom {
-  margin-top:-25px;
-}
-.alpaca-vertical {
-  margin-bottom: 20px;
-}
-
-.alpaca-array-actionbar-top {
-  float: right;
-  margin-right: -130px;
-  display: inline-flex!important;
-}
-[data-alpaca-container-item-name*="authors_"] {
+.alpaca-container {
   width: 100%;
+}
+.alpaca-container .md-pubtype {
+  label {
+    display: block;
+  }
+  .radio label {
+    margin-left: 12px;
+  }
 }
 
 .help-block {
   display: none;
-}
-[data-alpaca-container-item-name*="authors_"] > div > div:nth-child(2) > div  {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-}
-[data-alpaca-container-item-name*="authors_"] > div > div:nth-child(2) > div > div:nth-child(odd)   {
-  margin-right: 2px;
-}
-[data-alpaca-container-item-name*="authors_"] > div > div:nth-child(2) > div > div:nth-child(even)   {
-  margin-left: 2px;
-}
-
-@media (max-width: 1200px) {
-  .alpaca-array-actionbar-top {
-    float: left;
-    margin-right: 0;
-    margin-bottom: 3px;
-  }
-  [data-alpaca-container-item-name*="authors_"] > div > div:nth-child(2) > div  {
-    width: 100%;
-  }
 }
 
 .form-control:disabled, .form-control[readonly] {
