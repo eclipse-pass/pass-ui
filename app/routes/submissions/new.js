@@ -17,16 +17,18 @@ export default CheckSessionRoute.extend({
     }
   },
 
-  // Return a promise to load count objects starting at offsefrom of given type.
+  // Return a promise to load count objects starting at offset from of given type.
   loadObjects(type, offset, count) {
     return this.get('store').query(type, { query: { match_all: {} }, from: offset, size: count });
   },
-  model(params) {
+
+  async model(params) {
     let preLoadedGrant = null;
     let newSubmission = null;
     let submissionEvents = null;
     let files = null;
-    let publication = this.get('store').createRecord('publication');
+    let publication = null;
+    let journal = null;
 
     if (params.grant) {
       preLoadedGrant = this.get('store').findRecord('grant', params.grant);
@@ -36,54 +38,53 @@ export default CheckSessionRoute.extend({
     const policies = this.loadObjects('policy', 0, 500);
 
     if (params.submission) {
-      return this.get('store').findRecord('submission', params.submission).then((sub) => {
-        newSubmission = sub;
-        publication = sub.get('publication');
-        const journal = publication.get('journal');
-        submissionEvents = this.get('store').query('submissionEvent', {
-          sort: [
-            { performedDate: 'asc' }
-          ],
-          query: {
-            term: {
-              submission: sub.get('id')
-            }
-          }
-        });
-        files = this.get('store').query('file', {
+      // Operating on existing submission
+
+      newSubmission = await this.get('store').findRecord('submission', params.submission);
+      publication = newSubmission.get('publication');
+      journal = publication.get('journal');
+
+      submissionEvents = this.get('store').query('submissionEvent', {
+        sort: [
+          { performedDate: 'asc' }
+        ],
+        query: {
           term: {
-            submission: sub.get('id')
+            submission: newSubmission.get('id')
           }
-        });
-
-        // Also seed workflow.doiInfo with metadata from the Submission
-        const metadata = sub.get('metadata');
-        if (metadata) {
-          this.get('workflow').setDoiInfo(JSON.parse(metadata));
         }
+      });
 
-        return Ember.RSVP.hash({
-          repositories,
-          newSubmission,
-          submissionEvents,
-          publication,
-          policies,
-          preLoadedGrant,
-          files,
-          journal
-        });
+      files = this.get('store').query('file', {
+        term: {
+          submission: newSubmission.get('id')
+        }
+      });
+
+      // Also seed workflow.doiInfo with metadata from the Submission
+      const metadata = newSubmission.get('metadata');
+      if (metadata) {
+        this.get('workflow').setDoiInfo(JSON.parse(metadata));
+      }
+    } else {
+      // Starting a new submission
+
+      publication = this.get('store').createRecord('publication');
+
+      newSubmission = this.get('store').createRecord('submission', {
+        submissionStatus: 'draft'
       });
     }
-    newSubmission = this.get('store').createRecord('submission', {
-      submissionStatus: 'draft'
-    });
-    const h = Ember.RSVP.hash({
+
+    return Ember.RSVP.hash({
       repositories,
       newSubmission,
+      submissionEvents,
       publication,
       policies,
-      preLoadedGrant
+      preLoadedGrant,
+      files,
+      journal
     });
-    return h;
   }
 });
