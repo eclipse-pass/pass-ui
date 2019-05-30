@@ -16,8 +16,22 @@ export default Service.extend({
 
     // this.set('base', ENV.policyService.url);
     const policyConf = ENV.policyService;
-    this.set('policyUrl', `${policyConf.url}${policyConf.policySuffix}`);
-    this.set('repoUrl', `${policyConf.url}${policyConf.repoSuffix}`);
+
+    let policyUrl;
+    if (policyConf.policyEndpoint) {
+      policyUrl = policyConf.policyEndpoint;
+    } else {
+      policyUrl = `${policyConf.url}${policyConf.policySuffix}`;
+    }
+    this.set('policyUrl', policyUrl);
+
+    let repoUrl;
+    if (policyConf.repositoryEndpoint) {
+      repoUrl = policyConf.repositoryEndpoint;
+    } else {
+      repoUrl = `${policyConf.url}${policyConf.repoSuffix}`;
+    }
+    this.set('repoUrl', repoUrl);
   },
 
   /**

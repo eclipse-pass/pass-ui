@@ -57,16 +57,6 @@ module.exports = function (environment) {
     };
   }
 
-  if (environment === 'surge') {
-    // Application deployed as /pass
-    // ENV.rootURL = '/pass/';
-    ENV.contentSecurityPolicy = {
-      'style-src': "'self' 'unsafe-inline'",
-      'script-src': "'self' 'unsafe-eval' http://pass-jhu.surge.sh",
-      'connect-src': "'self' http://pass-jhu.surge.sh"
-    };
-  }
-
   ENV.fedora = {
     base: 'http://localhost:8080/fcrepo/rest/',
     context: 'https://oa-pass.github.io/pass-data-model/src/main/resources/context-3.4.jsonld',
@@ -86,10 +76,11 @@ module.exports = function (environment) {
   };
 
   ENV.policyService = {
-    // url: 'https://pass.local:8088',
     url: 'https://pass.local/policyservice',
     policySuffix: '/policies',
-    repoSuffix: '/repositories'
+    repoSuffix: '/repositories',
+    // policyEndpoint: 'https://pass.local/policyservice/policies',
+    // repositoryEndpoint: 'https://pass.local/policyservice/repositories'
   };
 
   ENV.metadataSchemaUri = 'https://oa-pass.github.io/metadata-schemas/jhu/global.json';
@@ -128,6 +119,18 @@ module.exports = function (environment) {
 
   if (process.env.METADATA_SCHEMA_URI) {
     ENV.metadataSchemaUri = process.env.METADATA_SCHEMA_URI;
+  }
+
+  if (process.env.POLICY_SERVICE_URL) {
+    ENV.policyService.url = process.env.POLICY_SERVICE_URL;
+  }
+
+  if (process.env.POLICY_SERVICE_POLICY_ENDPOINT) {
+    ENV.policyService.policyEndpoint = process.env.POLICY_SERVICE_POLICY_ENDPOINT;
+  }
+
+  if (process.env.POLICY_SERVICE_REPOSITORY_ENDPOINT) {
+    ENV.policyService.repositoryEndpoint = process.env.POLICY_SERVICE_REPOSITORY_ENDPOINT;
   }
 
   if ('FEDORA_ADAPTER_USER_NAME' in process.env) {
