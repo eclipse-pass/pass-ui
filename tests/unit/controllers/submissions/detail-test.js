@@ -10,26 +10,26 @@ module('Unit | Controller | submissions/detail', (hooks) => {
     assert.ok(controller);
   });
 
-  test('delete action should trigger destroy on model object', function (assert) {
-    assert.expect(2);
+  test('delete action should call the submission handler', function (assert) {
+    assert.expect(3);
 
     // Mock the global SweetAlert object to always return immediately
     swal = () => Promise.resolve({
       value: 'moo'
     });
 
-    const submission = {
-      get() {
-        return undefined;
-      },
-      destroyRecord() {
-        assert.ok(true);
-        return Promise.resolve();
-      }
-    };
+    const submission = Ember.Object.create();
 
     const controller = this.owner.lookup('controller:submissions/detail');
     assert.ok(controller, 'controller not found');
+
+    controller.set('submissionHandler', Ember.Object.create({
+      deleteSubmission() {
+        assert.ok(true);
+        return Promise.resolve();
+      }
+    }));
+    controller.set('transitionToRoute', () => assert.ok(true));
 
     controller.send('deleteSubmission', submission);
   });

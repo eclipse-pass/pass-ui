@@ -77,7 +77,7 @@ export default Service.extend({
   },
 
   /**
-   * _uploadFile - Internal method which adds a file to a submission in the
+   * _uploadFile - method which adds a file to a submission in the
    *  repository. The bytes of the local file corresponding to the File object
    *  are read and uploaded to the Submission container. The modified File object
    *  is persisted.
@@ -86,7 +86,7 @@ export default Service.extend({
    * @param  {File} file   Local file uploaded.
    * @returns {Promise}    Promise resolves to the File object.
    */
-  _uploadFile(sub, file) {
+  uploadFile(sub, file) {
     return new Promise((resolve, reject) => {
       let reader = new FileReader();
 
@@ -135,13 +135,15 @@ export default Service.extend({
   /**
    * submit - Perform or prepares a submission. Persists the publication, associate
    *   the submission with the saved publication, modify the submission appropriately,
-   *   uploads files, and finally persists the submission with an appropraite event
+   *   and finally persists the submission with an appropraite event
    *   to hold the comment. Repositories of type web-link are removed if submission
    *   is actually submitted.
    *
+   *   Files are already uploaded during the Files step of the workflow, so they do not
+   *   need to be handled here.
+   *
    * @param  {Submission} submission
    * @param  {Publication} publication Persisted and associated with Submission.
-   * @param  {Files} files             Local files to upload and add to Submission.
    * @param  {String} comment          Comment added as to SubmissionEvent.
    * @returns {Promise}                Promise to perform the operation.
    */
@@ -153,7 +155,7 @@ export default Service.extend({
       submission.set('publication', p);
 
       return submission.save();
-    }).then(s => Promise.all(files.map(f => this._uploadFile(s, f))).then(() => this._finishSubmission(s, comment)));
+    }).then(s => this._finishSubmission(s, comment));
   },
 
   /**
@@ -271,12 +273,12 @@ export default Service.extend({
       result.push(pub.destroyRecord());
     }
 
-    // eslint-disable-next-line function-paren-newline
-    result.push(
-      this._getFiles(submission.get('id')).then(files => files.map(file => file.destroyRecord()))
-    ); // eslint-disable-line function-paren-newline
+    const files = await this._getFiles(submission.get('id'));
+    if (files) {
+      result.push(files.map(file => file.destroyRecord()));
+    }
 
-    result.push(submission.destroyRecord());
-    return Promise.all(result);
+    await Promise.all(result);
+    return submission.destroyRecord();
   }
 });
