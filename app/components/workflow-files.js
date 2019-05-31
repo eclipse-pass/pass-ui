@@ -4,7 +4,13 @@ import { inject as service } from '@ember/service';
 export default Component.extend({
   store: service('store'),
   workflow: service('workflow'),
+  submitter: service('submission-handler'),
   currentUser: service('current-user'),
+
+  _getFilesElement() {
+    return document.getElementById('file-multiple-input');
+  },
+
   actions: {
     deleteExistingFile(file) {
       swal({
@@ -30,7 +36,8 @@ export default Component.extend({
       });
     },
     getFiles() {
-      const uploads = document.getElementById('file-multiple-input');
+      const uploads = this._getFilesElement();
+
       if ('files' in uploads) {
         if (uploads.files.length !== 0) {
           for (let i = 0; i < uploads.files.length; i++) {
@@ -51,6 +58,9 @@ export default Component.extend({
                 newFile.set('fileRole', 'manuscript');
               }
               this.get('newFiles').pushObject(newFile);
+
+              // Immediately upload file
+              this.get('submitter').uploadFile(this.get('submission'), newFile);
             }
           }
         }

@@ -8,6 +8,7 @@ export default Controller.extend({
   publication: alias('model.publication'),
   preLoadedGrant: alias('model.preLoadedGrant'),
   submissionEvents: alias('model.submissionEvents'),
+  journal: alias('model.journal'),
   parent: Ember.inject.controller('submissions.new'),
 
   // these errors start as false since you don't want to immediately have all fields turn red
@@ -96,6 +97,13 @@ export default Controller.extend({
           }
         }
       }
+
+      // After validation, we can save the publication to the Submission
+      const publication = this.get('publication');
+      publication.save().then(() => {
+        this.set('submission.publication', publication);
+      });
+
       this.send('loadTab', gotoRoute);
     },
     validateTitle() {

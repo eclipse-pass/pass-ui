@@ -1,12 +1,24 @@
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 
-
+/**
+ * IMPL NOTE:
+ * An interesting thing to consider: say a user goes through the submission workflow and ends up filling
+ * out some custom values in the metadata fields presented to them. The user then leaves the workflow
+ * leaving us with a 'draft' submission that can be resumed later. When we re-enter the submission
+ * workflow, we don't want to clobber the user-entered metadata.
+ *
+ * If submission metadata exists, it means the user at least made it past the metadata details step
+ * in the workflow. In this case, we should trust this metadata over data from the DOI service. Since
+ * data from the DOI is used to seed the metadata step, we can be sure that this data already exists
+ * in the submission metadata.
+ */
 export default Component.extend({
   store: service('store'),
   workflow: service('workflow'),
   currentUser: service('current-user'),
   doiService: service('doi'),
+  metadataService: service('metadata-blob'),
 
   inFlight: false,
   isShowingUserSearchModal: false,
@@ -32,7 +44,32 @@ export default Component.extend({
   },
   didInsertElement() {
     this._super(...arguments);
-    this.send('lookupDOI');
+    /**
+     * See IMPL NOTE above regarding the existance of submission metadata
+     */
+    try {
+      /**
+       * Set workflow doiInfo because of some weird timing between `routes/submissions/new/index#beforeModel`
+       * and `routes/submissions/new#model()` causing the doiInfo in 'workflow' to reset after it is
+       * defined by the incoming submission
+       */
+      this.get('workflow').setDoiInfo(JSON.parse(this.get('submission.metadata')));
+    } catch (e) {
+      /**
+       * Either 'metadata' is missing or malformed
+       */
+      this.send('lookupDOI');
+      /**
+       * If a Journal object exists in the model, then we have loaded an existing Submission
+       * with a Publication and a Journal. We need to make sure that this journal makes it
+       * into 'doiInfo' so it can be used in later steps.
+       *
+       * Only do this if there is no publication DOI, as the DOI lookup will cover this case.
+       */
+      if (!this.get('publication.doi') && this.get('journal')) {
+        this.send('selectJournal', this.get('journal'));
+      }
+    }
   },
   isValidDOI: Ember.computed('publication.doi', function () {
     return this.get('doiService').isValidDOI(this.get('publication.doi'));
@@ -146,9 +183,12 @@ export default Component.extend({
     /** Sets the selected journal for the current publication.
      * @param journal {DS.Model} The journal
      */
-    async selectJournal(journal) {
+    selectJournal(journal) {
       let doiInfo = this.get('doiInfo');
-      doiInfo = { 'journal-title': journal.get('journalName'), ISSN: journal.get('issns') };
+      // Formats metadata and adds journal metadata
+      let metadata = this.get('doiService').doiToMetadata(doiInfo, journal);
+      metadata['journal-title'] = journal.get('journalName');
+      doiInfo = this.get('metadataService').mergeBlobs(doiInfo, metadata);
 
       this.set('doiInfo', doiInfo);
 

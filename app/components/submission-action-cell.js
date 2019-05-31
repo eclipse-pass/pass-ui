@@ -15,6 +15,10 @@ export default Component.extend({
     return this.get('currentUser.user.id') === this.get('record.submitter.id');
   }),
 
+  submissionIsDraft: Ember.computed('record', function () {
+    return this.get('record.isDraft');
+  }),
+
   actions: {
     /**
      * Delete the specified submission record from Fedora.

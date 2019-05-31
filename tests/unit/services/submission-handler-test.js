@@ -286,7 +286,12 @@ module('Unit | Service | submission-handler', (hooks) => {
    * Associated files should be queried from the Store
    */
   test('delete submission', function (assert) {
-    assert.expect(4);
+    assert.expect(6);
+
+    function destroyRecord() {
+      assert.ok(true);
+      return Promise.resolve();
+    }
 
     const service = this.owner.lookup('service:submission-handler');
 
@@ -294,17 +299,20 @@ module('Unit | Service | submission-handler', (hooks) => {
       query(type, query) {
         assert.equal(type, 'file', 'Unexpected store query found');
         assert.ok(query);
-        return Promise.resolve(Ember.A());
+        return Promise.resolve(Ember.A([
+          Ember.Object.create({
+            destroyRecord
+          })
+        ]));
       }
     }));
 
     const sub = Ember.Object.create({
-      // publication: Ember.Object.create()
-      destroyRecord() {
-        assert.ok(true);
-        return Promise.resolve();
-      }
+      destroyRecord
     });
+    sub.set('publication', Ember.Object.create({
+      destroyRecord
+    }));
 
     const result = service.deleteSubmission(sub);
     result.then(() => {

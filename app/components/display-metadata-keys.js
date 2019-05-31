@@ -6,7 +6,14 @@ export default Component.extend({
   ignoreList: ['agent_information', 'external-submissions'],
 
   metadata: Ember.computed('submission', function () {
-    return JSON.parse(this.get('submission.metadata'));
+    try {
+      return JSON.parse(this.get('submission.metadata'));
+    } catch (e) {
+      /**
+       * We just need to handle the case where 'submission.metadata' does not exist.
+       */
+      return {};
+    }
   }),
 
   // TODO: could be changed to get the real label from relevant metadata schema!

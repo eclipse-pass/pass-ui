@@ -7,7 +7,7 @@ export default DS.Model.extend({
   }),
   submittedDate: DS.attr('date'),
   source: DS.attr('string', { defaultValue: 'pass' }),
-  metadata: DS.attr('string', { defaultValue: '[]' }), // Stringified JSON
+  metadata: DS.attr('string'), // Stringified JSON
   submitted: DS.attr('boolean', { defaultValue: false }),
   submissionStatus: DS.attr('string'),
   submitterName: DS.attr('string'),
@@ -82,8 +82,7 @@ export default DS.Model.extend({
    * @returns {boolean} is this a draft submission?
    */
   isDraft: Ember.computed('submitted', 'submissionStatus', function () {
-    // TODO: after model update, we can just check if submission status === 'draft'
-    // return this.get('record.submissinoStatus') === 'draft';
-    return !this.get('submitted') && !this.get('submissionStatus');
+    return this.get('submissionStatus') === 'draft';
+    // return !this.get('submitted') && !this.get('submissionStatus');
   })
 });
