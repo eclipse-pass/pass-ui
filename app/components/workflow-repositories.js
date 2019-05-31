@@ -90,9 +90,9 @@ export default Component.extend({
      */
     toggleRepository(repository, selected, type) {
       if (selected) {
-        this.addRepository(repository);
+        this.addRepository(repository, true);
       } else {
-        this.removeRepository(repository);
+        this.removeRepository(repository, true);
       }
     },
 
