@@ -57,16 +57,16 @@ export default Component.extend({
        * as well as any other repositories marked as 'selected'
        */
       if (req) {
-        req.forEach(repoInfo => this.addRepository(repoInfo.repository));
+        req.forEach(repoInfo => this.addRepository(repoInfo.repository, false));
       }
       if (opt) {
         opt.filter(repoInfo => repoInfo.repository.get('_selected'))
-          .forEach(repoInfo => this.addRepository(repoInfo.repository));
+          .forEach(repoInfo => this.addRepository(repoInfo.repository, false));
       }
       if (choice) {
         choice.forEach((group) => {
           group.filter(repoInfo => repoInfo.repository.get('_selected'))
-            .forEach(repoInfo => this.addRepository(repoInfo.repository));
+            .forEach(repoInfo => this.addRepository(repoInfo.repository, false));
         });
       }
     }
@@ -113,23 +113,29 @@ export default Component.extend({
    * Add a repository to the submission only if it is not already included
    *
    * @param {Repository} repository
+   * @param {boolean} setMaxStep should we modify 'maxStep' in the workflow?
    */
-  addRepository(repository) {
+  addRepository(repository, setMaxStep) {
     const subRepos = this.get('submission.repositories');
 
     if (!subRepos.includes(repository)) {
       subRepos.pushObject(repository);
     }
-    this.get('workflow').setMaxStep(4);
+    if (setMaxStep) {
+      this.get('workflow').setMaxStep(4);
+    }
   },
 
   /**
    * Remove a repository from the submission
    *
    * @param {Repository} repository
+   * @param {boolean} setMaxStep should we modify 'maxStep' in the workflow?
    */
-  removeRepository(repository) {
+  removeRepository(repository, setMaxStep) {
     this.get('submission.repositories').removeObject(repository);
-    this.get('workflow').setMaxStep(4);
+    if (setMaxStep) {
+      this.get('workflow').setMaxStep(4);
+    }
   },
 });
