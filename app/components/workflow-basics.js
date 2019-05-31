@@ -12,6 +12,13 @@ import { inject as service } from '@ember/service';
  * in the workflow. In this case, we should trust this metadata over data from the DOI service. Since
  * data from the DOI is used to seed the metadata step, we can be sure that this data already exists
  * in the submission metadata.
+ *
+ * If we find either NO metadata or an empty object, then we must look up the DOI to get the
+ * metadata, but NOT act on the Publication or Journal objects received from the doi service.
+ *
+ * TODO: these cumulative issues require pretty ugly and round-about fixes making the code
+ * hard to follow. This component needs to be cleaned up so these workaround pathways are not
+ * required.
  */
 export default Component.extend({
   store: service('store'),
@@ -44,33 +51,55 @@ export default Component.extend({
   },
   didInsertElement() {
     this._super(...arguments);
+
+    const publication = this.get('submission.publication');
+    const hasPublication = !!(publication && publication.get('doi'));
     /**
      * See IMPL NOTE above regarding the existance of submission metadata
      */
     try {
+      const md = JSON.parse(this.get('submission.metadata'));
+
       /**
        * Set workflow doiInfo because of some weird timing between `routes/submissions/new/index#beforeModel`
        * and `routes/submissions/new#model()` causing the doiInfo in 'workflow' to reset after it is
        * defined by the incoming submission
        */
-      this.get('workflow').setDoiInfo(JSON.parse(this.get('submission.metadata')));
-    } catch (e) {
+      this.get('workflow').setDoiInfo(md);
+
       /**
-       * Either 'metadata' is missing or malformed
+       * Check to see if incoming metadata is an empty object. If metadata is an empty object, then
+       * we still need to load DOI, but may not have to set the returned Publication object.
        */
-      this.send('lookupDOI');
-      /**
-       * If a Journal object exists in the model, then we have loaded an existing Submission
-       * with a Publication and a Journal. We need to make sure that this journal makes it
-       * into 'doiInfo' so it can be used in later steps.
-       *
-       * Only do this if there is no publication DOI, as the DOI lookup will cover this case.
-       */
-      if (!this.get('publication.doi') && this.get('journal')) {
-        this.send('selectJournal', this.get('journal'));
+      if (Object.entries(md).length === 0 && md.constructor === Object) {
+        this.lookupDoiAndJournal(!hasPublication);
       }
+    } catch (e) {
+      // Either 'metadata' is missing or malformed
+      this.lookupDoiAndJournal(!hasPublication);
     }
   },
+
+  /**
+   * Look up the known DOI in Crossref to get metadata, as well as the expected Publication object
+   * and associated Journal.
+   *
+   * @param {boolean} setPublication DOI lookup should set the Publication object on the submission
+   */
+  lookupDoiAndJournal(setPublication) {
+    this.send('lookupDOI', setPublication);
+    /**
+     * If a Journal object exists in the model, then we have loaded an existing Submission
+     * with a Publication and a Journal. We need to make sure that this journal makes it
+     * into 'doiInfo' so it can be used in later steps.
+     *
+     * Only do this if there is no publication DOI, as the DOI lookup will cover this case.
+     */
+    if (!this.get('publication.doi') && this.get('journal')) {
+      this.send('selectJournal', this.get('journal'));
+    }
+  },
+
   isValidDOI: Ember.computed('publication.doi', function () {
     return this.get('doiService').isValidDOI(this.get('publication.doi'));
   }),
@@ -144,8 +173,10 @@ export default Component.extend({
 
     /**
      * lookupDOI - Set publication, publication journal, and doiInfo based on DOI.
+     *
+     * @param {boolean} setPublication DOI lookup should set the Publication object on the submission
      */
-    lookupDOI() {
+    lookupDOI(setPublication) {
       if (this.get('inFlight')) {
         console.log('%cA request is already in flight, ignoring this call', 'color:blue;');
         return;
@@ -169,7 +200,10 @@ export default Component.extend({
       this.set('inFlight', true);
 
       doiService.resolveDOI(doi).then(async (result) => {
-        this.set('publication', result.publication);
+        if (setPublication) {
+          this.set('publication', result.publication);
+        }
+
         this.set('doiInfo', result.doiInfo);
 
         toastr.success("We've pre-populated information from the DOI provided!");
