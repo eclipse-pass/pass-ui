@@ -12,7 +12,11 @@ module('Integration | Component | workflow basics', (hooks) => {
       repositories: [],
       grants: []
     });
-    let publication = Ember.Object.create({ doi: 'test' });
+    let publication = Ember.Object.create({
+      doi: 'test',
+      // title: 'Moo title',
+      // journal: Ember.Object.create({ journalName: 'Moo Journal' })
+    });
     let preLoadedGrant = Ember.Object.create({});
     let flaggedFields = [];
     let doiInfo = [];
@@ -121,14 +125,21 @@ module('Integration | Component | workflow basics', (hooks) => {
   /**
    * Test case:
    *  - Draft submission
-   *  - Publication has a DOI
+   *  - Publication has valid data
    *
    * Expect:
    * DOI, title, and journal should be added to the UI inputs when things settle
+   *
+   * In this test case, a draft submission is provided to the component with a
+   * Publication object already attached. The title, DOI, and Journal from the
+   * Publication should be displayed in the appropriate elements.
    */
   test('Info is filled in when a submission is provided with a publication and DOI', async function (assert) {
     const publication = this.get('publication');
     const submission = this.get('submission');
+
+    publication.set('title', 'Moo title');
+    publication.set('journal', Ember.Object.create({ journalName: 'Moo Journal' }));
 
     submission.set('publication', publication);
 
@@ -164,12 +175,14 @@ module('Integration | Component | workflow basics', (hooks) => {
    * differ from equivalent fields defined in the mock DOI service.
    */
   test('Draft submission metadata is not overwritten by DOI data', async function (assert) {
+    assert.expect(10);
+
     // First override the DOI service to ensure that it isn't called
-    this.set('doiService', {
+    this.owner.register('service:doi', Ember.Service.extend({
       resolveDOI: () => assert.ok(false, 'resolveDOI should not be called'),
       formatDOI: () => asssert.ok(false, 'formatDOI should not be called'),
-      isValidDOI: () => assert.ok(false, 'isValidDOI should not be called')
-    });
+      isValidDOI: () => assert.ok(true, 'isValidDOI should be called')
+    }));
 
     const pub = Ember.Object.create({
       doi: 'ThisIsADOI',
@@ -200,19 +213,82 @@ module('Integration | Component | workflow basics', (hooks) => {
     // Check values of various inputs
     const inputs = this.element.querySelectorAll('input');
     const title = this.element.querySelector('textarea');
+    const journal = this.element.querySelector('#journal');
 
-    assert.equal(inputs.length, 2, 'There should be two input elements');
+    assert.equal(inputs.length, 1, 'There should be one input element');
     assert.ok(title, 'No "title" textarea element found');
+    assert.ok(journal, 'No "title" input element found');
 
     assert.ok(title.textLength > 0, 'No title value found');
     inputs.forEach((inp) => {
       const msg = `No value found for input "${inp.parentElement.parentElement.querySelector('label').textContent}"`;
       assert.ok(!!inp.value, msg);
     });
+    assert.ok(journal.textContent.includes('Moo Journal'), 'Journal not found');
 
     // Check submission metadata
     const md = JSON.parse(this.get('submission.metadata'));
     assert.ok(md, 'no metadata found');
     assert.equal(md.title, 'You better use this', 'Unexpected metadata!');
+  });
+
+  /**
+   * - Publication object exists
+   * - Journal exists on Publication
+   * - No metadata on submission
+   *
+   * The submission already has a Publication object with a Journal, but no metadata.
+   * We should call the DOI service to get the metadata, but should NOT replace the
+   * publication on the submission.
+   */
+  test('Draft submission with empty metadata looksup DOI', async function (assert) {
+    const pub = Ember.Object.create({
+      doi: 'ThisIsADOI',
+      title: 'Moo title',
+      journal: Ember.Object.create({ journalName: 'Moo Journal' })
+    });
+    this.set('publication', pub);
+
+    // Add metadata to submission
+    const submission = Ember.Object.create({
+      publication: pub,
+      metadata: '{}'
+    });
+    this.set('submission', submission);
+
+    this.owner.register('service:doi', Ember.Service.extend({
+      resolveDOI: () => Promise.resolve({
+        publication: Ember.Object.create({
+          title: 'Do not want'
+        }), // This publication should not be used
+        doiInfo: { title: 'You better use this' }
+      }),
+      formatDOI: () => 'Formatted-Moo',
+      isValidDOI: () => true
+    }));
+
+    await render(hbs`{{workflow-basics
+      submission=submission
+      publication=publication
+      preLoadedGrant=preLoadedGrant
+      doiInfo=doiInfo
+      flaggedFields=flaggedFields
+      validateTitle=(action validateTitle)
+      validateJournal=(action validateJournal)
+      validateSubmitterEmail=(action validateSubmitterEmail)
+      next=(action loadNext)}}`);
+    assert.ok(this.element);
+
+    const doiInfo = this.get('doiInfo');
+    assert.ok(doiInfo, 'No doiInfo found');
+    assert.equal(doiInfo.title, 'You better use this', 'Unexpected doiInfo.title found');
+
+    const publication = this.get('publication');
+    assert.ok(publication, 'No publication found');
+    assert.equal(publication.get('title'), 'Moo title', 'Unexpected publication title found');
+    assert.equal(publication.get('journal.journalName'), 'Moo Journal', 'Unexpected journal title found');
+
+    const metadata = this.get('submission.metadata');
+    assert.equal(metadata, '{}', 'Metadata should be empty');
   });
 });
