@@ -259,26 +259,16 @@ export default Service.extend({
   },
 
   /**
-   * Delete a draft submission object and it's associated Publication object,
-   * if applicable. Persist all changes.
+   * Simply set submission.submissionStatus to 'cancelled'
+   *
+   * All other objects associated with the submission (Publication, Files, etc)
+   * will remain intact.
    *
    * @param {Submission} submission submission to delete
    * @returns {Promise} that returns once the submission deletion is persisted
    */
   async deleteSubmission(submission) {
-    const result = [];
-
-    const pub = await submission.get('publication');
-    if (pub) {
-      result.push(pub.destroyRecord());
-    }
-
-    const files = await this._getFiles(submission.get('id'));
-    if (files) {
-      result.push(files.map(file => file.destroyRecord()));
-    }
-
-    await Promise.all(result);
-    return submission.destroyRecord();
+    submission.set('submissionStatus', 'cancelled');
+    return submission.save();
   }
 });
