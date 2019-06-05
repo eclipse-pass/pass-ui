@@ -264,11 +264,19 @@ export default Service.extend({
    * All other objects associated with the submission (Publication, Files, etc)
    * will remain intact.
    *
+   * TODO: Are deleted submissions important enough to track for audit purposes?
+   * If so, we can use #cancelSubmission() above to issue a SubmissionEvent.
+   *
    * @param {Submission} submission submission to delete
    * @returns {Promise} that returns once the submission deletion is persisted
    */
   async deleteSubmission(submission) {
     submission.set('submissionStatus', 'cancelled');
-    return submission.save();
+    // this.cancelSubmission(submission).then(() => {
+    //   submission.unloadRecord();
+    // });
+    return submission.save().then(() => {
+      submission.unloadRecord();
+    });
   }
 });

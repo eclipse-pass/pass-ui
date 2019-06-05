@@ -30,7 +30,10 @@ export default CheckSessionRoute.extend({
         }
       }],
       query: {
-        match_all: {}
+        match_all: {},
+        must_not: {
+          term: { submissionStatus: 'cancelled' }
+        }
       },
       size: 500
     });
@@ -57,7 +60,10 @@ export default CheckSessionRoute.extend({
                 preparers: user.get('id')
               }
             },
-          ]
+          ],
+          must_not: {
+            term: { submissionStatus: 'cancelled' }
+          }
         }
       },
       size: 500

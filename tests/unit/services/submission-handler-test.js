@@ -286,10 +286,16 @@ module('Unit | Service | submission-handler', (hooks) => {
    * objects alone
    */
   test('delete submission', function (assert) {
+    assert.expect(4);
+
     const submission = Ember.Object.create({
       submissionStatus: 'draft',
       publication: Ember.Object.create({ title: 'Moo title' }),
-      save: () => Promise.resolve()
+      save: () => Promise.resolve(),
+      unloadRecord: () => {
+        assert.ok(true);
+        return Promise.resolve();
+      }
     });
 
     const service = this.owner.lookup('service:submission-handler');
