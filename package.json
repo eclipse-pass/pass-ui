@@ -18,6 +18,7 @@
   "devDependencies": {
     "@ember/jquery": "^0.6.0",
     "ajv": "^6.10.0",
+    "clean-css": ">=4.1.11",
     "coveralls": "^3.0.2",
     "ember-auto-import": "^1.2.21",
     "ember-cli-code-coverage": "^0.4.2",
@@ -37,7 +38,7 @@
     "bootstrap": "^4.3.1",
     "broccoli-asset-rev": "^2.7.0",
     "ember-ajax": "^3.1.0",
-    "ember-cli": "^3.8.1",
+    "ember-cli": "^3.10.1",
     "ember-cli-app-version": "^3.2.0",
     "ember-cli-babel": "^7.5.0",
     "ember-cli-bootstrap-4": "^0.9.1",
@@ -77,7 +78,7 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-react": "^7.11.1",
-    "jquery": "^3.3.1",
+    "jquery": "^3.4.1",
     "loader.js": "^4.7.0",
     "popper.js": "^1.14.5",
     "sweetalert2": "^7.29.0"
