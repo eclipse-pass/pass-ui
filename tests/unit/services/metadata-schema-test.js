@@ -17,7 +17,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
             }
           },
           properties: {
-            name: { type: 'string' },
+            name: { type: 'string', title: 'Full name' },
             feedback: { type: 'string' },
             ranking: {
               type: 'string',
@@ -34,8 +34,12 @@ module('Unit | Service | metadata-schema', (hooks) => {
             ranking: { type: 'string', enum: ['excellent', 'ok', 'moo'] },
             issns: {
               type: 'array',
+              title: 'ISSNs',
               items: {
-                properties: { issn: { type: 'string' }, pubType: { type: 'string', enum: ['Print', 'Online'] } },
+                properties: {
+                  issn: { type: 'string', title: 'ISSN' },
+                  pubType: { type: 'string', title: 'Publication Type', enum: ['Print', 'Online'] }
+                },
                 type: 'object'
               }
             }
@@ -48,8 +52,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
 
     const mockAjax = Ember.Service.extend({
       request() {
-        // return Promise.resolve({ data: 'This is a moo' });
-        return Promise.resolve(mockSchema);
+        return Promise.resolve([mockSchema]);
       }
     });
 
@@ -67,14 +70,14 @@ module('Unit | Service | metadata-schema', (hooks) => {
     this.owner.lookup('service:metadata-schema').getMetadataSchemas(['moo', 'too'])
       .then((result) => {
         assert.ok(result, 'No result found');
-        assert.ok(result.definitions, 'mockSchema.definitions not found');
+        assert.ok(result[0].definitions, 'mockSchema.definitions not found');
       });
   });
 
   test('Alpacafication works as expected', function (assert) {
     const service = this.owner.lookup('service:metadata-schema');
-    service.getMetadataSchemas(['moo', 'two']).then((schema) => {
-      const alpa = service.alpacafySchema(schema);
+    service.getMetadataSchemas(['moo', 'two']).then((schemas) => {
+      const alpa = service.alpacafySchema(schemas[0]);
       assert.ok(alpa);
       assert.ok(alpa.options);
       assert.ok(alpa.schema);
@@ -168,5 +171,56 @@ module('Unit | Service | metadata-schema', (hooks) => {
 
     assert.ok(result, 'No results found');
     assert.ok(result.includes('issns'));
+  });
+
+  test('Get field to title map', function (assert) {
+    const service = this.owner.lookup('service:metadata-schema');
+
+    const result = service.getFieldTitleMap([this.get('mockSchema')]);
+
+    assert.ok(result);
+    assert.equal(result.name, 'Full name');
+    assert.equal(result.feedback, 'Feedback');
+    assert.equal(result.issns, 'ISSNs', 'issns field from "allOf" block should be included');
+  });
+
+  test('Should format complex metadata', async function (assert) {
+    const service = this.owner.lookup('service:metadata-schema');
+    const submission = Ember.Object.create({
+      repositories: [],
+      metadata: JSON.stringify({
+        issns: [
+          { issn: '123-moo' },
+          { issn: 'moo-321', pubType: 'Print' }
+        ]
+      })
+    });
+
+    const result = await service.displayMetadata(submission);
+    const expected = [
+      {
+        label: 'ISSNs',
+        isArray: true,
+        value: [
+          { ISSN: '123-moo' },
+          { ISSN: 'moo-321 (Print)' }
+        ]
+      }
+    ];
+
+    assert.deepEqual(result, expected);
+  });
+
+  test('Key not found in whitelist is not displayed', async function (assert) {
+    const service = this.owner.lookup('service:metadata-schema');
+    const submission = Ember.Object.create({
+      repositories: [],
+      metadata: JSON.stringify({ name: 'Bessie Cow' })
+    });
+
+    const result = await service.displayMetadata(submission);
+    const expected = [];
+
+    assert.deepEqual(result, expected);
   });
 });

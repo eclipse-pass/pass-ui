@@ -32,38 +32,97 @@ module('Integration | Component | display-metadata-keys', (hooks) => {
       metadata: JSON.stringify(mockData)
     });
 
-    this.set('submission', submission);
-  });
+    const mockSchema = {
+      properties: {
+        authors: {
+          type: 'array',
+          title: 'Authors of this article or manuscript',
+          description: 'List of authors and their associated ORCIDS, if available',
+          uniqueItems: true,
+          items: {
+            type: 'object',
+            title: 'Author',
+            properties: {
+              author: {
+                type: 'string'
+              },
+              orcid: {
+                type: 'string'
+              }
+            }
+          }
+        },
+        title: {
+          type: 'string',
+          title: 'Article / Manuscript Title',
+          description: 'The title of the individual article or manuscript that was submitted'
+        },
+        issns: {
+          type: 'array',
+          title: "ISSN information for the manuscript's journal",
+          description: 'List of ISSN numbers with optional publication type',
+          uniqueItems: true,
+          items: {
+            type: 'object',
+            title: 'ISSN info',
+            properties: {
+              issn: {
+                type: 'string',
+                title: 'ISSN '
+              },
+              pubType: {
+                type: 'string',
+                title: 'publication type',
+                enum: ['Print', 'Online']
+              }
+            }
+          }
+        },
+        'journal-NLMTA-ID': {
+          type: 'string',
+          title: 'NTMLA',
+          description: 'NLM identifier for a journal'
+        },
+        'journal-title': {
+          type: 'string',
+          title: 'Journal title',
+          description: 'Title of the journal the individual article or manuscript was submitted to'
+        },
+      }
+    };
 
-  test('it renders', async (assert) => {
-    const el = await render(hbs`{{display-metadata-keys submission=submission}}`);
-    assert.ok(el);
+    const mockSchemaService = Ember.Object.create({
+      displayMetadata(submission) {
+        return [
+          { label: 'Journal nlmta-id', value: 'MOO-ID', isArray: false },
+          {
+            label: 'Authors',
+            isArray: true,
+            value: [
+              { name: 'Moo Jones', orcid: '1234' },
+              { name: 'Moo Too' }
+            ]
+          },
+          {
+            label: 'Issns',
+            isArray: true,
+            value: [
+              { issn: '1234j-09ufe', pubType: 'Online' }
+            ]
+          },
+          { label: 'Title', isArray: false, value: 'This is the title moo' },
+          { label: 'Journal Title', isArray: false, value: 'Journal moo' }
+
+        ];
+      }
+    });
+
+    this.set('submission', submission);
+    this.set('schemaService', mockSchemaService);
   });
 
   test('Check the "display" blob', async function (assert) {
-    const el = await render(hbs`{{display-metadata-keys submission=submission}}`);
-
-    // const expected = [
-    //   { label: 'Journal nlmta-id', value: 'MOO-ID', isArray: false },
-    //   {
-    //     label: 'Authors',
-    //     isArray: true,
-    //     value: [
-    //       { name: 'Moo Jones', orcid: '1234' },
-    //       { name: 'Moo Too' }
-    //     ]
-    //   },
-    //   {
-    //     label: 'Issns',
-    //     isArray: true,
-    //     value: [
-    //       { issn: '1234j-09ufe', pubType: 'Online' }
-    //     ]
-    //   },
-    //   { label: 'Title', isArray: false, value: 'This is the title moo' },
-    //   { label: 'Journal Title', isArray: false, value: 'Journal moo' }
-    // ];
-
+    const el = await render(hbs`{{display-metadata-keys submission=submission schemaService=schemaService}}`);
     const allText = this.element.textContent;
 
     assert.ok(allText.includes('Journal nlmta-id: MOO-ID'), 'Should include "Journal nlmta-id"');
