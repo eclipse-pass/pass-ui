@@ -34,8 +34,12 @@ module('Unit | Service | metadata-schema', (hooks) => {
             ranking: { type: 'string', enum: ['excellent', 'ok', 'moo'] },
             issns: {
               type: 'array',
+              title: 'ISSNs',
               items: {
-                properties: { issn: { type: 'string' }, pubType: { type: 'string', enum: ['Print', 'Online'] } },
+                properties: {
+                  issn: { type: 'string', title: 'ISSN' },
+                  pubType: { type: 'string', title: 'Publication Type', enum: ['Print', 'Online'] }
+                },
                 type: 'object'
               }
             }
@@ -177,9 +181,37 @@ module('Unit | Service | metadata-schema', (hooks) => {
     assert.ok(result);
     assert.equal(result.name, 'Full name');
     assert.equal(result.feedback, 'Feedback');
+    assert.equal(result.issns, 'ISSNs', 'issns field from "allOf" block should be included');
   });
 
-  test('Display submission metadata', async function (assert) {
+  test('Should format complex metadata', async function (assert) {
+    const service = this.owner.lookup('service:metadata-schema');
+    const submission = Ember.Object.create({
+      repositories: [],
+      metadata: JSON.stringify({
+        issns: [
+          { issn: '123-moo' },
+          { issn: 'moo-321', pubType: 'Print' }
+        ]
+      })
+    });
+
+    const result = await service.displayMetadata(submission);
+    const expected = [
+      {
+        label: 'ISSNs',
+        isArray: true,
+        value: [
+          { ISSN: '123-moo' },
+          { ISSN: 'moo-321 (Print)' }
+        ]
+      }
+    ];
+
+    assert.deepEqual(result, expected);
+  });
+
+  test('Key not found in whitelist is not displayed', async function (assert) {
     const service = this.owner.lookup('service:metadata-schema');
     const submission = Ember.Object.create({
       repositories: [],
@@ -187,7 +219,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
     });
 
     const result = await service.displayMetadata(submission);
-    const expected = [{ label: 'Full name', value: 'Bessie Cow', isArray: false }];
+    const expected = [];
 
     assert.deepEqual(result, expected);
   });

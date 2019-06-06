@@ -124,8 +124,8 @@ export default Service.extend({
     schemas.filter(schema => (schema.additionalProperties !== false) && schema.allOf)
       .map(schema => schema.allOf)
       .forEach((allOf) => {
-        allOf.filter(schema => schema.properties)
-          .map(schema => schema.properties)
+        allOf.filter(schema => schema.properties) // Make sure the schema has a 'properties' property
+          .map(schema => schema.properties) // Operate on schema.properties
           .forEach((props) => {
             Object.keys(props).filter(key => !fields.includes(key))
               .forEach(key => fields.push(key));
@@ -136,8 +136,21 @@ export default Service.extend({
   },
 
   /**
+   * Get a "title" value for a schema property. If a 'title' property exists, use that value. If
+   * one does not exist, format the key.
+   *
+   * @param {Object} property a schema property
+   * @param {string} key the property key
+   * @returns {string} the property title, if one exists, or a formatted version of the properties key
+   */
+  propertyTitle(property, key) {
+    return property.title || _.capitalize(key.replace('-', ' '));
+  },
+
+  /**
    * Return map from field key to field title. Use title from the schema or
-   * just munge the key.
+   * just munge the key. Fields from additional schemas in `schema.allOf`
+   * should be added to the map as well.
    *
    * @param {array} schemas array of schemas
    */
@@ -148,14 +161,25 @@ export default Service.extend({
       let props = schema.definitions.form.properties;
 
       Object.keys(props).forEach((key) => {
-        let title = props[key].title;
-
-        if (!title) {
-          title = _.capitalize(key.replace('-', ' '));
-        }
-
-        map[key] = title;
+        map[key] = this.propertyTitle(props[key], key);
       });
+
+      /**
+       * Note: additionalProperties: undefined (or if it does not exist)
+       * should count as truthy
+       * See logic from #getFields
+       */
+      if (schema.additionalProperties !== false && Array.isArray(schema.allOf)) {
+        schema.allOf.filter(schema => schema.properties)
+          .map(schema => schema.properties)
+          .forEach((props) => {
+            Object.keys(props).forEach((key) => {
+              if (!map.hasOwnProperty(key)) {
+                map[key] = this.propertyTitle(props[key], key);
+              }
+            });
+          });
+      }
     });
 
     return map;
@@ -211,12 +235,18 @@ export default Service.extend({
    */
   _formatComplexMetadataObject(key, obj) {
     if (key === 'issns') {
-      return { ISSN: `${obj.issn}(${obj.pubType})` };
+      let issn = obj.issn;
+
+      if ('pubType' in obj) {
+        issn += ` (${obj.pubType})`;
+      }
+
+      return { ISSN: issn };
     } else if (key == 'authors') {
       let author = obj.author;
 
       if ('orcid' in obj) {
-        author += `(${obj.orcid})`;
+        author += ` (${obj.orcid})`;
       }
 
       return { Author: author };
