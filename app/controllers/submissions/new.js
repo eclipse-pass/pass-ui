@@ -7,6 +7,8 @@ export default Controller.extend({
   currentUser: service('current-user'),
   workflow: service('workflow'),
   submissionHandler: service('submission-handler'),
+  searchHelper: service('search-helper'),
+
   comment: '', // Holds the comment that will be added to submissionEvent in the review step.
   uploading: false,
   waitingMessage: '',
@@ -76,10 +78,11 @@ export default Controller.extend({
         confirmButtonText: 'Abort',
         confirmButtonColor: '#f86c6b',
         showCancelButton: true
-      }).then((result) => {
+      }).then(async (result) => {
         if (result.value) {
-          this.get('submissionHandler').deleteSubmission(submission)
-            .then(() => this.transitionToRoute('submissions'));
+          await this.get('submissionHandler').deleteSubmission(submission);
+          await this.get('searchHelper').waitForES(submission.get('id'), 'submission', { submissionStatus: 'cancelled' });
+          this.transitionToRoute('submissions');
         }
       });
     }

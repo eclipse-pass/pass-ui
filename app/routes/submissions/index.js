@@ -50,15 +50,10 @@ export default CheckSessionRoute.extend({
         bool: {
           should: [
             {
-              term: {
-                submitter: user.get('id')
-
-              }
+              term: { submitter: user.get('id') }
             },
             {
-              term: {
-                preparers: user.get('id')
-              }
+              term: { preparers: user.get('id') }
             },
           ],
           must_not: {
