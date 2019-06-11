@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "@coreui/ajax": "1.0.10",
-    "alpaca": "^1.5.24",
+    "alpaca": "1.5.27",
     "bootstrap": "^4.3.1",
     "broccoli-asset-rev": "^2.7.0",
     "ember-ajax": "^3.1.0",
@@ -78,7 +78,7 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-react": "^7.11.1",
-    "jquery": "^3.4.1",
+    "jquery": "^3.3.1",
     "loader.js": "^4.7.0",
     "popper.js": "^1.14.5",
     "sweetalert2": "^7.29.0"
