@@ -3,7 +3,6 @@ import { inject as service } from '@ember/service';
 
 export default Component.extend({
   workflow: service('workflow'),
-  metadataService: service('metadata-blob'),
   currentUser: service('current-user'),
   isValidated: Ember.A(),
   init() {

@@ -25,7 +25,7 @@ export default Component.extend({
   workflow: service('workflow'),
   currentUser: service('current-user'),
   doiService: service('doi'),
-  metadataService: service('metadata-blob'),
+  metadataService: service('metadata-schema'),
 
   inFlight: false,
   isShowingUserSearchModal: false,

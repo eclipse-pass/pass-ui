@@ -4,7 +4,6 @@ import { inject as service } from '@ember/service';
 // import swal from 'sweetalert2';
 
 export default Controller.extend({
-  metadataService: service('metadata-blob'),
   currentUser: service('current-user'),
   store: service('store'),
   submissionHandler: service('submission-handler'),

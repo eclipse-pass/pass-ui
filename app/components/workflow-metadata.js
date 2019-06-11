@@ -22,7 +22,6 @@ export default Component.extend({
   currentUser: service('current-user'),
   router: service('router'), // Used to abort this step
   workflow: service('workflow'),
-  metadataService: service('metadata-blob'),
   schemaService: service('metadata-schema'),
 
   doiInfo: Ember.computed('workflow.doiInfo', function () {
@@ -158,12 +157,12 @@ export default Component.extend({
    * Impl note:
    * - The structure of the 'newMetadata' blob is determined by 'components/metadata-form.js'. It's
    * metadata is provided to the #nextForm function call.
-   * - Merging current and new blobs together is done in 'services/metadata-blob.js'
+   * - Merging current and new blobs together is done in 'services/metadata-schema.js'
    *
    * @param {object} newMetadata metadata blob from a single metadata form
    */
   updateMetadata(newMetadata) {
-    const mergedBlob = this.get('metadataService').mergeBlobs(
+    const mergedBlob = this.get('schemaService').mergeBlobs(
       this.get('metadata'),
       newMetadata
     );
