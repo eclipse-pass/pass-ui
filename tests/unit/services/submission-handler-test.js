@@ -282,41 +282,29 @@ module('Unit | Service | submission-handler', (hooks) => {
   });
 
   /**
-   * `#destroyRecord` should be called on the given Submission object
-   * Associated files should be queried from the Store
+   * #deleteSubmission should set submissionStatus to 'cancelled' while leaving associated
+   * objects alone
    */
   test('delete submission', function (assert) {
-    assert.expect(6);
+    assert.expect(4);
 
-    function destroyRecord() {
-      assert.ok(true);
-      return Promise.resolve();
-    }
+    const submission = Ember.Object.create({
+      submissionStatus: 'draft',
+      publication: Ember.Object.create({ title: 'Moo title' }),
+      save: () => Promise.resolve(),
+      unloadRecord: () => {
+        assert.ok(true);
+        return Promise.resolve();
+      }
+    });
 
     const service = this.owner.lookup('service:submission-handler');
+    const result = service.deleteSubmission(submission);
 
-    service.set('store', Ember.Object.create({
-      query(type, query) {
-        assert.equal(type, 'file', 'Unexpected store query found');
-        assert.ok(query);
-        return Promise.resolve(Ember.A([
-          Ember.Object.create({
-            destroyRecord
-          })
-        ]));
-      }
-    }));
-
-    const sub = Ember.Object.create({
-      destroyRecord
-    });
-    sub.set('publication', Ember.Object.create({
-      destroyRecord
-    }));
-
-    const result = service.deleteSubmission(sub);
+    assert.ok(result, 'No result found');
     result.then(() => {
-      assert.ok(true);
+      assert.equal(submission.get('submissionStatus'), 'cancelled', 'Unexpected status');
+      assert.ok(submission.get('publication'), 'No publication found');
     });
   });
 });
