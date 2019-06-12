@@ -4,8 +4,9 @@ import { inject as service } from '@ember/service';
 
 export default CheckSessionRoute.extend({
   currentUser: service('current-user'),
+  searchHelper: service('search-helper'),
 
-  model() {
+  async model() {
     const user = this.get('currentUser.user');
 
     let submissions = null;
@@ -16,13 +17,17 @@ export default CheckSessionRoute.extend({
       submissions = this._doSubmitter(user);
     }
 
+    submissions.then(() => this.get('searchHelper').clearIgnore());
+
     return RSVP.hash({
       submissions
     });
   },
 
   _doAdmin() {
-    return this.store.query('submission', {
+    const ignoreList = this.get('searchHelper').getIgnoreList();
+
+    const query = {
       sort: [{
         submittedDate: {
           missing: '_last',
@@ -31,16 +36,24 @@ export default CheckSessionRoute.extend({
       }],
       query: {
         match_all: {},
-        must_not: {
-          term: { submissionStatus: 'cancelled' }
-        }
+        must_not: [
+          { term: { submissionStatus: 'cancelled' } }
+        ]
       },
       size: 500
-    });
+    };
+
+    if (ignoreList && ignoreList.length > 0) {
+      query.query.must_not.push({ terms: { '@id': ignoreList } });
+    }
+
+    return this.store.query('submission', query);
   },
 
   _doSubmitter(user) {
-    return this.store.query('submission', {
+    const ignoreList = this.get('searchHelper').getIgnoreList();
+
+    const query = {
       sort: [
         { submitted: { missing: '_last', order: 'asc' } },
         { submittedDate: { missing: '_last', order: 'desc' } },
@@ -49,24 +62,21 @@ export default CheckSessionRoute.extend({
       query: {
         bool: {
           should: [
-            {
-              term: {
-                submitter: user.get('id')
-
-              }
-            },
-            {
-              term: {
-                preparers: user.get('id')
-              }
-            },
+            { term: { submitter: user.get('id') } },
+            { term: { preparers: user.get('id') } },
           ],
-          must_not: {
-            term: { submissionStatus: 'cancelled' }
-          }
+          must_not: [
+            { term: { submissionStatus: 'cancelled' } }
+          ]
         }
       },
       size: 500
-    });
+    };
+
+    if (ignoreList && ignoreList.length > 0) {
+      query.query.bool.must_not.push({ terms: { '@id': ignoreList } });
+    }
+
+    return this.store.query('submission', query);
   },
 });
