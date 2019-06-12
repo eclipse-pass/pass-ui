@@ -1,5 +1,5 @@
 import Service from '@ember/service';
-import { defer } from 'rsvp';
+// import { defer } from 'rsvp';
 
 /**
  * This service can be referenced by components that rely on Elasticsearch query results
@@ -53,11 +53,9 @@ export default Service.extend({
     }
 
     const list = this.get('ignoreList');
-    if (!list.includes('id')) {
-      return;
+    if (list.includes(id)) {
+      this.get('ignoreList').splice(list.indexOf(id), 1);
     }
-
-    this.set('ignoreList', list.splice(list.indexOf(id), 1));
   },
 
   getIgnoreList() {

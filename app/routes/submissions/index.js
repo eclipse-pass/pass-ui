@@ -36,15 +36,15 @@ export default CheckSessionRoute.extend({
       }],
       query: {
         match_all: {},
-        must_not: {
-          term: { submissionStatus: 'cancelled' }
-        }
+        must_not: [
+          { term: { submissionStatus: 'cancelled' } }
+        ]
       },
       size: 500
     };
 
     if (ignoreList && ignoreList.length > 0) {
-      query.query.bool.must_not.push({ terms: { '@id': ignoreList } });
+      query.query.must_not.push({ terms: { '@id': ignoreList } });
     }
 
     return this.store.query('submission', query);
