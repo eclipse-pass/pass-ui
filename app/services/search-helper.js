@@ -8,8 +8,13 @@ import { defer } from 'rsvp';
  * situation is known in advance, a component can refer to this service to know about
  * any object IDs that have changed that may not appear in the ES results.
  *
+ * An ignore list is maintained here. Components can declare that certain model IDs
+ * should be ignored through a transition, then other components can check against this
+ * list after the transtition.
+ *
  * #waitForES : polls ES a few times and looks for a known change to appear in the ES
- *              result
+ *              result. This was a less desirable option due to it's performance and
+ *              networking hit.
  */
 export default Service.extend({
   store: Ember.inject.service('store'),
@@ -21,7 +26,9 @@ export default Service.extend({
     this.clearIgnore();
   },
 
-  /** Clear the ignore list */
+  /**
+   * Clear the ignore list.
+   */
   clearIgnore() {
     this.set('ignoreList', []);
   },
@@ -71,37 +78,36 @@ export default Service.extend({
    * @returns {Promise} resolves when the known change is observed in the ES results
    *                    rejects if max number of retries is reached
    */
-  waitForES(id, type, change) {
-    const promise = defer();
-    let count = 0;
+  // waitForES(id, type, change) {
+  //   const promise = defer();
+  //   let count = 0;
 
-    const store = this.get('store');
+  //   const store = this.get('store');
 
-    const timer = window.setInterval(() => {
-      console.log(`%cWaiting for ES to change. ${id} : (${JSON.stringify(change)}) [Step ${count}]`, 'color:orange;');
-      store.query(type, { term: { '@id': id } }).then((objs) => {
-        const changeFound = (obj) => {
-          for (let key in change) {
-            if (obj.get(key) !== change[key]) {
-              return false;
-            }
-          }
-          return true;
-        };
+  //   const timer = window.setInterval(() => {
+  //     store.query(type, { term: { '@id': id } }).then((objs) => {
+  //       const changeFound = (obj) => {
+  //         for (let key in change) {
+  //           if (obj.get(key) !== change[key]) {
+  //             return false;
+  //           }
+  //         }
+  //         return true;
+  //       };
 
-        if (objs.any(obj => changeFound(obj))) {
-          window.clearInterval(timer);
-          promise.resolve();
-        }
+  //       if (objs.any(obj => changeFound(obj))) {
+  //         window.clearInterval(timer);
+  //         promise.resolve();
+  //       }
 
-        if (count++ >= 10) {
-          window.clearInterval(timer);
-          promise.reject('Max retries reached');
-        }
-      });
-    }, 500);
+  //       if (count++ >= 10) {
+  //         window.clearInterval(timer);
+  //         promise.reject('Max retries reached');
+  //       }
+  //     });
+  //   }, 500);
 
-    return promise.promise;
-  }
+  //   return promise.promise;
+  // }
 
 });

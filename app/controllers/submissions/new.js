@@ -71,6 +71,7 @@ export default Controller.extend({
     },
     abort() {
       const submission = this.get('model.newSubmission');
+      const ignoreList = this.get('searchHelper');
 
       swal({
         title: 'Discard Draft',
@@ -81,7 +82,9 @@ export default Controller.extend({
       }).then(async (result) => {
         if (result.value) {
           await this.get('submissionHandler').deleteSubmission(submission);
-          await this.get('searchHelper').waitForES(submission.get('id'), 'submission', { submissionStatus: 'cancelled' });
+          // Clear the shared ignore list, then add the 'deleted' submission ID
+          ignoreList.clearIgnore();
+          ignoreList.ignore(submission.get('id'));
           this.transitionToRoute('submissions');
         }
       });
