@@ -59,17 +59,17 @@ export default Service.extend({
    *
    * @param {object} schema metadata (form) schema
    * @param {object} data display data to add to the schema
-   * @param {boolean} setReadOnly force updated fields to be read-only in the generated form
+   * @param {array} readonly list of properties that should be marked as read-only
    * @Returns {object} the modified schema
    */
-  addDisplayData(schema, data, setReadOnly) {
+  addDisplayData(schema, data, readonly) {
     if (!schema.data) {
       schema.data = {};
     }
     schema.data = Object.assign(schema.data, data);
 
-    if (setReadOnly) {
-      Object.keys(data).forEach((key) => {
+    if (readonly && readonly.length > 0) {
+      Object.keys(data).filter(key => readonly.includes(key)).forEach((key) => {
         if (schema.options.fields.hasOwnProperty(key)) {
           schema.options.fields[key].readonly = true;
         }

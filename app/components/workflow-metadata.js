@@ -45,7 +45,8 @@ export default Component.extend({
     return this.get('currentFormStep') + 1;
   }),
 
-  setNextReadonly: false,
+  // setNextReadonly: false,
+  readOnlyProperties: [],
 
   schemas: undefined,
 
@@ -79,6 +80,8 @@ export default Component.extend({
           this.get('schemaService').getFields(schemas)
         );
 
+        this.setReadOnly(metadataFromDoi);
+
         this.updateMetadata(metadataFromDoi);
 
         this.set('schemas', schemas);
@@ -88,6 +91,17 @@ export default Component.extend({
         console.log(e);
       }
     }
+  },
+
+  /**
+   * Set the object keys as read-only metadata fields. This assumes that incoming metadata captured
+   * before this component is reached is read-only such as Crossref metadata or title/journal
+   * from the first step of the workflow
+   *
+   * @param {object} metadata
+   */
+  setReadOnly(metadata) {
+    this.set('readOnlyProperties', Object.keys(metadata));
   },
 
   actions: {
@@ -144,7 +158,7 @@ export default Component.extend({
     let processed = service.alpacafySchema(schema);
 
     const metadata = this.get('metadata');
-    const readonly = this.get('setNextReadonly');
+    const readonly = this.get('readOnlyProperties');
 
     return service.addDisplayData(processed, metadata, readonly);
   },

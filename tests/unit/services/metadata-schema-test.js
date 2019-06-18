@@ -110,15 +110,17 @@ module('Unit | Service | metadata-schema', (hooks) => {
       feedback: 'Feedbag'
     };
 
+    const readonly = ['name'];
+
     const service = this.owner.lookup('service:metadata-schema');
     const schema = service.alpacafySchema(this.get('mockSchema'));
-    const result = service.addDisplayData(schema, data, true);
+    const result = service.addDisplayData(schema, data, readonly);
 
     assert.ok(result, 'No result found');
     assert.ok(result.data, 'No data found in result');
 
     assert.ok(result.options.fields.name.readonly, 'Property \'name\' not marked as read only');
-    assert.ok(result.options.fields.feedback.readonly, 'Property \'feedback\' not marked as read only');
+    assert.notOk(result.options.fields.feedback.readonly, 'Property \'feedback\' marked as read only');
   });
 
   test('Validation should fail when "name" field is not present in data', function (assert) {
