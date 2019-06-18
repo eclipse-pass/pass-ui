@@ -7,6 +7,7 @@ export default Controller.extend({
   currentUser: service('current-user'),
   store: service('store'),
   submissionHandler: service('submission-handler'),
+  searchHelper: service('search-helper'),
 
   tooltips: function () {
     $(() => {
@@ -421,7 +422,11 @@ export default Controller.extend({
         showCancelButton: true
       }).then((result) => {
         if (result.value) {
+          const ignoreList = this.get('searchHelper');
+
           this.get('submissionHandler').deleteSubmission(submission).then(() => {
+            ignoreList.clearIgnore();
+            ignoreList.ignore(submission.get('id'));
             this.transitionToRoute('submissions');
           });
         }
