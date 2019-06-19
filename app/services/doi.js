@@ -130,8 +130,13 @@ export default Service.extend({
     }
 
     // Misc manual translation
-    doiCopy['journal-NLMTA-ID'] = doiCopy.nlmta;
-    doiCopy['journal-title-short'] = doiCopy['container-title-short'];
+    if (doiCopy.nlmta) {
+      doiCopy['journal-NLMTA-ID'] = doiCopy.nlmta;
+    }
+    if (doiCopy['container-title-short']) {
+      doiCopy['journal-title-short'] = doiCopy['container-title-short'];
+    }
+
     doiCopy.doi = doiCopy.DOI;
 
     // Remove "invalid" properties if given a list of valid fields

@@ -171,68 +171,6 @@ module('Integration | Component | workflow basics', (hooks) => {
   });
 
   /**
-   * Test this by first adding metadata to the submission with some fields containing values that
-   * differ from equivalent fields defined in the mock DOI service.
-   */
-  test('Draft submission metadata is not overwritten by DOI data', async function (assert) {
-    assert.expect(10);
-
-    // First override the DOI service to ensure that it isn't called
-    this.owner.register('service:doi', Ember.Service.extend({
-      resolveDOI: () => assert.ok(false, 'resolveDOI should not be called'),
-      formatDOI: () => asssert.ok(false, 'formatDOI should not be called'),
-      isValidDOI: () => assert.ok(true, 'isValidDOI should be called')
-    }));
-
-    const pub = Ember.Object.create({
-      doi: 'ThisIsADOI',
-      title: 'Moo title',
-      journal: Ember.Object.create({ journalName: 'Moo Journal' })
-    });
-    this.set('publication', pub);
-
-    // Add metadata to submission
-    const submission = Ember.Object.create({
-      publication: pub,
-      metadata: JSON.stringify({ title: 'You better use this' })
-    });
-    this.set('submission', submission);
-
-    await render(hbs`{{workflow-basics
-      submission=submission
-      publication=publication
-      preLoadedGrant=preLoadedGrant
-      doiInfo=doiInfo
-      flaggedFields=flaggedFields
-      validateTitle=(action validateTitle)
-      validateJournal=(action validateJournal)
-      validateSubmitterEmail=(action validateSubmitterEmail)
-      next=(action loadNext)}}`);
-    assert.ok(this.element);
-
-    // Check values of various inputs
-    const inputs = this.element.querySelectorAll('input');
-    const title = this.element.querySelector('textarea');
-    const journal = this.element.querySelector('#journal');
-
-    assert.equal(inputs.length, 1, 'There should be one input element');
-    assert.ok(title, 'No "title" textarea element found');
-    assert.ok(journal, 'No "title" input element found');
-
-    assert.ok(title.textLength > 0, 'No title value found');
-    inputs.forEach((inp) => {
-      const msg = `No value found for input "${inp.parentElement.parentElement.querySelector('label').textContent}"`;
-      assert.ok(!!inp.value, msg);
-    });
-    assert.ok(journal.textContent.includes('Moo Journal'), 'Journal not found');
-
-    // Check submission metadata
-    const md = JSON.parse(this.get('submission.metadata'));
-    assert.ok(md, 'no metadata found');
-    assert.equal(md.title, 'You better use this', 'Unexpected metadata!');
-  });
-
-  /**
    * - Publication object exists
    * - Journal exists on Publication
    * - No metadata on submission

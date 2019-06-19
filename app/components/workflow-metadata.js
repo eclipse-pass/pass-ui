@@ -54,7 +54,12 @@ export default Component.extend({
 
   init() {
     this._super(...arguments);
-    this.set('metadata', {});
+    try {
+      const md = JSON.parse(this.get('submission.metadata'));
+      this.set('metadata', md || {});
+      this.setReadOnly({});
+    // eslint-disable-next-line no-empty
+    } catch (e) {}
   },
 
   async willRender() {
@@ -80,7 +85,9 @@ export default Component.extend({
           this.get('schemaService').getFields(schemas)
         );
 
-        this.setReadOnly(metadataFromDoi);
+        if (this.get('workflow').isDataFromCrossref()) {
+          this.setReadOnly(metadataFromDoi);
+        }
 
         this.updateMetadata(metadataFromDoi);
 
