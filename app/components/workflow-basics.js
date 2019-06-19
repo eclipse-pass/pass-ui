@@ -45,30 +45,6 @@ export default Component.extend({
     const hasPublication = !!(publication && publication.get('doi'));
 
     this.lookupDoiAndJournal(!hasPublication);
-    /**
-     * See IMPL NOTE above regarding the existance of submission metadata
-     */
-    // try {
-    //   const md = JSON.parse(this.get('submission.metadata'));
-
-    //   /**
-    //    * Set workflow doiInfo because of some weird timing between `routes/submissions/new/index#beforeModel`
-    //    * and `routes/submissions/new#model()` causing the doiInfo in 'workflow' to reset after it is
-    //    * defined by the incoming submission
-    //    */
-    //   this.get('workflow').setDoiInfo(md);
-
-    //   /**
-    //    * Check to see if incoming metadata is an empty object. If metadata is an empty object, then
-    //    * we still need to load DOI, but may not have to set the returned Publication object.
-    //    */
-    //   if (Object.entries(md).length === 0 && md.constructor === Object) {
-    //     this.lookupDoiAndJournal(!hasPublication);
-    //   }
-    // } catch (e) {
-    //   // Either 'metadata' is missing or malformed
-    //   this.lookupDoiAndJournal(!hasPublication);
-    // }
   },
 
   /**
