@@ -1,7 +1,7 @@
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
-import { fillIn, render, waitUntil } from '@ember/test-helpers';
+import { fillIn, triggerKeyEvent, render, settled } from '@ember/test-helpers';
 import { run } from '@ember/runloop';
 
 module('Integration | Component | workflow basics', (hooks) => {
@@ -228,5 +228,94 @@ module('Integration | Component | workflow basics', (hooks) => {
 
     const metadata = this.get('submission.metadata');
     assert.equal(metadata, '{}', 'Metadata should be empty');
+  });
+
+  /**
+   * Word of the day: DOI
+   *
+   * Test for a case where a user enters a DOI that is resolved by the DOI service, progresses through
+   * the workflow a bit, then goes back to Step 1 and removes the DOI from the submission. Image two
+   * known DOIs, the user enters the first DOI, which contains a lot of data, such as many authors. This
+   * data is saved to the submission metadata as the user progresses far enough through the workflow.
+   * The user then goes back and enters a 2nd DOI that does not contain any author information. The data
+   * from the first DOI _should_ be removed, or else it will dirty the submission metadata along side
+   * the correct data from the second DOI. In this case, authors will exist "with the 2nd DOI" even though
+   * they were only associated with the first DOI.
+   *
+   * In this case, I think it should be the case that the submission metadata that originally came
+   * from the DOI lookup should be removed, as well as the title and journal. The user will then be free
+   * to enter another DOI or manually enter a title and journal. The user _may_ lose some manually entered
+   * submission metadata if they provided any. I think this tradeoff is fair to avoid cross contamination
+   * of data.
+   */
+  test('Submission metadata and other UI fields should be reset if a DOI is removed', async function (assert) {
+    const publication = Ember.Object.create({
+      doi: 'moo',
+      title: 'Moo title',
+      journal: Ember.Object.create({
+        journalName: 'Moo Journalitics'
+      })
+    });
+    this.set('publication', publication);
+
+    const submission = Ember.Object.create({
+      publication,
+      metadata: JSON.stringify({
+        title: 'this is a moo, please ignore',
+        authors: [
+          { author: 'Moo Jones' }
+        ]
+      })
+    });
+    this.set('submission', submission);
+
+    const mockDoiService = Ember.Service.extend({
+      resolveDOI: () => Promise.resolve({
+        doiInfo: {
+          title: 'Don\'t use'
+        },
+        publication
+      }),
+      isValidDOI: doi => !!doi,
+      formatDOI: doi => doi
+    });
+
+    // run(async () => {
+    this.owner.unregister('service:doi');
+    this.owner.register('service:doi', mockDoiService);
+
+    await render(hbs`{{workflow-basics
+      submission=submission
+      publication=publication
+      preLoadedGrant=preLoadedGrant
+      doiInfo=doiInfo
+      flaggedFields=flaggedFields
+      validateTitle=(action validateTitle)
+      validateJournal=(action validateJournal)
+      validateSubmitterEmail=(action validateSubmitterEmail)
+      next=(action loadNext)}}`);
+    assert.ok(this.element);
+
+    debugger
+    // await typeIn('input[id="doi"]', ' ');
+    await fillIn('input[id="doi"]', '');
+    assert.notOk(this.get('publication.doi'));
+    await triggerKeyEvent('input[id="doi"]', 'keyup', 'Enter');
+    // this.set('publication.doi', '');
+    await settled();
+    debugger
+    const inputs = this.element.querySelectorAll('input');
+    assert.equal(inputs.length, 1, 'There should be one text input');
+    inputs.forEach(input => assert.notOk(input.hasAttribute('readonly')));
+
+    const titleIn = this.element.querySelector('textarea');
+    assert.ok(titleIn);
+    assert.notOk(titleIn.hasAttribute('readonly'));
+
+    const journalSelector = this.element.querySelector('div#journal');
+    assert.ok(journalSelector, 'Couldn\'t find journal selector');
+    assert.equal('Moo Journal', journalSelector.textContent);
+    debugger
+    // });
   });
 });

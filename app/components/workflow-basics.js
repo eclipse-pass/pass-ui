@@ -41,6 +41,8 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
 
+    this.get('workflow').setFromCrossref(false);
+
     const publication = this.get('submission.publication');
     const hasPublication = !!(publication && publication.get('doi'));
 
@@ -88,6 +90,18 @@ export default Component.extend({
     }
     return 'form-control is-invalid';
   }),
+
+  clearDoiData() {
+    const workflow = this.get('workflow');
+
+    if (workflow.isDataFromCrossref()) {
+      this.get('workflow').setFromCrossref(false);
+      this.set('doiInfo', {});
+      // debugger
+      console.log('Reset Crossref stuff');
+    }
+  },
+
   actions: {
     proxyStatusToggled(isProxySubmission) {
       // do only if the values indicate a switch of proxy
@@ -151,6 +165,8 @@ export default Component.extend({
 
       const publication = this.get('publication');
       if (!publication || !publication.get('doi')) {
+        // Note that any metadata now does NOT come from Xref
+        this.clearDoiData();
         return;
       }
 

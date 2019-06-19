@@ -198,7 +198,8 @@ export default Service.extend({
    */
   mergeBlobs(blob1 = {}, blob2 = {}) {
     let blob = Object.assign(blob1, blob2);
-    Object.keys(blob).filter(key => !blob[key]).forEach(key => delete blob[key]);
+    Object.keys(blob).filter(key => !(key in blob)).forEach(key => delete blob[key]);
+
     return blob;
   },
 
