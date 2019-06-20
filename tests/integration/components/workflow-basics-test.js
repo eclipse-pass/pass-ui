@@ -283,9 +283,6 @@ module('Integration | Component | workflow basics', (hooks) => {
     this.owner.unregister('service:doi');
     this.owner.register('service:doi', mockDoiService);
 
-    // const wf = this.owner.lookup('service:workflow');
-    // wf.setFromCrossref(true);
-
     await render(hbs`{{workflow-basics
       submission=submission
       publication=publication
@@ -314,8 +311,13 @@ module('Integration | Component | workflow basics', (hooks) => {
     assert.ok(titleIn);
     assert.notOk(titleIn.hasAttribute('readonly'));
 
-    // Can't check for 'readonly' attribute, because the journal "input"
-    // is actually a PowerSelect div
+    /**
+     * Can't check for 'readonly' attribute, because the journal "input"
+     * is actually a PowerSelect div. The lack of the 'input' does actually
+     * suggest that things are working as intended, because this particular
+     * input should change from a normal text input to a PowerSelect when
+     * theh DOI goes away
+     */
     const journalSelector = this.element.querySelector('div#journal');
     assert.ok(journalSelector, 'Couldn\'t find journal selector');
     assert.notOk(

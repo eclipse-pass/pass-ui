@@ -24,9 +24,16 @@ export default Service.extend({
      *
      * We could set 'logger' to an object with `log`, `warn`, and `error` functions
      * to handle these things, if there is a need.
+     *
+     * 'addUsedSchema' option allows us to provide the full JSON schema object to the validate function
+     * of AJV without complaints. Without this option, the validate function will report an error because
+     * AJV does not like compiling a JSON schema that it already knows about (based on the schema's '$id').
+     * Speed can be improved if we enable this feature, then selectively add JSON schemas to avoid
+     * the re-compile step.
      */
     this.set('validator', new Ajv({
-      logger: false
+      logger: false,
+      addUsedSchema: false
     }));
   },
 

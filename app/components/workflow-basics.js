@@ -97,6 +97,7 @@ export default Component.extend({
     if (workflow.isDataFromCrossref()) {
       this.get('workflow').setFromCrossref(false);
       this.set('doiInfo', {});
+      this.set('submission.metadata', '{}');
       this.clearPublication();
     }
   },
