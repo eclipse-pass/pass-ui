@@ -97,9 +97,23 @@ export default Component.extend({
     if (workflow.isDataFromCrossref()) {
       this.get('workflow').setFromCrossref(false);
       this.set('doiInfo', {});
-      // debugger
-      console.log('Reset Crossref stuff');
+      this.clearPublication();
     }
+  },
+
+  /**
+   * Remove all data from the current Publication
+   */
+  clearPublication() {
+    this.get('publication').setProperties({
+      doi: '',
+      title: '',
+      abstract: '',
+      volume: '',
+      issue: '',
+      pmid: '',
+      journal: undefined
+    });
   },
 
   actions: {

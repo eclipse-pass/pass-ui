@@ -1,7 +1,7 @@
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
-import { fillIn, triggerKeyEvent, render, settled } from '@ember/test-helpers';
+import { fillIn, render, settled, triggerKeyEvent } from '@ember/test-helpers';
 import { run } from '@ember/runloop';
 
 module('Integration | Component | workflow basics', (hooks) => {
@@ -280,9 +280,11 @@ module('Integration | Component | workflow basics', (hooks) => {
       formatDOI: doi => doi
     });
 
-    // run(async () => {
     this.owner.unregister('service:doi');
     this.owner.register('service:doi', mockDoiService);
+
+    // const wf = this.owner.lookup('service:workflow');
+    // wf.setFromCrossref(true);
 
     await render(hbs`{{workflow-basics
       submission=submission
@@ -296,14 +298,14 @@ module('Integration | Component | workflow basics', (hooks) => {
       next=(action loadNext)}}`);
     assert.ok(this.element);
 
-    debugger
-    // await typeIn('input[id="doi"]', ' ');
     await fillIn('input[id="doi"]', '');
-    assert.notOk(this.get('publication.doi'));
     await triggerKeyEvent('input[id="doi"]', 'keyup', 'Enter');
-    // this.set('publication.doi', '');
     await settled();
-    debugger
+    assert.notOk(
+      this.get('publication.doi'),
+      'After clearing the DOI input, there should no longer be a doi value on the publication'
+    );
+
     const inputs = this.element.querySelectorAll('input');
     assert.equal(inputs.length, 1, 'There should be one text input');
     inputs.forEach(input => assert.notOk(input.hasAttribute('readonly')));
@@ -312,10 +314,15 @@ module('Integration | Component | workflow basics', (hooks) => {
     assert.ok(titleIn);
     assert.notOk(titleIn.hasAttribute('readonly'));
 
+    // Can't check for 'readonly' attribute, because the journal "input"
+    // is actually a PowerSelect div
     const journalSelector = this.element.querySelector('div#journal');
     assert.ok(journalSelector, 'Couldn\'t find journal selector');
-    assert.equal('Moo Journal', journalSelector.textContent);
-    debugger
-    // });
+    assert.notOk(
+      journalSelector.textContent.includes('Moo Journal'),
+      'No journal should be selected now'
+    );
+
+    assert.deepEqual(this.get('doiInfo'), {}, 'doiInfo should be empty');
   });
 });
