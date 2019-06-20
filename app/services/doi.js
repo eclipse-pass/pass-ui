@@ -132,6 +132,8 @@ export default Service.extend({
     // Misc manual translation
     if (doiCopy.nlmta) {
       doiCopy['journal-NLMTA-ID'] = doiCopy.nlmta;
+    } else if (journal.get('nlmta')) {
+      doiCopy['journal-NLMTA-ID'] = journal.get('nlmta');
     }
     if (doiCopy['container-title-short']) {
       doiCopy['journal-title-short'] = doiCopy['container-title-short'];
