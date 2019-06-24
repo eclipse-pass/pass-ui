@@ -91,23 +91,23 @@ export default Component.extend({
     return 'form-control is-invalid';
   }),
 
-  clearDoiData() {
+  clearDoiData(doi) {
     const workflow = this.get('workflow');
 
     if (workflow.isDataFromCrossref()) {
       this.get('workflow').setFromCrossref(false);
       this.set('doiInfo', {});
       this.set('submission.metadata', '{}');
-      this.clearPublication();
+      this.clearPublication(doi);
     }
   },
 
   /**
    * Remove all data from the current Publication
    */
-  clearPublication() {
+  clearPublication(doi) {
     this.get('publication').setProperties({
-      doi: '',
+      doi,
       title: '',
       abstract: '',
       volume: '',
@@ -183,6 +183,9 @@ export default Component.extend({
         // Note that any metadata now does NOT come from Xref
         this.clearDoiData();
         return;
+      } else if (publication.get('doi') === this.get('workflow').getDoiInfo().DOI) {
+        // Stop issuing requests when the current DOI is the same as the recorded DOI
+        return;
       }
 
       const doiService = this.get('doiService');
@@ -190,13 +193,14 @@ export default Component.extend({
 
       doi = doiService.formatDOI(doi);
       if (!doi || doi === '' || doiService.isValidDOI(doi) === false) {
+        this.clearDoiData(doi); // Clear out title/Journal if user enters a valid DOI, then changes it to an invalid DOI
         return;
       }
 
       publication.set('doi', doi);
-      // this.set('submission.metadata', '{}');
       this.set('inFlight', true);
 
+      toastr.info('Please wait while we information about your DOI');
       doiService.resolveDOI(doi).then(async (result) => {
         if (setPublication) {
           this.set('publication', result.publication);
@@ -205,11 +209,17 @@ export default Component.extend({
         this.set('doiInfo', result.doiInfo);
         this.get('workflow').setFromCrossref(true);
 
+        toastr.remove();
         toastr.success("We've pre-populated information from the DOI provided!");
         this.sendAction('validateTitle');
         this.sendAction('validateJournal');
       }).catch((error) => {
         console.log(`DOI service request failed: ${error.payload.error}`);
+        toastr.remove();
+        toastr.error(`<i class="far fa-frown"></i><br>${error.payload.error}`);
+
+        this.clearDoiData(doi);
+        // this.set('isValidDOI', false);
       }).finally(() => this.set('inFlight', false));
     },
 
