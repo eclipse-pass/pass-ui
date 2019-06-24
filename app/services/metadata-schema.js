@@ -73,11 +73,20 @@ export default Service.extend({
     if (!schema.data) {
       schema.data = {};
     }
+    // Will merge 'data' onto 'schema.data'. 'schema.data' values may be overwritten by values from 'data'
     schema.data = Object.assign(schema.data, data);
 
     if (readonly && readonly.length > 0) {
+      /**
+       * For each key in the data object, if they are marked as "read only",
+       * set the field's 'readonly' to true, and 'toolbarSticky' to false iff the
+       * key refers to an array
+       */
       Object.keys(data).filter(key => readonly.includes(key)).forEach((key) => {
-        if (schema.options.fields.hasOwnProperty(key)) {
+        if (key in schema.options.fields) {
+          if (Array.isArray(data[key])) {
+            schema.options.fields[key].toolbarSticky = false;
+          }
           schema.options.fields[key].readonly = true;
         }
       });
