@@ -69,6 +69,10 @@ export default Component.extend({
     }
   },
 
+  hasKeyInfo: Ember.computed('publication.title', 'publication.journal', function () {
+    return this.get('publication.title') && this.get('publication.journal') && this.get('publication.journal.journalName');
+  }),
+
   isValidDOI: Ember.computed('publication.doi', function () {
     return this.get('doiService').isValidDOI(this.get('publication.doi'));
   }),
@@ -168,9 +172,13 @@ export default Component.extend({
     },
 
     /**
-     * lookupDOI - Set publication, publication journal, and doiInfo based on DOI.
+     * lookupDOI - Set publication, publication journal, and doiInfo based on DOI. The 'setPublication'
+     * flag can be set to 'false' to avoid overwriting any current Publication data. However, this flag
+     * WILL be overridden if the current Publication is not complete: i.e. if it lacks either a Title,
+     * or if it lacks a Journal (with a journalName).
      *
      * @param {boolean} setPublication DOI lookup should set the Publication object on the submission
+     *                  this flag is ignored if the current publication is "not valid"
      */
     lookupDOI(setPublication) {
       if (this.get('inFlight')) {
@@ -202,7 +210,7 @@ export default Component.extend({
 
       toastr.info('Please wait while we information about your DOI');
       doiService.resolveDOI(doi).then(async (result) => {
-        if (setPublication) {
+        if (setPublication || !this.get('hasKeyInfo')) {
           this.set('publication', result.publication);
         }
 
