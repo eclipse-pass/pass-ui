@@ -2,7 +2,7 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { run } from '@ember/runloop';
-import { click, render } from '@ember/test-helpers';
+import { click, render, fillIn } from '@ember/test-helpers';
 
 module('Integration | Component | workflow-metadata', (hooks) => {
   setupRenderingTest(hooks);
@@ -17,7 +17,8 @@ module('Integration | Component | workflow-metadata', (hooks) => {
     });
     const submission = Ember.Object.create({
       repositories,
-      publication
+      publication,
+      save: () => Promise.resolve()
     });
 
     this.set('submission', submission);
@@ -361,6 +362,27 @@ module('Integration | Component | workflow-metadata', (hooks) => {
 
       assert.ok(metadata, 'No component metadata found');
       assert.notOk(metadata.badMoo, 'metadata.badMoo property should not be found on the metadata object');
+    });
+  });
+
+  test('Should persist changes on Next Form', async function (assert) {
+    assert.expect(1); // The assertion in save() should run once
+
+    const submission = Ember.Object.create({
+      publication: this.get('publication'),
+      repositories: this.get('repositories'),
+      save: () => {
+        assert.ok(true);
+        return Promise.resolve();
+      }
+    });
+    this.set('submission', submission);
+
+    run(async () => {
+      await render(hbs`{{workflow-metadata submission=submission publication=publication}}`);
+
+      await fillIn('input[name="journal-NLMTA-ID"]', 'MOO ID');
+      await click('button[data-key="Next"]');
     });
   });
 });

@@ -128,10 +128,12 @@ export default Component.extend({
         swal({
           type: 'error',
           title: 'Form Validation Error',
-          text: this.validationErrorMsg(schemaService.getErrors())
+          html: this.validationErrorMsg(schemaService.getErrors())
         });
         return;
       }
+
+      this.saveMetadata();
 
       if (step >= this.get('schemas').length - 1) {
         this.finalizeMetadata(metadata);
@@ -207,8 +209,24 @@ export default Component.extend({
       agent_information: this.getBrowserInfo()
     });
 
-    const finalMetadata = this.get('metadata');
-    this.set('submission.metadata', JSON.stringify(finalMetadata));
+    this.saveMetadata();
+  },
+
+  saveMetadata() {
+    let shouldPersist = true;
+    const md = this.get('metadata');
+    try {
+      const subMD = JSON.parse(this.get('submission.metadata'));
+
+      shouldPersist = !_.isEqual(md, subMD);
+    } catch (e) {
+      shouldPersist = true;
+    }
+    // console.log(`Saving metadata. Should persist? ${shouldPersist}`);
+    this.set('submission.metadata', JSON.stringify(this.get('metadata')));
+    if (shouldPersist) {
+      this.get('submission').save();
+    }
   },
 
   /**
