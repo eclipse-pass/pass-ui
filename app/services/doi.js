@@ -138,6 +138,10 @@ export default Service.extend({
     if (doiCopy['container-title-short']) {
       doiCopy['journal-title-short'] = doiCopy['container-title-short'];
     }
+    if (doiCopy.issued && doiCopy.issued['date-parts']) {
+      const parts = doiCopy.issued['date-parts'];
+      doiCopy.publicationDate = parts.join('-');
+    }
 
     doiCopy.doi = doiCopy.DOI;
 
