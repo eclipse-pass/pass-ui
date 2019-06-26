@@ -31,6 +31,17 @@ export default Component.extend({
       return value;
     }
   }),
+
+  /**
+   * Publication should be set/overwritten if there is no current publication, if the current
+   * publication has no DOI or Title, or it the current publication has no journal with a
+   * journalName
+   */
+  shouldSetPublication() {
+    const publication = this.get('publication');
+    return !publication || !publication.get('doi') || !publication.get('title') || !publication.get('journal.journalName');
+  },
+
   didRender() {
     this._super(...arguments);
     if (!this.get('isProxySubmission')) {
@@ -43,10 +54,8 @@ export default Component.extend({
 
     this.get('workflow').setFromCrossref(false);
 
-    const publication = this.get('submission.publication');
-    const hasPublication = !!(publication && publication.get('doi'));
-
-    this.lookupDoiAndJournal(!hasPublication);
+    const shouldSet = this.shouldSetPublication();
+    this.lookupDoiAndJournal(shouldSet);
   },
 
   /**
