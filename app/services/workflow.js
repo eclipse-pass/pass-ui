@@ -8,7 +8,10 @@ export default Service.extend({
    * then PASS must handle the submission for NIH compliance.
    */
   pmcPublisherDeposit: false,
+
   doiInfo: {},
+  dataFromCrossref: false,
+
   filesTemp: [],
   defaultRepoLoaded: false, // you only want to load the default setting on first access, after that is should respect he user's choice.
 
@@ -58,7 +61,14 @@ export default Service.extend({
   getDoiInfo() {
     return this.get('doiInfo');
   },
-  setDoiInfo(doiInfo) {
+  setDoiInfo(doiInfo, fromCrossref) {
     this.set('doiInfo', doiInfo);
+    this.setFromCrossref(!!fromCrossref);
+  },
+  setFromCrossref(fromCrossref) {
+    this.set('dataFromCrossref', fromCrossref);
+  },
+  isDataFromCrossref() {
+    return this.get('dataFromCrossref');
   }
 });

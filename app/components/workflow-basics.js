@@ -2,23 +2,12 @@ import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 
 /**
- * IMPL NOTE:
- * An interesting thing to consider: say a user goes through the submission workflow and ends up filling
- * out some custom values in the metadata fields presented to them. The user then leaves the workflow
- * leaving us with a 'draft' submission that can be resumed later. When we re-enter the submission
- * workflow, we don't want to clobber the user-entered metadata.
- *
- * If submission metadata exists, it means the user at least made it past the metadata details step
- * in the workflow. In this case, we should trust this metadata over data from the DOI service. Since
- * data from the DOI is used to seed the metadata step, we can be sure that this data already exists
- * in the submission metadata.
- *
- * If we find either NO metadata or an empty object, then we must look up the DOI to get the
- * metadata, but NOT act on the Publication or Journal objects received from the doi service.
- *
- * TODO: these cumulative issues require pretty ugly and round-about fixes making the code
- * hard to follow. This component needs to be cleaned up so these workaround pathways are not
- * required.
+ * Any metadata field presented by Crossref is made read-only, preventing any changes
+ * to those metadata fields. However, a user may enter extra metadata on top of the Crossref fields.
+ * It is safe to lookup the DOI in Crossref, then always merge the metadata currently in the
+ * submission with the Crossref results. Lookup Crossref whenever the user enters the submission
+ * workflow lets us see which fields came from Crossref. With that record, we will have enough
+ * information about specific fields to set to read-only in the subsequent metadata step.
  */
 export default Component.extend({
   store: service('store'),
@@ -52,32 +41,12 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
 
+    this.get('workflow').setFromCrossref(false);
+
     const publication = this.get('submission.publication');
     const hasPublication = !!(publication && publication.get('doi'));
-    /**
-     * See IMPL NOTE above regarding the existance of submission metadata
-     */
-    try {
-      const md = JSON.parse(this.get('submission.metadata'));
 
-      /**
-       * Set workflow doiInfo because of some weird timing between `routes/submissions/new/index#beforeModel`
-       * and `routes/submissions/new#model()` causing the doiInfo in 'workflow' to reset after it is
-       * defined by the incoming submission
-       */
-      this.get('workflow').setDoiInfo(md);
-
-      /**
-       * Check to see if incoming metadata is an empty object. If metadata is an empty object, then
-       * we still need to load DOI, but may not have to set the returned Publication object.
-       */
-      if (Object.entries(md).length === 0 && md.constructor === Object) {
-        this.lookupDoiAndJournal(!hasPublication);
-      }
-    } catch (e) {
-      // Either 'metadata' is missing or malformed
-      this.lookupDoiAndJournal(!hasPublication);
-    }
+    this.lookupDoiAndJournal(!hasPublication);
   },
 
   /**
@@ -121,6 +90,33 @@ export default Component.extend({
     }
     return 'form-control is-invalid';
   }),
+
+  clearDoiData(doi) {
+    const workflow = this.get('workflow');
+
+    if (workflow.isDataFromCrossref()) {
+      this.get('workflow').setFromCrossref(false);
+      this.set('doiInfo', {});
+      this.set('submission.metadata', '{}');
+      this.clearPublication(doi);
+    }
+  },
+
+  /**
+   * Remove all data from the current Publication
+   */
+  clearPublication(doi) {
+    this.get('publication').setProperties({
+      doi,
+      title: '',
+      abstract: '',
+      volume: '',
+      issue: '',
+      pmid: '',
+      journal: undefined
+    });
+  },
+
   actions: {
     proxyStatusToggled(isProxySubmission) {
       // do only if the values indicate a switch of proxy
@@ -184,6 +180,11 @@ export default Component.extend({
 
       const publication = this.get('publication');
       if (!publication || !publication.get('doi')) {
+        // Note that any metadata now does NOT come from Xref
+        this.clearDoiData();
+        return;
+      } else if (publication.get('doi') === this.get('workflow').getDoiInfo().DOI) {
+        // Stop issuing requests when the current DOI is the same as the recorded DOI
         return;
       }
 
@@ -192,25 +193,33 @@ export default Component.extend({
 
       doi = doiService.formatDOI(doi);
       if (!doi || doi === '' || doiService.isValidDOI(doi) === false) {
+        this.clearDoiData(doi); // Clear out title/Journal if user enters a valid DOI, then changes it to an invalid DOI
         return;
       }
 
       publication.set('doi', doi);
-      this.set('submission.metadata', '{}');
       this.set('inFlight', true);
 
+      toastr.info('Please wait while we information about your DOI');
       doiService.resolveDOI(doi).then(async (result) => {
         if (setPublication) {
           this.set('publication', result.publication);
         }
 
         this.set('doiInfo', result.doiInfo);
+        this.get('workflow').setFromCrossref(true);
 
+        toastr.remove();
         toastr.success("We've pre-populated information from the DOI provided!");
         this.sendAction('validateTitle');
         this.sendAction('validateJournal');
       }).catch((error) => {
         console.log(`DOI service request failed: ${error.payload.error}`);
+        toastr.remove();
+        toastr.error(`<i class="far fa-frown"></i><br>${error.payload.error}`);
+
+        this.clearDoiData(doi);
+        // this.set('isValidDOI', false);
       }).finally(() => this.set('inFlight', false));
     },
 

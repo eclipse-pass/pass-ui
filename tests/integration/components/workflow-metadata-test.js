@@ -219,17 +219,24 @@ module('Integration | Component | workflow-metadata', (hooks) => {
 
   test('Should not proceed to 3rd form without ISSN specified', async function (assert) {
     // Validation should fail without doiInfo values.
-    const workflowService = this.owner.lookup('service:workflow');
-    workflowService.set('doiInfo', {});
 
-    await render(hbs`{{workflow-metadata submission=submission publication=publication}}`);
-    await click('button[data-key="Next"]');
-    // debugger
-    assert.ok(this.element.textContent.includes('NIHMS'), 'We should be on NIH form');
+    run(async () => {
+      this.owner.unregister('service:workflow');
+      this.owner.register('service:workflow', Ember.Service.extend({
+        getDoiInfo: () => {},
+        isDataFromCrossref: () => false
+      }));
 
-    await click('button[data-key="Next"]');
-    // debugger
-    assert.ok(this.element.textContent.includes('NIHMS'), 'We should still be on NIH form');
+      await render(hbs`{{workflow-metadata submission=submission publication=publication}}`);
+      await click('button[data-key="Next"]');
+
+      assert.ok(this.element.textContent.includes('NIHMS'), 'We should be on NIH form');
+      this.element.querySelector('input[name="ISSN"]').value = '';
+
+      await click('button[data-key="Next"]');
+
+      assert.ok(this.element.textContent.includes('NIHMS'), 'We should still be on NIH form');
+    });
   });
 
   module('test with mocked doi service', (hooks) => {
@@ -277,6 +284,52 @@ module('Integration | Component | workflow-metadata', (hooks) => {
     });
   });
 
+  test('DOI fields should be read-only, but non-DOI fields should be editable', async function (assert) {
+    let sub = this.get('submission');
+    sub.set('metadata', JSON.stringify({
+      ISSN: '123Moo'
+    }));
+    this.set('submission', sub);
+
+    const mockDoiService = Ember.Service.extend({
+      doiToMetadata() {
+        return {
+          'journal-NLMTA-ID': 'MOO JOURNAL'
+        };
+      }
+    });
+
+    const mockWorkflow = Ember.Service.extend({
+      getDoiInfo: () => {},
+      isDataFromCrossref: () => true
+    });
+
+    run(async () => {
+      this.owner.unregister('service:workflow');
+      this.owner.register('service:workflow', mockWorkflow);
+      this.owner.unregister('service:doi');
+      this.owner.register('service:doi', mockDoiService);
+
+      await render(hbs`{{workflow-metadata submission=submission publication=publication}}`);
+
+      const nlmtaInput = this.element.querySelector('input[name="journal-NLMTA-ID"]');
+      assert.ok(nlmtaInput, 'NLMTA-ID input not found');
+      assert.ok(
+        nlmtaInput.hasAttribute('readonly') || nlmtaInput.hasAttribute('disabled'),
+        'NLMTA-ID input was found to be editable'
+      );
+      assert.ok(nlmtaInput.value, 'MOO JOURNAL', 'Unexpected "NLMTA-ID" found');
+
+      const issnInput = this.element.querySelector('input[name="ISSN"]');
+      assert.ok(issnInput, 'ISSN input not found');
+      assert.notOk(
+        issnInput.hasAttribute('readonly') || issnInput.hasAttribute('disabled'),
+        'ISSN input was read only, but should be editable'
+      );
+      assert.ok(issnInput.value, '123Moo', 'Unexpected ISSN value found');
+    });
+  });
+
   /**
    * DOI data should have invalid keys removed when translated to the 'workflow-metadata'
    * metadata property. The mock Schema Service defined in #beforeEach above will define
@@ -292,7 +345,8 @@ module('Integration | Component | workflow-metadata', (hooks) => {
           mooName: 'This is a moo',
           badMoo: 'Sad moo'
         };
-      }
+      },
+      isDataFromCrossref: () => false
     });
 
     run(async () => {

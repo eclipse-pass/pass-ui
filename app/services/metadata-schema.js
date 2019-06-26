@@ -24,9 +24,16 @@ export default Service.extend({
      *
      * We could set 'logger' to an object with `log`, `warn`, and `error` functions
      * to handle these things, if there is a need.
+     *
+     * 'addUsedSchema' option allows us to provide the full JSON schema object to the validate function
+     * of AJV without complaints. Without this option, the validate function will report an error because
+     * AJV does not like compiling a JSON schema that it already knows about (based on the schema's '$id').
+     * Speed can be improved if we enable this feature, then selectively add JSON schemas to avoid
+     * the re-compile step.
      */
     this.set('validator', new Ajv({
-      logger: false
+      logger: false,
+      addUsedSchema: false
     }));
   },
 
@@ -59,18 +66,27 @@ export default Service.extend({
    *
    * @param {object} schema metadata (form) schema
    * @param {object} data display data to add to the schema
-   * @param {boolean} setReadOnly force updated fields to be read-only in the generated form
+   * @param {array} readonly list of properties that should be marked as read-only
    * @Returns {object} the modified schema
    */
-  addDisplayData(schema, data, setReadOnly) {
+  addDisplayData(schema, data, readonly) {
     if (!schema.data) {
       schema.data = {};
     }
+    // Will merge 'data' onto 'schema.data'. 'schema.data' values may be overwritten by values from 'data'
     schema.data = Object.assign(schema.data, data);
 
-    if (setReadOnly) {
-      Object.keys(data).forEach((key) => {
-        if (schema.options.fields.hasOwnProperty(key)) {
+    if (readonly && readonly.length > 0) {
+      /**
+       * For each key in the data object, if they are marked as "read only",
+       * set the field's 'readonly' to true, and 'toolbarSticky' to false iff the
+       * key refers to an array
+       */
+      Object.keys(data).filter(key => readonly.includes(key)).forEach((key) => {
+        if (key in schema.options.fields) {
+          if (Array.isArray(data[key])) {
+            schema.options.fields[key].toolbarSticky = false;
+          }
           schema.options.fields[key].readonly = true;
         }
       });
@@ -198,7 +214,8 @@ export default Service.extend({
    */
   mergeBlobs(blob1 = {}, blob2 = {}) {
     let blob = Object.assign(blob1, blob2);
-    Object.keys(blob).filter(key => !blob[key]).forEach(key => delete blob[key]);
+    Object.keys(blob).filter(key => !(key in blob)).forEach(key => delete blob[key]);
+
     return blob;
   },
 
