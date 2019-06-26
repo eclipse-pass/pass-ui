@@ -104,7 +104,7 @@ export default Component.extend({
     const workflow = this.get('workflow');
 
     if (workflow.isDataFromCrossref()) {
-      this.get('workflow').setFromCrossref(false);
+      workflow.setFromCrossref(false);
       this.set('doiInfo', {});
       this.set('submission.metadata', '{}');
       this.clearPublication(doi);
@@ -191,9 +191,6 @@ export default Component.extend({
       if (!publication || !publication.get('doi')) {
         // Note that any metadata now does NOT come from Xref
         this.clearDoiData();
-        return;
-      } else if (publication.get('doi') === this.get('workflow').getDoiInfo().DOI) {
-        // Stop issuing requests when the current DOI is the same as the recorded DOI
         return;
       }
 
