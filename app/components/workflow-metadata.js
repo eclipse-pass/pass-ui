@@ -41,6 +41,10 @@ export default Component.extend({
   }),
   currentFormStep: 0, // Current step #
 
+  onlySingleSchema: Ember.computed('schemas', function () {
+    return this.get('schemas').length === 1;
+  }),
+
   displayFormStep: Ember.computed('currentFormStep', function () {
     return this.get('currentFormStep') + 1;
   }),
@@ -158,9 +162,14 @@ export default Component.extend({
   /**
    * Process schema before displaying it to the user. Tasks during processing includes pre-populating
    * appropriate data fields from current metadata, setting read-only fields, etc.
+   *  - Remove title of schema if there is only a single one to display
    */
   preprocessSchema(schema) {
     const service = this.get('schemaService');
+
+    if (this.get('onlySingleSchema')) {
+      schema = service.untitleSchema(schema);
+    }
 
     let processed = service.alpacafySchema(schema);
 

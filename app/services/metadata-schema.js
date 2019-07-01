@@ -134,6 +134,16 @@ export default Service.extend({
     };
   },
 
+  /**
+   * Remove the schema's title to avoid showing it in the UI
+   *
+   * @param {object} schema JSON schema
+   */
+  untitleSchema(schema) {
+    delete schema.definitions.form.title;
+    return schema;
+  },
+
   validate(schema, data) {
     return this.get('validator').validate(schema, data);
   },
