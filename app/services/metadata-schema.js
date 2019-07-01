@@ -119,11 +119,16 @@ export default Service.extend({
   },
 
   /**
-   * Get all unique field names across a set of schema. For each schema,
+   * Get all unique field names across a set of schema. This includes any unique field
+   * in schema referenced in the 'allOf' validation sections, unless otherwise specified.
    *
    * @param {array} schemas array of schemas
+   * @param {boolean} onlyVisibleFields should this only return rendered fields
+   *                  this will ignore any unique fields that may be present in a linked
+   *                  schema in the 'allOf' section
+   * @returns {array} list of unique field keys
    */
-  getFields(schemas) {
+  getFields(schemas, onlyVisibleFields) {
     let fields = [];
 
     schemas.map(schema => this.alpacafySchema(schema))
@@ -132,6 +137,11 @@ export default Service.extend({
           .filter(key => !fields.includes(key))
           .forEach(key => fields.push(key));
       });
+
+    // Return early
+    if (onlyVisibleFields) {
+      return fields;
+    }
 
     /**
      * Add fields from properties defined in schema.allOf
@@ -211,10 +221,17 @@ export default Service.extend({
    *
    * @param {object} blob1 arbitrary JSON object representing metadata for a submission
    * @param {object} blob2 arbitrary JSON object representing metadata for a submission
+   * @param {array} deletableFields list of keys that can be deleted
+   *                if UNDNEFINED, assume that no fields can be deleted
    */
-  mergeBlobs(blob1 = {}, blob2 = {}) {
+  mergeBlobs(blob1 = {}, blob2 = {}, deletableFields) {
     let blob = Object.assign(blob1, blob2);
-    Object.keys(blob).filter(key => !(key in blob)).forEach(key => delete blob[key]);
+
+    if (Array.isArray(deletableFields) && deletableFields.length > 0) {
+      // Filter out only keys that DO NOT appear in "blob2" and DO appear in the deletableFields list
+      Object.keys(blob).filter(key => !(key in blob2) && deletableFields.includes(key))
+        .forEach(key => delete blob[key]);
+    }
 
     return blob;
   },

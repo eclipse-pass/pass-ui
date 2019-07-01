@@ -2,7 +2,7 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { run } from '@ember/runloop';
-import { click, render } from '@ember/test-helpers';
+import { click, render, fillIn } from '@ember/test-helpers';
 
 module('Integration | Component | workflow-metadata', (hooks) => {
   setupRenderingTest(hooks);
@@ -362,5 +362,18 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       assert.ok(metadata, 'No component metadata found');
       assert.notOk(metadata.badMoo, 'metadata.badMoo property should not be found on the metadata object');
     });
+  });
+
+  test('Metadata merges should be able to remove fields', async function (assert) {
+    const component = this.owner.lookup('component:workflow-metadata');
+
+    await render(hbs`{{workflow-metadata submission=submission publication=publication}}`);
+
+    assert.ok('journal-NLMTA-ID' in component.get('metadata'), 'journal-NLMTA-ID should be in metadata');
+
+    await fillIn('input[name="journal-NLMTA-ID"]', '');
+    await click('button[data-key="Next"]');
+
+    assert.notOk('journal-NLMTA-ID' in component.get('metadata'), 'journal-NLMTA-ID should no longer be in metadata');
   });
 });
