@@ -213,8 +213,16 @@ export default Service.extend({
 
   /**
    * Merge data from metadata blob2 into metadata blob1 and output the result as a new
-   * object (this operation will not mutate either input objects). Broken out here in
-   * case special logic needs to be assigned.
+   * object (this operation will not mutate either input objects). Think of this merge
+   * as overwriting values from 'blob2' in 'blob1' to get the output blob.
+   *
+   * A list of fields can be provided specifying the field keys that can be deleted
+   * during this merge - it is possible to have keys that are _required_ for various
+   * business logic reasons. Defining this list will make it so that if a key is NOT
+   * present in 'blob2' and IS present in the 'deletableFields' list, then that key
+   * will be deleted from the merged blob. If you do not want _any_ fields to be
+   * able to be deleted from the merged blob, 'deletableFields' can be UNDEFINED or
+   * an empty array.
    *
    * Impl note: each blob now has a default value set of an empty object because
    * Object.assign will die if any arguments is undefined
