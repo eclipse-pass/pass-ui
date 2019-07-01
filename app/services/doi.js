@@ -140,7 +140,7 @@ export default Service.extend({
     }
     if (doiCopy.issued && doiCopy.issued['date-parts']) {
       const parts = doiCopy.issued['date-parts'];
-      doiCopy.publicationDate = parts.join('-');
+      doiCopy.publicationDate = parts.flat().join('-');
     }
 
     doiCopy.doi = doiCopy.DOI;
@@ -154,20 +154,6 @@ export default Service.extend({
     doiCopy.$schema = this.get('metadataSchemaUri');
 
     return doiCopy;
-    // Manual mapping of DOI data to fields expected by our metadata forms
-    // return {
-    //   abstract: doiInfo.abstract,
-    //   authors: doiInfo.authors,
-    //   issns,
-    //   'journal-NLMTA-ID': doiInfo.nlmta,
-    //   doi: doiInfo.DOI,
-    //   publisher: doiInfo.publisher,
-    //   'journal-title-short': doiInfo['container-title-short'],
-    //   'journal-title': doiInfo['journal-title'],
-    //   title: doiInfo.title,
-    //   issue: doiInfo.issue,
-    //   volume: doiInfo.volume
-    // };
   },
 
   getJournalTitle(doiInfo) {
