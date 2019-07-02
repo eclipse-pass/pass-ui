@@ -1,14 +1,6 @@
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 
-/**
- * Any metadata field presented by Crossref is made read-only, preventing any changes
- * to those metadata fields. However, a user may enter extra metadata on top of the Crossref fields.
- * It is safe to lookup the DOI in Crossref, then always merge the metadata currently in the
- * submission with the Crossref results. Lookup Crossref whenever the user enters the submission
- * workflow lets us see which fields came from Crossref. With that record, we will have enough
- * information about specific fields to set to read-only in the subsequent metadata step.
- */
 export default Component.extend({
   store: service('store'),
   workflow: service('workflow'),

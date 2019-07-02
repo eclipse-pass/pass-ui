@@ -58,12 +58,16 @@ export default Component.extend({
 
   init() {
     this._super(...arguments);
+
+    let md;
     try {
-      const md = JSON.parse(this.get('submission.metadata'));
+      md = JSON.parse(this.get('submission.metadata'));
+    } catch (e) {
+      // Do nothing
+    } finally {
       this.set('metadata', md || {});
       this.setReadOnly({});
-    // eslint-disable-next-line no-empty
-    } catch (e) {}
+    }
   },
 
   async willRender() {
