@@ -74,6 +74,34 @@ module('Unit | Service | metadata-schema', (hooks) => {
       });
   });
 
+  test('Should retry request without merge query param on failure', function (assert) {
+    const service = this.owner.lookup('service:metadata-schema');
+
+    let triedWithMerge = false;
+    let triedWithoutMerge = false;
+
+    service.set('ajax', Ember.Object.create({
+      request: (url, options) => {
+        if (url.includes('merge')) {
+          triedWithMerge = true;
+        } else {
+          triedWithoutMerge = true;
+        }
+        assert.ok(true);
+        return $.Deferred().reject({}, { status: 409 });
+      },
+    }));
+
+    service.getMetadataSchemas(['moo', 'too'])
+      .then(
+        result => assert.ok(false),
+        (failure) => {
+          assert.ok(triedWithMerge, 'Request did not try with the "merge" query param');
+          assert.ok(triedWithoutMerge, 'Request did not try without the "merge" query param');
+        }
+      );
+  });
+
   test('Alpacafication works as expected', function (assert) {
     const service = this.owner.lookup('service:metadata-schema');
     service.getMetadataSchemas(['moo', 'two']).then((schemas) => {

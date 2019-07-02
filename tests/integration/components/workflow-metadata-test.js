@@ -376,4 +376,39 @@ module('Integration | Component | workflow-metadata', (hooks) => {
 
     assert.notOk('journal-NLMTA-ID' in component.get('metadata'), 'journal-NLMTA-ID should no longer be in metadata');
   });
+
+  test('Single schema displays no title', async function (assert) {
+    const mockAjax = Ember.Service.extend({
+      request() {
+        return Promise.resolve([
+          {
+            id: 'common',
+            definitions: {
+              form: {
+                title: 'Common schema title moo',
+                type: 'object',
+                properties: {
+                  'journal-NLMTA-ID': { type: 'string' },
+                  ISSN: { type: 'string' }
+                },
+                options: {
+                  fields: {
+                    'journal-NLMTA-ID': { type: 'text', label: 'Journal NLMTA ID', placeholder: '' },
+                    ISSN: { type: 'text', label: 'ISSN', placeholder: '' }
+                  }
+                }
+              }
+            }
+          },
+        ]);
+      }
+    });
+    // Override previously mocked AJAX service
+    this.owner.register('service:ajax', mockAjax);
+
+    await render(hbs`{{workflow-metadata submission=submission publication=publication}}`);
+
+    const text = this.element.textContent;
+    assert.notOk(text.includes('Common schema'), 'Schema title should not be displayed');
+  });
 });

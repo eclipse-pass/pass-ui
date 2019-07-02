@@ -38,6 +38,11 @@ export default Service.extend({
   },
 
   /**
+   * First try to get a single merged schema that combines all repository schema.
+   * If that request fails, retry the request, but without trying to merge the schema.
+   *
+   * If the schema service fails to merge, it should return a 409 error. Any other error
+   * will likely have an unknown cause and may not be recoverable.
    *
    * @param {array} repositories list of repository URIs
    * @returns {array} list of schemas relevant to the given repositories
@@ -49,15 +54,34 @@ export default Service.extend({
       repositories = repositories.map(repo => repo.get('id'));
     }
     const url = this.get('schemaService.url');
+    const urlWithMerge = `${url}?merge=true`;
 
-    return this.get('ajax').request(url, {
+    const options = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json; charset=utf-8'
       },
       processData: false,
       data: repositories
-    });
+    };
+
+    // TODO: would be nice if this used Fetch API, but current tests are written for AJAX
+    return this.get('ajax')
+      .request(urlWithMerge, options)
+      .catch((response, jqXHR, payload) => {
+        /**
+         * error handling with `ember-ajax`: https://github.com/ember-cli/ember-ajax#access-the-response-in-case-of-error
+         * jqXHR info : https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
+         */
+        if (jqXHR.status !== 409) {
+          // Unknown error
+          const msg = `Unknown error fetching merged metadata schema: ${jqXHR.statusText}`;
+          // console.log(`msg \n${response}`, 'color:red;');
+          throw new Error(msg);
+        }
+
+        return this.get('ajax').request(url, options);
+      });
   },
 
   /**
@@ -108,6 +132,16 @@ export default Service.extend({
       schema: schema.definitions.form,
       options: schema.definitions.options || schema.definitions.form.options
     };
+  },
+
+  /**
+   * Remove the schema's title to avoid showing it in the UI
+   *
+   * @param {object} schema JSON schema
+   */
+  untitleSchema(schema) {
+    delete schema.definitions.form.title;
+    return schema;
   },
 
   validate(schema, data) {
