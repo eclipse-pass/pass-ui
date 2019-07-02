@@ -58,12 +58,16 @@ export default Component.extend({
 
   init() {
     this._super(...arguments);
+
+    let md;
     try {
-      const md = JSON.parse(this.get('submission.metadata'));
+      md = JSON.parse(this.get('submission.metadata'));
+    } catch (e) {
+      // Do nothing
+    } finally {
       this.set('metadata', md || {});
       this.setReadOnly({});
-    // eslint-disable-next-line no-empty
-    } catch (e) {}
+    }
   },
 
   async willRender() {
@@ -78,6 +82,7 @@ export default Component.extend({
       // Load schemas by calling the Schema service
       try {
         const schemas = await this.get('schemaService').getMetadataSchemas(repos);
+        // this.clearUnsavedMetadata();
 
         const doiInfo = this.get('doiInfo');
         const journal = await this.get('publication.journal');
@@ -94,7 +99,7 @@ export default Component.extend({
         }
 
         this.updateMetadata(metadataFromDoi);
-
+        // debugger
         this.set('schemas', schemas);
         this.set('currentFormStep', 0);
       } catch (e) {
