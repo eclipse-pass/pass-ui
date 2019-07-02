@@ -114,7 +114,7 @@ export default Component.extend({
   actions: {
     nextForm(metadata) {
       const step = this.get('currentFormStep');
-      this.updateMetadata(metadata);
+      this.updateMetadata(metadata, true);
 
       const schemaService = this.get('schemaService');
       const schema = this.get('schemas')[this.get('currentFormStep')];
@@ -176,17 +176,41 @@ export default Component.extend({
    * blob.
    *
    * Impl note:
-   * - The structure of the 'newMetadata' blob is determined by 'components/metadata-form.js'. It's
+   * - The structure of the 'newMetadata' blob is determined by 'components/metadata-form.js'. Its
    * metadata is provided to the #nextForm function call.
    * - Merging current and new blobs together is done in 'services/metadata-schema.js'
    *
    * @param {object} newMetadata metadata blob from a single metadata form
+   * @param {boolean} allowDelete let the blob merge delete fields
    */
-  updateMetadata(newMetadata) {
-    const mergedBlob = this.get('schemaService').mergeBlobs(
+  updateMetadata(newMetadata, allowDelete) {
+    let mergedBlob;
+
+    let deletableFields;
+
+    /**
+     * TODO: We need a comprehensive definition of how to merge metadata blobs.
+     * The current implementation does not work! For example, it will not allow
+     * the deletion of data, so if a user removes some info from a metadata form,
+     * it will not be removed from the blob :(
+     */
+
+    if (allowDelete) {
+      /**
+       * For field deletion, we should look at what fields are displayed in the current schema
+       * then for each of those fields, if no value is present, remove that key from the
+       * metadata blob. Using 'rendered' fields as valid deletable fields should work around
+       * the need to explicitly ignore '$schema'
+       */
+      deletableFields = this.get('schemaService').getFields([this.get('currentSchema')], true);
+    }
+
+    mergedBlob = this.get('schemaService').mergeBlobs(
       this.get('metadata'),
-      newMetadata
+      newMetadata,
+      deletableFields
     );
+
     this.set('metadata', mergedBlob);
   },
 

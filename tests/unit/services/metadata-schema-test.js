@@ -175,6 +175,14 @@ module('Unit | Service | metadata-schema', (hooks) => {
     assert.ok(result.includes('issns'));
   });
 
+  test('Get fields does not include \'allOf\' properties when told not to', function (assert) {
+    const service = this.owner.lookup('service:metadata-schema');
+    const result = service.getFields([this.get('mockSchema')], true);
+
+    assert.ok(result, 'No results found');
+    assert.notOk(result.includes('issns'));
+  });
+
   test('Get field to title map', function (assert) {
     const service = this.owner.lookup('service:metadata-schema');
 
@@ -224,5 +232,29 @@ module('Unit | Service | metadata-schema', (hooks) => {
     const expected = [];
 
     assert.deepEqual(result, expected);
+  });
+
+  test('mergeBlobs does not delete data normally', function (assert) {
+    const service = this.owner.lookup('service:metadata-schema');
+
+    const b1 = { one: '1 moo', two: '2 moo' };
+    const b2 = { two: 'moo too' };
+
+    const expected = { one: '1 moo', two: 'moo too' };
+
+    assert.deepEqual(service.mergeBlobs(b1, b2), expected);
+  });
+
+  test('mergeBlobs can delete only specified fields', function (assert) {
+    const service = this.owner.lookup('service:metadata-schema');
+
+    const b1 = { one: '1 moo', two: '2 moo' };
+    const b2 = { two: 'moo too' };
+
+    const list = ['one', 'two'];
+
+    const expected = { two: 'moo too' };
+
+    assert.deepEqual(service.mergeBlobs(b1, b2, list), expected);
   });
 });
