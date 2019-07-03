@@ -2,9 +2,20 @@ import Controller from '@ember/controller';
 import { inject as service } from '@ember/service';
 import Bootstrap4Theme from 'ember-models-table/themes/bootstrap4';
 import { computed } from '@ember/object';
+import { alias } from '@ember/object/computed';
 
 export default Controller.extend({
   currentUser: service('current-user'),
+
+  grant: alias('model.grant'),
+
+  coPIs: computed('grant.coPis', function () {
+    const coPis = this.get('grant.coPis');
+    if (coPis) {
+      return coPis.mapBy('displayName').toArray().join(', ');
+    }
+    return '';
+  }),
 
   // Columns displayed depend on the user role
   columns: computed('currentUser', {
