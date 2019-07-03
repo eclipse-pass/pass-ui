@@ -32,6 +32,7 @@ export default CheckSessionRoute.extend({
     //     policies.push(res);
     //   }
     // });
+    this.clearEffectivePolicies(submission);
 
     const policies = await this.get('policyService').getPolicies(submission);
 
@@ -42,6 +43,10 @@ export default CheckSessionRoute.extend({
       preLoadedGrant: parentModel.preLoadedGrant,
       policies: Promise.all(policies)
     });
+  },
+
+  clearEffectivePolicies(submission) {
+    submission.get('effectivePolicies').clear();
   },
 
   actions: {

@@ -22,6 +22,12 @@ import { inject as service, } from '@ember/service';
  * "Choice" repositories refer to a set of repositories, from which the user must select one or
  * more to be added to the submission. Choice repositories are provided to this component as an
  * array of arrays of strings.
+ *
+ * "required", "optional", and "choice groups" are arrays of objects that look like:
+ *  repoInfo: {
+ *    funders: {}, // string
+ *    repository: {}, // Repository object
+ *  }
  */
 export default Component.extend({
   workflow: service('workflow'),
@@ -35,22 +41,46 @@ export default Component.extend({
     const req = this.get('requiredRepositories');
     const choice = this.get('choiceRepositories');
 
-    if (currentRepos && currentRepos.length > 0) {
+    if (currentRepos && currentRepos.get('length') > 0) {
+      const validRepos = Ember.A();
+
+      /**
+       * Make sure any required repos have been added to the submission
+       */
+      req.forEach((repoInfo) => {
+        validRepos.addObject(repoInfo.repository);
+        this.addRepository(repoInfo.repository, false);
+      });
+
       /**
        * Check returned repositories against any repositories already set in the current submission.
        * Make sure all repositories present in the submission have `selected: true` in the returned
        * lists.
        */
       if (opt) {
-        opt.forEach((opt) => { opt.repository.set('_selected', currentRepos.includes(opt.repository)); });
+        validRepos.addObjects(opt.map(repoInfo => repoInfo.repository));
+        opt.forEach((opt) => {
+          opt.repository.set('_selected', currentRepos.includes(opt.repository));
+        });
       }
       if (choice) {
         choice.forEach((group) => {
+          validRepos.addObjects(group.map(repoInfo => repoInfo.repository));
           group.forEach((repoInfo) => {
             repoInfo.repository.set('_selected', currentRepos.includes(repoInfo.repository));
           });
         });
       }
+
+      /**
+       * Remove any extra repositories that do not appear in any of the repo lists.
+       * There may be a case of a repository appearing in the submission's repo list
+       * that is not present in the response from the Policy service. This repository
+       * should be considered invalid and removed from the submission prior to any
+       * other operation.
+       */
+      currentRepos.filter(repo => !validRepos.includes(repo))
+        .forEach(repo => currentRepos.removeObject(repo));
     } else {
       /**
        * If no repositories have been saved to the submission yet, force add all required repositories

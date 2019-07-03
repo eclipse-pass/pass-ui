@@ -11,6 +11,26 @@ export default Service.extend({
   schemaService: Ember.inject.service('metadata-schema'),
 
   /**
+   * Remove the specified grant from the given submission.
+   *
+   * There is some complexity behind the operation of changing grants associated with a
+   * submission. Since the grants directly or indirectly determing several properties of
+   * the submission such as policies and repositories, some care needs to be taken when
+   * adding or removing grants. There are separate steps in the workflow dealing with each
+   * of these properties that are isolated from one another - each step may not have enough
+   * information to determine
+   *
+   * Adding grants should not pose much of a risk to the submission, as the UI will render
+   *
+   *
+   * @param {Grant} grant the grant object to remove
+   * @param {Submission} submission the submission from which the grant will be removed
+   */
+  removeGrant(grant, submission) {
+
+  },
+
+  /**
    * _getSubmissionView - Internal method which returns the URL to view a submission.
    *
    * @param  {Submission} submission
