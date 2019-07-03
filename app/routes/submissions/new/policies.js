@@ -32,6 +32,11 @@ export default CheckSessionRoute.extend({
     //     policies.push(res);
     //   }
     // });
+
+    /**
+     * Remove current effectivePolicies from the submission because
+     * it will be recalculated and added back in this step.
+     */
     this.clearEffectivePolicies(submission);
 
     const policies = await this.get('policyService').getPolicies(submission);
