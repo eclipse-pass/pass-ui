@@ -9,14 +9,6 @@ export default Controller.extend({
 
   grant: alias('model.grant'),
 
-  coPIs: computed('grant.coPis', function () {
-    const coPis = this.get('grant.coPis');
-    if (coPis) {
-      return coPis.mapBy('displayName').toArray().join(', ');
-    }
-    return '';
-  }),
-
   // Columns displayed depend on the user role
   columns: computed('currentUser', {
     get() {

@@ -23,7 +23,7 @@
       <li><strong>PI:</strong> {{grant.pi.displayName}}</li>
       <li><strong>Co-PI(s) / Co-I(s):</strong>
         <ul>
-          {{coPIs}}
+          {{#each grant.coPis as |person index|}}{{#if index}}, {{/if}}{{person.displayName}}{{/each}}
         </ul>
       </li>
     </ul>
