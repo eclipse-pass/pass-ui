@@ -42,13 +42,17 @@ export default Component.extend({
     const choice = this.get('choiceRepositories');
 
     if (currentRepos && currentRepos.get('length') > 0) {
-      const validRepos = Ember.A();
+      /**
+       * Since this is used to tell if a repo is present in the policy service result, we don't care
+       * if there are duplicates
+       */
+      const validRepos = [];
 
       /**
        * Make sure any required repos have been added to the submission
        */
       req.forEach((repoInfo) => {
-        validRepos.addObject(repoInfo.repository);
+        validRepos.push(repoInfo.repository.get('id'));
         this.addRepository(repoInfo.repository, false);
       });
 
@@ -58,15 +62,15 @@ export default Component.extend({
        * lists.
        */
       if (opt) {
-        validRepos.addObjects(opt.map(repoInfo => repoInfo.repository));
         opt.forEach((opt) => {
+          validRepos.push(opt.repository.get('id'));
           opt.repository.set('_selected', currentRepos.includes(opt.repository));
         });
       }
       if (choice) {
         choice.forEach((group) => {
-          validRepos.addObjects(group.map(repoInfo => repoInfo.repository));
           group.forEach((repoInfo) => {
+            validRepos.push(repoInfo.repository.get('id'));
             repoInfo.repository.set('_selected', currentRepos.includes(repoInfo.repository));
           });
         });
@@ -78,8 +82,11 @@ export default Component.extend({
        * that is not present in the response from the Policy service. This repository
        * should be considered invalid and removed from the submission prior to any
        * other operation.
+       *
+       * Use IDs instead of full Repository objects to try to avoid weird JS equality
+       * nonsense.
        */
-      currentRepos.filter(repo => !validRepos.includes(repo))
+      currentRepos.filter(repo => !validRepos.includes(repo.get('id')))
         .forEach(repo => currentRepos.removeObject(repo));
     } else {
       /**
