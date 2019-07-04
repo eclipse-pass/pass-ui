@@ -61,7 +61,16 @@ export default CheckSessionRoute.extend({
       });
 
       // Then search for all Submissions associated with the returned Grants
-      this.get('store').query('submission', { query: { terms: { grants: grantIds } }, size: querySize }).then((subs) => {
+      const query = {
+        query: {
+          bool: {
+            must: { terms: { grants: grantIds } },
+            must_not: { term: { submissionStatus: 'cancelled' } }
+          }
+        },
+        size: querySize
+      };
+      this.get('store').query('submission', query).then((subs) => {
         subs.forEach((submission) => {
           submission.get('grants').forEach((grant) => {
             let match = results.find(res => res.grant.get('id') === grant.get('id'));

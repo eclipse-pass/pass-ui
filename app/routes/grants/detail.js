@@ -19,8 +19,9 @@ export default CheckSessionRoute.extend({
     let grant = this.get('store').findRecord('grant', params.grant_id);
 
     const query = {
-      term: {
-        grants: params.grant_id
+      bool: {
+        must: { term: { grants: params.grant_id } },
+        must_not: { term: { submissionStatus: 'cancelled' } }
       },
       size: 500
     };
