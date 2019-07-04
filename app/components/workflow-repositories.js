@@ -25,7 +25,7 @@ import { inject as service, } from '@ember/service';
  *
  * "required", "optional", and "choice groups" are arrays of objects that look like:
  *  repoInfo: {
- *    funders: {}, // string
+ *    funders: '', // string
  *    repository: {}, // Repository object
  *  }
  */
