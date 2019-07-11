@@ -165,4 +165,51 @@ module('Integration | Component | workflow repositories', (hooks) => {
     assert.equal(repos.length, 2, 'unexpected number of repositories attached to the submission');
     assert.notOk(repos.isAny('name', 'Moo-pository 00'));
   });
+
+  /**
+   * One repository already exists on the submission. One grant was "added" according to the workflow
+   * service. Three optional repositories are returned by the policy service. We expect the checked
+   * status of each repository as follows:
+   *   - First repo should be selected : because it exists in the submission already
+   *   - Second repo should not be selected : because it's default status is false
+   *   - Third repo should be selected : because it's default status is true
+   *
+   * This could happen when editing a draft submission.
+   */
+  test('Repos on submission are selected initially', async function (assert) {
+    this.set('submission', Ember.Object.create({
+      repositories: Ember.A([
+        Ember.Object.create({ id: 1, name: 'Test Repo 1' })
+      ])
+    }));
+
+    const addedRepo = Ember.Object.create({ id: 3, name: 'Test Repo 3', _selected: true });
+    this.set('optionalRepositories', Ember.A([
+      { repository: Ember.Object.create({ id: 1, name: 'Test Repo 1', _selected: false }) },
+      { repository: Ember.Object.create({ id: 2, name: 'Test Repo 2', _selected: true }) },
+      { repository: addedRepo }
+    ]));
+    this.owner.register('service:workflow', Ember.Service.extend({
+      setMaxStep: () => {},
+      getAddedGrants: () => Ember.A([
+        Ember.Object.create({
+          primaryFunder: Ember.Object.create({
+            policy: Ember.Object.create({ repositories: Ember.A([addedRepo]) })
+          })
+        })
+      ])
+    }));
+
+    await render(hbs`{{workflow-repositories
+      submission=submission
+      requiredRepositories=requiredRepositories
+      optionalRepositories=optionalRepositories
+      choiceRepositories=choiceRepositories}}`);
+
+    const checkboxes = this.element.querySelectorAll('input[type="checkbox"]');
+    assert.equal(checkboxes.length, 3, 'Should be two checkboxes showing');
+    assert.ok(checkboxes[0].checked, 'First checkbox should be checked');
+    assert.notOk(checkboxes[1].checked, 'Second checkbox should NOT be checked');
+    assert.ok(checkboxes[2].checked, 'Third checkbox should be selected');
+  });
 });

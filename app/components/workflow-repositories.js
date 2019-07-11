@@ -69,14 +69,13 @@ export default Component.extend({
       if (opt) {
         opt.forEach((opt) => {
           validRepos.push(opt.repository.get('id'));
-          opt.repository.set('_selected', currentRepos.includes(opt.repository));
+          this.setSelected(opt.repository);
         });
       }
       if (choice) {
         choice.forEach((group) => {
           group.forEach((repoInfo) => {
             validRepos.push(repoInfo.repository.get('id'));
-            // repoInfo.repository.set('_selected', currentRepos.includes(repoInfo.repository));
             this.setSelected(repoInfo.repository);
           });
         });
