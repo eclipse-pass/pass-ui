@@ -15,6 +15,8 @@ export default Service.extend({
   filesTemp: [],
   defaultRepoLoaded: false, // you only want to load the default setting on first access, after that is should respect he user's choice.
 
+  addedGrants: Ember.A([]),
+
   resetWorkflow() {
     this.setCurrentStep(0);
     this.setMaxStep(1);
@@ -22,6 +24,7 @@ export default Service.extend({
     this.setFilesTemp([]);
     this.setDoiInfo({});
     this.setDefaultRepoLoaded(false);
+    this.clearAddedGrants();
   },
   getCurrentStep() {
     return this.get('currentStep');
@@ -70,5 +73,17 @@ export default Service.extend({
   },
   isDataFromCrossref() {
     return this.get('dataFromCrossref');
+  },
+  getAddedGrants() {
+    return this.get('addedGrants');
+  },
+  addGrant(grant) {
+    this.get('addedGrants').pushObject(grant);
+  },
+  removeGrant(repo) {
+    this.get('addedGrants').removeObject(grant);
+  },
+  clearAddedGrants() {
+    this.get('addedGrants').clear();
   }
 });

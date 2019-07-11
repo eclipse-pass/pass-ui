@@ -30,11 +30,16 @@ import { inject as service, } from '@ember/service';
  *  }
  */
 export default Component.extend({
+  submissionHandler: service('submission-handler'),
   workflow: service('workflow'),
+
+  addedRepos: Ember.A([]),
 
   willRender() {
     this._super(...arguments);
 
+
+    this.set('addedRepos', this.getAddedRepositories());
     const currentRepos = this.get('submission.repositories');
 
     const opt = this.get('optionalRepositories');
@@ -71,7 +76,8 @@ export default Component.extend({
         choice.forEach((group) => {
           group.forEach((repoInfo) => {
             validRepos.push(repoInfo.repository.get('id'));
-            repoInfo.repository.set('_selected', currentRepos.includes(repoInfo.repository));
+            // repoInfo.repository.set('_selected', currentRepos.includes(repoInfo.repository));
+            this.setSelected(repoInfo.repository);
           });
         });
       }
@@ -107,6 +113,33 @@ export default Component.extend({
         });
       }
     }
+  },
+
+  getAddedRepositories() {
+    const grants = this.get('workflow').getAddedGrants();
+    return this.get('submissionHandler').getRepositoriesFromGrants(grants);
+  },
+
+  /**
+   * Set the selection status of an "optional" repository.
+   *
+   * The default selection status should be kept if the repository was added during this pass through
+   * the submission workflow, which is "known" in the workflow service. If the repository wasn't just
+   * added, then the repository's selection status should be set according to its presence in the
+   * submission's repositories list.
+   *
+   * @param {Repository} repo the repository that may be modified
+   */
+  setSelected(repo) {
+    const id = repo.get('id');
+    const addedRepos = this.get('addedRepos');
+    const currentRepos = this.get('submission.repositories');
+
+    if (addedRepos.isAny('id', id)) {
+      return;
+    }
+
+    repo.set('_selected', currentRepos.isAny('id', id));
   },
 
   actions: {

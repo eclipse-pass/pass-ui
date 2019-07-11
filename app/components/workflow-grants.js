@@ -18,6 +18,7 @@ import Bootstrap4Theme from 'ember-models-table/themes/bootstrap4';
 export default Component.extend({
   store: service('store'),
   workflow: service('workflow'),
+
   pageNumber: 1,
   pageCount: 0,
   pageSize: 10,
@@ -121,20 +122,27 @@ export default Component.extend({
       }
     },
     addGrant(grant, event) {
+      const workflow = this.get('workflow');
       const submission = this.get('submission');
+
       if (grant) {
         submission.get('grants').pushObject(grant);
-        this.get('workflow').setMaxStep(2);
+        // submissionHandler.getRepositoriesFromGrant(grant).forEach(repo => workflow.addRepo(repo));
+        workflow.addGrant(grant);
+        workflow.setMaxStep(2);
       } else if (event && event.target.value) {
         this.get('store').findRecord('grant', event.target.value).then((g) => {
           g.get('primaryFunder.policy'); // Make sure policy is loaded in memory
           submission.get('grants').pushObject(g);
-          this.get('workflow').setMaxStep(2);
+          workflow.addGrant(g);
+          workflow.setMaxStep(2);
           Ember.$('select')[0].selectedIndex = 0;
         });
       }
     },
     async removeGrant(grant) {
+      const workflow = this.get('workflow');
+
       // if grant is grant passed in from grant detail page remove query parms
       if (grant === this.get('preLoadedGrant')) {
         this.set('preLoadedGrant', null);
@@ -142,8 +150,9 @@ export default Component.extend({
       const submission = this.get('submission');
       submission.get('grants').removeObject(grant);
 
+      workflow.removeGrant(grant);
       // undo progress, make user redo metadata step.
-      this.get('workflow').setMaxStep(2);
+      workflow.setMaxStep(2);
     },
 
     abortSubmission() {
