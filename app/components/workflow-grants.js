@@ -1,11 +1,24 @@
 import Component from '@ember/component';
-import { Promise, } from 'rsvp';
 import { inject as service } from '@ember/service';
 import Bootstrap4Theme from 'ember-models-table/themes/bootstrap4';
 
+/**
+ * This component is responsible for displaying a table of grants that are relevant to
+ * the current submission. The list of grants is loaded here and is determined by
+ * the "submitter" of the current submission.
+ *
+ * This step entirely determines the policies that may be applied to the submission,
+ * which appear in a subsequent workflow step. Because of this, any change to selected
+ * grants necessarily must change policies applied to the submission. Adding a grant
+ * MUST trigger a recalculation of applied policies just as much as removing grants.
+ * We can implement this by simply clearing `submission.effectivePolicies` every time we
+ * make a change to grants in this stage. **We could also naively just clear
+ * `effectivePolicies` every time we load into the Policies step...**
+ */
 export default Component.extend({
   store: service('store'),
   workflow: service('workflow'),
+
   pageNumber: 1,
   pageCount: 0,
   pageSize: 10,
@@ -109,20 +122,27 @@ export default Component.extend({
       }
     },
     addGrant(grant, event) {
+      const workflow = this.get('workflow');
       const submission = this.get('submission');
+
       if (grant) {
         submission.get('grants').pushObject(grant);
-        this.get('workflow').setMaxStep(2);
+        // submissionHandler.getRepositoriesFromGrant(grant).forEach(repo => workflow.addRepo(repo));
+        workflow.addGrant(grant);
+        workflow.setMaxStep(2);
       } else if (event && event.target.value) {
         this.get('store').findRecord('grant', event.target.value).then((g) => {
           g.get('primaryFunder.policy'); // Make sure policy is loaded in memory
           submission.get('grants').pushObject(g);
-          this.get('workflow').setMaxStep(2);
+          workflow.addGrant(g);
+          workflow.setMaxStep(2);
           Ember.$('select')[0].selectedIndex = 0;
         });
       }
     },
     async removeGrant(grant) {
+      const workflow = this.get('workflow');
+
       // if grant is grant passed in from grant detail page remove query parms
       if (grant === this.get('preLoadedGrant')) {
         this.set('preLoadedGrant', null);
@@ -130,8 +150,9 @@ export default Component.extend({
       const submission = this.get('submission');
       submission.get('grants').removeObject(grant);
 
+      workflow.removeGrant(grant);
       // undo progress, make user redo metadata step.
-      this.get('workflow').setMaxStep(2);
+      workflow.setMaxStep(2);
     },
 
     abortSubmission() {

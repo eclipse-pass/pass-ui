@@ -11,6 +11,30 @@ export default Service.extend({
   schemaService: Ember.inject.service('metadata-schema'),
 
   /**
+   * Get all repositories associated with grants.
+   *
+   * @param {EmberArray} grant list of Grants
+   * @returns EmberArray with repositories
+   */
+  getRepositoriesFromGrants(grants) {
+    let result = Ember.A();
+
+    grants.forEach((grant) => {
+      const directRepos = grant.get('directFunder.policy.repositories');
+      const primaryRepos = grant.get('primaryFunder.policy.repositories');
+
+      if (Ember.isArray(directRepos)) {
+        result.pushObjects(directRepos);
+      }
+      if (Ember.isArray(primaryRepos)) {
+        result.pushObjects(primaryRepos);
+      }
+    });
+
+    return result.compact().uniqBy('id');
+  },
+
+  /**
    * _getSubmissionView - Internal method which returns the URL to view a submission.
    *
    * @param  {Submission} submission

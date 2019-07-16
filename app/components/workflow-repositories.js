@@ -22,35 +22,77 @@ import { inject as service, } from '@ember/service';
  * "Choice" repositories refer to a set of repositories, from which the user must select one or
  * more to be added to the submission. Choice repositories are provided to this component as an
  * array of arrays of strings.
+ *
+ * "required", "optional", and "choice groups" are arrays of objects that look like:
+ *  repoInfo: {
+ *    funders: '', // string
+ *    repository: {}, // Repository object
+ *  }
  */
 export default Component.extend({
+  submissionHandler: service('submission-handler'),
   workflow: service('workflow'),
+
+  addedRepos: Ember.A([]),
 
   willRender() {
     this._super(...arguments);
 
+
+    this.set('addedRepos', this.getAddedRepositories());
     const currentRepos = this.get('submission.repositories');
 
     const opt = this.get('optionalRepositories');
     const req = this.get('requiredRepositories');
     const choice = this.get('choiceRepositories');
 
-    if (currentRepos && currentRepos.length > 0) {
+    if (currentRepos && currentRepos.get('length') > 0) {
+      /**
+       * Since this is used to tell if a repo is present in the policy service result, we don't care
+       * if there are duplicates
+       */
+      const validRepos = [];
+
+      /**
+       * Make sure any required repos have been added to the submission
+       */
+      req.forEach((repoInfo) => {
+        validRepos.push(repoInfo.repository.get('id'));
+        this.addRepository(repoInfo.repository, false);
+      });
+
       /**
        * Check returned repositories against any repositories already set in the current submission.
        * Make sure all repositories present in the submission have `selected: true` in the returned
        * lists.
        */
       if (opt) {
-        opt.forEach((opt) => { opt.repository.set('_selected', currentRepos.includes(opt.repository)); });
+        opt.forEach((opt) => {
+          validRepos.push(opt.repository.get('id'));
+          this.setSelected(opt.repository);
+        });
       }
       if (choice) {
         choice.forEach((group) => {
           group.forEach((repoInfo) => {
-            repoInfo.repository.set('_selected', currentRepos.includes(repoInfo.repository));
+            validRepos.push(repoInfo.repository.get('id'));
+            this.setSelected(repoInfo.repository);
           });
         });
       }
+
+      /**
+       * Remove any extra repositories that do not appear in any of the repo lists.
+       * There may be a case of a repository appearing in the submission's repo list
+       * that is not present in the response from the Policy service. This repository
+       * should be considered invalid and removed from the submission prior to any
+       * other operation.
+       *
+       * Use IDs instead of full Repository objects to try to avoid weird JS equality
+       * nonsense.
+       */
+      currentRepos.filter(repo => !validRepos.includes(repo.get('id')))
+        .forEach(repo => currentRepos.removeObject(repo));
     } else {
       /**
        * If no repositories have been saved to the submission yet, force add all required repositories
@@ -70,6 +112,33 @@ export default Component.extend({
         });
       }
     }
+  },
+
+  getAddedRepositories() {
+    const grants = this.get('workflow').getAddedGrants();
+    return this.get('submissionHandler').getRepositoriesFromGrants(grants);
+  },
+
+  /**
+   * Set the selection status of an "optional" repository.
+   *
+   * The default selection status should be kept if the repository was added during this pass through
+   * the submission workflow, which is "known" in the workflow service. If the repository wasn't just
+   * added, then the repository's selection status should be set according to its presence in the
+   * submission's repositories list.
+   *
+   * @param {Repository} repo the repository that may be modified
+   */
+  setSelected(repo) {
+    const id = repo.get('id');
+    const addedRepos = this.get('addedRepos');
+    const currentRepos = this.get('submission.repositories');
+
+    if (addedRepos.isAny('id', id)) {
+      return;
+    }
+
+    repo.set('_selected', currentRepos.isAny('id', id));
   },
 
   actions: {

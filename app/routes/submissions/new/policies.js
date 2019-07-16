@@ -33,6 +33,12 @@ export default CheckSessionRoute.extend({
     //   }
     // });
 
+    /**
+     * Remove current effectivePolicies from the submission because
+     * it will be recalculated and added back in this step.
+     */
+    this.clearEffectivePolicies(submission);
+
     const policies = await this.get('policyService').getPolicies(submission);
 
     return Ember.RSVP.hash({
@@ -42,6 +48,10 @@ export default CheckSessionRoute.extend({
       preLoadedGrant: parentModel.preLoadedGrant,
       policies: Promise.all(policies)
     });
+  },
+
+  clearEffectivePolicies(submission) {
+    submission.get('effectivePolicies').clear();
   },
 
   actions: {
