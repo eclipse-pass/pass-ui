@@ -324,8 +324,8 @@ td {
   label {
     display: block;
   }
-  .radio label {
-    margin-left: 12px;
+  .radio input[type="radio"] {
+    margin: 0 8px;
   }
 }
 
