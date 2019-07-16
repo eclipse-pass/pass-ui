@@ -9,6 +9,7 @@ export default Component.extend({
   metadataService: service('metadata-schema'),
 
   inFlight: false,
+  doiServiceError: false,
   isShowingUserSearchModal: false,
 
   isProxySubmission: Ember.computed('submission.isProxySubmission', function () {
@@ -70,8 +71,8 @@ export default Component.extend({
     }
   },
 
-  isValidDOI: Ember.computed('publication.doi', function () {
-    return this.get('doiService').isValidDOI(this.get('publication.doi'));
+  isValidDOI: Ember.computed('publication.doi', 'doiServiceError', function () {
+    return !this.get('doiServiceError') && this.get('doiService').isValidDOI(this.get('publication.doi'));
   }),
   titleClass: Ember.computed('flaggedFields', function () {
     return ((this.get('flaggedFields').indexOf('title') > -1) ? 'form-control is-invalid' : 'form-control');
@@ -174,6 +175,7 @@ export default Component.extend({
      * @param {boolean} setPublication DOI lookup should set the Publication object on the submission
      */
     lookupDOI(setPublication) {
+      this.set('doiServiceError', false);
       if (this.get('inFlight')) {
         console.log('%cA request is already in flight, ignoring this call', 'color:blue;');
         return;
@@ -198,7 +200,10 @@ export default Component.extend({
       publication.set('doi', doi);
       this.set('inFlight', true);
 
-      toastr.info('Please wait while we information about your DOI');
+      toastr.info('Please wait while we information about your DOI', '', {
+        timeOut: 0,
+        extendedTimeOut: 0
+      });
       doiService.resolveDOI(doi).then(async (result) => {
         if (setPublication) {
           this.set('publication', result.publication);
@@ -208,16 +213,15 @@ export default Component.extend({
         this.get('workflow').setFromCrossref(true);
 
         toastr.remove();
-        toastr.success("We've pre-populated information from the DOI provided!");
+        toastr.success('We\'ve pre-populated information from the DOI provided!');
         this.sendAction('validateTitle');
         this.sendAction('validateJournal');
       }).catch((error) => {
         console.log(`DOI service request failed: ${error.payload.error}`);
         toastr.remove();
-        toastr.error(`<i class="far fa-frown"></i><br>${error.payload.error}`);
 
         this.clearDoiData(doi);
-        // this.set('isValidDOI', false);
+        this.set('doiServiceError', error.payload.error);
       }).finally(() => this.set('inFlight', false));
     },
 
