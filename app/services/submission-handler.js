@@ -24,10 +24,10 @@ export default Service.extend({
       const primaryRepos = grant.get('primaryFunder.policy.repositories');
 
       if (Ember.isArray(directRepos)) {
-        result.pushObjects(directRepos);
+        result.pushObjects(directRepos.toArray());
       }
       if (Ember.isArray(primaryRepos)) {
-        result.pushObjects(primaryRepos);
+        result.pushObjects(primaryRepos.toArray());
       }
     });
 
