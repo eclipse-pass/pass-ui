@@ -51,6 +51,7 @@ export default Component.extend({
     }
 
     // Init selected grants to grants already attached to submission
+    this.get('_selectedGrants').clear();
     this.get('_selectedGrants').addObjects(this.get('submission.grants'));
   },
 

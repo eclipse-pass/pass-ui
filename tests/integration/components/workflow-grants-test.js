@@ -75,14 +75,27 @@ module('Integration | Component | workflow grants', (hooks) => {
     const row2 = rows[1];
     assert.ok(row2.getAttribute('class').includes('selected-row'));
     assert.ok(row2.querySelector('i[class="fa fa-check-square"]'));
+
+    const workflow = this.owner.lookup('service:workflow');
+    assert.equal(workflow.getAddedGrants().length, 1, 'One grant should have been added');
   });
 
   test('Selecting a grant adds it', async function (assert) {
-    assert.expect(4);
+    assert.expect(6);
 
+    this.set('preLoadedGrant', undefined);
+
+    const list = Ember.A();
     this.owner.register('service:workflow', Ember.Service.extend({
       setMaxStep: (step) => {},
-      addGrant: (grant) => { assert.ok(grant); }
+      addGrant(grant) {
+        assert.ok(grant);
+        list.pushObject(grant);
+      },
+      getAddedGrants() {
+        return list;
+      },
+      clearAddedGrants: () => { list.clear(); }
     }));
 
     await render(hbs`{{workflow-grants
@@ -101,6 +114,54 @@ module('Integration | Component | workflow grants', (hooks) => {
       .querySelectorAll('tbody tr');
     assert.equal(selectedRows.length, 1);
     assert.ok(selectedRows[0].textContent.includes('Moo 1'), 'Only "Moo 1" should be selected');
-    // debugger
+
+    assert.equal(list.length, 1, 'One grant should be added to the list');
+
+    assert.equal(this.get('submission.grants.length'), 1, 'One grant should be attached to submission');
+  });
+
+  /**
+   * A grant is selected in this component. Test whether clicking on this selected grant in the
+   * "grant selection table" will unselect it and remove it from the submission.
+   */
+  test('Clicking on a selected grant will remove it', async function (assert) {
+    assert.expect(6);
+
+    const list = Ember.A();
+    this.owner.register('service:workflow', Ember.Service.extend({
+      setMaxStep: () => {},
+      clearAddedGrants: () => { list.clear(); },
+      getAddedGrants: () => list,
+      addGrant: (grant) => { list.pushObject(grant); },
+      removeGrant(grant) {
+        assert.ok(true);
+        list.removeObject(grant);
+      }
+    }));
+
+    this.set('preLoadedGrant', knownGrant);
+
+    await render(hbs`{{workflow-grants
+      submission=submission
+      preLoadedGrant=preLoadedGrant
+      next=(action loadNext)
+      back=(action loadPrevious)}}`);
+    await settled();
+
+    const selectedRows = this.element.querySelector('h5').nextElementSibling
+      .querySelectorAll('tbody tr');
+    assert.ok(selectedRows[0].textContent.includes('Moo 2'));
+
+    const grants = this.get('submission.grants');
+    assert.equal(grants.get('length'), 1, 'There should be one grant attached to the submission');
+
+    const grantRows = this.element.querySelectorAll('#grants-selection-table table tbody tr');
+    assert.equal(grantRows.length, 4, 'Should be 4 rows');
+
+    await click(grantRows[1]);
+
+    assert.equal(grants.get('length'), 0, 'Grant should have been removed from submission');
+
+    assert.ok(grantRows[1].querySelector('i[class="far fa-square"]'), '"Unselected" icon should be seen now');
   });
 });
