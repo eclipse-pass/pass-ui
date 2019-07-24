@@ -80,7 +80,7 @@ export default Service.extend({
   addGrant(grant) {
     this.get('addedGrants').pushObject(grant);
   },
-  removeGrant(repo) {
+  removeGrant(grant) {
     this.get('addedGrants').removeObject(grant);
   },
   clearAddedGrants() {
