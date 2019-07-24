@@ -7,17 +7,13 @@ import Bootstrap4Theme from 'ember-models-table/themes/bootstrap4';
  * the current submission. The list of grants is loaded here and is determined by
  * the "submitter" of the current submission.
  *
- * This step entirely determines the policies that may be applied to the submission,
- * which appear in a subsequent workflow step. Because of this, any change to selected
- * grants necessarily must change policies applied to the submission. Adding a grant
- * MUST trigger a recalculation of applied policies just as much as removing grants.
- * We can implement this by simply clearing `submission.effectivePolicies` every time we
- * make a change to grants in this stage. **We could also naively just clear
- * `effectivePolicies` every time we load into the Policies step...**
+ *
  */
 export default Component.extend({
   store: service('store'),
   workflow: service('workflow'),
+
+  workflowStep: 2,
 
   pageNumber: 1,
   pageCount: 0,
@@ -25,6 +21,9 @@ export default Component.extend({
   submitterGrants: null,
   totalGrants: 0,
   themeInstance: Bootstrap4Theme.create(),
+
+  /** Grants already attached to the submission on component init */
+  _selectedGrants: Ember.A(),
 
   // Matches numbered starting at 1. Return number of first match on current page.
   pageFirstMatchNumber: Ember.computed('totalGrants', 'pageNumber', 'pageSize', function () {
@@ -44,9 +43,21 @@ export default Component.extend({
   }),
   init() {
     this._super(...arguments);
-    if (this.get('preLoadedGrant')) this.send('addGrant', this.get('preLoadedGrant'));
-    if (this.get('submission.submitter.id')) this.updateGrants();
+    if (this.get('preLoadedGrant')) {
+      this.send('addGrant', this.get('preLoadedGrant'));
+    }
+    if (this.get('submission.submitter.id')) {
+      this.updateGrants();
+    }
+
+    // Init selected grants to grants already attached to submission
+    this.get('_selectedGrants').addObjects(this.get('submission.grants'));
   },
+
+  setWorkflowStepHere() {
+    this.get('workflow').setMaxStep(this.get('workflowStep'));
+  },
+
   updateGrants() {
     let info = {};
 
@@ -104,6 +115,53 @@ export default Component.extend({
   filteredGrants: Ember.computed('submitterGrants', 'submission.grants.[]', function () {
     return this.get('submitterGrants').filter(g => !this.get('submission.grants').map(x => x.id).includes(g.get('id')));
   }),
+
+  /**
+   * Add a grant to the submission. Since this effects subsequent steps in the workflow,
+   * make sure the user can't skip any step past this
+   *
+   * @param {Grant} grant
+   */
+  addGrant(grant) {
+    const workflow = this.get('workflow');
+    const submission = this.get('submission');
+
+    if (!submission.get('grants').includes(grant)) {
+      submission.get('grants').pushObject(grant);
+    }
+    if (!workflow.getAddedGrants().includes(grant)) {
+      workflow.addGrant(grant);
+    }
+    if (!this.get('_selectedGrants').includes(grant)) {
+      this.get('_selectedGrants').pushObject(grant);
+    }
+
+    this.setWorkflowStepHere();
+  },
+
+  /**
+   * Remove a grant from the submission. If the grant was "pre-loaded" in the submission
+   * workflow, make sure it is no longer marked that way (remove grant ID from URL param).
+   * Since this effects subsequent steps, force the user to go through all steps again
+   * to recalculate things like `effectivePolicies` and `repositories`
+   *
+   * @param {Grant} grant
+   */
+  removeGrant(grant) {
+    const workflow = this.get('workflow');
+
+    // if grant is grant passed in from grant detail page remove query parms
+    if (grant === this.get('preLoadedGrant')) {
+      this.set('preLoadedGrant', null);
+    }
+    const submission = this.get('submission');
+    submission.get('grants').removeObject(grant);
+    workflow.removeGrant(grant);
+    this.get('_selectedGrants').removeObject(grant);
+
+    this.setWorkflowStepHere();
+  },
+
   actions: {
     prevPage() {
       let i = this.get('pageNumber');
@@ -121,38 +179,82 @@ export default Component.extend({
         this.updateGrants();
       }
     },
-    addGrant(grant, event) {
-      const workflow = this.get('workflow');
-      const submission = this.get('submission');
 
+    /**
+     * Only really triggered on #init by a pre-loaded grant...
+     *
+     * @param {Grant} grant
+     * @param {object} event ?
+     */
+    addGrant(grant, event) {
       if (grant) {
-        submission.get('grants').pushObject(grant);
-        // submissionHandler.getRepositoriesFromGrant(grant).forEach(repo => workflow.addRepo(repo));
-        workflow.addGrant(grant);
-        workflow.setMaxStep(2);
+        this.addGrant(grant);
       } else if (event && event.target.value) {
         this.get('store').findRecord('grant', event.target.value).then((g) => {
           g.get('primaryFunder.policy'); // Make sure policy is loaded in memory
-          submission.get('grants').pushObject(g);
-          workflow.addGrant(g);
-          workflow.setMaxStep(2);
+          this.addGrant(g);
           Ember.$('select')[0].selectedIndex = 0;
         });
       }
     },
+
+    /**
+     * Only triggered by clicking the Remove button in the "Current Selection" table
+     *
+     * @param {Grant} grant
+     */
     async removeGrant(grant) {
-      const workflow = this.get('workflow');
+      this.removeGrant(grant);
+    },
 
-      // if grant is grant passed in from grant detail page remove query parms
-      if (grant === this.get('preLoadedGrant')) {
-        this.set('preLoadedGrant', null);
+    /**
+     * Since this action is only triggered from user interaction, we can be sure that
+     * any Grants found selected (or deselected) in this action are not the result of
+     * the previous state of the Submission. These grants should be tracked in 'workflow'
+     *
+     * This action catches user interactions that don't directly trigger #addGrant or
+     * #removeGrant actions. These actions _will_ add or remove grants, just not through
+     * the above actions. We need to know when this happens so we can track the Grants
+     * in the workflow.
+     */
+    dataChange(options) {
+      const selectedItems = options.selectedItems;
+
+      /**
+       * Compare `selectedItems` with `_selectedGrants`, which holds the previous
+       * selection of grants. If these two differ, we know that some selection
+       * has been made (though we don't know if it was an addition or removal).
+       * This will weed out other display data changes, like table filtering.
+       *
+       * When we know grant selection has changed, we have to make sure all places
+       * that Grants are tracked are updated (_selectedGrants, workflow.addedGrants,
+       * and submission.grants). Also reset progress in the workflow, forcing
+       * users to step through the workflow, without skipping steps.
+       */
+      const previousSelection = this.get('_selectedGrants');
+
+      const curLen = selectedItems.get('length');
+      const prevLen = previousSelection.get('length');
+
+      if (curLen > prevLen) {
+        /**
+         * Grant added. For each currently selected grant, check if it is
+         * present in the previous selection state. If not, make sure it is
+         * added everywhere appropriate.
+         */
+        selectedItems.filter(grant => !previousSelection.includes(grant))
+          .forEach(grant => this.addGrant(grant));
+      } else if (curLen < prevLen) {
+        /**
+         * Grant removed. For each previously selected grant, check if it is
+         * present in current selection. If not, make sure it is removed where
+         * appropriate.
+         */
+        previousSelection.filter(grant => !selectedItems.includes(grant))
+          .forEach(grant => this.removeGrant(grant));
       }
-      const submission = this.get('submission');
-      submission.get('grants').removeObject(grant);
 
-      workflow.removeGrant(grant);
-      // undo progress, make user redo metadata step.
-      workflow.setMaxStep(2);
+      this.set('_selectedGrants', selectedItems);
     },
 
     abortSubmission() {
