@@ -39,4 +39,28 @@ module('Integration | Component | metadata-form', (hooks) => {
       'There should be three form control buttons (prev, abort, next)'
     );
   });
+
+  test('Test "stripEmptyArrays"', function (assert) {
+    const component = this.owner.lookup('component:metadata-form');
+
+    const obj = {
+      one: [],
+      two: ['moo'],
+      three: undefined,
+      four: [''],
+      five: [{}],
+      six: {},
+      seven: { moo: [] }
+    };
+    const result = component.stripEmptyArrays(obj);
+
+    assert.notOk('one' in result);
+    assert.ok('two' in result);
+    assert.ok('three' in result);
+    assert.ok('four' in result);
+    assert.ok('five' in result);
+    assert.ok('six' in result);
+    assert.ok('seven' in result);
+    assert.ok('moo' in result.seven);
+  });
 });

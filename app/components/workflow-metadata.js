@@ -136,7 +136,7 @@ export default Component.extend({
         swal({
           type: 'error',
           title: 'Form Validation Error',
-          text: this.validationErrorMsg(schemaService.getErrors())
+          html: this.validationErrorMsg(schemaService.getErrors())
         });
         return;
       }
