@@ -4,7 +4,7 @@ import { inject as service } from '@ember/service';
 export default Component.extend({
   store: service('store'),
   workflow: service('workflow'),
-  submitter: service('submission-handler'),
+  submissionHandler: service('submission-handler'),
   currentUser: service('current-user'),
 
   _getFilesElement() {
@@ -31,7 +31,7 @@ export default Component.extend({
             mFiles.removeObject(file);
           }
 
-          file.destroyRecord();
+          this.get('submissionHandler').deleteFile(file);
         }
       });
     },
@@ -60,7 +60,7 @@ export default Component.extend({
               this.get('newFiles').pushObject(newFile);
 
               // Immediately upload file
-              this.get('submitter').uploadFile(this.get('submission'), newFile);
+              this.get('submissionHandler').uploadFile(this.get('submission'), newFile);
             }
           }
         }

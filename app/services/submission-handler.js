@@ -298,5 +298,24 @@ export default Service.extend({
     return submission.save().then(() => {
       submission.unloadRecord();
     });
+  },
+
+  /**
+   * Remove a file from a submission.
+   *
+   * Note this does NOT delete the file from Fedora! It merely strips the
+   * File object's reference to the submission. This is to (for now) avoid
+   * some nasty permissions issues that might crop up during DELETE operations
+   *
+   * @param {File} file
+   * @returns {Promise}
+   */
+  deleteFile(file) {
+    if (!file) {
+      return;
+    }
+
+    file.set('submission', undefined);
+    return file.save().then(() => file.unloadRecord());
   }
 });

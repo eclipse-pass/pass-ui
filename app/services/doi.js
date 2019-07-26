@@ -93,28 +93,30 @@ export default Service.extend({
 
     // Add issns key in expected format by parsing journal issns.
     doiCopy.issns = [];
-    journal.get('issns').forEach((s) => {
-      let i = s.indexOf(':');
-      let value = {};
+    if (Ember.isArray(journal.get('issns'))) {
+      journal.get('issns').forEach((s) => {
+        let i = s.indexOf(':');
+        let value = {};
 
-      if (i == -1) {
-        value.issn = s;
-      } else {
-        let prefix = s.substring(0, i);
+        if (i == -1) {
+          value.issn = s;
+        } else {
+          let prefix = s.substring(0, i);
 
-        if (prefix === 'Print') {
-          value.pubType = 'Print';
-        } else if (prefix === 'Online') {
-          value.pubType = 'Online';
+          if (prefix === 'Print') {
+            value.pubType = 'Print';
+          } else if (prefix === 'Online') {
+            value.pubType = 'Online';
+          }
+
+          value.issn = s.substring(i + 1);
         }
 
-        value.issn = s.substring(i + 1);
-      }
-
-      if (value.issn.length > 0) {
-        doiCopy.issns.push(value);
-      }
-    });
+        if (value.issn.length > 0) {
+          doiCopy.issns.push(value);
+        }
+      });
+    }
 
     // Massage 'authors' information
     // Add expected properties and copy the field from 'author' to 'authors'
