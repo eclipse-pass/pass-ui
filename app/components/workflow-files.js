@@ -70,6 +70,8 @@ export default Component.extend({
       let files = this.get('newFiles');
       files.removeObject(file);
       this.set('files', files);
+
+      this.get('submissionHandler').deleteFile(file);
     },
     cancel() {
       this.sendAction('abort');
