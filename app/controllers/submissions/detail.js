@@ -171,6 +171,7 @@ export default Controller.extend({
   submissionNeedsSubmitter: Ember.computed(
     'currentUser.user',
     'model',
+    'model.sub.submissionStatus',
     function () {
       return (
         this.get('model.sub.submissionStatus') === 'approval-requested' ||
