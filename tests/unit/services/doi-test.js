@@ -187,4 +187,18 @@ module('Unit | Service | doi', (hooks) => {
       assert.equal(doiInfo.DOI, result.doiInfo.DOI);
     });
   });
+
+  test('Make sure we don\'t choke on journal with no ISSNs', function (assert) {
+    const journal = Ember.Object.create({
+      nlmta: 'NLmooTA'
+    });
+    const doiInfo = this.get('mockDoiInfo');
+    const service = this.owner.lookup('service:doi');
+
+    const result = service.doiToMetadata(doiInfo, journal);
+
+    assert.ok(result);
+    assert.equal(result.issns.length, 0);
+    assert.equal(result['journal-NLMTA-ID'], 'NLmooTA');
+  });
 });
