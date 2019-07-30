@@ -122,12 +122,24 @@ export default Service.extend({
   /**
    * Map a JSON schema to on that Alpaca will recognize.
    *
+   * If a field of `type: 'array'` is marked as `required` in the schema, remove that
+   * required status only for the alpacafied schema.
+   *
    * @param {object} schema JSON schema from the schema service
    */
   alpacafySchema(schema) {
     if (!schema.hasOwnProperty('definitions')) {
       return schema;
     }
+
+    Object.keys(schema.definitions.form.properties).filter(key => schema.definitions.form.properties[key].type === 'array')
+      .forEach((key) => {
+        const req = schema.definitions.form.required;
+        if (Array.isArray(req) && req.includes(key)) {
+          req.splice(req.indexOf(key), 1);
+        }
+      });
+
     return {
       schema: schema.definitions.form,
       options: schema.definitions.options || schema.definitions.form.options

@@ -411,4 +411,127 @@ module('Integration | Component | workflow-metadata', (hooks) => {
     const text = this.element.textContent;
     assert.notOk(text.includes('Common schema'), 'Schema title should not be displayed');
   });
+
+  test('Check "required" labels for pre-populated array fields', async function (assert) {
+    const mockDoiService = Ember.Service.extend({
+      doiToMetadata() {
+        return {
+          moorray: [
+            { reqField: 'Moo 1', optField: 'Optional-ish' },
+            { reqField: 'Moo 2' }
+          ]
+        };
+      }
+    });
+    const mockAjax = Ember.Service.extend({
+      request() {
+        return Promise.resolve([{
+          id: 'moo',
+          definitions: {
+            form: {
+              title: 'Test schema',
+              type: 'object',
+              properties: {
+                moorray: {
+                  type: 'array',
+                  items: {
+                    properties: {
+                      reqField: { type: 'string' },
+                      optField: { type: 'string' }
+                    },
+                    required: ['reqField']
+                  }
+                }
+              },
+              options: {
+                fields: {
+                  moorray: {
+                    label: 'Array field',
+                    items: {
+                      fields: {
+                        reqField: { label: 'This should be required' },
+                        optField: { label: 'This is optional' }
+                      }
+                    }
+                  }
+                }
+              },
+              required: ['moorray']
+            }
+          }
+        }]);
+      }
+    });
+
+    run(async () => {
+      this.owner.register('service:doi', mockDoiService);
+      this.owner.register('service:ajax', mockAjax);
+
+      await render(hbs`{{workflow-metadata submission=submission publication=publication}}`);
+
+      assert.notOk(this.element.querySelector('legend').textContent.includes('required'));
+
+      const reqIndicators = this.element.querySelectorAll('.alpaca-container-item .alpaca-required-indicator');
+      assert.equal(reqIndicators.length, 2, '(required) indicator should appear only twice in rendered form');
+    });
+  });
+
+  test('Check "required" labels for user added array fields', async function (assert) {
+    const mockAjax = Ember.Service.extend({
+      request() {
+        return Promise.resolve([{
+          id: 'moo',
+          definitions: {
+            form: {
+              title: 'Test schema',
+              type: 'object',
+              properties: {
+                moorray: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      reqField: { type: 'string' },
+                      optField: { type: 'string' }
+                    },
+                    required: ['reqField']
+                  }
+                }
+              },
+              options: {
+                fields: {
+                  moorray: {
+                    label: 'Array field',
+                    items: {
+                      fields: {
+                        reqField: { label: 'This should be required' },
+                        optField: { label: 'This is optional' }
+                      }
+                    }
+                  }
+                }
+              },
+              required: ['moorray']
+            }
+          }
+        }]);
+      }
+    });
+
+    run(async () => {
+      this.owner.register('service:ajax', mockAjax);
+
+      await render(hbs`{{workflow-metadata submission=submission publication=publication}}`);
+
+      const addBtn = this.element.querySelector('button[data-alpaca-array-toolbar-action="add"]');
+      assert.ok(addBtn);
+
+      await click(addBtn);
+
+      assert.notOk(this.element.querySelector('legend').textContent.includes('required'));
+
+      const reqIndicators = this.element.querySelectorAll('.alpaca-container-item .alpaca-required-indicator');
+      assert.equal(reqIndicators.length, 1, '(required) indicator should appear only twice in rendered form');
+    });
+  });
 });
