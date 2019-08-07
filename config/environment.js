@@ -27,6 +27,9 @@ module.exports = function (environment) {
       assetsUri: '/',
       brand: {
         mailto: 'pass@jhu.edu',
+        homepage: '',
+        logo: '',
+        stylesheet: '',
         fontUrl: 'fonts/',
         imgUrl: 'img/'
       }
