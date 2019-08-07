@@ -4,6 +4,8 @@ import { inject as service } from '@ember/service';
 export default Component.extend({
   currentUser: service('current-user'),
 
+  assetsUri: PassEmber.assetsUri,
+
   /**
    * Do we have a valid user loaded into the user service?
    */

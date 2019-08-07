@@ -8,6 +8,8 @@ export default Controller.extend({
   params: ['userToken'],
   userToken: null,
   rootURL: config.rootURL,
+  assetsUri: PassEmber.assetsUri,
+  brand: PassEmber.brand,
   institution: '',
   wideRoutes: ['grants.index', 'grants.detail', 'submissions.index'],
   fullWidth: Ember.computed('currentRouteName', function () {
