@@ -25,49 +25,7 @@ $color-text-secondary: $jhu-grey2;
 $transition-duration: 0.3s;
 
 /* Override things with JHU rules */
-body {
-  background-color: #f5f4f3;
-}
-a {
-  color: $jhu-blue;
-}
 
-primary-skin {
-  background-color: $color-bg-primary !important;
-  color: $color-text-primary !important;
-}
-header {
-  margin-bottom: 24px;
-  .pass-title {
-    padding:0;
-    span {
-      font-size: 1.2em;
-    }
-  }
-  .navbar {
-    padding-top: 0;
-  }
-  .navbar-brand {
-    img {
-      width: 250px;
-      margin: 0 24px;
-    }
-  }
-  .navbar-dark .navbar-nav .nav-link {
-    padding: 0 1rem;
-    color: $jhu-blue2;
-    border-right: 1px solid $jhu-grey3;
-    &:hover {
-      color: $jhu-grey;
-    }
-    &.borderless {
-      border: 0;
-    }
-  }
-}
-.nav-link:hover {
-  color: $color-text-secondary;
-}
 .text-info {
   color: $jhu-weird-bluegreen !important;
 }
@@ -146,10 +104,10 @@ h6.card-subtitle {
 .unset-width {
   width: unset!important;
 }
-.custom-color {
-  color:white!important;
-  border:none!important;
-}
+// .custom-color {
+//   color:white!important;
+//   border:none!important;
+// }
 
 .table thead th {
   border-bottom: 2px solid #dedede!important;
@@ -361,16 +319,16 @@ $primary-color: #418FDE;
 $danger-color: #f86c6b;
 $navbar-color: #005EB8;
 body {
-  font-family:  gentona-light,sans-serif!important;
+  // font-family:  gentona-light,sans-serif!important;
   font-size: 1em !important;
-  color:#2C2C33 !important;
+  // color:#2C2C33 !important;
   -webkit-font-smoothing: antialiased;
   -moz-font-smoothing: antialiased;
   -o-font-smoothing: antialiased;
 }
-h1, h2, h3, h4, h5 {
-  font-family:  quadon-regular,serif!important;
-}
+// h1, h2, h3, h4, h5 {
+//   font-family:  quadon-regular,serif!important;
+// }
 h1 {
   font-size: 1.7rem!important;
 }
@@ -381,12 +339,12 @@ h3 {
   font-size: 1.3rem!important;
 }
 
-a {
-  color: $navbar-color !important;
-}
-.navbar {
-  background:$navbar-color;
-}
+// a {
+//   color: $navbar-color !important;
+// }
+// .navbar {
+//   background:$navbar-color;
+// }
 .btn-primary {
   background-color: $primary-color !important;
   border-color: $primary-color !important;

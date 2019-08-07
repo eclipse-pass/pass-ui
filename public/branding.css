@@ -1,0 +1,66 @@
+:root {
+  --jhu-bg-primary: white;
+
+  /* JHU Primary Colors */
+  --jhu-blue-spirit: #68ACE5;
+  --jhu-blue-heritage: #002D72;
+  --jhu-black: #31261D;
+
+  /* JHU Secondary Colors */
+  --jhu-secondary-1: #CF4520;
+  --jhu-secondary-2: #76232F;
+  --jhu-secondary-3: #A15A95;
+  --jhu-secondary-4: #009B77;
+  --jhu-secondary-5: #0072CE;
+  --jhu-secondary-6: #F1C400;
+
+  /* JHU Accent Colors */
+  --jhu-accent-1: #CBA052;
+  --jhu-accent-2: #FF9E1B;
+  --jhu-accent-3: #FF6900;
+  --jhu-accent-4: #9E5330;
+  --jhu-accent-5: #4F2C1D;
+  --jhu-accent-6: #E8927C;
+  --jhu-accent-7: #A6192E;
+  --jhu-accent-8: #51284F;
+  --jhu-accent-9: #A192B2;
+  --jhu-accent-10: #418FDE;
+  --jhu-accent-11: #86C8BC;
+  --jhu-accent-12: #286140;
+  --jhu-accent-13: #179949;
+
+  /* JHU Fonts */
+  --jhu-headline: quadon-regular, tahoma;
+  --jhu-subhead: quadon-regular, tahoma;
+  --jhu-bodycopy-accent: quadon-regular, tahoma;
+  --jhu-bodycopy: gentona-light, tahoma;
+}
+
+body {
+  font-family: var(--jhu-bodycopy);
+  color: var(--jhu-black);
+}
+h1, h2, h3, h4, h5 {
+  font-family:  quadon-regular,serif!important;
+}
+a {
+  color: var(--jhu-secondary-5);
+}
+#brand-site-container {
+  background-color: var(--jhu-bg-primary);
+  /* background-color: var(--jhu-blue-spirit); */
+}
+#brand-header {
+  background-color: var(--jhu-blue-heritage);
+  color: var(--jhu-blue-spirit);
+}
+#brand-header-title {
+  /* color: var(--jhu-blue-spirit); */
+  color: white;
+}
+#header-navbar {
+  font-family: var(--jhu-bodycopy);
+}
+#header-navbar .navitem {
+  font-family: var(--jhu-bodycopy);
+}

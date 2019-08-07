@@ -17,11 +17,11 @@
   }
 </style>
 {{ember-load-remover}}
-<div class="site" style="z-index:0;">
-  <header class="primary-skin navbar navbar-expand-xs justify-content-center mb-0">
+<div id="brand-site-container" class="site" style="z-index:0;">
+  <header id="brand-header" class="navbar navbar-expand-xs justify-content-center mb-0">
     <div class={{if fullWidth 'container-fluid' 'container'}}>
-      <a href="/" class="navbar-brand custom-color d-none d-sm-block">
-        <h3 class="font-weight-light" >
+      <a href="/" class="navbar-brand d-none d-sm-block">
+        <h3 id="brand-header-title" class="font-weight-light">
           Public Access Submission System
         </h3>
       </a>
