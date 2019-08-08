@@ -1,9 +1,4 @@
-<style>
-.card {
-  height: 100%;
-}
-</style>
-<div class='row row-eq-height'>
+<div id="dashboard-container" class='row row-eq-height'>
   <div class='col-md-6 mt-4 mb-4'>
     <div class='card'>
       <div class='card-body'>
@@ -12,10 +7,10 @@
         </h2>
         <p class='card-text'>
           The submissions view allows you to:
-            <ul>
-              <li>create submissions to one or more repository in order to comply with the access policies of your funders and institutions</li>
-              <li>review the statuses of previous submissions</li>
-            </ul>
+          <ul>
+            <li>create submissions to one or more repository in order to comply with the access policies of your funders and institutions</li>
+            <li>review the statuses of previous submissions</li>
+          </ul>
         </p>
         <div class="text-center">
           {{#if (get (await currentUser.user) 'isSubmitter')}}
@@ -56,10 +51,10 @@
       <div class="alert alert-info">
         You have:<br>
         {{#if model.numberAwaitingApproval}}
-        {{#link-to 'submissions.index'}}{{model.numberAwaitingApproval}} submission(s){{/link-to}} awaiting your approval.<br>
+          {{#link-to 'submissions.index'}}{{model.numberAwaitingApproval}} submission(s){{/link-to}} awaiting your approval.<br>
         {{/if}}
         {{#if model.numberAwaitingEdits}}
-        {{#link-to 'submissions.index'}}{{model.numberAwaitingEdits}} submission(s){{/link-to}} with a submitter waiting for you to edit them.
+          {{#link-to 'submissions.index'}}{{model.numberAwaitingEdits}} submission(s){{/link-to}} with a submitter waiting for you to edit them.
         {{/if}}
       </div>
     </div>

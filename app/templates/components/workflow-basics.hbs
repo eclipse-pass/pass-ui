@@ -2,14 +2,22 @@
 {{#unless (or submission.id preLoadedGrant)}}
 <div class="py-0 mt-2 alert alert-secondary" id="on-behalf-of-block">
   <p class="my-2 lead">I'm creating this submission on behalf of:
-    <input type="radio" checked={{ not isProxySubmission }} onchange={{action 'proxyStatusToggled' false}}/> Myself
-    <input type="radio" checked={{ isProxySubmission }} onchange={{action 'proxyStatusToggled' true}}/> Someone else
+    <label>
+      <input type="radio" checked={{ not isProxySubmission }} onchange={{action 'proxyStatusToggled' false}}/>
+      Myself
+    </label>
+    <label>
+      <input type="radio" checked={{ isProxySubmission }} onchange={{action 'proxyStatusToggled' true}}/>
+      Someone else
+    </label>
   </p>
 </div>
 {{#if isProxySubmission}}
-<div class="alert alert-info">
-  <p>When a submission is created on someone's behalf, PASS will contact that person to acquire their approval before
-    finalizing the submission and sending it to its corresponding repositories.</p>
+<div id="proxy-input-block" class="alert alert-info">
+  <p>
+    When a submission is created on someone's behalf, PASS will contact that person to acquire their approval before
+    finalizing the submission and sending it to its corresponding repositories.
+  </p>
   <p class="mb-0">Please indicate on behalf of whom this submission is being completed:</p>
     <div class="input-group pb-3">
       {{input enter=(action 'toggleUserSearchModal') value=userSearchTerm class="form-control"}}

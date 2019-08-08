@@ -24,6 +24,14 @@ $color-text-secondary: $jhu-grey2;
 
 $transition-duration: 0.3s;
 
+#dashboard .card {
+  height: 100%;
+}
+
+#on-behalf-of-block label {
+  margin-bottom: 0;
+}
+
 /* Tables */
 .table-bordered {
   border-color: $jhu-grey;
@@ -33,7 +41,6 @@ th.table-header {
     display: inline-flex;
     cursor: pointer;
     float: right;
-    color: $jhu-grey3;
   }
   & > i:not(.fa-sort-asc):not(.fa-sort-desc) {
     font: normal normal normal 14px/1 FontAwesome;
@@ -42,10 +49,6 @@ th.table-header {
       content: "\f0dc" !important;
     }
   }
-}
-
-.fa-arrow-left {
-  color: #ccc;
 }
 
 .models-table-wrapper .globalSearch {
@@ -87,10 +90,6 @@ h6.card-subtitle {
 .unset-width {
   width: unset!important;
 }
-// .custom-color {
-//   color:white!important;
-//   border:none!important;
-// }
 
 .table thead th {
   border-bottom: 2px solid #dedede!important;
@@ -98,9 +97,9 @@ h6.card-subtitle {
 }
 
 .table-bordered {
-    border-bottom: 1px solid #dedede!important;
-    border-left: none!important;
-    border-right: none!important;
+  border-bottom: 1px solid #dedede!important;
+  border-left: none!important;
+  border-right: none!important;
 }
 th {
   border-left: none!important;
@@ -150,15 +149,6 @@ td {
   height: auto;
 }
 
-.custom-header {
- background:url(https://image.ibb.co/gx84Uc/JHU.jpg) repeat-x 0 0;
- text-align:center;
- width:100%;
- height:425px;
- background-repeat:no-repeat;
- background-size:cover;
-}
-
 // for use with ember sticky component addon
 .sticky {
   position: fixed;
@@ -181,25 +171,30 @@ td {
   font-size: 0.65625rem;
   background-color: #f0f3f5;
   border: solid #a4b7c1 1px;
+
+  button {
+    border: none;
+  }
+
+  .step {
+    width: 15.2857%;
+    font-size: 16px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 35px;
+    cursor: pointer;
+  }
+
+  .step:not(.btn-primary):hover {
+    background: #e0e5e8;
+  }
+
+  .active-step {
+    background: #20a8d8;
+    color:white;
+  }
 }
 
-.step {
-  width: 15.2857%;
-  font-size: 16px;
-  text-align: center;
-  vertical-align: middle;
-  line-height: 35px;
-  cursor: pointer;
-}
-
-.step:hover{
-  background: #e0e5e8;
-}
-
-.active-step {
-  background: #20a8d8;
-  color:white;
-}
 .back-arrow {
   margin: 0px;
   padding: 1px!important;
@@ -302,16 +297,11 @@ $primary-color: #418FDE;
 $danger-color: #f86c6b;
 $navbar-color: #005EB8;
 body {
-  // font-family:  gentona-light,sans-serif!important;
   font-size: 1em !important;
-  // color:#2C2C33 !important;
   -webkit-font-smoothing: antialiased;
   -moz-font-smoothing: antialiased;
   -o-font-smoothing: antialiased;
 }
-// h1, h2, h3, h4, h5 {
-//   font-family:  quadon-regular,serif!important;
-// }
 h1 {
   font-size: 1.7rem!important;
 }
@@ -322,54 +312,6 @@ h3 {
   font-size: 1.3rem!important;
 }
 
-// a {
-//   color: $navbar-color !important;
-// }
-// .navbar {
-//   background:$navbar-color;
-// }
-.btn-primary {
-  background-color: $primary-color !important;
-  border-color: $primary-color !important;
-  color:white !important;
-}
-.btn-outline-primary {
-  border-color: $primary-color !important;
-  color: $primary-color !important;
-}
-.btn-outline-primary:hover {
-  background-color: $primary-color !important;
-  color: white !important;
-}
-.btn-danger	{
-  color: white !important;
-  background-color: $danger-color !important;
-}
-.badge-danger {
-  color: white !important;
-  background-color: $danger-color !important;
-}
-.btn-link {
-  color: $primary-color !important;
-}
-.btn {
-  font-size: 1em !important;
-}
-// .navbar-light .navbar-nav .nav-link, .navbar-light .navbar-nav .navbar .dropdown-toggle, .navbar .navbar-light .navbar-nav .dropdown-toggle {
-//   color: #2C2C33 !important;
-// }
-
-// .navbar-light .navbar-nav .show > .nav-link, .navbar-light .navbar-nav .navbar .show > .dropdown-toggle, .navbar .navbar-light .navbar-nav .show > .dropdown-toggle, .navbar-light .navbar-nav .active > .nav-link, .navbar-light .navbar-nav .navbar .active > .dropdown-toggle, .navbar
-//  .navbar-light .navbar-nav .active > .dropdown-toggle, .navbar-light .navbar-nav .nav-link.show, .navbar-light .navbar-nav .navbar .show.dropdown-toggle, .navbar
-//  .navbar-light .navbar-nav .show.dropdown-toggle, .navbar-light .navbar-nav .nav-link.active, .navbar-light .navbar-nav .navbar .active.dropdown-toggle, .navbar
-//  .navbar-light .navbar-nav .active.dropdown-toggle {
-//   font-weight: bold;
-//   color: #4A484C !important;
-// }
-
-// h1, h2 {
-//   color: #4A484C !important
-// }
 ////////////////////////////
 // End Custom JHU Colors
 ////////////////////////////
@@ -410,7 +352,6 @@ table td {
 }
 
 // Tables
-
 .grant-table table {
   th {
     min-width: 100px;
@@ -453,18 +394,17 @@ table td {
   display:inline-block;
 }
 [tooltip]::before {
-    content: "";
-    position: absolute;
-    top:-6px;
-    left:50%;
-    transform: translateX(-50%);
-    border-width: 4px 6px 0 6px;
-    border-style: solid;
-    border-color: rgba(0,0,0,0.7) transparent transparent     transparent;
-    z-index: 99;
-    opacity:0;
+  content: "";
+  position: absolute;
+  top:-6px;
+  left:50%;
+  transform: translateX(-50%);
+  border-width: 4px 6px 0 6px;
+  border-style: solid;
+  border-color: rgba(0,0,0,0.7) transparent transparent     transparent;
+  z-index: 99;
+  opacity:0;
 }
-
 
 [tooltip-position='left']::before{
   left:0%;
@@ -532,7 +472,7 @@ table td {
 }
 
 [tooltip]:hover::after,[tooltip]:hover::before {
-   opacity:1
+  opacity:1
 }
 
 .help-block {
@@ -582,7 +522,7 @@ table td {
   background-color: #a4b7c1!important;;
   border-color: #a4b7c1!important;;
   margin: 0px 5px;
-  }
+}
 
 .nodata-placeholder {
   display: block;
@@ -723,11 +663,11 @@ footer {
 }
 
 #grants-selection-nav ul li.active a {
-    color: white !important;
-    background-color: #418FDE;
+  color: white !important;
+  background-color: #418FDE;
 }
 
 #grants-selection-nav ul li a {
-    color: black !important;
-    background-color: white;
+  color: black !important;
+  background-color: white;
 }

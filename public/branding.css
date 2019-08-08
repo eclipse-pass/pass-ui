@@ -30,30 +30,107 @@
   --jhu-accent-13: #179949;
 
   /* JHU Fonts */
-  --jhu-headline: quadon-regular, tahoma;
-  --jhu-subhead: quadon-regular, tahoma;
-  --jhu-bodycopy-accent: quadon-regular, tahoma;
-  --jhu-bodycopy: gentona-light, tahoma;
+  --font-headline: quadon-regular, tahoma;
+  --font-subhead: quadon-regular, tahoma;
+  --font-bodycopy-accent: quadon-regular, tahoma;
+  --font-bodycopy: gentona-light, tahoma;
 
   /* Other colors */
   --btn-active-color: #C9C9C9;
   --header-color: #4A484C;
 }
 
-body {
-  font-family: var(--jhu-bodycopy);
+/* ---------------- */
+/* .bg-main {
+  background-color: white;
+}
+.bg1 {
+  background-color: var(--jhu-blue-heritage);
+}
+.bg2 {
+  background-color: var(--jhu-blue-spirit);
+}
+.bg-primary {
+  background-color: var(--jhu-accent-10);
+}
+
+.text-white {
+  color: white;
+}
+.text-black {
   color: var(--jhu-black);
 }
-/* Headers */
+.text-link {
+  color: var(--jhu-secondary-5);
+}
+.text-link:hover {
+  color: var(--jhu-accent-10);
+} */
+/* ---------------- */
+
+body {
+  font-family: var(--font-bodycopy);
+  color: var(--jhu-black);
+}
 h1, h2, h3, h4, h5 {
-  font-family:  quadon-regular,serif!important;
+  font-family: var(--font-headline);
 }
 h1, h2 {
   color: var(--header-color);
 }
-/* Clickable links */
-a {
+a, .btn-link {
   color: var(--jhu-secondary-5);
+}
+a:hover, .btn-link:hover {
+ color: var(--jhu-accent-10);
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: var(--jhu-secondary-5);
+  border-color: var(--jhu-secondary-5);
+  color:white;
+}
+.btn-primary:hover {
+  background-color: var(--jhu-accent-10);
+  border-color: var(--jhu-accent-10);
+}
+/*
+ * This mess must be done in order to properly override Bootstrap styles for a clicked button
+ */
+.btn-primary:not(:disabled):not(.disabled):active {
+  background-color: var(--jhu-accent-10);
+  border-color: var(--jhu-accent-10);
+}
+
+.btn-outline-primary {
+  border-color: var(--jhu-secondary-5);
+  color: var(--jhu-secondary-5);
+}
+.btn-outline-primary:hover {
+  background-color: var(--jhu-secondary-5);
+  border-color: var(--jhu-secondary-5);
+}
+.btn-outline-primary:not(:disabled):not(.disabled):active {
+  background-color: var(--jhu-accent-10);
+  border-color: var(--jhu-accent-10);
+}
+
+.btn-danger	{
+  color: white;
+  background-color: var(--jhu-secondary-1);
+}
+.btn-danger:hover {
+  background-color: var(--jhu-accent-7);
+  border-color: var(--jhu-accent-7);
+}
+.btn-danger:not(:disabled):not(.disabled):active {
+  background-color: var(--jhu-accent-7);
+  border-color: var(--jhu-accent-7);
+}
+
+.btn {
+  font-size: 1em !important;
 }
 
 /* Header */
@@ -70,7 +147,7 @@ a {
   color: white;
 }
 #header-navbar {
-  font-family: var(--jhu-bodycopy);
+  font-family: var(--font-bodycopy);
 }
 #header-navbar .nav-item .active {
   font-weight: bold;
@@ -95,5 +172,49 @@ a {
   margin-bottom: -10px;
 }
 
-/* Dashboard */
+/* Status icons */
+.manuscript-required>.fa-circle, .manuscript-required .fa-info-circle,
+.approval-requested>.fa-circle, .approval-requested .fa-info-circle,
+.changes-requested>.fa-circle, .changes-requested .fa-info-circle,
+.needs-attention>.fa-circle, .needs-attention .fa-info-circle,
+.stalled>.fa-circle, .stalled .fa-info-circle,
+.failed>.fa-circle, .failed .fa-info-circle,
+.rejected>.fa-circle, .rejected .fa-info-circle {
+  color: var(--jhu-secondary-6);
+}
+.cancelled>.fa-circle, .cancelled .fa-info-circle,
+.not-submitted>.fa-circle, .not-submitted .fa-info-circle {
+  color: var(--jhu-accent-10);
+}
+.submitted>.fa-circle, .submitted .fa-info-circle,
+.complete>.fa-circle, .complete .fa-info-circle {
+  color: var(--jhu-accent-11);
+}
+.draft>.fa-circle, .draft .fa-info-circle {
+  color: gray;
+}
+
+/* Submission workflow */
+#proxy-input-block {
+  background-color: var(--jhu-blue-spirit);
+  color: var(--jhu-black);
+}
+#on-behalf-of-block {
+  background-color: var(--jhu-blue-spirit);
+  color: var(--jhu-black);
+}
+
+th.table-header > i {
+  color: var(--jhu-black);
+  opacity: 0.8;
+}
+#grant-details-title .back-arrow, #submission-details-title .back-arrow {
+  color: var(--jhu-black);
+  opacity: 0.7;
+}
+#grant-details-title .back-arrow:hover,
+#submission-details-title .back-arrow:hover {
+  opacity: 0.5;
+}
+
 

@@ -1,8 +1,3 @@
-<style>
-button {
-  border: none;
-}
-</style>
 <div class="pb-2">
   <div class="steps">
     <button {{action "loadTab" "submissions.new.basics"}} class="step {{if (eq step 1) 'btn-primary'}}" disabled={{if (gt 1 maxStep) 'disabled'}}>
