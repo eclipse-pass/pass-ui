@@ -34,18 +34,29 @@
   --jhu-subhead: quadon-regular, tahoma;
   --jhu-bodycopy-accent: quadon-regular, tahoma;
   --jhu-bodycopy: gentona-light, tahoma;
+
+  /* Other colors */
+  --btn-active-color: #C9C9C9;
+  --header-color: #4A484C;
 }
 
 body {
   font-family: var(--jhu-bodycopy);
   color: var(--jhu-black);
 }
+/* Headers */
 h1, h2, h3, h4, h5 {
   font-family:  quadon-regular,serif!important;
 }
+h1, h2 {
+  color: var(--header-color);
+}
+/* Clickable links */
 a {
   color: var(--jhu-secondary-5);
 }
+
+/* Header */
 #brand-site-container {
   background-color: var(--jhu-bg-primary);
   /* background-color: var(--jhu-blue-spirit); */
@@ -61,6 +72,28 @@ a {
 #header-navbar {
   font-family: var(--jhu-bodycopy);
 }
-#header-navbar .navitem {
-  font-family: var(--jhu-bodycopy);
+#header-navbar .nav-item .active {
+  font-weight: bold;
 }
+#header-navbar .nav-link {
+  color: var(--jhu-black);
+}
+#user-menu {
+  color: var(--jhu-black);
+}
+#user-menu-title {
+  background-color: var(--jhu-secondary-5);
+  color: white;
+}
+#user-menu .dropdown-item:active {
+  background-color: var(--btn-active-color);
+}
+#brand-logo {
+  height: 110px;
+  margin-top: -10px;
+  margin-right: -35px;
+  margin-bottom: -10px;
+}
+
+/* Dashboard */
+

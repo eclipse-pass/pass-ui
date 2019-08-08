@@ -21,7 +21,7 @@
               <a class="nav-link" href="{{assetsUri}}faq.html?anchor">FAQ</a>
             </li>
             <li class="nav-item dropdown ml-auto">
-              <a class="nav-link accountInfo pr-1" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+              <a id="user-menu-name" class="nav-link accountInfo pr-1" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                 <span class="pr-1">{{gravatar-image email=currentUser.user.email
                   title=currentUser.user.email
                   alt=currentUser.user.email
@@ -32,8 +32,8 @@
                 </span>
                 {{currentUser.user.displayName}}
               </a>
-              <div class="dropdown-menu dropdown-menu-right">
-                <div class="dropdown-header text-center">
+              <div id="user-menu" class="dropdown-menu dropdown-menu-right">
+                <div id="user-menu-title" class="dropdown-header text-center">
                   <strong>Account</strong>
                 </div>
                 <div class="divider"></div>

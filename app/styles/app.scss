@@ -24,23 +24,6 @@ $color-text-secondary: $jhu-grey2;
 
 $transition-duration: 0.3s;
 
-/* Override things with JHU rules */
-
-.text-info {
-  color: $jhu-weird-bluegreen !important;
-}
-
-/* Buttons */
-.btn-outline-info {
-  color: $jhu-weird-bluegreen;
-  border-color: $jhu-weird-bluegreen;
-  &:hover {
-    color: $color-text-primary;
-    background-color: $jhu-weird-bluegreen;
-    border-collapse: $jhu-weird-bluegreen;
-  }
-}
-
 /* Tables */
 .table-bordered {
   border-color: $jhu-grey;
@@ -372,28 +355,21 @@ h3 {
 .btn {
   font-size: 1em !important;
 }
-.navbar-light .navbar-nav .nav-link, .navbar-light .navbar-nav .navbar .dropdown-toggle, .navbar .navbar-light .navbar-nav .dropdown-toggle {
-  color: #2C2C33 !important;
-}
+// .navbar-light .navbar-nav .nav-link, .navbar-light .navbar-nav .navbar .dropdown-toggle, .navbar .navbar-light .navbar-nav .dropdown-toggle {
+//   color: #2C2C33 !important;
+// }
 
-.navbar-light .navbar-nav .show > .nav-link, .navbar-light .navbar-nav .navbar .show > .dropdown-toggle, .navbar .navbar-light .navbar-nav .show > .dropdown-toggle, .navbar-light .navbar-nav .active > .nav-link, .navbar-light .navbar-nav .navbar .active > .dropdown-toggle, .navbar
- .navbar-light .navbar-nav .active > .dropdown-toggle, .navbar-light .navbar-nav .nav-link.show, .navbar-light .navbar-nav .navbar .show.dropdown-toggle, .navbar
- .navbar-light .navbar-nav .show.dropdown-toggle, .navbar-light .navbar-nav .nav-link.active, .navbar-light .navbar-nav .navbar .active.dropdown-toggle, .navbar
- .navbar-light .navbar-nav .active.dropdown-toggle {
-  font-weight: bold;
-  color: #4A484C !important;
-}
+// .navbar-light .navbar-nav .show > .nav-link, .navbar-light .navbar-nav .navbar .show > .dropdown-toggle, .navbar .navbar-light .navbar-nav .show > .dropdown-toggle, .navbar-light .navbar-nav .active > .nav-link, .navbar-light .navbar-nav .navbar .active > .dropdown-toggle, .navbar
+//  .navbar-light .navbar-nav .active > .dropdown-toggle, .navbar-light .navbar-nav .nav-link.show, .navbar-light .navbar-nav .navbar .show.dropdown-toggle, .navbar
+//  .navbar-light .navbar-nav .show.dropdown-toggle, .navbar-light .navbar-nav .nav-link.active, .navbar-light .navbar-nav .navbar .active.dropdown-toggle, .navbar
+//  .navbar-light .navbar-nav .active.dropdown-toggle {
+//   font-weight: bold;
+//   color: #4A484C !important;
+// }
 
-.jhu-logo {
-  height: 110px;
-  margin-top: -10px;
-  margin-right: -35px;
-  margin-bottom: -10px;
-}
-
-h1, h2 {
-  color: #4A484C !important
-}
+// h1, h2 {
+//   color: #4A484C !important
+// }
 ////////////////////////////
 // End Custom JHU Colors
 ////////////////////////////
