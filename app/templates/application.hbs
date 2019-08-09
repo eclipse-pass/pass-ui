@@ -1,21 +1,3 @@
-<style>
-  @font-face {
-    font-family: "gentona-light";
-    src: url("{{assetsUri}}{{brand.fontUrl}}Gentona-Light.ttf");
-  }
-  @font-face {
-    font-family: "gentona-medium";
-    src: url("{{assetsUri}}{{brand.fontUrl}}Gentona-Medium.ttf");
-  }
-  @font-face {
-    font-family: "quadon-black";
-    src: url("{{assetsUri}}{{brand.fontUrl}}Quadon-Medium.ttf");
-  }
-  @font-face {
-    font-family: "quadon-regular";
-    src: url("{{assetsUri}}{{brand.fontUrl}}Quadon-Regular.ttf");
-  }
-</style>
 {{ember-load-remover}}
 <div id="brand-site-container" class="site" style="z-index:0;">
   <header id="brand-header" class="navbar navbar-expand-xs justify-content-center mb-0">
@@ -46,7 +28,7 @@
     <div class='text-center p-1'>
       <small>
         Interested in making PASS even better? Want to have PASS for your institution?
-        <a href="{{assetsUri}}contact.html">Contact us!</a>!
+        <a href="{{assetsUri}}contact.html">Contact us!</a>
       </small>
       <br>
       <small>rev. {{app-version hideVersion=true}}</small>

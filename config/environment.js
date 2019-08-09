@@ -24,15 +24,7 @@ module.exports = function (environment) {
     },
 
     APP: { // This is available in the app by calling PassEmber.varName
-      assetsUri: '/',
-      brand: {
-        mailto: 'pass@jhu.edu',
-        homepage: '',
-        logo: '',
-        stylesheet: '',
-        fontUrl: 'fonts/',
-        imgUrl: 'img/'
-      }
+      staticConfigUri: '/config.json'
     }
   };
   // Disable mirage entirely.
@@ -92,8 +84,8 @@ module.exports = function (environment) {
 
   ENV.metadataSchemaUri = 'https://oa-pass.github.io/metadata-schemas/jhu/global.json';
 
-  if (process.env.STATIC_ASSETS_URI) {
-    ENV.APP.assetsUri = process.env.STATIC_ASSETS_URI;
+  if (process.env.STATIC_CONFIG_URI) {
+    ENV.APP.staticConfigUri = process.env.STATIC_CONFIG_URI;
   }
 
   if (process.env.EMBER_ROOT_URL) {
@@ -154,16 +146,6 @@ module.exports = function (environment) {
     ENV.fedora.password = process.env.FEDORA_ADAPTER_PASSWORD;
   } else {
     ENV.fedora.password = 'moo';
-  }
-
-  if (process.env.BRAND_MAILTO) {
-    ENV.APP.brand.mailto = process.env.BRAND_MAILTO;
-  }
-  if (process.env.BRAND_FONT_URL) {
-    ENV.APP.brand.fontUrl = process.env.BRAND_FONT_URL;
-  }
-  if (process.env.BRAND_IMG_URL) {
-    ENV.APP.brand.imgUrl = process.env.BRAND_IMG_URL;
   }
 
   return ENV;
