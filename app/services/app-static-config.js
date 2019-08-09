@@ -5,6 +5,8 @@ export default Service.extend({
   /** List of URI strings */
   _loaded: Ember.A(),
 
+  _config: null,
+
   init() {
     this._super(...arguments);
     this.set('configUrl', PassEmber.staticConfigUri);
@@ -14,9 +16,19 @@ export default Service.extend({
    * Get the static configuration for PASS
    */
   getStaticConfig() {
+    const cached = this.get('_config');
+    if (cached) {
+      return cached;
+    }
+
     return fetch(this.get('configUrl'), {
       headers: { 'Content-Type': 'application/json' }
-    }).then(resp => resp.json());
+    })
+      .then(resp => resp.json())
+      .then((data) => {
+        this.set('_config', data);
+        return data;
+      });
   },
 
   /**
