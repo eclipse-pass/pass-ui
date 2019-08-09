@@ -1,5 +1,7 @@
 <p class="lead text-muted">
-    Please select the grant(s)/award(s) that funded this work. This information will help determine which public access policies are applicable to your work. If the work you’re about to submit was not supported by a grant, leave this page blank and go to the next step.
+    Please select the grant(s)/award(s) that funded this work. This information will help determine which
+    public access policies are applicable to your work. If the work you’re about to submit was not
+    supported by a grant, leave this page blank and go to the next step.
 </p>
 
 {{#if submission.grants}}
@@ -16,7 +18,9 @@
   <h5>Available grants</h5>
 
   <p>
-    PASS receives information about grants from the University grant management system, COEUS. If your grant is not listed, {{#link-to "contact" target="_blank"}}please contact us{{/link-to}}.
+    PASS receives information about grants from the University grant management system, COEUS. If
+    your grant is not listed,
+    <a href="{{assetsUri}}contact.html" target="_blank">please contact us</a>.
   </p>
 
   {{#if (gt pageCount "1")}}

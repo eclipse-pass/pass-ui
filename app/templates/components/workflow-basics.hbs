@@ -83,8 +83,9 @@
 <div class="form-group">
   <div>
     <label>Journal <span class="text-muted">(required)</span></label>
-    {{#link-to "contact" class='btn btn-link pull-right pr-0'}}Can't find your journal? Contact us to add
-    it.{{/link-to}}
+    <a class="btn btn-link pull-right pr-0" href="{{assetsUri}}contact.html">
+      Can't find your journal? Contact us to add it.
+    </a>
   </div>
   <div class="w-100">
     {{#unless isValidDOI}}

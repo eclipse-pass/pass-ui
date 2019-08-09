@@ -7,6 +7,9 @@ export default Component.extend({
   currentUser: service('current-user'),
   doiService: service('doi'),
   metadataService: service('metadata-schema'),
+  configurator: service('app-static-config'),
+
+  assetsUri: null,
 
   inFlight: false,
   doiServiceError: false,
@@ -33,6 +36,12 @@ export default Component.extend({
   shouldSetPublication() {
     const publication = this.get('publication');
     return !publication || !publication.get('doi') || !publication.get('title') || !publication.get('journal.journalName');
+  },
+
+  init() {
+    this._super(...arguments);
+    this.get('configurator').getStaticConfig()
+      .then(config => this.set('assetsUri', config.assetsUri));
   },
 
   didRender() {

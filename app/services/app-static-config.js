@@ -14,11 +14,13 @@ export default Service.extend({
 
   /**
    * Get the static configuration for PASS
+   *
+   * @returns {Promise}
    */
   getStaticConfig() {
     const cached = this.get('_config');
     if (cached) {
-      return cached;
+      return Promise.resolve(cached);
     }
 
     return fetch(this.get('configUrl'), {

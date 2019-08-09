@@ -5,6 +5,10 @@ import { inject as service } from '@ember/service';
 
 export default Controller.extend({
   currentUser: service('current-user'),
+  configurator: service('app-static-config'),
+
+  assetsUri: null,
+
   // Bound to message dialog.
   messageShow: false,
   messageTo: '',
@@ -13,6 +17,13 @@ export default Controller.extend({
 
   tablePageSize: 50,
   tablePageSizeValues: [10, 25, 50],
+
+  init() {
+    this._super(...arguments);
+
+    this.get('configurator').getStaticConfig()
+      .then(config => this.set('assetsUri', config.assetsUri));
+  },
 
   // Columns displayed depend on the user role
   columns: computed('currentUser', {
