@@ -4,6 +4,20 @@ import { setupTest } from 'ember-qunit';
 module('Unit | Controller | grants/index', (hooks) => {
   setupTest(hooks);
 
+  hooks.beforeEach(function () {
+    const mockStaticConfig = Ember.Service.extend({
+      getStaticConfig: () => Promise.resolve({
+        assetsUri: '',
+        branding: {
+          stylesheet: ''
+        }
+      }),
+      addCss: () => {}
+    });
+
+    this.owner.register('service:app-static-config', mockStaticConfig);
+  });
+
   // Replace this with your real tests.
   test('it exists', function (assert) {
     let controller = this.owner.lookup('controller:grants/index');
