@@ -1,4 +1,5 @@
 import Service from '@ember/service';
+import ENV from 'pass-ember/config/environment';
 
 export default Service.extend({
   configUrl: null,
@@ -9,7 +10,7 @@ export default Service.extend({
 
   init() {
     this._super(...arguments);
-    this.set('configUrl', PassEmber.staticConfigUri);
+    this.set('configUrl', ENV.APP.staticConfigUri);
   },
 
   /**
