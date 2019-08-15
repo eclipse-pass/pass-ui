@@ -23,9 +23,8 @@ module.exports = function (environment) {
       }
     },
 
-    APP: {
-      // Here you can pass flags/options to your application instance
-      // when it is created
+    APP: { // This is available in the app by calling PassEmber.varName
+      staticConfigUri: '/config.json'
     }
   };
   // Disable mirage entirely.
@@ -85,6 +84,10 @@ module.exports = function (environment) {
 
   ENV.metadataSchemaUri = 'https://oa-pass.github.io/metadata-schemas/jhu/global.json';
 
+  if (process.env.STATIC_CONFIG_URI) {
+    ENV.APP.staticConfigUri = process.env.STATIC_CONFIG_URI;
+  }
+
   if (process.env.EMBER_ROOT_URL) {
     ENV.rootURL = process.env.EMBER_ROOT_URL;
   }
@@ -143,14 +146,6 @@ module.exports = function (environment) {
     ENV.fedora.password = process.env.FEDORA_ADAPTER_PASSWORD;
   } else {
     ENV.fedora.password = 'moo';
-  }
-
-  ENV.brand = {
-    mailto: 'pass@jhu.edu'
-  };
-
-  if (process.env.BRAND_MAILTO) {
-    ENV.brand.mailto = process.env.BRAND_MAILTO;
   }
 
   return ENV;

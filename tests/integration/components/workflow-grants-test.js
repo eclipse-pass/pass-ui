@@ -26,6 +26,16 @@ module('Integration | Component | workflow grants', (hooks) => {
       Ember.Object.create({ id: 4, awardNumber: '4', projectName: 'Moo 4' })
     ]);
 
+    const mockStaticConfig = Ember.Service.extend({
+      getStaticConfig: () => Promise.resolve({
+        assetsUri: '',
+        branding: {
+          stylesheet: ''
+        }
+      }),
+      addCss: () => {}
+    });
+
     run(() => {
       this.owner.unregister('service:store');
       this.owner.register('service:store', Ember.Service.extend({
@@ -36,6 +46,9 @@ module('Integration | Component | workflow grants', (hooks) => {
           return Promise.resolve(grants.findBy('id', id));
         }
       }));
+
+      this.owner.unregister('service:app-static-config');
+      this.owner.register('service:app-static-config', mockStaticConfig);
     });
   });
 

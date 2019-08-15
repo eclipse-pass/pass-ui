@@ -91,12 +91,25 @@ module('Integration | Component | workflow basics', (hooks) => {
       }
     });
 
+    const mockStaticConfig = Ember.Service.extend({
+      getStaticConfig: () => Promise.resolve({
+        assetsUri: '',
+        branding: {
+          stylesheet: ''
+        }
+      }),
+      addCss: () => {}
+    });
+
     run(() => {
       this.owner.unregister('service:doi');
       this.owner.register('service:doi', mockDoiService);
 
       this.owner.unregister('service:store');
       this.owner.register('service:store', mockStore);
+
+      this.owner.unregister('service:app-static-config');
+      this.owner.register('service:app-static-config', mockStaticConfig);
     });
   });
 

@@ -4,6 +4,7 @@ import { inject as service } from '@ember/service';
 
 export default CheckSessionRoute.extend({
   currentUser: service('current-user'),
+  staticConfig: service('app-static-config'),
 
   /* Used as route-action in templates */
   actions: {
@@ -50,7 +51,20 @@ export default CheckSessionRoute.extend({
     }
   },
 
+  model() {
+    const configurator = this.get('staticConfig');
+    return RSVP.hash({
+      staticConfig: configurator.getStaticConfig()
+    });
+  },
+
   afterModel(model, transition) {
+    if (model.staticConfig && model.staticConfig.branding.stylesheet) {
+      const stylesheet = `${model.staticConfig.assetsUri}${model.staticConfig.branding.stylesheet}`;
+      this.get('staticConfig').addCSS(stylesheet);
+    } else {
+      console.log('%cNo branding stylesheet was configured', 'color:red');
+    }
     return this._loadCurrentUser(transition.queryParams.userToken);
   },
 

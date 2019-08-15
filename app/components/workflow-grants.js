@@ -12,6 +12,9 @@ import Bootstrap4Theme from 'ember-models-table/themes/bootstrap4';
 export default Component.extend({
   store: service('store'),
   workflow: service('workflow'),
+  configurator: service('app-static-config'),
+
+  assetsUri: null,
 
   workflowStep: 2,
 
@@ -43,6 +46,10 @@ export default Component.extend({
   }),
   init() {
     this._super(...arguments);
+
+    this.get('configurator').getStaticConfig()
+      .then(config => this.set('assetsUri', config.assetsUri));
+
     if (this.get('preLoadedGrant')) {
       this.send('addGrant', this.get('preLoadedGrant'));
     }

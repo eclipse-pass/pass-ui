@@ -1,17 +1,19 @@
 {{ember-load-remover}}
-<div class="site" style="z-index:0;">
-  <header class="primary-skin navbar navbar-expand-xs justify-content-center mb-0">
+<div id="brand-site-container" class="site" style="z-index:0;">
+  <header id="brand-header" class="navbar navbar-expand-xs justify-content-center mb-0">
     <div class={{if fullWidth 'container-fluid' 'container'}}>
-        <a href="/" class="navbar-brand custom-color d-none d-sm-block">
-          <h3 class="font-weight-light" >
-            Public Access Submission System
-          </h3>
-        </a>
-        <a href="/" class="navbar-brand custom-color d-xs-block d-sm-none">
-          <h3 class="font-weight-light">P.A.S.S.</h3>
-        </a>
-        <a href="https://jhu.edu"><img src='{{rootURL}}fullSizeLogo.png' alt='Logo' class="nav-item d-sm-down-none pull-right jhu-logo pr-0"></a>
-  </div>
+      <a href="/" class="navbar-brand d-none d-sm-block">
+        <h3 id="brand-header-title" class="font-weight-light">
+          Public Access Submission System
+        </h3>
+      </a>
+      <a href="/" class="navbar-brand custom-color d-xs-block d-sm-none">
+        <h3 class="font-weight-light">P.A.S.S.</h3>
+      </a>
+      <a href="{{homepage}}">
+        <img id="brand-logo" src="{{logoUri}}" alt='Logo' class="nav-item d-sm-down-none pull-right brand-logo pr-0">
+      </a>
+    </div>
   </header>
   <div style="z-index:10;">
     {{#sticky-element}}
@@ -24,8 +26,10 @@
   </div>
   <footer class="app-footer justify-content-center mt-3">
     <div class='text-center p-1'>
-      <small>Interested in making PASS even better? Want to have PASS for your institution?
-{{#link-to 'contact'}}Contact us{{/link-to}}!</small>
+      <small>
+        Interested in making PASS even better? Want to have PASS for your institution?
+        <a href="{{assetsUri}}contact.html">Contact us!</a>
+      </small>
       <br>
       <small>rev. {{app-version hideVersion=true}}</small>
     </div>

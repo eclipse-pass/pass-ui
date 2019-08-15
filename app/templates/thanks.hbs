@@ -1,7 +1,12 @@
 {{outlet}}
 <h1>Thank you!</h1>
 <p>
-  A detailed summary of the submission and it's current status can be seen {{#link-to 'submissions.detail' submission class="btn-link"}}here{{/link-to}}. 
-  A list of all submissions associated with your account can be found on the {{#link-to 'submissions.index' class="btn-link"}}Submissions page{{/link-to}}.
+  A detailed summary of the submission and it's current status can be seen
+  {{#link-to 'submissions.detail' submission class="btn-link"}}here{{/link-to}}.
+  A list of all submissions associated with your account can be found on the
+  {{#link-to 'submissions.index' class="btn-link"}}Submissions page{{/link-to}}.
 </p>
-<p>To learn more about what to expect from each repository after submitting through PASS, {{#link-to "faq" (query-params anchor="#supported-policies")}}visit the FAQ page.{{/link-to}}</p>
+<p>
+  To learn more about what to expect from each repository after submitting through PASS,
+  <a href="{{assetsUri}}faq.html#supported-policies">visit the FAQ page</a>.
+</p>
