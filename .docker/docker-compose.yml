@@ -54,7 +54,7 @@ services:
 
   static-html:
     # image: oapass/static-html:20181116-4ab9eb3@sha256:2c5a8f315783ab41205aaead6c82c6148f9d6334b1dc33b7bf31033cf008d2d6
-    image: oapass/static-html:mootest
+    image: oapass/static-html:20190815-8f52cd7@sha256:38b55bb2d2856d1b11a00a8897bb473059b90761385ed5580b04f10813c4346b
     container_name: static-html
     env_file: .env
     ports:
