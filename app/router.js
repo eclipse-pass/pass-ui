@@ -8,11 +8,7 @@ const Router = EmberRouter.extend({
 });
 
 Router.map(function () {
-  // this.route('login');
-  this.route('index', { path: '/welcome' });
   this.route('dashboard', { path: '/' });
-  this.route('about');
-  this.route('contact');
   this.route('submissions', function () {
     this.route('detail', { path: '/*path' });
     this.route('detail', { path: '/:submission_id' });
@@ -30,11 +26,7 @@ Router.map(function () {
     this.route('detail', { path: '/*path' });
     this.route('detail', { path: '/:grant_id' });
   });
-  this.route('thanks');
   this.route('404', { path: '/*path' });
-  this.route('faq', {
-    queryParams: ['anchor']
-  });
 });
 
 export default Router;
