@@ -3,9 +3,10 @@ import ENV from 'pass-ember/config/environment';
 
 export default Service.extend({
   configUrl: null,
-  /** List of URI strings */
+  /** List of URI strings, used to tell which static assets have already been loaded */
   _loaded: Ember.A(),
 
+  /** Cached static config object */
   _config: null,
 
   init() {
@@ -31,6 +32,18 @@ export default Service.extend({
       .then((data) => {
         this.set('_config', data);
         return data;
+      })
+      .catch((error) => {
+        console.log(`%cFailed to get static 'config.json'. ${error}`, 'color:red;');
+        toastr.error(
+          'Unable to load theme. PASS may look different than expected.',
+          null,
+          {
+            timeOut: 0,
+            extendedTimeOut: 0,
+            preventDuplicates: true
+          }
+        );
       });
   },
 

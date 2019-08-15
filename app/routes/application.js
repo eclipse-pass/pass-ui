@@ -59,11 +59,12 @@ export default CheckSessionRoute.extend({
   },
 
   afterModel(model, transition) {
-    if (!model.staticConfig.branding.stylesheet) {
+    if (model.staticConfig && model.staticConfig.branding.stylesheet) {
+      const stylesheet = `${model.staticConfig.assetsUri}${model.staticConfig.branding.stylesheet}`;
+      this.get('staticConfig').addCSS(stylesheet);
+    } else {
       console.log('%cNo branding stylesheet was configured', 'color:red');
     }
-    const stylesheet = `${model.staticConfig.assetsUri}${model.staticConfig.branding.stylesheet}`;
-    this.get('staticConfig').addCSS(stylesheet);
     return this._loadCurrentUser(transition.queryParams.userToken);
   },
 
