@@ -53,7 +53,7 @@ services:
       - back
 
   static-html:
-    image: oapass/static-html:20190820-c035da4@sha256:223bb489ac94517788be149bef69c40d65e715ff11957833e57ded0b2d5fd023
+    image: oapass/static-html:20190822-bad963d@sha256:181a4b8bc0e5e4c69fa9ed37f2ec9d0192f628614656ebab40cd471334ed4aba
     container_name: static-html
     env_file: .env
     ports:
