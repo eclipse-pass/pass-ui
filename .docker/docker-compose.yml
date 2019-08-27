@@ -15,7 +15,7 @@ services:
       - back
 
   fcrepo:
-    image: oapass/fcrepo:4.7.5-3.4-1@sha256:56faf95a9753f2548665de0154888221a7c02ae2158489d08ec5499ed7ceb3fd
+    image: oapass/fcrepo:4.7.5-3.5@sha256:bb44fff182ace1d0d57372f297cbab8cc04c662db2d10a061213178b7c0c9bba
     container_name: fcrepo
     env_file: .env
     ports:
