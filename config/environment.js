@@ -58,7 +58,7 @@ module.exports = function (environment) {
 
   ENV.fedora = {
     base: 'http://localhost:8080/fcrepo/rest/',
-    context: 'https://oa-pass.github.io/pass-data-model/src/main/resources/context-3.4.jsonld',
+    context: 'https://oa-pass.github.io/pass-data-model/src/main/resources/context-3.5.jsonld',
     data: 'http://oapass.org/ns/pass#',
     elasticsearch: 'http://localhost:9200/pass/_search'
   };
