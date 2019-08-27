@@ -11,7 +11,7 @@ export default DS.Model.extend({
   displayName: DS.attr('string'),
   email: DS.attr('string'),
 
-  affiliation: DS.attr('string'),
+  affiliation: DS.attr('set'),
   locatorIds: DS.attr('set'),
   orcidId: DS.attr('string'),
   /** Possible values: admin, submitter */
