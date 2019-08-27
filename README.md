@@ -20,6 +20,8 @@ You will need the following things properly installed on your computer.
 * [Ember CLI](https://ember-cli.com/)
 * [Google Chrome](https://google.com/chrome/)
 
+The `hosts` (`C:\Windows\System32\Drivers\etc\hosts` for windows, `/etc/hosts` for *nix) file on your development computer needs to be updated to alias `pass.local` to your loopback address (`127.0.0.1`) or to your docker-machine address (e.g. `192.168.99.100`). For example, to alias `pass.local` to your loopback address, you would make sure your `hosts` file contains the line: `127.0.0.1  pass.local`
+
 ## Installation
 
 * `git clone <repository-url>` this repository
@@ -32,11 +34,21 @@ A docker environement which relies on a Shibboleth proxy is in .docker/. All ser
 be available at https://pass.local/.
 
 * In .docker/ run `docker-compose pull && docker-compose up -d`
-* Wait for the containers to finish coming up, this could take 5-10 minutes. There will be a long pause while the `ember` container builds. When you see the "Build successful" message from `ember` and a small table listing the "Slowest Nodes" that indicates the application is ready to use
+* Wait for the containers to finish coming up, this could take 5-10 minutes. There will be a long pause while the `ember` container builds. When you see the "Build successful" message from `ember` and a small table listing the "Slowest Nodes" that indicates the application is ready to use. It will look similar to:
+
+```
+ember            | Slowest Nodes (totalTime => 5% )              | Total (avg)
+ember            | ----------------------------------------------+---------------------
+ember            | Babel: pass-ember (4)                         | 15209ms (3802 ms)
+ember            | broccoli-persistent-filter:EslintValid... (3) | 6654ms (2218 ms)
+ember            | Babel: ember-lodash (1)                       | 5960ms
+ember            | Babel: ember-data (2)                         | 5386ms (2693 ms)
+```
+
 * The local code runs in the `ember` container, and changes in the local code will be reflected there.
 * Visit your app at https://pass.local/app
 * Visit your tests at https://pass.local/app/tests
-* Fedora repository is at https://pass.local/fcrepo/ 
+* Fedora repository is at https://pass.local/fcrepo/
 * Elasticsearch index search endpoint is at https://pass.local/es/
 * In order to remove persisted data, stop all the containers and `docker system prune -f`
 

@@ -65,6 +65,19 @@ export default Service.extend({
     this.get('_loaded').pushObject(uri);
   },
 
+  addFavicon(uri) {
+    const fav = document.querySelector('head link[rel="icon"]');
+    if (fav || !uri) {
+      return;
+    }
+
+    const newFav = window.document.createElement('link');
+    newFav.setAttribute('rel', 'icon');
+    newFav.setAttribute('href', uri);
+
+    window.document.head.appendChild(newFav);
+  },
+
   _alreadyLoaded(uri) {
     return this.get('_loaded').includes(uri);
   }
