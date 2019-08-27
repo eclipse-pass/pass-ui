@@ -82,7 +82,7 @@ export default Component.extend({
         .map(repo => ({
           id: repo.get('name'),
           title: `Deposit requirements for ${repo.get('name')}`,
-          html: `<textarea rows="16" cols="40" name="embargo" class="alpaca-control form-control disabled" disabled="" autocomplete="off">${repo.get('agreementText')}</textarea>`
+          html: `<div class="form-control deposit-agreement-content py-4 mt-4">${repo.get('agreementText')}</div>`
         }));
 
       let reposWithoutAgreementText = this.get('submission.repositories')
