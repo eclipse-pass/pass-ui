@@ -58,12 +58,21 @@ export default CheckSessionRoute.extend({
     });
   },
 
+  /**
+   * Add styling from static branding. TODO: Should this be moved to an initializer or something?
+   */
   afterModel(model, transition) {
-    if (model.staticConfig && model.staticConfig.branding.stylesheet) {
-      const stylesheet = `${model.staticConfig.assetsUri}${model.staticConfig.branding.stylesheet}`;
-      this.get('staticConfig').addCSS(stylesheet);
-    } else {
-      console.log('%cNo branding stylesheet was configured', 'color:red');
+    if (model.staticConfig) {
+      if (model.staticConfig.branding.stylesheet) {
+        const stylesheet = `${model.staticConfig.assetsUri}${model.staticConfig.branding.stylesheet}`;
+        this.get('staticConfig').addCSS(stylesheet);
+      } else {
+        console.log('%cNo branding stylesheet was configured', 'color:red');
+      }
+      if (model.staticConfig.branding.favicon) {
+        const favicon = `${model.staticConfig.assetsUri}${model.staticConfig.branding.favicon}`;
+        this.get('staticConfig').addFavicon(favicon);
+      }
     }
     return this._loadCurrentUser(transition.queryParams.userToken);
   },
