@@ -7,7 +7,7 @@ export default DS.Model.extend({
   displayName: DS.attr('string'),
   email: DS.attr('string'),
   orcidId: DS.attr('string'),
-  affiliation: DS.attr('string'),
+  affiliation: DS.attr('set'),
   roles: DS.attr('set'),
   publication: DS.belongsTo('publication'),
   user: DS.belongsTo('user'),
