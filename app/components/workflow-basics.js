@@ -209,7 +209,7 @@ export default Component.extend({
       publication.set('doi', doi);
       this.set('inFlight', true);
 
-      toastr.info('Please wait while we lookup information about your DOI', '', {
+      toastr.info('Please wait while we look up information about your DOI', '', {
         timeOut: 0,
         extendedTimeOut: 0
       });
