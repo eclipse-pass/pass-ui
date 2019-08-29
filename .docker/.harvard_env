@@ -96,7 +96,7 @@ PASS_AUTHZ_QUEUE=Consumer.authz.VirtualTopic.pass.docker
 # Authz roles
 PASS_BACKEND_ROLE=http://oapass.org/ns/roles/harvard.edu#pass-backend
 PASS_GRANTADMIN_ROLE=http://oapass.org/ns/roles/harvard.edu#admin
-PASS_SUBMITTER_ROLE= http://oapass.org/ns/roles/harvard.edu#submitter
+PASS_SUBMITTER_ROLE=http://oapass.org/ns/roles/harvard.edu#submitter
 
 # User token key for creating/using user tokens
 PASS_USER_TOKEN_KEY=BETKPFHWGGDIEWIIYKYQ33LUS4

@@ -6,7 +6,7 @@ services:
     build: ember-dev/
     image: oapass/ember-dev
     container_name: ember
-    env_file: .harvard_env
+    env_file: .env
     volumes:
       - ../:/app:Z
       - /app/node_modules
@@ -44,7 +44,7 @@ services:
       - back
 
   static-html:
-    image: oapass/static-html:20190828-dffd0fd@sha256:630ae1637b8a13e5e1f610c859d33d6509fe8ec2b8726f1a2fa37ade4e1b9354
+    image: oapass/static-html:20190829-9e3e344@sha256:33b5d79fbdc3adda35b536eedac9897a14b751a44c50d96367021789119e485e
     container_name: static-html
     env_file: .harvard_env
     ports:
@@ -138,6 +138,16 @@ services:
     networks:
       - back
 
+  schemaservice:
+    image: oapass/schema-service:v0.6.0-1-g60e99b8@sha256:9c8cee614b5ce399068a383cece5ced4396372023cc3477561e2e7df2474dfae
+    container_name: schemaservice
+    env_file: .harvard_env
+    ports:
+      - "${SCHEMA_SERVICE_PORT}:${SCHEMA_SERVICE_PORT}"
+    networks:
+      - front
+      - back
+
   policyservice:
     image: oapass/policy-service:v0.2.0@sha256:8a2f4236b700077511f240fc302dc40450dafdb58db4570b20aa31be7a80ae93
     container_name: policyservice
@@ -161,6 +171,10 @@ services:
 volumes:
   passdata-harvard:
     driver: local
+  mailstate-harvard:
+    driver: local
+  maildata-harvard:
+    driver: local
 
 networks:
   front:
@@ -170,14 +184,14 @@ networks:
 
 secrets:
   idp_backchannel:
-    file: ./secrets/harvard/idp/idp-backchannel.p12
+    file: ./secrets/idp/idp-backchannel.p12
   idp_browser:
-    file: ./secrets/harvard/idp/idp-browser.p12
+    file: ./secrets/idp/idp-browser.p12
   idp_encryption:
-    file: ./secrets/harvard/idp/idp-encryption.key
+    file: ./secrets/idp/idp-encryption.key
   idp_signing:
-    file: ./secrets/harvard/idp/idp-signing.key
+    file: ./secrets/idp/idp-signing.key
   idp_sealer:
-    file: ./secrets/harvard/idp/sealer.jks
+    file: ./secrets/idp/sealer.jks
   sp_key:
-    file: ./secrets/harvard/sp/sp-key.pem
+    file: ./secrets/sp/sp-key.pem
