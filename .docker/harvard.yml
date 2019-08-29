@@ -139,7 +139,7 @@ services:
       - back
 
   schemaservice:
-    image: oapass/schema-service:v0.6.0-1-g60e99b8@sha256:9c8cee614b5ce399068a383cece5ced4396372023cc3477561e2e7df2474dfae
+    image: oapass/schema-service:v0.6.1@sha256:094b120e0d8b8f7ddab97a6f49be72df843ef3e39755dc6abe0c3940a6d4ff06
     container_name: schemaservice
     env_file: .harvard_env
     ports:
