@@ -1,0 +1,189 @@
+# FTP config for nihms submission
+FTP_HOST=ftpserver
+FTP_PORT=21
+FTP_USER=nihmsftpuser
+FTP_PASS=nihmsftppass
+
+# For testing with NIH-administered FTP staging server
+# (comment out the above FTP_* variables, add correct password)
+# TODO obtain Harvard credentials
+#FTP_HOST=ftp-private.ncbi.nlm.nih.gov
+#FTP_PORT=21
+#FTP_USER=TODO
+#FTP_PASS=TODO
+
+# Static html server runtime config
+STATIC_HTML_PORT=82
+
+# Ember app runtime config
+EMBER_PORT=81
+
+EMBER_ROOT_URL=/app/
+
+# Fedora config
+FCREPO_HOST=fcrepo
+FCREPO_PORT=8080
+FCREPO_JMS_BASEURL=http://fcrepo:8080/fcrepo/rest
+FCREPO_DEBUG_PORT=5006
+FCREPO_JMS_CONFIGURATION=classpath:/pass-jms-external.xml
+#FCREPO_JMS_PUBLISHER=org.fcrepo.jms.JMSQueuePublisher
+FCREPO_JMS_DESTINATION=VirtualTopic.pass.docker
+FCREPO_LOG_LEVEL=INFO
+FCREPO_LOG_JMS=INFO
+FCREPO_HOME=/data
+FCREPO_LOGBACK_LOCATION=webapps/fcrepo/WEB-INF/classes/logback.xml
+# Uncomment to have Tomcat dump the headers for each request/response cycle to the console
+#FCREPO_TOMCAT_REQUEST_DUMPER_ENABLED=true
+#
+# Uncomment to have Tomcat debug authentication/authorization for each request
+#FCREPO_TOMCAT_AUTH_LOGGING_ENABLED=true
+
+# ActiveMQ Server Config
+ACTIVEMQ_JMS_PORT=61616
+ACTIVEMQ_STOMP_PORT=61613
+ACTIVEMQ_WEBCONSOLE_PORT=8161
+
+#ActiveMQ client config
+SPRING_ACTIVEMQ_BROKER_URL=failover:(tcp://activemq:61616)?trackMessages=true&maxCacheSize=100000000
+SPRING_ACTIVEMQ_USER=messaging
+SPRING_ACTIVEMQ_PASSWORD=moo
+
+# Backend PASS client config
+PASS_FEDORA_BASEURL=http://fcrepo:8080/fcrepo/rest/
+PASS_ELASTICSEARCH_URL=http://elasticsearch:9200
+PASS_FEDORA_USER=fedoraAdmin
+PASS_FEDORA_PASSWORD=moo
+
+
+# DSpace config
+DSPACE_HOST=pass.local
+DSPACE_PORT=8181
+DSPACE_BASEURI=http://pass.local:8181
+DSPACE_SUBMITTER_USERNAME=submitter@oapass.org
+DSPACE_SUBMITTER_PASSWORD=moo
+DSPACE_COLLECTION_WORKFLOW_HANDLE=123456789/3
+
+# Postgres config
+POSTGRES_DB_PORT=6543
+
+# Elasticsearch config
+
+ES_PORT=9200
+
+# PASS indexing service config
+
+PI_FEDORA_USER=fedoraAdmin
+PI_FEDORA_PASS=moo
+PI_FEDORA_INTERNAL_BASE=http://fcrepo:8080/fcrepo/rest/
+PI_ES_BASE=http://elasticsearch:9200/
+PI_ES_INDEX=http://elasticsearch:9200/pass/
+PI_FEDORA_JMS_QUEUE=Consumer.indexer.VirtualTopic.pass.docker
+PI_TYPE_PREFIX=http://oapass.org/ns/pass#
+PI_LOG_LEVEL=info
+PI_ES_CONFIG=https://raw.githubusercontent.com/emetsger/pass-data-model/dash/src/main/resources/esconfig-3.5.json
+
+# Deposit Services
+DEPOSIT_DEBUG_PORT=5007
+PASS_DEPOSIT_QUEUE_SUBMISSION_NAME=Consumer.submission.VirtualTopic.pass.docker
+PASS_DEPOSIT_QUEUE_DEPOSIT_NAME=Consumer.deposit.VirtualTopic.pass.docker
+PASS_DEPOSIT_OAICLIENT_DASH_OAIBASEURL=http://dspace:8181/oai/request
+PASS_DEPOSIT_PROVIDER_DASH_COPYBASEURL=http://pass.local:8181/
+PASS_DEPOSIT_JOBS_DEFAULT_INTERVAL_MS=30000
+
+# Authorization Listener
+PASS_AUTHZ_QUEUE=Consumer.authz.VirtualTopic.pass.docker
+
+# Authz roles
+PASS_BACKEND_ROLE=http://oapass.org/ns/roles/harvard.edu#pass-backend
+PASS_GRANTADMIN_ROLE=http://oapass.org/ns/roles/harvard.edu#admin
+PASS_SUBMITTER_ROLE=http://oapass.org/ns/roles/harvard.edu#submitter
+
+# User token key for creating/using user tokens
+PASS_USER_TOKEN_KEY=BETKPFHWGGDIEWIIYKYQ33LUS4
+
+# Mail server
+MAIL_SMTP=11025
+MAIL_IMAPS=11993
+MAIL_MSP=11587
+OVERRIDE_HOSTNAME=mail.jhu.edu
+ENABLE_SPAMASSASSIN=0
+ENABLE_CLAMAV=0
+ENABLE_FAIL2BAN=0
+ENABLE_POSTGREY=0
+SMTP_ONLY=0
+ONE_DIR=1
+DMS_DEBUG=0
+ENABLE_LDAP=1
+TLS_LEVEL=intermediate
+LDAP_SERVER_HOST=ldap
+LDAP_SEARCH_BASE=ou=People,dc=pass
+LDAP_BIND_DN=cn=admin,dc=pass
+LDAP_BIND_PW=password
+LDAP_QUERY_FILTER_USER=(&(objectClass=posixAccount)(mail=%s))
+LDAP_QUERY_FILTER_GROUP=(&(objectClass=posixAccount)(mailGroupMember=%s))
+LDAP_QUERY_FILTER_ALIAS=(&(objectClass=posixAccount)(mailAlias=%s))
+LDAP_QUERY_FILTER_DOMAIN=(|(mail=*@%s)(mailalias=*@%s)(mailGroupMember=*@%s))
+ENABLE_SASLAUTHD=0
+POSTMASTER_ADDRESS=root
+SSL_TYPE=manual
+SSL_CERT_PATH=/tmp/docker-mailserver/cert.pem
+SSL_KEY_PATH=/tmp/docker-mailserver/key.rsa
+
+# Link Services
+PASS_LINK_USERTOKEN_GENERATOR_KEY=BETKPFHWGGDIEWIIYKYQ33LUS4
+PASS_LINK_SCHEME=https
+PASS_LINK_HOST=pass.local
+
+# Notification Services
+NOTIFICATION_DEBUG_PORT=5011
+PASS_NOTIFICATION_QUEUE_EVENT_NAME=Consumer.event.VirtualTopic.pass.docker
+PASS_NOTIFICATION_MODE=DEMO
+PASS_NOTIFICATION_CONFIGURATION=file:/notification.json
+PASS_NOTIFICATION_SMTP_HOST=mail
+PASS_NOTIFICATION_SMTP_PORT=587
+PASS_NOTIFICATION_SMTP_USER=
+PASS_NOTIFICATION_SMTP_PASS=
+PASS_NOTIFICATION_SMTP_TRANSPORT=SMTP
+NOTIFICATION_OPTS=-Dorg.dataconservancy.pass.notification.level=DEBUG
+
+PASS_NOTIFICATION_TEMPLATE_APPROVAL_INVITE_SUBJECT=file:/templates/approval-invite-subject.hbr
+PASS_NOTIFICATION_TEMPLATE_APPROVAL_INVITE_BODY=file:/templates/approval-invite-body.hbr
+PASS_NOTIFICATION_TEMPLATE_APPROVAL_INVITE_FOOTER=file:/templates/footer.hbr
+
+PASS_NOTIFICATION_TEMPLATE_APPROVAL_REQUESTED_SUBJECT=file:/templates/approval-requested-subject.hbr
+PASS_NOTIFICATION_TEMPLATE_APPROVAL_REQUESTED_BODY=file:/templates/approval-requested-body.hbr
+PASS_NOTIFICATION_TEMPLATE_APPROVAL_REQUESTED_FOOTER=file:/templates/footer.hbr
+
+PASS_NOTIFICATION_TEMPLATE_CHANGES_REQUESTED_SUBJECT=file:/templates/changes-requested-subject.hbr
+PASS_NOTIFICATION_TEMPLATE_CHANGES_REQUESTED_BODY=file:/templates/changes-requested-body.hbr
+PASS_NOTIFICATION_TEMPLATE_CHANGES_REQUESTED_FOOTER=file:/templates/footer.hbr
+
+PASS_NOTIFICATION_TEMPLATE_SUBMISSION_SUBMITTED_SUBJECT=file:/templates/submission-submitted-subject.hbr
+PASS_NOTIFICATION_TEMPLATE_SUBMISSION_SUBMITTED_BODY=file:/templates/submission-submitted-body.hbr
+PASS_NOTIFICATION_TEMPLATE_SUBMISSION_SUBMITTED_FOOTER=file:/templates/footer.hbr
+
+PASS_NOTIFICATION_TEMPLATE_SUBMISSION_CANCELLED_SUBJECT=file:/templates/submission-cancelled-subject.hbr
+PASS_NOTIFICATION_TEMPLATE_SUBMISSION_CANCELLED_BODY=file:/templates/submission-cancelled-body.hbr
+PASS_NOTIFICATION_TEMPLATE_SUBMISSION_CANCELLED_FOOTER=file:/templates/footer.hbr
+
+PASS_NOTIFICATION_DEMO_FROM_ADDRESS=noreply@pass.jh.edu
+# docker-mailserver can't relay to any other addresses other than @jhu.edu
+# PASS_NOTIFICATION_DEMO_GLOBAL_CC_ADDRESS=emetsger@gmail.com
+PASS_NOTIFICATION_DEMO_GLOBAL_CC_ADDRESS=notification-demo-cc@jhu.edu
+
+PASS_NOTIFICATION_PRODUCTION_FROM_ADDRESS=noreply@pass.jh.edu
+PASS_NOTIFICATION_PRODUCTION_GLOBAL_CC_ADDRESS=
+
+# Schema service
+SCHEMA_SERVICE_PORT=8086
+METADATA_SCHEMA_URI=https://oa-pass.github.io/metadata-schemas/harvard/global.json
+PASS_EXTERNAL_FEDORA_BASEURL=https://pass.local/fcrepo/rest/
+
+# Policy service
+POLICY_SERVICE_URL=/policyservice
+POLICY_SERVICE_PORT=8088
+POLICY_FILE=harvard.json
+
+# DOI Service
+DOI_SERVICE_URL=/doiservice/journal
+PASS_DOI_SERVICE_PORT=8090
