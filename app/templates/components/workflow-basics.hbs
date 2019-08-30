@@ -69,9 +69,7 @@
     {{if (and publication.doi (not isValidDOI)) 'Please provide a valid DOI'}}
   </div>
   {{#if doiServiceError}}
-    <div class="text-danger">
-      {{doiServiceError}}
-    </div>
+    <div class="text-danger">{{{doiServiceError}}}</div>
   {{/if}}
 </div>
 <div class="form-group">
