@@ -34,6 +34,7 @@ A docker environement which relies on a Shibboleth proxy is in .docker/. All ser
 be available at https://pass.local/.
 
 * In .docker/ run `docker-compose pull && docker-compose up -d`
+  * If you want to run the Harvard development stack, from the `.docker/` directory, you can instead run `docker-compose -f harvard.yml up -d`
 * Wait for the containers to finish coming up, this could take 5-10 minutes. There will be a long pause while the `ember` container builds. When you see the "Build successful" message from `ember` and a small table listing the "Slowest Nodes" that indicates the application is ready to use. It will look similar to:
 
 ```
