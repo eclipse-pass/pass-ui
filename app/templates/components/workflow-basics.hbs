@@ -64,6 +64,7 @@
     input=(action "lookupDOI" true)
     id="doi"
     placeholder="Leave blank if your manuscript or article has not yet been assigned a DOI"
+    data-test-doi-input=true
   }}
   <div class="text-danger">
     {{if (and publication.doi (not isValidDOI)) 'Please provide a valid DOI'}}
@@ -75,7 +76,7 @@
 <div class="form-group">
   <label>Manuscript/Article Title <span class="text-muted">(required)</span></label>
   {{textarea value=publication.title cols="100%" rows="2" class=titleClass placeholder="Manuscript/Article Title"
-    keyUp=(action validateTitle) id="title" readonly=isValidDOI }}
+    keyUp=(action validateTitle) id="title" readonly=isValidDOI data-test-article-title-text-area=true}}
 </div>
 
 <div class="form-group">
@@ -89,7 +90,7 @@
     {{#unless isValidDOI}}
     {{find-journal id="journal" selectJournal=(action "selectJournal") value=publication.journal journalClass=journalClass isValidDOI=isValidDOI}}
     {{else}}
-    <input type="text" class="form-control" value={{publication.journal.journalName}} readonly>
+    <input type="text" class="form-control" value={{publication.journal.journalName}} readonly data-test-journal-name-input>
     {{/unless}}
   </div>
 </div>
@@ -98,7 +99,7 @@
 {{#if inFlight}}
   <button class="btn btn-primary pull-right next" disabled>Next</button>
 {{else}}
-  <button class="btn btn-primary pull-right next" {{action next}}>Next</button>
+  <button class="btn btn-primary pull-right next" {{action next}} data-test-workflow-basics-next>Next</button>
 {{/if}}
 {{#if isShowingUserSearchModal}}
   {{#modal-dialog

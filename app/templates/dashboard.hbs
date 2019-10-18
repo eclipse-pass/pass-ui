@@ -14,7 +14,7 @@
         </p>
         <div class="text-center">
           {{#if (get (await currentUser.user) 'isSubmitter')}}
-            {{#link-to "submissions.new" class='btn btn-primary mt-1 mr-1'}}
+            {{#link-to "submissions.new" class='btn btn-primary mt-1 mr-1' data-test-start-new-submission=true}}
               Start new submission
             {{/link-to}}
           {{/if}}
