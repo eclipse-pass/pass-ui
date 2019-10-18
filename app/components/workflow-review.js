@@ -1,5 +1,6 @@
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
+import { task } from 'ember-concurrency';
 
 export default Component.extend({
   workflow: service('workflow'),
@@ -48,132 +49,134 @@ export default Component.extend({
   submitButtonText: Ember.computed('userIsPreparer', function () {
     return this.get('userIsPreparer') ? 'Request approval' : 'Submit';
   }),
-  actions: {
-    async submit() {
-      $('.block-user-input').css('display', 'block');
-      let disableSubmit = true;
-      // In case a crafty user edits the page HTML, don't submit when not allowed
-      if (this.get('disableSubmit')) {
-        if (!this.get('hasVisitedWeblink')) {
-          $('.fa-exclamation-triangle').css('color', '#f86c6b');
-          $('.fa-exclamation-triangle').css('font-size', '2.2em');
-          setTimeout(() => {
-            $('.fa-exclamation-triangle').css('color', '#b0b0b0');
-            $('.fa-exclamation-triangle').css('font-size', '2em');
-          }, 4000);
-          toastr.warning('Please visit the following web portal to submit your manuscript directly. Metadata displayed above could be used to aid in your submission progress.');
+
+  submitTask: task(function* () {
+    $('.block-user-input').css('display', 'block');
+    let disableSubmit = true;
+    // In case a crafty user edits the page HTML, don't submit when not allowed
+    if (this.get('disableSubmit')) {
+      if (!this.get('hasVisitedWeblink')) {
+        $('.fa-exclamation-triangle').css('color', '#f86c6b');
+        $('.fa-exclamation-triangle').css('font-size', '2.2em');
+        setTimeout(() => {
+          $('.fa-exclamation-triangle').css('color', '#b0b0b0');
+          $('.fa-exclamation-triangle').css('font-size', '2em');
+        }, 4000);
+        toastr.warning('Please visit the following web portal to submit your manuscript directly. Metadata displayed above could be used to aid in your submission progress.');
+      }
+      disableSubmit = false;
+    }
+
+    if (!disableSubmit) {
+      $('.block-user-input').css('display', 'none');
+      return;
+    }
+
+    if (this.get('submission.submitter.id') !== this.get('currentUser.user.id')) {
+      this.sendAction('submit');
+      return;
+    }
+
+    // User is submitting on own behalf. Must get repository agreements.
+    let reposWithAgreementText = this.get('submission.repositories')
+      .filter(repo => (!repo.get('_isWebLink')) && repo.get('agreementText'))
+      .map(repo => ({
+        id: repo.get('name'),
+        title: `Deposit requirements for ${repo.get('name')}`,
+        html: `<div class="form-control deposit-agreement-content py-4 mt-4">${repo.get('agreementText')}</div>`
+      }));
+
+    let reposWithoutAgreementText = this.get('submission.repositories')
+      .filter(repo => !repo.get('_isWebLink') && !repo.get('agreementText'))
+      .map(repo => ({
+        id: repo.get('name')
+      }));
+
+    let reposWithWebLink = this.get('submission.repositories')
+      .filter(repo => repo.get('_isWebLink'))
+      .map(repo => ({
+        id: repo.get('name')
+      }));
+
+    const result = yield swal.mixin({
+      input: 'checkbox',
+      inputPlaceholder: 'I agree to the above statement on today\'s date ',
+      confirmButtonText: 'Next &rarr;',
+      progressSteps: reposWithAgreementText.map((repo, index) => index + 1),
+    }).queue(reposWithAgreementText);
+    if (result.value) {
+      let reposThatUserAgreedToDeposit = reposWithAgreementText.filter((repo, index) => {
+        // if the user agreed to depost to this repo === 1
+        if (result.value[index] === 1) {
+          return repo;
         }
-        disableSubmit = false;
-      }
-
-      if (!disableSubmit) {
-        $('.block-user-input').css('display', 'none');
-        return;
-      }
-
-      if (this.get('submission.submitter.id') !== this.get('currentUser.user.id')) {
-        this.sendAction('submit');
-        return;
-      }
-
-      // User is submitting on own behalf. Must get repository agreements.
-      let reposWithAgreementText = this.get('submission.repositories')
-        .filter(repo => (!repo.get('_isWebLink')) && repo.get('agreementText'))
-        .map(repo => ({
-          id: repo.get('name'),
-          title: `Deposit requirements for ${repo.get('name')}`,
-          html: `<div class="form-control deposit-agreement-content py-4 mt-4">${repo.get('agreementText')}</div>`
-        }));
-
-      let reposWithoutAgreementText = this.get('submission.repositories')
-        .filter(repo => !repo.get('_isWebLink') && !repo.get('agreementText'))
-        .map(repo => ({
-          id: repo.get('name')
-        }));
-
-      let reposWithWebLink = this.get('submission.repositories')
-        .filter(repo => repo.get('_isWebLink'))
-        .map(repo => ({
-          id: repo.get('name')
-        }));
-
-      const result = await swal.mixin({
-        input: 'checkbox',
-        inputPlaceholder: 'I agree to the above statement on today\'s date ',
-        confirmButtonText: 'Next &rarr;',
-        progressSteps: reposWithAgreementText.map((repo, index) => index + 1),
-      }).queue(reposWithAgreementText);
-      if (result.value) {
-        let reposThatUserAgreedToDeposit = reposWithAgreementText.filter((repo, index) => {
-          // if the user agreed to depost to this repo === 1
-          if (result.value[index] === 1) {
-            return repo;
+      });
+      // make sure there are repos to submit to.
+      if (this.get('submission.repositories.length') > 0) {
+        if (reposWithoutAgreementText.length > 0 || reposThatUserAgreedToDeposit.length > 0 || reposWithWebLink.length > 0) {
+          let swalMsg = 'Once you click confirm you will no longer be able to edit this submission or add repositories.<br/>';
+          if (reposWithoutAgreementText.length > 0 || reposThatUserAgreedToDeposit.length) {
+            swalMsg = `${swalMsg}You are about to submit your files to: <pre><code>${JSON.stringify(reposThatUserAgreedToDeposit.map(repo => repo.id)).replace(/[\[\]']/g, '')}${JSON.stringify(reposWithoutAgreementText.map(repo => repo.id)).replace(/[\[\]']/g, '')} </code></pre>`;
           }
-        });
-        // make sure there are repos to submit to.
-        if (this.get('submission.repositories.length') > 0) {
-          if (reposWithoutAgreementText.length > 0 || reposThatUserAgreedToDeposit.length > 0 || reposWithWebLink.length > 0) {
-            let swalMsg = 'Once you click confirm you will no longer be able to edit this submission or add repositories.<br/>';
-            if (reposWithoutAgreementText.length > 0 || reposThatUserAgreedToDeposit.length) {
-              swalMsg = `${swalMsg}You are about to submit your files to: <pre><code>${JSON.stringify(reposThatUserAgreedToDeposit.map(repo => repo.id)).replace(/[\[\]']/g, '')}${JSON.stringify(reposWithoutAgreementText.map(repo => repo.id)).replace(/[\[\]']/g, '')} </code></pre>`;
-            }
-            if (reposWithWebLink.length > 0) {
-              swalMsg = `${swalMsg}You were prompted to submit to: <code><pre>${JSON.stringify(reposWithWebLink.map(repo => repo.id)).replace(/[\[\]']/g, '')}</code></pre>`;
-            }
+          if (reposWithWebLink.length > 0) {
+            swalMsg = `${swalMsg}You were prompted to submit to: <code><pre>${JSON.stringify(reposWithWebLink.map(repo => repo.id)).replace(/[\[\]']/g, '')}</code></pre>`;
+          }
 
-            swal({
-              title: 'Confirm submission',
-              html: swalMsg, // eslint-disable-line
-              confirmButtonText: 'Confirm',
-              showCancelButton: true,
-            }).then((result) => {
-              if (result.value) {
-                /*
-                 * Update repos to reflect repos that user agreed to deposit
-                 * It is assumed that the user has done the necessary steps for each web-link repository,
-                 * so those are also kept in the list
-                 */
-                this.set('submission.repositories', this.get('submission.repositories').filter((repo) => {
-                  if (repo.get('_isWebLink')) {
-                    return true;
-                  }
-                  let temp = reposWithAgreementText.map(x => x.id).includes(repo.get('name'));
-                  if (!temp) {
-                    return true;
-                  } else if (reposThatUserAgreedToDeposit.map(r => r.id).includes(repo.get('name'))) {
-                    return true;
-                  }
-                  return false;
-                }));
+          const result = yield swal({
+            title: 'Confirm submission',
+            html: swalMsg, // eslint-disable-line
+            confirmButtonText: 'Confirm',
+            showCancelButton: true,
+          });
 
-                $('.block-user-input').css('display', 'block');
-
-                this.sendAction('submit');
-              }
-            });
-          } else {
-            // there were repositories, but the user didn't sign any of the agreements
-            let reposUserDidNotAgreeToDeposit = reposWithAgreementText.filter((repo) => {
-              if (!reposThatUserAgreedToDeposit.includes(repo)) {
+          if (result.value) {
+            /*
+              * Update repos to reflect repos that user agreed to deposit
+              * It is assumed that the user has done the necessary steps for each web-link repository,
+              * so those are also kept in the list
+              */
+            this.set('submission.repositories', this.get('submission.repositories').filter((repo) => {
+              if (repo.get('_isWebLink')) {
                 return true;
               }
-            });
-            swal({
-              title: 'Your submission cannot be submitted.',
-              html: `You declined to agree to the deposit agreement(s) for ${JSON.stringify(reposUserDidNotAgreeToDeposit.map(repo => repo.id)).replace(/[\[\]']/g, '')}. Therefore, this submission cannot be submitted.`,
-              confirmButtonText: 'Ok',
-            });
+              let temp = reposWithAgreementText.map(x => x.id).includes(repo.get('name'));
+              if (!temp) {
+                return true;
+              } else if (reposThatUserAgreedToDeposit.map(r => r.id).includes(repo.get('name'))) {
+                return true;
+              }
+              return false;
+            }));
+
+            $('.block-user-input').css('display', 'block');
+
+            this.sendAction('submit');
           }
         } else {
-          // no repositories associated with the submission
+          // there were repositories, but the user didn't sign any of the agreements
+          let reposUserDidNotAgreeToDeposit = reposWithAgreementText.filter((repo) => {
+            if (!reposThatUserAgreedToDeposit.includes(repo)) {
+              return true;
+            }
+          });
           swal({
             title: 'Your submission cannot be submitted.',
-            html: 'No repositories are associated with this submission. \n Return to the submission and edit it to include a repository.',
+            html: `You declined to agree to the deposit agreement(s) for ${JSON.stringify(reposUserDidNotAgreeToDeposit.map(repo => repo.id)).replace(/[\[\]']/g, '')}. Therefore, this submission cannot be submitted.`,
             confirmButtonText: 'Ok',
           });
         }
+      } else {
+        // no repositories associated with the submission
+        swal({
+          title: 'Your submission cannot be submitted.',
+          html: 'No repositories are associated with this submission. \n Return to the submission and edit it to include a repository.',
+          confirmButtonText: 'Ok',
+        });
       }
-    },
+    }
+  }),
+
+  actions: {
     agreeToDeposit() { this.set('step', 5); },
     back() { this.sendAction('back'); },
     openWeblinkAlert(repo) {

@@ -58,7 +58,7 @@ export default Controller.extend({
         this.set('uploading', true);
         this.set('waitingMessage', 'Saving your submission');
 
-        this.get('submissionHandler').submit(sub, pub, files, comment).catch((error) => {
+        this.get('submissionHandler.submit').perform(sub, pub, files, comment).catch((error) => {
           this.set('uploading', false);
           toastr.error(`Submission failed: ${error.message}`);
         }).then(() => {

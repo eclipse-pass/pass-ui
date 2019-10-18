@@ -1,6 +1,7 @@
-import RSVP from 'rsvp';
 import Service from '@ember/service';
 import ENV from 'pass-ember/config/environment';
+import { task, all, hash } from 'ember-concurrency';
+import { get } from '@ember/object';
 
 /**
  * Service that can get policies and associated repositories for a submission
@@ -46,10 +47,10 @@ export default Service.extend({
    *    {Policy}, ...
    * ]
    */
-  async getPolicies(submission) {
+  getPolicies: task(function* (submission) {
     const url = `${this.get('policyUrl')}?submission=${submission.get('id')}`;
 
-    const result = await fetch(url, {
+    const result = yield fetch(url, {
       method: 'GET',
       headers: {
         // 'Content-Type': 'application/json'
@@ -66,14 +67,14 @@ export default Service.extend({
      * NOTE: Promise.all() will consolidate all of the store.findRecord
      * Promises and will ultimately return an array of Policy objects
      */
-    const data = await result.json();
+    const data = yield result.json();
 
-    return Promise.all(data.map(policyInfo => this.get('store').findRecord('policy', policyInfo.id)
+    return yield all(data.map(policyInfo => this.get('store').findRecord('policy', policyInfo.id)
       .then((pol) => {
         pol.set('_type', policyInfo.type);
         return pol;
       })));
-  },
+  }),
 
   /**
    * Get a set of repositories based on effective policies applied to the submission.
@@ -95,10 +96,10 @@ export default Service.extend({
    *    'optional': []
    * }
    */
-  async getRepositories(submission) {
+  getRepositories: task(function* (submission) {
     const url = `${this.get('repoUrl')}?submission=${submission.get('id')}`;
 
-    const response = await fetch(url, {
+    const response = yield fetch(url, {
       method: 'GET',
       headers: {
         credentials: 'include'
@@ -113,28 +114,28 @@ export default Service.extend({
      * For each DSL field (required, one-of, optional), transform each repository info object
      * to a Promise for a Repository object from the Store
      */
-    return response.json().then((dsl) => {
-      let result = {};
+    const dsl = yield response.json();
 
-      if (dsl.hasOwnProperty('required')) {
-        result.required = this._resolveRepos(dsl.required);
-      }
+    let result = {};
 
-      if (dsl.hasOwnProperty('one-of')) {
-        const choices = [];
-        dsl['one-of'].forEach((choiceGroup) => {
-          choices.push(this._resolveRepos(choiceGroup));
-        });
-        result['one-of'] = Promise.all(choices);
-      }
+    if (dsl.hasOwnProperty('required')) {
+      result.required = yield get(this, '_resolveRepos').perform(dsl.required);
+    }
 
-      if (dsl.hasOwnProperty('optional')) {
-        result.optional = this._resolveRepos(dsl.optional);
-      }
+    if (dsl.hasOwnProperty('one-of')) {
+      const choices = [];
+      dsl['one-of'].forEach((choiceGroup) => {
+        choices.push(get(this, '_resolveRepos').perform(choiceGroup));
+      });
+      result['one-of'] = yield all(choices);
+    }
 
-      return RSVP.hash(result);
-    });
-  },
+    if (dsl.hasOwnProperty('optional')) {
+      result.optional = yield get(this, '_resolveRepos').perform(dsl.optional);
+    }
+
+    return yield hash(result);
+  }),
 
   /**
    * Transform a list of repository information objects to Repository model objects
@@ -145,12 +146,12 @@ export default Service.extend({
    * }
    * @returns {array} list of Promises of Repository objects
    */
-  _resolveRepos(repos) {
-    return Promise.all(repos.map(repoInfo => this.get('store').findRecord('repository', repoInfo['repository-id'])
+  _resolveRepos: task(function* (repos) {
+    return yield all(repos.map(repoInfo => this.get('store').findRecord('repository', repoInfo['repository-id'])
       .then((repo) => {
         repo.set('_selected', repoInfo.selected);
         return repo;
       })));
-  }
+  })
 
 });

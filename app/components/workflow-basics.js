@@ -213,7 +213,7 @@ export default Component.extend({
         timeOut: 0,
         extendedTimeOut: 0
       });
-      doiService.resolveDOI(doi).then(async (result) => {
+      doiService.get('resolveDOI').perform(doi).then(async (result) => {
         if (setPublication) {
           this.set('publication', result.publication);
         }
