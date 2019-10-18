@@ -72,7 +72,7 @@ module.exports = function (environment) {
   };
 
   ENV.schemaService = {
-    url: 'https://pass.local:8086'
+    url: 'https://pass.local/schemaservice'
   };
 
   ENV.policyService = {
