@@ -1,3 +1,10 @@
+/**
+ * Note use of custom fixtures directory. This needs to happen because
+ * Mirage maps the fixtures directory and will not allow mismatches between
+ * Mirage model names and fixture files and also will not allow sub-directories.
+ * This means these files are not Mirage fixtures and cannot be used with the
+ * Mirage loadFixtures() method so we combine their use with factories instead.
+ */
 import metaDataSchema from '../custom-fixtures/nih-submission/schemas';
 import repos from '../custom-fixtures/nih-submission/repositories';
 import policies from '../custom-fixtures/nih-submission/policies';
