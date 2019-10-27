@@ -69,7 +69,7 @@ module('Integration | Component | submission action cell', (hooks) => {
 
     await render(hbs`{{#submission-action-cell record=record}}{{/submission-action-cell}}`);
     await click('a.delete-button');
-    await click('.swal2-confirm');
+    await click(document.querySelector('.swal2-confirm'));
 
     await settled();
 

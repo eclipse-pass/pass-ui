@@ -3,6 +3,7 @@ import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
 import { fillIn, render, settled, triggerKeyEvent } from '@ember/test-helpers';
 import { run } from '@ember/runloop';
+import { task } from 'ember-concurrency';
 
 module('Integration | Component | workflow basics', (hooks) => {
   setupRenderingTest(hooks);
@@ -32,8 +33,8 @@ module('Integration | Component | workflow basics', (hooks) => {
     this.set('loadNext', (actual) => {});
 
     const mockDoiService = Ember.Service.extend({
-      resolveDOI(doi) {
-        return Promise.resolve({
+      resolveDOI: task(function* (doi) {
+        return yield Promise.resolve({
           doiInfo: {
             publisher: 'Royal Society of Chemistry (RSC)',
             issue: 1,
@@ -66,7 +67,7 @@ module('Integration | Component | workflow basics', (hooks) => {
             journal: Ember.Object.create({ journalName: 'moo-title' })
           })
         });
-      },
+      }),
       formatDOI(doi) {
         return 'moo';
       },
@@ -208,11 +209,13 @@ module('Integration | Component | workflow basics', (hooks) => {
     this.set('submission', submission);
 
     this.owner.register('service:doi', Ember.Service.extend({
-      resolveDOI: () => Promise.resolve({
-        publication: Ember.Object.create({
-          title: 'Do not want'
-        }), // This publication should not be used
-        doiInfo: { title: 'You better use this' }
+      resolveDOI: task(function* () {
+        return yield Promise.resolve({
+          publication: Ember.Object.create({
+            title: 'Do not want'
+          }), // This publication should not be used
+          doiInfo: { title: 'You better use this' }
+        });
       }),
       formatDOI: () => 'Formatted-Moo',
       isValidDOI: () => true
@@ -283,11 +286,13 @@ module('Integration | Component | workflow basics', (hooks) => {
     this.set('submission', submission);
 
     const mockDoiService = Ember.Service.extend({
-      resolveDOI: () => Promise.resolve({
-        doiInfo: {
-          title: 'Don\'t use'
-        },
-        publication
+      resolveDOI: task(function* () {
+        return yield Promise.resolve({
+          doiInfo: {
+            title: 'Don\'t use'
+          },
+          publication
+        });
       }),
       isValidDOI: doi => !!doi,
       formatDOI: doi => doi
