@@ -21,7 +21,12 @@ export default function (server) {
     email: 'nihuser@jhu.edu',
     firstName: 'Nihu',
     lastName: 'Ser',
-    locatorIds: ['johnshopkins.edu:jhed:akirkwo1', 'johnshopkins.edu:hopkinsid:KYWJIT', 'johnshopkins.edu:employeeid:00001421', 'johnshopkins.edu:jhed:nih-user'],
+    locatorIds: [
+      `johnshopkins.edu:jhed:${Math.ceil(Math.random() * 1000000)}`,
+      `johnshopkins.edu:hopkinsid:${Math.ceil(Math.random() * 1000000)}`,
+      `johnshopkins.edu:employeeid:${Math.ceil(Math.random() * 1000000)}`,
+      `johnshopkins.edu:jhed:${Math.ceil(Math.random() * 1000000)}`
+    ],
     roles: ['submitter'],
     username: 'nih-user@johnshopkins.edu'
   });
