@@ -67,6 +67,9 @@ module('Integration | Component | workflow grants', (hooks) => {
   });
 
   test('Pre-loaded grant is selected on render', async function (assert) {
+    const workflow = this.owner.lookup('service:workflow');
+    workflow.resetWorkflow();
+
     this.set('preLoadedGrant', knownGrant);
 
     await render(hbs`{{workflow-grants
@@ -89,7 +92,6 @@ module('Integration | Component | workflow grants', (hooks) => {
     assert.ok(row2.getAttribute('class').includes('selected-row'));
     assert.ok(row2.querySelector('i[class="fa fa-check-square"]'));
 
-    const workflow = this.owner.lookup('service:workflow');
     assert.equal(workflow.getAddedGrants().length, 1, 'One grant should have been added');
   });
 

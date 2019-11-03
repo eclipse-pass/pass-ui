@@ -179,7 +179,7 @@ module('Unit | Service | doi', (hooks) => {
 
     assert.expect(8);
 
-    return service.resolveDOI(doiInfo.DOI).then((result) => {
+    return service.get('resolveDOI').perform(doiInfo.DOI).then((result) => {
       assert.ok(result.publication);
       assert.ok(result.doiInfo);
 

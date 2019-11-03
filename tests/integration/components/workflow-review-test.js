@@ -143,17 +143,17 @@ module('Integration | Component | workflow review', (hooks) => {
 
     // Click on web-link repository and then confirm
     await click('.btn-link');
-    await click('.swal2-confirm');
+    await click(document.querySelector('.swal2-confirm'));
 
     // Click on submit
     await click('.submit');
 
     // Click on deposit agreement checkbox and then next
-    await click('.swal2-checkbox');
-    await click('.swal2-confirm');
+    await click(document.querySelector('.swal2-checkbox'));
+    await click(document.querySelector('.swal2-confirm'));
 
     // Click on confirm submission
-    await click('.swal2-confirm');
+    await click(document.querySelector('.swal2-confirm'));
 
     assert.equal(submitted, true);
 
@@ -261,13 +261,13 @@ module('Integration | Component | workflow review', (hooks) => {
     await click('.submit');
 
     // Click Next without agreeing
-    await click('.swal2-confirm');
+    await click(document.querySelector('.swal2-confirm'));
 
     // Should be warning about no deposit agreement
     assert.equal(document.querySelector('.swal2-title').textContent, 'Your submission cannot be submitted.');
     assert.equal(document.querySelector('.swal2-content').textContent.includes(repo1.get('name')), true);
 
-    await click('.swal2-confirm');
+    await click(document.querySelector('.swal2-confirm'));
 
     assert.equal(submitted, false);
   });

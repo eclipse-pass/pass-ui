@@ -39,7 +39,7 @@ module('Unit | Service | current-user', (hooks) => {
 
     assert.expect(7);
 
-    return service.load().then(() => {
+    return service.get('load').perform().then(() => {
       assert.equal(service.get('user.id'), user.get('id'));
     });
   });
@@ -81,7 +81,7 @@ module('Unit | Service | current-user', (hooks) => {
 
     assert.expect(7);
 
-    return service.load(userToken).then(() => {
+    return service.get('load').perform(userToken).then(() => {
       assert.equal(service.get('user.id'), user.get('id'));
     });
   });
