@@ -89,8 +89,6 @@ module('Integration | Component | workflow review', (hooks) => {
   });
 
   test('submission success: web-link and agreement', async function (assert) {
-    await click(document.querySelector('.swal2-confirm'));
-
     let controller = this.owner.lookup('controller:submissions/new/review');
     assert.ok(controller);
 
@@ -165,6 +163,8 @@ module('Integration | Component | workflow review', (hooks) => {
   });
 
   test('submission failure: no web-link click', async function (assert) {
+    await click(document.querySelector('.swal2-confirm'));
+
     let controller = this.owner.lookup('controller:submissions/new/review');
     assert.ok(controller);
 
