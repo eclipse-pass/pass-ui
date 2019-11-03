@@ -1,8 +1,7 @@
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
-import { click, render } from '@ember/test-helpers';
-import { run } from '@ember/runloop';
+import { click, render, waitUntil, waitFor } from '@ember/test-helpers';
 
 module('Integration | Component | workflow review', (hooks) => {
   setupRenderingTest(hooks);
@@ -211,6 +210,8 @@ module('Integration | Component | workflow review', (hooks) => {
     await click('.submit');
 
     // Should be toastr warning about web-link click instead of confirm dialog
+    await waitUntil(() => !document.querySelector('.swal2-title'), { timeout: 500 });
+    await waitFor(document.querySelector('.toast-message'));
     assert.equal(document.querySelector('.swal2-title'), null);
 
     assert.equal(submitted, false);
