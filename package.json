@@ -20,7 +20,7 @@
     "ajv": "^6.10.0",
     "clean-css": ">=4.1.11",
     "coveralls": "^3.0.2",
-    "ember-auto-import": "^1.2.21",
+    "ember-auto-import": "^1.5.3",
     "ember-cli-code-coverage": "^0.4.2",
     "ember-cli-mirage": "^1.1.1",
     "ember-load": "0.0.12",
@@ -79,7 +79,7 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-react": "^7.11.1",
-    "jquery": "3.3.1",
+    "jquery": "^3.4.1",
     "loader.js": "^4.7.0",
     "popper.js": "^1.14.5",
     "sweetalert2": "^7.29.0"
