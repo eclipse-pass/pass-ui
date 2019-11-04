@@ -20,7 +20,7 @@
     "ajv": "^6.10.0",
     "clean-css": ">=4.1.11",
     "coveralls": "^3.0.2",
-    "ember-auto-import": "^1.5.3",
+    "ember-auto-import": "1.2.21",
     "ember-cli-code-coverage": "^0.4.2",
     "ember-cli-mirage": "^1.1.1",
     "ember-load": "0.0.12",
