@@ -78,6 +78,6 @@ export default CheckSessionRoute.extend({
   },
 
   _loadCurrentUser(userToken) {
-    return this.get('currentUser').load(userToken);
+    return this.get('currentUser.load').perform(userToken);
   }
 });

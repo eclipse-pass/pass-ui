@@ -1,5 +1,5 @@
 <div class="form-group">
-    <p class="lead text-muted">
+    <p class="lead text-muted" data-test-workflow-policies-lead-text>
       Based on the information you provided so far, these are the public access
       policies that are applicable to your work:
     </p>
@@ -10,4 +10,4 @@
 
 <button class="btn btn-outline-primary" {{action back}}>Back</button>
 <button class="btn btn-outline-danger ml-2" {{action "cancel"}}>Abort</button>
-<button class="btn btn-primary next pull-right" {{action next}}>Next</button>
+<button class="btn btn-primary next pull-right" {{action next}} data-test-workflow-policies-next>Next</button>

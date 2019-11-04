@@ -234,6 +234,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       this.element.querySelector('input[name="ISSN"]').value = '';
 
       await click('button[data-key="Next"]');
+      await click(document.querySelector('.swal2-confirm'));
 
       assert.ok(this.element.textContent.includes('NIHMS'), 'We should still be on NIH form');
     });

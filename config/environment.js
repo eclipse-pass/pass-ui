@@ -42,6 +42,7 @@ module.exports = function (environment) {
 
 
   if (environment === 'test') {
+    ENV.APP.autoboot = false;
     // Testem prefers this...
     ENV.locationType = 'none';
 
@@ -71,7 +72,7 @@ module.exports = function (environment) {
   };
 
   ENV.schemaService = {
-    url: 'https://pass.local:8086'
+    url: 'https://pass.local/schemaservice'
   };
 
   ENV.policyService = {

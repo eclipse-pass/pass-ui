@@ -1,5 +1,6 @@
 import Service from '@ember/service';
 import ENV from 'pass-ember/config/environment';
+import { task } from 'ember-concurrency';
 
 /**
  * This service contains functions for interacting with Crossref and manipulating Crossref
@@ -24,39 +25,39 @@ export default Service.extend({
   * @param  {string} doi
   * @returns {object}    Object with doiInfo and publication
   */
-  async resolveDOI(doi) {
+  resolveDOI: task(function* (doi) {
     let url = `${this.get('doiServiceUrl')}?doi=${encodeURIComponent(doi)}`;
 
-    return this.get('ajax').request(url, 'GET', {
+    let response = yield this.get('ajax').request(url, 'GET', {
       headers: {
         Accept: 'application/json; charset=utf-8',
         withCredentials: 'include'
       }
-    }).then(async (response) => {
-      let journal = await this.get('store').findRecord('journal', response['journal-id']);
-
-      let doiInfo = this._processRawDoi(response.crossref.message);
-
-      // Needed by schemas
-      doiInfo['journal-title'] = doiInfo['container-title'];
-
-      let publication = this.get('store').createRecord('publication', {
-        doi,
-        journal,
-        title: Array.isArray(doiInfo.title) ? doiInfo.title.join(', ') : doiInfo.title,
-        submittedDate: doiInfo.deposited,
-        creationDate: doiInfo.created,
-        issue: doiInfo.issue,
-        volume: doiInfo.volume,
-        abstract: doiInfo.abstract,
-      });
-
-      return {
-        publication,
-        doiInfo
-      };
     });
-  },
+
+    let journal = yield this.get('store').findRecord('journal', response['journal-id']);
+
+    let doiInfo = this._processRawDoi(response.crossref.message);
+
+    // Needed by schemas
+    doiInfo['journal-title'] = doiInfo['container-title'];
+
+    let publication = this.get('store').createRecord('publication', {
+      doi,
+      journal,
+      title: Array.isArray(doiInfo.title) ? doiInfo.title.join(', ') : doiInfo.title,
+      submittedDate: doiInfo.deposited,
+      creationDate: doiInfo.created,
+      issue: doiInfo.issue,
+      volume: doiInfo.volume,
+      abstract: doiInfo.abstract,
+    });
+
+    return {
+      publication,
+      doiInfo
+    };
+  }),
 
   isValidDOI(doi) {
     // ref: https://www.crossref.org/blog/dois-and-matching-regular-expressions/

@@ -9,7 +9,7 @@ export default CheckSessionRoute.extend({
     const parentModel = this.modelFor('submissions.new');
     const submission = parentModel.newSubmission;
 
-    const repoPromise = await this.get('policyService').getRepositories(submission);
+    const repoPromise = await this.get('policyService.getRepositories').perform(submission);
 
     return Ember.RSVP.hash({
       newSubmission: submission,

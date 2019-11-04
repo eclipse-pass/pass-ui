@@ -213,7 +213,7 @@ export default Component.extend({
         timeOut: 0,
         extendedTimeOut: 0
       });
-      doiService.resolveDOI(doi).then(async (result) => {
+      doiService.get('resolveDOI').perform(doi).then(async (result) => {
         if (setPublication) {
           this.set('publication', result.publication);
         }
@@ -231,6 +231,7 @@ export default Component.extend({
 
         this.clearDoiData(doi);
         this.set('doiServiceError', error.payload.error);
+      // eslint-disable-next-line newline-per-chained-call
       }).finally(() => this.set('inFlight', false));
     },
 

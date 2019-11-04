@@ -29,7 +29,7 @@ module('Unit | Service | policies', (hooks) => {
 
     const sub = Ember.Object.create({ id: 'moo_id' });
 
-    const policies = await service.getPolicies(sub);
+    const policies = await service.get('getPolicies').perform(sub);
 
     assert.ok(Array.isArray(policies), 'Should be an array');
     assert.equal(policies.length, 2, 'Should be two policies here');
@@ -37,7 +37,7 @@ module('Unit | Service | policies', (hooks) => {
     policies.forEach(policy => assert.equal(policy.get('text'), 'Moo', 'Expecting text:\'Moo\''));
   });
 
-  test('good response to getRepositories returns object with Repository promises by DSL rules', function (assert) {
+  test('good response to getRepositories returns object with Repository promises by DSL rules', async function (assert) {
     assert.expect(17);
 
     const service = this.owner.lookup('service:policies');
@@ -68,7 +68,7 @@ module('Unit | Service | policies', (hooks) => {
 
     const sub = Ember.Object.create({ id: 'moo_id' });
 
-    service.getRepositories(sub).then((rules) => {
+    service.get('getRepositories').perform(sub).then((rules) => {
       assert.ok(Array.isArray(rules.required), 'rules.required should be an array');
       assert.ok(Array.isArray(rules.optional), 'rules.optional should be an array');
       assert.ok(Array.isArray(rules['one-of']), 'rules[\'one-of\'] should be an array');
@@ -104,7 +104,7 @@ module('Unit | Service | policies', (hooks) => {
 
     const sub = Ember.Object.create({ id: 'moo' });
 
-    service.getPolicies(sub).catch(e => assert.ok(e.message.includes('403')));
+    service.get('getPolicies').perform(sub).catch(e => assert.ok(e.message.includes('403')));
   });
 
   /**
@@ -127,6 +127,6 @@ module('Unit | Service | policies', (hooks) => {
 
     const sub = Ember.Object.create({ id: 'moo' });
 
-    service.getRepositories(sub).catch(e => assert.ok(e.message.includes('404'), 'unexpected error caught'));
+    service.get('getRepositories').perform(sub).catch(e => assert.ok(e.message.includes('404'), 'unexpected error caught'));
   });
 });

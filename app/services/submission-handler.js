@@ -1,6 +1,7 @@
 import Service from '@ember/service';
 import ENV from 'pass-ember/config/environment';
-
+import { task } from 'ember-concurrency';
+import { get } from '@ember/object';
 
 /**
  * Service to manage submissions.
@@ -56,8 +57,8 @@ export default Service.extend({
    * @param  {string} comment    Added to SubmissionEvent
    * @returns {Promise}          Promise resolves to the updated submission.
    */
-  _finishSubmission(submission, comment) {
-    let subEvent = this.get('store').createRecord('submissionEvent');
+  _finishSubmission: task(function* (submission, comment) {
+    let subEvent = yield this.get('store').createRecord('submissionEvent');
 
     subEvent.set('performedBy', this.get('currentUser.user'));
     subEvent.set('comment', comment);
@@ -97,8 +98,9 @@ export default Service.extend({
     }
 
     // Save the updated submission, then save the submissionEvent
-    return subEvent.save().then(() => submission.save());
-  },
+    yield subEvent.save();
+    yield submission.save();
+  }),
 
   /**
    * _uploadFile - method which adds a file to a submission in the
@@ -171,16 +173,17 @@ export default Service.extend({
    * @param  {String} comment          Comment added as to SubmissionEvent.
    * @returns {Promise}                Promise to perform the operation.
    */
-  submit(submission, publication, files, comment) {
-    return publication.save().then((p) => {
-      submission.set('submitted', false);
-      submission.set('source', 'pass');
-      submission.set('aggregatedDepositStatus', 'not-started');
-      submission.set('publication', p);
+  submit: task(function* (submission, publication, files, comment) {
+    const p = yield publication.save();
 
-      return submission.save();
-    }).then(s => this._finishSubmission(s, comment));
-  },
+    submission.set('submitted', false);
+    submission.set('source', 'pass');
+    submission.set('aggregatedDepositStatus', 'not-started');
+    submission.set('publication', p);
+
+    const s = yield submission.save();
+    yield get(this, '_finishSubmission').perform(s, comment);
+  }),
 
   /**
    * approveSubmission - Submitter approves submission. Metadata is added to

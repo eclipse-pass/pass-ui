@@ -39,7 +39,7 @@ export default CheckSessionRoute.extend({
      */
     this.clearEffectivePolicies(submission);
 
-    const policies = await this.get('policyService').getPolicies(submission);
+    const policies = await this.get('policyService.getPolicies').perform(submission);
 
     return Ember.RSVP.hash({
       repositories: parentModel.repositories,

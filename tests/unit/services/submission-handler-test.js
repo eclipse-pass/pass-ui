@@ -55,7 +55,7 @@ module('Unit | Service | submission-handler', (hooks) => {
 
     assert.expect(13);
 
-    return service.submit(submission, publication, files, comment).then(() => {
+    return service.get('submit').perform(submission, publication, files, comment).then(() => {
       assert.equal(submission.get('submitted'), false);
       assert.equal(submission.get('submissionStatus'), 'approval-requested');
 
@@ -122,7 +122,7 @@ module('Unit | Service | submission-handler', (hooks) => {
 
     assert.expect(13);
 
-    return service.submit(submission, publication, files, comment).then(() => {
+    return service.get('submit').perform(submission, publication, files, comment).then(() => {
       assert.equal(submission.get('submitted'), true);
       assert.equal(submission.get('submissionStatus'), 'submitted');
 
