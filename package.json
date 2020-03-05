@@ -23,17 +23,17 @@
     "ember-auto-import": "1.2.21",
     "ember-cli-code-coverage": "^0.4.2",
     "ember-cli-mirage": "^1.1.1",
+    "ember-cli-qunit": "^4.3.2",
     "ember-load": "0.0.12",
     "ember-lodash": "^4.19.4",
-    "ember-qunit": "^4.5.1",
     "ember-test-selectors": "^2.1.0",
     "ember-tether": "^1.0.0",
     "merge": ">=1.2.1",
-    "qunit-dom": "^0.6.3",
+    "qunit-dom": "^0.7.1",
     "toastr": "^2.1.4"
   },
   "engines": {
-    "node": "^4.5 || 6.* || >= 7.*"
+    "node": "6.* || 8.* || >= 10.*"
   },
   "dependencies": {
     "@coreui/ajax": "1.0.10",
@@ -45,10 +45,10 @@
     "ember-cli-app-version": "^3.2.0",
     "ember-cli-babel": "^7.5.0",
     "ember-cli-bootstrap-4": "^0.9.1",
-    "ember-cli-dependency-checker": "^2.2.1",
+    "ember-cli-dependency-checker": "^3.0.0",
     "ember-cli-eslint": "^4.2.3",
     "ember-cli-gravatar": "^3.10.2",
-    "ember-cli-htmlbars": "^2.0.5",
+    "ember-cli-htmlbars": "^3.0.0",
     "ember-cli-htmlbars-inline-precompile": "^1.0.5",
     "ember-cli-inject-live-reload": "^1.10.2",
     "ember-cli-sass": "^7.2.0",
@@ -68,7 +68,7 @@
     "ember-resolver": "^4.5.6",
     "ember-route-action-helper": "^2.0.6",
     "ember-simple-auth": "^1.7.0",
-    "ember-source": "^2.18.2",
+    "ember-source": "^3.4.0",
     "ember-sticky-element": "^0.2.3",
     "ember-toastr": "^1.7.1",
     "ember-truth-helpers": "^2.1.0",
