@@ -1,3 +1,4 @@
+import { computed } from '@ember/object';
 import Controller from '@ember/controller';
 import ENV from 'pass-ember/config/environment';
 import { inject as service } from '@ember/service';
@@ -15,7 +16,7 @@ export default Controller.extend({
     });
   }.on('init'),
 
-  externalSubmission: Ember.computed('externalSubmissionsMetadata', 'model.sub.submitted', function () {
+  externalSubmission: computed('externalSubmissionsMetadata', 'model.sub.submitted', function () {
     if (!this.get('model.sub.submitted')) {
       return [];
     }
@@ -33,14 +34,14 @@ export default Controller.extend({
    * This map is then turned into an array for use in the template
    */
   externalRepoMap: {},
-  hasVisitedWeblink: Ember.computed('externalRepoMap', function () {
+  hasVisitedWeblink: computed('externalRepoMap', function () {
     return Object.values(this.get('externalRepoMap')).every(val => val === true);
   }),
 
   /**
    * Get enough information about 'web-link' repositories to display to a user.
    */
-  externalSubmissionsMetadata: Ember.computed('model.sub.submitted', 'model.sub.repositories', function () {
+  externalSubmissionsMetadata: computed('model.sub.submitted', 'model.sub.repositories', function () {
     let result = [];
 
     this.get('model.sub.repositories').filter(repo => repo.get('_isWebLink'))
@@ -55,7 +56,7 @@ export default Controller.extend({
     return result;
   }),
 
-  weblinkRepos: Ember.computed('externalSubmissionsMetadata', function () {
+  weblinkRepos: computed('externalSubmissionsMetadata', function () {
     let md = this.get('externalSubmissionsMetadata');
 
     if (Array.isArray(md) && md.length > 0) {
@@ -68,7 +69,7 @@ export default Controller.extend({
     return [];
   }),
 
-  mustVisitWeblink: Ember.computed('weblinkRepos', 'model', function () {
+  mustVisitWeblink: computed('weblinkRepos', 'model', function () {
     const weblinkExists = this.get('weblinkRepos').length > 0;
     const isSubmitter = this.get('currentUser.user.id') === this.get('model.sub.submitter.id');
     const isProxySubmission = this.get('model.sub.isProxySubmission');
@@ -76,7 +77,7 @@ export default Controller.extend({
     return weblinkExists && isSubmitter && isProxySubmission && !isSubmitted;
   }),
 
-  disableSubmit: Ember.computed(
+  disableSubmit: computed(
     'mustVisitWeblink',
     'hasVisitedWeblink',
     function () {
@@ -91,7 +92,7 @@ export default Controller.extend({
    *
    * Explicitly exclude 'web-link' repositories.
    */
-  repoMap: Ember.computed('model.deposits', 'model.repoCopies', function () {
+  repoMap: computed('model.deposits', 'model.repoCopies', function () {
     let hasStuff = false;
     const repos = this.get('model.repos');
     const deps = this.get('model.deposits');
@@ -148,19 +149,19 @@ export default Controller.extend({
     return null;
   }),
 
-  isSubmitter: Ember.computed('currentUser.user', 'model', function () {
+  isSubmitter: computed('currentUser.user', 'model', function () {
     return (
       this.get('model.sub.submitter.id') === this.get('currentUser.user.id')
     );
   }),
 
-  isPreparer: Ember.computed('currentUser.user', 'model', function () {
+  isPreparer: computed('currentUser.user', 'model', function () {
     return this.get('model.sub.preparers')
       .map(x => x.get('id'))
       .includes(this.get('currentUser.user.id'));
   }),
 
-  submissionNeedsPreparer: Ember.computed(
+  submissionNeedsPreparer: computed(
     'currentUser.user',
     'model',
     function () {
@@ -168,7 +169,7 @@ export default Controller.extend({
     }
   ),
 
-  submissionNeedsSubmitter: Ember.computed(
+  submissionNeedsSubmitter: computed(
     'currentUser.user',
     'model',
     'model.sub.submissionStatus',
@@ -180,7 +181,7 @@ export default Controller.extend({
     }
   ),
 
-  displaySubmitterName: Ember.computed('model.sub', function () {
+  displaySubmitterName: computed('model.sub', function () {
     if (this.get('model.sub.submitter.displayName')) {
       return this.get('model.sub.submitter.displayName');
     } else if (this.get('model.sub.submitter.firstName')) {
@@ -191,7 +192,7 @@ export default Controller.extend({
     return '';
   }),
 
-  displaySubmitterEmail: Ember.computed('model.sub', function () {
+  displaySubmitterEmail: computed('model.sub', function () {
     if (this.get('model.sub.submitter.email')) {
       return this.get('model.sub.submitter.email');
     } else if (this.get('model.sub.submitterEmail')) {

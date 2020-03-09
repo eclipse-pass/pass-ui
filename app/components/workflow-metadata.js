@@ -1,3 +1,4 @@
+import { computed } from '@ember/object';
 import Component from '@ember/component';
 import _ from 'lodash';
 import { inject as service } from '@ember/service';
@@ -24,7 +25,7 @@ export default Component.extend({
   workflow: service('workflow'),
   schemaService: service('metadata-schema'),
 
-  doiInfo: Ember.computed('workflow.doiInfo', function () {
+  doiInfo: computed('workflow.doiInfo', function () {
     return this.get('workflow').getDoiInfo();
   }),
   doiService: service('doi'),
@@ -32,7 +33,7 @@ export default Component.extend({
   /**
    * Schema that is currently being shown to the user
    */
-  currentSchema: Ember.computed('schemas', 'currentFormStep', function () {
+  currentSchema: computed('schemas', 'currentFormStep', function () {
     const schemas = this.get('schemas');
     if (schemas && schemas.length > 0) {
       const newSchema = this.preprocessSchema(schemas[this.get('currentFormStep')]);
@@ -41,11 +42,11 @@ export default Component.extend({
   }),
   currentFormStep: 0, // Current step #
 
-  onlySingleSchema: Ember.computed('schemas', function () {
+  onlySingleSchema: computed('schemas', function () {
     return this.get('schemas').length === 1;
   }),
 
-  displayFormStep: Ember.computed('currentFormStep', function () {
+  displayFormStep: computed('currentFormStep', function () {
     return this.get('currentFormStep') + 1;
   }),
 

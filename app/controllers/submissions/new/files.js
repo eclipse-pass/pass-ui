@@ -1,22 +1,23 @@
-import Controller from '@ember/controller';
+import { computed } from '@ember/object';
+import Controller, { inject as controller } from '@ember/controller';
 import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 
 export default Controller.extend({
   workflow: service('workflow'),
-  parent: Ember.inject.controller('submissions.new'),
+  parent: controller('submissions.new'),
   submission: alias('model.newSubmission'),
   files: alias('model.files'),
   publication: alias('model.publication'),
   submissionEvents: alias('model.submissionEvents'),
-  nextTabIsActive: Ember.computed('workflow.maxStep', function () {
+  nextTabIsActive: computed('workflow.maxStep', function () {
     return (this.get('workflow').getMaxStep() > 6);
   }),
   loadingNext: false,
-  needValidation: Ember.computed('nextTabIsActive', 'loadingNext', function () {
+  needValidation: computed('nextTabIsActive', 'loadingNext', function () {
     return (this.get('nextTabIsActive') || this.get('loadingNext'));
   }),
-  newFiles: Ember.computed('workflow.filesTemp', {
+  newFiles: computed('workflow.filesTemp', {
     get(key) {
       return this.get('workflow').getFilesTemp();
     },

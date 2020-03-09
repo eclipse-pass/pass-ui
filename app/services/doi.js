@@ -1,4 +1,5 @@
-import Service from '@ember/service';
+import { isArray } from '@ember/array';
+import Service, { inject as service } from '@ember/service';
 import ENV from 'pass-ember/config/environment';
 import { task } from 'ember-concurrency';
 
@@ -10,8 +11,8 @@ import { task } from 'ember-concurrency';
  * Sample DOI data as JSON: https://gist.github.com/jabrah/c268c6b027bd2646595e266f872c883c
  */
 export default Service.extend({
-  store: Ember.inject.service('store'),
-  ajax: Ember.inject.service(),
+  store: service('store'),
+  ajax: service(),
 
   doiServiceUrl: ENV.doiService.url,
   metadataSchemaUri: ENV.metadataSchemaUri,
@@ -94,7 +95,7 @@ export default Service.extend({
 
     // Add issns key in expected format by parsing journal issns.
     doiCopy.issns = [];
-    if (Ember.isArray(journal.get('issns'))) {
+    if (isArray(journal.get('issns'))) {
       journal.get('issns').forEach((s) => {
         let i = s.indexOf(':');
         let value = {};

@@ -1,4 +1,5 @@
-import Controller from '@ember/controller';
+import { computed } from '@ember/object';
+import Controller, { inject as controller } from '@ember/controller';
 import { alias } from '@ember/object/computed';
 
 export default Controller.extend({
@@ -6,14 +7,14 @@ export default Controller.extend({
   files: alias('model.files'),
   publication: alias('model.publication'),
   submissionEvents: alias('model.submissionEvents'),
-  parent: Ember.inject.controller('submissions.new'),
-  waitingMessage: Ember.computed('parent.waitingMessage', function () {
+  parent: controller('submissions.new'),
+  waitingMessage: computed('parent.waitingMessage', function () {
     return this.get('parent').get('waitingMessage');
   }),
-  uploading: Ember.computed('parent.uploading', function () {
+  uploading: computed('parent.uploading', function () {
     return this.get('parent').get('uploading');
   }),
-  comment: Ember.computed('parent.comment', {
+  comment: computed('parent.comment', {
     get(key) {
       return this.get('parent').get('comment');
     },

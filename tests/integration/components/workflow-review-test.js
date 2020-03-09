@@ -1,3 +1,5 @@
+import { A } from '@ember/array';
+import EmberObject from '@ember/object';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
@@ -7,12 +9,12 @@ module('Integration | Component | workflow review', (hooks) => {
   setupRenderingTest(hooks);
 
   test('it renders', function (assert) {
-    let submission = Ember.Object.create({
+    let submission = EmberObject.create({
       metadata: '[]',
       repositories: []
     });
-    let publication = Ember.Object.create({});
-    let files = [Ember.Object.create({})];
+    let publication = EmberObject.create({});
+    let files = [EmberObject.create({})];
 
     this.set('submission', submission);
     this.set('publication', publication);
@@ -39,27 +41,27 @@ module('Integration | Component | workflow review', (hooks) => {
     let controller = this.owner.lookup('controller:submissions/new/review');
     assert.ok(controller);
 
-    let repo1 = Ember.Object.create({
+    let repo1 = EmberObject.create({
       id: 'test:repo1', integrationType: 'full', agreementText: 'Cows are the best', name: 'repo1'
     });
-    let repo2 = Ember.Object.create({ id: 'test:repo2', integrationType: 'web-link', name: 'repo2' });
+    let repo2 = EmberObject.create({ id: 'test:repo2', integrationType: 'web-link', name: 'repo2' });
     let submitted = false;
 
-    this.owner.register('service:current-user', Ember.Object.extend({
+    this.owner.register('service:current-user', EmberObject.extend({
       user: { id: 'preparer' }
     }));
 
-    let submission = Ember.Object.create({
+    let submission = EmberObject.create({
       submitter: {
         id: 'pi'
       },
-      preparers: Ember.A([this.get('currentUser.user')]),
-      repositories: Ember.A([repo1, repo2]),
+      preparers: A([this.get('currentUser.user')]),
+      repositories: A([repo1, repo2]),
       metadata: '[]'
     });
 
-    let publication = Ember.Object.create({});
-    let files = [Ember.Object.create({})];
+    let publication = EmberObject.create({});
+    let files = [EmberObject.create({})];
 
     this.set('submission', submission);
     this.set('publication', publication);
@@ -91,14 +93,14 @@ module('Integration | Component | workflow review', (hooks) => {
     let controller = this.owner.lookup('controller:submissions/new/review');
     assert.ok(controller);
 
-    let repo1 = Ember.Object.create({
+    let repo1 = EmberObject.create({
       id: 'test:repo1',
       integrationType: 'full',
       agreementText: 'Cows are the best',
       name: 'repo1',
       _isWebLink: false
     });
-    let repo2 = Ember.Object.create({
+    let repo2 = EmberObject.create({
       id: 'test:repo2',
       integrationType: 'web-link',
       url: '',
@@ -107,21 +109,21 @@ module('Integration | Component | workflow review', (hooks) => {
     });
     let submitted = false;
 
-    this.owner.register('service:current-user', Ember.Object.extend({
+    this.owner.register('service:current-user', EmberObject.extend({
       user: { id: 'pi' }
     }));
 
-    let submission = Ember.Object.create({
+    let submission = EmberObject.create({
       submitter: {
         id: 'pi'
       },
-      preparers: Ember.A([this.get('currentUser.user')]),
-      repositories: Ember.A([repo1, repo2]),
+      preparers: A([this.get('currentUser.user')]),
+      repositories: A([repo1, repo2]),
       metadata: '[]'
     });
 
-    let publication = Ember.Object.create({});
-    let files = [Ember.Object.create({})];
+    let publication = EmberObject.create({});
+    let files = [EmberObject.create({})];
 
     this.set('submission', submission);
     this.set('publication', publication);
@@ -165,7 +167,7 @@ module('Integration | Component | workflow review', (hooks) => {
     let controller = this.owner.lookup('controller:submissions/new/review');
     assert.ok(controller);
 
-    let repo2 = Ember.Object.create({
+    let repo2 = EmberObject.create({
       id: 'test:repo2',
       integrationType: 'web-link',
       name: 'repo2',
@@ -173,21 +175,21 @@ module('Integration | Component | workflow review', (hooks) => {
     });
     let submitted = false;
 
-    this.owner.register('service:current-user', Ember.Object.extend({
+    this.owner.register('service:current-user', EmberObject.extend({
       user: { id: 'pi' }
     }));
 
-    let submission = Ember.Object.create({
+    let submission = EmberObject.create({
       submitter: {
         id: 'pi'
       },
-      preparers: Ember.A([this.get('currentUser.user')]),
-      repositories: Ember.A([repo2]),
+      preparers: A([this.get('currentUser.user')]),
+      repositories: A([repo2]),
       metadata: '[]'
     });
 
-    let publication = Ember.Object.create({});
-    let files = [Ember.Object.create({})];
+    let publication = EmberObject.create({});
+    let files = [EmberObject.create({})];
 
     this.set('submission', submission);
     this.set('publication', publication);
@@ -221,26 +223,26 @@ module('Integration | Component | workflow review', (hooks) => {
     let controller = this.owner.lookup('controller:submissions/new/review');
     assert.ok(controller);
 
-    let repo1 = Ember.Object.create({
+    let repo1 = EmberObject.create({
       id: 'test:repo1', integrationType: 'full', agreementText: 'Cows are the best', name: 'repo1'
     });
     let submitted = false;
 
-    this.owner.register('service:current-user', Ember.Object.extend({
+    this.owner.register('service:current-user', EmberObject.extend({
       user: { id: 'pi' }
     }));
 
-    let submission = Ember.Object.create({
+    let submission = EmberObject.create({
       submitter: {
         id: 'pi'
       },
-      preparers: Ember.A([this.get('currentUser.user')]),
-      repositories: Ember.A([repo1]),
+      preparers: A([this.get('currentUser.user')]),
+      repositories: A([repo1]),
       metadata: '[]'
     });
 
-    let publication = Ember.Object.create({});
-    let files = [Ember.Object.create({})];
+    let publication = EmberObject.create({});
+    let files = [EmberObject.create({})];
 
     this.set('submission', submission);
     this.set('publication', publication);

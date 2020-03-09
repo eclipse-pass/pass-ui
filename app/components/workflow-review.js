@@ -1,3 +1,5 @@
+import { computed } from '@ember/object';
+import { A } from '@ember/array';
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import { task } from 'ember-concurrency';
@@ -5,17 +7,17 @@ import { task } from 'ember-concurrency';
 export default Component.extend({
   workflow: service('workflow'),
   currentUser: service('current-user'),
-  isValidated: Ember.A(),
+  isValidated: A(),
   init() {
     this._super(...arguments);
     $('[data-toggle="tooltip"]').tooltip();
   },
   externalRepoMap: {},
-  filesTemp: Ember.computed('workflow.filesTemp', function () {
+  filesTemp: computed('workflow.filesTemp', function () {
     return this.get('workflow').getFilesTemp();
   }),
-  parsedFiles: Ember.computed('filesTemp', 'previouslyUploadedFiles', function () {
-    let newArr = Ember.A();
+  parsedFiles: computed('filesTemp', 'previouslyUploadedFiles', function () {
+    let newArr = A();
     if (this.get('filesTemp')) {
       newArr.addObjects(this.get('filesTemp'));
     }
@@ -25,28 +27,28 @@ export default Component.extend({
     return newArr;
   }),
 
-  hasVisitedWeblink: Ember.computed('externalRepoMap', function () {
+  hasVisitedWeblink: computed('externalRepoMap', function () {
     return Object.values(this.get('externalRepoMap')).every(val => val === true);
   }),
-  weblinkRepos: Ember.computed('submission.repositories', function () {
+  weblinkRepos: computed('submission.repositories', function () {
     const repos = this.get('submission.repositories').filter(repo => repo.get('_isWebLink'));
     repos.forEach(repo => (this.get('externalRepoMap')[repo.get('id')] = false)); // eslint-disable-line
     return repos;
   }),
-  mustVisitWeblink: Ember.computed('weblinkRepos', 'model', function () {
+  mustVisitWeblink: computed('weblinkRepos', 'model', function () {
     const weblinkExists = this.get('weblinkRepos.length') > 0;
     const isSubmitter = this.get('currentUser.user.id') === this.get('submission.submitter.id');
     return weblinkExists && isSubmitter;
   }),
-  disableSubmit: Ember.computed('mustVisitWeblink', 'hasVisitedWeblink', function () {
+  disableSubmit: computed('mustVisitWeblink', 'hasVisitedWeblink', function () {
     const needsToVisitWeblink = this.get('mustVisitWeblink') && !this.get('hasVisitedWeblink');
     return needsToVisitWeblink;
   }),
-  userIsPreparer: Ember.computed('submission', 'currentUser.user', function () {
+  userIsPreparer: computed('submission', 'currentUser.user', function () {
     const isNotSubmitter = this.get('submission.submitter.id') !== this.get('currentUser.user.id');
     return (this.get('submission.isProxySubmission') && isNotSubmitter);
   }),
-  submitButtonText: Ember.computed('userIsPreparer', function () {
+  submitButtonText: computed('userIsPreparer', function () {
     return this.get('userIsPreparer') ? 'Request approval' : 'Submit';
   }),
 

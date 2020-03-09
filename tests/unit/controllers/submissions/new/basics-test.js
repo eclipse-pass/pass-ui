@@ -1,3 +1,4 @@
+import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 
@@ -12,7 +13,7 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
 
   test('ensure email format validation works', function (assert) {
     let controller = this.owner.lookup('controller:submissions/new/basics');
-    let submission = Ember.Object.create({
+    let submission = EmberObject.create({
       submitterEmailDisplay: 'badtestemail',
       repositories: [],
       grants: []
@@ -47,11 +48,11 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
 
   test('check submitter validation', function (assert) {
     let controller = this.owner.lookup('controller:submissions/new/basics');
-    let submission = Ember.Object.create({
+    let submission = EmberObject.create({
       repositories: [],
       grants: []
     });
-    let submitter = Ember.Object.create({
+    let submitter = EmberObject.create({
       id: 'https://fake.id'
     });
     let model = {
@@ -73,8 +74,8 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
 
   test('check title and journal validation', function (assert) {
     let controller = this.owner.lookup('controller:submissions/new/basics');
-    let submission = Ember.Object.create({ });
-    let publication = Ember.Object.create({
+    let submission = EmberObject.create({ });
+    let publication = EmberObject.create({
       journal: []
     });
     let model = {
@@ -98,8 +99,8 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
 
   test('check validateAndLoadTab rejects empty journal and title', function (assert) {
     let controller = this.owner.lookup('controller:submissions/new/basics');
-    let submission = Ember.Object.create({ });
-    let publication = Ember.Object.create({
+    let submission = EmberObject.create({ });
+    let publication = EmberObject.create({
       journal: []
     });
     let model = {
@@ -124,10 +125,10 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
     assert.expect(9);
     let controller = this.owner.lookup('controller:submissions/new/basics');
     let loadTabAccessed = false;
-    let submission = Ember.Object.create({
+    let submission = EmberObject.create({
       isProxySubmission: true
     });
-    let publication = Ember.Object.create({
+    let publication = EmberObject.create({
       title: 'Test publication title',
       journal: {
         id: 'journal:id'
@@ -164,7 +165,7 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
     let subSaved = false;
 
     let controller = this.owner.lookup('controller:submissions/new/basics');
-    let submission = Ember.Object.create({
+    let submission = EmberObject.create({
       isProxySubmission: true,
       submitterName: 'Test Submitter',
       submitterEmail: 'mailto:test@email.com',
@@ -175,7 +176,7 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
         return Promise.resolve();
       }
     });
-    let publication = Ember.Object.create({
+    let publication = EmberObject.create({
       title: 'Test publication title',
       journal: {
         id: 'journal:id'
@@ -218,14 +219,14 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
 
     const controller = this.owner.lookup('controller:submissions/new/basics');
     const model = {
-      publication: Ember.Object.create({
+      publication: EmberObject.create({
         title: 'This is the moo-iest',
-        journal: Ember.Object.create({
+        journal: EmberObject.create({
           id: 'journal:id'
         }),
         save: () => Promise.resolve(assert.ok(true))
       }),
-      newSubmission: Ember.Object.create({
+      newSubmission: EmberObject.create({
         save: () => Promise.resolve(assert.ok(true))
       })
     };

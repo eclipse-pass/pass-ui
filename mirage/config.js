@@ -14,6 +14,8 @@ import schemas from './routes/schemas';
 export default function () {
   this.urlPrefix = ENV.host;
 
+  this.logging = true;
+
   users(this);
   elastic(this);
   journals(this);

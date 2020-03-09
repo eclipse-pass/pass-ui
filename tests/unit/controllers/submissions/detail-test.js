@@ -1,3 +1,4 @@
+import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 
@@ -18,12 +19,12 @@ module('Unit | Controller | submissions/detail', (hooks) => {
       value: 'moo'
     });
 
-    const submission = Ember.Object.create();
+    const submission = EmberObject.create();
 
     const controller = this.owner.lookup('controller:submissions/detail');
     assert.ok(controller, 'controller not found');
 
-    controller.set('submissionHandler', Ember.Object.create({
+    controller.set('submissionHandler', EmberObject.create({
       deleteSubmission() {
         assert.ok(true);
         return Promise.resolve();

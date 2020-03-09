@@ -1,3 +1,5 @@
+import { computed } from '@ember/object';
+import { A } from '@ember/array';
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 
@@ -11,7 +13,7 @@ export default Component.extend({
 
     const publicationId = this.get('record.publication.id');
     if (!publicationId) {
-      this.set('repoCopies', Ember.A());
+      this.set('repoCopies', A());
       return;
     }
     this.get('store').query('repositoryCopy', {
@@ -43,7 +45,7 @@ export default Component.extend({
    *    }
    *  ]
    */
-  displayIds: Ember.computed('repoCopies', function () {
+  displayIds: computed('repoCopies', function () {
     const rc = this.get('repoCopies');
     if (!rc) {
       return [];

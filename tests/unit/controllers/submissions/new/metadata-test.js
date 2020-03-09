@@ -1,3 +1,4 @@
+import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 
@@ -15,8 +16,8 @@ module('Unit | Controller | submissions/new/metadata', (hooks) => {
 
     let subSaved = false;
 
-    const model = Ember.Object.create({
-      newSubmission: Ember.Object.create({
+    const model = EmberObject.create({
+      newSubmission: EmberObject.create({
         save: () => {
           subSaved = true;
           return Promise.resolve();
@@ -36,8 +37,8 @@ module('Unit | Controller | submissions/new/metadata', (hooks) => {
     let controller = this.owner.lookup('controller:submissions/new/metadata');
 
     let subSaved = false;
-    const model = Ember.Object.create({
-      newSubmission: Ember.Object.create({
+    const model = EmberObject.create({
+      newSubmission: EmberObject.create({
         save: () => {
           subSaved = true;
           return Promise.resolve();

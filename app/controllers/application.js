@@ -1,3 +1,4 @@
+import { computed } from '@ember/object';
 import Controller from '@ember/controller';
 import config from '../config/environment';
 import { inject as service } from '@ember/service';
@@ -14,23 +15,23 @@ export default Controller.extend({
   rootURL: config.rootURL,
 
   wideRoutes: ['grants.index', 'grants.detail', 'submissions.index'],
-  fullWidth: Ember.computed('currentRouteName', function () {
+  fullWidth: computed('currentRouteName', function () {
     return this.get('wideRoutes').includes(this.get('currentRouteName'));
   }),
 
-  assetsUri: Ember.computed('staticConfig', function () {
+  assetsUri: computed('staticConfig', function () {
     return this.get('staticConfig.assetsUri');
   }),
 
-  brand: Ember.computed('staticConfig', function () {
+  brand: computed('staticConfig', function () {
     return this.get('staticConfig.branding');
   }),
 
-  logoUri: Ember.computed('brand', function () {
+  logoUri: computed('brand', function () {
     return this._staticUrl(this.get('brand.logo'));
   }),
 
-  homepage: Ember.computed('brand', function () {
+  homepage: computed('brand', function () {
     return this.get('brand.homepage');
   }),
 

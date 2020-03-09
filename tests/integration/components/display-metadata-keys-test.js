@@ -1,3 +1,4 @@
+import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { click, render } from '@ember/test-helpers';
@@ -28,7 +29,7 @@ module('Integration | Component | display-metadata-keys', (hooks) => {
       title: 'This is the title moo',
       'journal-title': 'Journal moo'
     };
-    const submission = Ember.Object.create({
+    const submission = EmberObject.create({
       metadata: JSON.stringify(mockData)
     });
 
@@ -91,7 +92,7 @@ module('Integration | Component | display-metadata-keys', (hooks) => {
       }
     };
 
-    const mockSchemaService = Ember.Object.create({
+    const mockSchemaService = EmberObject.create({
       displayMetadata(submission) {
         return [
           { label: 'Journal nlmta-id', value: 'MOO-ID', isArray: false },

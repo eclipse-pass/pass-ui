@@ -1,3 +1,5 @@
+import EmberObject from '@ember/object';
+import Service from '@ember/service';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 
@@ -5,9 +7,9 @@ module('Unit | Controller | dashboard', (hooks) => {
   setupTest(hooks);
 
   test('should properly identify a submitter', function (assert) {
-    this.owner.register('service:currentUser', Ember.Service.extend({
+    this.owner.register('service:currentUser', Service.extend({
       /* mock code */
-      user: Ember.Object.create({
+      user: EmberObject.create({
         roles: ['submitter', 'admin', 'moderator']
       })
     }));
@@ -32,9 +34,9 @@ module('Unit | Controller | dashboard', (hooks) => {
     // assert.equal(controller.get('propB'), 'Testing Rocks!', 'propB updated');
   });
   test('should properly identify someone who isn\'t a submitter', function (assert) {
-    this.owner.register('service:currentUser', Ember.Service.extend({
+    this.owner.register('service:currentUser', Service.extend({
       /* mock code */
-      user: Ember.Object.create({
+      user: EmberObject.create({
         roles: ['admin', 'moderator']
       })
     }));

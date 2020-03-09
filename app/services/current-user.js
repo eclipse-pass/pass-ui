@@ -1,5 +1,4 @@
-import Ember from 'ember';
-import Service from '@ember/service';
+import Service, { inject as service } from '@ember/service';
 import ENV from 'pass-ember/config/environment';
 import { task } from 'ember-concurrency';
 
@@ -8,8 +7,8 @@ import { task } from 'ember-concurrency';
  */
 export default Service.extend({
   whoamiUrl: ENV.userService.url,
-  store: Ember.inject.service(),
-  ajax: Ember.inject.service(),
+  store: service(),
+  ajax: service(),
 
   user: null,
 

@@ -1,3 +1,5 @@
+import EmberObject from '@ember/object';
+import Service from '@ember/service';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
@@ -8,8 +10,8 @@ module('Integration | Component | submissions repoid cell', (hooks) => {
 
   // Inject mocked store that on query returns a single user
   hooks.beforeEach(function () {
-    let store = Ember.Service.extend({
-      query: (type, q) => Promise.resolve([Ember.Object.create({ id: 'test' })])
+    let store = Service.extend({
+      query: (type, q) => Promise.resolve([EmberObject.create({ id: 'test' })])
     });
 
     run(() => {
@@ -34,13 +36,13 @@ module('Integration | Component | submissions repoid cell', (hooks) => {
   test('it renders with when data is missing', async function (assert) {
     assert.expect(1);
 
-    this.set('store', Ember.Service.extend({
+    this.set('store', Service.extend({
       query(type, q) {
         assert.ok(true);
       }
     }));
-    const record = Ember.Object.create({
-      publication: Ember.Object.create({})
+    const record = EmberObject.create({
+      publication: EmberObject.create({})
     });
     this.set('record', record);
 

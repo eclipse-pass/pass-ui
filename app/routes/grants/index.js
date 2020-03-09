@@ -1,3 +1,4 @@
+import { A } from '@ember/array';
 import CheckSessionRoute from '../check-session-route';
 import { hash, defer } from 'rsvp';
 import { inject as service } from '@ember/service';
@@ -56,7 +57,7 @@ export default CheckSessionRoute.extend({
 
         results.push({
           grant,
-          submissions: Ember.A()
+          submissions: A()
         });
       });
 

@@ -1,3 +1,5 @@
+import EmberObject from '@ember/object';
+import Service from '@ember/service';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { run } from '@ember/runloop';
@@ -50,7 +52,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
     };
     this.set('mockSchema', mockSchema);
 
-    const mockAjax = Ember.Service.extend({
+    const mockAjax = Service.extend({
       request() {
         return Promise.resolve([mockSchema]);
       }
@@ -80,7 +82,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
     let triedWithMerge = false;
     let triedWithoutMerge = false;
 
-    service.set('ajax', Ember.Object.create({
+    service.set('ajax', EmberObject.create({
       request: (url, options) => {
         if (url.includes('merge')) {
           triedWithMerge = true;
@@ -224,7 +226,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
 
   test('Should format complex metadata', async function (assert) {
     const service = this.owner.lookup('service:metadata-schema');
-    const submission = Ember.Object.create({
+    const submission = EmberObject.create({
       repositories: [],
       metadata: JSON.stringify({
         issns: [
@@ -251,7 +253,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
 
   test('Key not found in whitelist is not displayed', async function (assert) {
     const service = this.owner.lookup('service:metadata-schema');
-    const submission = Ember.Object.create({
+    const submission = EmberObject.create({
       repositories: [],
       metadata: JSON.stringify({ name: 'Bessie Cow' })
     });

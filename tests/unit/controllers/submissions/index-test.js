@@ -1,3 +1,5 @@
+import EmberObject from '@ember/object';
+import Service from '@ember/service';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 
@@ -5,7 +7,7 @@ module('Unit | Controller | submissions/index', (hooks) => {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
-    const mockStaticConfig = Ember.Service.extend({
+    const mockStaticConfig = Service.extend({
       getStaticConfig: () => Promise.resolve({
         assetsUri: '',
         branding: {
@@ -26,7 +28,7 @@ module('Unit | Controller | submissions/index', (hooks) => {
 
   test('properly returns admin roles', function (assert) {
     let controller = this.owner.lookup('controller:submissions/index');
-    controller.set('currentUser.user', Ember.Object.create({
+    controller.set('currentUser.user', EmberObject.create({
       isAdmin: true
     }));
     assert.equal(controller.get('columns.length'), 6);
@@ -34,7 +36,7 @@ module('Unit | Controller | submissions/index', (hooks) => {
 
   test('properly returns submitter roles', function (assert) {
     let controller = this.owner.lookup('controller:submissions/index');
-    controller.set('currentUser.user', Ember.Object.create({
+    controller.set('currentUser.user', EmberObject.create({
       isSubmitter: true
     }));
     assert.equal(controller.get('columns.length'), 7);

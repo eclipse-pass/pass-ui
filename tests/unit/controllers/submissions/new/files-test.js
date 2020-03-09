@@ -1,3 +1,4 @@
+import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 
@@ -13,10 +14,10 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
   test('No manuscript files, user is submitter, stops transition', function (assert) {
     let controller = this.owner.lookup('controller:submissions/new/files');
     let loadTabAccessed = false;
-    this.owner.register('controller:submissions.new', Ember.Object.extend({
+    this.owner.register('controller:submissions.new', EmberObject.extend({
       userIsSubmitter: true
     }));
-    this.owner.register('service:workflow', Ember.Object.extend({
+    this.owner.register('service:workflow', EmberObject.extend({
       getFilesTemp() { return []; },
       getMaxStep() { return 6; }
     }));
@@ -34,10 +35,10 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
   test('No manuscript files, user not submitter, warns before transition', function (assert) {
     let controller = this.owner.lookup('controller:submissions/new/files');
     let loadTabAccessed = false;
-    this.owner.register('controller:submissions.new', Ember.Object.extend({
+    this.owner.register('controller:submissions.new', EmberObject.extend({
       userIsSubmitter: false
     }));
-    this.owner.register('service:workflow', Ember.Object.extend({
+    this.owner.register('service:workflow', EmberObject.extend({
       getFilesTemp() { return []; },
       getMaxStep() { return 7; }
     }));
@@ -56,13 +57,13 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
   test('Multiple manuscript files stops transition', function (assert) {
     let controller = this.owner.lookup('controller:submissions/new/files');
     let loadTabAccessed = false;
-    let file = Ember.Object.create({
+    let file = EmberObject.create({
       fileRole: 'manuscript'
     });
-    this.owner.register('controller:submissions.new', Ember.Object.extend({
+    this.owner.register('controller:submissions.new', EmberObject.extend({
       userIsSubmitter: false
     }));
-    this.owner.register('service:workflow', Ember.Object.extend({
+    this.owner.register('service:workflow', EmberObject.extend({
       getFilesTemp() {
         return [file];
       },
@@ -83,10 +84,10 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
   test('Valid files page does transition', function (assert) {
     let controller = this.owner.lookup('controller:submissions/new/files');
 
-    this.owner.register('controller:submissions.new', Ember.Object.extend({
+    this.owner.register('controller:submissions.new', EmberObject.extend({
       userIsSubmitter: false
     }));
-    this.owner.register('service:workflow', Ember.Object.extend({
+    this.owner.register('service:workflow', EmberObject.extend({
       getFilesTemp() {
         return [];
       },
@@ -95,13 +96,13 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
 
     let subSaved = false;
 
-    let file = Ember.Object.create({
+    let file = EmberObject.create({
       fileRole: 'manuscript'
     });
 
     let model = {
       files: [file],
-      newSubmission: Ember.Object.create({
+      newSubmission: EmberObject.create({
         save: () => {
           subSaved = true;
           return Promise.resolve();

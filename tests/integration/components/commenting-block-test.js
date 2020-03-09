@@ -1,3 +1,4 @@
+import { find } from '@ember/test-helpers';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
@@ -11,7 +12,7 @@ module('Integration | Component | commenting block', (hooks) => {
 
     this.render(hbs`{{commenting-block}}`);
 
-    assert.equal(this.$().text().trim(), '');
+    assert.equal(find('*').textContent.trim(), '');
 
     // Template block usage:
     this.render(hbs`
@@ -20,6 +21,6 @@ module('Integration | Component | commenting block', (hooks) => {
       {{/commenting-block}}
     `);
 
-    assert.equal(this.$().text().trim(), '');
+    assert.equal(find('*').textContent.trim(), '');
   });
 });

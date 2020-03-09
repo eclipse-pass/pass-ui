@@ -1,3 +1,4 @@
+import { A } from '@ember/array';
 import Service from '@ember/service';
 // service to hold workflow form state information that is not part of the model
 export default Service.extend({
@@ -15,7 +16,7 @@ export default Service.extend({
   filesTemp: [],
   defaultRepoLoaded: false, // you only want to load the default setting on first access, after that is should respect he user's choice.
 
-  addedGrants: Ember.A([]),
+  addedGrants: A([]),
 
   resetWorkflow() {
     this.setCurrentStep(0);

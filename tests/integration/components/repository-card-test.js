@@ -1,3 +1,4 @@
+import EmberObject from '@ember/object';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
@@ -7,7 +8,7 @@ module('Integration | Component | repository card', (hooks) => {
   setupRenderingTest(hooks);
 
   test('it renders', async function (assert) {
-    const repository = Ember.Object.create();
+    const repository = EmberObject.create();
     this.set('repository', repository);
     await render(hbs`{{repository-card repository=repository}}`);
 
@@ -18,7 +19,7 @@ module('Integration | Component | repository card', (hooks) => {
     assert.expect(1);
 
     this.set('selected', true);
-    this.set('repository', Ember.Object.create({ _selected: true }));
+    this.set('repository', EmberObject.create({ _selected: true }));
 
     await render(hbs`{{repository-card
       repository=repository
@@ -28,14 +29,14 @@ module('Integration | Component | repository card', (hooks) => {
   });
 
   test('Selected repos are checked by default', async function (assert) {
-    this.set('repository', Ember.Object.create({ _selected: true }));
+    this.set('repository', EmberObject.create({ _selected: true }));
 
     await render(hbs`{{repository-card repository=repository choice=true}}`);
     assert.ok(this.element.querySelector('input[type="checkbox"]').checked, 'Checkbox should be checked');
   });
 
   test('Repos that are not "selected" are unchecked by default', async function (assert) {
-    this.set('repository', Ember.Object.create({ _selected: false }));
+    this.set('repository', EmberObject.create({ _selected: false }));
 
     await render(hbs`{{repository-card repository=repository choice=true}}`);
     assert.notOk(this.element.querySelector('input[type="checkbox"]').checked, 'Checkbox should NOT be checked');
@@ -44,7 +45,7 @@ module('Integration | Component | repository card', (hooks) => {
   test('Clicking bubbles the "toggleRepository" action with a Repository and status', async function (assert) {
     assert.expect(4);
 
-    const repo = Ember.Object.create({ name: 'Moo-pository', _selected: false });
+    const repo = EmberObject.create({ name: 'Moo-pository', _selected: false });
     this.set('repository', repo);
 
     this.set('toggleRepository', (repository, status) => {

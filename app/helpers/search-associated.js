@@ -1,7 +1,8 @@
-import { helper } from '@ember/component/helper';
+import { setProperties, observer } from '@ember/object';
+import Helper, { helper } from '@ember/component/helper';
 import { inject as service } from '@ember/service';
 
-export default Ember.Helper.extend({
+export default Helper.extend({
   store: service('store'),
 
   type: null,
@@ -37,7 +38,7 @@ export default Ember.Helper.extend({
       return '';
     }
 
-    Ember.setProperties(this, {
+    setProperties(this, {
       type: params[0],
       propertyName: params[1],
       associatedId: params[2]
@@ -46,7 +47,7 @@ export default Ember.Helper.extend({
     return this.get('content');
   },
 
-  paramsChanged: Ember.observer('associatedId', function () {
+  paramsChanged: observer('associatedId', function () {
     const self = this;
     let query = { size: 500, term: {} };
 
@@ -55,7 +56,7 @@ export default Ember.Helper.extend({
       self.set('content', results);
     });
   }),
-  contentChanged: Ember.observer('content', function () {
+  contentChanged: observer('content', function () {
     this.recompute();
   })
 });

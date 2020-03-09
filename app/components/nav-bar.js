@@ -1,3 +1,4 @@
+import { computed } from '@ember/object';
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 
@@ -14,7 +15,7 @@ export default Component.extend({
   /**
    * Do we have a valid user loaded into the user service?
    */
-  hasAUser: Ember.computed('currentUser.user', function () {
+  hasAUser: computed('currentUser.user', function () {
     return !!this.get('currentUser.user');
   }),
 

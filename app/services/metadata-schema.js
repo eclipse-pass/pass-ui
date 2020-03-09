@@ -1,6 +1,4 @@
-/* eslint-disable indent */
-import Ember from 'ember';
-import Service from '@ember/service';
+import Service, { inject as service } from '@ember/service';
 import ENV from 'pass-ember/config/environment';
 import Ajv from 'ajv'; // https://github.com/epoberezkin/ajv
 import _ from 'lodash';
@@ -9,7 +7,7 @@ import _ from 'lodash';
  * Service to manipulate Alpaca schemas
  */
 export default Service.extend({
-  ajax: Ember.inject.service('ajax'),
+  ajax: service('ajax'),
   schemaService: ENV.schemaService,
 
   // JSON schema validator
@@ -369,9 +367,9 @@ export default Service.extend({
    * @returns [{label, value, isArray}]
    */
   async displayMetadata(submission) {
-      // Metadata keys to display and the order to display them in.
+    // Metadata keys to display and the order to display them in.
     const whiteList = ['authors', 'abstract', 'doi', 'Embargo-end-date', 'journal-NLMTA-ID', 'journal-title', 'journal-title-short', 'issue', 'issns',
-                        'publisher', 'publicationDate', 'title', 'volume'];
+      'publisher', 'publicationDate', 'title', 'volume'];
 
     const schemas = await this.getMetadataSchemas(submission.get('repositories'));
     const titleMap = this.getFieldTitleMap(schemas);

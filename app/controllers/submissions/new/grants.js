@@ -1,4 +1,4 @@
-import Controller from '@ember/controller';
+import Controller, { inject as controller } from '@ember/controller';
 import { alias } from '@ember/object/computed';
 
 export default Controller.extend({
@@ -6,7 +6,7 @@ export default Controller.extend({
   preLoadedGrant: alias('model.preLoadedGrant'),
   publication: alias('model.publication'),
   submissionEvents: alias('model.submissionEvents'),
-  parent: Ember.inject.controller('submissions.new'),
+  parent: controller('submissions.new'),
 
   actions: {
     loadNext() {

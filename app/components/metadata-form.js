@@ -1,8 +1,8 @@
 // import Component from '@ember/component';
-import Ember from 'ember';
+import Component from '@ember/component';
 import _ from 'lodash';
 
-export default Ember.Component.extend({
+export default Component.extend({
   didRender() {
     this._super(...arguments);
     const that = this;

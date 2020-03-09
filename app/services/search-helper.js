@@ -1,4 +1,4 @@
-import Service from '@ember/service';
+import Service, { inject as service } from '@ember/service';
 // import { defer } from 'rsvp';
 
 /**
@@ -17,7 +17,7 @@ import Service from '@ember/service';
  *              networking hit.
  */
 export default Service.extend({
-  store: Ember.inject.service('store'),
+  store: service('store'),
   /** List of object IDs to ignore */
   ignoreList: [],
 

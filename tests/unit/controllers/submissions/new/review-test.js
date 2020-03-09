@@ -1,3 +1,4 @@
+import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 
@@ -24,7 +25,7 @@ module('Unit | Controller | submissions/new/review', (hooks) => {
   test('parent properties are retrieved', function (assert) {
     let controller = this.owner.lookup('controller:submissions/new/review');
     let submitTriggered = false;
-    this.owner.register('controller:submissions/new', Ember.Object.extend({
+    this.owner.register('controller:submissions/new', EmberObject.extend({
       uploading: 'is uploading',
       comment: 'test comment',
       waitingMessage: 'test waiting message'

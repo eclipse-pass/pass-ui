@@ -1,10 +1,11 @@
+import { A } from '@ember/array';
 import Service from '@ember/service';
 import ENV from 'pass-ember/config/environment';
 
 export default Service.extend({
   configUrl: null,
   /** List of URI strings, used to tell which static assets have already been loaded */
-  _loaded: Ember.A(),
+  _loaded: A(),
 
   /** Cached static config object */
   _config: null,

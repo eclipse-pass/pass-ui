@@ -1,3 +1,4 @@
+import EmberObject from '@ember/object';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
@@ -18,7 +19,7 @@ module('Integration | Component | submissions status cell', (hooks) => {
   });
 
   test('draft submission renders', async function (assert) {
-    const record = Ember.Object.create({
+    const record = EmberObject.create({
       submissionStatus: 'draft'
     });
     this.set('record', record);

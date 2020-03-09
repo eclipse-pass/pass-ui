@@ -1,3 +1,6 @@
+import Service from '@ember/service';
+import { A } from '@ember/array';
+import EmberObject from '@ember/object';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
@@ -8,12 +11,12 @@ module('Integration | Component | workflow files', (hooks) => {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    let submission = Ember.Object.create({
+    let submission = EmberObject.create({
       repositories: [],
       grants: []
     });
-    let files = [Ember.Object.create({})];
-    let newFiles = Ember.A();
+    let files = [EmberObject.create({})];
+    let newFiles = A();
     this.set('submission', submission);
     this.set('files', files);
     this.set('newFiles', newFiles);
@@ -31,10 +34,10 @@ module('Integration | Component | workflow files', (hooks) => {
   test('Files should upload immediately', function (assert) {
     assert.expect(6);
 
-    this.owner.register('service:store', Ember.Service.extend({
+    this.owner.register('service:store', Service.extend({
       createRecord: () => Promise.resolve()
     }));
-    this.owner.register('service:submission-handler', Ember.Service.extend({
+    this.owner.register('service:submission-handler', Service.extend({
       uploadFile: (submission, file) => {
         assert.ok(submission);
         assert.ok(file);
@@ -62,8 +65,8 @@ module('Integration | Component | workflow files', (hooks) => {
           ]
         });
       });
-      component.set('newFiles', Ember.A());
-      component.set('submission', Ember.Object.create());
+      component.set('newFiles', A());
+      component.set('submission', EmberObject.create());
 
       component.send('getFiles');
     });
@@ -75,11 +78,11 @@ module('Integration | Component | workflow files', (hooks) => {
   test('Files removed from UI should no longer reference submission', async function (assert) {
     assert.expect(6);
 
-    const submission = Ember.Object.create({});
+    const submission = EmberObject.create({});
     this.set('submission', submission);
 
-    this.set('previouslyUploadedFiles', Ember.A([
-      Ember.Object.create({
+    this.set('previouslyUploadedFiles', A([
+      EmberObject.create({
         name: 'File-for-test',
         fileRole: 'manuscript',
         submission,

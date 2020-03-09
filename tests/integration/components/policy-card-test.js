@@ -1,3 +1,5 @@
+import { A } from '@ember/array';
+import EmberObject from '@ember/object';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
@@ -9,16 +11,16 @@ module('Integration | Component | policy card', (hooks) => {
   test('it renders when given expected data', async function (assert) {
     assert.expect(4);
 
-    const policy = Ember.Object.create({
-      repositories: Ember.A(),
+    const policy = EmberObject.create({
+      repositories: A(),
       description: 'This is a moo-scription',
       title: 'Moo title'
     });
-    const journal = Ember.Object.create({
+    const journal = EmberObject.create({
       isMethodA: false
     });
-    const submission = Ember.Object.create({
-      effectivePolicies: Ember.A()
+    const submission = EmberObject.create({
+      effectivePolicies: A()
     });
 
     // this.set('workflow', workflow);
@@ -38,18 +40,18 @@ module('Integration | Component | policy card', (hooks) => {
 
   module('PMC tests', (hooks) => {
     hooks.beforeEach(function () {
-      const policy = Ember.Object.create({
-        repositories: Ember.A([Ember.Object.create({
+      const policy = EmberObject.create({
+        repositories: A([EmberObject.create({
           repositoryKey: 'pmc'
         })]),
         description: 'This is a moo-scription',
         title: 'Moo title'
       });
-      const journal = Ember.Object.create({
+      const journal = EmberObject.create({
         isMethodA: false
       });
-      const submission = Ember.Object.create({
-        effectivePolicies: Ember.A()
+      const submission = EmberObject.create({
+        effectivePolicies: A()
       });
 
       this.set('policy', policy);
@@ -84,7 +86,7 @@ module('Integration | Component | policy card', (hooks) => {
     });
 
     test('PMC type A journal as no inputs and is not added to submission', async function (assert) {
-      this.set('journal', Ember.Object.create({ isMethodA: true }));
+      this.set('journal', EmberObject.create({ isMethodA: true }));
 
       await render(hbs`policy-card policy=policy journal=journal submission=submission`);
       assert.ok(this.element, 'failed to render');

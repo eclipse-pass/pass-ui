@@ -1,3 +1,4 @@
+import { A } from '@ember/array';
 import Component from '@ember/component';
 import { inject as service, } from '@ember/service';
 
@@ -33,7 +34,7 @@ export default Component.extend({
   submissionHandler: service('submission-handler'),
   workflow: service('workflow'),
 
-  addedRepos: Ember.A([]),
+  addedRepos: A([]),
 
   willRender() {
     this._super(...arguments);

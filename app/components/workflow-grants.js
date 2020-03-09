@@ -1,3 +1,6 @@
+import $ from 'jquery';
+import { computed } from '@ember/object';
+import { A } from '@ember/array';
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import Bootstrap4Theme from 'ember-models-table/themes/bootstrap4';
@@ -26,15 +29,15 @@ export default Component.extend({
   themeInstance: Bootstrap4Theme.create(),
 
   /** Grants already attached to the submission on component init */
-  _selectedGrants: Ember.A(),
+  _selectedGrants: A(),
 
   // Matches numbered starting at 1. Return number of first match on current page.
-  pageFirstMatchNumber: Ember.computed('totalGrants', 'pageNumber', 'pageSize', function () {
+  pageFirstMatchNumber: computed('totalGrants', 'pageNumber', 'pageSize', function () {
     return ((this.get('pageNumber') - 1) * this.get('pageSize')) + 1;
   }),
 
   // Matches numbered starting at 1. Return number of last match on current page.
-  pageLastMatchNumber: Ember.computed('totalGrants', 'pageNumber', 'pageSize', function () {
+  pageLastMatchNumber: computed('totalGrants', 'pageNumber', 'pageSize', function () {
     let result = this.get('pageNumber') * this.get('pageSize');
     let total = this.get('totalGrants');
 
@@ -120,7 +123,7 @@ export default Component.extend({
       mayBeHidden: false
     }
   ],
-  filteredGrants: Ember.computed('submitterGrants', 'submission.grants.[]', function () {
+  filteredGrants: computed('submitterGrants', 'submission.grants.[]', function () {
     return this.get('submitterGrants').filter(g => !this.get('submission.grants').map(x => x.id).includes(g.get('id')));
   }),
 
@@ -201,7 +204,7 @@ export default Component.extend({
         this.get('store').findRecord('grant', event.target.value).then((g) => {
           g.get('primaryFunder.policy'); // Make sure policy is loaded in memory
           this.addGrant(g);
-          Ember.$('select')[0].selectedIndex = 0;
+          $('select')[0].selectedIndex = 0;
         });
       }
     },
