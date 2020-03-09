@@ -33,7 +33,7 @@
     "ember-tether": "^1.0.0",
     "eslint-plugin-ember": "^7.9.0",
     "merge": ">=1.2.1",
-    "qunit-dom": "^0.7.1",
+    "qunit-dom": "^0.8.0",
     "toastr": "^2.1.4"
   },
   "engines": {
@@ -72,7 +72,7 @@
     "ember-resolver": "^4.5.6",
     "ember-route-action-helper": "^2.0.6",
     "ember-simple-auth": "^1.7.0",
-    "ember-source": "^3.4.0",
+    "ember-source": "^3.8.0",
     "ember-sticky-element": "^0.2.3",
     "ember-toastr": "^1.7.1",
     "ember-truth-helpers": "^2.1.0",
