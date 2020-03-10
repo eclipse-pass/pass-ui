@@ -14,12 +14,12 @@
 </style>
 {{/if}}
 
-<PowerSelect
-  @search={{action "searchJournals"}}
-  @selected={{value}}
-  @placeholder="Journal"
-  @onChange={{action "onSelect"}}
+{{#power-select
+  search=(action "searchJournals")
+  selected=value
+  placeholder="Journal"
+  onchange=(action "onSelect")
   as |journal|
->
+}}
   {{get journal 'journalName'}}
-</PowerSelect>
+{{/power-select}}
