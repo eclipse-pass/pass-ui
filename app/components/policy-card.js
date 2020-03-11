@@ -1,10 +1,11 @@
+import { computed } from '@ember/object';
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 
 export default Component.extend({
   workflow: service('workflow'),
 
-  pmcPublisherDeposit: Ember.computed('workflow.pmcPublisherDeposit', {
+  pmcPublisherDeposit: computed('workflow.pmcPublisherDeposit', {
     get(key) {
       return this.get('workflow').getPmcPublisherDeposit();
     },
@@ -13,7 +14,7 @@ export default Component.extend({
       return value;
     }
   }),
-  maxStep: Ember.computed('workflow.maxStep', {
+  maxStep: computed('workflow.maxStep', {
     get(key) {
       return this.get('workflow').getMaxStep();
     },
@@ -23,13 +24,13 @@ export default Component.extend({
     }
   }),
   // checks if the radio buttons need to be displayed
-  usesPmcRepository: Ember.computed('policy.repositories', function () {
+  usesPmcRepository: computed('policy.repositories', function () {
     return this.get('policy.repositories') ? (this.get('policy.repositories').filter(repo => repo.get('repositoryKey') === 'pmc').length > 0) : false;
   }),
-  methodAJournal: Ember.computed('journal', function () {
+  methodAJournal: computed('journal', function () {
     return this.get('journal.isMethodA');
   }),
-  policyIsJHU: Ember.computed(function () { // eslint-ignore-line
+  policyIsJHU: computed(function () { // eslint-ignore-line
     return this.get('policy.title') === 'Johns Hopkins University (JHU) Open Access Policy';
   }),
 

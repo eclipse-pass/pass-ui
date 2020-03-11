@@ -41,7 +41,7 @@
               <a href="{{file.uri}}">{{file.name}}</a>
             </td>
             <td class="text-center vertical-align-middle">
-              <select onchange= {{action (mut file.fileRole) value="target.value"}}>
+              <select onchange={{action (mut file.fileRole) value="target.value"}}>
                 <option value="supplement" selected={{eq file.fileRole "supplement"}}>Supplement</option>
                 <option value="manuscript" selected={{eq file.fileRole "manuscript"}}>Manuscript</option>
                 <option value="table" selected={{eq file.fileRole "table"}}>Table</option>
@@ -62,7 +62,7 @@
               {{file.name}}
             </td>
             <td class="text-center vertical-align-middle">
-              <select onchange= {{action (mut file.fileRole) value="target.value"}}>
+              <select onchange={{action (mut file.fileRole) value="target.value"}}>
                 <option value="supplemental" selected={{eq file.fileRole "supplemental"}}>Supplement</option>
                 <option value="manuscript" selected={{eq file.fileRole "manuscript"}}>Manuscript</option>
                 <option value="table" selected={{eq file.fileRole "table"}}>Table</option>
@@ -88,7 +88,7 @@
 <p class="lead text-muted">Each individual file must be smaller than 100MB.</p>
 <div class="form-group row">
   <div class="col-md-12">
-    <input type="file" id="file-multiple-input" multiple size="50" onchange= {{action "getFiles"}} class="text-gray-300" style="border-width:2px; cursor:pointer; border-style: dashed; padding:30px; width:100%">
+    <input type="file" id="file-multiple-input" multiple size="50" onchange={{action "getFiles"}} class="text-gray-300" style="border-width:2px; cursor:pointer; border-style: dashed; padding:30px; width:100%">
   </div>
 </div>
 <p><strong>Tip:</strong> Use the Control or the Shift key to select multiple files.</p>

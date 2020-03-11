@@ -1,3 +1,4 @@
+import { hash } from 'rsvp';
 import CheckSessionRoute from '../check-session-route';
 import { inject as service } from '@ember/service';
 
@@ -76,7 +77,7 @@ export default CheckSessionRoute.extend({
       });
     }
 
-    return Ember.RSVP.hash({
+    return hash({
       repositories,
       newSubmission,
       submissionEvents,

@@ -1,4 +1,5 @@
-import Controller from '@ember/controller';
+import { computed } from '@ember/object';
+import Controller, { inject as controller } from '@ember/controller';
 import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 
@@ -8,13 +9,13 @@ export default Controller.extend({
   repositories: alias('model.repositories'),
   publication: alias('model.publication'),
   submissionEvents: alias('model.submissionEvents'),
-  parent: Ember.inject.controller('submissions.new'),
+  parent: controller('submissions.new'),
 
-  nextTabIsActive: Ember.computed('workflow.maxStep', function () {
+  nextTabIsActive: computed('workflow.maxStep', function () {
     return (this.get('workflow').getMaxStep() > 4);
   }),
   loadingNext: false,
-  needValidation: Ember.computed('nextTabIsActive', 'loadingNext', function () {
+  needValidation: computed('nextTabIsActive', 'loadingNext', function () {
     return (this.get('nextTabIsActive') || this.get('loadingNext'));
   }),
 
@@ -22,7 +23,7 @@ export default Controller.extend({
    * Do some light processing on the repository containers, such as adding the names of funders
    * that both are associated with the submission AND associated with each repository.
    */
-  requiredRepositories: Ember.computed('model.requiredRepositories', function () {
+  requiredRepositories: computed('model.requiredRepositories', function () {
     let req = this.get('model.requiredRepositories');
     const submission = this.get('submission');
 
@@ -31,7 +32,7 @@ export default Controller.extend({
       funders: this._getFunderNamesForRepo(repo, submission)
     }));
   }),
-  optionalRepositories: Ember.computed('model.optionalRepositories', function () {
+  optionalRepositories: computed('model.optionalRepositories', function () {
     const submission = this.get('submission');
     let optionals = this.get('model.optionalRepositories');
 
@@ -40,7 +41,7 @@ export default Controller.extend({
       funders: this._getFunderNamesForRepo(repo, submission)
     }));
   }),
-  choiceRespositories: Ember.computed('model.choiceRepositories', function () {
+  choiceRespositories: computed('model.choiceRepositories', function () {
     const submission = this.get('submission');
     let choices = this.get('model.choiceRepositories');
 

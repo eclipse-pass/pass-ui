@@ -1,3 +1,4 @@
+import { computed } from '@ember/object';
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import swal from 'sweetalert2';
@@ -6,16 +7,16 @@ export default Component.extend({
   currentUser: service('current-user'),
   submissionHandler: service('submission-handler'),
 
-  isPreparer: Ember.computed('currentUser', 'record', function () {
+  isPreparer: computed('currentUser', 'record', function () {
     let userId = this.get('currentUser.user.id');
     let preparers = this.get('record.preparers');
     return preparers.map(x => x.id).includes(userId);
   }),
-  isSubmitter: Ember.computed('currentUser', 'record', function () {
+  isSubmitter: computed('currentUser', 'record', function () {
     return this.get('currentUser.user.id') === this.get('record.submitter.id');
   }),
 
-  submissionIsDraft: Ember.computed('record', function () {
+  submissionIsDraft: computed('record', function () {
     return this.get('record.isDraft');
   }),
 

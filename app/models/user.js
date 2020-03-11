@@ -1,3 +1,4 @@
+import { computed } from '@ember/object';
 import DS from 'ember-data';
 
 export default DS.Model.extend({
@@ -17,10 +18,10 @@ export default DS.Model.extend({
   /** Possible values: admin, submitter */
   roles: DS.attr('set'),
 
-  isSubmitter: Ember.computed('roles.[]', function () {
+  isSubmitter: computed('roles.[]', function () {
     return this.get('roles') ? this.get('roles').includes('submitter') : false;
   }),
-  isAdmin: Ember.computed('roles.[]', function () {
+  isAdmin: computed('roles.[]', function () {
     return this.get('roles') ? this.get('roles').includes('admin') : false;
   })
 });

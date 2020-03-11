@@ -1,10 +1,11 @@
+import { computed } from '@ember/object';
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 
 export default Component.extend({
   store: service('store'),
 
-  status: Ember.computed('deposit', 'repoCopy', function () {
+  status: computed('deposit', 'repoCopy', function () {
     const deposit = this.get('deposit');
     const repoCopy = this.get('repoCopy');
     const source = this.get('submission.source');
@@ -36,7 +37,7 @@ export default Component.extend({
   /**
    * Return a tooltip based on the current status.
    */
-  tooltip: Ember.computed('status', function () {
+  tooltip: computed('status', function () {
     switch (this.get('status')) {
       case 'complete':
         return 'Submission was accepted and processed by the repository. ID(s) have been assigned to the submitted manuscript.';
@@ -61,11 +62,11 @@ export default Component.extend({
    * Is this an external repository - is this not tracked by PASS
    * (e.g. US Dept of Education submission system ERIC)
    */
-  isExternalRepo: Ember.computed('repo', function () {
+  isExternalRepo: computed('repo', function () {
     return this.get('repo._isWebLink');
   }),
 
-  isSubmitted: Ember.computed('submission.submitted', function () {
+  isSubmitted: computed('submission.submitted', function () {
     return this.get('submission.submitted');
   })
 });

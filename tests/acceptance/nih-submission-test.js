@@ -1,4 +1,6 @@
 /* eslint-disable prefer-arrow-callback */
+import Service from '@ember/service';
+
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
 import {
@@ -19,7 +21,7 @@ module('Acceptance | submission', function (hooks) {
   setupMirage(hooks);
 
   hooks.beforeEach(function () {
-    const mockStaticConfig = Ember.Service.extend({
+    const mockStaticConfig = Service.extend({
       getStaticConfig: () => Promise.resolve({
         assetsUri: '',
         branding: {
@@ -41,6 +43,7 @@ module('Acceptance | submission', function (hooks) {
     assert.dom('[data-test-start-new-submission]').exists();
     await click(find('[data-test-start-new-submission]'));
 
+    await waitFor('[data-test-workflow-basics-next]');
     assert.equal(currentURL(), '/submissions/new/basics');
     assert.dom('[data-test-doi-input]').exists();
     await fillIn('[data-test-doi-input]', '10.1039/c7an01256j');
@@ -97,7 +100,8 @@ module('Acceptance | submission', function (hooks) {
 
     await click('.alpaca-form-button-Next');
 
-    await waitFor('[data-test-workflow-files-next]');
+    await waitFor('input[type=file]');
+
     assert.equal(currentURL(), '/submissions/new/files');
     const submissionFile = new Blob(['moo'], { type: 'application/pdf' });
     submissionFile.name = 'my-submission.pdf';

@@ -1,3 +1,4 @@
+import { A } from '@ember/array';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { run } from '@ember/runloop';
@@ -33,7 +34,7 @@ module('Unit | Model | submission', (hooks) => {
 
     run(() => submission.set('submitterName', null));
     run(() => submission.set('submitterEmail', null));
-    run(() => submission.set('preparers', Ember.A([user])));
+    run(() => submission.set('preparers', A([user])));
     // if there is one preparer, regardless of other values, it is a proxy submission
     assert.equal(submission.get('isProxySubmission'), true);
   });

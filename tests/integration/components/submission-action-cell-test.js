@@ -1,16 +1,19 @@
+import EmberObject from '@ember/object';
+import { A } from '@ember/array';
+import Service from '@ember/service';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
-import { render, click, settled } from '@ember/test-helpers';
+import { render, click, settled, find } from '@ember/test-helpers';
 import { run } from '@ember/runloop';
 
 module('Integration | Component | submission action cell', (hooks) => {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    const mockStore = Ember.Service.extend({
+    const mockStore = Service.extend({
       query() {
-        return Promise.resolve(Ember.A());
+        return Promise.resolve(A());
       }
     });
 
@@ -24,25 +27,25 @@ module('Integration | Component | submission action cell', (hooks) => {
     let record = {};
 
     // TODO: add actual tests here
-    record = Ember.Object.create({
+    record = EmberObject.create({
       preparers: [],
       submitted: true
     });
 
     this.set('record', record);
 
-    await this.render(hbs`{{submission-action-cell record=record}}`);
+    await render(hbs`{{submission-action-cell record=record}}`);
 
-    assert.equal(this.$().text().trim(), 'No actions available.');
+    assert.equal(this.element.textContent.trim(), 'No actions available.');
 
     // Template block usage:
-    await this.render(hbs`
+    await render(hbs`
       {{#submission-action-cell record=record}}
         template block text
       {{/submission-action-cell}}
     `);
 
-    assert.equal(this.$().text().trim(), 'No actions available.');
+    assert.equal(this.element.textContent.trim(), 'No actions available.');
   });
 
   /**
@@ -52,8 +55,8 @@ module('Integration | Component | submission action cell', (hooks) => {
   test('should delete and persist submission', async function (assert) {
     assert.expect(3);
 
-    const record = Ember.Object.create({
-      preparers: Ember.A(),
+    const record = EmberObject.create({
+      preparers: A(),
       isDraft: true,
       save() {
         assert.ok(true);
@@ -78,8 +81,8 @@ module('Integration | Component | submission action cell', (hooks) => {
   });
 
   test('Draft submissions should display Edit and Delete buttons', async function (assert) {
-    const record = Ember.Object.create({
-      preparers: Ember.A(),
+    const record = EmberObject.create({
+      preparers: A(),
       isDraft: true
       // submissionStatus: 'draft'
     });

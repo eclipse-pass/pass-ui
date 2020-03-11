@@ -1,4 +1,6 @@
-import Controller from '@ember/controller';
+import { A } from '@ember/array';
+import { computed } from '@ember/object';
+import Controller, { inject as controller } from '@ember/controller';
 import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 
@@ -9,21 +11,21 @@ export default Controller.extend({
   preLoadedGrant: alias('model.preLoadedGrant'),
   submissionEvents: alias('model.submissionEvents'),
   journal: alias('model.journal'),
-  parent: Ember.inject.controller('submissions.new'),
+  parent: controller('submissions.new'),
 
   // these errors start as false since you don't want to immediately have all fields turn red
   titleError: false,
   journalError: false,
   submitterEmailError: false,
-  flaggedFields: Ember.computed('titleError', 'journalError', 'submitterEmailError', function () {
-    let fields = Ember.A();
+  flaggedFields: computed('titleError', 'journalError', 'submitterEmailError', function () {
+    let fields = A();
     if (this.get('titleError')) fields.pushObject('title');
     if (this.get('journalError')) fields.pushObject('journal');
     if (this.get('submitterEmailError')) fields.pushObject('submitterEmail');
     return fields;
   }),
 
-  doiInfo: Ember.computed('workflow.doiInfo', {
+  doiInfo: computed('workflow.doiInfo', {
     get(key) {
       return this.get('workflow').getDoiInfo();
     },
@@ -32,13 +34,13 @@ export default Controller.extend({
       return value;
     }
   }),
-  titleIsInvalid: Ember.computed('publication.title', function () {
+  titleIsInvalid: computed('publication.title', function () {
     return !(this.get('publication.title'));
   }),
-  journalIsInvalid: Ember.computed('publication.journal.id', 'publication.journal.journalName', function () {
+  journalIsInvalid: computed('publication.journal.id', 'publication.journal.journalName', function () {
     return !(this.get('publication.journal.id') || this.get('publication.journal.journalName'));
   }),
-  submitterIsInvalid: Ember.computed(
+  submitterIsInvalid: computed(
     'submission.submitter.id',
     'submission.submitterEmail',
     'submission.submitterName', function () {
@@ -46,7 +48,7 @@ export default Controller.extend({
             && (!this.get('submission.submitterEmail') || !this.get('submission.submitterName')));
     }
   ),
-  submitterEmailIsInvalid: Ember.computed('submission.submitterEmailDisplay', 'submission.submitter.id', function () {
+  submitterEmailIsInvalid: computed('submission.submitterEmailDisplay', 'submission.submitter.id', function () {
     let emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     let email = this.get('submission.submitterEmailDisplay');
     return (!this.get('submission.submitter.id') && (!email || !emailPattern.test(email)));

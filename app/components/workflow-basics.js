@@ -1,3 +1,5 @@
+import { A } from '@ember/array';
+import { computed } from '@ember/object';
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 
@@ -15,10 +17,10 @@ export default Component.extend({
   doiServiceError: false,
   isShowingUserSearchModal: false,
 
-  isProxySubmission: Ember.computed('submission.isProxySubmission', function () {
+  isProxySubmission: computed('submission.isProxySubmission', function () {
     return this.get('submission.isProxySubmission');
   }),
-  inputSubmitterEmail: Ember.computed('submission.submitterEmail', {
+  inputSubmitterEmail: computed('submission.submitterEmail', {
     get(key) {
       return this.get('submission.submitterEmail').replace('mailto:', '');
     },
@@ -48,7 +50,7 @@ export default Component.extend({
     this._super(...arguments);
     if (!this.get('isProxySubmission')) {
       this.set('submission.submitter', this.get('currentUser.user'));
-      this.set('submission.preparers', Ember.A());
+      this.set('submission.preparers', A());
     }
   },
   didInsertElement() {
@@ -80,19 +82,19 @@ export default Component.extend({
     }
   },
 
-  isValidDOI: Ember.computed('publication.doi', 'doiServiceError', function () {
+  isValidDOI: computed('publication.doi', 'doiServiceError', function () {
     return !this.get('doiServiceError') && this.get('doiService').isValidDOI(this.get('publication.doi'));
   }),
-  titleClass: Ember.computed('flaggedFields', function () {
+  titleClass: computed('flaggedFields', function () {
     return ((this.get('flaggedFields').indexOf('title') > -1) ? 'form-control is-invalid' : 'form-control');
   }),
-  journalClass: Ember.computed('flaggedFields', function () {
+  journalClass: computed('flaggedFields', function () {
     return ((this.get('flaggedFields').indexOf('journal') > -1) ? 'is-invalid' : 'is-valid');
   }),
-  submitterEmailClass: Ember.computed('flaggedFields', function () {
+  submitterEmailClass: computed('flaggedFields', function () {
     return ((this.get('flaggedFields').indexOf('submitterEmail') > -1) ? 'is-invalid' : '');
   }),
-  doiClass: Ember.computed('isValidDOI', function () {
+  doiClass: computed('isValidDOI', function () {
     let doi = this.get('publication.doi');
     if (doi == null || !doi) {
       return 'form-control';
@@ -156,7 +158,7 @@ export default Component.extend({
           confirmButtonText: 'Yes, I\'m sure'
         }).then((result) => {
           if (result.value) {
-            this.set('submission.grants', Ember.A());
+            this.set('submission.grants', A());
             this.send('updateSubmitterModel', isProxySubmission, submitter);
             toastr.info('Submitter and related grants removed from submission.');
           }
@@ -171,10 +173,10 @@ export default Component.extend({
       this.set('submission.submitterName', '');
       if (isProxySubmission) {
         this.set('submission.submitter', submitter);
-        this.set('submission.preparers', Ember.A([this.get('currentUser.user')]));
+        this.set('submission.preparers', A([this.get('currentUser.user')]));
       } else {
         this.set('submission.submitter', this.get('currentUser.user'));
-        this.set('submission.preparers', Ember.A());
+        this.set('submission.preparers', A());
       }
     },
 

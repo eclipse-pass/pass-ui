@@ -1,21 +1,25 @@
+/* eslint-disable prefer-arrow-callback */
+import Service from '@ember/service';
+import EmberObject from '@ember/object';
+import { A } from '@ember/array';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { run } from '@ember/runloop';
-import { click, render, fillIn } from '@ember/test-helpers';
+import { click, render, fillIn, waitFor } from '@ember/test-helpers';
 
 module('Integration | Component | workflow-metadata', (hooks) => {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    const repositories = Ember.A();
-    const journal = Ember.Object.create({
+    const repositories = A();
+    const journal = EmberObject.create({
       issns: []
     });
-    const publication = Ember.Object.create({
+    const publication = EmberObject.create({
       journal
     });
-    const submission = Ember.Object.create({
+    const submission = EmberObject.create({
       repositories,
       publication
     });
@@ -26,7 +30,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
 
     Object.defineProperty(window.navigator, 'userAgent', { value: 'Chrome', configurable: true });
 
-    const mockAjax = Ember.Service.extend({
+    const mockAjax = Service.extend({
       request() {
         return Promise.resolve([
           {
@@ -125,6 +129,8 @@ module('Integration | Component | workflow-metadata', (hooks) => {
 
   test('should render common schema', async function (assert) {
     await render(hbs`{{workflow-metadata submission=submission publication=publication}}`);
+    await waitFor('input[type=text]');
+
     assert.ok(this.element.textContent.includes('Common schema'));
   });
 
@@ -150,8 +156,9 @@ module('Integration | Component | workflow-metadata', (hooks) => {
 
   test('second form should be NIHMS', async function (assert) {
     await render(hbs`{{workflow-metadata submission=submission publication=publication}}`);
+    await waitFor('button[data-key="Next"]');
     await click('button[data-key="Next"]');
-
+    await waitFor('input[name="journal-NLMTA-ID"]');
     assert.ok(
       this.element.textContent.includes('NIH Manuscript Submission System'),
       'NIHMS header not found'
@@ -164,12 +171,15 @@ module('Integration | Component | workflow-metadata', (hooks) => {
 
   test('third form should be J10P', async function (assert) {
     await render(hbs`{{workflow-metadata submission=submission publication=publication}}`);
+    await waitFor('button[data-key="Next"]');
     await click('button[data-key="Next"]');
 
     // Need to fill out ISSN field
+    await waitFor('input[name="ISSN"]');
     this.element.querySelector('input[name="ISSN"]').value = '1234';
 
     await click('button[data-key="Next"]');
+    await waitFor('input[name="ISSN"]');
 
     assert.ok(
       this.element.textContent.includes('JScholarship Moo'),
@@ -179,12 +189,17 @@ module('Integration | Component | workflow-metadata', (hooks) => {
 
   test('Back button on J10P form takes you back to NIH form', async function (assert) {
     await render(hbs`{{workflow-metadata submission=submission publication=publication}}`);
+    await waitFor('button[data-key="Next"]');
     await click('button[data-key="Next"]');
     // Need to fill out ISSN field
+    await waitFor('input[name="ISSN"]');
     this.element.querySelector('input[name="ISSN"]').value = '1234';
 
     await click('button[data-key="Next"]');
+    await waitFor('button[data-key="Back"]');
     await click('button[data-key="Back"]');
+
+    await waitFor('input[name="ISSN"]');
 
     assert.ok(
       this.element.textContent.includes('NIH Manuscript Submission System'),
@@ -200,49 +215,46 @@ module('Integration | Component | workflow-metadata', (hooks) => {
     const expectedISSN = '123moo321';
 
     await render(hbs`{{workflow-metadata submission=submission publication=publication}}`);
-    await click('button[data-key="Next"]');
+    await waitFor('button[data-key="Next"]');
 
     // Set data in the inputs of Form 1
-    this.element.querySelector('input[name="journal-NLMTA-ID"]').value = 'nlmta-id-moo';
-    this.element.querySelector('input[name="ISSN"]').value = expectedISSN;
+    await waitFor('input[name="ISSN"]');
+    await fillIn('input[name="journal-NLMTA-ID"]', 'nlmta-id-moo');
+    await fillIn('input[name="ISSN"]', expectedISSN);
 
     await click('button[data-key="Next"]');
     // Check to see if relevant data is pre-populated into Form 2
-    const issnInput = this.element.querySelector('input[name="ISSN"]');
-    assert.ok(issnInput, 'No ISSN input found');
-    assert.equal(
-      issnInput.value,
-      expectedISSN,
-      'ISSN from Form 1 should appear in Form 2'
-    );
+    await waitFor('input[name="ISSN"]');
+    assert.dom('input[name="ISSN"]').hasValue(expectedISSN);
   });
 
   test('Should not proceed to 3rd form without ISSN specified', async function (assert) {
     // Validation should fail without doiInfo values.
 
-    run(async () => {
-      this.owner.unregister('service:workflow');
-      this.owner.register('service:workflow', Ember.Service.extend({
-        getDoiInfo: () => {},
-        isDataFromCrossref: () => false
-      }));
+    this.owner.unregister('service:workflow');
+    this.owner.register('service:workflow', Service.extend({
+      getDoiInfo: () => {},
+      isDataFromCrossref: () => false
+    }));
 
-      await render(hbs`{{workflow-metadata submission=submission publication=publication}}`);
-      await click('button[data-key="Next"]');
+    await render(hbs`{{workflow-metadata submission=submission publication=publication}}`);
+    await waitFor('button[data-key="Next"]');
+    await click('button[data-key="Next"]');
 
-      assert.ok(this.element.textContent.includes('NIHMS'), 'We should be on NIH form');
-      this.element.querySelector('input[name="ISSN"]').value = '';
+    await waitFor('input[name="ISSN"]');
+    assert.ok(this.element.textContent.includes('NIHMS'), 'We should be on NIH form');
+    this.element.querySelector('input[name="ISSN"]').value = '';
 
-      await click('button[data-key="Next"]');
-      await click(document.querySelector('.swal2-confirm'));
+    await click('button[data-key="Next"]');
+    await waitFor(document.querySelector('.swal2-confirm'));
+    await click(document.querySelector('.swal2-confirm'));
 
-      assert.ok(this.element.textContent.includes('NIHMS'), 'We should still be on NIH form');
-    });
+    assert.ok(this.element.textContent.includes('NIHMS'), 'We should still be on NIH form');
   });
 
   module('test with mocked doi service', (hooks) => {
     hooks.beforeEach(function () {
-      const mockDoiService = Ember.Service.extend({
+      const mockDoiService = Service.extend({
         doiToMetadata() {
           return {
             ISSN: '1234-4321',
@@ -263,6 +275,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       assert.ok(true, 'Failed to render');
 
       // On render, check the 'journal-NLMTA-ID' field value in UI
+      await waitFor('input[name="journal-NLMTA-ID"]');
       const nlmtaInput = this.element.querySelector('input[name="journal-NLMTA-ID"]');
       assert.ok(nlmtaInput, 'NLMTA-ID input not found');
       assert.equal(
@@ -272,9 +285,11 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       );
 
       await click('button[data-key="Next"]');
+      await waitFor('button[data-key="Next"]');
       await click('button[data-key="Next"]');
 
       // On third form, check the 'mooName' field in the UI
+      await waitFor('input[name="mooName"]');
       const mooInput = this.element.querySelector('input[name="mooName"]');
       assert.ok(mooInput, 'mooName input not found');
       assert.equal(
@@ -292,7 +307,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
     }));
     this.set('submission', sub);
 
-    const mockDoiService = Ember.Service.extend({
+    const mockDoiService = Service.extend({
       doiToMetadata() {
         return {
           'journal-NLMTA-ID': 'MOO JOURNAL'
@@ -300,35 +315,34 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       }
     });
 
-    const mockWorkflow = Ember.Service.extend({
+    const mockWorkflow = Service.extend({
       getDoiInfo: () => {},
       isDataFromCrossref: () => true
     });
 
-    run(async () => {
-      this.owner.unregister('service:workflow');
-      this.owner.register('service:workflow', mockWorkflow);
-      this.owner.unregister('service:doi');
-      this.owner.register('service:doi', mockDoiService);
+    this.owner.unregister('service:workflow');
+    this.owner.register('service:workflow', mockWorkflow);
+    this.owner.unregister('service:doi');
+    this.owner.register('service:doi', mockDoiService);
 
-      await render(hbs`{{workflow-metadata submission=submission publication=publication}}`);
+    await render(hbs`{{workflow-metadata submission=submission publication=publication}}`);
 
-      const nlmtaInput = this.element.querySelector('input[name="journal-NLMTA-ID"]');
-      assert.ok(nlmtaInput, 'NLMTA-ID input not found');
-      assert.ok(
-        nlmtaInput.hasAttribute('readonly') || nlmtaInput.hasAttribute('disabled'),
-        'NLMTA-ID input was found to be editable'
-      );
-      assert.ok(nlmtaInput.value, 'MOO JOURNAL', 'Unexpected "NLMTA-ID" found');
+    await waitFor('input[name="journal-NLMTA-ID"]');
+    const nlmtaInput = this.element.querySelector('input[name="journal-NLMTA-ID"]');
+    assert.ok(nlmtaInput, 'NLMTA-ID input not found');
+    assert.ok(
+      nlmtaInput.hasAttribute('readonly') || nlmtaInput.hasAttribute('disabled'),
+      'NLMTA-ID input was found to be editable'
+    );
+    assert.ok(nlmtaInput.value, 'MOO JOURNAL', 'Unexpected "NLMTA-ID" found');
 
-      const issnInput = this.element.querySelector('input[name="ISSN"]');
-      assert.ok(issnInput, 'ISSN input not found');
-      assert.notOk(
-        issnInput.hasAttribute('readonly') || issnInput.hasAttribute('disabled'),
-        'ISSN input was read only, but should be editable'
-      );
-      assert.ok(issnInput.value, '123Moo', 'Unexpected ISSN value found');
-    });
+    const issnInput = this.element.querySelector('input[name="ISSN"]');
+    assert.ok(issnInput, 'ISSN input not found');
+    assert.notOk(
+      issnInput.hasAttribute('readonly') || issnInput.hasAttribute('disabled'),
+      'ISSN input was read only, but should be editable'
+    );
+    assert.ok(issnInput.value, '123Moo', 'Unexpected ISSN value found');
   });
 
   /**
@@ -338,7 +352,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
    * then should not exist in the component's metadata blob.
    */
   test('DOI data should be trimmed', async function (assert) {
-    const mockWorkflow = Ember.Service.extend({
+    const mockWorkflow = Service.extend({
       getDoiInfo() {
         return {
           ISSN: '1234-4321',
@@ -350,36 +364,37 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       isDataFromCrossref: () => false
     });
 
-    run(async () => {
-      this.owner.unregister('service:workflow');
-      this.owner.register('service:workflow', mockWorkflow);
+    this.owner.unregister('service:workflow');
+    this.owner.register('service:workflow', mockWorkflow);
 
-      await render(hbs`{{workflow-metadata submission=submission publication=publication}}`);
-      assert.ok(true, 'Failed to render');
+    await render(hbs`{{workflow-metadata submission=submission publication=publication}}`);
+    assert.ok(true, 'Failed to render');
 
-      const component = this.owner.lookup('component:workflow-metadata');
-      const metadata = component.get('metadata');
+    const component = this.owner.lookup('component:workflow-metadata');
+    const metadata = component.get('metadata');
 
-      assert.ok(metadata, 'No component metadata found');
-      assert.notOk(metadata.badMoo, 'metadata.badMoo property should not be found on the metadata object');
-    });
+    assert.ok(metadata, 'No component metadata found');
+    assert.notOk(metadata.badMoo, 'metadata.badMoo property should not be found on the metadata object');
   });
 
   test('Metadata merges should be able to remove fields', async function (assert) {
     await render(hbs`{{workflow-metadata submission=submission publication=publication}}`);
 
+    await waitFor('input[name="journal-NLMTA-ID"]');
     const nlmtaIn = this.element.querySelector('input[name="journal-NLMTA-ID"]');
     assert.ok(nlmtaIn, 'No NLMTA-ID input field found');
     assert.ok(nlmtaIn.value.includes('triumph'), 'Unexpected value found for NLMTA-ID');
 
+    await waitFor('input[name="journal-NLMTA-ID"]');
     await fillIn('input[name="journal-NLMTA-ID"]', '');
     await click('button[data-key="Next"]');
 
+    await waitFor('input[name="journal-NLMTA-ID"]');
     assert.notOk(this.element.querySelector('input[name="journal-NLMTA-ID"]').value.includes('triumph'));
   });
 
   test('Single schema displays no title', async function (assert) {
-    const mockAjax = Ember.Service.extend({
+    const mockAjax = Service.extend({
       request() {
         return Promise.resolve([
           {
@@ -414,7 +429,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
   });
 
   test('Check "required" labels for pre-populated array fields', async function (assert) {
-    const mockDoiService = Ember.Service.extend({
+    const mockDoiService = Service.extend({
       doiToMetadata() {
         return {
           moorray: [
@@ -424,7 +439,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
         };
       }
     });
-    const mockAjax = Ember.Service.extend({
+    const mockAjax = Service.extend({
       request() {
         return Promise.resolve([{
           id: 'moo',
@@ -464,21 +479,20 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       }
     });
 
-    run(async () => {
-      this.owner.register('service:doi', mockDoiService);
-      this.owner.register('service:ajax', mockAjax);
+    this.owner.register('service:doi', mockDoiService);
+    this.owner.register('service:ajax', mockAjax);
 
-      await render(hbs`{{workflow-metadata submission=submission publication=publication}}`);
+    await render(hbs`{{workflow-metadata submission=submission publication=publication}}`);
 
-      assert.notOk(this.element.querySelector('legend').textContent.includes('required'));
+    await waitFor('legend');
+    assert.notOk(this.element.querySelector('legend').textContent.includes('required'));
 
-      const reqIndicators = this.element.querySelectorAll('.alpaca-container-item .alpaca-required-indicator');
-      assert.equal(reqIndicators.length, 2, '(required) indicator should appear only twice in rendered form');
-    });
+    const reqIndicators = this.element.querySelectorAll('.alpaca-container-item .alpaca-required-indicator');
+    assert.equal(reqIndicators.length, 2, '(required) indicator should appear only twice in rendered form');
   });
 
   test('Check "required" labels for user added array fields', async function (assert) {
-    const mockAjax = Ember.Service.extend({
+    const mockAjax = Service.extend({
       request() {
         return Promise.resolve([{
           id: 'moo',
@@ -519,20 +533,19 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       }
     });
 
-    run(async () => {
-      this.owner.register('service:ajax', mockAjax);
+    this.owner.register('service:ajax', mockAjax);
 
-      await render(hbs`{{workflow-metadata submission=submission publication=publication}}`);
+    await render(hbs`{{workflow-metadata submission=submission publication=publication}}`);
 
-      const addBtn = this.element.querySelector('button[data-alpaca-array-toolbar-action="add"]');
-      assert.ok(addBtn);
+    await waitFor('button[data-alpaca-array-toolbar-action="add"]');
+    const addBtn = this.element.querySelector('button[data-alpaca-array-toolbar-action="add"]');
+    assert.ok(addBtn);
 
-      await click(addBtn);
+    await click(addBtn);
 
-      assert.notOk(this.element.querySelector('legend').textContent.includes('required'));
+    assert.notOk(this.element.querySelector('legend').textContent.includes('required'));
 
-      const reqIndicators = this.element.querySelectorAll('.alpaca-container-item .alpaca-required-indicator');
-      assert.equal(reqIndicators.length, 1, '(required) indicator should appear only twice in rendered form');
-    });
+    const reqIndicators = this.element.querySelectorAll('.alpaca-container-item .alpaca-required-indicator');
+    assert.equal(reqIndicators.length, 1, '(required) indicator should appear only twice in rendered form');
   });
 });

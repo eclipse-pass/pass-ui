@@ -1,4 +1,5 @@
-import Service from '@ember/service';
+import { computed } from '@ember/object';
+import Service, { inject as service } from '@ember/service';
 import ENV from 'pass-ember/config/environment';
 
 /**
@@ -12,8 +13,8 @@ import ENV from 'pass-ember/config/environment';
  */
 export default Service.extend({
   suggestSize: 100,
-  ajax: Ember.inject.service(),
-  base: Ember.computed(() => ENV.fedora.elasticsearch),
+  ajax: service(),
+  base: computed(() => ENV.fedora.elasticsearch),
   es_field_suffix: '_suggest',
 
   /**

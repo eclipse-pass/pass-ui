@@ -1,4 +1,4 @@
-import { Response } from '@miragejs/server';
+import { Response } from 'miragejs';
 
 export default function (server) {
   /**

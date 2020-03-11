@@ -1,3 +1,5 @@
+import EmberObject from '@ember/object';
+import { A } from '@ember/array';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
@@ -7,20 +9,20 @@ module('Integration | Component | choice repositories card', (hooks) => {
   setupRenderingTest(hooks);
 
   test('it renders', async function (assert) {
-    this.set('choiceGroup', Ember.A());
+    this.set('choiceGroup', A());
     await render(hbs`{{choice-repositories-card choiceGroup=choiceGroup}}`);
     assert.ok(true, 'failed to render');
   });
 
   test('selected repos are checked by default', async function (assert) {
-    this.set('choiceGroup', Ember.A([
-      Ember.Object.create({
+    this.set('choiceGroup', A([
+      EmberObject.create({
         'repository-id': 'moo-1',
-        repository: Ember.Object.create({ name: 'Moo the First', _selected: true })
+        repository: EmberObject.create({ name: 'Moo the First', _selected: true })
       }),
-      Ember.Object.create({
+      EmberObject.create({
         'repository-id': 'moo-2',
-        repository: Ember.Object.create({ name: 'Moo the Second', _selected: false })
+        repository: EmberObject.create({ name: 'Moo the Second', _selected: false })
       })
     ]));
 
@@ -37,14 +39,14 @@ module('Integration | Component | choice repositories card', (hooks) => {
   test('toggleRespositories blocks actions to deselect the only selected repo', async function (assert) {
     assert.expect(3);
 
-    this.set('choiceGroup', Ember.A([
-      Ember.Object.create({
+    this.set('choiceGroup', A([
+      EmberObject.create({
         'repository-id': 'moo-1',
-        repository: Ember.Object.create({ name: 'Moo the First', _selected: true })
+        repository: EmberObject.create({ name: 'Moo the First', _selected: true })
       }),
-      Ember.Object.create({
+      EmberObject.create({
         'repository-id': 'moo-2',
-        repository: Ember.Object.create({ name: 'Moo the Second', _selected: false })
+        repository: EmberObject.create({ name: 'Moo the Second', _selected: false })
       })
     ]));
 
@@ -61,14 +63,14 @@ module('Integration | Component | choice repositories card', (hooks) => {
   test('toggleRepositories bubbles actions', async function (assert) {
     assert.expect(3);
 
-    this.set('choiceGroup', Ember.A([
-      Ember.Object.create({
+    this.set('choiceGroup', A([
+      EmberObject.create({
         'repository-id': 'moo-1',
-        repository: Ember.Object.create({ name: 'Moo the First', _selected: true })
+        repository: EmberObject.create({ name: 'Moo the First', _selected: true })
       }),
-      Ember.Object.create({
+      EmberObject.create({
         'repository-id': 'moo-2',
-        repository: Ember.Object.create({ name: 'Moo the Second', _selected: false })
+        repository: EmberObject.create({ name: 'Moo the Second', _selected: false })
       })
     ]));
     this.set('toggleRepository', () => {

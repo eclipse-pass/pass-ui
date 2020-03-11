@@ -1,3 +1,4 @@
+import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { run } from '@ember/runloop';
@@ -64,7 +65,7 @@ module('Unit | Service | doi', (hooks) => {
   test('check doi data processing', function (assert) {
     const service = this.owner.lookup('service:doi');
     const doiInfo = this.get('mockDoiInfo');
-    const journal = Ember.Object.create({
+    const journal = EmberObject.create({
       issns: ['odd', 'Print:moo', 'Online:chitter', 'malformed:', ':oddagain', ':'],
     });
     const result = service.doiToMetadata(doiInfo, journal);
@@ -122,7 +123,7 @@ module('Unit | Service | doi', (hooks) => {
   test('make sure we only get valid fields back', function (assert) {
     let doiInfo = this.get('mockDoiInfo');
     doiInfo.invalid = 'Bad moo';
-    const journal = Ember.Object.create({
+    const journal = EmberObject.create({
       issns: ['Print:moo'],
     });
     const result = this.owner.lookup('service:doi').doiToMetadata(doiInfo, journal, ['authors']);
@@ -146,11 +147,11 @@ module('Unit | Service | doi', (hooks) => {
     const doiInfo = this.get('mockDoiInfo2');
     const journalId = 'blah';
 
-    service.set('ajax', Ember.Object.create({
+    service.set('ajax', EmberObject.create({
       request(url, method, options) {
         assert.ok(true);
 
-        let journal = Ember.Object.create({ id: 'journal' });
+        let journal = EmberObject.create({ id: 'journal' });
 
         let result = {
           crossref: { message: doiInfo },
@@ -161,19 +162,19 @@ module('Unit | Service | doi', (hooks) => {
       }
     }));
 
-    service.set('store', Ember.Object.create({
+    service.set('store', EmberObject.create({
       findRecord(type, id) {
         assert.ok(true);
         assert.equal(type, 'journal');
 
-        let journal = Ember.Object.create({ id: 'journal' });
+        let journal = EmberObject.create({ id: 'journal' });
         return new Promise(resolve => resolve(journal));
       },
 
       createRecord(type, values) {
         assert.equal(type, 'publication');
 
-        return Ember.Object.create(values);
+        return EmberObject.create(values);
       }
     }));
 
@@ -189,7 +190,7 @@ module('Unit | Service | doi', (hooks) => {
   });
 
   test('Make sure we don\'t choke on journal with no ISSNs', function (assert) {
-    const journal = Ember.Object.create({
+    const journal = EmberObject.create({
       nlmta: 'NLmooTA'
     });
     const doiInfo = this.get('mockDoiInfo');

@@ -1,3 +1,5 @@
+import { A } from '@ember/array';
+import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 
@@ -12,13 +14,13 @@ module('Unit | Controller | submissions/new/repositories', (hooks) => {
 
   test('transition aborted if no repositories', function (assert) {
     let controller = this.owner.lookup('controller:submissions/new/repositories');
-    this.owner.register('service:workflow', Ember.Object.extend({
+    this.owner.register('service:workflow', EmberObject.extend({
       getMaxStep() { return 5; }
     }));
-    let submission = Ember.Object.create({
+    let submission = EmberObject.create({
       repositories: []
     });
-    let model = Ember.Object.create({
+    let model = EmberObject.create({
       newSubmission: submission
     });
     controller.set('model', model);
@@ -36,17 +38,17 @@ module('Unit | Controller | submissions/new/repositories', (hooks) => {
     assert.ok(2);
 
     let controller = this.owner.lookup('controller:submissions/new/repositories');
-    this.owner.register('service:workflow', Ember.Object.extend({
+    this.owner.register('service:workflow', EmberObject.extend({
       getMaxStep() { return 5; }
     }));
 
-    let repository = Ember.Object.create({
+    let repository = EmberObject.create({
       id: 'test:repo',
       formSchema: '{ "id": "nih", "title": "med data" }'
     });
-    const model = Ember.Object.create({
-      newSubmission: Ember.Object.create({
-        repositories: Ember.A([repository]),
+    const model = EmberObject.create({
+      newSubmission: EmberObject.create({
+        repositories: A([repository]),
         save: () => Promise.resolve(assert.ok(true))
       })
     });
@@ -89,14 +91,14 @@ module('Unit | Controller | submissions/new/repositories', (hooks) => {
 
     const controller = this.owner.lookup('controller:submissions/new/repositories');
 
-    const repositories = Ember.A([
-      Ember.Object.create({
+    const repositories = A([
+      EmberObject.create({
         id: 'test:repo',
         formSchema: '{ "id": "nih", "title": "med data" }'
       })
     ]);
-    const model = Ember.Object.create({
-      newSubmission: Ember.Object.create({
+    const model = EmberObject.create({
+      newSubmission: EmberObject.create({
         repositories,
         save: () => {
           subSaved = true;

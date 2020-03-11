@@ -102,15 +102,17 @@
   <button class="btn btn-primary pull-right next" {{action next}} data-test-workflow-basics-next>Next</button>
 {{/if}}
 {{#if isShowingUserSearchModal}}
-  {{#modal-dialog
-     translucentOverlay=true
-     tetherTarget='#on-behalf-of-block'
-     attachment='top center'
-     targetAttachment='top center'
-     containerClass='user-search-modal'}}
-    {{workflow-basics-user-search
-      toggleUserSearchModal=(action 'toggleUserSearchModal')
-      pickSubmitter=(action 'pickSubmitter')
-      searchInput=userSearchTerm}}
-  {{/modal-dialog}}
+  <div class="user-search-modal">
+    {{#modal-dialog
+      translucentOverlay=true
+      tetherTarget='#on-behalf-of-block'
+      attachment='top center'
+      targetAttachment='top center'
+      containerClass='user-search-modal'}}
+      {{workflow-basics-user-search
+        toggleUserSearchModal=(action 'toggleUserSearchModal')
+        pickSubmitter=(action 'pickSubmitter')
+        searchInput=userSearchTerm}}
+    {{/modal-dialog}}
+  </div>
 {{/if}}

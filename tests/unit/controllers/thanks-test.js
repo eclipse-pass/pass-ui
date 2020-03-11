@@ -1,3 +1,4 @@
+import Service from '@ember/service';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 
@@ -5,7 +6,7 @@ module('Unit | Controller | thanks', (hooks) => {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
-    const mockStaticConfig = Ember.Service.extend({
+    const mockStaticConfig = Service.extend({
       getStaticConfig: () => Promise.resolve({
         assetsUri: '',
         branding: {

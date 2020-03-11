@@ -1,3 +1,4 @@
+import { computed } from '@ember/object';
 import DS from 'ember-data';
 
 export default DS.Model.extend({
@@ -34,7 +35,7 @@ export default DS.Model.extend({
   }),
 
   // computed attributes for tables and to support some logic
-  isProxySubmission: Ember.computed( // determines whether submission is a proxy submission.
+  isProxySubmission: computed(
     'submitterEmail', 'submitterEmail.length',
     'submitterName', 'submitterName.length',
     'preparers', 'preparers.length',
@@ -47,25 +48,25 @@ export default DS.Model.extend({
     }
   ),
 
-  submitterEmailDisplay: Ember.computed('submitterEmail', function () {
+  submitterEmailDisplay: computed('submitterEmail', function () {
     if (this.get('submitterEmail')) {
       return this.get('submitterEmail').replace('mailto:', '');
     }
     return this.get('submitterEmail');
   }),
 
-  publicationTitle: Ember.computed('publication', function () {
+  publicationTitle: computed('publication', function () {
     return this.get('publication.title');
   }),
 
-  repositoryNames: Ember.computed('repositories', function () {
+  repositoryNames: computed('repositories', function () {
     let repoNames = [];
     this.get('repositories').forEach((repo) => {
       repoNames.push(repo.get('name'));
     });
     return repoNames;
   }),
-  grantInfo: Ember.computed('grants', function () {
+  grantInfo: computed('grants', function () {
     let grants = [];
     this.get('grants').forEach((grant) => {
       grants.push(grant.get('awardNumber'));
@@ -74,14 +75,14 @@ export default DS.Model.extend({
     });
     return grants;
   }),
-  isStub: Ember.computed('source', 'submitted', function () {
+  isStub: computed('source', 'submitted', function () {
     return this.get('source') === 'other' && !(this.get('submitted'));
   }),
 
   /**
    * @returns {boolean} is this a draft submission?
    */
-  isDraft: Ember.computed('submitted', 'submissionStatus', function () {
+  isDraft: computed('submitted', 'submissionStatus', function () {
     return this.get('submissionStatus') === 'draft';
     // return !this.get('submitted') && !this.get('submissionStatus');
   })

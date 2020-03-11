@@ -1,12 +1,13 @@
+import { computed } from '@ember/object';
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 
 export default Component.extend({
   workflow: service('workflow'),
-  step: Ember.computed('workflow.currentStep', function () {
+  step: computed('workflow.currentStep', function () {
     return this.get('workflow').getCurrentStep();
   }),
-  maxStep: Ember.computed('workflow.maxStep', function () {
+  maxStep: computed('workflow.maxStep', function () {
     return this.get('workflow').getMaxStep();
   }),
   actions: {

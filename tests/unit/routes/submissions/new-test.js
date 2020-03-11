@@ -1,3 +1,5 @@
+import { A } from '@ember/array';
+import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 
@@ -9,12 +11,12 @@ module('Unit | Route | submissions/new', (hooks) => {
    * test assertions in store calls
    */
   hooks.beforeEach(function () {
-    this.set('journal', Ember.Object.create({ journalName: 'International Moonthly' }));
-    this.set('publication', Ember.Object.create({
+    this.set('journal', EmberObject.create({ journalName: 'International Moonthly' }));
+    this.set('publication', EmberObject.create({
       title: 'Test Publication',
       journal: this.get('journal')
     }));
-    this.set('submission', Ember.Object.create({
+    this.set('submission', EmberObject.create({
       submissionStatus: 'draft',
       publication: this.get('publication'),
       metadata: '{ "moo": "This is a moo" }'
@@ -31,16 +33,16 @@ module('Unit | Route | submissions/new', (hooks) => {
         switch (type) {
           case 'publication':
             assert.ok(true);
-            return Promise.resolve(Ember.Object.create({ title: 'MockMoo' }));
+            return Promise.resolve(EmberObject.create({ title: 'MockMoo' }));
           case 'submission': // Submission - fall through to default
             assert.ok(true);
           // eslint-disable-next-line no-fallthrough
           default:
-            return Promise.resolve(Ember.Object.create(data));
+            return Promise.resolve(EmberObject.create(data));
         }
       },
-      findRecord: (type, id) => Promise.resolve(Ember.Object.create()),
-      query: () => Promise.resolve(Ember.A())
+      findRecord: (type, id) => Promise.resolve(EmberObject.create()),
+      query: () => Promise.resolve(A())
     });
 
     const result = await route.model({});
@@ -66,10 +68,10 @@ module('Unit | Route | submissions/new', (hooks) => {
         switch (type) {
           case 'publication':
             assert.ok(false, 'should not create a publication');
-            return Promise.resolve(Ember.Object.create({ title: 'MockMoo' }));
+            return Promise.resolve(EmberObject.create({ title: 'MockMoo' }));
           default:
             assert.ok(false, `unexpected 'createRecord' type found: ${type}`);
-            return Promise.resolve(Ember.Object.create(data));
+            return Promise.resolve(EmberObject.create(data));
         }
       },
       findRecord(type, id) {
@@ -79,10 +81,10 @@ module('Unit | Route | submissions/new', (hooks) => {
             return Promise.resolve(mockSub);
           default:
             assert.ok(false, `unexpected 'createRecord' type found: ${type}`);
-            return Promise.resolve(Ember.Object.create());
+            return Promise.resolve(EmberObject.create());
         }
       },
-      query: () => Promise.resolve(Ember.A())
+      query: () => Promise.resolve(A())
     });
     route.set('workflow', {
       setDoiInfo(data) {

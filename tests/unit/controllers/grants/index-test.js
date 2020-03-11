@@ -1,3 +1,5 @@
+import EmberObject from '@ember/object';
+import Service from '@ember/service';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 
@@ -5,7 +7,7 @@ module('Unit | Controller | grants/index', (hooks) => {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
-    const mockStaticConfig = Ember.Service.extend({
+    const mockStaticConfig = Service.extend({
       getStaticConfig: () => Promise.resolve({
         assetsUri: '',
         branding: {
@@ -26,7 +28,7 @@ module('Unit | Controller | grants/index', (hooks) => {
 
   test('properly returns admin roles', function (assert) {
     let controller = this.owner.lookup('controller:grants/index');
-    controller.set('currentUser.user', Ember.Object.create({
+    controller.set('currentUser.user', EmberObject.create({
       isAdmin: true
     }));
 
@@ -35,7 +37,7 @@ module('Unit | Controller | grants/index', (hooks) => {
 
   test('properly returns submitter roles', function (assert) {
     let controller = this.owner.lookup('controller:grants/index');
-    controller.set('currentUser.user', Ember.Object.create({
+    controller.set('currentUser.user', EmberObject.create({
       isSubmitter: true
     }));
 

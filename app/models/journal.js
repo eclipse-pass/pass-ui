@@ -1,3 +1,4 @@
+import { computed } from '@ember/object';
 import DS from 'ember-data';
 
 export default DS.Model.extend({
@@ -10,10 +11,10 @@ export default DS.Model.extend({
   issns: DS.attr('set'),
   publisher: DS.belongsTo('publisher'),
 
-  isMethodA: Ember.computed('pmcParticipation', function () {
+  isMethodA: computed('pmcParticipation', function () {
     return this.get('pmcParticipation') ? this.get('pmcParticipation').toLowerCase() === 'a' : false;
   }),
-  isMethodB: Ember.computed('pmcParticipation', function () {
+  isMethodB: computed('pmcParticipation', function () {
     return this.get('pmcParticipation') ? this.get('pmcParticipation').toLowerCase() === 'b' : false;
   })
 });

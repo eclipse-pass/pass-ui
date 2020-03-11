@@ -1,3 +1,4 @@
+import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 
@@ -8,7 +9,7 @@ module('Unit | Service | current-user', (hooks) => {
     const service = this.owner.lookup('service:current-user');
     assert.ok(service);
 
-    let user = Ember.Object.create({
+    let user = EmberObject.create({
       id: 0,
       username: 'hvu',
       email: 'hvu@example.com'
@@ -18,7 +19,7 @@ module('Unit | Service | current-user', (hooks) => {
       '@id': user.get('id')
     };
 
-    service.set('ajax', Ember.Object.create({
+    service.set('ajax', EmberObject.create({
       request(url, method, options) {
         assert.ok(true);
         assert.equal(url.includes('userToken'), false);
@@ -27,7 +28,7 @@ module('Unit | Service | current-user', (hooks) => {
       }
     }));
 
-    service.set('store', Ember.Object.create({
+    service.set('store', EmberObject.create({
       findRecord(type, id) {
         assert.ok(true);
         assert.equal(type, 'user');
@@ -50,7 +51,7 @@ module('Unit | Service | current-user', (hooks) => {
 
     let userToken = 'blah';
 
-    let user = Ember.Object.create({
+    let user = EmberObject.create({
       id: 0,
       username: 'hvu',
       email: 'hvu@example.com'
@@ -60,7 +61,7 @@ module('Unit | Service | current-user', (hooks) => {
       '@id': user.get('id')
     };
 
-    service.set('ajax', Ember.Object.create({
+    service.set('ajax', EmberObject.create({
       request(url, method, options) {
         assert.ok(true);
         assert.equal(url.includes(userToken), true);
@@ -69,7 +70,7 @@ module('Unit | Service | current-user', (hooks) => {
       }
     }));
 
-    service.set('store', Ember.Object.create({
+    service.set('store', EmberObject.create({
       findRecord(type, id) {
         assert.ok(true);
         assert.equal(type, 'user');

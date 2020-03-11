@@ -1,7 +1,15 @@
+import { A } from '@ember/array';
+import Service from '@ember/service';
+import EmberObject from '@ember/object';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
-import { fillIn, render, settled, triggerKeyEvent } from '@ember/test-helpers';
+import {
+  fillIn,
+  render,
+  settled,
+  triggerKeyEvent
+} from '@ember/test-helpers';
 import { run } from '@ember/runloop';
 import { task } from 'ember-concurrency';
 
@@ -9,16 +17,16 @@ module('Integration | Component | workflow basics', (hooks) => {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    let submission = Ember.Object.create({
+    let submission = EmberObject.create({
       repositories: [],
       grants: []
     });
-    let publication = Ember.Object.create({
+    let publication = EmberObject.create({
       doi: 'test',
       // title: 'Moo title',
       // journal: Ember.Object.create({ journalName: 'Moo Journal' })
     });
-    let preLoadedGrant = Ember.Object.create({});
+    let preLoadedGrant = EmberObject.create({});
     let flaggedFields = [];
     let doiInfo = [];
     this.set('submission', submission);
@@ -32,7 +40,7 @@ module('Integration | Component | workflow basics', (hooks) => {
     this.set('validateSubmitterEmail', (actual) => { });
     this.set('loadNext', (actual) => {});
 
-    const mockDoiService = Ember.Service.extend({
+    const mockDoiService = Service.extend({
       resolveDOI: task(function* (doi) {
         return yield Promise.resolve({
           doiInfo: {
@@ -58,13 +66,13 @@ module('Integration | Component | workflow basics', (hooks) => {
               { value: '1364-5528', type: 'electronic' }
             ],
           },
-          publication: Ember.Object.create({
+          publication: EmberObject.create({
             abstract: '<p>The investigators report a dramatically improved chemoselective analysis for carbonyls in crude biological extracts by turning to a catalyst and freezing conditions for derivatization.</p>',
             doi: '1234/4321',
             issue: 1,
             title: 'Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS',
             volume: '143',
-            journal: Ember.Object.create({ journalName: 'moo-title' })
+            journal: EmberObject.create({ journalName: 'moo-title' })
           })
         });
       }),
@@ -79,12 +87,12 @@ module('Integration | Component | workflow basics', (hooks) => {
       }
     });
 
-    const mockStore = Ember.Service.extend({
+    const mockStore = Service.extend({
       query(type, query) {
-        return Promise.resolve(Ember.A());
+        return Promise.resolve(A());
       },
       createRecord() {
-        return Ember.Object.create({
+        return EmberObject.create({
           save() {
             return Promise.resolve();
           }
@@ -92,7 +100,7 @@ module('Integration | Component | workflow basics', (hooks) => {
       }
     });
 
-    const mockStaticConfig = Ember.Service.extend({
+    const mockStaticConfig = Service.extend({
       getStaticConfig: () => Promise.resolve({
         assetsUri: '',
         branding: {
@@ -153,7 +161,7 @@ module('Integration | Component | workflow basics', (hooks) => {
     const submission = this.get('submission');
 
     publication.set('title', 'Moo title');
-    publication.set('journal', Ember.Object.create({ journalName: 'Moo Journal' }));
+    publication.set('journal', EmberObject.create({ journalName: 'Moo Journal' }));
 
     submission.set('publication', publication);
 
@@ -194,24 +202,24 @@ module('Integration | Component | workflow basics', (hooks) => {
    * publication on the submission.
    */
   test('Draft submission with empty metadata looksup DOI', async function (assert) {
-    const pub = Ember.Object.create({
+    const pub = EmberObject.create({
       doi: 'ThisIsADOI',
       title: 'Moo title',
-      journal: Ember.Object.create({ journalName: 'Moo Journal' })
+      journal: EmberObject.create({ journalName: 'Moo Journal' })
     });
     this.set('publication', pub);
 
     // Add metadata to submission
-    const submission = Ember.Object.create({
+    const submission = EmberObject.create({
       publication: pub,
       metadata: '{}'
     });
     this.set('submission', submission);
 
-    this.owner.register('service:doi', Ember.Service.extend({
+    this.owner.register('service:doi', Service.extend({
       resolveDOI: task(function* () {
         return yield Promise.resolve({
-          publication: Ember.Object.create({
+          publication: EmberObject.create({
             title: 'Do not want'
           }), // This publication should not be used
           doiInfo: { title: 'You better use this' }
@@ -265,16 +273,16 @@ module('Integration | Component | workflow basics', (hooks) => {
    * of data.
    */
   test('Submission metadata and other UI fields should be reset if a DOI is removed', async function (assert) {
-    const publication = Ember.Object.create({
+    const publication = EmberObject.create({
       doi: 'moo',
       title: 'Moo title',
-      journal: Ember.Object.create({
+      journal: EmberObject.create({
         journalName: 'Moo Journalitics'
       })
     });
     this.set('publication', publication);
 
-    const submission = Ember.Object.create({
+    const submission = EmberObject.create({
       publication,
       metadata: JSON.stringify({
         title: 'this is a moo, please ignore',
@@ -285,7 +293,7 @@ module('Integration | Component | workflow basics', (hooks) => {
     });
     this.set('submission', submission);
 
-    const mockDoiService = Ember.Service.extend({
+    const mockDoiService = Service.extend({
       resolveDOI: task(function* () {
         return yield Promise.resolve({
           doiInfo: {

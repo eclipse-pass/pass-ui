@@ -1,7 +1,8 @@
+import { computed } from '@ember/object';
 import Component from '@ember/component';
 
 export default Component.extend({
-  isStalled: Ember.computed('grant', function () {
+  isStalled: computed('grant', function () {
     if (this.get('grant.submissions')) {
       this.get('grant.submissions').forEach((submission) => {
         if (submission.get('deposits')) {

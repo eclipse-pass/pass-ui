@@ -1,3 +1,6 @@
+import Service from '@ember/service';
+import { A } from '@ember/array';
+import EmberObject from '@ember/object';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
@@ -7,26 +10,26 @@ import { run } from '@ember/runloop';
 module('Integration | Component | workflow grants', (hooks) => {
   setupRenderingTest(hooks);
 
-  const knownGrant = Ember.Object.create({ id: 2, awardNumber: '2', projectName: 'Moo 2' });
+  const knownGrant = EmberObject.create({ id: 2, awardNumber: '2', projectName: 'Moo 2' });
 
   hooks.beforeEach(function () {
     this.set('loadPrevious', (actual) => {});
     this.set('loadNext', (actual) => {});
 
-    const submission = Ember.Object.create({
-      grants: Ember.A(),
-      submitter: Ember.Object.create({ id: '00' })
+    const submission = EmberObject.create({
+      grants: A(),
+      submitter: EmberObject.create({ id: '00' })
     });
     this.set('submission', submission);
 
-    const grants = Ember.A([
-      Ember.Object.create({ id: 1, awardNumber: '1', projectName: 'Moo 1' }),
+    const grants = A([
+      EmberObject.create({ id: 1, awardNumber: '1', projectName: 'Moo 1' }),
       knownGrant,
-      Ember.Object.create({ id: 3, awardNumber: '3', projectName: 'Moo 3' }),
-      Ember.Object.create({ id: 4, awardNumber: '4', projectName: 'Moo 4' })
+      EmberObject.create({ id: 3, awardNumber: '3', projectName: 'Moo 3' }),
+      EmberObject.create({ id: 4, awardNumber: '4', projectName: 'Moo 4' })
     ]);
 
-    const mockStaticConfig = Ember.Service.extend({
+    const mockStaticConfig = Service.extend({
       getStaticConfig: () => Promise.resolve({
         assetsUri: '',
         branding: {
@@ -38,7 +41,7 @@ module('Integration | Component | workflow grants', (hooks) => {
 
     run(() => {
       this.owner.unregister('service:store');
-      this.owner.register('service:store', Ember.Service.extend({
+      this.owner.register('service:store', Service.extend({
         query(type, query) {
           return Promise.resolve(grants);
         },
@@ -100,8 +103,8 @@ module('Integration | Component | workflow grants', (hooks) => {
 
     this.set('preLoadedGrant', undefined);
 
-    const list = Ember.A();
-    this.owner.register('service:workflow', Ember.Service.extend({
+    const list = A();
+    this.owner.register('service:workflow', Service.extend({
       setMaxStep: (step) => {},
       addGrant(grant) {
         assert.ok(grant);
@@ -142,8 +145,8 @@ module('Integration | Component | workflow grants', (hooks) => {
   test('Clicking on a selected grant will remove it', async function (assert) {
     assert.expect(6);
 
-    const list = Ember.A();
-    this.owner.register('service:workflow', Ember.Service.extend({
+    const list = A();
+    this.owner.register('service:workflow', Service.extend({
       setMaxStep: () => {},
       clearAddedGrants: () => { list.clear(); },
       getAddedGrants: () => list,

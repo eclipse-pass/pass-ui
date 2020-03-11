@@ -74,7 +74,7 @@ export default CheckSessionRoute.extend({
         this.get('staticConfig').addFavicon(favicon);
       }
     }
-    return this._loadCurrentUser(transition.queryParams.userToken);
+    return this._loadCurrentUser(transition.to.queryParams.userToken);
   },
 
   _loadCurrentUser(userToken) {

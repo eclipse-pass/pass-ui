@@ -1,3 +1,4 @@
+import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 
@@ -14,8 +15,8 @@ module('Unit | Controller | submissions/new/policies', (hooks) => {
     assert.expect(2);
 
     const controller = this.owner.lookup('controller:submissions/new/policies');
-    const model = Ember.Object.create({
-      newSubmission: Ember.Object.create({
+    const model = EmberObject.create({
+      newSubmission: EmberObject.create({
         save: () => Promise.resolve(assert.ok(true))
       })
     });
@@ -31,8 +32,8 @@ module('Unit | Controller | submissions/new/policies', (hooks) => {
     assert.expect(2);
 
     const controller = this.owner.lookup('controller:submissions/new/policies');
-    const model = Ember.Object.create({
-      newSubmission: Ember.Object.create({
+    const model = EmberObject.create({
+      newSubmission: EmberObject.create({
         save: () => Promise.resolve(assert.ok(true))
       })
     });
@@ -48,8 +49,8 @@ module('Unit | Controller | submissions/new/policies', (hooks) => {
     assert.expect(4);
 
     const controller = this.owner.lookup('controller:submissions/new/policies');
-    const model = Ember.Object.create({
-      newSubmission: Ember.Object.create({
+    const model = EmberObject.create({
+      newSubmission: EmberObject.create({
         save: () => Promise.resolve(assert.ok(true))
       })
     });

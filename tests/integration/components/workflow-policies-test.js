@@ -1,3 +1,4 @@
+import EmberObject from '@ember/object';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
@@ -6,12 +7,12 @@ module('Integration | Component | workflow policies', (hooks) => {
   setupRenderingTest(hooks);
 
   test('it renders', function (assert) {
-    let submission = Ember.Object.create({
+    let submission = EmberObject.create({
       repositories: [],
       grants: []
     });
     let policies = [];
-    let publication = Ember.Object.create({});
+    let publication = EmberObject.create({});
 
     this.set('submission', submission);
     this.set('policies', policies);

@@ -1,3 +1,4 @@
+import { hash } from 'rsvp';
 import CheckSessionRoute from '../../check-session-route';
 import { inject as service } from '@ember/service';
 
@@ -41,7 +42,7 @@ export default CheckSessionRoute.extend({
 
     const policies = await this.get('policyService.getPolicies').perform(submission);
 
-    return Ember.RSVP.hash({
+    return hash({
       repositories: parentModel.repositories,
       newSubmission: parentModel.newSubmission,
       publication: parentModel.publication,

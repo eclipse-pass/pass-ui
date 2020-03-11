@@ -1,3 +1,5 @@
+import { A } from '@ember/array';
+import { computed } from '@ember/object';
 import Controller from '@ember/controller';
 import ENV from 'pass-ember/config/environment';
 import { inject as service } from '@ember/service';
@@ -13,7 +15,7 @@ export default Controller.extend({
   uploading: false,
   waitingMessage: '',
 
-  filesTemp: Ember.computed('workflow.filesTemp', {
+  filesTemp: computed('workflow.filesTemp', {
     get(key) {
       return this.get('workflow').getFilesTemp();
     },
@@ -22,7 +24,7 @@ export default Controller.extend({
       return value;
     }
   }),
-  userIsSubmitter: Ember.computed(
+  userIsSubmitter: computed(
     'currentUser.user',
     'model.newSubmission.submitter',
     function () {
@@ -63,7 +65,7 @@ export default Controller.extend({
           toastr.error(`Submission failed: ${error.message}`);
         }).then(() => {
           this.set('uploading', false);
-          this.set('filesTemp', Ember.A());
+          this.set('filesTemp', A());
           this.set('comment', '');
           this.transitionToRoute('thanks', { queryParams: { submission: sub.get('id') } });
         });

@@ -1,3 +1,4 @@
+import EmberObject from '@ember/object';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
@@ -6,9 +7,9 @@ module('Integration | Component | workflow wrapper', (hooks) => {
   setupRenderingTest(hooks);
 
   test('it renders', function (assert) {
-    let submission = Ember.Object.create({ });
-    let publication = Ember.Object.create({ });
-    let submissionEvent = Ember.Object.create({ });
+    let submission = EmberObject.create({ });
+    let publication = EmberObject.create({ });
+    let submissionEvent = EmberObject.create({ });
 
     this.set('submission', submission);
     this.set('publication', publication);

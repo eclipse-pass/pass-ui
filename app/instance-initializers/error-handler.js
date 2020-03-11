@@ -1,5 +1,7 @@
 // Set global error handlers for the application
 
+import { on } from 'rsvp';
+
 export function initialize(app) {
   let errorHandler = app.lookup('service:error-handler');
 
@@ -11,7 +13,7 @@ export function initialize(app) {
     errorHandler.handleError(error);
   };
 
-  Ember.RSVP.on('error', (error) => {
+  on('error', (error) => {
     errorHandler.handleError(error);
   });
 }

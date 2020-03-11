@@ -33,7 +33,18 @@ export default function (server) {
         selected: false
       }
     ],
-    'one-of': [],
+    'one-of': [
+      [
+        {
+          'repository-id': 'https://pass.local/fcrepo/rest/repositories/77/64/12/ec/776412ec-0f5e-488e-97dc-15bb427d27e2',
+          selected: false
+        },
+        {
+          'repository-id': 'https://pass.local/fcrepo/rest/repositories/41/96/0a/92/41960a92-d3f8-4616-86a6-9e9cadc1a269',
+          selected: true
+        }
+      ]
+    ],
     optional: [
       {
         'repository-id': 'https://pass.local/fcrepo/rest/repositories/41/96/0a/92/41960a92-d3f8-4616-86a6-9e9cadc1a269',

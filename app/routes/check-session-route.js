@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import Route from '@ember/routing/route';
 import ENV from '../config/environment';
 import { inject as service } from '@ember/service';
@@ -10,7 +11,7 @@ export default Route.extend({
     if (ENV.userService.url) {
       url = ENV.userService.url;
     }
-    Ember.$.get(url, (data) => {
+    $.get(url, (data) => {
       if (!(data.username)) {
         transition.abort();
         this.get('errorHandler').handleError(new Error('shib302'));

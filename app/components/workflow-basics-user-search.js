@@ -1,3 +1,4 @@
+import { computed } from '@ember/object';
 import Component from '@ember/component';
 import ENV from '../config/environment';
 import { inject as service } from '@ember/service';
@@ -9,20 +10,20 @@ export default Component.extend({
   currentPage: 1,
   usersPerPage: 30,
   numberOfMatches: 0,
-  numberOfPages: Ember.computed('numberOfMatches', 'usersPerPage', function () {
+  numberOfPages: computed('numberOfMatches', 'usersPerPage', function () {
     return Math.ceil(this.get('numberOfMatches') / this.get('usersPerPage'));
   }),
-  pageNumbers: Ember.computed('numberOfPages', function () {
+  pageNumbers: computed('numberOfPages', function () {
     let arr = [];
     for (let i = 1; i <= this.get('numberOfPages'); i += 1) {
       arr.push(i);
     }
     return arr;
   }),
-  moreThanOnePage: Ember.computed('numberOfPages', function () {
+  moreThanOnePage: computed('numberOfPages', function () {
     return (this.get('numberOfPages') ? (this.get('numberOfPages') > 1) : false);
   }),
-  filteredUsers: Ember.computed('matchingUsers', 'currentUser.user.id', function () {
+  filteredUsers: computed('matchingUsers', 'currentUser.user.id', function () {
     let users = this.get('matchingUsers');
     return users.filter(u => u.id !== this.get('currentUser.user.id'));
   }),

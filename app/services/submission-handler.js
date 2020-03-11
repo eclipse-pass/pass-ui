@@ -1,4 +1,5 @@
-import Service from '@ember/service';
+import { A, isArray } from '@ember/array';
+import Service, { inject as service } from '@ember/service';
 import ENV from 'pass-ember/config/environment';
 import { task } from 'ember-concurrency';
 import { get } from '@ember/object';
@@ -7,9 +8,9 @@ import { get } from '@ember/object';
  * Service to manage submissions.
  */
 export default Service.extend({
-  store: Ember.inject.service('store'),
-  currentUser: Ember.inject.service('current-user'),
-  schemaService: Ember.inject.service('metadata-schema'),
+  store: service('store'),
+  currentUser: service('current-user'),
+  schemaService: service('metadata-schema'),
 
   /**
    * Get all repositories associated with grants.
@@ -18,16 +19,16 @@ export default Service.extend({
    * @returns EmberArray with repositories
    */
   getRepositoriesFromGrants(grants) {
-    let result = Ember.A();
+    let result = A();
 
     grants.forEach((grant) => {
       const directRepos = grant.get('directFunder.policy.repositories');
       const primaryRepos = grant.get('primaryFunder.policy.repositories');
 
-      if (Ember.isArray(directRepos)) {
+      if (isArray(directRepos)) {
         result.pushObjects(directRepos.toArray());
       }
-      if (Ember.isArray(primaryRepos)) {
+      if (isArray(primaryRepos)) {
         result.pushObjects(primaryRepos.toArray());
       }
     });
@@ -182,7 +183,9 @@ export default Service.extend({
     submission.set('publication', p);
 
     const s = yield submission.save();
-    yield get(this, '_finishSubmission').perform(s, comment);
+    yield get(this, '_finishSubmission').perform(s, comment).catch((e) => {
+      if (!didCancel(e)) { throw e; }
+    });
   }),
 
   /**
