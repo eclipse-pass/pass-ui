@@ -11,6 +11,6 @@ env:
 before_install:
 - npm config set spin false
 install:
-- yarn install --flat
+- yarn install
 script:
   - ember test --test-port=4200
