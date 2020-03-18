@@ -4,7 +4,7 @@ import Service from '@ember/service';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
-import { render, click, settled, find } from '@ember/test-helpers';
+import { render, click, settled } from '@ember/test-helpers';
 import { run } from '@ember/runloop';
 
 module('Integration | Component | submission action cell', (hooks) => {
