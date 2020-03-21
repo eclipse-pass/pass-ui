@@ -14,6 +14,5 @@ module.exports = {
   */
   liveReload: false,
   testPort: 4200,
-  watcher: "polling",
   disableAnalytics: false,
 };
