@@ -3,10 +3,6 @@
   Form {{displayFormStep}} of {{schemas.length}}
 </h4>
 {{#if currentSchema}}
-{{metadata-form
-  schema=currentSchema
-  nextForm=(action "nextForm")
-  previousForm=(action "previousForm")
-  cancel=(action "cancel")}}
+<MetadataForm @schema={{currentSchema}} @nextForm={{action "nextForm"}} @previousForm={{action "previousForm"}} @cancel={{action "cancel"}} />
 {{/if}}
 {{yield}}

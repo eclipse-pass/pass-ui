@@ -1,4 +1,4 @@
-{{ember-load-remover}}
+<EmberLoadRemover />
 <div id="brand-site-container" class="site" style="z-index:0;">
   <header id="brand-header" class="navbar navbar-expand-xs justify-content-center mb-0">
     <div class={{if fullWidth 'container-fluid' 'container'}}>
@@ -16,9 +16,9 @@
     </div>
   </header>
   <div style="z-index:10;">
-    {{#sticky-element}}
-      {{nav-bar fullWidth=fullWidth}}
-    {{/sticky-element}}
+    <StickyElement>
+      <NavBar @fullWidth={{fullWidth}} />
+    </StickyElement>
   </div>
   <div class="{{if fullWidth 'container-fluid' 'container'}} site-content">
     {{institution}}

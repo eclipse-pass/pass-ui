@@ -6,7 +6,7 @@
 
 {{#if submission.grants}}
   <h5>Grants added to submission</h5>
-  {{submission-funding-table grants=submission.grants remove=(action "removeGrant")}}
+  <SubmissionFundingTable @grants={{submission.grants}} @remove={{action "removeGrant"}} />
   <button class="btn btn-outline-primary" {{action back}}>Back</button>
   <button class="btn btn-primary next pull-right" {{action next}} data-test-workflow-grants-next>Next</button>
   <br>
@@ -25,22 +25,7 @@
   {{#if (gt pageCount "1")}}
   <p  class="font-italic">Showing {{pageFirstMatchNumber}}-{{pageLastMatchNumber}} of total {{totalGrants}}</p>
   {{/if}}
-  {{models-table
-    id="grants-selection-table"
-    data=submitterGrants
-    columns=grantColumns
-    themeInstance=themeInstance
-    showColumnsDropdown=false
-    useFilteringByColumns=false
-    multipleColumnsSorting=false
-    showComponentFooter=false
-    showGlobalFilter=false
-    pageSize=pageSize
-    multipleSelect=true
-    selectedItems=submission.grants
-    displayDataChangedAction=(action "dataChange")
-    data-test-grants-selection-table=true
-  }}
+  <ModelsTable @id="grants-selection-table" @data={{submitterGrants}} @columns={{grantColumns}} @themeInstance={{themeInstance}} @showColumnsDropdown={{false}} @useFilteringByColumns={{false}} @multipleColumnsSorting={{false}} @showComponentFooter={{false}} @showGlobalFilter={{false}} @pageSize={{pageSize}} @multipleSelect={{true}} @selectedItems={{submission.grants}} @displayDataChangedAction={{action "dataChange"}} @data-test-grants-selection-table={{true}} />
 
   {{#if (gt pageCount "1")}}
     <nav id="grants-selection-nav" aria-label="...">

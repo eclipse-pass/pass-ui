@@ -58,18 +58,18 @@
 </div>
 <div id="submission-details-title" class="row mb-2">
   <div class="col-6">
-    {{#link-to 'submissions' class="btn btn-small back-arrow" }}<i class="fa fa-arrow-left fa-lg"></i>{{/link-to}}
+    <LinkTo @route="submissions" class="btn btn-small back-arrow"><i class="fa fa-arrow-left fa-lg"></i></LinkTo>
     <h2 class="font-weight-light d-inline-block">Submission Detail</h2>
   </div>
   <div class="col-6 text-right">
     {{#if model.sub.isStub}}
-      {{#link-to 'submissions.new' (query-params submission=model.sub.id) class="btn btn-outline-primary text-right" }}
+      <LinkTo @route="submissions.new" @query={{hash submission=model.sub.id}} class="btn btn-outline-primary text-right">
         Finish submission
-      {{/link-to}}
+      </LinkTo>
     {{else if model.sub.isDraft}}
-      {{#link-to 'submissions.new' (query-params submission=model.sub.id) class="btn btn-outline-primary text-right"}}
+      <LinkTo @route="submissions.new" @query={{hash submission=model.sub.id}} class="btn btn-outline-primary text-right">
         Edit submission
-      {{/link-to}}
+      </LinkTo>
       <button {{action "deleteSubmission" model.sub}} class="btn btn-outline-danger text-right">
         Delete
       </button>
@@ -91,7 +91,7 @@
             <tr>
               <td><strong>Submission status</strong></td>
               <td>
-                {{submission-status submissionStatus=model.sub.submissionStatus}}
+                <SubmissionStatus @submissionStatus={{model.sub.submissionStatus}} />
               </td>
             </tr>
             <tr>
@@ -115,8 +115,7 @@
               <td>
                 <ul class="list-unstyled">
                   {{#each repoMap as |repoInfo index|}}
-                  {{submission-repo-details repo=repoInfo.repo deposit=repoInfo.deposit
-                  repoCopy=repoInfo.repositoryCopy submission=model.sub}}
+                  <SubmissionRepoDetails @repo={{repoInfo.repo}} @deposit={{repoInfo.deposit}} @repoCopy={{repoInfo.repositoryCopy}} @submission={{model.sub}} />
                   {{/each}}
                 </ul>
               </td>
@@ -190,7 +189,7 @@
               <td><strong>Details</strong></td>
               <td>
                 {{!-- <DisplayMetadataKeys @submission={{submission}}/> --}}
-                {{display-metadata-keys submission=model.sub}}
+                <DisplayMetadataKeys @submission={{model.sub}} />
               </td>
             </tr>
             <tr>
@@ -246,10 +245,9 @@
             <tr>
               <td class="text-nowrap"><strong>Comments</strong></td>
               <td>
-                {{commenting-block submissionEvents=model.submissionEvents}}
+                <CommentingBlock @submissionEvents={{model.submissionEvents}} />
                 {{#if (or (and isSubmitter submissionNeedsSubmitter) (and isPreparer submissionNeedsPreparer))}}
-                {{textarea placeholder="Add comment" value=message class="form-control custom-control p-2" rows="2"
-                style="resize:none; min-height: 38px!important;"}}
+                <Textarea placeholder="Add comment" @value={{message}} class="form-control custom-control p-2" @rows="2" @style="resize:none; min-height: 38px!important;" />
                 {{/if}}
               </td>
             </tr>
@@ -265,7 +263,7 @@
   <div class="col-12 text-right">
     <button class="btn btn-primary" onclick={{action 'approveChanges'}}>Submit</button>
     <button class="btn btn-outline-primary" onclick={{action 'requestMoreChanges'}}>Request More Changes</button>
-    {{#link-to 'submissions.new' (query-params submission=model.sub.id) class="btn btn-outline-primary"}}Edit Submission{{/link-to}}
+    <LinkTo @route="submissions.new" @query={{hash submission=model.sub.id}} class="btn btn-outline-primary">Edit Submission</LinkTo>
     <button class="btn btn-danger" onclick={{action 'cancelSubmission'}}>Cancel Submission</button>
   </div>
 </div>
@@ -273,8 +271,8 @@
 {{#if (and isPreparer submissionNeedsPreparer)}}
 <div class="row">
   <div class="col-12 text-right">
-    {{#link-to 'submissions.new' (query-params submission=model.sub.id) class="btn btn-primary"}}Edit this
-    submission{{/link-to}}
+    <LinkTo @route="submissions.new" @query={{hash submission=model.sub.id}} class="btn btn-primary">Edit this
+    submission</LinkTo>
   </div>
 </div>
 {{/if}}

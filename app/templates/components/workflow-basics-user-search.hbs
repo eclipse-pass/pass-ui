@@ -4,7 +4,7 @@
     <h2>Search Users</h2>
     <p class="text-muted">Search by name or email and click on a user to assign them to the submitter role.</p>
     <div class="input-group pb-3">
-      {{input value=searchInput enter=(action 'searchForUsers' 1) class="form-control"}}
+      <Input @value={{searchInput}} @enter={{action "searchForUsers" 1}} class="form-control" />
       <span class="input-group-btn">
         <button id='search-for-users' class="btn btn-primary" {{action 'searchForUsers' 1}} type="button">Search</button>
       </span>

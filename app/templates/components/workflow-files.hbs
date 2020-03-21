@@ -49,7 +49,7 @@
               </select>
             </td>
             <td class="vertical-align-middle">
-              {{input class="form-control file-description-width" value=file.description}}
+              <Input class="form-control file-description-width" @value={{file.description}} />
             </td>
             <td class="text-center vertical-align-middle">
               <button type="button" class="btn btn-outline-danger" {{action 'deleteExistingFile' file}}>Remove</button>
@@ -70,7 +70,7 @@
               </select>
             </td>
             <td class="vertical-align-middle">
-              {{input class="form-control file-description-width" value=file.description}}
+              <Input class="form-control file-description-width" @value={{file.description}} />
             </td>
             <td class="text-center vertical-align-middle">
               <button type="button" class="btn btn-outline-danger" {{action 'removeFile' file}}>Remove</button>

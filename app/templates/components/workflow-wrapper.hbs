@@ -7,7 +7,7 @@
     <div class="font-weight-light col-12" style="font-style:italic;">{{publication.title}}</div>
   </div>
   <div class="row">
-    {{submission-nav loadTab=(action "loadTab") class="col-lg-12"}}
+    <SubmissionNav @loadTab={{action "loadTab"}} @class="col-lg-12" />
   </div>
   <div class="row justify-content-center">
     <main class="col-lg-12">
@@ -20,7 +20,7 @@
     <div class="alert alert-info mt-3">
       <h3 class="mt-3 mb-0">Comments</h3>
       <hr class="mt-0">
-      {{commenting-block submissionEvents=submissionEvents}}
+      <CommentingBlock @submissionEvents={{submissionEvents}} />
     </div>
     {{/if}}
   {{/if}}

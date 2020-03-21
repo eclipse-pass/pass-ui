@@ -20,7 +20,7 @@
   </p>
   <p class="mb-0">Please indicate on behalf of whom this submission is being completed:</p>
     <div class="input-group pb-3">
-      {{input enter=(action 'toggleUserSearchModal') value=userSearchTerm class="form-control"}}
+      <Input @enter={{action "toggleUserSearchModal"}} @value={{userSearchTerm}} class="form-control" />
       <span class="input-group-btn">
         <button id='search-for-users' class="btn btn-primary" {{action 'toggleUserSearchModal'}} type="button">Search</button>
       </span>
@@ -35,8 +35,8 @@
     provide their email address and name so we may notify them:
   </p>
   <div class="form-inline">
-  {{input class=(concat "mt-1 mb-3 form-control w-50 " submitterEmailClass) keyUp=(action validateSubmitterEmail) disabled=submission.submitter.id value=inputSubmitterEmail placeholder="Email address"}}
-  {{input class="mt-1 mb-3 form-control w-50" disabled=submission.submitter.id value=submission.submitterName placeholder="Name"}}
+  <Input class={{concat "mt-1 mb-3 form-control w-50 " submitterEmailClass}} @keyUp={{action validateSubmitterEmail}} @disabled={{submission.submitter.id}} @value={{inputSubmitterEmail}} placeholder="Email address" />
+  <Input class="mt-1 mb-3 form-control w-50" @disabled={{submission.submitter.id}} @value={{submission.submitterName}} placeholder="Name" />
   </div>
 </div>
 {{/if}}
@@ -58,14 +58,7 @@
     </i>
   </p>
 
-  {{input
-    class=doiClass
-    value=publication.doi
-    input=(action "lookupDOI" true)
-    id="doi"
-    placeholder="Leave blank if your manuscript or article has not yet been assigned a DOI"
-    data-test-doi-input=true
-  }}
+  <Input class={{doiClass}} @value={{publication.doi}} @input={{action "lookupDOI" true}} @id="doi" placeholder="Leave blank if your manuscript or article has not yet been assigned a DOI" data-test-doi-input={{true}} />
   <div class="text-danger">
     {{if (and publication.doi (not isValidDOI)) 'Please provide a valid DOI'}}
   </div>
@@ -75,8 +68,7 @@
 </div>
 <div class="form-group">
   <label>Manuscript/Article Title <span class="text-muted">(required)</span></label>
-  {{textarea value=publication.title cols="100%" rows="2" class=titleClass placeholder="Manuscript/Article Title"
-    keyUp=(action validateTitle) id="title" readonly=isValidDOI data-test-article-title-text-area=true}}
+  <Textarea @value={{publication.title}} @cols="100%" @rows="2" class={{titleClass}} placeholder="Manuscript/Article Title" @keyUp={{action validateTitle}} @id="title" @readonly={{isValidDOI}} data-test-article-title-text-area={{true}} />
 </div>
 
 <div class="form-group">
@@ -88,13 +80,13 @@
   </div>
   <div class="w-100">
     {{#unless isValidDOI}}
-    {{find-journal id="journal" selectJournal=(action "selectJournal") value=publication.journal journalClass=journalClass isValidDOI=isValidDOI}}
+    <FindJournal @id="journal" @selectJournal={{action "selectJournal"}} @value={{publication.journal}} @journalClass={{journalClass}} @isValidDOI={{isValidDOI}} />
     {{else}}
     <input type="text" class="form-control" value={{publication.journal.journalName}} readonly data-test-journal-name-input>
     {{/unless}}
   </div>
 </div>
-{{#link-to 'submissions.index' class="btn btn-outline-primary"}}Back{{/link-to}}
+<LinkTo @route="submissions.index" class="btn btn-outline-primary">Back</LinkTo>
 <button class="btn btn-outline-danger ml-2" {{action 'cancel'}}>Abort</button>
 {{#if inFlight}}
   <button class="btn btn-primary pull-right next" disabled>Next</button>
@@ -103,16 +95,8 @@
 {{/if}}
 {{#if isShowingUserSearchModal}}
   <div class="user-search-modal">
-    {{#modal-dialog
-      translucentOverlay=true
-      tetherTarget='#on-behalf-of-block'
-      attachment='top center'
-      targetAttachment='top center'
-      containerClass='user-search-modal'}}
-      {{workflow-basics-user-search
-        toggleUserSearchModal=(action 'toggleUserSearchModal')
-        pickSubmitter=(action 'pickSubmitter')
-        searchInput=userSearchTerm}}
-    {{/modal-dialog}}
+    <ModalDialog @translucentOverlay={{true}} @tetherTarget="#on-behalf-of-block" @attachment="top center" @targetAttachment="top center" @containerClass="user-search-modal">
+      <WorkflowBasicsUserSearch @toggleUserSearchModal={{action "toggleUserSearchModal"}} @pickSubmitter={{action "pickSubmitter"}} @searchInput={{userSearchTerm}} />
+    </ModalDialog>
   </div>
 {{/if}}

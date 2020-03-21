@@ -14,13 +14,13 @@
         </p>
         <div class="text-center">
           {{#if (get (await currentUser.user) 'isSubmitter')}}
-            {{#link-to "submissions.new" class='btn btn-primary mt-1 mr-1' data-test-start-new-submission=true}}
+            <LinkTo @route="submissions.new" class="btn btn-primary mt-1 mr-1" data-test-start-new-submission={{true}}>
               Start new submission
-            {{/link-to}}
+            </LinkTo>
           {{/if}}
-          {{#link-to 'submissions' class='btn btn-primary mr-auto mt-1'}}
+          <LinkTo @route="submissions" class="btn btn-primary mr-auto mt-1">
             View submissions
-          {{/link-to}}
+          </LinkTo>
         </div>
       </div>
     </div>
@@ -37,9 +37,9 @@
           </ul>
         </p>
         <div class="text-center">
-          {{#link-to 'grants' class='btn btn-primary mt-1'}}
+          <LinkTo @route="grants" class="btn btn-primary mt-1">
             Manage grants' submissions
-          {{/link-to}}
+          </LinkTo>
         </div>
       </div>
     </div>
@@ -51,10 +51,10 @@
       <div class="alert alert-info">
         You have:<br>
         {{#if model.numberAwaitingApproval}}
-          {{#link-to 'submissions.index'}}{{model.numberAwaitingApproval}} submission(s){{/link-to}} awaiting your approval.<br>
+          <LinkTo @route="submissions.index">{{model.numberAwaitingApproval}} submission(s)</LinkTo> awaiting your approval.<br>
         {{/if}}
         {{#if model.numberAwaitingEdits}}
-          {{#link-to 'submissions.index'}}{{model.numberAwaitingEdits}} submission(s){{/link-to}} with a submitter waiting for you to edit them.
+          <LinkTo @route="submissions.index">{{model.numberAwaitingEdits}} submission(s)</LinkTo> with a submitter waiting for you to edit them.
         {{/if}}
       </div>
     </div>

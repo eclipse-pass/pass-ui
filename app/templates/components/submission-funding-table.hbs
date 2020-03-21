@@ -10,7 +10,7 @@
     {{#each grants as |grant|}}
       <tr class="pr-0">
         <td class="awardnum-column">
-          {{#link-to "grants.detail" grant class="text-nowrap" target="_blank"}}{{grant.awardNumber}}{{/link-to}}
+          <LinkTo @route="grants.detail" @model={{grant}} class="text-nowrap" @target="_blank">{{grant.awardNumber}}</LinkTo>
         </td>
         <td class="projectname-date-column">{{grant.projectName}} ({{ format-date grant.startDate }} -  {{ format-date grant.endDate }})</td>
         <td class="pr-0 mr-0">

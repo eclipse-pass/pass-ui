@@ -6,10 +6,7 @@
   </p>
   <ul class="list-group" data-test-workflow-repositories-required-list>
     {{#each requiredRepositories as |repoInfo|}}
-      {{repository-card
-        repository=repoInfo.repository
-        funders=repoInfo.funders
-        type="required"}}
+      <RepositoryCard @repository={{repoInfo.repository}} @funders={{repoInfo.funders}} @type="required" />
     {{/each}}
   </ul>
 {{/if}}
@@ -20,9 +17,7 @@
     You must submit to at least one repository from each group.
   </p>
   {{#each choiceRepositories as |repoGroup|}}
-    {{choice-repositories-card
-      choiceGroup=repoGroup
-      toggleRepository=(action "toggleRepository")}}
+    <ChoiceRepositoriesCard @choiceGroup={{repoGroup}} @toggleRepository={{action "toggleRepository"}} />
   {{/each}}
 
 {{/if}}
@@ -40,12 +35,7 @@
   <div id="local-deposit-list">
     <ul class="list-group" data-test-workflow-repositories-optional-list>
       {{#each optionalRepositories as |repoInfo|}}
-        {{repository-card
-          repository=repoInfo.repository
-          funders=repoInfo.funders
-          choice="true"
-          type="optional"
-          toggleRepository=(action "toggleRepository")}}
+        <RepositoryCard @repository={{repoInfo.repository}} @funders={{repoInfo.funders}} @choice="true" @type="optional" @toggleRepository={{action "toggleRepository"}} />
       {{/each}}
     </ul>
   </div>

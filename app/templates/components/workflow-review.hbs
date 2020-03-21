@@ -49,7 +49,7 @@
       <div href="#" class="list-group-item flex-column align-items-start">
         <div class="d-flex w-100 justify-content-between">
           <h5 class="mb-1" data-test-workflow-review-title> {{publication.title}}</h5>
-          <small class="text-muted">{{submission.dateSubmitted.date-time}}<br>{{submission.dateCreated.date-time}}</small>
+          <small class="text-muted"><submission.dateSubmitted.date-time /><br><submission.dateCreated.date-time /></small>
         </div>
         <p class="mb-1" data-test-workflow-review-doi>{{publication.doi}}</p>
         <div class="text-muted">Please review the information below</div>
@@ -113,7 +113,7 @@
             <tr>
               <td>Details</td>
               <td>
-                {{display-metadata-keys submission=submission}}
+                <DisplayMetadataKeys @submission={{submission}} />
               </td>
             </tr>
 
@@ -187,9 +187,8 @@
                 </p>
                 {{/unless}}
                 <hr>
-                {{commenting-block submissionEvents=submission.submissionEvents}}
-                {{textarea placeholder="Add comment" value=comment class="form-control custom-control p-2" rows="2"
-                style="resize:none; min-height: 38px!important;"}}
+                <CommentingBlock @submissionEvents={{submission.submissionEvents}} />
+                <Textarea placeholder="Add comment" @value={{comment}} class="form-control custom-control p-2" @rows="2" @style="resize:none; min-height: 38px!important;" />
               </td>
             </tr>
             {{/if}}
