@@ -109,24 +109,29 @@
               </td>
             </tr>
             {{!-- Consolidate repository, deposit, repoCopy info --}}
-            {{#if repoMap}}
+            {{#if this.repoMap}}
             <tr>
               <td class="text-nowrap"><strong>Repositories</strong></td>
               <td>
                 <ul class="list-unstyled">
-                  {{#each repoMap as |repoInfo index|}}
-                  <SubmissionRepoDetails @repo={{repoInfo.repo}} @deposit={{repoInfo.deposit}} @repoCopy={{repoInfo.repositoryCopy}} @submission={{model.sub}} />
+                  {{#each this.repoMap as |repoInfo index|}}
+                    <SubmissionRepoDetails
+                      @repo={{repoInfo.repo}}
+                      @deposit={{repoInfo.deposit}}
+                      @repoCopy={{repoInfo.repositoryCopy}}
+                      @submission={{model.sub}}
+                    />
                   {{/each}}
                 </ul>
               </td>
             </tr>
             {{/if}}
-            {{#if externalSubmission}}
+            {{#if this.externalSubmission}}
             <tr>
               <td><strong>External Submission Repositories</strong></td>
               <td>
                 <ul class="list-unstyled">
-                  {{#each externalSubmission as |sub|}}
+                  {{#each this.externalSubmission as |sub|}}
                   <li>{{sub.message}}</li>
                   {{/each}}
                 </ul>
@@ -138,11 +143,11 @@
               <td>
                 {{#if (eq model.sub.source "other")}}
                 <i>This submission did not originate from PASS</i>
-                {{else if displaySubmitterName}}
-                {{displaySubmitterName}}
+                {{else if this.displaySubmitterName}}
+                {{this.displaySubmitterName}}
                 {{/if}}
-                {{#if displaySubmitterEmail}}
-                &nbsp;(<a href="mailto:{{displaySubmitterEmail}}">{{displaySubmitterEmail}}</a>)
+                {{#if this.displaySubmitterEmail}}
+                &nbsp;(<a href="mailto:{{this.displaySubmitterEmail}}">{{this.displaySubmitterEmail}}</a>)
                 {{/if}}
               </td>
             </tr>
@@ -241,12 +246,12 @@
                 {{/if}}
               </td>
             </tr>
-            {{#if (or isPreparer isSubmitter)}}
+            {{#if (or this.this.isPreparer this.isSubmitter)}}
             <tr>
               <td class="text-nowrap"><strong>Comments</strong></td>
               <td>
                 <CommentingBlock @submissionEvents={{model.submissionEvents}} />
-                {{#if (or (and isSubmitter submissionNeedsSubmitter) (and isPreparer submissionNeedsPreparer))}}
+                {{#if (or (and this.isSubmitter this.submissionNeedsSubmitter) (and this.isPreparer this.submissionNeedsPreparer))}}
                 <Textarea placeholder="Add comment" @value={{message}} class="form-control custom-control p-2" @rows="2" @style="resize:none; min-height: 38px!important;" />
                 {{/if}}
               </td>
@@ -258,7 +263,7 @@
     </div>
   </div>
 </div>
-{{#if (and isSubmitter submissionNeedsSubmitter)}}
+{{#if (and this.isSubmitter this.submissionNeedsSubmitter)}}
 <div class="row">
   <div class="col-12 text-right">
     <button class="btn btn-primary" onclick={{action 'approveChanges'}}>Submit</button>
@@ -268,7 +273,7 @@
   </div>
 </div>
 {{/if}}
-{{#if (and isPreparer submissionNeedsPreparer)}}
+{{#if (and this.isPreparer this.submissionNeedsPreparer)}}
 <div class="row">
   <div class="col-12 text-right">
     <LinkTo @route="submissions.new" @query={{hash submission=model.sub.id}} class="btn btn-primary">Edit this

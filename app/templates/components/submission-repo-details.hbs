@@ -11,10 +11,10 @@
   <div class="card float-left col-5 mr-3 mb-0">
     <div class="card-body sub-status">
       <div class="row card-title">
-        {{#if repo.url}}
-          <a href={{repo.url}} target="_blank">{{repo.name}}</a>
+        {{#if @repo.url}}
+          <a href={{@repo.url}} target="_blank">{{@repo.name}}</a>
         {{else}}
-          {{repo.name}}
+          {{@repo.name}}
         {{/if}}
       </div>
       <p class="card-text">
@@ -22,9 +22,9 @@
           <strong class="col-5 px-0">Deposit status: </strong>
           {{#if isExternalRepo}}
             {{!-- {{#if isSubmitted}}
-              <span class="col">Deposit into {{repo.name}} was prompted.</span>
+              <span class="col">Deposit into {{@repo.name}} was prompted.</span>
             {{else}}
-              <span class="col">Deposit into {{repo.name}} will be prompted.</span>
+              <span class="col">Deposit into {{@repo.name}} will be prompted.</span>
             {{/if}} --}}
           {{else}}
             <div class="col">
@@ -46,7 +46,7 @@
           {{/if}}
         </div>
         <hr class="my-2">
-        <RepocopyDisplay @repoCopy={{repoCopy}} />
+        <RepocopyDisplay @repoCopy={{@repoCopy}} />
       </p>
     </div>
   </div>

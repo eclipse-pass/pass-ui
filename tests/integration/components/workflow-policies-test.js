@@ -2,11 +2,12 @@ import EmberObject from '@ember/object';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
+import { render } from '@ember/test-helpers';
 
 module('Integration | Component | workflow policies', (hooks) => {
   setupRenderingTest(hooks);
 
-  test('it renders', function (assert) {
+  test('it renders', async function (assert) {
     let submission = EmberObject.create({
       repositories: [],
       grants: []
@@ -20,12 +21,15 @@ module('Integration | Component | workflow policies', (hooks) => {
     this.set('loadPrevious', (actual) => {});
     this.set('loadNext', (actual) => {});
 
-    this.render(hbs`{{workflow-policies
-      submission=submission
-      policies=policies
-      publication=publication
-      next=(action loadNext)
-      back=(action loadPrevious)}}`);
+    await render(hbs`
+      <WorkflowPolicies
+        @submission={{this.submission}}
+        @policies={{this.policies}}
+        @publication={{this.publication}}
+        @next={{action this.loadNext}}
+        @back={{action this.loadPrevious}}
+      />
+    `);
     assert.ok(true);
   });
 });

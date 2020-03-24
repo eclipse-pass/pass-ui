@@ -3,7 +3,7 @@
     <h1 class="font-weight-light pt-1">Submissions</h1>
   </div>
   <div class="col-6">
-    {{#if (get (await currentUser.user) 'isSubmitter')}}
+    {{#if (get (await this.currentUser.user) 'isSubmitter')}}
       <LinkTo @route="submissions.new" @query={{hash grant=null submission=null}} class="btn btn-primary btn-small pull-right">Create new submission</LinkTo>
     {{/if}}
   </div>
@@ -12,14 +12,30 @@
   it may also contain pre-loaded information about incomplete, in-progress, or completed Submissions
   to PubMed Central that cite a grant for which you are the PI. Find out more about these pre-loaded
   NIH submissions on the
-  <a href="{{assetsUri}}faq.html#nih-submissions">FAQ page</a>
+  <a href="{{this.assetsUri}}faq.html#nih-submissions">FAQ page</a>
 </p>
 <div class="row">
   <div class="col-12" style="overflow-x: auto;">
     <div class="submission-table">
-    <ModelsTable @data={{model.submissions}} @columns={{columns}} @themeInstance={{themeInstance}} @showColumnsDropdown={{false}} @useFilteringByColumns={{false}} @filteringIgnoreCase={{true}} @multipleColumnsSorting={{false}} @authorSelected="authorclick" @pageSize={{tablePageSize}} @pageSizeValues={{tablePageSizeValues}} />
+    <ModelsTable
+      @data={{model.submissions}}
+      @columns={{this.columns}}
+      @themeInstance={{this.themeInstance}}
+      @showColumnsDropdown={{false}}
+      @useFilteringByColumns={{false}}
+      @filteringIgnoreCase={{true}}
+      @multipleColumnsSorting={{false}}
+      @authorSelected="authorclick"
+      @pageSize={{this.tablePageSize}}
+      @pageSizeValues={{this.tablePageSizeValues}}
+    />
     </div>
   </div>
 </div>
-<MessageDialog @show={{messageShow}} @to={{messageTo}} @subject={{messageSubject}} @message={{messageText}}>
+<MessageDialog
+  @show={{this.messageShow}}
+  @to={{this.messageTo}}
+  @subject={{this.messageSubject}}
+  @message={{this.messageText}}
+>
 </MessageDialog>

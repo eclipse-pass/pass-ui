@@ -2,6 +2,7 @@ import Service from '@ember/service';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
+import { render } from '@ember/test-helpers';
 
 module('Integration | Component | nav bar', (hooks) => {
   setupRenderingTest(hooks);
@@ -19,7 +20,7 @@ module('Integration | Component | nav bar', (hooks) => {
 
     this.owner.register('service:app-static-config', mockStaticConfig);
 
-    await this.render(hbs`{{nav-bar}}`);
+    await render(hbs`<NavBar />`);
     assert.ok(true);
   });
 });

@@ -4,7 +4,7 @@
     <h2 class="font-weight-light d-inline-block">Grant Details</h2>
   </div>
   <div class="col-6">
-    {{#if (get (await currentUser.user) 'isSubmitter')}}
+    {{#if (get (await this.currentUser.user) 'isSubmitter')}}
       <LinkTo @route="submissions.new" @query={{hash grant=grant.id}} class="btn btn-primary btn-small pull-right">Create new submission</LinkTo>
     {{/if}}
   </div>
@@ -12,18 +12,21 @@
 <div id="grant-details-body" class='grant-details'>
   <div class='row'>
     <ul class='col-sm-6'>
-      <li><strong>Project Name:</strong> {{grant.projectName}}</li>
-      <li><strong>Award Number:</strong> {{grant.awardNumber}}</li>
-      <li><strong>Funder:</strong> {{grant.primaryFunder.name}}</li>
+      <li><strong>Project Name:</strong> {{this.grant.projectName}}</li>
+      <li><strong>Award Number:</strong> {{this.grant.awardNumber}}</li>
+      <li><strong>Funder:</strong> {{this.grant.primaryFunder.name}}</li>
       <li><strong>Start:</strong> {{format-date grant.startDate }}</li>
       <li><strong>End:</strong> {{format-date grant.endDate}}</li>
     </ul>
     <ul class='col-sm-6'>
-      <li><strong>Status:</strong> {{grant.awardStatus}}</li>
-      <li><strong>PI:</strong> {{grant.pi.displayName}}</li>
+      <li><strong>Status:</strong> {{this.grant.awardStatus}}</li>
+      <li><strong>PI:</strong> {{this.grant.pi.displayName}}</li>
       <li><strong>Co-PI(s) / Co-I(s):</strong>
         <ul>
-          {{#each grant.coPis as |person index|}}{{#if index}}, {{/if}}{{person.displayName}}{{/each}}
+          {{#each this.grant.coPis as |person index|}}
+            {{#if index}}, {{/if}}
+            {{person.displayName}}
+          {{/each}}
         </ul>
       </li>
     </ul>
@@ -33,7 +36,16 @@
   <div class="col-12" style="overflow-x: auto;">
     <h3 class="font-weight-light">Submissions for grant</h3>
     <div class="submission-table">
-      <ModelsTable @data={{model.submissions}} @columns={{columns}} @themeInstance={{themeInstance}} @showColumnsDropdown={{false}} @filteringIgnoreCase={{true}} @multipleColumnsSorting={{false}} @useFilteringByColumns={{false}} @showGlobalFilter={{false}} />
+      <ModelsTable
+        @data={{this.model.submissions}}
+        @columns={{this.columns}}
+        @themeInstance={{this.themeInstance}}
+        @showColumnsDropdown={{false}}
+        @filteringIgnoreCase={{true}}
+        @multipleColumnsSorting={{false}}
+        @useFilteringByColumns={{false}}
+        @showGlobalFilter={{false}}
+      />
     </div>
   </div>
 </div>

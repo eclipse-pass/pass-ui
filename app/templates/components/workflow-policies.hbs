@@ -3,11 +3,11 @@
       Based on the information you provided so far, these are the public access
       policies that are applicable to your work:
     </p>
-    {{#each policies as |policy|}}
-      <PolicyCard @policy={{policy}} @journal={{publication.journal}} @submission={{submission}} />
+    {{#each @policies as |policy|}}
+      <PolicyCard @policy={{policy}} @journal={{@publication.journal}} @submission={{@submission}} />
     {{/each}}
 </div>
 
-<button class="btn btn-outline-primary" {{action back}}>Back</button>
+<button class="btn btn-outline-primary" {{action @back}}>Back</button>
 <button class="btn btn-outline-danger ml-2" {{action "cancel"}}>Abort</button>
-<button class="btn btn-primary next pull-right" {{action next}} data-test-workflow-policies-next>Next</button>
+<button class="btn btn-primary next pull-right" {{action @next}} data-test-workflow-policies-next>Next</button>

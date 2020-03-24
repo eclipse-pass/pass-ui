@@ -55,7 +55,7 @@ module.exports = {
     'comma-dangle': 'off',
     'array-callback-return': 'off',
     'no-lonely-if': 'off',
-    'no-useless-escape': 'off'
+    'no-useless-escape': 'off',
     // we're not enabling this yet
     // 'ember/no-jquery': 'error'
   },
@@ -77,6 +77,13 @@ module.exports = {
         browser: false,
         node: true
       }
-    }
+    },
+    // ember tests
+    {
+      files: ['**/tests/**/*-test.js'],
+      rules: {
+        'prefer-arrow-callback': 'off',
+      },
+    },
   ]
 };

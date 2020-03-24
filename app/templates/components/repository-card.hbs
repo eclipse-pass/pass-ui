@@ -13,18 +13,18 @@
   }
 --}}
 <li class="list-group-item d-flex align-items-center my-1">
-  {{#if choice}}
-    <Input @type="checkbox" @change={{action "toggle"}} @checked={{get repository "_selected"}} @name={{this.repository.name}} />
-    <label for="{{repoInfo.repository.name}}" class="mb-0 ml-2">
-      {{repository.name}}{{#if funders}} - {{funders}}{{/if}}
+  {{#if @choice}}
+    <Input @type="checkbox" @change={{action "toggle"}} @checked={{get @repository "_selected"}} @name={{@repository.name}} />
+    <label for="{{@repoInfo.repository.name}}" class="mb-0 ml-2">
+      {{@repository.name}}{{#if @funders}} - {{@funders}}{{/if}}
     </label>
   {{else}}
-    {{repository.name}}{{#if funders}} - {{funders}}{{/if}}
+    {{@repository.name}}{{#if @funders}} - {{@funders}}{{/if}}
   {{/if}}
 
-  {{#if repository.description}}
+  {{#if @repository.description}}
     <p>
-      {{repository.description}}
+      {{@repository.description}}
     </p>
   {{/if}}
   {{yield}}

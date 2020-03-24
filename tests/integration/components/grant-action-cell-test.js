@@ -1,4 +1,3 @@
-/* eslint-disable prefer-arrow-callback */
 import { render } from '@ember/test-helpers';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
@@ -11,12 +10,12 @@ module('Integration | Component | grant action cell', (hooks) => {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.on('myAction', function(val) { ... });
 
-    await render(hbs`{{grant-action-cell}}`);
+    await render(hbs`<GrantActionCell />`);
 
     assert.equal(this.element.textContent.trim(), 'New submission');
 
     // Template block usage:
-    await render(hbs`{{#grant-action-cell}}template block text{{/grant-action-cell}}`);
+    await render(hbs`<GrantActionCell>template block text</GrantActionCell>`);
 
     assert.equal(this.element.textContent.trim(), 'New submission\ntemplate block text');
   });

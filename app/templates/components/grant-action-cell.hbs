@@ -1,2 +1,2 @@
-<LinkTo @route="submissions.new" @query={{hash grant=(get record 'grant.id') submission=null}} class="btn btn-outline-primary">New submission</LinkTo>
+<LinkTo @route="submissions.new" @query={{hash grant=(get @record 'grant.id') submission=null}} class="btn btn-outline-primary">New submission</LinkTo>
 {{yield}}

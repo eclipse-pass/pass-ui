@@ -8,7 +8,7 @@ import { click, render, waitUntil, waitFor } from '@ember/test-helpers';
 module('Integration | Component | workflow review', (hooks) => {
   setupRenderingTest(hooks);
 
-  test('it renders', function (assert) {
+  test('it renders', async function (assert) {
     let submission = EmberObject.create({
       metadata: '[]',
       repositories: []
@@ -25,15 +25,18 @@ module('Integration | Component | workflow review', (hooks) => {
     this.set('uploading', '');
     this.set('waitingMessage', '');
 
-    this.render(hbs`{{workflow-review
-      submission=submission
-      publication=publication
-      previouslyUploadedFiles=files
-      comment=comment
-      back=(action loadPrevious)
-      submit=(action submit)
-      uploading=uploading
-      waitingMessage=waitingMessage}}`);
+    await render(hbs`
+      <WorkflowReview
+        @submission={{this.submission}}
+        @publication={{this.publication}}
+        @previouslyUploadedFiles={{this.files}}
+        @comment={{this.comment}}
+        @back={{action this.loadPrevious}}
+        @submit={{action this.submit}}
+        @uploading={{this.uploading}}
+        @waitingMessage={{this.waitingMessage}}
+      />
+    `);
     assert.ok(true);
   });
 
@@ -71,14 +74,17 @@ module('Integration | Component | workflow review', (hooks) => {
     this.set('uploading', '');
     this.set('waitingMessage', '');
 
-    await render(hbs`{{workflow-review
-      submission=submission
-      publication=publication
-      previouslyUploadedFiles=files
-      comment=comment
-      submit=(action submit)
-      uploading=uploading
-      waitingMessage=waitingMessage}}`);
+    await render(hbs`
+      <WorkflowReview
+        @submission={{this.submission}}
+        @publication={{this.publication}}
+        @previouslyUploadedFiles={{this.files}}
+        @comment={{this.comment}}
+        @submit={{action this.submit}}
+        @uploading={{this.uploading}}
+        @waitingMessage={{this.waitingMessage}}
+      />
+    `);
 
     // Click on submit
     await click('.submit');
@@ -133,14 +139,17 @@ module('Integration | Component | workflow review', (hooks) => {
     this.set('uploading', '');
     this.set('waitingMessage', '');
 
-    await render(hbs`{{workflow-review
-      submission=submission
-      publication=publication
-      previouslyUploadedFiles=files
-      comment=comment
-      submit=(action submit)
-      uploading=uploading
-      waitingMessage=waitingMessage}}`);
+    await render(hbs`
+      <WorkflowReview
+        @submission={{this.submission}}
+        @publication={{this.publication}}
+        @previouslyUploadedFiles={{this.files}}
+        @comment={{this.comment}}
+        @submit={{action this.submit}}
+        @uploading={{this.uploading}}
+        @waitingMessage={{this.waitingMessage}}
+      />
+    `);
 
     // Click on web-link repository and then confirm
     await click('.btn-link');
@@ -199,14 +208,17 @@ module('Integration | Component | workflow review', (hooks) => {
     this.set('uploading', '');
     this.set('waitingMessage', '');
 
-    await render(hbs`{{workflow-review
-      submission=submission
-      publication=publication
-      previouslyUploadedFiles=files
-      comment=comment
-      submit=(action submit)
-      uploading=uploading
-      waitingMessage=waitingMessage}}`);
+    await render(hbs`
+      <WorkflowReview
+        @submission={{this.submission}}
+        @publication={{this.publication}}
+        @previouslyUploadedFiles={{this.files}}
+        @comment={{this.comment}}
+        @submit={{action this.submit}}
+        @uploading={{this.uploading}}
+        @waitingMessage={{this.waitingMessage}}
+      />
+    `);
 
     // Click on submit
     await click('.submit');
@@ -252,14 +264,17 @@ module('Integration | Component | workflow review', (hooks) => {
     this.set('uploading', '');
     this.set('waitingMessage', '');
 
-    await render(hbs`{{workflow-review
-      submission=submission
-      publication=publication
-      previouslyUploadedFiles=files
-      comment=comment
-      submit=(action submit)
-      uploading=uploading
-      waitingMessage=waitingMessage}}`);
+    await render(hbs`
+      <WorkflowReview
+        @submission={{this.submission}}
+        @publication={{this.publication}}
+        @previouslyUploadedFiles={{this.files}}
+        @comment={{this.comment}}
+        @submit={{action this.submit}}
+        @uploading={{this.uploading}}
+        @waitingMessage={{this.waitingMessage}}
+      />
+    `);
 
     await click('.submit');
 

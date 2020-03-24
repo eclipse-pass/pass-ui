@@ -58,7 +58,14 @@
     </i>
   </p>
 
-  <Input class={{doiClass}} @value={{publication.doi}} @input={{action "lookupDOI" true}} @id="doi" placeholder="Leave blank if your manuscript or article has not yet been assigned a DOI" data-test-doi-input={{true}} />
+  <Input
+    class={{doiClass}}
+    @value={{publication.doi}}
+    @input={{action "lookupDOI" true}}
+    @id="doi"
+    placeholder="Leave blank if your manuscript or article has not yet been assigned a DOI"
+    data-test-doi-input={{true}}
+  />
   <div class="text-danger">
     {{if (and publication.doi (not isValidDOI)) 'Please provide a valid DOI'}}
   </div>
@@ -95,8 +102,18 @@
 {{/if}}
 {{#if isShowingUserSearchModal}}
   <div class="user-search-modal">
-    <ModalDialog @translucentOverlay={{true}} @tetherTarget="#on-behalf-of-block" @attachment="top center" @targetAttachment="top center" @containerClass="user-search-modal">
-      <WorkflowBasicsUserSearch @toggleUserSearchModal={{action "toggleUserSearchModal"}} @pickSubmitter={{action "pickSubmitter"}} @searchInput={{userSearchTerm}} />
+    <ModalDialog
+      @translucentOverlay={{true}}
+      @tetherTarget="#on-behalf-of-block"
+      @attachment="top center"
+      @targetAttachment="top center"
+      @containerClass="user-search-modal"
+    >
+      <WorkflowBasicsUserSearch
+        @toggleUserSearchModal={{action "toggleUserSearchModal"}}
+        @pickSubmitter={{action "pickSubmitter"}}
+        @searchInput={{userSearchTerm}}
+      />
     </ModalDialog>
   </div>
 {{/if}}
