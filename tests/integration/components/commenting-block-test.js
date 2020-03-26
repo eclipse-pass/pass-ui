@@ -1,26 +1,23 @@
-import { find } from '@ember/test-helpers';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
+import { render } from '@ember/test-helpers';
 
 module('Integration | Component | commenting block', (hooks) => {
   setupRenderingTest(hooks);
 
-  test('it renders', function (assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
+  test('it renders', async function (assert) {
+    await render(hbs`<CommentingBlock />`);
 
-    this.render(hbs`{{commenting-block}}`);
-
-    assert.equal(find('*').textContent.trim(), '');
+    assert.equal(this.element.textContent.trim(), '');
 
     // Template block usage:
-    this.render(hbs`
-      {{#commenting-block}}
+    await render(hbs`
+      <CommentingBlock>
         template block text
-      {{/commenting-block}}
+      </CommentingBlock>
     `);
 
-    assert.equal(find('*').textContent.trim(), '');
+    assert.equal(this.element.textContent.trim(), '');
   });
 });

@@ -79,6 +79,13 @@ module.exports = {
         browser: false,
         node: true
       }
-    }
+    },
+    // ember tests
+    {
+      files: ['**/tests/**/*-test.js'],
+      rules: {
+        'prefer-arrow-callback': 'off',
+      },
+    },
   ]
 };

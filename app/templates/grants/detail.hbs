@@ -1,29 +1,32 @@
 <div id="grant-details-title" class="row mt-3 mb-3">
   <div class="col-6 pt-1">
-    {{#link-to 'grants' class="btn btn-small back-arrow"}}<i class="fa fa-arrow-left fa-lg"></i>{{/link-to}}
+    <LinkTo @route="grants" class="btn btn-small back-arrow"><i class="fa fa-arrow-left fa-lg"></i></LinkTo>
     <h2 class="font-weight-light d-inline-block">Grant Details</h2>
   </div>
   <div class="col-6">
-    {{#if (get (await currentUser.user) 'isSubmitter')}}
-      {{#link-to "submissions.new" (query-params grant=grant.id) class="btn btn-primary btn-small pull-right"}}Create new submission{{/link-to}}
+    {{#if (get (await this.currentUser.user) 'isSubmitter')}}
+      <LinkTo @route="submissions.new" @query={{hash grant=this.grant.id}} class="btn btn-primary btn-small pull-right">Create new submission</LinkTo>
     {{/if}}
   </div>
 </div>
 <div id="grant-details-body" class='grant-details'>
   <div class='row'>
     <ul class='col-sm-6'>
-      <li><strong>Project Name:</strong> {{grant.projectName}}</li>
-      <li><strong>Award Number:</strong> {{grant.awardNumber}}</li>
-      <li><strong>Funder:</strong> {{grant.primaryFunder.name}}</li>
-      <li><strong>Start:</strong> {{format-date grant.startDate }}</li>
-      <li><strong>End:</strong> {{format-date grant.endDate}}</li>
+      <li><strong>Project Name:</strong> {{this.grant.projectName}}</li>
+      <li><strong>Award Number:</strong> {{this.grant.awardNumber}}</li>
+      <li><strong>Funder:</strong> {{this.grant.primaryFunder.name}}</li>
+      <li><strong>Start:</strong> {{format-date this.grant.startDate }}</li>
+      <li><strong>End:</strong> {{format-date this.grant.endDate}}</li>
     </ul>
     <ul class='col-sm-6'>
-      <li><strong>Status:</strong> {{grant.awardStatus}}</li>
-      <li><strong>PI:</strong> {{grant.pi.displayName}}</li>
+      <li><strong>Status:</strong> {{this.grant.awardStatus}}</li>
+      <li><strong>PI:</strong> {{this.grant.pi.displayName}}</li>
       <li><strong>Co-PI(s) / Co-I(s):</strong>
         <ul>
-          {{#each grant.coPis as |person index|}}{{#if index}}, {{/if}}{{person.displayName}}{{/each}}
+          {{#each this.grant.coPis as |person index|}}
+            {{#if index}}, {{/if}}
+            {{person.displayName}}
+          {{/each}}
         </ul>
       </li>
     </ul>
@@ -33,16 +36,16 @@
   <div class="col-12" style="overflow-x: auto;">
     <h3 class="font-weight-light">Submissions for grant</h3>
     <div class="submission-table">
-      {{models-table
-        data=model.submissions
-        columns=columns
-        themeInstance=themeInstance
-        showColumnsDropdown=false
-        filteringIgnoreCase=true
-        multipleColumnsSorting=false
-        useFilteringByColumns=false
-        showGlobalFilter=false
-      }}
+      <ModelsTable
+        @data={{this.model.submissions}}
+        @columns={{this.columns}}
+        @themeInstance={{this.themeInstance}}
+        @showColumnsDropdown={{false}}
+        @filteringIgnoreCase={{true}}
+        @multipleColumnsSorting={{false}}
+        @useFilteringByColumns={{false}}
+        @showGlobalFilter={{false}}
+      />
     </div>
   </div>
 </div>

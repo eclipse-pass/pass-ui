@@ -140,12 +140,15 @@ module('Integration | Component | workflow files', (hooks) => {
     // Bogus action so component actions don't complain
     this.set('moo', () => {});
 
-    await render(hbs`{{workflow-files
-      submission=submission
-      previouslyUploadedFiles=previouslyUploadedFiles
-      next=(action moo)
-      back=(action moo)
-      abort=(action moo)}}`);
+    await render(hbs`
+      <WorkflowFiles
+        @submission={{this.submission}}
+        @previouslyUploadedFiles={{this.previouslyUploadedFiles}}
+        @next={{action this.moo}}
+        @back={{action this.moo}}
+        @abort={{action this.moo}}
+      />
+    `);
 
     const btn = this.element.querySelector('button');
     assert.ok(btn);

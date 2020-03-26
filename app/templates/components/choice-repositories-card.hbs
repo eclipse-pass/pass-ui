@@ -5,13 +5,13 @@
 }
 --}}
 <ul class="list-group">
-  {{#each choiceGroup as |repoInfo|}}
-    {{repository-card
-      repository=repoInfo.repository
-      funders=repoInfo.funders
-      choice="true"
-      type="choice"
-      toggleRepository=(action "toggleRepository")}}
+  {{#each @choiceGroup as |repoInfo|}}
+    <RepositoryCard
+      @repository={{repoInfo.repository}}
+      @funders={{repoInfo.funders}}
+      @choice="true"
+      @type="choice"
+      @toggleRepository={{action "toggleRepository"}} />
   {{/each}}
 </ul>
 {{yield}}

@@ -1,20 +1,20 @@
-{{#workflow-wrapper
-  submission=submission
-  title=publication.title
-  isProxySubmission=submission.isProxySubmission
-  submissionEvents=submissionEvents
-  loadTab=(action 'loadTab')
-  updateCovidSubmission=(action "updateCovidSubmission")
-}}
-{{workflow-review
-  submission=submission
-  publication=publication
-  previouslyUploadedFiles=files
-  comment=comment
-  back=(action "loadPrevious")
-  submit=(action "submit")
-  uploading=uploading
-  waitingMessage=waitingMessage
-  abort=(action "abort")
-}}
-{{/workflow-wrapper}}
+<WorkflowWrapper
+  @submission={{this.submission}}
+  @title={{this.publication.title}}
+  @isProxySubmission={{this.submission.isProxySubmission}}
+  @submissionEvents={{this.submissionEvents}}
+  @loadTab={{action "loadTab"}}
+  @updateCovidSubmission={{action "updateCovidSubmission"}}
+>
+  <WorkflowReview
+    @submission={{this.submission}}
+    @publication={{this.publication}}
+    @previouslyUploadedFiles={{this.files}}
+    @comment={{this.comment}}
+    @back={{action "loadPrevious"}}
+    @submit={{action "submit"}}
+    @uploading={{this.uploading}}
+    @waitingMessage={{this.waitingMessage}}
+    @abort={{action "abort"}}
+  />
+</WorkflowWrapper>

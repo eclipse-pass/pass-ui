@@ -1,5 +1,5 @@
 <ul class="list-unstyled">
-  {{#each (await displayData) as |data|}}
+  {{#each (await this.displayData) as |data|}}
     <li>
       {{#if data.isArray}}
         <span class="col-6">

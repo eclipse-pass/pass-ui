@@ -1,4 +1,3 @@
-/* eslint-disable prefer-arrow-callback */
 import ENV from 'pass-ember/config/environment';
 import users from './routes/users';
 import elastic from './routes/elastic-search';

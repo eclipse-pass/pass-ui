@@ -11,34 +11,34 @@
   <div class="card float-left col-5 mr-3 mb-0">
     <div class="card-body sub-status">
       <div class="row card-title">
-        {{#if repo.url}}
-          <a href={{repo.url}} target="_blank">{{repo.name}}</a>
+        {{#if @repo.url}}
+          <a href={{@repo.url}} target="_blank">{{@repo.name}}</a>
         {{else}}
-          {{repo.name}}
+          {{@repo.name}}
         {{/if}}
       </div>
       <p class="card-text">
         <div class="row">
           <strong class="col-5 px-0">Deposit status: </strong>
-          {{#if isExternalRepo}}
+          {{#if this.isExternalRepo}}
             {{!-- {{#if isSubmitted}}
-              <span class="col">Deposit into {{repo.name}} was prompted.</span>
+              <span class="col">Deposit into {{@repo.name}} was prompted.</span>
             {{else}}
-              <span class="col">Deposit into {{repo.name}} will be prompted.</span>
+              <span class="col">Deposit into {{@repo.name}} will be prompted.</span>
             {{/if}} --}}
           {{else}}
             <div class="col">
-              {{#if tooltip}}
-                <span class="{{status}}" tooltip-position="left" tooltip="{{tooltip}}">
+              {{#if this.tooltip}}
+                <span class="{{this.status}}" tooltip-position="left" tooltip="{{this.tooltip}}">
                   <i class="fas fa-info-circle"></i>
-                  {{#if (eq status "not-submitted")}}
+                  {{#if (eq this.status "not-submitted")}}
                     n&#47;a
                   {{else}}
                     {{status}}
                   {{/if}}
                 </span>
               {{else}}
-                <span class="{{status}}">
+                <span class="{{this.status}}">
                   <i class="fas fa-circle"></i> {{status}}
                 </span>
               {{/if}}
@@ -46,7 +46,7 @@
           {{/if}}
         </div>
         <hr class="my-2">
-        {{repocopy-display repoCopy=repoCopy}}
+        <RepocopyDisplay @repoCopy={{@repoCopy}} />
       </p>
     </div>
   </div>

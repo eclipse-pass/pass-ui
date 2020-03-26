@@ -34,15 +34,15 @@ module('Integration | Component | submission action cell', (hooks) => {
 
     this.set('record', record);
 
-    await render(hbs`{{submission-action-cell record=record}}`);
+    await render(hbs`<SubmissionActionCell @record={{this.record}} />`);
 
     assert.equal(this.element.textContent.trim(), 'No actions available.');
 
     // Template block usage:
     await render(hbs`
-      {{#submission-action-cell record=record}}
+      <SubmissionActionCell @record={{this.record}}>
         template block text
-      {{/submission-action-cell}}
+      </SubmissionActionCell>
     `);
 
     assert.equal(this.element.textContent.trim(), 'No actions available.');
@@ -70,7 +70,7 @@ module('Integration | Component | submission action cell', (hooks) => {
 
     this.set('record', record);
 
-    await render(hbs`{{#submission-action-cell record=record}}{{/submission-action-cell}}`);
+    await render(hbs`<SubmissionActionCell @record={{this.record}}></SubmissionActionCell>`);
     await click('a.delete-button');
     await click(document.querySelector('.swal2-confirm'));
 
@@ -88,7 +88,7 @@ module('Integration | Component | submission action cell', (hooks) => {
     });
     this.set('record', record);
 
-    await render(hbs`{{#submission-action-cell record=record}}{{/submission-action-cell}}`);
+    await render(hbs`<SubmissionActionCell @record={{this.record}}></SubmissionActionCell>`);
 
     const buttons = this.element.querySelectorAll('a');
 

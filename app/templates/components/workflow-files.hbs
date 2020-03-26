@@ -7,7 +7,7 @@
   }
 </style>
 
-{{#each submission.repositories as |repo| }}
+{{#each @submission.repositories as |repo| }}
   {{#if (eq repo.name "PubMed Central")}}
     <p class="lead text-muted">
       <a href="https://www.ncbi.nlm.nih.gov/pmc/about/public-access/" target="_blank">National Institutes of Health (NIH) and other PubMed Central-supported funding agencies</a> require funded authors to submit the Author's Accepted Manuscripts. For clarification
@@ -18,7 +18,7 @@
     </p>
   {{/if}}
 {{/each}}
-{{#if (or previouslyUploadedFiles newFiles)}}
+{{#if (or @previouslyUploadedFiles @newFiles)}}
 <div class="row">
   <div class="col-lg-12">
     <table class="table table-responsive-sm table-sm">
@@ -80,7 +80,7 @@
               </select>
             </td>
             <td class="vertical-align-middle">
-              {{input class="form-control file-description-width" value=file.description}}
+              <Input class="form-control file-description-width" @value={{file.description}} />
             </td>
             <td class="text-center vertical-align-middle">
               <button type="button" class="btn btn-outline-danger" {{action 'deleteExistingFile' file}}>Remove</button>
@@ -124,6 +124,6 @@
   </div>
 </div>
 <p><strong>Tip:</strong> Use the Control or the Shift key to select multiple files.</p>
-<button class="btn btn-outline-primary" {{action back}}>Back</button>
+<button class="btn btn-outline-primary" {{action @back}}>Back</button>
 <button class="btn btn-outline-danger ml-2" {{action "cancel"}}>Abort</button>
-<button class="btn btn-primary pull-right next" {{action next}} data-test-workflow-files-next>Next</button>
+<button class="btn btn-primary pull-right next" {{action @next}} data-test-workflow-files-next>Next</button>

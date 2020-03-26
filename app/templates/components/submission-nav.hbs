@@ -1,24 +1,24 @@
 <div class="pb-2">
   <div class="steps">
-    <button {{action "loadTab" "submissions.new.basics"}} class="step {{if (eq step 1) 'btn-primary'}}" disabled={{if (gt 1 maxStep) 'disabled'}}>
+    <button {{action "loadTab" "submissions.new.basics"}} class="step {{if (eq this.step 1) 'btn-primary'}}" disabled={{if (gt 1 this.maxStep) 'disabled'}}>
       1. Basics
     </button>
-    <button {{action "loadTab" "submissions.new.grants"}} class="step {{if (eq step 2) 'btn-primary'}}" disabled={{if (gt 2 maxStep) 'disabled'}}>
+    <button {{action "loadTab" "submissions.new.grants"}} class="step {{if (eq this.step 2) 'btn-primary'}}" disabled={{if (gt 2 this.maxStep) 'disabled'}}>
       2. Grants
     </button>
-    <button {{action "loadTab" "submissions.new.policies"}} class="step {{if (eq step 3) 'btn-primary'}}" disabled={{if (gt 3 maxStep) 'disabled'}}>
+    <button {{action "loadTab" "submissions.new.policies"}} class="step {{if (eq this.step 3) 'btn-primary'}}" disabled={{if (gt 3 this.maxStep) 'disabled'}}>
       3. Policies
     </button>
-    <button {{action "loadTab" "submissions.new.repositories"}} class="step {{if (eq step 4) 'btn-primary'}}" disabled={{if (gt 4 maxStep) 'disabled'}}>
+    <button {{action "loadTab" "submissions.new.repositories"}} class="step {{if (eq this.step 4) 'btn-primary'}}" disabled={{if (gt 4 this.maxStep) 'disabled'}}>
       4. Repositories
     </button>
-    <button {{action "loadTab" "submissions.new.metadata"}} class="step {{if (eq step 5) 'btn-primary'}}" disabled={{if (gt 5 maxStep) 'disabled'}}>
+    <button {{action "loadTab" "submissions.new.metadata"}} class="step {{if (eq this.step 5) 'btn-primary'}}" disabled={{if (gt 5 this.maxStep) 'disabled'}}>
       5. Details
     </button>
-    <button {{action "loadTab" "submissions.new.files"}} class="step {{if (eq step 6) 'btn-primary'}}" disabled={{if (gt 6 maxStep) 'disabled'}}>
+    <button {{action "loadTab" "submissions.new.files"}} class="step {{if (eq this.step 6) 'btn-primary'}}" disabled={{if (gt 6 this.maxStep) 'disabled'}}>
       6. Files
     </button>
-    <button {{action "loadTab" "submissions.new.review"}} class="step {{if (eq step 7) 'btn-primary'}}" disabled={{if (gt 7 maxStep) 'disabled'}}>
+    <button {{action "loadTab" "submissions.new.review"}} class="step {{if (eq this.step 7) 'btn-primary'}}" disabled={{if (gt 7 this.maxStep) 'disabled'}}>
       7. Review
     </button>
   </div>
