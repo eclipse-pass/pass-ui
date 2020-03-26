@@ -9,5 +9,5 @@
 }
 </style>
 <LinkTo @route="grants.detail" @model={{get @record 'grant.id'}} class="award-number">
-  {{await (get @record column.propertyName)}}
+  {{await (get @record @column.propertyName)}}
 </LinkTo>

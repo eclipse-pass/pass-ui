@@ -1,12 +1,12 @@
 <!-- triggerClass param doesn't appear to work, this is a workaround-->
-{{#if (eq journalClass 'is-invalid')}}
+{{#if (eq @journalClass 'is-invalid')}}
   <style>
   .ember-power-select-trigger {
     border-color: #f86c6b;
   }
   </style>
 {{/if}}
-{{#if (eq journalClass 'is-valid')}}
+{{#if (eq @journalClass 'is-valid')}}
   <style>
   .ember-power-select-trigger {
     border-color: #aaaaaa;

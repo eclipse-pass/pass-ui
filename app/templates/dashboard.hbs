@@ -13,7 +13,7 @@
           </ul>
         </p>
         <div class="text-center">
-          {{#if (get (await currentUser.user) 'isSubmitter')}}
+          {{#if (get (await this.currentUser.user) 'isSubmitter')}}
             <LinkTo @route="submissions.new" class="btn btn-primary mt-1 mr-1" data-test-start-new-submission={{true}}>
               Start new submission
             </LinkTo>
@@ -45,16 +45,16 @@
     </div>
   </div>
 </div>
-{{#if (or model.numberAwaitingApproval model.numberAwaitingEdits)}}
+{{#if (or this.model.numberAwaitingApproval this.model.numberAwaitingEdits)}}
   <div class="row">
     <div class="col-12">
       <div class="alert alert-info">
         You have:<br>
-        {{#if model.numberAwaitingApproval}}
-          <LinkTo @route="submissions.index">{{model.numberAwaitingApproval}} submission(s)</LinkTo> awaiting your approval.<br>
+        {{#if this.model.numberAwaitingApproval}}
+          <LinkTo @route="submissions.index">{{this.model.numberAwaitingApproval}} submission(s)</LinkTo> awaiting your approval.<br>
         {{/if}}
-        {{#if model.numberAwaitingEdits}}
-          <LinkTo @route="submissions.index">{{model.numberAwaitingEdits}} submission(s)</LinkTo> with a submitter waiting for you to edit them.
+        {{#if this.model.numberAwaitingEdits}}
+          <LinkTo @route="submissions.index">{{this.model.numberAwaitingEdits}} submission(s)</LinkTo> with a submitter waiting for you to edit them.
         {{/if}}
       </div>
     </div>

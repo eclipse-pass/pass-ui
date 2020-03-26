@@ -1,4 +1,4 @@
 <LinkTo @route="grants.detail" @model={{get @record 'grant.id'}}>
-  {{await (get @record column.propertyName)}}
+  {{await (get @record @column.propertyName)}}
    {{!-- submission{{if (not-eq (await (get record column.propertyName)) 1) 's'}} --}}
 </LinkTo>

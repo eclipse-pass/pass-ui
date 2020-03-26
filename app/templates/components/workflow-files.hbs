@@ -18,7 +18,7 @@
     </p>
   {{/if}}
 {{/each}}
-{{#if (or @previouslyUploadedFiles newFiles)}}
+{{#if (or @previouslyUploadedFiles @newFiles)}}
 <div class="row">
   <div class="col-lg-12">
     <table class="table table-responsive-sm table-sm">

@@ -20,7 +20,7 @@
       <p class="card-text">
         <div class="row">
           <strong class="col-5 px-0">Deposit status: </strong>
-          {{#if isExternalRepo}}
+          {{#if this.isExternalRepo}}
             {{!-- {{#if isSubmitted}}
               <span class="col">Deposit into {{@repo.name}} was prompted.</span>
             {{else}}
@@ -28,17 +28,17 @@
             {{/if}} --}}
           {{else}}
             <div class="col">
-              {{#if tooltip}}
-                <span class="{{status}}" tooltip-position="left" tooltip="{{tooltip}}">
+              {{#if this.tooltip}}
+                <span class="{{this.status}}" tooltip-position="left" tooltip="{{this.tooltip}}">
                   <i class="fas fa-info-circle"></i>
-                  {{#if (eq status "not-submitted")}}
+                  {{#if (eq this.status "not-submitted")}}
                     n&#47;a
                   {{else}}
                     {{status}}
                   {{/if}}
                 </span>
               {{else}}
-                <span class="{{status}}">
+                <span class="{{this.status}}">
                   <i class="fas fa-circle"></i> {{status}}
                 </span>
               {{/if}}
