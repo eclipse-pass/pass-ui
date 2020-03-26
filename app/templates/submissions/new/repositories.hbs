@@ -1,15 +1,16 @@
-{{#workflow-wrapper
-  title=publication.title
-  isProxySubmission=submission.isProxySubmission
-  submissionEvents=submissionEvents
-  loadTab=(action 'validateAndLoadTab')
-}}
-{{workflow-repositories
-  submission=submission
-  requiredRepositories=requiredRepositories
-  optionalRepositories=optionalRepositories
-  choiceRepositories=choiceRepositories
-  next=(action "loadNext")
-  back=(action "loadPrevious")
-  abort=(action "abort")}}
-{{/workflow-wrapper}}
+<WorkflowWrapper
+  @title={{this.publication.title}}
+  @isProxySubmission={{this.submission.isProxySubmission}}
+  @submissionEvents={{this.submissionEvents}}
+  @loadTab={{action "validateAndLoadTab"}}
+>
+  <WorkflowRepositories
+    @submission={{this.submission}}
+    @requiredRepositories={{this.requiredRepositories}}
+    @optionalRepositories={{this.optionalRepositories}}
+    @choiceRepositories={{this.choiceRepositories}}
+    @next={{action "loadNext"}}
+    @back={{action "loadPrevious"}}
+    @abort={{action "abort"}}
+  />
+</WorkflowWrapper>

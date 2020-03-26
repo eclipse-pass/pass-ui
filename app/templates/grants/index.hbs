@@ -2,28 +2,33 @@
   <div class="col-12">
     <h1 class="font-weight-light">Your Grants</h1>
     <p>
-      For information about which grants are displayed in PASS, please see our 
-      <a href="{{assetsUri}}faq.html#grants-expected">FAQ page</a>.
+      For information about which grants are displayed in PASS, please see our
+      <a href="{{this.assetsUri}}faq.html#grants-expected">FAQ page</a>.
     </p>
   </div>
 </div>
 <div class="row justify-content-center grant-table">
   <div class="col-12" style="overflow-x:auto;">
     <div class="grant-table">
-      {{models-table
-          data=model
-          columns=columns
-          themeInstance=themeInstance
-          showColumnsDropdown=false
-          useFilteringByColumns=false
-          filteringIgnoreCase=true
-          multipleColumnsSorting=false
-          piSelected='piclick'
-          pageSize=tablePageSize
-          pageSizeValues=tablePageSizeValues
-        }}
+      <ModelsTable
+        @data={{this.model}}
+        @columns={{this.columns}}
+        @themeInstance={{this.themeInstance}}
+        @showColumnsDropdown={{false}}
+        @useFilteringByColumns={{false}}
+        @filteringIgnoreCase={{true}}
+        @multipleColumnsSorting={{false}}
+        @piSelected="piclick"
+        @pageSize={{this.tablePageSize}}
+        @pageSizeValues={{this.tablePageSizeValues}}
+      />
     </div>
   </div>
 </div>
-{{#message-dialog show=messageShow to=messageTo subject=messageSubject message=messageText}}
-{{/message-dialog}}
+<MessageDialog
+  @show={{this.messageShow}}
+  @to={{this.messageTo}}
+  @subject={{this.messageSubject}}
+  @message={{this.messageText}}
+>
+</MessageDialog>

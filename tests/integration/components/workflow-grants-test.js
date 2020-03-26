@@ -56,11 +56,14 @@ module('Integration | Component | workflow grants', (hooks) => {
   });
 
   test('it renders', async function (assert) {
-    await render(hbs`{{workflow-grants
-      submission=submission
-      preLoadedGrant=preLoadedGrant
-      next=(action loadNext)
-      back=(action loadPrevious)}}`);
+    await render(hbs`
+      <WorkflowGrants
+        @submission={{this.submission}}
+        @preLoadedGrant={{this.preLoadedGrant}}
+        @next={{action loadNext}}
+        @back={{action loadPrevious}}
+      />
+    `);
     // Settled is required to let the call to store.query return before
     // checking the rendered component
     await settled();
@@ -75,11 +78,15 @@ module('Integration | Component | workflow grants', (hooks) => {
 
     this.set('preLoadedGrant', knownGrant);
 
-    await render(hbs`{{workflow-grants
-      submission=submission
-      preLoadedGrant=preLoadedGrant
-      next=(action loadNext)
-      back=(action loadPrevious)}}`);
+    await render(hbs`
+      <WorkflowGrants
+        @submission={{this.submission}}
+        @preLoadedGrant={{this.preLoadedGrant}}
+        @next={{action loadNext}}
+        @back={{action loadPrevious}}
+      />
+    `);
+
     await settled();
 
     const selectedRows = this.element.querySelector('h5').nextElementSibling
@@ -116,11 +123,15 @@ module('Integration | Component | workflow grants', (hooks) => {
       clearAddedGrants: () => { list.clear(); }
     }));
 
-    await render(hbs`{{workflow-grants
-      submission=submission
-      preLoadedGrant=preLoadedGrant
-      next=(action loadNext)
-      back=(action loadPrevious)}}`);
+    await render(hbs`
+      <WorkflowGrants
+        @submission={{this.submission}}
+        @preLoadedGrant={{this.preLoadedGrant}}
+        @next={{action loadNext}}
+        @back={{action loadPrevious}}
+      />
+    `);
+
     await settled();
 
     const rows = this.element.querySelectorAll('#grants-selection-table table tbody tr');
@@ -159,11 +170,15 @@ module('Integration | Component | workflow grants', (hooks) => {
 
     this.set('preLoadedGrant', knownGrant);
 
-    await render(hbs`{{workflow-grants
-      submission=submission
-      preLoadedGrant=preLoadedGrant
-      next=(action loadNext)
-      back=(action loadPrevious)}}`);
+    await render(hbs`
+      <WorkflowGrants
+        @submission={{this.submission}}
+        @preLoadedGrant={{this.preLoadedGrant}}
+        @next={{action loadNext}}
+        @back={{action loadPrevious}}
+      />
+    `);
+
     await settled();
 
     const selectedRows = this.element.querySelector('h5').nextElementSibling

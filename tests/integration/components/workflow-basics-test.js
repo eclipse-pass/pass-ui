@@ -125,16 +125,19 @@ module('Integration | Component | workflow basics', (hooks) => {
   test('lookupDOI should set doiInfo and publication', async function (assert) {
     this.set('validateTitle', () => assert.ok(true));
 
-    await render(hbs`{{workflow-basics
-      submission=submission
-      publication=publication
-      preLoadedGrant=preLoadedGrant
-      doiInfo=doiInfo
-      flaggedFields=flaggedFields
-      validateTitle=(action validateTitle)
-      validateJournal=(action validateJournal)
-      validateSubmitterEmail=(action validateSubmitterEmail)
-      next=(action loadNext)}}`);
+    await render(hbs`
+      <WorkflowBasics
+        @submission={{this.submission}}
+        @publication={{this.publication}}
+        @preLoadedGrant={{this.preLoadedGrant}}
+        @doiInfo={{this.doiInfo}}
+        @flaggedFields={{this.flaggedFields}}
+        @validateTitle={{action validateTitle}}
+        @validateJournal={{action validateJournal}}
+        @validateSubmitterEmail={{action validateSubmitterEmail}}
+        @next={{action loadNext}}
+      />
+    `);
 
     // Add a DOI to UI
     await fillIn('#doi', '1234/4321');
@@ -165,16 +168,20 @@ module('Integration | Component | workflow basics', (hooks) => {
 
     submission.set('publication', publication);
 
-    await render(hbs`{{workflow-basics
-      submission=submission
-      publication=publication
-      preLoadedGrant=preLoadedGrant
-      doiInfo=doiInfo
-      flaggedFields=flaggedFields
-      validateTitle=(action validateTitle)
-      validateJournal=(action validateJournal)
-      validateSubmitterEmail=(action validateSubmitterEmail)
-      next=(action loadNext)}}`);
+    await render(hbs`
+      <WorkflowBasics
+        @submission={{submission}}
+        @publication={{publication}}
+        @preLoadedGrant={{this.preLoadedGrant}}
+        @doiInfo={{this.doiInfo}}
+        @flaggedFields={{this.flaggedFields}}
+        @validateTitle={{action validateTitle}}
+        @validateJournal={{action validateJournal}}
+        @validateSubmitterEmail={{action validateSubmitterEmail}}
+        @next={{action loadNext}}
+      />
+    `);
+
     assert.ok(this.element);
 
     // await waitUntil(() => new Promise(resolve => setTimeout(() => { debugger; resolve(); }, 1000)));
@@ -229,16 +236,20 @@ module('Integration | Component | workflow basics', (hooks) => {
       isValidDOI: () => true
     }));
 
-    await render(hbs`{{workflow-basics
-      submission=submission
-      publication=publication
-      preLoadedGrant=preLoadedGrant
-      doiInfo=doiInfo
-      flaggedFields=flaggedFields
-      validateTitle=(action validateTitle)
-      validateJournal=(action validateJournal)
-      validateSubmitterEmail=(action validateSubmitterEmail)
-      next=(action loadNext)}}`);
+    await render(hbs`
+      <WorkflowBasics
+        @submission={{this.submission}}
+        @publication={{this.publication}}
+        @preLoadedGrant={{this.preLoadedGrant}}
+        @doiInfo={{this.doiInfo}}
+        @flaggedFields={{this.flaggedFields}}
+        @validateTitle={{action validateTitle}}
+        @validateJournal={{action validateJournal}}
+        @validateSubmitterEmail={{action validateSubmitterEmail}}
+        @next={{action loadNext}}
+      />
+    `);
+
     assert.ok(this.element);
 
     const doiInfo = this.get('doiInfo');
@@ -309,16 +320,20 @@ module('Integration | Component | workflow basics', (hooks) => {
     this.owner.unregister('service:doi');
     this.owner.register('service:doi', mockDoiService);
 
-    await render(hbs`{{workflow-basics
-      submission=submission
-      publication=publication
-      preLoadedGrant=preLoadedGrant
-      doiInfo=doiInfo
-      flaggedFields=flaggedFields
-      validateTitle=(action validateTitle)
-      validateJournal=(action validateJournal)
-      validateSubmitterEmail=(action validateSubmitterEmail)
-      next=(action loadNext)}}`);
+    await render(hbs`
+      <WorkflowBasics
+        @submission={{this.submission}}
+        @publication={{this.publication}}
+        @preLoadedGrant={{this.preLoadedGrant}}
+        @doiInfo={{this.doiInfo}}
+        @flaggedFields={{this.flaggedFields}}
+        @validateTitle={{action validateTitle}}
+        @validateJournal={{action validateJournal}}
+        @validateSubmitterEmail={{action validateSubmitterEmail}}
+        @next={{action loadNext}}
+      />
+    `);
+
     assert.ok(this.element);
 
     await fillIn('input[id="doi"]', '');

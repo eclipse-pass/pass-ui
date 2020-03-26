@@ -1,15 +1,15 @@
 <div class="row">
   <strong class="col-5 px-0">Manuscript ID(s):</strong>
-  {{#if repoCopy.externalIds}}
+  {{#if @repoCopy.externalIds}}
     <ul class="col list-unstyled">
-    {{#if repoCopy.accessUrl}}
-      {{#each repoCopy.externalIds as |externalIds|}}
-      <li><a href="{{repoCopy.accessUrl}}" target="_blank">{{externalIds}}</a></li>
+    {{#if @repoCopy.accessUrl}}
+      {{#each @repoCopy.externalIds as |externalId|}}
+        <li><a href="{{@repoCopy.accessUrl}}" target="_blank">{{externalId}}</a></li>
       {{/each}}
     {{else}}
       <ul class="col list-unstyled">
-      {{#each repoCopy.externalIds as |externalIds|}}
-        <li>{{externalIds}}</li>
+      {{#each @repoCopy.externalIds as |externalId|}}
+        <li>{{externalId}}</li>
       {{/each}}
       </ul>
     {{/if}}

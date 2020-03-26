@@ -8,6 +8,6 @@
   word-break: break-word;
 }
 </style>
-{{#link-to 'grants.detail' (get record 'grant.id') class="award-number"}}
-  {{await (get record column.propertyName)}}
-{{/link-to}}
+<LinkTo @route="grants.detail" @model={{get @record 'grant.id'}} class="award-number">
+  {{await (get @record @column.propertyName)}}
+</LinkTo>

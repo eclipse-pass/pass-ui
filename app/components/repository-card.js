@@ -7,7 +7,7 @@ export default Component.extend({
       const type = this.get('type');
       const selected = event.target.checked;
 
-      this.sendAction('toggleRepository', repo, selected, type);
+      this.get('toggleRepository')(repo, selected, type);
     }
   }
 });

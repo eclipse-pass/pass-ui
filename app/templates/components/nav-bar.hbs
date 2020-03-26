@@ -1,36 +1,39 @@
   <nav class="navbar navbar-light navbar-expand-md w-100" id="header-navbar">
-    <div class={{if fullWidth 'container-fluid' 'container'}}>
+    <div class={{if @fullWidth 'container-fluid' 'container'}}>
       <div class="col-xs-12" style="width:100%;">
         <button class="navbar-toggler text-center border-none" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav" style="width:100%">
-            <li class="nav-item">{{#link-to 'dashboard' class='nav-link pl-0 ml-0'}}Dashboard{{/link-to}}</li>
-            {{#if hasAUser}}
-              <li class="nav-item">{{#link-to 'grants' class="nav-link"}}Grants{{/link-to}}</li>
-              <li class="nav-item">{{#link-to 'submissions' class="nav-link"}}Submissions{{/link-to}}</li>
+            <li class="nav-item"><LinkTo @route="dashboard" class="nav-link pl-0 ml-0">Dashboard</LinkTo></li>
+            {{#if this.hasAUser}}
+              <li class="nav-item"><LinkTo @route="grants" class="nav-link">Grants</LinkTo></li>
+              <li class="nav-item"><LinkTo @route="submissions" class="nav-link">Submissions</LinkTo></li>
             {{/if}}
             <li class="nav-item">
-              <a class="nav-link" href="{{assetsUri}}about.html">About</a>
+              <a class="nav-link" href="{{this.assetsUri}}about.html">About</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{{assetsUri}}contact.html">Contact</a>
+              <a class="nav-link" href="{{this.assetsUri}}contact.html">Contact</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{{assetsUri}}faq.html">FAQ</a>
+              <a class="nav-link" href="{{this.assetsUri}}faq.html">FAQ</a>
             </li>
             <li class="nav-item dropdown ml-auto">
               <a id="user-menu-name" class="nav-link accountInfo pr-1" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                <span class="pr-1">{{gravatar-image email=currentUser.user.email
-                  title=currentUser.user.email
-                  alt=currentUser.user.email
-                  defaultImage='identicon'
-                  class='img-avatar'
-                  size=30
-                  retina=true}}
+                <span class="pr-1">
+                  <GravatarImage
+                    @email={{this.currentUser.user.email}}
+                    @title={{this.currentUser.user.email}}
+                    @alt={{this.currentUser.user.email}}
+                    @defaultImage="identicon"
+                    @class="img-avatar"
+                    @size={{30}}
+                    @retina={{true}}
+                  />
                 </span>
-                {{currentUser.user.displayName}}
+                {{this.currentUser.user.displayName}}
               </a>
               <div id="user-menu" class="dropdown-menu dropdown-menu-right">
                 <div id="user-menu-title" class="dropdown-header text-center">

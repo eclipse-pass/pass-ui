@@ -1,5 +1,3 @@
-/* eslint-disable prefer-arrow-callback */
-import EmberObject from '@ember/object';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
@@ -12,11 +10,8 @@ module('Integration | Component | submissions status cell', (hooks) => {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.on('myAction', function(val) { ... });
 
-    await render(hbs`{{submissions-status-cell submissionStatus="submitted"}}`);
+    await render(hbs`<SubmissionsStatusCell @submissionStatus="submitted" />`);
     assert.ok(true);
-
-    // Template block usage:
-    // this.render(hbs`{{submissions-status-cell status=""}}`);
   });
 
   test('draft submission renders', async function (assert) {
@@ -25,7 +20,7 @@ module('Integration | Component | submissions status cell', (hooks) => {
     };
     this.set('record', record);
 
-    await render(hbs`{{submissions-status-cell record=record}}`);
+    await render(hbs`<SubmissionsStatusCell @record={{this.record}} />`);
 
     assert.ok(this.element, 'Failed to render');
     assert.ok(this.element.textContent.includes('draft'), 'unexpected text found');
