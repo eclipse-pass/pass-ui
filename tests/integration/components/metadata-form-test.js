@@ -1,6 +1,7 @@
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
+import { render } from '@ember/test-helpers';
 
 module('Integration | Component | metadata-form', (hooks) => {
   setupRenderingTest(hooks);
@@ -28,7 +29,7 @@ module('Integration | Component | metadata-form', (hooks) => {
   });
 
   test('it renders', async function (assert) {
-    await this.render(hbs`{{metadata-form schema=schema}}`);
+    await render(hbs`<MetadataForm @schema={{this.schema}} />`);
 
     const el = this.element.querySelector('#schemaForm');
     assert.ok(el);

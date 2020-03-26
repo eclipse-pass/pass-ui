@@ -4,6 +4,7 @@ import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
 import { run } from '@ember/runloop';
+import { render } from '@ember/test-helpers';
 
 module('Integration | Component | submissions repoid cell', (hooks) => {
   setupRenderingTest(hooks);
@@ -22,11 +23,8 @@ module('Integration | Component | submissions repoid cell', (hooks) => {
   });
 
   test('it renders', async function (assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
+    await render(hbs`<SubmissionsRepoidCell />`);
 
-    // Template usage:
-    await this.render(hbs`{{submissions-repoid-cell}}`);
     assert.ok(true);
   });
 
@@ -46,7 +44,7 @@ module('Integration | Component | submissions repoid cell', (hooks) => {
     });
     this.set('record', record);
 
-    await this.render(hbs`{{submission-repoid-cell}}`);
+    await render(hbs`<SubmissionsRepoidCell />`);
     assert.ok(true);
   });
 });
