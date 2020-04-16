@@ -1,22 +1,24 @@
-import Component from '@ember/component';
+import Component from '@glimmer/component';
+import { action } from '@ember/object';
 
-export default Component.extend({
-  show: false,
-  to: '',
-  subject: '',
-  message: '',
+export default class MessageDialog extends Component {
+  @tracked show = false;
+  @tracked to = '';
+  @tracked subject = '';
+  @tracked message = '';
 
-  actions: {
-    toggleModal() {
-      this.toggleProperty('show');
-    },
+  @action
+  toggleModal() {
+    this.toggleProperty('show');
+  }
 
-    cancel() {
-      this.set('show', false);
-    },
+  @action
+  cancel() {
+    this.show = false;
+  }
 
-    send() {
-      this.set('show', false);
-    },
-  },
-});
+  @action
+  send() {
+    this.show = false;
+  }
+}

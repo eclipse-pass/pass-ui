@@ -1,6 +1,6 @@
 import { A } from '@ember/array';
 import Service from '@ember/service';
-import EmberObject from '@ember/object';
+import EmberObject, { get } from '@ember/object';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
@@ -39,6 +39,8 @@ module('Integration | Component | workflow basics', (hooks) => {
     this.set('validateJournal', (actual) => { });
     this.set('validateSubmitterEmail', (actual) => { });
     this.set('loadNext', (actual) => {});
+    this.set('updatePublication', publication => this.set('publication', publication));
+    this.set('updateDoiInfo', doiInfo => this.set('doiInfo', doiInfo));
 
     const mockDoiService = Service.extend({
       resolveDOI: task(function* (doi) {
@@ -135,6 +137,8 @@ module('Integration | Component | workflow basics', (hooks) => {
         @validateTitle={{action validateTitle}}
         @validateJournal={{action validateJournal}}
         @validateSubmitterEmail={{action validateSubmitterEmail}}
+        @updatePublication={{action this.updatePublication}}
+        @updateDoiInfo={{action this.updateDoiInfo}}
         @next={{action loadNext}}
       />
     `);
@@ -178,6 +182,8 @@ module('Integration | Component | workflow basics', (hooks) => {
         @validateTitle={{action validateTitle}}
         @validateJournal={{action validateJournal}}
         @validateSubmitterEmail={{action validateSubmitterEmail}}
+        @updatePublication={{action this.updatePublication}}
+        @updateDoiInfo={{action this.updateDoiInfo}}
         @next={{action loadNext}}
       />
     `);
@@ -246,22 +252,24 @@ module('Integration | Component | workflow basics', (hooks) => {
         @validateTitle={{action validateTitle}}
         @validateJournal={{action validateJournal}}
         @validateSubmitterEmail={{action validateSubmitterEmail}}
+        @updatePublication={{action this.updatePublication}}
+        @updateDoiInfo={{action this.updateDoiInfo}}
         @next={{action loadNext}}
       />
     `);
 
     assert.ok(this.element);
 
-    const doiInfo = this.get('doiInfo');
+    const doiInfo = get(this, 'doiInfo');
     assert.ok(doiInfo, 'No doiInfo found');
     assert.equal(doiInfo.title, 'You better use this', 'Unexpected doiInfo.title found');
 
-    const publication = this.get('publication');
+    const publication = get(this, 'publication');
     assert.ok(publication, 'No publication found');
     assert.equal(publication.get('title'), 'Moo title', 'Unexpected publication title found');
     assert.equal(publication.get('journal.journalName'), 'Moo Journal', 'Unexpected journal title found');
 
-    const metadata = this.get('submission.metadata');
+    const metadata = get(this, 'submission.metadata');
     assert.equal(metadata, '{}', 'Metadata should be empty');
   });
 
@@ -330,6 +338,8 @@ module('Integration | Component | workflow basics', (hooks) => {
         @validateTitle={{action validateTitle}}
         @validateJournal={{action validateJournal}}
         @validateSubmitterEmail={{action validateSubmitterEmail}}
+        @updatePublication={{action this.updatePublication}}
+        @updateDoiInfo={{action this.updateDoiInfo}}
         @next={{action loadNext}}
       />
     `);
@@ -359,12 +369,7 @@ module('Integration | Component | workflow basics', (hooks) => {
      * input should change from a normal text input to a PowerSelect when
      * theh DOI goes away
      */
-    const journalSelector = this.element.querySelector('div#journal');
-    assert.ok(journalSelector, 'Couldn\'t find journal selector');
-    assert.notOk(
-      journalSelector.textContent.includes('Moo Journal'),
-      'No journal should be selected now'
-    );
+    assert.dom('[data-test-find-journal]').doesNotExist();
 
     assert.deepEqual(this.get('doiInfo'), {}, 'doiInfo should be empty');
   });

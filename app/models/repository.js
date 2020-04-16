@@ -14,6 +14,6 @@ export default DS.Model.extend({
 
   _selected: DS.attr('boolean'),
   _isWebLink: computed('integrationType', function () {
-    return this.get('integrationType') === 'web-link';
+    return this.integrationType === 'web-link';
   })
 });

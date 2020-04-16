@@ -21,12 +21,12 @@ export default Service.extend({
    * @returns {Promise}
    */
   getStaticConfig() {
-    const cached = this.get('_config');
+    const cached = this._config;
     if (cached) {
       return Promise.resolve(cached);
     }
 
-    return fetch(this.get('configUrl'), {
+    return fetch(this.configUrl, {
       headers: { 'Content-Type': 'application/json' }
     })
       .then(resp => resp.json())
@@ -63,7 +63,7 @@ export default Service.extend({
 
     window.document.head.appendChild(newLink);
 
-    this.get('_loaded').pushObject(uri);
+    this._loaded.pushObject(uri);
   },
 
   addFavicon(uri) {
@@ -80,7 +80,7 @@ export default Service.extend({
   },
 
   _alreadyLoaded(uri) {
-    return this.get('_loaded').includes(uri);
+    return this._loaded.includes(uri);
   }
 
 });

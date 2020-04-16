@@ -11,6 +11,12 @@ module('Integration | Component | submission action cell', (hooks) => {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
+    const currentUserStub = Service.extend({
+      user: {
+        id: 1,
+      }
+    });
+
     const mockStore = Service.extend({
       query() {
         return Promise.resolve(A());
@@ -20,16 +26,17 @@ module('Integration | Component | submission action cell', (hooks) => {
     run(() => {
       this.owner.unregister('service:store');
       this.owner.register('service:store', mockStore);
+      this.owner.register('service:currentUser', currentUserStub);
     });
   });
 
   test('it renders', async function (assert) {
-    let record = {};
-
-    // TODO: add actual tests here
-    record = EmberObject.create({
+    let record = EmberObject.create({
       preparers: [],
-      submitted: true
+      submitted: true,
+      submitter: {
+        id: 1,
+      },
     });
 
     this.set('record', record);
@@ -65,7 +72,10 @@ module('Integration | Component | submission action cell', (hooks) => {
       unloadRecord() {
         assert.ok(true);
         return Promise.resolve();
-      }
+      },
+      submitter: {
+        id: 1,
+      },
     });
 
     this.set('record', record);
@@ -83,7 +93,10 @@ module('Integration | Component | submission action cell', (hooks) => {
   test('Draft submissions should display Edit and Delete buttons', async function (assert) {
     const record = EmberObject.create({
       preparers: A(),
-      isDraft: true
+      isDraft: true,
+      submitter: {
+        id: 1,
+      },
       // submissionStatus: 'draft'
     });
     this.set('record', record);

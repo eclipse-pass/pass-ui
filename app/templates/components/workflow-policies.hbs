@@ -4,7 +4,11 @@
       policies that are applicable to your work:
     </p>
     {{#each @policies as |policy|}}
-      <PolicyCard @policy={{policy}} @journal={{@publication.journal}} @submission={{@submission}} />
+      <PolicyCard
+        @policy={{policy}}
+        @journal={{@publication.journal}}
+        @submission={{@submission}}
+      />
     {{/each}}
 </div>
 

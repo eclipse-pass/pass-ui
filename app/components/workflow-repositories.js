@@ -1,5 +1,7 @@
+import Component from '@glimmer/component';
+import { tracked } from '@glimmer/tracking';
+import { action, get, set } from '@ember/object';
 import { A } from '@ember/array';
-import Component from '@ember/component';
 import { inject as service, } from '@ember/service';
 
 /**
@@ -30,24 +32,22 @@ import { inject as service, } from '@ember/service';
  *    repository: {}, // Repository object
  *  }
  */
-export default Component.extend({
-  submissionHandler: service('submission-handler'),
-  workflow: service('workflow'),
+export default class WorkflowRepositories extends Component {
+  @service submissionHandler;
+  @service workflow;
 
-  addedRepos: A([]),
+  @tracked addedRepos = A([]);
 
-  willRender() {
-    this._super(...arguments);
+  @action
+  setupRepos() {
+    set(this, 'addedRepos', this.getAddedRepositories());
+    const currentRepos = get(this, 'submission.repositories');
 
+    const opt = this.args.optionalRepositories;
+    const req = this.args.requiredRepositories;
+    const choice = this.args.choiceRepositories;
 
-    this.set('addedRepos', this.getAddedRepositories());
-    const currentRepos = this.get('submission.repositories');
-
-    const opt = this.get('optionalRepositories');
-    const req = this.get('requiredRepositories');
-    const choice = this.get('choiceRepositories');
-
-    if (currentRepos && currentRepos.get('length') > 0) {
+    if (currentRepos && currentRepos.length > 0) {
       /**
        * Since this is used to tell if a repo is present in the policy service result, we don't care
        * if there are duplicates
@@ -58,7 +58,7 @@ export default Component.extend({
        * Make sure any required repos have been added to the submission
        */
       req.forEach((repoInfo) => {
-        validRepos.push(repoInfo.repository.get('id'));
+        validRepos.push(repoInfo.repository.id);
         this.addRepository(repoInfo.repository, false);
       });
 
@@ -69,14 +69,14 @@ export default Component.extend({
        */
       if (opt) {
         opt.forEach((opt) => {
-          validRepos.push(opt.repository.get('id'));
+          validRepos.push(opt.repository.id);
           this.setSelected(opt.repository);
         });
       }
       if (choice) {
         choice.forEach((group) => {
           group.forEach((repoInfo) => {
-            validRepos.push(repoInfo.repository.get('id'));
+            validRepos.push(repoInfo.repository.id);
             this.setSelected(repoInfo.repository);
           });
         });
@@ -92,7 +92,7 @@ export default Component.extend({
        * Use IDs instead of full Repository objects to try to avoid weird JS equality
        * nonsense.
        */
-      currentRepos.filter(repo => !validRepos.includes(repo.get('id')))
+      currentRepos.filter(repo => !validRepos.includes(repo.id))
         .forEach(repo => currentRepos.removeObject(repo));
     } else {
       /**
@@ -103,22 +103,22 @@ export default Component.extend({
         req.forEach(repoInfo => this.addRepository(repoInfo.repository, false));
       }
       if (opt) {
-        opt.filter(repoInfo => repoInfo.repository.get('_selected'))
+        opt.filter(repoInfo => get(repoInfo, 'repository._selected'))
           .forEach(repoInfo => this.addRepository(repoInfo.repository, false));
       }
       if (choice) {
         choice.forEach((group) => {
-          group.filter(repoInfo => repoInfo.repository.get('_selected'))
+          group.filter(repoInfo => get(repoInfo, 'repository._selected'))
             .forEach(repoInfo => this.addRepository(repoInfo.repository, false));
         });
       }
     }
-  },
+  }
 
   getAddedRepositories() {
-    const grants = this.get('workflow').getAddedGrants();
-    return this.get('submissionHandler').getRepositoriesFromGrants(grants);
-  },
+    const grants = this.workflow.getAddedGrants();
+    return this.submissionHandler.getRepositoriesFromGrants(grants);
+  }
 
   /**
    * Set the selection status of an "optional" repository.
@@ -131,53 +131,55 @@ export default Component.extend({
    * @param {Repository} repo the repository that may be modified
    */
   setSelected(repo) {
-    const id = repo.get('id');
-    const addedRepos = this.get('addedRepos');
-    const currentRepos = this.get('submission.repositories');
+    const id = repo.id;
+    const addedRepos = this.addedRepos;
+    const currentRepos = this.get('args.submission.repositories');
 
     if (addedRepos.isAny('id', id)) {
       return;
     }
 
     repo.set('_selected', currentRepos.isAny('id', id));
-  },
+  }
 
-  actions: {
-    /**
-     * Toggle a repository on/off of this submission.
-     *
-     * NOTE:
-     * Normally, we would have to make sure that there is at least one repository from
-     * each "choice group" selected.
-     * Do not worry about checking things for "choice" groups, since that logic is done
-     * in the 'choice-repositories-card' component. That component will only bubble the
-     * toggle action to here if such an action is logically possible.
-     *
-     * @param {Repository} repository
-     * @param {boolean} selected - has the repo been selected or deselected?
-     *    TRUE = repo was selected, FALSE = repo was deselected
-     * @param {string} type required|optional|choice
-     */
-    toggleRepository(repository, selected, type) {
-      if (selected) {
-        this.addRepository(repository, true);
-      } else {
-        this.removeRepository(repository, true);
-      }
-    },
-
-    cancel() {
-      this.sendAction('abort');
-    },
-
-    next() {
-      this.sendAction('next');
-    },
-
-    back() {
-      this.sendAction('back');
+  /**
+   * Toggle a repository on/off of this submission.
+   *
+   * NOTE:
+   * Normally, we would have to make sure that there is at least one repository from
+   * each "choice group" selected.
+   * Do not worry about checking things for "choice" groups, since that logic is done
+   * in the 'choice-repositories-card' component. That component will only bubble the
+   * toggle action to here if such an action is logically possible.
+   *
+   * @param {Repository} repository
+   * @param {boolean} selected - has the repo been selected or deselected?
+   *    TRUE = repo was selected, FALSE = repo was deselected
+   * @param {string} type required|optional|choice
+   */
+  @action
+  toggleRepository(repository, selected, type) {
+    if (selected) {
+      this.addRepository(repository, true);
+    } else {
+      this.removeRepository(repository, true);
     }
-  },
+  }
+
+  @action
+  cancel() {
+    this.args.abort();
+  }
+
+  @action
+  next() {
+    this.args.next();
+  }
+
+  @action
+  back() {
+    this.args.back();
+  }
 
   /**
    * Add a repository to the submission only if it is not already included
@@ -186,15 +188,15 @@ export default Component.extend({
    * @param {boolean} setMaxStep should we modify 'maxStep' in the workflow?
    */
   addRepository(repository, setMaxStep) {
-    const subRepos = this.get('submission.repositories');
+    const subRepos = get(this, 'args.submission.repositories');
 
     if (!subRepos.includes(repository)) {
       subRepos.pushObject(repository);
     }
     if (setMaxStep) {
-      this.get('workflow').setMaxStep(4);
+      this.workflow.setMaxStep(4);
     }
-  },
+  }
 
   /**
    * Remove a repository from the submission
@@ -203,9 +205,9 @@ export default Component.extend({
    * @param {boolean} setMaxStep should we modify 'maxStep' in the workflow?
    */
   removeRepository(repository, setMaxStep) {
-    this.get('submission.repositories').removeObject(repository);
+    get(this, 'args.submission.repositories').removeObject(repository);
     if (setMaxStep) {
-      this.get('workflow').setMaxStep(4);
+      this.workflow.setMaxStep(4);
     }
-  },
-});
+  }
+}

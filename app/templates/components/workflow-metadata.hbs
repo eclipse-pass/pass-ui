@@ -1,13 +1,15 @@
 {{!-- takes in a schema and the model to save the schema to--}}
-<h4 class="font-weight-light pull-right" style="margin-top:6.5px;">
-  Form {{this.displayFormStep}} of {{this.schemas.length}}
-</h4>
-{{#if this.currentSchema}}
-  <MetadataForm
-    @schema={{this.currentSchema}}
-    @nextForm={{action "nextForm"}}
-    @previousForm={{action "previousForm"}}
-    @cancel={{action "cancel"}}
-  />
-{{/if}}
+<div {{did-insert (perform this.setupSchemas)}}>
+  <h4 class="font-weight-light pull-right" style="margin-top:6.5px;">
+    Form {{this.displayFormStep}} of {{this.schemas.length}}
+  </h4>
+  {{#if this.currentSchema}}
+    <MetadataForm
+      @schema={{this.currentSchema}}
+      @nextForm={{action this.nextForm}}
+      @previousForm={{action this.previousForm}}
+      @cancel={{action this.cancel}}
+    />
+  {{/if}}
+</div>
 {{yield}}

@@ -74,7 +74,7 @@ export default Service.extend({
       data.suggest[fieldName] = this._suggestQueryPart(fieldName, suggestPrefix, context);
     }
 
-    return this.get('ajax').post(this.get('base'), {
+    return this.ajax.post(this.base, {
       data,
       headers: this._headers(),
       xhrFields: { withCredentials: true }
@@ -83,15 +83,15 @@ export default Service.extend({
 
   _suggestQueryPart(fieldName, prefix, context) {
     let esFieldName = fieldName;
-    if (!esFieldName.endsWith(this.get('es_field_suffix'))) {
-      esFieldName += this.get('es_field_suffix');
+    if (!esFieldName.endsWith(this.es_field_suffix)) {
+      esFieldName += this.es_field_suffix;
     }
 
     let query = {
       prefix,
       completion: {
         field: esFieldName,
-        size: this.get('suggestSize')
+        size: this.suggestSize
       }
     };
 

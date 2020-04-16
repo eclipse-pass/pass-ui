@@ -1,40 +1,48 @@
-import { computed } from '@ember/object';
-import Component from '@ember/component';
+import Component from '@glimmer/component';
+import { tracked } from '@glimmer/tracking';
+import { action, get } from '@ember/object';
 import { inject as service } from '@ember/service';
+import { task } from 'ember-concurrency-decorators';
 
 /**
  * Some links in the navbar point to static pages hosted outside of Ember. Those
  * URLs are relative to 'assetsUri' which is known from the static configuration
  */
-export default Component.extend({
-  currentUser: service('current-user'),
-  configurator: service('app-static-config'),
 
-  assetsUri: null,
+export default class NavBar extends Component {
+  @service currentUser;
+  @service appStaticConfig;
+
+  @tracked assetsUri = null;
+
+  constructor() {
+    super(...arguments);
+
+    this._setupAppStaticConfig.perform();
+  }
 
   /**
    * Do we have a valid user loaded into the user service?
    */
-  hasAUser: computed('currentUser.user', function () {
-    return !!this.get('currentUser.user');
-  }),
+  get hasAUser() {
+    return !!get(this, 'currentUser.user');
+  }
 
-  init() {
-    this._super(...arguments);
+  @action
+  invalidateSession() {
+    // this.get('session').invalidate();
+  }
 
-    this.get('configurator').getStaticConfig()
-      .then(config => this.set('assetsUri', config.assetsUri));
-  },
-
-  actions: {
-    invalidateSession() {
-      // this.get('session').invalidate();
-    },
-  },
-  didRender() {
-    this._super(...arguments);
+  @action
+  scrollToAnchor() {
     if (window.location.search.indexOf('anchor=') == -1) {
       window.scrollTo(0, 0);
     }
   }
-});
+
+  @task
+  _setupAppStaticConfig = function* () {
+    let config = yield this.appStaticConfig.getStaticConfig();
+    this.assetsUri = config.assetsUri;
+  }
+}

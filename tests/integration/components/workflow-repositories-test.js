@@ -109,6 +109,7 @@ module('Integration | Component | workflow repositories', (hooks) => {
      * The user should not be able to unselect this repo because it is the
      * only one selected
      */
+
     const checkboxes = this.element.querySelectorAll('input[type="checkbox"]');
     assert.ok(checkboxes[0].checked, 'first checkbox should be checked');
 
@@ -234,10 +235,10 @@ module('Integration | Component | workflow repositories', (hooks) => {
       />
     `);
 
-    const checkboxes = this.element.querySelectorAll('input[type="checkbox"]');
+    const checkboxes = this.element.querySelectorAll('[data-test-workflow-repositories-optional-list] > li > input[type="checkbox"]');
     assert.equal(checkboxes.length, 3, 'Should be two checkboxes showing');
-    assert.ok(checkboxes[0].checked, 'First checkbox should be checked');
-    assert.notOk(checkboxes[1].checked, 'Second checkbox should NOT be checked');
+    assert.notOk(checkboxes[0].checked, 'First checkbox should NOT be checked');
+    assert.ok(checkboxes[1].checked, 'Second checkbox should be checked');
     assert.ok(checkboxes[2].checked, 'Third checkbox should be selected');
   });
 });

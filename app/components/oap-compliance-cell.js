@@ -1,8 +1,7 @@
-import { computed } from '@ember/object';
-import Component from '@ember/component';
+import Component from '@glimmer/component';
 
-export default Component.extend({
-  isStalled: computed('grant', function () {
+export default class OapComplianceCell extends Component {
+  get isStalled() {
     if (this.get('grant.submissions')) {
       this.get('grant.submissions').forEach((submission) => {
         if (submission.get('deposits')) {
@@ -15,5 +14,5 @@ export default Component.extend({
       });
     }
     return false;
-  })
-});
+  }
+}

@@ -1,22 +1,21 @@
-import { computed } from '@ember/object';
-import Component from '@ember/component';
+import Component from '@glimmer/component';
+import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
+import { tracked } from '@glimmer/tracking';
 
-export default Component.extend({
-  workflow: service('workflow'),
-  step: computed('workflow.currentStep', function () {
-    return this.get('workflow').getCurrentStep();
-  }),
-  maxStep: computed('workflow.maxStep', function () {
-    return this.get('workflow').getMaxStep();
-  }),
-  actions: {
-    loadTab(gotoRoute) {
-      this.sendAction('loadTab', gotoRoute);
-    }
-  },
-  didRender() {
-    this._super(...arguments);
+export default class SubmissionNav extends Component {
+  @service workflow;
+
+  @tracked currentStep = this.workflow.getCurrentStep();
+  @tracked maxStep = this.workflow.getMaxStep();
+
+  @action
+  loadTab(gotoRoute) {
+    this.loadTab(gotoRoute);
+  }
+
+  @action
+  scrollTo() {
     window.scrollTo(0, 0);
   }
-});
+}

@@ -1,13 +1,13 @@
-import Component from '@ember/component';
+import Component from '@glimmer/component';
+import { action } from '@ember/object';
 
-export default Component.extend({
-  actions: {
-    toggle() {
-      const repo = this.get('repository');
-      const type = this.get('type');
-      const selected = event.target.checked;
+export default class RepositoryCard extends Component {
+  @action
+  toggle() {
+    const repo = this.args.repository;
+    const type = this.type;
+    const selected = event.target.checked;
 
-      this.get('toggleRepository')(repo, selected, type);
-    }
+    this.args.toggleRepository(repo, selected, type);
   }
-});
+}

@@ -42,19 +42,17 @@ export default DS.Model.extend({
     'submitterName', 'submitterName.length',
     'preparers', 'preparers.length',
     function () {
-      return (
-        (this.get('submitterEmail') && this.get('submitterEmail.length') > 0
-          && this.get('submitterName') && this.get('submitterName.length') > 0
-        ) || (this.get('preparers') && this.get('preparers.length') > 0)
-      );
+      return (this.submitterEmail && this.get('submitterEmail.length') > 0
+        && this.submitterName && this.get('submitterName.length') > 0
+      ) || (this.preparers && this.get('preparers.length') > 0);
     }
   ),
 
   submitterEmailDisplay: computed('submitterEmail', function () {
-    if (this.get('submitterEmail')) {
-      return this.get('submitterEmail').replace('mailto:', '');
+    if (this.submitterEmail) {
+      return this.submitterEmail.replace('mailto:', '');
     }
-    return this.get('submitterEmail');
+    return this.submitterEmail;
   }),
 
   publicationTitle: computed('publication', function () {
@@ -63,14 +61,14 @@ export default DS.Model.extend({
 
   repositoryNames: computed('repositories', function () {
     let repoNames = [];
-    this.get('repositories').forEach((repo) => {
+    this.repositories.forEach((repo) => {
       repoNames.push(repo.get('name'));
     });
     return repoNames;
   }),
   grantInfo: computed('grants', function () {
     let grants = [];
-    this.get('grants').forEach((grant) => {
+    this.grants.forEach((grant) => {
       grants.push(grant.get('awardNumber'));
       grants.push(grant.get('primaryFunder.name'));
       grants.push(grant.get('projectName'));
@@ -78,14 +76,14 @@ export default DS.Model.extend({
     return grants;
   }),
   isStub: computed('source', 'submitted', function () {
-    return this.get('source') === 'other' && !(this.get('submitted'));
+    return this.source === 'other' && !(this.submitted);
   }),
 
   /**
    * @returns {boolean} is this a draft submission?
    */
   isDraft: computed('submitted', 'submissionStatus', function () {
-    return this.get('submissionStatus') === 'draft';
+    return this.submissionStatus === 'draft';
     // return !this.get('submitted') && !this.get('submissionStatus');
   }),
 

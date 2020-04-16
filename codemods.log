@@ -11,3 +11,159 @@
 2020-03-21T18:53:07.763Z [warn] WARNING: {{eq}} was not converted as it has positional parameters which can't be automatically converted. Source: app/templates/components/workflow-files.hbs
 2020-03-21T18:53:07.763Z [warn] WARNING: {{eq}} was not converted as it has positional parameters which can't be automatically converted. Source: app/templates/components/workflow-files.hbs
 2020-03-21T18:53:07.976Z [warn] WARNING: {{not}} was not converted as it has positional parameters which can't be automatically converted. Source: app/templates/components/policy-card.hbs
+2020-03-30T14:56:54.297Z [warn] [/Users/jaredgalanis/pass-ember/app/components/submissions-author-cell.js]: FAILURE 
+Validation errors: 
+	[sendAction]: Transform not supported - calling the passed action would cause an infinite loop. See https://github.com/scalvert/eslint-plugin-ember-es6-class/pull/2 for more details
+2020-03-30T14:56:54.369Z [info] [/Users/jaredgalanis/pass-ember/app/components/workflow-policies.js]: SUCCESS
+2020-03-30T14:56:54.452Z [info] [/Users/jaredgalanis/pass-ember/app/router.js]: SUCCESS
+2020-03-30T14:56:54.553Z [info] [/Users/jaredgalanis/pass-ember/app/components/grant-link-newtab-cell.js]: SUCCESS
+2020-03-30T14:56:54.330Z [info] [/Users/jaredgalanis/pass-ember/app/components/submissions-status-cell.js]: SUCCESS
+2020-03-30T14:56:54.368Z [info] [/Users/jaredgalanis/pass-ember/app/components/submissions-award-cell.js]: SUCCESS
+2020-03-30T14:56:54.390Z [info] [/Users/jaredgalanis/pass-ember/app/components/submissions-repo-cell.js]: SUCCESS
+2020-03-30T14:56:54.579Z [info] [/Users/jaredgalanis/pass-ember/app/components/submissions-repoid-cell.js]: SUCCESS
+2020-03-30T14:56:54.637Z [info] [/Users/jaredgalanis/pass-ember/app/components/submissions-status.js]: SUCCESS
+2020-03-30T14:56:54.558Z [info] [/Users/jaredgalanis/pass-ember/app/adapters/application.js]: SUCCESS
+2020-03-30T14:56:54.600Z [info] [/Users/jaredgalanis/pass-ember/app/app.js]: SUCCESS
+2020-03-30T14:56:54.646Z [info] [/Users/jaredgalanis/pass-ember/app/controllers/404.js]: SUCCESS
+2020-03-30T14:56:54.706Z [info] [/Users/jaredgalanis/pass-ember/app/controllers/thanks.js]: SUCCESS
+2020-03-30T14:56:54.719Z [info] [/Users/jaredgalanis/pass-ember/app/components/commenting-block.js]: SUCCESS
+2020-03-30T14:56:54.732Z [info] [/Users/jaredgalanis/pass-ember/app/helpers/search-associated.js]: SUCCESS
+2020-03-30T14:56:54.769Z [warn] [/Users/jaredgalanis/pass-ember/app/controllers/grants/detail.js]: FAILURE 
+Validation errors: 
+	[themeInstance]: Transform not supported - need option '--decorators=true' or the property type CallExpression can not be transformed
+2020-03-30T14:56:54.792Z [info] [/Users/jaredgalanis/pass-ember/app/components/workflow-basics-user-search.js]: SUCCESS
+2020-03-30T14:56:54.836Z [warn] [/Users/jaredgalanis/pass-ember/app/routes/dashboard.js]: FAILURE 
+Validation errors: 
+	[headers]: Transform not supported - value is of type object. For more details: eslint-plugin-ember/avoid-leaking-state-in-ember-objects
+2020-03-30T14:56:54.837Z [warn] [/Users/jaredgalanis/pass-ember/app/controllers/submissions/new/metadata.js]: FAILURE 
+Validation errors: 
+	[abort]: Transform not supported - calling the passed action would cause an infinite loop. See https://github.com/scalvert/eslint-plugin-ember-es6-class/pull/2 for more details
+2020-03-30T14:56:54.843Z [info] [/Users/jaredgalanis/pass-ember/app/routes/grants/detail.js]: SUCCESS
+2020-03-30T14:56:54.817Z [info] [/Users/jaredgalanis/pass-ember/app/controllers/application.js]: SUCCESS
+2020-03-30T14:56:54.868Z [info] [/Users/jaredgalanis/pass-ember/app/controllers/dashboard.js]: SUCCESS
+2020-03-30T14:56:54.867Z [info] [/Users/jaredgalanis/pass-ember/app/routes/submissions/new/metadata.js]: SUCCESS
+2020-03-30T14:56:54.823Z [warn] [/Users/jaredgalanis/pass-ember/app/instance-initializers/error-handler.js]: SKIPPED Could not find runtime data NO_RUNTIME_DATA
+2020-03-30T14:56:54.868Z [warn] [/Users/jaredgalanis/pass-ember/app/helpers/format-oap-compliance.js]: SKIPPED Could not find runtime data NO_RUNTIME_DATA
+2020-03-30T14:56:54.662Z [warn] [/Users/jaredgalanis/pass-ember/app/components/workflow-repositories.js]: FAILURE 
+Validation errors: 
+	[addedRepos]: Transform not supported - need option '--decorators=true' or the property type CallExpression can not be transformed
+	[next]: Transform not supported - calling the passed action would cause an infinite loop. See https://github.com/scalvert/eslint-plugin-ember-es6-class/pull/2 for more details
+	[back]: Transform not supported - calling the passed action would cause an infinite loop. See https://github.com/scalvert/eslint-plugin-ember-es6-class/pull/2 for more details
+2020-03-30T14:56:54.843Z [info] [/Users/jaredgalanis/pass-ember/app/components/workflow-files.js]: SUCCESS
+2020-03-30T14:56:54.885Z [warn] [/Users/jaredgalanis/pass-ember/app/components/workflow-wrapper.js]: FAILURE 
+Validation errors: 
+	[loadTab]: Transform not supported - calling the passed action would cause an infinite loop. See https://github.com/scalvert/eslint-plugin-ember-es6-class/pull/2 for more details
+2020-03-30T14:56:54.934Z [warn] [/Users/jaredgalanis/pass-ember/app/helpers/format-date.js]: SKIPPED Could not find runtime data NO_RUNTIME_DATA
+2020-03-30T14:56:54.954Z [info] [/Users/jaredgalanis/pass-ember/app/routes/submissions/new/review.js]: SUCCESS
+2020-03-30T14:56:55.085Z [info] [/Users/jaredgalanis/pass-ember/app/routes/submissions/new/repositories.js]: SUCCESS
+2020-03-30T14:56:55.112Z [info] [/Users/jaredgalanis/pass-ember/app/components/policy-card.js]: SUCCESS
+2020-03-30T14:56:54.778Z [info] [/Users/jaredgalanis/pass-ember/app/components/date-cell.js]: SUCCESS
+2020-03-30T14:56:54.802Z [info] [/Users/jaredgalanis/pass-ember/app/components/carousel-gallery.js]: SUCCESS
+2020-03-30T14:56:54.925Z [warn] [/Users/jaredgalanis/pass-ember/app/components/choice-repositories-card.js]: FAILURE 
+Validation errors: 
+	[toggleRepository]: Transform not supported - calling the passed action would cause an infinite loop. See https://github.com/scalvert/eslint-plugin-ember-es6-class/pull/2 for more details
+2020-03-30T14:56:54.997Z [info] [/Users/jaredgalanis/pass-ember/app/components/find-journal.js]: SUCCESS
+2020-03-30T14:56:55.077Z [info] [/Users/jaredgalanis/pass-ember/app/components/display-metadata-keys.js]: SUCCESS
+2020-03-30T14:56:55.118Z [info] [/Users/jaredgalanis/pass-ember/app/components/grant-action-cell.js]: SUCCESS
+2020-03-30T14:56:55.132Z [info] [/Users/jaredgalanis/pass-ember/app/components/grant-link-cell.js]: SUCCESS
+2020-03-30T14:56:55.134Z [info] [/Users/jaredgalanis/pass-ember/app/services/current-user.js]: SUCCESS
+2020-03-30T14:56:54.602Z [info] [/Users/jaredgalanis/pass-ember/app/components/grant-submission-cell.js]: SUCCESS
+2020-03-30T14:56:54.628Z [info] [/Users/jaredgalanis/pass-ember/app/components/grant-title-date-cell.js]: SUCCESS
+2020-03-30T14:56:54.734Z [warn] [/Users/jaredgalanis/pass-ember/app/components/message-dialog.js]: FAILURE 
+Validation errors: 
+	[send]: Transform not supported - action name matches one of the lifecycle hooks. Rename and try again. See https://github.com/scalvert/ember-native-class-codemod/issues/34 for more details
+2020-03-30T14:56:54.893Z [info] [/Users/jaredgalanis/pass-ember/app/components/metadata-form.js]: SUCCESS
+2020-03-30T14:56:55.027Z [info] [/Users/jaredgalanis/pass-ember/app/components/oap-compliance-cell.js]: SUCCESS
+2020-03-30T14:56:55.069Z [warn] [/Users/jaredgalanis/pass-ember/app/components/pi-list-cell.js]: FAILURE 
+Validation errors: 
+	[sendAction]: Transform not supported - calling the passed action would cause an infinite loop. See https://github.com/scalvert/eslint-plugin-ember-es6-class/pull/2 for more details
+2020-03-30T14:56:55.131Z [info] [/Users/jaredgalanis/pass-ember/app/components/nav-bar.js]: SUCCESS
+2020-03-30T14:56:54.954Z [warn] [/Users/jaredgalanis/pass-ember/app/routes/application.js]: FAILURE 
+Validation errors: 
+	[transitionTo]: Transform not supported - calling the passed action would cause an infinite loop. See https://github.com/scalvert/eslint-plugin-ember-es6-class/pull/2 for more details
+2020-03-30T14:56:55.020Z [info] [/Users/jaredgalanis/pass-ember/app/routes/404.js]: SUCCESS
+2020-03-30T14:56:55.121Z [info] [/Users/jaredgalanis/pass-ember/app/routes/check-session-route.js]: SUCCESS
+2020-03-30T14:56:55.153Z [info] [/Users/jaredgalanis/pass-ember/app/routes/thanks.js]: SUCCESS
+2020-03-30T14:56:55.173Z [info] [/Users/jaredgalanis/pass-ember/app/serializers/application.js]: SUCCESS
+2020-03-30T14:56:55.188Z [info] [/Users/jaredgalanis/pass-ember/app/routes/submissions/new/policies.js]: SUCCESS
+2020-03-30T14:56:55.193Z [info] [/Users/jaredgalanis/pass-ember/app/components/workflow-basics.js]: SUCCESS
+2020-03-30T14:56:54.962Z [info] [/Users/jaredgalanis/pass-ember/app/services/search-helper.js]: SUCCESS
+2020-03-30T14:56:55.165Z [warn] [/Users/jaredgalanis/pass-ember/app/services/workflow.js]: FAILURE 
+Validation errors: 
+	[doiInfo]: Transform not supported - value is of type object. For more details: eslint-plugin-ember/avoid-leaking-state-in-ember-objects
+	[addedGrants]: Transform not supported - need option '--decorators=true' or the property type CallExpression can not be transformed
+2020-03-30T14:56:55.264Z [warn] [/Users/jaredgalanis/pass-ember/app/controllers/grants/index.js]: FAILURE 
+Validation errors: 
+	[themeInstance]: Transform not supported - need option '--decorators=true' or the property type CallExpression can not be transformed
+2020-03-30T14:56:55.343Z [warn] [/Users/jaredgalanis/pass-ember/app/controllers/submissions/index.js]: FAILURE 
+Validation errors: 
+	[themeInstance]: Transform not supported - need option '--decorators=true' or the property type CallExpression can not be transformed
+2020-03-30T14:56:55.263Z [warn] [/Users/jaredgalanis/pass-ember/app/components/workflow-review.js]: FAILURE 
+Validation errors: 
+	[isValidated]: Transform not supported - need option '--decorators=true' or the property type CallExpression can not be transformed
+	[externalRepoMap]: Transform not supported - value is of type object. For more details: eslint-plugin-ember/avoid-leaking-state-in-ember-objects
+	[back]: Transform not supported - calling the passed action would cause an infinite loop. See https://github.com/scalvert/eslint-plugin-ember-es6-class/pull/2 for more details
+2020-03-30T14:56:55.398Z [warn] [/Users/jaredgalanis/pass-ember/app/components/workflow-metadata.js]: FAILURE 
+Validation errors: 
+	[metadata]: Transform not supported - value is of type object. For more details: eslint-plugin-ember/avoid-leaking-state-in-ember-objects
+2020-03-30T14:56:54.921Z [warn] [/Users/jaredgalanis/pass-ember/app/controllers/submissions/new/policies.js]: FAILURE 
+Validation errors: 
+	[abort]: Transform not supported - calling the passed action would cause an infinite loop. See https://github.com/scalvert/eslint-plugin-ember-es6-class/pull/2 for more details
+2020-03-30T14:56:55.023Z [warn] [/Users/jaredgalanis/pass-ember/app/controllers/submissions/new/review.js]: FAILURE 
+Validation errors: 
+	[submit]: Transform not supported - action name matches one of the lifecycle hooks. Rename and try again. See https://github.com/scalvert/ember-native-class-codemod/issues/34 for more details
+	[submit]: Transform not supported - calling the passed action would cause an infinite loop. See https://github.com/scalvert/eslint-plugin-ember-es6-class/pull/2 for more details
+	[abort]: Transform not supported - calling the passed action would cause an infinite loop. See https://github.com/scalvert/eslint-plugin-ember-es6-class/pull/2 for more details
+2020-03-30T14:56:55.249Z [warn] [/Users/jaredgalanis/pass-ember/app/controllers/submissions/new/repositories.js]: FAILURE 
+Validation errors: 
+	[abort]: Transform not supported - calling the passed action would cause an infinite loop. See https://github.com/scalvert/eslint-plugin-ember-es6-class/pull/2 for more details
+2020-03-30T14:56:55.291Z [info] [/Users/jaredgalanis/pass-ember/app/routes/submissions/new/basics.js]: SUCCESS
+2020-03-30T14:56:55.366Z [info] [/Users/jaredgalanis/pass-ember/app/routes/submissions/new/grants.js]: SUCCESS
+2020-03-30T14:56:55.400Z [info] [/Users/jaredgalanis/pass-ember/app/routes/submissions/new/index.js]: SUCCESS
+2020-03-30T14:56:55.423Z [info] [/Users/jaredgalanis/pass-ember/app/routes/submissions/new/files.js]: SUCCESS
+2020-03-30T14:56:55.026Z [info] [/Users/jaredgalanis/pass-ember/app/routes/submissions/detail.js]: SUCCESS
+2020-03-30T14:56:55.193Z [info] [/Users/jaredgalanis/pass-ember/app/routes/grants/index.js]: SUCCESS
+2020-03-30T14:56:55.398Z [warn] [/Users/jaredgalanis/pass-ember/app/controllers/submissions/new/basics.js]: FAILURE 
+Validation errors: 
+	[abort]: Transform not supported - calling the passed action would cause an infinite loop. See https://github.com/scalvert/eslint-plugin-ember-es6-class/pull/2 for more details
+2020-03-30T14:56:55.439Z [warn] [/Users/jaredgalanis/pass-ember/app/controllers/submissions/new/grants.js]: FAILURE 
+Validation errors: 
+	[abort]: Transform not supported - calling the passed action would cause an infinite loop. See https://github.com/scalvert/eslint-plugin-ember-es6-class/pull/2 for more details
+2020-03-30T14:56:55.207Z [info] [/Users/jaredgalanis/pass-ember/app/components/repository-card.js]: SUCCESS
+2020-03-30T14:56:55.226Z [info] [/Users/jaredgalanis/pass-ember/app/components/repocopy-display.js]: SUCCESS
+2020-03-30T14:56:55.255Z [warn] [/Users/jaredgalanis/pass-ember/app/components/select-row-toggle.js]: FAILURE 
+Validation errors: 
+	[clickOnRow]: Transform not supported - calling the passed action would cause an infinite loop. See https://github.com/scalvert/eslint-plugin-ember-es6-class/pull/2 for more details
+2020-03-30T14:56:55.269Z [info] [/Users/jaredgalanis/pass-ember/app/components/submission-funding-table.js]: SUCCESS
+2020-03-30T14:56:55.309Z [warn] [/Users/jaredgalanis/pass-ember/app/components/submission-nav.js]: FAILURE 
+Validation errors: 
+	[loadTab]: Transform not supported - calling the passed action would cause an infinite loop. See https://github.com/scalvert/eslint-plugin-ember-es6-class/pull/2 for more details
+2020-03-30T14:56:55.382Z [info] [/Users/jaredgalanis/pass-ember/app/components/submission-action-cell.js]: SUCCESS
+2020-03-30T14:56:55.513Z [info] [/Users/jaredgalanis/pass-ember/app/components/submission-repo-details.js]: SUCCESS
+2020-03-30T14:56:55.532Z [warn] [/Users/jaredgalanis/pass-ember/app/components/workflow-grants.js]: FAILURE 
+Validation errors: 
+	[themeInstance]: Transform not supported - need option '--decorators=true' or the property type CallExpression can not be transformed
+	[_selectedGrants]: Transform not supported - need option '--decorators=true' or the property type CallExpression can not be transformed
+	[addGrant]: Transform not supported - calling the passed action would cause an infinite loop. See https://github.com/scalvert/eslint-plugin-ember-es6-class/pull/2 for more details
+	[removeGrant]: Transform not supported - calling the passed action would cause an infinite loop. See https://github.com/scalvert/eslint-plugin-ember-es6-class/pull/2 for more details
+2020-03-30T14:56:55.258Z [warn] [/Users/jaredgalanis/pass-ember/app/services/app-static-config.js]: FAILURE 
+Validation errors: 
+	[_loaded]: Transform not supported - need option '--decorators=true' or the property type CallExpression can not be transformed
+2020-03-30T14:56:55.378Z [info] [/Users/jaredgalanis/pass-ember/app/services/error-handler.js]: SUCCESS
+2020-03-30T14:56:55.578Z [info] [/Users/jaredgalanis/pass-ember/app/services/doi.js]: SUCCESS
+2020-03-30T14:56:55.687Z [info] [/Users/jaredgalanis/pass-ember/app/services/policies.js]: SUCCESS
+2020-03-30T14:56:55.528Z [info] [/Users/jaredgalanis/pass-ember/app/routes/submissions/index.js]: SUCCESS
+2020-03-30T14:56:55.615Z [info] [/Users/jaredgalanis/pass-ember/app/routes/submissions/new.js]: SUCCESS
+2020-03-30T14:56:55.705Z [warn] [/Users/jaredgalanis/pass-ember/app/controllers/submissions/new/files.js]: FAILURE 
+Validation errors: 
+	[abort]: Transform not supported - calling the passed action would cause an infinite loop. See https://github.com/scalvert/eslint-plugin-ember-es6-class/pull/2 for more details
+2020-03-30T14:56:55.490Z [warn] [/Users/jaredgalanis/pass-ember/app/controllers/submissions/new.js]: FAILURE 
+Validation errors: 
+	[submit]: Transform not supported - action name matches one of the lifecycle hooks. Rename and try again. See https://github.com/scalvert/ember-native-class-codemod/issues/34 for more details
+2020-03-30T14:56:55.695Z [info] [/Users/jaredgalanis/pass-ember/app/services/submission-handler.js]: SUCCESS
+2020-03-30T14:56:55.910Z [info] [/Users/jaredgalanis/pass-ember/app/services/metadata-schema.js]: SUCCESS
+2020-03-30T14:56:55.964Z [warn] [/Users/jaredgalanis/pass-ember/app/controllers/submissions/detail.js]: FAILURE 
+Validation errors: 
+	[tooltips]: Transform not supported - need option '--decorators=true' or the property type CallExpression can not be transformed
+	[tooltips]: Transform not supported - value has modifiers like 'property' or 'meta'
+	[externalRepoMap]: Transform not supported - value is of type object. For more details: eslint-plugin-ember/avoid-leaking-state-in-ember-objects

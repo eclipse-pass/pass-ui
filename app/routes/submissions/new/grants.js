@@ -1,11 +1,15 @@
-import CheckSessionRoute from '../../check-session-route';
-import { inject as service } from '@ember/service';
 
-export default CheckSessionRoute.extend({
-  workflow: service('workflow'),
-  actions: {
-    didTransition() {
-      this.get('workflow').setCurrentStep(2);
-    }
+import { action } from '@ember/object';
+import { inject as service } from '@ember/service';
+import CheckSessionRoute from '../../check-session-route';
+
+
+export default class GrantsRoute extends CheckSessionRoute {
+  @service('workflow')
+  workflow;
+
+  @action
+  didTransition() {
+    this.workflow.setCurrentStep(2);
   }
-});
+}

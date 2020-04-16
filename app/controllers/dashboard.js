@@ -1,11 +1,13 @@
-import { computed } from '@ember/object';
 import Controller from '@ember/controller';
-import ENV from 'pass-ember/config/environment';
+import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 
-export default Controller.extend({
-  currentUser: service('current-user'),
-  isSubmitter: computed('currentUser', function () {
-    return this.get('currentUser.user.roles').includes('submitter');
-  }),
-});
+export default class DashboardController extends Controller {
+  @service currentUser;
+
+  @tracked roles = get(this, 'currentUser.user.roles');
+
+  get isSubmitter() {
+    return this.roles.includes('submitter');
+  }
+}

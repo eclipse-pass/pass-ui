@@ -16,11 +16,11 @@ export default CheckSessionRoute.extend({
         filter: { term: { '@type': 'Submission' } }
       }
     };
-    let approvalResults = await this.get('ajax').post(ENV.fedora.elasticsearch, {
+    let approvalResults = await this.ajax.post(ENV.fedora.elasticsearch, {
       data: {
         size: 500, from: 0, query, _source: { excludes: '*_suggest' }
       },
-      headers: this.get('headers'),
+      headers: this.headers,
       xhrFields: { withCredentials: true }
     });
     const secondQuery = {
@@ -32,11 +32,11 @@ export default CheckSessionRoute.extend({
         filter: { term: { '@type': 'Submission' } }
       },
     };
-    let editsResults = await this.get('ajax').post(ENV.fedora.elasticsearch, {
+    let editsResults = await this.ajax.post(ENV.fedora.elasticsearch, {
       data: {
         size: 500, from: 0, query: secondQuery, _source: { excludes: '*_suggest' }
       },
-      headers: this.get('headers'),
+      headers: this.headers,
       xhrFields: { withCredentials: true }
     });
     const numberAwaitingEdits = editsResults.hits.total;

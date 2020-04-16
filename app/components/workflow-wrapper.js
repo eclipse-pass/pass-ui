@@ -1,9 +1,9 @@
-import Component from '@ember/component';
+import Component from '@glimmer/component';
+import { action } from '@ember/object';
 
-export default Component.extend({
-  actions: {
-    loadTab(gotoRoute) {
-      this.sendAction('loadTab', gotoRoute);
-    }
+export default class WorkflowWrapper extends Component {
+  @action
+  loadTab(gotoRoute) {
+    this.args.loadTab(gotoRoute);
   }
-});
+}

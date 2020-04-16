@@ -43,7 +43,7 @@
   }
 </style>
 
-<div class="form-group row">
+<div class="form-group row" {{did-insert this.initializeTooltip}}>
   <div class="col-md-12">
     <div class="list-group">
       <div href="#" class="list-group-item flex-column align-items-start">
@@ -87,7 +87,12 @@
                 <ul class="m-0">
                   {{#each this.weblinkRepos as |repo|}}
                   <li>
-                    <button type="button" class="btn btn-link" {{action "openWeblinkAlert" repo}}>
+                    <button
+                      type="button"
+                      class="btn btn-link"
+                      {{action "openWeblinkAlert"repo}}
+                      data-test-repo-link-button
+                    >
                       {{get repo 'url'}}
                     </button>
                   </li>

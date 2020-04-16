@@ -1,11 +1,17 @@
+
+import { inject as service } from '@ember/service';
 import $ from 'jquery';
 import Route from '@ember/routing/route';
 import ENV from '../config/environment';
-import { inject as service } from '@ember/service';
 
-export default Route.extend({
-  toast: service('toast'),
-  errorHandler: service('error-handler'),
+
+export default class CheckSessionRouteRoute extends Route {
+  @service('toast')
+  toast;
+
+  @service('error-handler')
+  errorHandler;
+
   beforeModel(transition) {
     let url = 'Make sure you set your ENV.userService.url value in ~config/environment.js or your .env file';
     if (ENV.userService.url) {
@@ -14,8 +20,8 @@ export default Route.extend({
     $.get(url, (data) => {
       if (!(data.username)) {
         transition.abort();
-        this.get('errorHandler').handleError(new Error('shib302'));
+        this.errorHandler.handleError(new Error('shib302'));
       }
     });
   }
-});
+}

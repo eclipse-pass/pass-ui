@@ -1,11 +1,10 @@
-import Component from '@ember/component';
-import { get } from '@ember/object';
+import Component from '@glimmer/component';
+import { action } from '@ember/object';
 
-export default Component.extend({
-  actions: {
-    // Send action to parent controller
-    sendAction(actionName, record, person) {
-      get(this, 'sendAction')(actionName, record, person);
-    }
+export default class SubmissionsAuthorCell extends Component {
+  @action
+  // Send action to parent controller
+  sendAction(actionName, record, person) {
+    this[actionName](actionName, record, person);
   }
-});
+}

@@ -1,4 +1,9 @@
-  <nav class="navbar navbar-light navbar-expand-md w-100" id="header-navbar">
+  <nav
+    id="header-navbar"
+    class="navbar navbar-light navbar-expand-md w-100"
+    {{did-insert this.scrollToAnchor}}
+    {{did-update this.scrollToAnchor}}
+  >
     <div class={{if @fullWidth 'container-fluid' 'container'}}>
       <div class="col-xs-12" style="width:100%;">
         <button class="navbar-toggler text-center border-none" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

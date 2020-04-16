@@ -1,45 +1,44 @@
-import { computed } from '@ember/object';
 import Controller from '@ember/controller';
-import config from '../config/environment';
+import { tracked } from '@glimmer/tracking';
+import { get } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { alias } from '@ember/object/computed';
+import config from '../config/environment';
 
-export default Controller.extend({
-  currentUser: service('current-user'),
-  notifications: service('toast'),
+export default class ApplicationController extends Controller {
+  @service currentUser;
+  @service router;
+  @service('toast') notifications;
 
-  staticConfig: alias('model.staticConfig'),
+  @alias('model.staticConfig')
+  staticConfig;
 
-  params: ['userToken'],
-  userToken: null,
-  rootURL: config.rootURL,
+  params = ['userToken'];
+  rootURL = config.rootURL;
 
-  wideRoutes: ['grants.index', 'grants.detail', 'submissions.index'],
-  fullWidth: computed('currentRouteName', function () {
-    return this.get('wideRoutes').includes(this.get('currentRouteName'));
-  }),
+  @tracked userToken = null;
+  @tracked wideRoutes = ['grants.index', 'grants.detail', 'submissions.index'];
+  @tracked assetsUri = get(this, 'staticConfig.assetsUri');
+  @tracked brand = get(this, 'staticConfig.branding');
+  @tracked currentRouteName = this.router.currentRouteName;
 
-  assetsUri: computed('staticConfig', function () {
-    return this.get('staticConfig.assetsUri');
-  }),
+  get fullWidth() {
+    return this.wideRoutes.includes(this.currentRouteName);
+  }
 
-  brand: computed('staticConfig', function () {
-    return this.get('staticConfig.branding');
-  }),
+  get logoUri() {
+    return this._staticUrl(get(this, 'brand.logo'));
+  }
 
-  logoUri: computed('brand', function () {
-    return this._staticUrl(this.get('brand.logo'));
-  }),
-
-  homepage: computed('brand', function () {
+  get homepage() {
     return this.get('brand.homepage');
-  }),
+  }
 
   init() {
-    this._super(...arguments);
-  },
+    super.init(...arguments);
+  }
 
   _staticUrl(relativeUrl) {
-    return `${this.get('assetsUri')}${relativeUrl}`;
+    return `${this.assetsUri}${relativeUrl}`;
   }
-});
+}

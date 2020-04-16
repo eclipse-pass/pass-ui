@@ -1,12 +1,10 @@
-import Component from '@ember/component';
-import layout from '../templates/components/select-row-toggle';
+import Component from '@glimmer/component';
+import { action } from '@ember/object';
 
-export default Component.extend({
-  layout,
-  actions: {
-    clickOnRow(index, record, event) {
-      this.get('clickOnRow')(index, record);
-      event.stopPropagation();
-    }
+export default class SelectRowToggle extends Component {
+  @action
+  clickOnRow(index, record, event) {
+    this.args.clickOnRow(index, record);
+    event.stopPropagation();
   }
-});
+}

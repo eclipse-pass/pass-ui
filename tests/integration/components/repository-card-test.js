@@ -43,7 +43,7 @@ module('Integration | Component | repository card', (hooks) => {
   });
 
   test('Clicking bubbles the "toggleRepository" action with a Repository and status', async function (assert) {
-    assert.expect(2);
+    assert.expect(3);
 
     const repo = EmberObject.create({ name: 'Moo-pository', _selected: false });
     this.set('repository', repo);
@@ -63,5 +63,7 @@ module('Integration | Component | repository card', (hooks) => {
 
     await waitFor('input[type="checkbox"]');
     await click('input[type="checkbox"]');
+
+    assert.dom('input[type="checkbox"]').isChecked();
   });
 });

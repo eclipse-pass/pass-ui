@@ -27,7 +27,12 @@ module('Unit | Controller | grants/index', (hooks) => {
   });
 
   test('properly returns admin roles', function (assert) {
+    this.owner.register('service:current-user', EmberObject.extend({
+      user: { isAdmin: true }
+    }));
+
     let controller = this.owner.lookup('controller:grants/index');
+
     controller.set('currentUser.user', EmberObject.create({
       isAdmin: true
     }));

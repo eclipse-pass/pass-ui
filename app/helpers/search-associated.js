@@ -1,15 +1,18 @@
-import { setProperties, observer } from '@ember/object';
-import Helper, { helper } from '@ember/component/helper';
+
+import { observes } from '@ember-decorators/object';
 import { inject as service } from '@ember/service';
+import { setProperties } from '@ember/object';
+import Helper, { helper } from '@ember/component/helper';
 
-export default Helper.extend({
-  store: service('store'),
 
-  type: null,
-  propertyName: null,
-  associatedId: null,
+export default class SearchAssociated extends Helper {
+  @service('store')
+  store;
 
-  content: null,
+  type = null;
+  propertyName = null;
+  associatedId = null;
+  content = null;
 
   /**
    * Search for all objects of a given type that are associated with the given property
@@ -44,19 +47,22 @@ export default Helper.extend({
       associatedId: params[2]
     });
 
-    return this.get('content');
-  },
+    return this.content;
+  }
 
-  paramsChanged: observer('associatedId', function () {
+  @observes('associatedId')
+  paramsChanged() {
     const self = this;
     let query = { size: 500, term: {} };
 
-    query.term[this.get('propertyName')] = this.get('associatedId');
-    this.get('store').query(this.get('type'), query).then((results) => {
+    query.term[this.propertyName] = this.associatedId;
+    this.store.query(this.type, query).then((results) => {
       self.set('content', results);
     });
-  }),
-  contentChanged: observer('content', function () {
+  }
+
+  @observes('content')
+  contentChanged() {
     this.recompute();
-  })
-});
+  }
+}

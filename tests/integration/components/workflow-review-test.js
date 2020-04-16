@@ -1,12 +1,18 @@
 import { A } from '@ember/array';
-import EmberObject from '@ember/object';
+import EmberObject, { get } from '@ember/object';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
 import { click, render, waitUntil, waitFor } from '@ember/test-helpers';
+import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 
 module('Integration | Component | workflow review', (hooks) => {
   setupRenderingTest(hooks);
+  setupMirage(hooks);
+
+  hooks.beforeEach(async function () {
+    this.server.post('https://pass.local/schemaservice?merge=true', (_schema, _request) => true);
+  });
 
   test('it renders', async function (assert) {
     let submission = EmberObject.create({
@@ -58,7 +64,7 @@ module('Integration | Component | workflow review', (hooks) => {
       submitter: {
         id: 'pi'
       },
-      preparers: A([this.get('currentUser.user')]),
+      preparers: A([get(this, 'currentUser.user')]),
       repositories: A([repo1, repo2]),
       metadata: '[]'
     });
@@ -123,7 +129,7 @@ module('Integration | Component | workflow review', (hooks) => {
       submitter: {
         id: 'pi'
       },
-      preparers: A([this.get('currentUser.user')]),
+      preparers: A([get(this, 'currentUser.user')]),
       repositories: A([repo1, repo2]),
       metadata: '[]'
     });
@@ -152,7 +158,7 @@ module('Integration | Component | workflow review', (hooks) => {
     `);
 
     // Click on web-link repository and then confirm
-    await click('.btn-link');
+    await click('[data-test-repo-link-button]');
     await click(document.querySelector('.swal2-confirm'));
 
     // Click on submit
@@ -192,7 +198,7 @@ module('Integration | Component | workflow review', (hooks) => {
       submitter: {
         id: 'pi'
       },
-      preparers: A([this.get('currentUser.user')]),
+      preparers: A([get(this, 'currentUser.user')]),
       repositories: A([repo2]),
       metadata: '[]'
     });
@@ -248,7 +254,7 @@ module('Integration | Component | workflow review', (hooks) => {
       submitter: {
         id: 'pi'
       },
-      preparers: A([this.get('currentUser.user')]),
+      preparers: A([get(this, 'currentUser.user')]),
       repositories: A([repo1]),
       metadata: '[]'
     });

@@ -1,4 +1,5 @@
+
 import CheckSessionRoute from './check-session-route';
 
-export default CheckSessionRoute.extend({
-});
+
+export default class ThanksRoute extends CheckSessionRoute {}

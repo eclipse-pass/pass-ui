@@ -1,11 +1,13 @@
+
 import EmberRouter from '@ember/routing/router';
 import config from './config/environment';
 
-const Router = EmberRouter.extend({
-  location: config.locationType,
-  rootURL: config.rootURL,
-  brand: config.brand
-});
+
+class Router extends EmberRouter {
+  location = config.locationType;
+  rootURL = config.rootURL;
+  brand = config.brand;
+}
 
 Router.map(function () {
   this.route('dashboard', { path: '/' });
@@ -26,7 +28,7 @@ Router.map(function () {
     this.route('detail', { path: '/*path' });
     this.route('detail', { path: '/:grant_id' });
   });
-  this.route('404', { path: '/*path' });
+  this.route('not-found-error', { path: '/*path' });
   this.route('thanks');
 });
 

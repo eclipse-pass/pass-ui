@@ -1,63 +1,74 @@
-import { computed } from '@ember/object';
+import Component from '@glimmer/component';
+import { tracked } from '@glimmer/tracking';
+import { action, computed, get, set } from '@ember/object';
 import { A } from '@ember/array';
-import Component from '@ember/component';
 import { inject as service } from '@ember/service';
-import { task } from 'ember-concurrency';
+import { task } from 'ember-concurrency-decorators';
 
-export default Component.extend({
-  workflow: service('workflow'),
-  currentUser: service('current-user'),
-  isValidated: A(),
-  init() {
-    this._super(...arguments);
-    $('[data-toggle="tooltip"]').tooltip();
-  },
-  externalRepoMap: {},
-  filesTemp: computed('workflow.filesTemp', function () {
-    return this.get('workflow').getFilesTemp();
-  }),
-  parsedFiles: computed('filesTemp', 'previouslyUploadedFiles', function () {
+export default class WorkflowReview extends Component {
+  @service workflow;
+  @service currentUser;
+
+  @tracked isValidated = A();
+  @tracked externalRepoMap = {};
+  @tracked filesTemp = this.workflow.filesTemp;
+  @tracked _hasVisitedWeblink = null;
+
+  get parsedFiles() {
     let newArr = A();
-    if (this.get('filesTemp')) {
-      newArr.addObjects(this.get('filesTemp'));
+    if (this.filesTemp) {
+      newArr.addObjects(this.filesTemp);
     }
-    if (this.get('previouslyUploadedFiles')) {
-      newArr.addObjects(this.get('previouslyUploadedFiles'));
+    if (this.args.previouslyUploadedFiles) {
+      newArr.addObjects(this.args.previouslyUploadedFiles);
     }
     return newArr;
-  }),
+  }
 
-  hasVisitedWeblink: computed('externalRepoMap', function () {
-    return Object.values(this.get('externalRepoMap')).every(val => val === true);
-  }),
-  weblinkRepos: computed('submission.repositories', function () {
-    const repos = this.get('submission.repositories').filter(repo => repo.get('_isWebLink'));
-    repos.forEach(repo => (this.get('externalRepoMap')[repo.get('id')] = false)); // eslint-disable-line
+  get hasVisitedWeblink() {
+    if (this._hasVisitedWeblink) {
+      return this._hasVisitedWeblink;
+    }
+    return Object.values(this.externalRepoMap).every(val => val === true);
+  }
+
+  set hasVisitedWeblink(value) {
+    this._hasVisitedWeblink = value;
+  }
+
+  get weblinkRepos() {
+    const repos = get(this, 'args.submission.repositories').filter(repo => repo.get('_isWebLink'));
+    repos.forEach(repo => (this.externalRepoMap[repo.get('id')] = false)); // eslint-disable-line
     return repos;
-  }),
-  mustVisitWeblink: computed('weblinkRepos', 'model', function () {
-    const weblinkExists = this.get('weblinkRepos.length') > 0;
-    const isSubmitter = this.get('currentUser.user.id') === this.get('submission.submitter.id');
-    return weblinkExists && isSubmitter;
-  }),
-  disableSubmit: computed('mustVisitWeblink', 'hasVisitedWeblink', function () {
-    const needsToVisitWeblink = this.get('mustVisitWeblink') && !this.get('hasVisitedWeblink');
-    return needsToVisitWeblink;
-  }),
-  userIsPreparer: computed('submission', 'currentUser.user', function () {
-    const isNotSubmitter = this.get('submission.submitter.id') !== this.get('currentUser.user.id');
-    return (this.get('submission.isProxySubmission') && isNotSubmitter);
-  }),
-  submitButtonText: computed('userIsPreparer', function () {
-    return this.get('userIsPreparer') ? 'Request approval' : 'Submit';
-  }),
+  }
 
-  submitTask: task(function* () {
+  get mustVisitWeblink() {
+    const weblinkExists = get(this, 'weblinkRepos.length') > 0;
+    const isSubmitter = get(this, 'currentUser.user.id') === get(this, 'args.submission.submitter.id');
+    return weblinkExists && isSubmitter;
+  }
+
+  get disableSubmit() {
+    const needsToVisitWeblink = this.mustVisitWeblink && !this.hasVisitedWeblink;
+    return needsToVisitWeblink;
+  }
+
+  get userIsPreparer() {
+    const isNotSubmitter = get(this, 'args.submission.submitter.id') !== get(this, 'currentUser.user.id');
+    return (get(this, 'args.submission.isProxySubmission') && isNotSubmitter);
+  }
+
+  get submitButtonText() {
+    return this.userIsPreparer ? 'Request approval' : 'Submit';
+  }
+
+  @task
+  submitTask = function* () {
     $('.block-user-input').css('display', 'block');
     let disableSubmit = true;
     // In case a crafty user edits the page HTML, don't submit when not allowed
-    if (this.get('disableSubmit')) {
-      if (!this.get('hasVisitedWeblink')) {
+    if (this.disableSubmit) {
+      if (!this.hasVisitedWeblink) {
         $('.fa-exclamation-triangle').css('color', '#f86c6b');
         $('.fa-exclamation-triangle').css('font-size', '2.2em');
         setTimeout(() => {
@@ -74,13 +85,13 @@ export default Component.extend({
       return;
     }
 
-    if (this.get('submission.submitter.id') !== this.get('currentUser.user.id')) {
-      this.sendAction('submit');
+    if (get(this, 'args.submission.submitter.id') !== get(this, 'currentUser.user.id')) {
+      this.args.submit();
       return;
     }
 
     // User is submitting on own behalf. Must get repository agreements.
-    let reposWithAgreementText = this.get('submission.repositories')
+    let reposWithAgreementText = get(this, 'args.submission.repositories')
       .filter(repo => (!repo.get('_isWebLink')) && repo.get('agreementText'))
       .map(repo => ({
         id: repo.get('name'),
@@ -88,13 +99,13 @@ export default Component.extend({
         html: `<div class="form-control deposit-agreement-content py-4 mt-4">${repo.get('agreementText')}</div>`
       }));
 
-    let reposWithoutAgreementText = this.get('submission.repositories')
+    let reposWithoutAgreementText = get(this, 'args.submission.repositories')
       .filter(repo => !repo.get('_isWebLink') && !repo.get('agreementText'))
       .map(repo => ({
         id: repo.get('name')
       }));
 
-    let reposWithWebLink = this.get('submission.repositories')
+    let reposWithWebLink = get(this, 'args.submission.repositories')
       .filter(repo => repo.get('_isWebLink'))
       .map(repo => ({
         id: repo.get('name')
@@ -114,7 +125,7 @@ export default Component.extend({
         }
       });
       // make sure there are repos to submit to.
-      if (this.get('submission.repositories.length') > 0) {
+      if (get(this, 'args.submission.repositories.length') > 0) {
         if (reposWithoutAgreementText.length > 0 || reposThatUserAgreedToDeposit.length > 0 || reposWithWebLink.length > 0) {
           let swalMsg = 'Once you click confirm you will no longer be able to edit this submission or add repositories.<br/>';
           if (reposWithoutAgreementText.length > 0 || reposThatUserAgreedToDeposit.length) {
@@ -137,7 +148,7 @@ export default Component.extend({
               * It is assumed that the user has done the necessary steps for each web-link repository,
               * so those are also kept in the list
               */
-            this.set('submission.repositories', this.get('submission.repositories').filter((repo) => {
+            set(this, 'args.submission.repositories', get(this, 'args.submission.repositories').filter((repo) => {
               if (repo.get('_isWebLink')) {
                 return true;
               }
@@ -150,9 +161,9 @@ export default Component.extend({
               return false;
             }));
 
-            this.sendAction('submit');
-          } else {
-            $('.block-user-input').css('display', 'none');
+            $('.block-user-input').css('display', 'block');
+
+            this.args.submit();
           }
         } else {
           // there were repositories, but the user didn't sign any of the agreements
@@ -181,41 +192,57 @@ export default Component.extend({
       // User has cancelled out of the popup
       $('.block-user-input').css('display', 'none');
     }
-  }),
+  }
 
-  actions: {
-    agreeToDeposit() { this.set('step', 5); },
-    back() { this.sendAction('back'); },
-    openWeblinkAlert(repo) {
-      swal({
-        title: 'Notice!',
-        text:
-          'You are being sent to an external site. This will open a new tab.',
-        showCancelButton: true,
-        cancelButtonText: 'Cancel',
-        confirmButtonText: 'Open new tab'
-      }).then((value) => {
-        if (value.dismiss) {
-          // Don't redirect
-          return;
-        }
-        // Go to the weblink repo
-        this.get('externalRepoMap')[repo.get('id')] = true;
-        const allLinksVisited = Object.values(this.get('externalRepoMap')).every(val => val === true);
-        if (allLinksVisited) {
-          this.set('hasVisitedWeblink', true);
-        }
-        $('#externalSubmission').modal('hide');
-
-        var win = window.open(repo.get('url'), '_blank');
-
-        if (win) {
-          win.focus();
-        }
-      });
-    },
-    cancel() {
-      this.sendAction('abort');
+  @action
+  initializeTooltip() {
+    if (document.querySelector('[data-toggle="tooltip"]')) {
+      document.querySelector('[data-toggle="tooltip"]').tooltip();
     }
   }
-});
+
+  @action
+  agreeToDeposit() {
+    set('step', 5);
+  }
+
+  @action
+  openWeblinkAlert(repo) {
+    swal({
+      title: 'Notice!',
+      text:
+        'You are being sent to an external site. This will open a new tab.',
+      showCancelButton: true,
+      cancelButtonText: 'Cancel',
+      confirmButtonText: 'Open new tab'
+    }).then((value) => {
+      if (value.dismiss) {
+        // Don't redirect
+        return;
+      }
+      // Go to the weblink repo
+      this.externalRepoMap[repo.get('id')] = true;
+      const allLinksVisited = Object.values(this.externalRepoMap).every(val => val === true);
+      if (allLinksVisited) {
+        this.hasVisitedWeblink = true;
+      }
+      $('#externalSubmission').modal('hide');
+
+      var win = window.open(repo.get('url'), '_blank');
+
+      if (win) {
+        win.focus();
+      }
+    });
+  }
+
+  @action
+  back() {
+    this.args.back();
+  }
+
+  @action
+  cancel() {
+    this.args.abort();
+  }
+}

@@ -1,10 +1,14 @@
-import Route from '@ember/routing/route';
-import { inject as service } from '@ember/service';
 
-export default Route.extend({
-  workflow: service('workflow'),
+import { inject as service } from '@ember/service';
+import Route from '@ember/routing/route';
+
+
+export default class IndexRoute extends Route {
+  @service('workflow')
+  workflow;
+
   beforeModel() {
-    this.get('workflow').resetWorkflow();
+    this.workflow.resetWorkflow();
     this.replaceWith('submissions.new.basics');
   }
-});
+}

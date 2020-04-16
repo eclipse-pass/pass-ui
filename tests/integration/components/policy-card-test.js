@@ -9,13 +9,13 @@ module('Integration | Component | policy card', (hooks) => {
   setupRenderingTest(hooks);
 
   test('it renders when given expected data', async function (assert) {
-    assert.expect(4);
-
     const policy = EmberObject.create({
       repositories: A(),
       description: 'This is a moo-scription',
-      title: 'Moo title'
+      title: 'Moo title',
+      id: 1,
     });
+
     const journal = EmberObject.create({
       isMethodA: false
     });

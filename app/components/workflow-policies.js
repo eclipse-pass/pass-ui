@@ -1,9 +1,9 @@
-import Component from '@ember/component';
+import { action } from '@ember/object';
+import Component from '@glimmer/component';
 
-export default Component.extend({
-  actions: {
-    cancel() {
-      this.sendAction('abort');
-    }
+export default class WorkflowPolicies extends Component {
+  @action
+  cancel() {
+    this.args.abort();
   }
-});
+}

@@ -57,7 +57,7 @@ export default CheckSessionRoute.extend({
   },
 
   model() {
-    const configurator = this.get('staticConfig');
+    const configurator = this.staticConfig;
     return RSVP.hash({
       staticConfig: configurator.getStaticConfig()
     });
@@ -70,13 +70,13 @@ export default CheckSessionRoute.extend({
     if (model.staticConfig) {
       if (model.staticConfig.branding.stylesheet) {
         const stylesheet = `${model.staticConfig.assetsUri}${model.staticConfig.branding.stylesheet}`;
-        this.get('staticConfig').addCSS(stylesheet);
+        this.staticConfig.addCSS(stylesheet);
       } else {
         console.log('%cNo branding stylesheet was configured', 'color:red');
       }
       if (model.staticConfig.branding.favicon) {
         const favicon = `${model.staticConfig.assetsUri}${model.staticConfig.branding.favicon}`;
-        this.get('staticConfig').addFavicon(favicon);
+        this.staticConfig.addFavicon(favicon);
       }
     }
     return this._loadCurrentUser(transition.to.queryParams.userToken);

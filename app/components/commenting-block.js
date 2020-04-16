@@ -1,6 +1,6 @@
-import Component from '@ember/component';
 import { inject as service } from '@ember/service';
+import Component from '@glimmer/component';
 
-export default Component.extend({
-  currentUser: service('current-user')
-});
+export default class CommentingBlock extends Component {
+  @service currentUser;
+}

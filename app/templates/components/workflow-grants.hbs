@@ -6,7 +6,7 @@
 
 {{#if @submission.grants}}
   <h5>Grants added to submission</h5>
-  <SubmissionFundingTable @grants={{@submission.grants}} @remove={{action "removeGrant"}} />
+  <SubmissionFundingTable @grants={{@submission.grants}} @remove={{action this.removeGrant}} />
   <button class="btn btn-outline-primary" {{action @back}}>Back</button>
   <button class="btn btn-primary next pull-right" {{action @next}} data-test-workflow-grants-next>Next</button>
   <br>

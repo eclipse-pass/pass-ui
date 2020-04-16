@@ -1,10 +1,16 @@
+
+import { action } from '@ember/object';
+import { inject as service } from '@ember/service';
 import { hash } from 'rsvp';
 import CheckSessionRoute from '../../check-session-route';
-import { inject as service } from '@ember/service';
 
-export default CheckSessionRoute.extend({
-  workflow: service('workflow'),
-  policyService: service('policies'),
+
+export default class PoliciesRoute extends CheckSessionRoute {
+  @service('workflow')
+  workflow;
+
+  @service('policies')
+  policyService;
 
   /**
    * First call the Policy Service to get the list of applicable policy IDs.
@@ -49,15 +55,14 @@ export default CheckSessionRoute.extend({
       preLoadedGrant: parentModel.preLoadedGrant,
       policies: Promise.all(policies)
     });
-  },
+  }
 
   clearEffectivePolicies(submission) {
     submission.get('effectivePolicies').clear();
-  },
-
-  actions: {
-    didTransition() {
-      this.get('workflow').setCurrentStep(3);
-    }
   }
-});
+
+  @action
+  didTransition() {
+    this.workflow.setCurrentStep(3);
+  }
+}

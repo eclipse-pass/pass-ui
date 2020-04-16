@@ -1,44 +1,44 @@
-import { computed } from '@ember/object';
-import Component from '@ember/component';
+import Component from '@glimmer/component';
+import { computed, get } from '@ember/object';
 import { inject as service } from '@ember/service';
 
-export default Component.extend({
-  store: service('store'),
+export default class SubmissionRepoDetails extends Component {
+  @service store;
 
-  status: computed('deposit', 'repoCopy', function () {
-    const deposit = this.get('deposit');
-    const repoCopy = this.get('repoCopy');
-    const source = this.get('submission.source');
-    const isSubmitted = this.get('submission.submitted');
+  get status() {
+    const deposit = this.args.deposit;
+    const repoCopy = this.args.repoCopy;
+    const source = get(this, 'args.submission.source');
+    const isSubmitted = get(this, 'args.submission.submitted');
 
     if (!isSubmitted) {
       return 'not-submitted';
     }
 
     if (repoCopy) {
-      const cs = repoCopy.get('copyStatus');
+      const cs = get(repoCopy, 'copyStatus');
       if (cs === 'complete' || cs === 'stalled' || cs === 'rejected') {
         return cs;
       }
     }
 
-    if (deposit && deposit.get('depositStatus') === 'failed') {
+    if (deposit && get(deposit, 'depositStatus') === 'failed') {
       return 'failed';
     }
 
     // Failed aggregatedDepositStatus means deposit never created
-    if (!deposit && source == 'pass' && this.get('submission.aggregatedDepositStatus') === 'failed') {
+    if (!deposit && source == 'pass' && get(this, 'submission.aggregatedDepositStatus') === 'failed') {
       return 'failed';
     }
 
     return 'submitted';
-  }),
+  }
 
   /**
    * Return a tooltip based on the current status.
    */
-  tooltip: computed('status', function () {
-    switch (this.get('status')) {
+  get tooltip() {
+    switch (this.status) {
       case 'complete':
         return 'Submission was accepted and processed by the repository. ID(s) have been assigned to the submitted manuscript.';
       case 'stalled':
@@ -56,17 +56,17 @@ export default Component.extend({
       default:
         return '';
     }
-  }),
+  }
 
   /**
    * Is this an external repository - is this not tracked by PASS
    * (e.g. US Dept of Education submission system ERIC)
    */
-  isExternalRepo: computed('repo', function () {
-    return this.get('repo._isWebLink');
-  }),
+  get isExternalRepo() {
+    return get(this, 'args.repo._isWebLink');
+  }
 
-  isSubmitted: computed('submission.submitted', function () {
-    return this.get('submission.submitted');
-  })
-});
+  get isSubmitted() {
+    return get(this, 'args.submission.submitted');
+  }
+}

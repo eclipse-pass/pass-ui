@@ -1,8 +1,10 @@
-import { computed, get } from '@ember/object';
-import Component from '@ember/component';
+import Component from '@glimmer/component';
+import { tracked } from '@glimmer/tracking';
+import { action, get, set } from '@ember/object';
 import _ from 'lodash';
 import { inject as service } from '@ember/service';
 import swal from 'sweetalert2';
+import { task } from 'ember-concurrency-decorators';
 
 /**
  * The schema service is invoked to retrieve appropriate metadata forms.
@@ -19,95 +21,91 @@ import swal from 'sweetalert2';
  * from the metadata forms and used to update the submission metadata, making the values
  * available to autofill subsequent forms.
  */
-export default Component.extend({
-  currentUser: service('current-user'),
-  router: service('router'), // Used to abort this step
-  workflow: service('workflow'),
-  schemaService: service('metadata-schema'),
+export default class WorkflowMetadata extends Component {
+  @service currentUser;
+  @service router; // Used to abort this step
+  @service workflow;
+  @service metadataSchema;
+  @service doi;
 
-  doiInfo: computed('workflow.doiInfo', function () {
-    return this.get('workflow').getDoiInfo();
-  }),
-  doiService: service('doi'),
+  @tracked doiInfo = this.workflow.doiInfo;
+  @tracked readOnlyProperties = [];
+  @tracked schemas = undefined;
+  @tracked metadata = {};
+  @tracked currentFormStep = 0; // Current step #
 
   /**
    * Schema that is currently being shown to the user
    */
-  currentSchema: computed('schemas', 'currentFormStep', function () {
-    const schemas = this.get('schemas');
+
+  get currentSchema() {
+    const schemas = this.schemas;
     if (schemas && schemas.length > 0) {
-      const newSchema = this.preprocessSchema(schemas[this.get('currentFormStep')]);
+      const newSchema = this.preprocessSchema(schemas[this.currentFormStep]);
       return newSchema;
     }
-  }),
-  currentFormStep: 0, // Current step #
+    return false;
+  }
 
-  onlySingleSchema: computed('schemas', function () {
-    return this.get('schemas').length === 1;
-  }),
+  get onlySingleSchema() {
+    return this.schemas.length === 1;
+  }
 
-  displayFormStep: computed('currentFormStep', function () {
-    return this.get('currentFormStep') + 1;
-  }),
+  get displayFormStep() {
+    return this.currentFormStep + 1;
+  }
 
-  // setNextReadonly: false,
-  readOnlyProperties: [],
-
-  schemas: undefined,
-
-  metadata: {},
-
-  init() {
-    this._super(...arguments);
+  constructor() {
+    super(...arguments);
 
     let md;
     try {
-      md = JSON.parse(this.get('submission.metadata'));
+      md = JSON.parse(get(this, 'args.submission.metadata'));
     } catch (e) {
+      // console.log(e);
       // Do nothing
     } finally {
-      this.set('metadata', md || {});
+      set(this, 'metadata', md || {});
       this.setReadOnly({});
     }
-  },
+  }
 
-  async willRender() {
-    this._super(...arguments);
-
+  @task
+  setupSchemas = function* () {
     // doi:10.1002/0470841559.ch1
     // 10.4137/CMC.S38446
     // 10.1039/c7an01256j
-    if (!this.get('schemas')) {
-      const repos = this.get('submission.repositories').map(repo => repo.get('id'));
+    if (!this.schemas) {
+      const repos = get(this, 'args.submission.repositories').map(repo => repo.id);
 
       // Load schemas by calling the Schema service
       try {
-        const schemas = await this.get('schemaService').getMetadataSchemas(repos);
+        const schemas = yield this.metadataSchema.getMetadataSchemas(repos);
 
-        const doiInfo = this.get('doiInfo');
-        const journal = await this.get('publication.journal');
+        const doiInfo = this.doiInfo;
+        const journal = yield get(this, 'args.publication.journal');
 
         // Add relevant fields from DOI data to submission metadata
-        const metadataFromDoi = this.get('doiService').doiToMetadata(
+        const metadataFromDoi = this.doi.doiToMetadata(
           doiInfo,
           journal,
-          this.get('schemaService').getFields(schemas)
+          this.metadataSchema.getFields(schemas)
         );
 
-        if (this.get('workflow').isDataFromCrossref()) {
+        if (this.workflow.isDataFromCrossref()) {
           this.setReadOnly(metadataFromDoi);
         }
 
         this.updateMetadata(metadataFromDoi);
 
-        this.set('schemas', schemas);
-        this.set('currentFormStep', 0);
+        set(this, 'schemas', schemas);
+        set(this, 'currentFormStep', 0);
       } catch (e) {
         console.log('%cFailed to get schemas', 'color:red;');
         console.log(e);
       }
     }
-  },
+  }
 
   /**
    * Set the object keys as read-only metadata fields. This assumes that incoming metadata captured
@@ -117,53 +115,54 @@ export default Component.extend({
    * @param {object} metadata
    */
   setReadOnly(metadata) {
-    this.set('readOnlyProperties', Object.keys(metadata));
-  },
+    set(this, 'readOnlyProperties', Object.keys(metadata));
+  }
 
-  actions: {
-    nextForm(metadata) {
-      const step = this.get('currentFormStep');
-      this.updateMetadata(metadata, true);
-      this.hintsCleanup();
+  @action
+  nextForm(metadata) {
+    const step = this.currentFormStep;
+    this.updateMetadata(metadata, true);
+    this.hintsCleanup();
 
-      const schemaService = this.get('schemaService');
-      const schema = this.get('schemas')[this.get('currentFormStep')];
+    const metadataSchema = this.metadataSchema;
+    const schema = this.schemas[this.currentFormStep];
 
-      const validation = schemaService.validate(schema, this.get('metadata'));
+    const validation = metadataSchema.validate(schema, this.metadata);
 
-      if (!validation) {
-        console.log('%cError(s) found while validating data', 'color:red;');
-        console.log(schemaService.getErrors());
+    if (!validation) {
+      console.log('%cError(s) found while validating data', 'color:red;');
+      console.log(metadataSchema.getErrors());
 
-        swal({
-          type: 'error',
-          title: 'Form Validation Error',
-          html: this.validationErrorMsg(schemaService.getErrors())
-        });
-        return;
-      }
-
-      if (step >= this.get('schemas').length - 1) {
-        this.finalizeMetadata(metadata);
-        this.sendAction('next');
-      } else {
-        this.set('currentFormStep', step + 1); // Changing step # will update current schema
-      }
-    },
-
-    previousForm(metadata) {
-      const step = this.get('currentFormStep');
-      if (step > 0) {
-        this.set('currentFormStep', step - 1); // Changing step # will update current schema
-      } else {
-        this.sendAction('back');
-      }
-    },
-
-    cancel() {
-      this.sendAction('abort');
+      swal({
+        type: 'error',
+        title: 'Form Validation Error',
+        html: this.validationErrorMsg(metadataSchema.getErrors())
+      });
+      return;
     }
-  },
+
+    if (step >= this.schemas.length - 1) {
+      this.finalizeMetadata(metadata);
+      this.args.next();
+    } else {
+      this.currentFormStep = step + 1; // Changing step # will update current schema
+    }
+  }
+
+  @action
+  previousForm(metadata) {
+    const step = this.currentFormStep;
+    if (step > 0) {
+      this.currentFormStep = step - 1; // Changing step # will update current schema
+    } else {
+      this.args.back();
+    }
+  }
+
+  @action
+  cancel() {
+    this.args.abort();
+  }
 
   /**
    * Process schema before displaying it to the user. Tasks during processing includes pre-populating
@@ -171,19 +170,19 @@ export default Component.extend({
    *  - Remove title of schema if there is only a single one to display
    */
   preprocessSchema(schema) {
-    const service = this.get('schemaService');
+    const service = this.metadataSchema;
 
-    if (this.get('onlySingleSchema')) {
+    if (this.onlySingleSchema) {
       schema = service.untitleSchema(schema);
     }
 
     let processed = service.alpacafySchema(schema);
 
-    const metadata = this.get('metadata');
-    const readonly = this.get('readOnlyProperties');
+    const metadata = this.metadata;
+    const readonly = this.readOnlyProperties;
 
     return service.addDisplayData(processed, metadata, readonly);
-  },
+  }
 
   /**
    * Add/update data in the current submission metadata blob based on information provided
@@ -217,17 +216,17 @@ export default Component.extend({
        * metadata blob. Using 'rendered' fields as valid deletable fields should work around
        * the need to explicitly ignore '$schema'
        */
-      deletableFields = this.get('schemaService').getFields([this.get('currentSchema')], true);
+      deletableFields = this.metadataSchema.getFields([this.currentSchema], true);
     }
 
-    mergedBlob = this.get('schemaService').mergeBlobs(
-      this.get('metadata'),
+    mergedBlob = this.metadataSchema.mergeBlobs(
+      this.metadata,
       newMetadata,
       deletableFields
     );
 
-    this.set('metadata', mergedBlob);
-  },
+    set(this, 'metadata', mergedBlob);
+  }
 
   /**
    * Do any final processing of the submission's metadata blob here before moving on to the
@@ -246,9 +245,9 @@ export default Component.extend({
       agent_information: this.getBrowserInfo()
     });
 
-    const finalMetadata = this.get('metadata');
-    this.set('submission.metadata', JSON.stringify(finalMetadata));
-  },
+    const finalMetadata = this.metadata;
+    set(this, 'args.submission.metadata', JSON.stringify(finalMetadata));
+  }
 
   /**
    * cleans up metadata before it is validated to align it with the submission
@@ -311,7 +310,7 @@ export default Component.extend({
       name: M[0],
       version: M[1]
     };
-  },
+  }
 
   validationErrorMsg(errors) {
     let msg = '<ul>';
@@ -322,4 +321,4 @@ export default Component.extend({
 
     return msg;
   }
-});
+}

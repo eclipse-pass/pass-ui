@@ -1,16 +1,19 @@
+
 import Service, { inject as service } from '@ember/service';
 import ENV from 'pass-ember/config/environment';
-import { task } from 'ember-concurrency';
+import { task } from 'ember-concurrency-decorators';
 
 /**
  * Service which returns information about the logged in user.
  */
-export default Service.extend({
-  whoamiUrl: ENV.userService.url,
-  store: service(),
-  ajax: service(),
 
-  user: null,
+export default class CurrentUserService extends Service {
+  whoamiUrl = ENV.userService.url;
+
+  @service store;
+  @service ajax;
+
+  user = null;
 
   /**
    * load - Retrieve the logged in User from the whoami service and also set the
@@ -19,7 +22,8 @@ export default Service.extend({
    * @param  {type} userToken  Optionally specify token representing user to retrieve.
    * @returns {Promise}        Promise which resolves to the User.
    */
-  load: task(function* (userToken = null) {
+  @task
+  load = function* (userToken = null) {
     let params = userToken ? `?userToken=${encodeURIComponent(userToken)}` : null;
     let url = `${this.get('whoamiUrl')}${params || ''}`;
     let response = yield this.get('ajax').request(url, 'GET', {
@@ -34,5 +38,5 @@ export default Service.extend({
     this.set('user', user);
 
     return user;
-  })
-});
+  }
+}

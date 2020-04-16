@@ -1,27 +1,34 @@
-import { computed } from '@ember/object';
 import Controller from '@ember/controller';
+import { tracked } from '@glimmer/tracking';
+import { action, get } from '@ember/object';
 import ENV from 'pass-ember/config/environment';
 import { inject as service } from '@ember/service';
-// import swal from 'sweetalert2';
 
-export default Controller.extend({
-  currentUser: service('current-user'),
-  store: service('store'),
-  submissionHandler: service('submission-handler'),
-  searchHelper: service('search-helper'),
+export default class SubmissionsDetail extends Controller {
+  @service currentUser;
+  @service store;
+  @service submissionHandler;
+  @service searchHelper;
 
-  tooltips: function () {
-    $(() => {
-      $('[data-toggle="tooltip"]').tooltip();
-    });
-  }.on('init'),
+  constructor() {
+    super(...arguments);
 
-  externalSubmission: computed('externalSubmissionsMetadata', 'model.sub.submitted', function () {
-    if (!this.get('model.sub.submitted')) {
+    let element = document.querySelector('[data-toggle="tooltip"]');
+    if (element) element.tooltip();
+  }
+
+  @tracked submitted = get(this, 'model.sub.submitted');
+  @tracked repositories = get(this, 'model.sub.repositories');
+  @tracked externalRepoMap = {};
+  @tracked currentUser = this.currentUser.user;
+
+  get externalSubmission() {
+    if (!submitted) {
       return [];
     }
-    return this.get('externalSubmissionsMetadata') || [];
-  }),
+    return this.externalSubmissionsMetadata || [];
+  }
+
   /**
    * Ugly way to generate data for the template to use.
    * {
@@ -33,58 +40,55 @@ export default Controller.extend({
    * }
    * This map is then turned into an array for use in the template
    */
-  externalRepoMap: {},
-  hasVisitedWeblink: computed('externalRepoMap', function () {
-    return Object.values(this.get('externalRepoMap')).every(val => val === true);
-  }),
+  get hasVisitedWeblink() {
+    return Object.values(this.externalRepoMap).every(val => val === true);
+  }
 
   /**
    * Get enough information about 'web-link' repositories to display to a user.
    */
-  externalSubmissionsMetadata: computed('model.sub.submitted', 'model.sub.repositories', function () {
+  get externalSubmissionsMetadata() {
     let result = [];
 
-    this.get('model.sub.repositories').filter(repo => repo.get('_isWebLink'))
+    this.repositories.filter(repo => repo._isWebLink)
       .forEach((repo) => {
         result.push({
-          message: `Deposit into ${repo.get('name')} was prompted`,
-          name: repo.get('name'),
-          url: repo.get('url')
+          message: `Deposit into ${repo.name} was prompted`,
+          name: repo.name,
+          url: repo.url
         });
       });
 
     return result;
-  }),
+  }
 
-  weblinkRepos: computed('externalSubmissionsMetadata', function () {
-    let md = this.get('externalSubmissionsMetadata');
+  get weblinkRepos() {
+    let md = this.externalSubmissionsMetadata;
 
     if (Array.isArray(md) && md.length > 0) {
       md.forEach((repo) => {
-        this.get('externalRepoMap')[repo.name] = false;
+        this.externalRepoMap[repo.name] = false;
       });
       return md;
     }
 
     return [];
-  }),
+  }
 
-  mustVisitWeblink: computed('weblinkRepos', 'model', function () {
-    const weblinkExists = this.get('weblinkRepos').length > 0;
-    const isSubmitter = this.get('currentUser.user.id') === this.get('model.sub.submitter.id');
-    const isProxySubmission = this.get('model.sub.isProxySubmission');
-    const isSubmitted = this.get('model.sub.submitted');
+  get mustVisitWeblink() {
+    const weblinkExists = this.weblinkRepos.length > 0;
+    const isSubmitter = this.currentUser.id === get(this, 'model.sub.submitter.id');
+    const isProxySubmission = get(this, 'model.sub.isProxySubmission');
+    const isSubmitted = this.submitted;
+
     return weblinkExists && isSubmitter && isProxySubmission && !isSubmitted;
-  }),
+  }
 
-  disableSubmit: computed(
-    'mustVisitWeblink',
-    'hasVisitedWeblink',
-    function () {
-      const needsToVisitWeblink = this.get('mustVisitWeblink') && !this.get('hasVisitedWeblink');
-      return needsToVisitWeblink;
-    }
-  ),
+  get disableSubmit() {
+    const needsToVisitWeblink = this.mustVisitWeblink && !this.hasVisitedWeblink;
+
+    return needsToVisitWeblink;
+  }
 
   /**
    * Awkward object for use in the UI composing Repository objects with related
@@ -92,17 +96,17 @@ export default Controller.extend({
    *
    * Explicitly exclude 'web-link' repositories.
    */
-  repoMap: computed('model.deposits', 'model.repoCopies', function () {
+  get repoMap() {
     let hasStuff = false;
-    const repos = this.get('model.repos');
-    const deps = this.get('model.deposits');
-    const repoCopies = this.get('model.repoCopies');
+    const repos = this.model.repos;
+    const deps = this.model.deposits;
+    const repoCopies = this.model.repoCopies;
     if (!repos) {
       return null;
     }
     let map = {};
-    repos.filter(repo => !repo.get('_isWebLink')).forEach((r) => {
-      (map[r.get('id')] = {
+    repos.filter(repo => !repo._isWebLink).forEach((r) => {
+      (map[r.id] = {
         repo: r
       });
     });
@@ -110,16 +114,16 @@ export default Controller.extend({
     if (deps) {
       deps.forEach((deposit) => {
         hasStuff = true;
-        const repo = deposit.get('repository');
-        if (!map.hasOwnProperty(repo.get('id'))) {
-          map[repo.get('id')] = {
+        const repo = get(deposit, 'repository');
+        if (!map.hasOwnProperty(repo.id)) {
+          map[repo.id] = {
             repo,
             deposit
           };
         } else {
-          map[repo.get('id')] = Object.assign(map[repo.get('id')], {
+          map[repo.id] = Object.assign(map[repo.id], {
             deposit,
-            repositoryCopy: deposit.get('repositoryCopy')
+            repositoryCopy: get(deposit, 'repositoryCopy')
           });
         }
       });
@@ -128,13 +132,13 @@ export default Controller.extend({
       hasStuff = true;
       repoCopies.forEach((rc) => {
         const repo = rc.get('repository');
-        if (!map.hasOwnProperty(repo.get('id'))) {
-          map[repo.get('id')] = {
+        if (!map.hasOwnProperty(repo.id)) {
+          map[repo.id] = {
             repo,
             repositoryCopy: rc
           };
         } else {
-          map[repo.get('id')] = Object.assign(map[repo.get('id')], {
+          map[repo.id] = Object.assign(map[repo.id], {
             repositoryCopy: rc
           });
         }
@@ -147,292 +151,289 @@ export default Controller.extend({
     }
 
     return null;
-  }),
+  }
 
-  isSubmitter: computed('currentUser.user', 'model', function () {
+  get isSubmitter() {
     return (
-      this.get('model.sub.submitter.id') === this.get('currentUser.user.id')
+      get(this, 'model.sub.submitter.id') === this.currentUser.id
     );
-  }),
+  }
 
-  isPreparer: computed('currentUser.user', 'model', function () {
-    return this.get('model.sub.preparers')
-      .map(x => x.get('id'))
-      .includes(this.get('currentUser.user.id'));
-  }),
+  get isPreparer() {
+    return get(this, 'model.sub.preparers')
+      .map(x => x.id)
+      .includes(this.currentUser.id);
+  }
 
-  submissionNeedsPreparer: computed(
-    'currentUser.user',
-    'model',
-    function () {
-      return this.get('model.sub.submissionStatus') === 'changes-requested';
+  get submissionNeedsPreparer() {
+    return get(this, 'model.sub.submissionStatus') === 'changes-requested';
+  }
+
+  get submissionNeedsSubmitter() {
+    return (
+      get(this, 'model.sub.submissionStatus') === 'approval-requested' ||
+      get(this, 'model.sub.submissionStatus') === 'approval-requested-newuser'
+    );
+  }
+
+  get displaySubmitterName() {
+    if (get(this, 'model.sub.submitter.displayName')) {
+      return get(this, 'model.sub.submitter.displayName');
+    } else if (get(this, 'model.sub.submitter.firstName')) {
+      return `${get(this, 'model.sub.submitter.firstName')} ${get(this, 'model.sub.submitter.lastName')}`;
+    } else if (get(this, 'model.sub.submitterName')) {
+      return get(this, 'model.sub.submitterName');
     }
-  ),
 
-  submissionNeedsSubmitter: computed(
-    'currentUser.user',
-    'model',
-    'model.sub.submissionStatus',
-    function () {
-      return (
-        this.get('model.sub.submissionStatus') === 'approval-requested' ||
-        this.get('model.sub.submissionStatus') === 'approval-requested-newuser'
+    return '';
+  }
+
+  displaySubmitterEmail() {
+    if (get(this, 'model.sub.submitter.email')) {
+      return get(this, 'model.sub.submitter.email');
+    } else if (get(this, 'model.sub.submitterEmail')) {
+      return get(this, 'model.sub.submitterEmailDisplay');
+    }
+
+    return '';
+  }
+
+  @action
+  async openWeblinkAlert(repo) {
+    let value = await swal({
+      title: 'Notice!',
+      text:
+        'You are being sent to an external site. This will open a new tab.',
+      showCancelButton: true,
+      cancelButtonText: 'Cancel',
+      confirmButtonText: 'Open new tab'
+    });
+
+    if (value.dismiss) {
+      // Don't redirect
+      return;
+    }
+    // Go to the weblink repo
+    this.externalRepoMap[repo.name] = true;
+    const allLinksVisited = Object.values(this.externalRepoMap).every(val => val === true);
+    if (allLinksVisited) {
+      this.set('hasVisitedWeblink', true);
+    }
+    $('#externalSubmission').modal('hide');
+
+    var win = window.open(repo.url, '_blank');
+    win.focus();
+  }
+
+  @action
+  async requestMoreChanges() {
+    let sub = get(this, 'model.sub');
+    let message = this.message;
+
+    if (!message) {
+      swal(
+        'Comment field empty',
+        'Please add a comment before requesting changes.',
+        'warning'
       );
+    } else {
+      $('.block-user-input').css('display', 'block');
+      await this.submissionHandler.requestSubmissionChanges(sub, message);
+      window.location.reload(true);
     }
-  ),
+  }
 
-  displaySubmitterName: computed('model.sub', 'model.sub.submitter.firstName', function () {
-    if (this.get('model.sub.submitter.displayName')) {
-      return this.get('model.sub.submitter.displayName');
-    } else if (this.get('model.sub.submitter.firstName')) {
-      return `${this.get('model.sub.submitter.firstName')} ${this.get('model.sub.submitter.lastName')}`;
-    } else if (this.get('model.sub.submitterName')) {
-      return this.get('model.sub.submitterName');
+  @action
+  async approveChanges() {
+    let baseURL = window.location.href.replace(new RegExp(`${ENV.rootURL}.*`), '');
+    // First, check if user has visited all required weblinks.
+    if (this.disableSubmit) {
+      if (!this.hasVisitedWeblink) {
+        $('.fa-exclamation-triangle').css('color', '#f86c6b');
+        $('.fa-exclamation-triangle').css('font-size', '2.2em');
+        setTimeout(() => {
+          $('.fa-exclamation-triangle').css('color', '#b0b0b0');
+          $('.fa-exclamation-triangle').css('font-size', '2em');
+        }, 4000);
+        toastr.warning('Please visit the listed web portal(s) to submit your manuscript directly. Metadata displayed on this page can be used to help in the submission process.');
+      }
+      return;
     }
-    return '';
-  }),
 
-  displaySubmitterEmail: computed('model.sub', 'model.sub.submitter.email', function () {
-    if (this.get('model.sub.submitter.email')) {
-      return this.get('model.sub.submitter.email');
-    } else if (this.get('model.sub.submitterEmail')) {
-      return this.get('model.sub.submitterEmailDisplay');
+    // Validate manuscript files
+    let manuscriptFiles = [].concat(this.filesTemp, get(this, 'model.files') && get(this, 'model.files').toArray())
+      .filter(file => file && file.get('fileRole') === 'manuscript');
+
+    if (manuscriptFiles.length == 0) {
+      swal(
+        'Manuscript is missing',
+        'At least one manuscript file is required.  Please Edit the submission to add one',
+        'warning'
+      );
+      return;
+    } else if (manuscriptFiles.length > 1) {
+      swal(
+        'Incorrect manuscript count',
+        `Only one file may be designated as the manuscript.  Instead, found ${manuscriptFiles.length}.  Please edit the file list`,
+        'warning'
+      );
+      return;
     }
-    return '';
-  }),
 
-  actions: {
-    openWeblinkAlert(repo) {
-      swal({
-        title: 'Notice!',
-        text:
-          'You are being sent to an external site. This will open a new tab.',
-        showCancelButton: true,
-        cancelButtonText: 'Cancel',
-        confirmButtonText: 'Open new tab'
-      }).then((value) => {
-        if (value.dismiss) {
-          // Don't redirect
-          return;
+    let reposWithAgreementText = get(this, 'model.repos')
+      .filter(repo => (!get(repo, '_isWebLink')) && get(repo, 'agreementText'))
+      .map(repo => ({
+        id: get(repo, 'name'),
+        title: `Deposit requirements for ${get(repo, 'name')}`,
+        html: `<textarea rows="16" cols="40" name="embargo" class="alpaca-control form-control disabled" disabled="" autocomplete="off">${get(repo, 'agreementText')}</textarea>`
+      }));
+
+    let reposWithoutAgreementText = get(this, 'model.repos')
+      .filter(repo => !get(repo, '_isWebLink') && !get(repo, 'agreementText'))
+      .map(repo => ({
+        id: get(repo, 'name')
+      }));
+
+    let reposWithWebLink = get(this, 'model.repos')
+      .filter(repo => get(repo, '_isWebLink'))
+      .map(repo => ({
+        id: get(repo, 'name')
+      }));
+
+    const result = await swal.mixin({
+      input: 'checkbox',
+      inputPlaceholder: 'I agree to the above statement on today\'s date ',
+      confirmButtonText: 'Next &rarr;',
+      showCancelButton: true,
+      progressSteps: reposWithAgreementText.map((repo, index) => index + 1),
+    }).queue(reposWithAgreementText);
+    if (result.value) {
+      let reposThatUserAgreedToDeposit = reposWithAgreementText.filter((repo, index) => {
+        // if the user agreed to depost to this repo === 1
+        if (result.value[index] === 1) {
+          return repo;
         }
-        // Go to the weblink repo
-        this.get('externalRepoMap')[repo.name] = true;
-        const allLinksVisited = Object.values(this.get('externalRepoMap')).every(val => val === true);
-        if (allLinksVisited) {
-          this.set('hasVisitedWeblink', true);
-        }
-        $('#externalSubmission').modal('hide');
-
-        var win = window.open(repo.url, '_blank');
-        win.focus();
       });
-    },
-
-    requestMoreChanges() {
-      let sub = this.get('model.sub');
-      let message = this.get('message');
-
-      if (!message) {
-        swal(
-          'Comment field empty',
-          'Please add a comment before requesting changes.',
-          'warning'
-        );
-      } else {
-        $('.block-user-input').css('display', 'block');
-        this.get('submissionHandler').requestSubmissionChanges(sub, message).then(() => window.location.reload(true));
-      }
-    },
-
-    async approveChanges() {
-      let baseURL = window.location.href.replace(new RegExp(`${ENV.rootURL}.*`), '');
-      // First, check if user has visited all required weblinks.
-      if (this.get('disableSubmit')) {
-        if (!this.get('hasVisitedWeblink')) {
-          $('.fa-exclamation-triangle').css('color', '#f86c6b');
-          $('.fa-exclamation-triangle').css('font-size', '2.2em');
-          setTimeout(() => {
-            $('.fa-exclamation-triangle').css('color', '#b0b0b0');
-            $('.fa-exclamation-triangle').css('font-size', '2em');
-          }, 4000);
-          toastr.warning('Please visit the listed web portal(s) to submit your manuscript directly. Metadata displayed on this page can be used to help in the submission process.');
-        }
-        return;
-      }
-
-      // Validate manuscript files
-      let manuscriptFiles = [].concat(this.get('filesTemp'), this.get('model.files') && this.get('model.files').toArray())
-        .filter(file => file && file.get('fileRole') === 'manuscript');
-
-      if (manuscriptFiles.length == 0) {
-        swal(
-          'Manuscript is missing',
-          'At least one manuscript file is required.  Please Edit the submission to add one',
-          'warning'
-        );
-        return;
-      } else if (manuscriptFiles.length > 1) {
-        swal(
-          'Incorrect manuscript count',
-          `Only one file may be designated as the manuscript.  Instead, found ${manuscriptFiles.length}.  Please edit the file list`,
-          'warning'
-        );
-        return;
-      }
-
-      let reposWithAgreementText = this.get('model.repos')
-        .filter(repo => (!repo.get('_isWebLink')) && repo.get('agreementText'))
-        .map(repo => ({
-          id: repo.get('name'),
-          title: `Deposit requirements for ${repo.get('name')}`,
-          html: `<textarea rows="16" cols="40" name="embargo" class="alpaca-control form-control disabled" disabled="" autocomplete="off">${repo.get('agreementText')}</textarea>`
-        }));
-
-      let reposWithoutAgreementText = this.get('model.repos')
-        .filter(repo => !repo.get('_isWebLink') && !repo.get('agreementText'))
-        .map(repo => ({
-          id: repo.get('name')
-        }));
-
-      let reposWithWebLink = this.get('model.repos')
-        .filter(repo => repo.get('_isWebLink'))
-        .map(repo => ({
-          id: repo.get('name')
-        }));
-
-      const result = await swal.mixin({
-        input: 'checkbox',
-        inputPlaceholder: 'I agree to the above statement on today\'s date ',
-        confirmButtonText: 'Next &rarr;',
-        showCancelButton: true,
-        progressSteps: reposWithAgreementText.map((repo, index) => index + 1),
-      }).queue(reposWithAgreementText);
-      if (result.value) {
-        let reposThatUserAgreedToDeposit = reposWithAgreementText.filter((repo, index) => {
-          // if the user agreed to depost to this repo === 1
-          if (result.value[index] === 1) {
-            return repo;
+      // make sure there are repos to submit to.
+      if (get(this, 'model.sub.repositories.length') > 0) {
+        if (reposWithoutAgreementText.length > 0 || reposThatUserAgreedToDeposit.length > 0 || reposWithWebLink.length > 0) {
+          let swalMsg = 'Once you click confirm you will no longer be able to edit this submission or add repositories.<br/>';
+          if (reposWithoutAgreementText.length > 0 || reposThatUserAgreedToDeposit.length) {
+            swalMsg = `${swalMsg}You are about to submit your files to: <pre><code>${JSON.stringify(reposThatUserAgreedToDeposit.map(repo => repo.id)).replace(/[\[\]']/g, '')}${JSON.stringify(reposWithoutAgreementText.map(repo => repo.id)).replace(/[\[\]']/g, '')} </code></pre>`;
           }
-        });
-        // make sure there are repos to submit to.
-        if (this.get('model.sub.repositories.length') > 0) {
-          if (reposWithoutAgreementText.length > 0 || reposThatUserAgreedToDeposit.length > 0 || reposWithWebLink.length > 0) {
-            let swalMsg = 'Once you click confirm you will no longer be able to edit this submission or add repositories.<br/>';
-            if (reposWithoutAgreementText.length > 0 || reposThatUserAgreedToDeposit.length) {
-              swalMsg = `${swalMsg}You are about to submit your files to: <pre><code>${JSON.stringify(reposThatUserAgreedToDeposit.map(repo => repo.id)).replace(/[\[\]']/g, '')}${JSON.stringify(reposWithoutAgreementText.map(repo => repo.id)).replace(/[\[\]']/g, '')} </code></pre>`;
-            }
-            if (reposWithWebLink.length > 0) {
-              swalMsg = `${swalMsg}You were prompted to submit to: <code><pre>${JSON.stringify(reposWithWebLink.map(repo => repo.id)).replace(/[\[\]']/g, '')}</code></pre>`;
-            }
+          if (reposWithWebLink.length > 0) {
+            swalMsg = `${swalMsg}You were prompted to submit to: <code><pre>${JSON.stringify(reposWithWebLink.map(repo => repo.id)).replace(/[\[\]']/g, '')}</code></pre>`;
+          }
 
-            swal({
-              title: 'Confirm submission',
-              html: swalMsg, // eslint-disable-line
-              confirmButtonText: 'Confirm',
-              showCancelButton: true,
-            }).then((result) => {
-              if (result.value) {
-                // Update repos to reflect repos that user agreed to deposit.
-                // Must keep web-link repos.
-                this.set('model.sub.repositories', this.get('model.sub.repositories').filter((repo) => {
-                  if (repo.get('_isWebLink')) {
-                    return true;
-                  }
-                  let temp = reposWithAgreementText.map(x => x.id).includes(repo.get('name'));
-                  if (!temp) {
-                    return true;
-                  } else if (reposThatUserAgreedToDeposit.map(r => r.id).includes(repo.get('name'))) {
-                    return true;
-                  }
-                  return false;
-                }));
+          let result = await swal({
+            title: 'Confirm submission',
+            html: swalMsg, // eslint-disable-line
+            confirmButtonText: 'Confirm',
+            showCancelButton: true,
+          });
 
-                let sub = this.get('model.sub');
-                let message = this.get('message');
-                this.get('submissionHandler').approveSubmission(sub, message);
-              }
-            });
-          } else {
-            // there were repositories, but the user didn't sign any of the agreements
-            let reposUserDidNotAgreeToDeposit = reposWithAgreementText.filter((repo) => {
-              if (!reposThatUserAgreedToDeposit.includes(repo)) {
+          if (result.value) {
+            // Update repos to reflect repos that user agreed to deposit.
+            // Must keep web-link repos.
+            this.set('model.sub.repositories', get(this, 'model.sub.repositories').filter((repo) => {
+              if (get(repo, '_isWebLink')) {
                 return true;
               }
-            });
-            swal({
-              title: 'Your submission cannot be submitted.',
-              html: `You declined to agree to the deposit agreement(s) for ${JSON.stringify(reposUserDidNotAgreeToDeposit.map(repo => repo.id)).replace(/[\[\]']/g, '')}. Therefore, this submission cannot be submitted. \n You can either (a) cancel the submission or (b) return to the submission to provide required input and try again.`,
-              confirmButtonText: 'Cancel submission',
-              showCancelButton: true,
-              cancelButtonText: 'Go back to edit information'
-            }).then((result) => {
-              if (result.value) {
-                this.send('cancelSubmission');
+              let temp = reposWithAgreementText.map(x => x.id).includes(get(repo, 'name'));
+              if (!temp) {
+                return true;
+              } else if (reposThatUserAgreedToDeposit.map(r => r.id).includes(get(repo, 'name'))) {
+                return true;
               }
-            });
+              return false;
+            }));
+
+            let sub = get(this, 'model.sub');
+            let message = this.message;
+            this.submissionHandler.approveSubmission(sub, message);
           }
         } else {
-          // no repositories associated with the submission
-          swal({
+          // there were repositories, but the user didn't sign any of the agreements
+          let reposUserDidNotAgreeToDeposit = reposWithAgreementText.filter((repo) => {
+            if (!reposThatUserAgreedToDeposit.includes(repo)) {
+              return true;
+            }
+          });
+          let result = await swal({
             title: 'Your submission cannot be submitted.',
-            html: 'No repositories are associated with this submission. \n You can either (a) cancel the submission or (b) return to the submission and edit it to include a repository.',
+            html: `You declined to agree to the deposit agreement(s) for ${JSON.stringify(reposUserDidNotAgreeToDeposit.map(repo => repo.id)).replace(/[\[\]']/g, '')}. Therefore, this submission cannot be submitted. \n You can either (a) cancel the submission or (b) return to the submission to provide required input and try again.`,
             confirmButtonText: 'Cancel submission',
             showCancelButton: true,
             cancelButtonText: 'Go back to edit information'
-          }).then((result) => {
-            if (result.value) {
-              this.send('cancelSubmission');
-            }
           });
+
+          if (result.value) {
+            this.cancelSubmission();
+          }
+        }
+      } else {
+        // no repositories associated with the submission
+        let result = await swal({
+          title: 'Your submission cannot be submitted.',
+          html: 'No repositories are associated with this submission. \n You can either (a) cancel the submission or (b) return to the submission and edit it to include a repository.',
+          confirmButtonText: 'Cancel submission',
+          showCancelButton: true,
+          cancelButtonText: 'Go back to edit information'
+        });
+
+        if (result.value) {
+          this.cancelSubmission();
         }
       }
-    },
-
-    cancelSubmission() {
-      let message = this.get('message');
-      let sub = this.get('model.sub');
-
-      if (!message) {
-        swal(
-          'Comment field empty',
-          'Please add a comment for your cancellation.',
-          'warning'
-        );
-        return;
-      }
-
-      swal({
-        title: 'Are you sure?',
-        text: 'If you cancel this submission, it will not be able to be resumed.',
-        confirmButtonText: 'Yes, cancel this submission',
-        confirmButtonColor: '#f86c6b',
-        cancelButtonText: 'Never mind',
-        showCancelButton: true,
-      }).then((result) => {
-        if (result.value) {
-          $('.block-user-input').css('display', 'block');
-          this.get('submissionHandler').cancelSubmission(sub, message).then(() => window.location.reload(true));
-        }
-      });
-    },
-
-    deleteSubmission(submission) {
-      swal({
-        text: 'Are you sure you want to delete this draft submission? This cannot be undone.',
-        confirmButtonText: 'Delete',
-        confirmButtonColor: '#f86c6b',
-        showCancelButton: true
-      }).then((result) => {
-        if (result.value) {
-          const ignoreList = this.get('searchHelper');
-
-          this.get('submissionHandler').deleteSubmission(submission).then(() => {
-            ignoreList.clearIgnore();
-            ignoreList.ignore(submission.get('id'));
-            this.transitionToRoute('submissions');
-          });
-        }
-      });
     }
   }
-});
+
+  @action
+  async cancelSubmission() {
+    let message = this.message;
+    let sub = get(this, 'model.sub');
+
+    if (!message) {
+      swal(
+        'Comment field empty',
+        'Please add a comment for your cancellation.',
+        'warning'
+      );
+      return;
+    }
+
+    let result = await swal({
+      title: 'Are you sure?',
+      text: 'If you cancel this submission, it will not be able to be resumed.',
+      confirmButtonText: 'Yes, cancel this submission',
+      confirmButtonColor: '#f86c6b',
+      cancelButtonText: 'Never mind',
+      showCancelButton: true,
+    });
+
+    if (result.value) {
+      $('.block-user-input').css('display', 'block');
+      await this.submissionHandler.cancelSubmission(sub, message);
+      window.location.reload(true);
+    }
+  }
+
+  @action
+  async deleteSubmission(submission) {
+    let result = await swal({
+      text: 'Are you sure you want to delete this draft submission? This cannot be undone.',
+      confirmButtonText: 'Delete',
+      confirmButtonColor: '#f86c6b',
+      showCancelButton: true
+    });
+
+    if (result.value) {
+      const ignoreList = this.searchHelper;
+
+      await this.submissionHandler.deleteSubmission(submission);
+      ignoreList.clearIgnore();
+      ignoreList.ignore(submission.get('id'));
+      this.transitionToRoute('submissions');
+    }
+  }
+}

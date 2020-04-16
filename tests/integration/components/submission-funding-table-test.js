@@ -7,11 +7,8 @@ module('Integration | Component | submission-funding-table', (hooks) => {
   setupRenderingTest(hooks);
 
   test('it renders', async function (assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
-
-    // Template usage:
     await render(hbs`<SubmissionFundingTable />`);
+
     assert.ok(true);
   });
 });

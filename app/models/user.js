@@ -19,9 +19,9 @@ export default DS.Model.extend({
   roles: DS.attr('set'),
 
   isSubmitter: computed('roles.[]', function () {
-    return this.get('roles') ? this.get('roles').includes('submitter') : false;
+    return this.roles ? this.roles.includes('submitter') : false;
   }),
   isAdmin: computed('roles.[]', function () {
-    return this.get('roles') ? this.get('roles').includes('admin') : false;
+    return this.roles ? this.roles.includes('admin') : false;
   })
 });

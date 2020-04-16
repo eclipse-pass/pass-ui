@@ -1,3 +1,4 @@
+<div {{did-insert this.setupRepos}} />
 {{#if @requiredRepositories}}
   <h4 class="mt-3 font-weight-light">Required repositories</h4>
   <p class="lead text-muted">
@@ -17,7 +18,10 @@
     You must submit to at least one repository from each group.
   </p>
   {{#each @choiceRepositories as |repoGroup|}}
-    <ChoiceRepositoriesCard @choiceGroup={{repoGroup}} @toggleRepository={{action "toggleRepository"}} />
+    <ChoiceRepositoriesCard
+      @choiceGroup={{repoGroup}}
+      @toggleRepository={{action "toggleRepository"}}
+    />
   {{/each}}
 
 {{/if}}
@@ -35,7 +39,13 @@
   <div id="local-deposit-list">
     <ul class="list-group" data-test-workflow-repositories-optional-list>
       {{#each @optionalRepositories as |repoInfo|}}
-        <RepositoryCard @repository={{repoInfo.repository}} @funders={{repoInfo.funders}} @choice="true" @type="optional" @toggleRepository={{action "toggleRepository"}} />
+        <RepositoryCard
+          @repository={{repoInfo.repository}}
+          @funders={{repoInfo.funders}}
+          @choice="true"
+          @type="optional"
+          @toggleRepository={{action "toggleRepository"}}
+        />
       {{/each}}
     </ul>
   </div>

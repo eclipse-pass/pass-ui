@@ -1,3 +1,4 @@
+
 import { isArray } from '@ember/array';
 import Service, { inject as service } from '@ember/service';
 import ENV from 'pass-ember/config/environment';
@@ -10,12 +11,16 @@ import { task } from 'ember-concurrency';
  *
  * Sample DOI data as JSON: https://gist.github.com/jabrah/c268c6b027bd2646595e266f872c883c
  */
-export default Service.extend({
-  store: service('store'),
-  ajax: service(),
 
-  doiServiceUrl: ENV.doiService.url,
-  metadataSchemaUri: ENV.metadataSchemaUri,
+export default class DoiService extends Service {
+  @service('store')
+  store;
+
+  @service
+  ajax;
+
+  doiServiceUrl = ENV.doiService.url;
+  metadataSchemaUri = ENV.metadataSchemaUri;
 
   /**
   * resolveDOI - Lookup information about a DOI using the PASS doi service. Return that information along
@@ -26,7 +31,7 @@ export default Service.extend({
   * @param  {string} doi
   * @returns {object}    Object with doiInfo and publication
   */
-  resolveDOI: task(function* (doi) {
+  @task(function* (doi) {
     let url = `${this.get('doiServiceUrl')}?doi=${encodeURIComponent(doi)}`;
 
     let response = yield this.get('ajax').request(url, 'GET', {
@@ -58,7 +63,8 @@ export default Service.extend({
       publication,
       doiInfo
     };
-  }),
+  })
+  resolveDOI;
 
   isValidDOI(doi) {
     // ref: https://www.crossref.org/blog/dois-and-matching-regular-expressions/
@@ -70,14 +76,14 @@ export default Service.extend({
       return true;
     }
     return false;
-  },
+  }
 
   formatDOI(doi) {
     doi = doi.trim();
     doi = doi.replace(/doi:/gi, '');
     doi = doi.replace(/https?:\/\/(dx\.)?doi\.org\//gi, '');
     return doi;
-  },
+  }
 
   /**
    * Transform crossref metadata to a metadata blob that can be attached to a submission.
@@ -155,18 +161,18 @@ export default Service.extend({
         .forEach(key => delete doiCopy[key]);
     }
 
-    doiCopy.$schema = this.get('metadataSchemaUri');
+    doiCopy.$schema = this.metadataSchemaUri;
 
     return doiCopy;
-  },
+  }
 
   getJournalTitle(doiInfo) {
     return this._maybeArrayToString('journal-title', doiInfo);
-  },
+  }
 
   getTitle(doiInfo) {
     return this._maybeArrayToString('title', doiInfo);
-  },
+  }
 
   /**
    * Crossref seems to like having properties set to arrays of strings, even if you expect a
@@ -187,7 +193,7 @@ export default Service.extend({
     }
 
     return undefined;
-  },
+  }
 
   /**
    * Process the DOI data object by 'transforming' select arrays to string values.
@@ -207,4 +213,4 @@ export default Service.extend({
 
     return data;
   }
-});
+}

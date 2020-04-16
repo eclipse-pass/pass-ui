@@ -2,12 +2,12 @@ import CheckSessionRoute from './check-session-route';
 import { inject as service } from '@ember/service';
 import RSVP from 'rsvp';
 
-export default CheckSessionRoute.extend({
-  staticConfig: service('app-static-config'),
+export default class NotFoundErrorRoute extends CheckSessionRoute {
+  @service('app-static-config') staticConfig;
 
   model() {
     return RSVP.hash({
-      config: this.get('staticConfig').getStaticConfig()
+      config: this.staticConfig.getStaticConfig()
     });
   }
-});
+}

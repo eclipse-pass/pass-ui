@@ -1,3 +1,4 @@
+
 import Service, { inject as service } from '@ember/service';
 // import { defer } from 'rsvp';
 
@@ -16,22 +17,25 @@ import Service, { inject as service } from '@ember/service';
  *              result. This was a less desirable option due to it's performance and
  *              networking hit.
  */
-export default Service.extend({
-  store: service('store'),
+
+export default class SearchHelperService extends Service {
+  @service('store')
+  store;
+
   /** List of object IDs to ignore */
-  ignoreList: [],
+  ignoreList = [];
 
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
     this.clearIgnore();
-  },
+  }
 
   /**
    * Clear the ignore list.
    */
   clearIgnore() {
     this.set('ignoreList', []);
-  },
+  }
 
   /**
    * Add an ID to the ignore list
@@ -43,8 +47,8 @@ export default Service.extend({
       console.log('%cYou can only add ID strings to the ignore list', 'color: red;');
       return;
     }
-    this.get('ignoreList').push(id);
-  },
+    this.ignoreList.push(id);
+  }
 
   unignore(id) {
     if (typeof id !== 'string') {
@@ -52,19 +56,19 @@ export default Service.extend({
       return;
     }
 
-    const list = this.get('ignoreList');
+    const list = this.ignoreList;
     if (list.includes(id)) {
-      this.get('ignoreList').splice(list.indexOf(id), 1);
+      this.ignoreList.splice(list.indexOf(id), 1);
     }
-  },
+  }
 
   getIgnoreList() {
-    return this.get('ignoreList');
-  },
+    return this.ignoreList;
+  }
 
   shouldIgnore(id) {
-    return this.get('ignoreList').includes(id);
-  },
+    return this.ignoreList.includes(id);
+  }
 
   /**
    * Wait for Elasticsearch to be reindexed with the given value.
@@ -107,5 +111,4 @@ export default Service.extend({
 
   //   return promise.promise;
   // }
-
-});
+}

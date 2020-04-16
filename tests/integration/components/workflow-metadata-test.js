@@ -1,11 +1,11 @@
 import Service from '@ember/service';
-import EmberObject from '@ember/object';
+import EmberObject, { get } from '@ember/object';
 import { A } from '@ember/array';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { run } from '@ember/runloop';
-import { click, render, fillIn, waitFor } from '@ember/test-helpers';
+import { getContext, click, render, fillIn, waitFor } from '@ember/test-helpers';
 
 let submission;
 
@@ -488,11 +488,11 @@ module('Integration | Component | workflow-metadata', (hooks) => {
 
     assert.ok(true, 'Failed to render');
 
-    const component = this.owner.lookup('component:workflow-metadata');
-    const metadata = component.get('metadata');
+    let { owner } = getContext();
+    let component = owner.lookup('component:metadata-form');
 
-    assert.ok(metadata, 'No component metadata found');
-    assert.notOk(metadata.badMoo, 'metadata.badMoo property should not be found on the metadata object');
+    assert.notOk(get(component, 'metadata'), 'No component metadata found');
+    assert.notOk(get(component, 'metadata.badMoo'), 'metadata.badMoo property should not be found on the metadata object');
   });
 
   test('Metadata merges should be able to remove fields', async function (assert) {

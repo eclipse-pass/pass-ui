@@ -12,9 +12,9 @@ export default DS.Model.extend({
   publisher: DS.belongsTo('publisher'),
 
   isMethodA: computed('pmcParticipation', function () {
-    return this.get('pmcParticipation') ? this.get('pmcParticipation').toLowerCase() === 'a' : false;
+    return this.pmcParticipation ? this.pmcParticipation.toLowerCase() === 'a' : false;
   }),
   isMethodB: computed('pmcParticipation', function () {
-    return this.get('pmcParticipation') ? this.get('pmcParticipation').toLowerCase() === 'b' : false;
+    return this.pmcParticipation ? this.pmcParticipation.toLowerCase() === 'b' : false;
   })
 });

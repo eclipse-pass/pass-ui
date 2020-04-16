@@ -1,45 +1,22 @@
 import Controller from '@ember/controller';
+import { tracked } from '@glimmer/tracking';
 import Bootstrap4Theme from 'ember-models-table/themes/bootstrap4';
-import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 
-export default Controller.extend({
-  currentUser: service('current-user'),
-  configurator: service('app-static-config'),
+export default class GrantsIndexController extends Controller {
+  @service currentUser;
+  @service('app-static-config') configurator;
 
-  assetsUri: null,
+  constructor() {
+    super(...arguments);
 
-  // Bound to message dialog.
-  messageShow: false,
-  messageTo: '',
-  messageSubject: '',
-  messageText: '',
-
-  tablePageSize: 50,
-  tablePageSizeValues: [10, 25, 50],
-
-  init() {
-    this._super(...arguments);
-
-    this.get('configurator').getStaticConfig()
+    this.configurator.getStaticConfig()
       .then(config => this.set('assetsUri', config.assetsUri));
-  },
+  }
 
-  // Columns displayed depend on the user role
-  columns: computed('currentUser', {
-    get() {
-      const user = this.get('currentUser.user');
-      if (user.get('isAdmin')) {
-        return this.get('adminColumns');
-      } else if (user.get('isSubmitter')) {
-        return this.get('piColumns');
-      }
-      return [];
-    },
-  }),
-
+  themeInstance = Bootstrap4Theme.create();
   // TODO Reduce duplication in column definitions
-  adminColumns: [
+  adminColumns = [
     {
       propertyName: 'grant.projectName',
       title: 'Project Name',
@@ -98,9 +75,9 @@ export default Controller.extend({
       filterWithSelect: true,
       predefinedFilterOptions: ['No', 'Yes'],
     },
-  ],
+  ]
 
-  piColumns: [
+  piColumns = [
     {
       propertyName: 'grant.projectName',
       title: 'Project Name',
@@ -148,7 +125,25 @@ export default Controller.extend({
       title: 'Actions',
       component: 'grant-action-cell'
     }
-  ],
+  ]
 
-  themeInstance: Bootstrap4Theme.create(),
-});
+  @tracked assetsUri = null;
+  // Bound to message dialog.
+  @tracked messageShow = false;
+  @tracked messageTo = '';
+  @tracked messageSubject = '';
+  @tracked messageText = '';
+  @tracked tablePageSize = 50;
+  @tracked tablePageSizeValues = [10, 25, 50];
+  @tracked user = this.currentUser.user;
+
+  // Columns displayed depend on the user role
+  get columns() {
+    if (this.user.isAdmin) {
+      return this.adminColumns;
+    } else if (this.user.isSubmitter) {
+      return this.piColumns;
+    }
+    return [];
+  }
+}

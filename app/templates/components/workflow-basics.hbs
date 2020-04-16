@@ -1,4 +1,8 @@
 {{yield}}
+<div
+  {{did-insert this.setupDoiJournal}}
+  {{did-update this.setupSubmission}}
+/>
 {{#unless (or @submission.id @preLoadedGrant)}}
 <div class="py-0 mt-2 alert alert-secondary" id="on-behalf-of-block">
   <p class="my-2 lead">I'm creating this submission on behalf of:
@@ -108,11 +112,13 @@
   </div>
   <div class="w-100">
     {{#unless this.isValidDOI}}
-    <FindJournal @id="journal"
+    <FindJournal
+      @id="journal"
       @selectJournal={{action "selectJournal"}}
       @value={{@publication.journal}}
       @journalClass={{this.journalClass}}
       @isValidDOI={{this.isValidDOI}}
+      data-test-find-journal
     />
     {{else}}
       <input type="text" class="form-control" value={{@publication.journal.journalName}} readonly data-test-journal-name-input>
