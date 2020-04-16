@@ -4,6 +4,6 @@ WORKDIR /app
 
 RUN apk add --no-cache nodejs-npm && \
     apk add --no-cache --virtual .build-deps git && \
-    npm install -g ember-cli
+    yarn global add ember-cli
 
-CMD npm install && ember server --port $EMBER_PORT
+CMD yarn install && ember server --port $EMBER_PORT

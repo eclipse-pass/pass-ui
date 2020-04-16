@@ -8,6 +8,6 @@
   "disableAnalytics": false,
   "liveReload": false,
   "testPort": 4200,
-  "watcher": "polling"
-
+  "yarn": true
+  // "watcher": "polling"
 }
