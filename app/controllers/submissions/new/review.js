@@ -1,6 +1,6 @@
 import Controller, { inject as controller } from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
-import { action, get } from '@ember/object';
+import { action, computed, get } from '@ember/object';
 import { alias } from '@ember/object/computed';
 
 export default class SubmissionsNewReview extends Controller {
@@ -11,9 +11,21 @@ export default class SubmissionsNewReview extends Controller {
 
   parent = controller('submissions.new');
 
-  @tracked waitingMessage = get(this, 'parent.waitingMessage');
-  @tracked uploading = get(this, 'parent.uploading');
-  @tracked comment = get(this, 'parent.comment');
+  @computed('parent.waitingMessage')
+  get waitingMessage() {
+    return get(this, 'parent.waitingMessage');
+  }
+
+  @computed('parent', 'parent.uploading')
+  get uploading() {
+    debugger;
+    return get(this, 'parent.uploading');
+  }
+
+  @computed('parent.comment')
+  get comment() {
+    return get(this, 'parent.comment');
+  }
 
   @action
   loadPrevious() {

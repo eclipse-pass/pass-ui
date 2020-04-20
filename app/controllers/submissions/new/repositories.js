@@ -1,6 +1,6 @@
 import Controller, { inject as controller } from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
-import { action, get, set } from '@ember/object';
+import { action, computed, get, set } from '@ember/object';
 import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 
@@ -16,14 +16,13 @@ export default class SubmissionsNewPolicies extends Controller {
 
   @tracked maxStep = this.workflow.maxStep;
   @tracked loadingNext = false;
-  @tracked requiredRepos = this.model.requiredRepositories;
-  @tracked optionalRepos = this.model.optionalRepositories;
-  @tracked choiceRepos = this.model.choiceRepositories;
 
+  @computed('workflow.maxStep')
   get nextTabIsActive() {
-    return this.maxStep > 4;
+    return get(this, 'workflow').getMaxStep() > 6;
   }
 
+  @computed('nextTabIsActive', 'loadingNext')
   get needValidation() {
     return this.nextTabIsActive || this.loadingNext;
   }
@@ -32,8 +31,9 @@ export default class SubmissionsNewPolicies extends Controller {
    * Do some light processing on the repository containers, such as adding the names of funders
    * that both are associated with the submission AND associated with each repository.
    */
+  @computed('model.requiredRepositories')
   get requiredRepositories() {
-    let req = this.requiredRepos;
+    let req = get(this, 'model.requiredRepositories');
     const submission = this.submission;
 
     return req.map(repo => ({
@@ -42,9 +42,10 @@ export default class SubmissionsNewPolicies extends Controller {
     }));
   }
 
+  @computed('model.optionalRepositories')
   get optionalRepositories() {
     const submission = this.submission;
-    let optionals = this.optionalRepos;
+    let optionals = get(this, 'model.optionalRepositories');
 
     return optionals.map(repo => ({
       repository: repo,
@@ -52,9 +53,10 @@ export default class SubmissionsNewPolicies extends Controller {
     }));
   }
 
+  @computed('model.choiceRepositories')
   get choiceRespositories() {
     const submission = this.submission;
-    let choices = this.choiceRepos;
+    let choices = get(this, 'model.choiceRepositories');
 
     choices.forEach((group) => {
       group.map(repo => ({

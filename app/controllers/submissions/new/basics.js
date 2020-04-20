@@ -1,6 +1,6 @@
 import Controller, { inject as controller } from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
-import { action, get, set } from '@ember/object';
+import { action, computed, get, set } from '@ember/object';
 import { A } from '@ember/array';
 import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
@@ -20,14 +20,7 @@ export default class SubmissionsNewBasics extends Controller {
   @tracked titleError = false;
   @tracked journalError = false;
   @tracked submitterEmailError = false;
-  @tracked doiInfo = this.workflow.doiInfo;
-  @tracked pubTitle = this.publication.title;
-  @tracked journalId = this.publication.journal.id;
-  @tracked journalName = this.publication.journal.journalName;
-  @tracked submitterId = this.submission.submitter.id;
-  @tracked submitterEmail = this.submission.submitterEmail;
-  @tracked submitterName = this.submission.submitterName;
-  @tracked emailDisplay = this.submission.submitterEmailDisplay;
+  @tracked doiInfo = get(this, 'workflow.doiInfo');
 
   get flaggedFields() {
     let fields = A();
@@ -38,18 +31,22 @@ export default class SubmissionsNewBasics extends Controller {
     return fields;
   }
 
+  @computed('publication.title')
   get titleIsInvalid() {
-    return !(this.pubTitle);
+    return !(get(this, 'publication.title'));
   }
 
+  @computed('publication.journal.id', 'publication.journal.journalName')
   get journalIsInvalid() {
-    return !(this.journalId || this.journalName);
+    return !(get(this, 'publication.journal.id') || get(this, 'publication.journal.journalName'));
   }
 
+  @computed('submission.submitter.id', 'submission.submitterEmail', 'submission.submitterName')
   get submitterIsInvalid() {
-    return (!this.submitterId) && (!this.submitterEmail || !this.submitterName);
+    return (!get(this, 'submission.submitter.id') && (!get(this, 'submission.submitterEmail') || !get(this, 'submission.submitterName')));
   }
 
+  @computed('submission.submitterEmailDisplay')
   get submitterEmailIsInvalid() {
     let emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     let email = get(this, 'submission.submitterEmailDisplay');

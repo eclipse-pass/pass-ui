@@ -1,5 +1,6 @@
 import Controller, { inject as controller } from '@ember/controller';
-import { action, get, set } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
+import { action, computed, get, set } from '@ember/object';
 import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 
@@ -14,15 +15,21 @@ export default class SubmissionsNewFiles extends Controller {
   parent = controller('submissions.new');
 
   @tracked loadingNext = false;
-  @tracked maxStep = this.workflow.maxStep;
   @tracked filesTemp = this.workflow.filesTemp;
 
+  @computed('workflow.maxStep')
   get nextTabIsActive() {
-    return this.maxStep > 6;
+    return get(this, 'workflow').getMaxStep() > 6;
   }
 
+  @computed('nextTabIsActive', 'loadingNext')
   get needValidation() {
     return this.nextTabIsActive || this.loadingNext;
+  }
+
+  @computed('workflow.filesTemp')
+  get newFiles() {
+    return get(this, 'workflow').getFilesTemp();
   }
 
   @action
@@ -63,17 +70,17 @@ export default class SubmissionsNewFiles extends Controller {
         });
 
         if (!result.dismiss) {
-          this.send('loadTab', gotoTab);
+          this.loadTab(gotoTab);
         }
       } else if (manuscriptFiles.length == 0) {
         toastr.warning('At least one manuscript file is required');
       } else if (manuscriptFiles.length > 1) {
         toastr.warning(`Only one file may be designated as the manuscript.  Instead, found ${manuscriptFiles.length}`);
       } else {
-        this.send('loadTab', gotoTab);
+        this.loadTab(gotoTab);
       }
     } else {
-      this.send('loadTab', gotoTab);
+      this.loadTab(gotoTab);
     }
   }
 

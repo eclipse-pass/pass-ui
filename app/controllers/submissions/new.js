@@ -14,15 +14,14 @@ export default class SubmissionsNew extends Controller {
   @tracked comment = ''; // Holds the comment that will be added to submissionEvent in the review step.
   @tracked uploading = false;
   @tracked waitingMessage = '';
-  @tracked filesTemp = this.workflow.filesTemp;
   @tracked user = this.currentUser.user;
   @tracked submitter = this.model.newSubmission.submitter
   @tracked covid = null;
+  @tracked filesTemp = get(this, 'workflow.filesTemp');
 
   get userIsSubmitter() {
     return (
-      this.submitter.id ===
-      this.user.id
+      get(this, 'model.newSubmission.submitter.id') === get(this, 'currentUser.user')
     );
   }
 
@@ -103,7 +102,7 @@ export default class SubmissionsNew extends Controller {
       this.set('uploading', true);
       this.set('waitingMessage', 'Saving your submission');
 
-      get(this, 'submissionHandler.submit').perform(sub, pub, files, comment).catch((error) => {
+      await get(this, 'submissionHandler.submit').perform(sub, pub, files, comment).catch((error) => {
         this.set('uploading', false);
         toastr.error(`Submission failed: ${error.message}`);
       });
