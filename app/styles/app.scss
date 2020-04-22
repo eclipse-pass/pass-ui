@@ -32,6 +32,13 @@ $transition-duration: 0.3s;
   margin-bottom: 0;
 }
 
+.info-banner {
+  background-color: #F1C400;
+  color: black;
+  border: 0;
+  border-radius: 0;
+}
+
 /* Tables */
 .table-bordered {
   border-color: $jhu-grey;

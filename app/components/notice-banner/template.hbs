@@ -1,0 +1,9 @@
+{{#if this.showInfoBanner}}
+  <LinkTo
+    class="info-banner p-1 text-center font-weight-bold"
+    @route="submissions.new.basics"
+    @query={{hash covid="true"}}
+  >
+    Submit COVID-19 related research manuscripts and data here
+  </LinkTo>
+{{/if}}

@@ -5,7 +5,7 @@ import ENV from 'pass-ember/config/environment';
 import { inject as service } from '@ember/service';
 
 export default Controller.extend({
-  queryParams: ['grant', 'submission'],
+  queryParams: ['grant', 'submission', 'covid'],
   currentUser: service('current-user'),
   workflow: service('workflow'),
   submissionHandler: service('submission-handler'),
@@ -14,6 +14,8 @@ export default Controller.extend({
   comment: '', // Holds the comment that will be added to submissionEvent in the review step.
   uploading: false,
   waitingMessage: '',
+
+  covid: null,
 
   filesTemp: computed('workflow.filesTemp', {
     get(key) {
