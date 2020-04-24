@@ -15,12 +15,15 @@ module('Integration | Component | workflow wrapper', (hooks) => {
     this.set('publication', publication);
     this.set('submissionEvents', [submissionEvent]);
     this.set('validateAndLoadTab', (actual) => {});
+    this.set('updateCovidSubmission', (actual) => {});
 
     this.render(hbs`{{workflow-wrapper
       submission=submission
       publication=publication
       submissionEvents=submissionEvents
-      loadTab=(action validateAndLoadTab)}}`);
+      loadTab=(action validateAndLoadTab)
+      updateCovidSubmission=(action this.updateCovidSubmission)
+    }}`);
     assert.ok(true);
   });
 });

@@ -12,7 +12,9 @@ export default Component.extend({
     return this.get('workflow').getMaxStep();
   }),
   displayCovidCheckboxBanner: computed('router.currentRouteName', function () {
-    return (!this.router.currentRouteName.includes('submissions.new.files')) && (!this.router.currentRouteName.includes('submissions.new.review'));
+    if (this.router.currentRouteName) {
+      return (!this.router.currentRouteName.includes('submissions.new.files')) && (!this.router.currentRouteName.includes('submissions.new.review'));
+    }
   }),
   actions: {
     loadTab(gotoRoute) {
