@@ -211,6 +211,22 @@ export default {
               title: 'DOI of article',
               type: 'string'
             },
+            hints: {
+              additionalProperties: false,
+              description: 'Hints have semantics shared by the UI and the backend that are intended to influence the backend processing of the submission.',
+              properties: {
+                'collection-tags': {
+                  items: {
+                    type: 'string'
+                  },
+                  title: 'Tags impacting the collection used by Deposit Services for deposit',
+                  type: 'array',
+                  uniqueItems: true
+                }
+              },
+              title: 'Hints provided by the UI to backend services',
+              type: 'object'
+            },
             issns: {
               description: 'List of ISSN numbers with optional publication type',
               items: {
@@ -842,5 +858,6 @@ export default {
       },
       type: 'object'
     }
+
   ]
 };

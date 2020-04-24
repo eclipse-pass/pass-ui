@@ -137,30 +137,6 @@ module('Acceptance | submission', function (hooks) {
   });
 
   test('can walk through an nih submission workflow and make a submission - covid case', async function (assert) {
-    this.server.post('https://pass.local/schemaservice', (schema, _request) => {
-      let hints = {
-        additionalProperties: false,
-        description: 'Hints have semantics shared by the UI and the backend that are intended to influence the backend processing of the submission.',
-        properties: {
-          'collection-tags': {
-            items: {
-              type: 'string'
-            },
-            title: 'Tags impacting the collection used by Deposit Services for deposit',
-            type: 'array',
-            uniqueItems: true
-          }
-        },
-        title: 'Hints provided by the UI to backend services',
-        type: 'object'
-      };
-
-      let mdSchema = schema.schemas.all().models[0].schema;
-      mdSchema[0].allOf[0].properties.hints = hints;
-
-      return mdSchema;
-    });
-
     nihSubmission(this.server);
 
     await visit('/?userToken=https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95');
