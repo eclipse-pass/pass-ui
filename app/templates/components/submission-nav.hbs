@@ -23,3 +23,6 @@
     </button>
   </div>
 </div>
+{{#if this.displayCovidCheckboxBanner}}
+  <CovidSelectionBanner @submission={{@submission}} @updateCovidSubmission={{@updateCovidSubmission}} />
+{{/if}}

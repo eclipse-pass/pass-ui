@@ -1,6 +1,7 @@
 import { hash } from 'rsvp';
 import CheckSessionRoute from '../check-session-route';
 import { inject as service } from '@ember/service';
+import { set } from '@ember/object';
 
 export default CheckSessionRoute.extend({
   workflow: service('workflow'),
@@ -75,6 +76,16 @@ export default CheckSessionRoute.extend({
       newSubmission = this.get('store').createRecord('submission', {
         submissionStatus: 'draft'
       });
+
+      if (params.covid) {
+        let covidHint = {
+          hints: {
+            'collection-tags': ['covid']
+          }
+        };
+
+        set(newSubmission, 'metadata', JSON.stringify(covidHint));
+      }
     }
 
     return hash({

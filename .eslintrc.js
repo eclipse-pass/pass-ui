@@ -55,7 +55,8 @@ module.exports = {
     'comma-dangle': 'off',
     'array-callback-return': 'off',
     'no-lonely-if': 'off',
-    'no-useless-escape': 'off'
+    'no-useless-escape': 'off',
+    'class-methods-use-this': 'off'
     // we're not enabling this yet
     // 'ember/no-jquery': 'error'
   },

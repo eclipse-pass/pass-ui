@@ -1,5 +1,5 @@
 import { A } from '@ember/array';
-import { computed } from '@ember/object';
+import { computed, set } from '@ember/object';
 import Controller from '@ember/controller';
 import ENV from 'pass-ember/config/environment';
 import { inject as service } from '@ember/service';
@@ -92,6 +92,25 @@ export default Controller.extend({
           this.transitionToRoute('submissions');
         }
       });
+    },
+    updateCovidSubmission() {
+      let selectedCovid = event.target.checked;
+      let submission = this.model.newSubmission;
+
+
+      if (selectedCovid && !submission.isCovid) {
+        let covidHint = {
+          hints: {
+            'collection-tags': ['covid']
+          }
+        };
+
+        set(submission, 'metadata', JSON.stringify(covidHint));
+      }
+
+      if (!selectedCovid && submission.isCovid) {
+        set(submission, 'metadata', '{}');
+      }
     }
   }
 });

@@ -37,6 +37,10 @@ export default Controller.extend({
     },
     abort() {
       this.get('parent').send('abort');
+    },
+    // this is a noop because the banner doesn't appear on this page
+    updateCovidSubmission() {
+      return true;
     }
   }
 });

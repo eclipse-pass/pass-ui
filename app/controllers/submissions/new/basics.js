@@ -1,5 +1,5 @@
 import { A } from '@ember/array';
-import { computed } from '@ember/object';
+import { computed, get } from '@ember/object';
 import Controller, { inject as controller } from '@ember/controller';
 import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
@@ -119,6 +119,9 @@ export default Controller.extend({
     },
     abort() {
       this.get('parent').send('abort');
+    },
+    updateCovidSubmission() {
+      get(this, 'parent').send('updateCovidSubmission');
     }
   }
 });

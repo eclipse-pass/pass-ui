@@ -1,4 +1,4 @@
-import { computed } from '@ember/object';
+import { computed, get } from '@ember/object';
 import Component from '@ember/component';
 import _ from 'lodash';
 import { inject as service } from '@ember/service';
@@ -124,6 +124,7 @@ export default Component.extend({
     nextForm(metadata) {
       const step = this.get('currentFormStep');
       this.updateMetadata(metadata, true);
+      this.hintsCleanup();
 
       const schemaService = this.get('schemaService');
       const schema = this.get('schemas')[this.get('currentFormStep')];
@@ -247,6 +248,32 @@ export default Component.extend({
 
     const finalMetadata = this.get('metadata');
     this.set('submission.metadata', JSON.stringify(finalMetadata));
+  },
+
+  /**
+   * cleans up metadata before it is validated to align it with the submission
+   * model metadata field which is mutated by the covid selection box
+   */
+  hintsCleanup() {
+    let submission = get(this, 'submission');
+    let metadata = get(this, 'metadata');
+    let tags = [];
+    let mdHasCovid = false;
+
+    if ('hints' in metadata) {
+      tags = metadata.hints['collection-tags'];
+      mdHasCovid = tags.includes('covid');
+    }
+
+    if (mdHasCovid && !submission.isCovid) {
+      delete metadata.hints;
+    }
+
+    if (!mdHasCovid && submission.isCovid) {
+      metadata.hints = {
+        'collection-tags': ['covid']
+      };
+    }
   },
 
   /**
