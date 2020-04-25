@@ -53,7 +53,7 @@ services:
       - back
 
   static-html:
-    image: oapass/static-html:jhu-20200422-aaa9d81@sha256:991aa8bce01254513ab7437e33c05545f157acd256802079cbe70bd7a9eeb7e9
+    image: oapass/static-html:jhu-20200425-0703fd3@sha256:d2ba409d05b5d585d5f410551186892e4a3098e313771c3d788863a9fe716db2
     container_name: static-html
     env_file: .env
     ports:
