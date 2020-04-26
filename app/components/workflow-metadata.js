@@ -266,13 +266,24 @@ export default Component.extend({
     }
 
     if (mdHasCovid && !submission.isCovid) {
-      delete metadata.hints;
+      if (tags.length > 1) {
+        let tagsWithoutCovid = tags.filter(tag => tag != 'covid');
+        metadata.hints['collection-tags'] = tagsWithoutCovid;
+      }
+
+      if (tags.length === 1) {
+        delete metadata.hints;
+      }
     }
 
     if (!mdHasCovid && submission.isCovid) {
-      metadata.hints = {
-        'collection-tags': ['covid']
-      };
+      if ('hints' in metadata) {
+        metadata.hints['collection-tags'].push('covid');
+      } else {
+        metadata.hints = {
+          'collection-tags': ['covid']
+        };
+      }
     }
   },
 
