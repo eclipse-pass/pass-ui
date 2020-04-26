@@ -1,4 +1,4 @@
-import { computed } from '@ember/object';
+import { computed, get } from '@ember/object';
 import Controller, { inject as controller } from '@ember/controller';
 import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
@@ -87,10 +87,8 @@ export default Controller.extend({
     abort() {
       this.get('parent').send('abort');
     },
-    // this is a noop because the banner doesn't appear on this page
     updateCovidSubmission() {
-      return true;
+      get(this, 'parent').send('updateCovidSubmission');
     }
   }
-
 });
