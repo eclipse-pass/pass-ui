@@ -1,0 +1,16 @@
+<div class="covid-selection-banner mt-2 mb-2">
+  <div class="checkbox-message">
+    <input
+      type="checkbox"
+      class="mr-1"
+      {{on "click" this.toggleCovidSubmission}}
+      checked={{@submission.isCovid}}
+      aria-label="Covid-19 related submission"
+      data-test-covid-selection-checkbox
+    >
+    <div>
+      This submission pertains to COVID-19 research
+    </div>
+  </div>
+  <a href="/faq.html#covid-19">(What does this mean?)</a>
+</div>

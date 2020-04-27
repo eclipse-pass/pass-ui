@@ -1,4 +1,4 @@
-import { computed } from '@ember/object';
+import { computed, get } from '@ember/object';
 import Controller, { inject as controller } from '@ember/controller';
 import { alias } from '@ember/object/computed';
 
@@ -37,6 +37,9 @@ export default Controller.extend({
     },
     abort() {
       this.get('parent').send('abort');
+    },
+    updateCovidSubmission() {
+      get(this, 'parent').send('updateCovidSubmission');
     }
   }
 });

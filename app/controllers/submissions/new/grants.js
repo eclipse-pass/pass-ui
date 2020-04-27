@@ -1,5 +1,6 @@
 import Controller, { inject as controller } from '@ember/controller';
 import { alias } from '@ember/object/computed';
+import { get } from '@ember/object';
 
 export default Controller.extend({
   submission: alias('model.newSubmission'),
@@ -21,6 +22,9 @@ export default Controller.extend({
     },
     abort() {
       this.get('parent').send('abort');
+    },
+    updateCovidSubmission() {
+      get(this, 'parent').send('updateCovidSubmission');
     }
   }
 });

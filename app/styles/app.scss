@@ -32,6 +32,52 @@ $transition-duration: 0.3s;
   margin-bottom: 0;
 }
 
+.info-banner {
+  background-color: #F1C400;
+  color: black;
+  border: 0;
+  border-radius: 0;
+}
+
+.covid-selection-banner {
+  display: flex;
+  align-items: center;
+  padding-left: 1.25rem;
+  background-color: #F1C400;
+  color: black;
+  border: 2px;
+  border-color: #FF9E1B;
+  border-radius: 0;
+  height: 35px;
+  overflow: auto;
+  a {
+    padding-left: 0.25rem;
+    font-style: italic;
+  }
+  .checkbox-message {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+@media (max-width: 767px) {
+  .covid-selection-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 1rem;
+    padding-top: 0.5rem;
+    padding-right: 1rem;
+    padding-bottom: 0.5rem;
+    height: 3.75rem;
+  }
+}
+@media (max-width: 400px) {
+  .covid-selection-banner {
+    height: 5rem;
+  }
+}
+
 /* Tables */
 .table-bordered {
   border-color: $jhu-grey;

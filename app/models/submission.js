@@ -1,4 +1,4 @@
-import { computed } from '@ember/object';
+import { computed, get } from '@ember/object';
 import DS from 'ember-data';
 
 export default DS.Model.extend({
@@ -85,5 +85,20 @@ export default DS.Model.extend({
   isDraft: computed('submitted', 'submissionStatus', function () {
     return this.get('submissionStatus') === 'draft';
     // return !this.get('submitted') && !this.get('submissionStatus');
+  }),
+
+  /**
+   * @returns {boolean} is this a covid related submission?
+   */
+  isCovid: computed('metadata', function () {
+    let metadata = get(this, 'metadata') ? JSON.parse(get(this, 'metadata')) : {};
+
+    if ('hints' in metadata) {
+      let tags = metadata.hints['collection-tags'];
+
+      return tags.includes('covid');
+    }
+
+    return false;
   })
 });

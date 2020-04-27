@@ -1,11 +1,11 @@
 import { A } from '@ember/array';
-import { computed } from '@ember/object';
+import { computed, get, set } from '@ember/object';
 import Controller from '@ember/controller';
 import ENV from 'pass-ember/config/environment';
 import { inject as service } from '@ember/service';
 
 export default Controller.extend({
-  queryParams: ['grant', 'submission'],
+  queryParams: ['grant', 'submission', 'covid'],
   currentUser: service('current-user'),
   workflow: service('workflow'),
   submissionHandler: service('submission-handler'),
@@ -14,6 +14,8 @@ export default Controller.extend({
   comment: '', // Holds the comment that will be added to submissionEvent in the review step.
   uploading: false,
   waitingMessage: '',
+
+  covid: null,
 
   filesTemp: computed('workflow.filesTemp', {
     get(key) {
@@ -90,6 +92,55 @@ export default Controller.extend({
           this.transitionToRoute('submissions');
         }
       });
+    },
+    /**
+     * Adds the covid hint if it does not exist and removes it if it does depending on the
+     * event emitted form the covid checkbox. also handles cases where there may be other
+     * hints in the collection tags on the metadata object
+     *
+     * Note, that if this method is used from the files or review steps (post metadata
+     * validation on the details step) there is not additional metadata validation
+     * that occurs prior to submission.
+     */
+    updateCovidSubmission() {
+      let selectedCovid = event.target.checked;
+      let submission = this.model.newSubmission;
+      let metadata = submission.metadata ? JSON.parse(submission.metadata) : {};
+
+      if (selectedCovid && !submission.isCovid) {
+        let covidHint = {
+          'collection-tags': ['covid']
+        };
+
+        if ('hints' in metadata) {
+          let tags = metadata.hints['collection-tags'];
+
+          if (tags.includes('covid')) return;
+
+          metadata.hints['collection-tags'].push('covid');
+        } else {
+          metadata.hints = covidHint;
+        }
+      }
+
+      if (!selectedCovid && submission.isCovid) {
+        if ('hints' in metadata) {
+          let tags = metadata.hints['collection-tags'];
+
+          if (tags.length > 1) {
+            let tagsWithoutCovid = tags.filter(tag => tag != 'covid');
+            metadata.hints['collection-tags'] = tagsWithoutCovid;
+          }
+
+          if (tags.length === 1) {
+            delete metadata.hints;
+          }
+        } else {
+          return;
+        }
+      }
+
+      set(submission, 'metadata', JSON.stringify(metadata));
     }
   }
 });
