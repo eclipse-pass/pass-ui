@@ -182,9 +182,20 @@ module('Acceptance | submission', function (hooks) {
     await waitFor('[data-test-submission-funding-table] tbody tr td.projectname-date-column');
     assert.dom('[data-test-submission-funding-table] tbody tr td.projectname-date-column').includesText('Regulation of Synaptic Plasticity in Visual Cortex');
 
+
+    await waitFor('[data-test-covid-selection-checkbox]');
+    await click('[data-test-covid-selection-checkbox]');
+    assert.dom('[data-test-covid-selection-checkbox:not(:checked)]');
+
     await click('[data-test-workflow-grants-next]');
 
     await waitFor('[data-test-workflow-policies-next]');
+
+    await waitFor('[data-test-covid-selection-checkbox]');
+    assert.dom('[data-test-covid-selection-checkbox:not(:checked)]');
+    await click('[data-test-covid-selection-checkbox]');
+    assert.dom('[data-test-covid-selection-checkbox:checked]');
+
     assert.equal(currentURL(), '/submissions/new/policies?covid=true');
     await waitFor('input[type=radio]:checked');
     assert.dom('[data-test-workflow-policies-radio-no-direct-deposit:checked');
@@ -192,6 +203,10 @@ module('Acceptance | submission', function (hooks) {
     await click('[data-test-workflow-policies-next]');
 
     await waitFor('[data-test-workflow-repositories-next]');
+
+    await waitFor('[data-test-covid-selection-checkbox]');
+    assert.dom('[data-test-covid-selection-checkbox:checked]');
+
     assert.equal(currentURL(), '/submissions/new/repositories?covid=true');
     assert.dom('[data-test-workflow-repositories-required-list] li').includesText('PubMed Central - NATIONAL INSTITUTE OF HEALTH');
     assert.dom('[data-test-workflow-repositories-optional-list] li').includesText('JScholarship');
@@ -218,6 +233,9 @@ module('Acceptance | submission', function (hooks) {
     );
 
     await click('[data-test-workflow-files-next]');
+
+    await waitFor('[data-test-covid-selection-checkbox]');
+    assert.dom('[data-test-covid-selection-checkbox:checked]');
 
     await waitFor('[data-test-workflow-review-submit]');
     assert.equal(currentURL(), '/submissions/new/review?covid=true');
