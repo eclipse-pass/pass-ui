@@ -8,6 +8,8 @@ import hbs from 'htmlbars-inline-precompile';
 import { run } from '@ember/runloop';
 import { click, render, fillIn, waitFor } from '@ember/test-helpers';
 
+let submission;
+
 module('Integration | Component | workflow-metadata', (hooks) => {
   setupRenderingTest(hooks);
 
@@ -19,9 +21,17 @@ module('Integration | Component | workflow-metadata', (hooks) => {
     const publication = EmberObject.create({
       journal
     });
-    const submission = EmberObject.create({
+
+    const subMetadata = {
+      hints: {
+        'collection-tags': ['covid']
+      }
+    };
+
+    submission = EmberObject.create({
       repositories,
-      publication
+      publication,
+      metadata: JSON.stringify(subMetadata)
     });
 
     this.set('submission', submission);
@@ -74,7 +84,23 @@ module('Integration | Component | workflow-metadata', (hooks) => {
             allOf: [
               {
                 properties: {
-                  ISSN: { type: 'string' }
+                  ISSN: { type: 'string' },
+                  hints: {
+                    additionalProperties: false,
+                    description: 'Hints have semantics shared by the UI and the backend that are intended to influence the backend processing of the submission.',
+                    properties: {
+                      'collection-tags': {
+                        items: {
+                          type: 'string'
+                        },
+                        title: 'Tags impacting the collection used by Deposit Services for deposit',
+                        type: 'array',
+                        uniqueItems: true
+                      }
+                    },
+                    title: 'Hints provided by the UI to backend services',
+                    type: 'object'
+                  }
                 },
                 required: ['ISSN']
               }
@@ -185,6 +211,35 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       this.element.textContent.includes('JScholarship Moo'),
       'text in component should include "JScholarship"'
     );
+  });
+
+  test('improperly formatted hint will fail validation', async function (assert) {
+    const badHintMetadata = {
+      hints: {
+        'collection-tags': [{
+          thisAint: 'a string'
+        }]
+      }
+    };
+
+    submission.metadata = JSON.stringify(badHintMetadata);
+
+    await render(hbs`{{workflow-metadata submission=submission publication=publication}}`);
+    await waitFor('button[data-key="Next"]');
+    await click('button[data-key="Next"]');
+
+    // Need to fill out ISSN field
+    await waitFor('input[name="ISSN"]');
+    this.element.querySelector('input[name="ISSN"]').value = '1234';
+
+    await click('button[data-key="Next"]');
+    await waitFor('input[name="ISSN"]');
+
+    await waitFor(document.querySelector('.swal2-confirm'));
+
+    assert.dom(document.querySelector('.swal2-title')).includesText('Form Validation Error');
+    assert.dom(document.querySelector('.swal2-content')).includesText('should be string');
+    await click(document.querySelector('.swal2-confirm'));
   });
 
   test('Back button on J10P form takes you back to NIH form', async function (assert) {
