@@ -1,0 +1,9 @@
+{{#if this.setupManuscripts.isIdle}}
+  <div class="found-manuscripts text-gray-300">
+    {{#each this.foundManuscripts as |manuscript|}}
+      <input class="mr-2" type="checkbox" {{on "click" (fn this.streamFile manuscript)}}><a href={{manuscript}}>{{manuscript}}</a>
+    {{/each}}
+  </div>
+{{else}}
+  <div class="app-loader"></div>
+{{/if}}

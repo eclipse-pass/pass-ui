@@ -1275,6 +1275,13 @@
     ember-cli-babel-plugin-helpers "^1.0.0"
     ember-cli-version-checker "^2.1.0"
 
+"@ember-decorators/utils@^6.1.0":
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/@ember-decorators/utils/-/utils-6.1.1.tgz#6b619814942b4fb3747cfa9f540c9f05283d7c5e"
+  integrity sha512-0KqnoeoLKb6AyoSU65TRF5T85wmS4uDn06oARddwNPxxf/lt5jQlh41uX3W7V/fWL9tPu8x1L1Vvpc80MN1+YA==
+  dependencies:
+    ember-cli-babel "^7.1.3"
+
 "@ember/edition-utils@^1.2.0":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@ember/edition-utils/-/edition-utils-1.2.0.tgz#a039f542dc14c8e8299c81cd5abba95e2459cfa6"
@@ -2188,6 +2195,14 @@ aws4@^1.8.0:
   version "1.9.1"
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.9.1.tgz#7e33d8f7d449b3f673cd72deb9abdc552dbe528e"
   integrity sha512-wMHVg2EOHaMRxbzgFJ9gtjOOCrI80OHLG14rxi28XwOW8ux6IiEbRCGGGqCtdAIg4FQCbW20k9RsT4y3gJlFug==
+
+axios@^0.18.0:
+  version "0.18.1"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-0.18.1.tgz#ff3f0de2e7b5d180e757ad98000f1081b87bcea3"
+  integrity sha512-0BfJq4NSfQXd+SkFdrvFbG7addhYSBA2mQwISr46pD6E5iqkWg02RAs8vyTT/j0RTnoYmeXauBuSv1qKwR179g==
+  dependencies:
+    follow-redirects "1.5.10"
+    is-buffer "^2.0.2"
 
 axobject-query@^2.0.2:
   version "2.1.2"
@@ -4683,6 +4698,13 @@ debug@2.6.9, debug@^2.1.0, debug@^2.1.1, debug@^2.1.3, debug@^2.2.0, debug@^2.3.
   dependencies:
     ms "2.0.0"
 
+debug@=3.1.0, debug@~3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-3.1.0.tgz#5bb5a0672628b64149566ba16819e61518c67261"
+  integrity sha512-OX8XqP7/1a9cqkxYw2yXss15f26NKWBpDXQd0/uK/KPqdQhxbPa994hnzjcE2VqQpDslf55723cKPUOGSmMY3g==
+  dependencies:
+    ms "2.0.0"
+
 debug@^3.0.0, debug@^3.0.1, debug@^3.1.0, debug@^3.1.1:
   version "3.2.6"
   resolved "https://registry.yarnpkg.com/debug/-/debug-3.2.6.tgz#e83d17de16d8a7efb7717edbe5fb10135eee629b"
@@ -4696,13 +4718,6 @@ debug@^4.0.0, debug@^4.1.0, debug@^4.1.1, debug@~4.1.0:
   integrity sha512-pYAIzeRo8J6KPEaJ0VWOh5Pzkbw/RetuzehGM7QRRX5he4fPHx2rdKMB256ehJCkX+XRQm16eZLqLNS8RSZXZw==
   dependencies:
     ms "^2.1.1"
-
-debug@~3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/debug/-/debug-3.1.0.tgz#5bb5a0672628b64149566ba16819e61518c67261"
-  integrity sha512-OX8XqP7/1a9cqkxYw2yXss15f26NKWBpDXQd0/uK/KPqdQhxbPa994hnzjcE2VqQpDslf55723cKPUOGSmMY3g==
-  dependencies:
-    ms "2.0.0"
 
 decamelize@^1.1.1, decamelize@^1.1.2:
   version "1.2.0"
@@ -4950,7 +4965,7 @@ ember-ast-helpers@0.3.5:
     "@glimmer/compiler" "^0.27.0"
     "@glimmer/syntax" "^0.27.0"
 
-ember-auto-import@^1.2.19, ember-auto-import@^1.5.3:
+ember-auto-import@^1.2.13, ember-auto-import@^1.2.19, ember-auto-import@^1.5.3:
   version "1.5.3"
   resolved "https://registry.yarnpkg.com/ember-auto-import/-/ember-auto-import-1.5.3.tgz#b32936f874d1ed7057ad2ed3f6116357820be44b"
   integrity sha512-7JfdunM1BmLy/lyUXu7uEoi0Gi4+dxkGM23FgIEyW5g7z4MidhP53Fc61t49oPSnq7+J4lLpbH1f6C+mDMgb4A==
@@ -4983,6 +4998,15 @@ ember-auto-import@^1.2.19, ember-auto-import@^1.5.3:
     typescript-memoize "^1.0.0-alpha.3"
     walk-sync "^0.3.3"
     webpack "~4.28"
+
+ember-axios@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/ember-axios/-/ember-axios-0.0.3.tgz#bd957a17d76993da7ddebb7403b504820322931a"
+  integrity sha512-oJhJbobAdKelSY7C+xqjWtdWt1WJ9J7fmxtTgrP52q9MHl4Ne3Nucu0jj5mxqfthfzmFOO8RrXaFIOU3ZLvprg==
+  dependencies:
+    axios "^0.18.0"
+    ember-auto-import "^1.2.13"
+    ember-cli-babel "^6.16.0"
 
 ember-basic-dropdown@^1.1.0:
   version "1.1.3"
@@ -5057,7 +5081,7 @@ ember-cli-babel@^7.0.0, ember-cli-babel@^7.1.0, ember-cli-babel@^7.11.0, ember-c
     rimraf "^3.0.1"
     semver "^5.5.0"
 
-ember-cli-babel@^7.10.0:
+ember-cli-babel@^7.1.3, ember-cli-babel@^7.10.0, ember-cli-babel@^7.9.0:
   version "7.19.0"
   resolved "https://registry.yarnpkg.com/ember-cli-babel/-/ember-cli-babel-7.19.0.tgz#e6eddea18a867231fcf90a80689e92b98be9a63b"
   integrity sha512-HiWKuoyy35vGEr+iCw6gUnQ3pS5qslyTlKEDW8cVoMbvZNGYBgRxHed5nklVUh+BS74AwR9lsp25BTAagYAP9Q==
@@ -5526,6 +5550,15 @@ ember-composable-helpers@^3.0.2:
     broccoli-funnel "2.0.1"
     ember-cli-babel "^7.1.0"
     resolve "^1.10.0"
+
+ember-concurrency-decorators@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/ember-concurrency-decorators/-/ember-concurrency-decorators-1.0.0.tgz#b327e9e487650f0670870a8233c35bd0b5a7452b"
+  integrity sha512-lvBp22RWjrrOMpVzMNx/un+9wMzAU97G2dEbqgg5t5i4n5oa8PSs4em6NDM+kVFX9hpf5rc1wBnisLbFRBIL6A==
+  dependencies:
+    "@ember-decorators/utils" "^6.1.0"
+    ember-cli-babel "^7.9.0"
+    ember-cli-typescript "^2.0.2"
 
 "ember-concurrency@^0.8.27 || ^0.9.0 || ^0.10.0 || ^1.0.0", ember-concurrency@^1.1.6:
   version "1.1.6"
@@ -6743,6 +6776,13 @@ flush-write-stream@^1.0.0:
     inherits "^2.0.3"
     readable-stream "^2.3.6"
 
+follow-redirects@1.5.10:
+  version "1.5.10"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.5.10.tgz#7b7a9f9aea2fdff36786a94ff643ed07f4ff5e2a"
+  integrity sha512-0V5l4Cizzvqt5D44aTXbFZz+FtyXV1vrDN6qrelxtfYQKW0KO0W2T/hkE8xvGa/540LkZlkaUjO4ailYTFtHVQ==
+  dependencies:
+    debug "=3.1.0"
+
 follow-redirects@^1.0.0:
   version "1.10.0"
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.10.0.tgz#01f5263aee921c6a54fb91667f08f4155ce169eb"
@@ -7691,6 +7731,11 @@ is-buffer@^1.1.5:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/is-buffer/-/is-buffer-1.1.6.tgz#efaa2ea9daa0d7ab2ea13a97b2b8ad51fefbe8be"
   integrity sha512-NcdALwpXkTm5Zvvbk7owOUSvVvBKDgKP5/ewfXEznmQFfs4ZRmanOeKBTjRVjka3QFoN6XJ+9F3USqfHqTaU5w==
+
+is-buffer@^2.0.2:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/is-buffer/-/is-buffer-2.0.4.tgz#3e572f23c8411a5cfd9557c849e3665e0b290623"
+  integrity sha512-Kq1rokWXOPXWuaMAqZiJW4XxsmD9zGx9q4aePabbn3qCRGedtH7Cm+zV8WETitMfu1wdh+Rvd6w5egwSngUX2A==
 
 is-callable@^1.1.4, is-callable@^1.1.5:
   version "1.1.5"
