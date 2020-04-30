@@ -1,9 +1,11 @@
 {{#if this.setupManuscripts.isIdle}}
-  <div class="found-manuscripts text-gray-300">
-    {{#each this.foundManuscripts as |manuscript|}}
-      <input class="mr-2" type="checkbox" {{on "click" (fn this.streamFile manuscript)}}><a href={{manuscript}}>{{manuscript}}</a>
-    {{/each}}
-  </div>
+ {{#if (gt this.foundManuscripts.length 0)}}
+    <div class="found-manuscripts text-gray-300">
+      {{#each this.foundManuscriptsToDisplay as |manuscript|}}
+        <input class="mr-2" type="checkbox" {{on "click" (fn this.streamFile manuscript)}}><a href={{manuscript}}>{{manuscript}}</a>
+      {{/each}}
+    </div>
+  {{/if}}
 {{else}}
   <div class="app-loader"></div>
 {{/if}}

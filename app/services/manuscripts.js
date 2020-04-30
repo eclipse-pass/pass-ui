@@ -2,7 +2,6 @@ import Service from '@ember/service';
 import { task } from 'ember-concurrency-decorators';
 
 export default class ManuscriptsService extends Service {
-
   @task
   * fetchManuscripts(doi) {
     let unpaywallManuscripts = yield this._fetchUnpaywallManuscripts.perform(doi);

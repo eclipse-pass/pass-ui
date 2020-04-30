@@ -17,27 +17,51 @@ export default class FoundManuscriptsComponent extends Component {
     this.setupManuscripts.perform();
   }
 
+  get foundManuscriptsToDisplay() {
+    let prevFiles;
+
+    if (this.args.previouslyUploadedFiles) {
+      prevFiles = this.args.previouslyUploadedFiles;
+    } else {
+      prevFiles = [];
+    }
+    const allFileNames = [
+      ...this.args.newFiles,
+      ...prevFiles
+    ].map(file => file.name);
+
+    return this.foundManuscripts.filter((url) => {
+      const foundName = url.slice(url.lastIndexOf('/') + 1);
+
+      return !allFileNames.includes(foundName);
+    });
+  }
+
   @task
   * setupManuscripts() {
-    let doi = this.workflow.getDoiInfo().DOI;
-    let foundUnpaywall = yield this.manuscripts.fetchManuscripts.perform(doi);
-    let data = foundUnpaywall.repository_institution || foundUnpaywall.url_for_pdf;
+    const doi = this.workflow.getDoiInfo().DOI;
+    const foundUnpaywall = yield this.manuscripts.fetchManuscripts.perform(doi);
+    const data = foundUnpaywall.repository_institution || foundUnpaywall.url_for_pdf;
 
-    this.foundManuscripts.pushObject(data);
+    if (data) {
+      this.foundManuscripts.pushObject(data);
+    }
   }
 
   @action
-  async streamFile(url) {
-    let response = await fetch(url, {
-      credentials: 'include'
-    })
-      .then((response) => {
-        response.blob();
-      }).catch((e) => {
-        debugger
+  async streamFile(remoteFile) {
+    if (event.target.checked) {
+      // TODO: move this manuscript service url to an ENV var once we discuss more broadly
+      const url = `https://sleepy-brushlands-37422.herokuapp.com/manuscripts?url=${remoteFile}`;
 
-      });
-
-    return blob;
+      try {
+        const response = await fetch(url);
+        const blob = await response.blob();
+        const file = new File([blob], url.slice(url.lastIndexOf('/') + 1), { type: 'application/pdf' });
+        this.args.uploadFoundManuscripts(file);
+      } catch (error) {
+        console.log(error);
+      }
+    }
   }
 }
