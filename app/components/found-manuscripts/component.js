@@ -52,7 +52,7 @@ export default class FoundManuscriptsComponent extends Component {
   async streamFile(remoteFile) {
     if (event.target.checked) {
       // TODO: move this manuscript service url to an ENV var once we discuss more broadly
-      const url = `https://sleepy-brushlands-37422.herokuapp.com/manuscripts?url=${remoteFile}`;
+      const url = `https://shrouded-everglades-05896.herokuapp.com/manuscripts?url=${remoteFile}`;
 
       try {
         const response = await fetch(url);
