@@ -68,8 +68,16 @@ export default Component.extend({
       }
     },
     handleExternalMs(file) {
-      this.get('newFiles').pushObject(file);
+      const newFiles = this.get('newFiles');
+
       file.set('submission', this.get('submission'));
+      if (newFiles.length === 0) {
+        file.set('fileRole', 'manuscript');
+      } else {
+        file.set('fileRole', 'supplemental');
+      }
+
+      newFiles.pushObject(file);
       file.save();
     },
     removeFile(file) {

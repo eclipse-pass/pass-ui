@@ -1,6 +1,11 @@
 {{#if this.setupManuscripts.isIdle}}
- {{#if this.hasManuscripts}}
-    <div class="found-manuscripts text-gray-300">
+ {{#if (gt this.foundManuscriptsToDisplay.length 0)}}
+    <div class="border p-4">
+      <p class="text-muted">
+        Based on the DOI you provided, we found the following files online. Click the 
+        <i class="fa fa-plus" aria-hidden="true"></i> 
+        icon beside a file name to add it to your submission.
+      </p>
       {{#each this.foundManuscriptsToDisplay as |manuscript|}}
         <div class="row border-top border-bottom m-auto p-2">
           <div class="mr-auto">
@@ -11,11 +16,14 @@
               {{on "click" (perform this.addFile manuscript)}}
             >
               <i class="fa fa-lg fa-plus" aria-hidden="true"></i>
-              <span class="px-2">{{manuscript.name}}</span>
+              <span class="pl-2">{{manuscript.name}}</span>
+              {{#if manuscript.repositoryLabel}}
+                <span class="font-italic"> - {{manuscript.repositoryLabel}}</span>
+              {{/if}}
             </a>
           </div>
           <div class="border-left my-auto">
-            <a href="{{manuscript.url}}" target="_blank" class="px-4 py-2" title="See this manuscript">
+            <a href="{{manuscript.url}}" target="_blank" class="px-4 py-2" title="Download this manuscript">
               <i class="fa fa-lg fa-cloud-download" aria-hidden="true"></i>
             </a>
           </div>

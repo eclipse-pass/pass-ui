@@ -18,10 +18,6 @@ export default class FoundManuscriptsComponent extends Component {
     this.setupManuscripts.perform();
   }
 
-  get hasManuscripts() {
-    return this.foundManuscripts.length > 0;
-  }
-
   get foundManuscriptsToDisplay() {
     let prevFiles;
 
