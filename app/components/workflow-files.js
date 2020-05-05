@@ -67,24 +67,10 @@ export default Component.extend({
         }
       }
     },
-    uploadFoundManuscripts(file) {
-      if (file.size > (1024 * 1024 * 100)) {
-        toastr.error(`Your file '${file.name}' is ${Number.parseFloat(file.size / 1024 / 1024).toPrecision(3)}MB. This exceeds the maximum upload size of 100MB and the file was not added to the submission.`);
-      }
-      const newFile = get(this, 'store').createRecord('file', {
-        name: file.name,
-        mimeType: file.type.substring(file.type.indexOf('/') + 1),
-        description: file.description,
-        fileRole: 'supplemental',
-        _file: file
-      });
-      if (get(this, 'newFiles').length === 0) {
-        set(newFile, 'fileRole', 'manuscript');
-      }
-      get(this, 'newFiles').pushObject(newFile);
-
-      // Immediately upload file
-      get(this, 'submissionHandler').uploadFile(get(this, 'submission'), newFile);
+    handleExternalMs(file) {
+      this.get('newFiles').pushObject(file);
+      file.set('submission', this.get('submission'));
+      file.save();
     },
     removeFile(file) {
       let files = this.get('newFiles');

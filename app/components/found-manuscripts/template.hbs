@@ -1,11 +1,30 @@
 {{#if this.setupManuscripts.isIdle}}
- {{#if (gt this.foundManuscripts.length 0)}}
+ {{#if this.hasManuscripts}}
     <div class="found-manuscripts text-gray-300">
       {{#each this.foundManuscriptsToDisplay as |manuscript|}}
-        <input class="mr-2" type="checkbox" {{on "click" (fn this.streamFile manuscript)}}><a href={{manuscript}}>{{manuscript}}</a>
+        <div class="row border-top border-bottom m-auto p-2">
+          <div class="mr-auto">
+            <a
+              href="javascript:;"
+              class="p-2"
+              title="Add this manuscript to your submission"
+              {{on "click" (perform this.addFile manuscript)}}
+            >
+              <i class="fa fa-lg fa-plus" aria-hidden="true"></i>
+              <span class="px-2">{{manuscript.name}}</span>
+            </a>
+          </div>
+          <div class="border-left my-auto">
+            <a href="{{manuscript.url}}" target="_blank" class="px-4 py-2" title="See this manuscript">
+              <i class="fa fa-lg fa-cloud-download" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
       {{/each}}
     </div>
   {{/if}}
 {{else}}
-  <div class="app-loader"></div>
+  <div class="text-center app-loader">
+    <div class="lds-dual-ring"></div>
+  </div>
 {{/if}}

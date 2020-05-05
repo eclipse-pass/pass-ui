@@ -1,3 +1,4 @@
+/* eslint-disable strict */
 /* eslint-env node */
 
 module.exports = function (environment) {
@@ -83,6 +84,11 @@ module.exports = function (environment) {
     // repositoryEndpoint: 'https://pass.local/policyservice/repositories'
   };
 
+  ENV.oaManuscriptService = {
+    lookupUrl: 'https://pass.local/lookup',
+    downloadUrl: 'https://pass.local/download'
+  };
+
   ENV.metadataSchemaUri = 'https://oa-pass.github.io/metadata-schemas/jhu/global.json';
 
   if (process.env.STATIC_CONFIG_URI) {
@@ -135,6 +141,14 @@ module.exports = function (environment) {
 
   if (process.env.POLICY_SERVICE_REPOSITORY_ENDPOINT) {
     ENV.policyService.repositoryEndpoint = process.env.POLICY_SERVICE_REPOSITORY_ENDPOINT;
+  }
+
+  if ('MANUSCRIPT_SERVICE_LOOKUP_URL' in process.env) {
+    ENV.oaManuscriptService.lookupUrl = process.env.MANUSCRIPT_SERVICE_LOOKUP_URL;
+  }
+
+  if ('MANUSCRIPT_SERVICE_DOWNLOAD_URL' in process.env) {
+    ENV.oaManuscriptService.downloadUrl = process.env.MANUSCRIPT_SERVICE_DOWNLOAD_URL;
   }
 
   if ('FEDORA_ADAPTER_USER_NAME' in process.env) {

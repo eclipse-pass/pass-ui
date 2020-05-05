@@ -6,8 +6,9 @@ import { task } from 'ember-concurrency-decorators';
 import { action } from '@ember/object';
 
 export default class FoundManuscriptsComponent extends Component {
-  @service manuscripts;
+  @service oaManuscriptService;
   @service workflow;
+  @service store;
 
   @tracked foundManuscripts = A([]);
 
@@ -15,6 +16,10 @@ export default class FoundManuscriptsComponent extends Component {
     super(...arguments);
 
     this.setupManuscripts.perform();
+  }
+
+  get hasManuscripts() {
+    return this.foundManuscripts.length > 0;
   }
 
   get foundManuscriptsToDisplay() {
@@ -30,38 +35,55 @@ export default class FoundManuscriptsComponent extends Component {
       ...prevFiles
     ].map(file => file.name);
 
-    return this.foundManuscripts.filter((url) => {
-      const foundName = url.slice(url.lastIndexOf('/') + 1);
-
-      return !allFileNames.includes(foundName);
-    });
+    return this.foundManuscripts.filter(foundMs => !allFileNames.includes(foundMs.name));
   }
 
   @task
   * setupManuscripts() {
     const doi = this.workflow.getDoiInfo().DOI;
-    const foundUnpaywall = yield this.manuscripts.fetchManuscripts.perform(doi);
-    const data = foundUnpaywall.repository_institution || foundUnpaywall.url_for_pdf;
+    const foundOAMss = yield this.oaManuscriptService.lookup(doi);
 
-    if (data) {
-      this.foundManuscripts.pushObject(data);
+    if (foundOAMss) {
+      this.foundManuscripts.pushObject(foundOAMss);
     }
   }
 
-  @action
-  async streamFile(remoteFile) {
-    if (event.target.checked) {
-      // TODO: move this manuscript service url to an ENV var once we discuss more broadly
-      const url = `https://shrouded-everglades-05896.herokuapp.com/manuscripts?url=${remoteFile}`;
+  /**
+   * @param {object} selectedManuscript {
+   *   url: '', // URL where the manuscript can be retrieved
+   *   name: '', // File name
+   *   type: '', // MIME-type of the file
+   *   source: '', // Where we found this manuscript (e.g. "Unpaywall")
+   *   repositoryLabel: '' // Human readable name of the repository where the manuscript is stored
+   * }
+   */
+  @task
+  * addFile(selectedManuscript) {
+    const doi = this.workflow.getDoiInfo().DOI;
+    const result = yield this.oaManuscriptService.downloadManuscripts([selectedManuscript.url], doi);
 
-      try {
-        const response = await fetch(url);
-        const blob = await response.blob();
-        const file = new File([blob], url.slice(url.lastIndexOf('/') + 1), { type: 'application/pdf' });
-        this.args.uploadFoundManuscripts(file);
-      } catch (error) {
-        console.log(error);
-      }
-    }
+    // TODO: handle error conditions
+
+    const file = this._ms2File(selectedManuscript, result);
+
+    this.args.handleExternalMs(file);
+  }
+
+  /**
+   * Create a new File model object with metadata found in the open access downloader file
+   * lookup and add the URL location where the file was downloaded. This model object will
+   * not be persisted here, nor will it have a submission attached to it.
+   *
+   * @param {object} manuscript data from the original #lookup
+   * @param {string} bitsUrl Fedora URL where the file bits can be found
+   * @returns {File}
+   */
+  _ms2File(manuscript, bitsUrl) {
+    return this.store.createRecord('file', {
+      name: manuscript.name,
+      uri: bitsUrl,
+      mimeType: manuscript.type,
+      description: manuscript.description
+    });
   }
 }
