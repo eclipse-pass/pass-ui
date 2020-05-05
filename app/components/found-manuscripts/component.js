@@ -56,7 +56,7 @@ export default class FoundManuscriptsComponent extends Component {
   @task
   * addFile(selectedManuscript) {
     const doi = this.workflow.getDoiInfo().DOI;
-    const result = yield this.oaManuscriptService.downloadManuscripts([selectedManuscript.url], doi);
+    const result = yield this.oaManuscriptService.downloadManuscript(selectedManuscript.url, doi);
 
     // TODO: handle error conditions
 

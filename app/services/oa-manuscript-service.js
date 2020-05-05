@@ -44,25 +44,25 @@ export default class OAManuscriptService extends Service {
 
     const url = `${this.lookupUrl}?doi=${doi}`;
 
-    console.log(`%cdownloader service: ${url}`, 'color: blue;');
-    return Promise.resolve({
-      url: 'https://dash.harvard.edu/bitstream/1/12285462/1/Nanometer-Scale%20Thermometry.pdf',
-      name: 'Nanometer-Scale Thermometry.pdf',
-      type: 'application/pdf',
-      source: 'Unpaywall',
-      repositoryLabel: 'Harvard University - Digital Access to Scholarship at Harvard (DASH)'
-    });
+    // console.log(`%cdownloader service: ${url}`, 'color: blue;');
+    // return Promise.resolve({
+    //   url: 'https://dash.harvard.edu/bitstream/1/12285462/1/Nanometer-Scale%20Thermometry.pdf',
+    //   name: 'Nanometer-Scale Thermometry.pdf',
+    //   type: 'application/pdf',
+    //   source: 'Unpaywall',
+    //   repositoryLabel: 'Harvard University - Digital Access to Scholarship at Harvard (DASH)'
+    // });
 
-    // return fetch(url, { method: 'GET' })
-    //   .then((resp) => {
-    //     if (resp.status !== 200) {
-    //       console.log(`%cFailed to lookup files for DOI (${doi}). Reason: "${resp.message}"`);
-    //       return {};
-    //     }
-    //     return resp.json();
-    //   })
-    //   .then(data => data.manuscripts)
-    //   .catch(e => console.log(e));
+    return fetch(url, { method: 'GET' })
+      .then((resp) => {
+        if (resp.status !== 200) {
+          console.log(`%cFailed to lookup files for DOI (${doi}). Reason: "${resp.message}"`);
+          return {};
+        }
+        return resp.json();
+      })
+      .then(data => data.manuscripts)
+      .catch(e => console.log(e));
   }
 
   /**
@@ -73,33 +73,28 @@ export default class OAManuscriptService extends Service {
    * @param {string} doi the DOI that these files are associated with
    * @returns {string} Fedora URL where the file bits can be found
    */
-  async downloadManuscripts(urls, doi) {
+  async downloadManuscript(url, doi) {
     console.assert(!!this.downloadUrl, '%cOA Manuscript service download URL not found.', 'color: red;');
-    console.assert(
-      Array.isArray(urls) && urls.length > 0,
-      '%c"urls" must be an array with one or more values',
-      'color: red;'
-    );
+    console.assert(!!url, '%cfile url not provided', 'color: red;');
     console.assert(!!doi, '%cNo DOI provided to the OA manuscript downloader', 'color: red;');
 
-    if (!this.downloadUrl || !(Array.isArray(urls) || urls.length > 0) || !doi) {
+    if (!this.downloadUrl || !url || !doi) {
       return;
     }
 
     // TODO: just grab the first string for now :(
-    const fileUrl = urls[0];
-    const url = `${this.downloadUrl}?doi=${doi}&url=${fileUrl}`;
+    const serviceUrl = `${this.downloadUrl}?doi=${doi}&url=${url}`;
 
-    console.log(`%cOA Manuscripts Download service ${url}`, 'color: blue;');
-    return 'https://dash.harvard.edu/bitstream/1/12285462/1/Nanometer-Scale%20Thermometry.pdf';
+    // console.log(`%cOA Manuscripts Download service ${url}`, 'color: blue;');
+    // return 'https://dash.harvard.edu/bitstream/1/12285462/1/Nanometer-Scale%20Thermometry.pdf';
 
-    // const response = await fetch(url, { method: 'POST' });
-    // const text = await response.text();
+    const response = await fetch(serviceUrl, { method: 'POST' });
+    const text = await response.text();
 
-    // if (!response.ok) {
-    //   throw new Error(text);
-    // }
+    if (!response.ok) {
+      throw new Error(text);
+    }
 
-    // return text;
+    return text;
   }
 }

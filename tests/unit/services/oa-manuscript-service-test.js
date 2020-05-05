@@ -1,7 +1,6 @@
 /* eslint-disable no-global-assign */
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import EmberObject from '@ember/object';
 
 module('Unit | Service | oaManuscriptService', (hooks) => {
   setupTest(hooks);
@@ -22,7 +21,7 @@ module('Unit | Service | oaManuscriptService', (hooks) => {
     assert.ok(service);
   });
 
-  test('downloadManuscripts fetches and calls store.createObject', function (assert) {
+  test('downloadManuscript fetches', function (assert) {
     const service = this.owner.lookup('service:oa-manuscript-service');
 
     const testUrl = 'moo.com';
@@ -32,19 +31,22 @@ module('Unit | Service | oaManuscriptService', (hooks) => {
       assert.equal(options.method, 'POST');
 
       return Promise.resolve({
-        json: () => Promise.resolve({
-          [testUrl]: {
-            id: 'fedora_moo_id',
-            status: 200,
-            name: 'This-is-a-moo.pdf',
-            mimeType: 'application/moo'
-          }
-        })
+        text: () => 'fedora_moo_id',
+        ok: true
+        // json: () => Promise.resolve({
+        //   [testUrl]: {
+        //     id: 'fedora_moo_id',
+        //     status: 200,
+        //     name: 'This-is-a-moo.pdf',
+        //     mimeType: 'application/moo'
+        //   }
+        // })
       });
     };
 
-    const res = service.downloadManuscripts([testUrl], 'doi');
+    const res = service.downloadManuscript(testUrl, 'doi');
 
     assert.ok(res, 'No result found');
   });
+
 });
