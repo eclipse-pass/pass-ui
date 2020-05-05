@@ -160,6 +160,16 @@ services:
       - front
       - back
 
+  downloadservice:
+    image: oapass/download-service:latest
+    container_name: downloadservice
+    env_file: .env
+    ports:
+      - "${DOWNLOAD_SERVICE_PORT}:${DOWNLOAD_SERVICE_PORT}"
+    networks:
+      - front
+      - back
+
 volumes:
   passdata:
     driver: local
