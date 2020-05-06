@@ -61,7 +61,7 @@ export default CheckSessionRoute.extend({
         term: {
           submission: newSubmission.get('id')
         }
-      });
+      }).then(files => [...files.toArray()]);
 
       // Also seed workflow.doiInfo with metadata from the Submission
       const metadata = newSubmission.get('metadata');

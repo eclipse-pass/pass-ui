@@ -1,5 +1,5 @@
 {{#if this.setupManuscripts.isIdle}}
- {{#if (gt this.foundManuscriptsToDisplay.length 0)}}
+ {{#if (and (not @disabled) (gt this.foundManuscriptsToDisplay.length 0))}}
     <div class="border p-4">
       {{#if @disabled}}<h1>Disabled</h1>{{/if}}
       <p class="text-muted mb-0">

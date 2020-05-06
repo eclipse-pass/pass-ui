@@ -1,6 +1,6 @@
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
-import { computed, get } from '@ember/object';
+import { computed, get, set } from '@ember/object';
 import { A } from '@ember/array';
 
 export default Component.extend({
@@ -9,11 +9,21 @@ export default Component.extend({
   submissionHandler: service('submission-handler'),
   currentUser: service('current-user'),
 
+  // didInsertElement() {
+  //   this._super(...arguments);
+  //   const prevFiles = A([]);
+  //   const stuff = get(this, 'prevoiuslyUploadedFiles') || A([]);
+
+  //   prevFiles.pushObjects(stuff.toArray());
+  //   set(this, 'prevFiles', prevFiles);
+  //   debugger
+  // },
+
   hasManuscript: computed('manuscript', function () {
     return !!get(this, 'manuscript');
   }),
 
-  manuscript: computed('newFiles.[]', 'previouslyUploadedFiles', function () {
+  manuscript: computed('newFiles.[]', 'previouslyUploadedFiles.[]', function () {
     const newFiles = get(this, 'newFiles') || A([]);
     const prevFiles = get(this, 'previouslyUploadedFiles') || A([]);
 
@@ -26,7 +36,7 @@ export default Component.extend({
   /**
    * Any non-manuscript files
    */
-  supplementalFiles: computed('newFiles.[]', 'previouslyUploadedFiles', function () {
+  supplementalFiles: computed('newFiles.[]', 'previouslyUploadedFiles.[]', function () {
     const newFiles = get(this, 'newFiles') || A([]);
     const prevFiles = get(this, 'previouslyUploadedFiles') || A([]);
 
