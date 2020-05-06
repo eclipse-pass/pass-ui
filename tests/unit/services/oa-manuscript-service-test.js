@@ -33,14 +33,6 @@ module('Unit | Service | oaManuscriptService', (hooks) => {
       return Promise.resolve({
         text: () => 'fedora_moo_id',
         ok: true
-        // json: () => Promise.resolve({
-        //   [testUrl]: {
-        //     id: 'fedora_moo_id',
-        //     status: 200,
-        //     name: 'This-is-a-moo.pdf',
-        //     mimeType: 'application/moo'
-        //   }
-        // })
       });
     };
 
@@ -48,5 +40,4 @@ module('Unit | Service | oaManuscriptService', (hooks) => {
 
     assert.ok(res, 'No result found');
   });
-
 });
