@@ -9,29 +9,34 @@ export default class FoundManuscriptsComponent extends Component {
   @service oaManuscriptService;
   @service workflow;
   @service store;
+  @service appStaticConfig;
 
   @tracked foundManuscripts = A([]);
+  @tracked assetsUri;
 
   constructor() {
     super(...arguments);
 
+    this.getAppConfig.perform();
     this.setupManuscripts.perform();
   }
 
   get foundManuscriptsToDisplay() {
-    let prevFiles;
+    let prevFiles = this.args.previouslyUploadedFiles || A([]);
+    let newFiles = this.args.newFiles || A([]);
 
-    if (this.args.previouslyUploadedFiles) {
-      prevFiles = this.args.previouslyUploadedFiles;
-    } else {
-      prevFiles = [];
-    }
     const allFileNames = [
-      ...this.args.newFiles,
-      ...prevFiles
+      ...newFiles.toArray(),
+      ...prevFiles.toArray()
     ].map(file => file.name);
 
     return this.foundManuscripts.filter(foundMs => !allFileNames.includes(foundMs.name));
+  }
+
+  @task
+  * getAppConfig() {
+    let config = yield this.appStaticConfig.getStaticConfig();
+    this.assetsUri = config.assetsUri;
   }
 
   @task
@@ -40,7 +45,7 @@ export default class FoundManuscriptsComponent extends Component {
     const foundOAMss = yield this.oaManuscriptService.lookup(doi);
 
     if (foundOAMss) {
-      this.foundManuscripts.pushObject(foundOAMss);
+      this.foundManuscripts.pushObjects(foundOAMss);
     }
   }
 

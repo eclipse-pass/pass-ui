@@ -1,10 +1,19 @@
 {{#if this.setupManuscripts.isIdle}}
  {{#if (gt this.foundManuscriptsToDisplay.length 0)}}
     <div class="border p-4">
-      <p class="text-muted">
-        Based on the DOI you provided, we found the following files online. Click the 
-        <i class="fa fa-plus" aria-hidden="true"></i> 
-        icon beside a file name to add it to your submission.
+      {{#if @disabled}}<h1>Disabled</h1>{{/if}}
+      <p class="text-muted mb-0">
+        We found the following OA copies of your manuscript/article. Please select only a peer-reviewed copy 
+        for inclusion in this submission. If you need help determining the appropriate copy to submit to PASS, 
+        please <a href="{{assetsUri}}contact.html" target="_blank">contact JHU's Office of Scholarly Communications</a>.
+      </p>
+      <p class="text-muted ml-4 mb-0">
+        Click the <i class="fa fa-plus" aria-hidden="true"></i> icon beside a file name 
+        to add it to your submission. 
+      </p>
+      <p class="text-muted ml-4">
+        The <i class="fa fa-cloud-download" aria-hidden="true"></i> icon will open the file
+        in your browser so you can see it first.
       </p>
       {{#each this.foundManuscriptsToDisplay as |manuscript|}}
         <div class="row border-top border-bottom m-auto p-2">
