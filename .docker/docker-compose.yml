@@ -63,8 +63,7 @@ services:
       - front
 
   proxy:
-    # image: oapass/httpd-proxy:201900508@sha256:a915ada2286a551d32b0494d4ce874ba7fe204c07f029cc9bba5e05b2a9087fc
-    image: oapass/httpd-proxy:moop
+    image: oapass/httpd-proxy:20200507@sha256:e8ad2e759fe270998efc80bdcacbeb3f965b4b83d875478e36b0ce4c104bb2d3
     container_name: proxy
     networks:
       - front
@@ -100,8 +99,7 @@ services:
       - back
 
   sp:
-    # image: oapass/sp:20190813@sha256:d75554dd82191ec3201494a2c0db5ba632d0e37141bba6561b5d48fdee916f38
-    image: oapass/sp:moos
+    image: oapass/sp:20200507@sha256:03d652dc51adf919f6f6982bbb5b32188bd8a8053600271dfe0cf9022c2d31fd
     container_name: sp
     networks:
       - back
@@ -170,7 +168,7 @@ services:
       - back
 
   downloadservice:
-    image: oapass/download-service:latest
+    image: oapass/download-service:v1.0.0@sha256:67a4ff5b35ae8b967823b02c17a1e72f04603dd176213fedfa2bf11bbeee1a00
     container_name: downloadservice
     env_file: .env
     ports:
