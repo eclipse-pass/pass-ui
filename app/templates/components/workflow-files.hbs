@@ -36,7 +36,7 @@
       </thead>
       <tbody>
         {{#if this.manuscript}}
-          <tr>
+          <tr data-test-added-manuscript-row>
             <td class="vertical-align-middle">
               {{#if manuscript.uri}}
                 <a href="{{manuscript.uri}}">{{manuscript.name}}</a>
@@ -56,7 +56,7 @@
           </tr>
         {{/if}}
         {{#each this.supplementalFiles as |file|}}
-          <tr>
+          <tr data-test-added-supplemental-row>
             <td class="vertical-align-middle">
               {{#if file.uri}}
                 <a href="{{file.uri}}">{{file.name}}</a>
@@ -105,7 +105,15 @@
 </div>
 <div class="form-group row">
   <div class="col-md-12">
-    <input type="file" id="file-multiple-input" multiple size="50" onchange={{action "getFiles"}} class="text-gray-300" style="border-width:2px; cursor:pointer; border-style: dashed; padding:30px; width:100%">
+    <input 
+      type="file"
+      id="file-multiple-input"
+      multiple
+      size="50"
+      onchange={{action "getFiles"}}
+      class="text-gray-300"
+      style="border-width:2px; cursor:pointer; border-style: dashed; padding:30px; width:100%"
+    >
   </div>
 </div>
 <p><strong>Tip:</strong> Use the Control or the Shift key to select multiple files.</p>

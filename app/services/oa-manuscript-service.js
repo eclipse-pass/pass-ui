@@ -1,4 +1,4 @@
-import Service, { inject as service } from '@ember/service';
+import Service from '@ember/service';
 import ENV from 'pass-ember/config/environment';
 
 export default class OAManuscriptService extends Service {
@@ -56,7 +56,7 @@ export default class OAManuscriptService extends Service {
     return fetch(url, { method: 'GET' })
       .then((resp) => {
         if (resp.status !== 200) {
-          console.log(`%cFailed to lookup files for DOI (${doi}). Reason: "${resp.message}"`);
+          console.log(`%cFailed to lookup files for DOI (${doi}). Reason: "${resp.message}"`, 'color: red;');
           return {};
         }
         return resp.json();

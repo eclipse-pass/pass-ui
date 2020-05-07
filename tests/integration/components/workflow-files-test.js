@@ -1,14 +1,21 @@
 import Service from '@ember/service';
 import { A } from '@ember/array';
-import EmberObject from '@ember/object';
+import EmberObject, { set } from '@ember/object';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
 import { run } from '@ember/runloop';
-import { render, click } from '@ember/test-helpers';
+import {
+  click,
+  render,
+  triggerEvent,
+  waitFor
+} from '@ember/test-helpers';
+import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 
 module('Integration | Component | workflow files', (hooks) => {
   setupRenderingTest(hooks);
+  setupMirage(hooks);
 
   hooks.beforeEach(function () {
     let submission = EmberObject.create({
@@ -16,12 +23,12 @@ module('Integration | Component | workflow files', (hooks) => {
       grants: []
     });
     let files = [EmberObject.create({})];
-    let newFiles = A();
-    this.set('submission', submission);
-    this.set('files', files);
-    this.set('newFiles', newFiles);
-    this.set('loadPrevious', (actual) => {});
-    this.set('loadNext', (actual) => {});
+    let newFiles = A([]);
+    set(this, 'submission', submission);
+    set(this, 'files', files);
+    set(this, 'newFiles', newFiles);
+    set(this, 'loadPrevious', (actual) => {});
+    set(this, 'loadNext', (actual) => {});
 
     const mockStaticConfig = Service.extend({
       getStaticConfig: () => Promise.resolve({
@@ -34,6 +41,24 @@ module('Integration | Component | workflow files', (hooks) => {
     });
 
     this.owner.register('service:app-static-config', mockStaticConfig);
+
+    this.owner.register('service:workflow', Service.extend({
+      getDoiInfo: () => ({ DOI: 'moo-doi' })
+    }));
+
+    this.owner.register('service:oa-manuscript-service', Service.extend({
+      lookup: () => Promise.resolve([{
+        name: 'This is a moo',
+        url: 'http://example.com/moo.pdf'
+      }]),
+      downloadManuscript: () => 'Resting-place'
+    }));
+
+    // Inline configure mirage to respond to File saves
+    this.server.post('http://localhost:8080/fcrepo/rest/files', () => new Response(201, {
+      Location: 'https://pass.local/fcrepo/rest/files/6a/e3/c0/91/6ae3c091-e87e-4249-a744-72cb93415a95',
+      'Content-Type': 'text/plain; charset=UTF-8'
+    }));
   });
 
   /**
@@ -132,5 +157,123 @@ module('Integration | Component | workflow files', (hooks) => {
 
     const workflowFiles = this.get('previouslyUploadedFiles');
     assert.equal(workflowFiles.length, 0, 'Should have 0 files tracked');
+  });
+
+  /**
+   * No files previously attached, the added file should be added as 'manuscript'. FoundManuscripts
+   * component should no longer be visible
+   */
+  test('You can add an external file from the oaManuscript service', async function (assert) {
+    set(this, 'moo', () => {});
+    set(this, 'submission', EmberObject.create({}));
+    set(this, 'previouslyUploadedFiles', A([]));
+
+    await render(hbs`<WorkflowFiles
+      @submission={{this.submission}}
+      @previouslyUploadedFiles={{this.previouslyUploadedFiles}}
+      @newFiles={{this.newFiles}}
+      @next={{this.moo}}
+      @back={{this.moo}}
+      @abort={{this.moo}}
+    />`);
+
+    assert.dom('[data-test-foundmss-component]').exists();
+
+    assert.dom('[data-test-add-file-link]').exists();
+    assert.dom('[data-test-add-file-link]').includesText('This is a moo');
+
+    await click('[data-test-add-file-link]');
+    await waitFor('[data-test-added-manuscript-row]');
+
+    assert.dom('[data-test-added-manuscript-row]').includesText('This is a moo');
+    assert.dom('[data-test-added-manuscript-row]').includesText('Manuscript');
+
+    assert.dom('[data-test-foundmss-component]').doesNotExist();
+  });
+
+  /**
+   * When a manuscript is already attached to the submission, FoundManuscripts component
+   * should not appear.
+   *
+   * User should still be able to manually upload supplemental files
+   */
+  test('Can\'t select oa mss when manuscript already attached to submission', async function (assert) {
+    const submission = EmberObject.create({});
+
+    const ms = EmberObject.create({
+      name: 'This is the first moo',
+      fileRole: 'manuscript'
+    });
+
+    set(this, 'submission', submission);
+    set(this, 'previouslyUploadedFiles', A([ms]));
+    set(this, 'moo', () => {});
+
+    this.owner.register('service:submission-handler', Service.extend({
+      uploadFile(submission, file) {
+        assert.ok(submission, 'No submission found');
+        assert.ok(file, 'No file specified for upload');
+      }
+    }));
+
+    await render(hbs`<WorkflowFiles
+      @submission={{this.submission}}
+      @previouslyUploadedFiles={{this.previouslyUploadedFiles}}
+      @newFiles={{this.newFiles}}
+      @next={{this.moo}}
+      @back={{this.moo}}
+      @abort={{this.moo}}
+    />`);
+
+    assert.dom('[data-test-foundmss-component]').doesNotExist();
+    assert.dom('[data-test-added-supplemental-row]').doesNotExist();
+    assert.dom('#file-multiple-input').exists();
+
+    const files2Add = {
+      files: [
+        new File([new Blob(['Moo!'])], 'Added_file.moo', { type: 'application/moo' })
+      ]
+    };
+
+    await triggerEvent('#file-multiple-input', 'change', files2Add);
+
+    assert.dom('[data-test-added-supplemental-row]').exists();
+    assert.dom('[data-test-added-supplemental-row]').includesText('Added_file.moo');
+  });
+
+  test('Manually uploading a MS should hide FoundManuscript component', async function (assert) {
+    set(this, 'moo', () => {});
+    set(this, 'submission', EmberObject.create({}));
+    set(this, 'previouslyUploadedFiles', A([]));
+
+    this.owner.register('service:submission-handler', Service.extend({
+      uploadFile(submission, file) {
+        assert.ok(submission, 'No submission found');
+        assert.ok(file, 'No file specified for upload');
+      }
+    }));
+
+    await render(hbs`<WorkflowFiles
+      @submission={{this.submission}}
+      @previouslyUploadedFiles={{this.previouslyUploadedFiles}}
+      @newFiles={{this.newFiles}}
+      @next={{this.moo}}
+      @back={{this.moo}}
+      @abort={{this.moo}}
+    />`);
+
+    assert.dom('[data-test-added-manuscript-row]').doesNotExist();
+    assert.dom('#file-multiple-input').exists();
+
+    const files2Add = {
+      files: [
+        new File([new Blob(['Moo!'])], 'Added_file.moo', { type: 'application/moo' })
+      ]
+    };
+
+    await triggerEvent('#file-multiple-input', 'change', files2Add);
+
+    assert.dom('[data-test-added-manuscript-row]').exists();
+    assert.dom('[data-test-added-manuscript-row]').includesText('Added_file.moo');
   });
 });

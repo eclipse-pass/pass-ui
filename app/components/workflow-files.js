@@ -109,10 +109,12 @@ export default Component.extend({
         }
       }
     },
-    handleExternalMs(file) {
-      const newFiles = this.get('newFiles');
 
-      file.set('submission', this.get('submission'));
+    // TODO: taskify this action
+    handleExternalMs(file) {
+      const newFiles = get(this, 'newFiles');
+
+      file.set('submission', get(this, 'submission'));
       if (!get(this, 'hasManuscript')) {
         file.set('fileRole', 'manuscript');
       } else {
