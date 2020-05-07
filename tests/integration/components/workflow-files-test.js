@@ -22,6 +22,18 @@ module('Integration | Component | workflow files', (hooks) => {
     this.set('newFiles', newFiles);
     this.set('loadPrevious', (actual) => {});
     this.set('loadNext', (actual) => {});
+
+    const mockStaticConfig = Service.extend({
+      getStaticConfig: () => Promise.resolve({
+        assetsUri: '',
+        branding: {
+          stylesheet: ''
+        }
+      }),
+      addCss: () => {}
+    });
+
+    this.owner.register('service:app-static-config', mockStaticConfig);
   });
 
   /**
