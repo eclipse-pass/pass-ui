@@ -75,7 +75,7 @@ module('Integration | Component | found-manuscripts', (hooks) => {
       downloadManuscript: (url, doi) => {
         assert.ok(url, 'No url provided');
         assert.ok(doi, 'No DOI provided');
-        return ':)';
+        return Promise.resolve(':)');
       }
     });
 
@@ -83,6 +83,8 @@ module('Integration | Component | found-manuscripts', (hooks) => {
 
     const mockAction = () => {
       assert.ok(true);
+
+      return Promise.resolve('I promise');
     };
     set(this, 'mockAction', mockAction);
 

@@ -3,6 +3,7 @@ import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import { A } from '@ember/array';
 import { task } from 'ember-concurrency-decorators';
+import { timeout } from 'ember-concurrency';
 import { action } from '@ember/object';
 
 export default class FoundManuscriptsComponent extends Component {
@@ -54,20 +55,49 @@ export default class FoundManuscriptsComponent extends Component {
    *   url: '', // URL where the manuscript can be retrieved
    *   name: '', // File name
    *   type: '', // MIME-type of the file
-   *   source: '', // Where we found this manuscript (e.g. "Unpaywall")
+   *   source: '', // Where we found this manuscript (e.g. 'Unpaywall')
    *   repositoryLabel: '' // Human readable name of the repository where the manuscript is stored
    * }
    */
   @task
   * addFile(selectedManuscript) {
-    const doi = this.workflow.getDoiInfo().DOI;
-    const result = yield this.oaManuscriptService.downloadManuscript(selectedManuscript.url, doi);
+    const result = yield swal({
+      type: 'warning',
+      title: 'Please wait while files are loading ...',
+      showCancelButton: false,
+      allowOutsideClick: false,
+      onBeforeOpen: async () => {
+        Swal.showLoading();
+        let content = Swal.getContent();
+        const doi = this.workflow.getDoiInfo().DOI;
+        const result = await this.oaManuscriptService.downloadManuscript(selectedManuscript.url, doi).catch((e) => {
+          Swal.hideLoading();
+          const title = Swal.getTitle();
+          const content = Swal.getContent();
+          title.innerHTML = 'File load failed';
+          content.innerHTML = e.message;
+          const cancelButton = Swal.getCancelButton();
+          const confirmButton = Swal.getConfirmButton();
+          cancelButton.style.display = 'flex';
+          confirmButton.innerHTML = 'Retry';
+          Swal.enableButtons();
 
-    // TODO: handle error conditions
+          return 'false';
+        });
 
-    const file = this._ms2File(selectedManuscript, result);
+        if (result !== 'false') {
+          const file = this._ms2File(selectedManuscript, result);
 
-    this.args.handleExternalMs(file);
+          await this.args.handleExternalMs(file);
+        }
+
+        Swal.closeModal();
+      }
+    });
+
+    if (result.value) {
+      this.addFile.perform(selectedManuscript);
+    }
   }
 
   /**
