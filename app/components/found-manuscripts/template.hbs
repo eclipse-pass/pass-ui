@@ -2,22 +2,21 @@
  {{#if (and (not @disabled) (gt this.foundManuscriptsToDisplay.length 0))}}
     <div class="border p-4">
       {{#if @disabled}}<h1>Disabled</h1>{{/if}}
-      <p class="text-muted mb-0">
-        We found the following OA copies of your manuscript/article. Please select only a peer-reviewed copy 
-        for inclusion in this submission. If you need help determining the appropriate copy to submit to PASS, 
+      <p class="text-muted">
+        We found the following OA copies of your manuscript/article. Please select only a peer-reviewed copy
+        for inclusion in this submission. If you need help determining the appropriate copy to submit to PASS,
         please <a href="{{assetsUri}}contact.html" target="_blank">contact JHU's Office of Scholarly Communications</a>.
       </p>
-      <p class="text-muted ml-4 mb-0">
-        Click the <i class="fa fa-plus" aria-hidden="true"></i> icon beside a file name 
-        to add it to your submission. 
+      <p class="text-muted mb-0">
+        Click the <i class="fa fa-plus" aria-hidden="true"></i> icon beside a file name
+        to add it to your submission.
       </p>
-      <p class="text-muted ml-4">
-        The <i class="fa fa-cloud-download" aria-hidden="true"></i> icon will open the file
-        in your browser so you can see it first.
+      <p class="text-muted">
+        Click the <i class="fa fa-cloud-download" aria-hidden="true"></i> icon to open the file so you can see it first.
       </p>
       {{#each this.foundManuscriptsToDisplay as |manuscript|}}
-        <div class="row border-top border-bottom m-auto p-2">
-          <div class="mr-auto">
+        <div class="d-flex flex-row border-top border-bottom m-auto p-2 align-items-center justify-content-between">
+          <div class="flex-shrink-1 pr-4 files-upload-action">
             <a
               href="javascript:;"
               class="p-2"
@@ -31,7 +30,7 @@
               {{/if}}
             </a>
           </div>
-          <div class="border-left my-auto">
+          <div class="flex-grow-1 ml-sm-4 files-download-action">
             <a href="{{manuscript.url}}" target="_blank" class="px-4 py-2" title="Download this manuscript">
               <i class="fa fa-lg fa-cloud-download" aria-hidden="true"></i>
             </a>
