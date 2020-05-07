@@ -51,7 +51,7 @@ module('Integration | Component | workflow files', (hooks) => {
         name: 'This is a moo',
         url: 'http://example.com/moo.pdf'
       }]),
-      downloadManuscript: () => 'Resting-place'
+      downloadManuscript: () => Promise.resolve('Resting-place')
     }));
 
     // Inline configure mirage to respond to File saves
