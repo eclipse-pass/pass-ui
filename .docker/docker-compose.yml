@@ -15,12 +15,12 @@ services:
       - back
 
   fcrepo:
-    image: oapass/fcrepo:4.7.5-3.5@sha256:bb44fff182ace1d0d57372f297cbab8cc04c662db2d10a061213178b7c0c9bba
+    image: oapass/fcrepo:4.7.5-3.4-2@sha256:581f71675a1adab1568ea1924f8a83df974b228c3fd6181f83fbd157bab806d9
     container_name: fcrepo
     env_file: .env
     ports:
-      - '${FCREPO_PORT}:${FCREPO_PORT}'
-      - '${FCREPO_DEBUG_PORT}:${FCREPO_DEBUG_PORT}'
+      - "${FCREPO_PORT}:${FCREPO_PORT}"
+      - "${FCREPO_DEBUG_PORT}:${FCREPO_DEBUG_PORT}"
     networks:
       - front
       - back
@@ -41,13 +41,13 @@ services:
       - back
 
   activemq:
-    image: oapass/activemq:20180618@sha256:e3cd47a1bc4c21899fc34e5ac7198f6c069f4148296bad0ce619cc2bdda5f435
+    image: oapass/activemq:20200219@sha256:e2351a4ce0d55fd7f016aeca37d789288dc8805fe8bf082b5ede28f7c18e5027
     container_name: activemq
     env_file: .env
     ports:
-      - '${ACTIVEMQ_JMS_PORT}:${ACTIVEMQ_JMS_PORT}'
-      - '${ACTIVEMQ_STOMP_PORT}:${ACTIVEMQ_STOMP_PORT}'
-      - '${ACTIVEMQ_WEBCONSOLE_PORT}:${ACTIVEMQ_WEBCONSOLE_PORT}'
+      - "${ACTIVEMQ_JMS_PORT}:${ACTIVEMQ_JMS_PORT}"
+      - "${ACTIVEMQ_STOMP_PORT}:${ACTIVEMQ_STOMP_PORT}"
+      - "${ACTIVEMQ_WEBCONSOLE_PORT}:${ACTIVEMQ_WEBCONSOLE_PORT}"
     networks:
       - front
       - back
@@ -57,23 +57,23 @@ services:
     container_name: static-html
     env_file: .env
     ports:
-      - '${STATIC_HTML_PORT}:${STATIC_HTML_PORT}'
+      - "${STATIC_HTML_PORT}:${STATIC_HTML_PORT}"
     networks:
       - back
       - front
 
   proxy:
-    image: oapass/httpd-proxy:201900508@sha256:a915ada2286a551d32b0494d4ce874ba7fe204c07f029cc9bba5e05b2a9087fc
+    image: oapass/httpd-proxy:20200507@sha256:e8ad2e759fe270998efc80bdcacbeb3f965b4b83d875478e36b0ce4c104bb2d3
     container_name: proxy
     networks:
       - front
       - back
     ports:
-      - '80:80'
-      - '443:443'
+      - "80:80"
+      - "443:443"
 
   idp:
-    image: oapass/idp:20181012@sha256:59d920bd4c6a51d12c0961717f38d743710f1bd8221c2b6c8dda6746ac224d7b
+    image: oapass/idp:20190813-jhu@sha256:f7a37180964e0e90e1db15440846a39c39659f20999a11c556b99f43d65c7fcb
     container_name: idp
     depends_on:
       - ldap
@@ -82,7 +82,7 @@ services:
       - JETTY_BROWSER_SSL_KEYSTORE_PASSWORD=password
       - JETTY_BACKCHANNEL_SSL_KEYSTORE_PASSWORD=password
     expose:
-      - '4443'
+      - "4443"
     networks:
       - back
     secrets:
@@ -93,13 +93,13 @@ services:
       - source: idp_sealer
 
   ldap:
-    image: oapass/ldap:20181106@sha256:065b91e74de5565df7d4459590c51986368ee157f73d81eb10232c7dadcb98e4
+    image: oapass/ldap:20190813-jhu@sha256:a5547be7962dabfaff604475e20001f631ad2450a21590bd0a3bd68b3e976b94
     container_name: ldap
     networks:
       - back
 
   sp:
-    image: oapass/sp:201900508@sha256:94eb4796da7bed604468e295422be23c94f0119591fb37e11b40ce0376bca49f
+    image: oapass/sp:20200507@sha256:03d652dc51adf919f6f6982bbb5b32188bd8a8053600271dfe0cf9022c2d31fd
     container_name: sp
     networks:
       - back
@@ -120,7 +120,7 @@ services:
     environment:
       - discovery.type=single-node
       - bootstrap.memory_lock=true
-      - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ulimits:
       memlock:
         soft: -1
@@ -128,7 +128,7 @@ services:
     volumes:
       - passdata:/usr/share/elasticsearch/data
     ports:
-      - '${ES_PORT}:${ES_PORT}'
+      - "${ES_PORT}:${ES_PORT}"
     networks:
       - front
       - back
@@ -140,8 +140,15 @@ services:
     volumes:
       - passdata:/data
 
+  authz:
+    image: oapass/authz:0.4.5-3.4@sha256:5ef2579e8094a3eb86d3765a6c910c8ce86a3a0352f821e751d647b4d97c5cc1
+    container_name: authz
+    env_file: .env
+    networks:
+      - back
+
   policyservice:
-    image: oapass/policy-service:v0.1.1@sha256:7eec368c7da024c1a3a955e80c2185928f86188e2e870ed9bf11846dc0153980
+    image: oapass/policy-service:v0.1.2@sha256:b361bc7dd9d366465f7683052e038e5ec93ef77a48e69176590c84044ce7d804
     container_name: policyservice
     env_file: .env
     ports:
@@ -151,11 +158,21 @@ services:
       - back
 
   doiservice:
-    image: oapass/doi-service:version1.0.0@sha256:3f244a7e0d2bc8f47fa4cca792984cf2f2672eb28a9a650db72ae7beee7e9b4b
+    image: oapass/doi-service:version1.0.0@sha256:a82a1b60b4bae17b9a5628ed3d65501000d576ef3ba6bc3ffe4cbf9138eba82d
     container_name: doiservice
     env_file: .env
     ports:
       - "${PASS_DOI_SERVICE_PORT}:8080"
+    networks:
+      - front
+      - back
+
+  downloadservice:
+    image: oapass/download-service:v1.0.0@sha256:67a4ff5b35ae8b967823b02c17a1e72f04603dd176213fedfa2bf11bbeee1a00
+    container_name: downloadservice
+    env_file: .env
+    ports:
+      - "${DOWNLOAD_SERVICE_PORT}:${DOWNLOAD_SERVICE_PORT}"
     networks:
       - front
       - back

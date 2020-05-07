@@ -1,11 +1,50 @@
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
+import { computed, get, set } from '@ember/object';
+import { A } from '@ember/array';
 
 export default Component.extend({
   store: service('store'),
   workflow: service('workflow'),
   submissionHandler: service('submission-handler'),
   currentUser: service('current-user'),
+
+  // didInsertElement() {
+  //   this._super(...arguments);
+  //   const prevFiles = A([]);
+  //   const stuff = get(this, 'prevoiuslyUploadedFiles') || A([]);
+
+  //   prevFiles.pushObjects(stuff.toArray());
+  //   set(this, 'prevFiles', prevFiles);
+  //   debugger
+  // },
+
+  hasManuscript: computed('manuscript', function () {
+    return !!get(this, 'manuscript');
+  }),
+
+  manuscript: computed('newFiles.[]', 'previouslyUploadedFiles.[]', function () {
+    const newFiles = get(this, 'newFiles') || A([]);
+    const prevFiles = get(this, 'previouslyUploadedFiles') || A([]);
+
+    return [
+      ...prevFiles.toArray(),
+      ...newFiles.toArray()
+    ].find(file => file.fileRole === 'manuscript');
+  }),
+
+  /**
+   * Any non-manuscript files
+   */
+  supplementalFiles: computed('newFiles.[]', 'previouslyUploadedFiles.[]', function () {
+    const newFiles = get(this, 'newFiles') || A([]);
+    const prevFiles = get(this, 'previouslyUploadedFiles') || A([]);
+
+    return [
+      ...prevFiles.toArray(),
+      ...newFiles.toArray()
+    ].filter(file => file.fileRole !== 'manuscript');
+  }),
 
   _getFilesElement() {
     return document.getElementById('file-multiple-input');
@@ -24,11 +63,15 @@ export default Component.extend({
         cancelButtonText: 'Never mind'
       }).then((result) => {
         if (result.value) {
-          let mFiles = this.get('previouslyUploadedFiles');
-
+          const mFiles = this.get('previouslyUploadedFiles');
           // Remove the file from the model
           if (mFiles) {
             mFiles.removeObject(file);
+          }
+
+          const newFiles = get(this, 'newFiles');
+          if (newFiles) {
+            newFiles.removeObject(file);
           }
 
           this.get('submissionHandler').deleteFile(file);
@@ -54,7 +97,7 @@ export default Component.extend({
                 fileRole: 'supplemental',
                 _file: file
               });
-              if (this.get('newFiles').length === 0) {
+              if (!get(this, 'hasManuscript')) {
                 newFile.set('fileRole', 'manuscript');
               }
               this.get('newFiles').pushObject(newFile);
@@ -66,12 +109,20 @@ export default Component.extend({
         }
       }
     },
-    removeFile(file) {
-      let files = this.get('newFiles');
-      files.removeObject(file);
-      this.set('files', files);
 
-      this.get('submissionHandler').deleteFile(file);
+    // TODO: taskify this action
+    handleExternalMs(file) {
+      const newFiles = get(this, 'newFiles');
+
+      file.set('submission', get(this, 'submission'));
+      if (!get(this, 'hasManuscript')) {
+        file.set('fileRole', 'manuscript');
+      } else {
+        file.set('fileRole', 'supplemental');
+      }
+
+      newFiles.pushObject(file);
+      file.save();
     },
     cancel() {
       this.sendAction('abort');

@@ -723,3 +723,15 @@ footer {
   overflow: auto;
   background-color: $jhu-grey;
 }
+
+@media (max-width: 1199.98px) {
+  .files-upload-action {
+    border-right: solid 1px #a4b7c1;
+  }
+}
+
+@media (min-width: 1200px) {
+  .files-download-action {
+    border-left: solid 1px #a4b7c1;
+  }
+}

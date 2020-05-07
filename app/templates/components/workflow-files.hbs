@@ -35,15 +35,39 @@
         </tr>
       </thead>
       <tbody>
-        {{#each previouslyUploadedFiles as |file|}}
-          <tr>
+        {{#if this.manuscript}}
+          <tr data-test-added-manuscript-row>
             <td class="vertical-align-middle">
-              <a href="{{file.uri}}">{{file.name}}</a>
+              {{#if manuscript.uri}}
+                <a href="{{manuscript.uri}}">{{manuscript.name}}</a>
+              {{else}}
+                {{manuscript.name}}
+              {{/if}}
+            </td>
+            <td class="text-center vertical-align-middle">
+              Manuscript
+            </td>
+            <td class="vertical-align-middle">
+              {{input class="form-control file-description-width" value=manuscript.description}}
+            </td>
+            <td class="text-center vertical-align-middle">
+              <button type="button" class="btn btn-outline-danger" {{action 'deleteExistingFile' manuscript}}>Remove</button>
+            </td>
+          </tr>
+        {{/if}}
+        {{#each this.supplementalFiles as |file|}}
+          <tr data-test-added-supplemental-row>
+            <td class="vertical-align-middle">
+              {{#if file.uri}}
+                <a href="{{file.uri}}">{{file.name}}</a>
+              {{else}}
+                {{file.name}}
+              {{/if}}
             </td>
             <td class="text-center vertical-align-middle">
               <select onchange={{action (mut file.fileRole) value="target.value"}}>
                 <option value="supplement" selected={{eq file.fileRole "supplement"}}>Supplement</option>
-                <option value="manuscript" selected={{eq file.fileRole "manuscript"}}>Manuscript</option>
+                {{!-- <option value="manuscript" selected={{eq file.fileRole "manuscript"}}>Manuscript</option> --}}
                 <option value="table" selected={{eq file.fileRole "table"}}>Table</option>
                 <option value="figure" selected={{eq file.fileRole "figure"}}>Figure</option>
               </select>
@@ -56,27 +80,6 @@
             </td>
           </tr>
         {{/each}}
-        {{#each newFiles as |file|}}
-          <tr>
-            <td class="vertical-align-middle">
-              {{file.name}}
-            </td>
-            <td class="text-center vertical-align-middle">
-              <select onchange={{action (mut file.fileRole) value="target.value"}}>
-                <option value="supplemental" selected={{eq file.fileRole "supplemental"}}>Supplement</option>
-                <option value="manuscript" selected={{eq file.fileRole "manuscript"}}>Manuscript</option>
-                <option value="table" selected={{eq file.fileRole "table"}}>Table</option>
-                <option value="figure" selected={{eq file.fileRole "figure"}}>Figure</option>
-              </select>
-            </td>
-            <td class="vertical-align-middle">
-              {{input class="form-control file-description-width" value=file.description}}
-            </td>
-            <td class="text-center vertical-align-middle">
-              <button type="button" class="btn btn-outline-danger" {{action 'removeFile' file}}>Remove</button>
-            </td>
-          </tr>
-        {{/each}}
       </tbody>
     </table>
   </div>
@@ -84,11 +87,33 @@
 </div>
 {{/if}}
 <!--/.row-->
-<p class="lead text-muted">Attach manuscript/article files to this submission.</p>
-<p class="lead text-muted">Each individual file must be smaller than 100MB.</p>
+<p class="lead">
+  Attach manuscript/article files to this submission by selecting an existing open access (OA) copy we've discovered on 
+  the web or by uploading files from your computer. Once you've selected the manuscript/article, you will still be able 
+  to manually add supplemental material to the submission by uploading them from your computer.
+</p>
+<p class="lead">Each individual file must be smaller than 100MB.</p>
 <div class="form-group row">
   <div class="col-md-12">
-    <input type="file" id="file-multiple-input" multiple size="50" onchange={{action "getFiles"}} class="text-gray-300" style="border-width:2px; cursor:pointer; border-style: dashed; padding:30px; width:100%">
+    <FoundManuscripts
+      @previouslyUploadedFiles={{this.previouslyUploadedFiles}}
+      @newFiles={{this.newFiles}}
+      @handleExternalMs={{action "handleExternalMs"}}
+      @disabled={{this.hasManuscript}}
+     />
+  </div>
+</div>
+<div class="form-group row">
+  <div class="col-md-12">
+    <input 
+      type="file"
+      id="file-multiple-input"
+      multiple
+      size="50"
+      onchange={{action "getFiles"}}
+      class="text-gray-300"
+      style="border-width:2px; cursor:pointer; border-style: dashed; padding:30px; width:100%"
+    >
   </div>
 </div>
 <p><strong>Tip:</strong> Use the Control or the Shift key to select multiple files.</p>

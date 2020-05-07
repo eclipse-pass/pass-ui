@@ -56,7 +56,8 @@ module.exports = {
     'array-callback-return': 'off',
     'no-lonely-if': 'off',
     'no-useless-escape': 'off',
-    'class-methods-use-this': 'off'
+    'class-methods-use-this': 'off',
+    'generator-star-spacing': 'off'
     // we're not enabling this yet
     // 'ember/no-jquery': 'error'
   },

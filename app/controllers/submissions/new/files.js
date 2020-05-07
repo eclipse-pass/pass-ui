@@ -5,6 +5,7 @@ import { inject as service } from '@ember/service';
 
 export default Controller.extend({
   workflow: service('workflow'),
+
   parent: controller('submissions.new'),
   submission: alias('model.newSubmission'),
   files: alias('model.files'),
