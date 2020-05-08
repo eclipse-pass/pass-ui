@@ -16,18 +16,25 @@
       </p>
       {{#each this.foundManuscriptsToDisplay as |manuscript|}}
         <div class="d-flex flex-row border-top border-bottom m-auto p-2 align-items-center justify-content-between">
-          <div class="flex-shrink-1 pr-4 files-upload-action">
+          <div class="d-flex flex-row flex-shrink-1 pr-4 files-upload-action">
             <a
               href="javascript:;"
-              class="p-2"
+              class="p-2 {{if (contains manuscript.url this.manuscriptsWithErrors) 'text-danger'}}"
               title="Add this manuscript to your submission"
               {{on "click" (perform this.addFile manuscript)}}
               data-test-add-file-link
             >
-              <i class="fa fa-lg fa-plus" aria-hidden="true"></i>
+              {{#if (contains manuscript.url this.manuscriptsWithErrors)}}
+                <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+              {{else}}
+                <i class="fa fa-lg fa-plus" aria-hidden="true"></i>
+              {{/if}}
               <span class="pl-2">{{manuscript.name}}</span>
               {{#if manuscript.repositoryLabel}}
                 <span class="font-italic"> - {{manuscript.repositoryLabel}}</span>
+              {{/if}}
+              {{#if (contains manuscript.url this.manuscriptsWithErrors)}}
+                <small class="d-flex flex text-danger">We weren't able to add the file to your submission</small>
               {{/if}}
             </a>
           </div>

@@ -3,8 +3,6 @@ import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import { A } from '@ember/array';
 import { task } from 'ember-concurrency-decorators';
-import { timeout } from 'ember-concurrency';
-import { action } from '@ember/object';
 
 export default class FoundManuscriptsComponent extends Component {
   @service oaManuscriptService;
@@ -13,6 +11,7 @@ export default class FoundManuscriptsComponent extends Component {
   @service appStaticConfig;
 
   @tracked foundManuscripts = A([]);
+  @tracked manuscriptsWithErrors = A([]);
   @tracked assetsUri;
 
   constructor() {
@@ -61,26 +60,43 @@ export default class FoundManuscriptsComponent extends Component {
    */
   @task
   * addFile(selectedManuscript) {
+    this.manuscriptsWithErrors.removeObject(selectedManuscript.url);
+
     const result = yield swal({
-      type: 'warning',
       title: 'Please wait while files are loading ...',
-      showCancelButton: false,
       allowOutsideClick: false,
+      imageClass: 'lds-dual-ring',
+      imageUrl: '',
+      showCancelButton: true,
       onBeforeOpen: async () => {
-        Swal.showLoading();
-        let content = Swal.getContent();
+        const confirmButton = Swal.getConfirmButton();
+        const cancelButton = Swal.getCancelButton();
+        confirmButton.style.display = 'none';
+        cancelButton.style.display = 'flex';
+
+        const title = Swal.getTitle();
+        const container = document.createElement('div');
+        container.classList.add('text-center');
+        title.append(container);
+        const spinner = document.createElement('div');
+        spinner.classList.add('lds-dual-ring');
+        spinner.classList.add('mt-2');
+        container.appendChild(spinner);
+
         const doi = this.workflow.getDoiInfo().DOI;
         const result = await this.oaManuscriptService.downloadManuscript(selectedManuscript.url, doi).catch((e) => {
-          Swal.hideLoading();
           const title = Swal.getTitle();
           const content = Swal.getContent();
+          const confirmButton = Swal.getConfirmButton();
+
           title.innerHTML = 'File load failed';
           content.innerHTML = e.message;
-          const cancelButton = Swal.getCancelButton();
-          const confirmButton = Swal.getConfirmButton();
-          cancelButton.style.display = 'flex';
+          confirmButton.style.display = 'flex';
           confirmButton.innerHTML = 'Retry';
+
           Swal.enableButtons();
+
+          this.manuscriptsWithErrors.pushObject(selectedManuscript.url);
 
           return 'false';
         });
@@ -89,9 +105,9 @@ export default class FoundManuscriptsComponent extends Component {
           const file = this._ms2File(selectedManuscript, result);
 
           await this.args.handleExternalMs(file);
-        }
 
-        Swal.closeModal();
+          Swal.closeModal();
+        }
       }
     });
 
