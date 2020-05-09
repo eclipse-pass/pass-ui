@@ -14,8 +14,8 @@
       <p class="text-muted">
         Click the <i class="fa fa-cloud-download" aria-hidden="true"></i> icon to open the file so you can see it first.
       </p>
-      {{#each this.foundManuscriptsToDisplay as |manuscript|}}
-        <div class="d-flex flex-row border-top border-bottom m-auto p-2 align-items-center justify-content-between">
+      {{#each this.foundManuscriptsToDisplay as |manuscript index|}}
+        <div class="d-flex flex-row {{if (eq index 0) "border-top "}} border-bottom m-auto p-2 align-items-center justify-content-between">
           <div class="d-flex flex-row flex-shrink-1 align-items-center pr-4 files-upload-action">
             {{#unless this.addFileTaskInstance.isRunning}}
               <a
@@ -39,18 +39,32 @@
                   {{/if}}
               </a>
             {{else}}
-              <div class="d-flex flex text-center">
-                <div class="lds-dual-ring-sm mt-0"></div>
-              </div>
-              <div class="d-flex flex text-center">
-                <button
-                  type="button"
-                  class="btn btn-link"
-                  {{on "click" (fn this.cancelAddFile)}}
+              {{#if (eq manuscript.url this.selectedManuscript.url)}}
+                <div class="d-flex flex text-center">
+                  <div class="lds-dual-ring-sm mt-0"></div>
+                </div>
+                <div class="d-flex flex text-center">
+                  <button
+                    type="button"
+                    class="btn btn-link"
+                    {{on "click" (fn this.cancelAddFile)}}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              {{else}}
+                <a
+                  href="javascript:;"
+                  class="p-2 text-muted"
+                  title="Add this manuscript to your submission"
                 >
-                  Cancel
-                </button>
-              </div>
+                  <i class="fa fa-lg fa-plus" aria-hidden="true"></i>
+                  <span class="pl-2">{{manuscript.name}}</span>
+                  {{#if manuscript.repositoryLabel}}
+                    <span class="font-italic"> - {{manuscript.repositoryLabel}}</span>
+                  {{/if}}
+                </a>
+              {{/if}}
             {{/unless}}
           </div>
           <div class="flex-grow-1 ml-sm-4 files-download-action">

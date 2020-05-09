@@ -13,6 +13,7 @@ export default class FoundManuscriptsComponent extends Component {
 
   @tracked foundManuscripts = A([]);
   @tracked manuscriptsWithErrors = A([]);
+  @tracked selectedManuscript = null;
   @tracked assetsUri;
 
   constructor() {
@@ -71,6 +72,8 @@ export default class FoundManuscriptsComponent extends Component {
       this.manuscriptsWithErrors.pushObject(selectedManuscript.url);
       console.log(e);
       return false;
+    } finally {
+      this.selectedManuscript = null;
     }
   }
 
@@ -79,6 +82,7 @@ export default class FoundManuscriptsComponent extends Component {
     let task = this._addFile;
     let taskInstance = task.perform(selectedManuscript);
     set(this, 'addFileTaskInstance', taskInstance);
+    this.selectedManuscript = selectedManuscript;
   }
 
   @action
