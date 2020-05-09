@@ -72,23 +72,27 @@ module('Integration | Component | found-manuscripts', (hooks) => {
           url: 'http://moo.example.com'
         }]);
       },
-      downloadManuscript: (url, doi) => {
-        assert.ok(url, 'No url provided');
-        assert.ok(doi, 'No DOI provided');
-        return Promise.resolve(':)');
+      downloadManuscript: {
+        perform: (url, doi) => {
+          assert.ok(url, 'No url provided');
+          assert.ok(doi, 'No DOI provided');
+          return Promise.resolve(':)');
+        }
       }
     });
 
     this.owner.register('service:oa-manuscript-service', mockMsService);
 
-    const mockAction = () => {
-      assert.ok(true);
+    const mockAction = {
+      perform() {
+        assert.ok(true);
 
-      return Promise.resolve('I promise');
+        return Promise.resolve('I promise');
+      }
     };
     set(this, 'mockAction', mockAction);
 
-    await render(hbs`<FoundManuscripts @handleExternalMs={{action mockAction}}/>`);
+    await render(hbs`<FoundManuscripts @handleExternalMs={{this.mockAction}}/>`);
 
     assert.dom('[data-test-add-file-link]').includesText('This is a moo');
 
