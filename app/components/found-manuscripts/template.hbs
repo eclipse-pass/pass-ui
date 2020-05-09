@@ -38,8 +38,7 @@
                     <small class="d-flex flex text-danger">We weren't able to add the file to your submission, please retry.</small>
                   {{/if}}
               </a>
-            {{/unless}}
-            {{#if this.addFileTaskInstance.isRunning}}
+            {{else}}
               <div class="d-flex flex text-center">
                 <div class="lds-dual-ring-sm mt-0"></div>
               </div>
@@ -52,7 +51,7 @@
                   Cancel
                 </button>
               </div>
-            {{/if}}
+            {{/unless}}
           </div>
           <div class="flex-grow-1 ml-sm-4 files-download-action">
             <a href="{{manuscript.url}}" target="_blank" class="px-4 py-2" title="Download this manuscript">
