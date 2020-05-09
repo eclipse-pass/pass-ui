@@ -3,6 +3,7 @@ import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import { A } from '@ember/array';
 import { task } from 'ember-concurrency-decorators';
+import { action, get, set } from '@ember/object';
 
 export default class FoundManuscriptsComponent extends Component {
   @service oaManuscriptService;
@@ -59,61 +60,30 @@ export default class FoundManuscriptsComponent extends Component {
    * }
    */
   @task
-  * addFile(selectedManuscript) {
+  * _addFile(selectedManuscript) {
     this.manuscriptsWithErrors.removeObject(selectedManuscript.url);
-
-    const result = yield swal({
-      title: 'Please wait while files are loading ...',
-      allowOutsideClick: false,
-      imageClass: 'lds-dual-ring',
-      imageUrl: '',
-      showCancelButton: true,
-      onBeforeOpen: async () => {
-        const confirmButton = Swal.getConfirmButton();
-        const cancelButton = Swal.getCancelButton();
-        confirmButton.style.display = 'none';
-        cancelButton.style.display = 'flex';
-
-        const title = Swal.getTitle();
-        const container = document.createElement('div');
-        container.classList.add('text-center');
-        title.append(container);
-        const spinner = document.createElement('div');
-        spinner.classList.add('lds-dual-ring');
-        spinner.classList.add('mt-2');
-        container.appendChild(spinner);
-
-        const doi = this.workflow.getDoiInfo().DOI;
-        const result = await this.oaManuscriptService.downloadManuscript(selectedManuscript.url, doi).catch((e) => {
-          const title = Swal.getTitle();
-          const content = Swal.getContent();
-          const confirmButton = Swal.getConfirmButton();
-
-          title.innerHTML = 'File load failed';
-          content.innerHTML = e.message;
-          confirmButton.style.display = 'flex';
-          confirmButton.innerHTML = 'Retry';
-
-          Swal.enableButtons();
-
-          this.manuscriptsWithErrors.pushObject(selectedManuscript.url);
-
-          return 'false';
-        });
-
-        if (result !== 'false') {
-          const file = this._ms2File(selectedManuscript, result);
-
-          await this.args.handleExternalMs(file);
-
-          Swal.closeModal();
-        }
-      }
-    });
-
-    if (result.value) {
-      this.addFile.perform(selectedManuscript);
+    try {
+      const doi = this.workflow.getDoiInfo().DOI;
+      const downloadResult = yield this.oaManuscriptService.downloadManuscript.perform(selectedManuscript.url, doi);
+      const file = this._ms2File(selectedManuscript, downloadResult);
+      yield this.args.handleExternalMs.perform(file);
+    } catch (e) {
+      this.manuscriptsWithErrors.pushObject(selectedManuscript.url);
+      console.log(e);
+      return false;
     }
+  }
+
+  @action
+  addFile(selectedManuscript) {
+    let task = this._addFile;
+    let taskInstance = task.perform(selectedManuscript);
+    set(this, 'addFileTaskInstance', taskInstance);
+  }
+
+  @action
+  cancelAddFile() {
+    get(this, 'addFileTaskInstance').cancel();
   }
 
   /**

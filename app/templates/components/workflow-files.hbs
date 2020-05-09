@@ -88,8 +88,8 @@
 {{/if}}
 <!--/.row-->
 <p class="lead">
-  Attach manuscript/article files to this submission by selecting an existing open access (OA) copy we've discovered on 
-  the web or by uploading files from your computer. Once you've selected the manuscript/article, you will still be able 
+  Attach manuscript/article files to this submission by selecting an existing open access (OA) copy we've discovered on
+  the web or by uploading files from your computer. Once you've selected the manuscript/article, you will still be able
   to manually add supplemental material to the submission by uploading them from your computer.
 </p>
 <p class="lead">Each individual file must be smaller than 100MB.</p>
@@ -98,14 +98,14 @@
     <FoundManuscripts
       @previouslyUploadedFiles={{this.previouslyUploadedFiles}}
       @newFiles={{this.newFiles}}
-      @handleExternalMs={{action "handleExternalMs"}}
+      @handleExternalMs={{this.handleExternalMs}}
       @disabled={{this.hasManuscript}}
      />
   </div>
 </div>
 <div class="form-group row">
   <div class="col-md-12">
-    <input 
+    <input
       type="file"
       id="file-multiple-input"
       multiple

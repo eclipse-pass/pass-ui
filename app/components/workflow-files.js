@@ -2,22 +2,13 @@ import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import { computed, get, set } from '@ember/object';
 import { A } from '@ember/array';
+import { task } from 'ember-concurrency';
 
 export default Component.extend({
   store: service('store'),
   workflow: service('workflow'),
   submissionHandler: service('submission-handler'),
   currentUser: service('current-user'),
-
-  // didInsertElement() {
-  //   this._super(...arguments);
-  //   const prevFiles = A([]);
-  //   const stuff = get(this, 'prevoiuslyUploadedFiles') || A([]);
-
-  //   prevFiles.pushObjects(stuff.toArray());
-  //   set(this, 'prevFiles', prevFiles);
-  //   debugger
-  // },
 
   hasManuscript: computed('manuscript', function () {
     return !!get(this, 'manuscript');
@@ -49,6 +40,20 @@ export default Component.extend({
   _getFilesElement() {
     return document.getElementById('file-multiple-input');
   },
+
+  handleExternalMs: task(function*(file) {
+    const newFiles = get(this, 'newFiles');
+
+    file.set('submission', get(this, 'submission'));
+    if (!get(this, 'hasManuscript')) {
+      file.set('fileRole', 'manuscript');
+    } else {
+      file.set('fileRole', 'supplemental');
+    }
+
+    newFiles.pushObject(file);
+    yield file.save();
+  }),
 
   actions: {
     deleteExistingFile(file) {
@@ -109,23 +114,8 @@ export default Component.extend({
         }
       }
     },
-
-    // TODO: taskify this action
-    handleExternalMs(file) {
-      const newFiles = get(this, 'newFiles');
-
-      file.set('submission', get(this, 'submission'));
-      if (!get(this, 'hasManuscript')) {
-        file.set('fileRole', 'manuscript');
-      } else {
-        file.set('fileRole', 'supplemental');
-      }
-
-      newFiles.pushObject(file);
-      file.save();
-    },
     cancel() {
       this.sendAction('abort');
     }
-  },
+  }
 });
