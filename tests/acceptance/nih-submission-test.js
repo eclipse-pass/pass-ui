@@ -31,6 +31,34 @@ module('Acceptance | submission', function (hooks) {
       addCss: () => {}
     });
 
+    this.server.get('https://pass.local/downloadservice/lookup', () => ({
+      manuscripts: [
+        {
+          url: 'https://dash.harvard.edu/bitstream/1/12285462/1/Nanometer-Scale%20Thermometry.pdf',
+          repositoryLabel: 'Harvard University - Digital Access to Scholarship at Harvard (DASH)',
+          type: 'application/pdf',
+          source: 'Unpaywall',
+          name: 'Nanometer-Scale Thermometry.pdf'
+        },
+        {
+          url: 'http://europepmc.org/articles/pmc4221854?pdf=render',
+          repositoryLabel: 'pubmedcentral.nih.gov',
+          type: 'application/pdf',
+          source: 'Unpaywall',
+          name: 'pmc4221854?pdf=render'
+        },
+        {
+          url: 'http://arxiv.org/pdf/1304.1068',
+          repositoryLabel: 'arXiv.org',
+          type: 'application/pdf',
+          source: 'Unpaywall',
+          name: '1304.1068'
+        }
+      ]
+    }));
+
+    this.server.post('https://pass.local/downloadservice/download', () => 'https://pass.local/fcrepo/rest/files/45/70/f3/40/4570f340-344f-46db-88f1-9cd82f49efc3');
+
     this.owner.register('service:app-static-config', mockStaticConfig);
   });
 
@@ -102,14 +130,30 @@ module('Acceptance | submission', function (hooks) {
 
     await waitFor('input[type=file]');
 
-    assert.equal(currentURL(), '/submissions/new/files');
-    const submissionFile = new Blob(['moo'], { type: 'application/pdf' });
-    submissionFile.name = 'my-submission.pdf';
-    await triggerEvent(
-      'input[type=file]',
-      'change',
-      { files: [submissionFile] }
-    );
+    // TODO (Jared):
+    // Resolve identity map problem that occurs in test when removing and adding
+    // another file. This passes on the first run, but can be flakey locally in subsequent
+    // runs.
+
+    // assert.equal(currentURL(), '/submissions/new/files');
+    // const submissionFile = new Blob(['moo'], { type: 'application/pdf' });
+    // submissionFile.name = 'my-submission.pdf';
+    // await triggerEvent(
+    //   'input[type=file]',
+    //   'change',
+    //   { files: [submissionFile] }
+    // );
+    // assert.dom('[data-test-added-manuscript-row]').includesText('my-submission.pdf');
+
+    // await click('[data-test-remove-file-button]');
+    // await waitFor(document.querySelector('#swal2-title'));
+    // assert.dom(document.querySelector('#swal2-title')).includesText('Are you sure?');
+    // await click(document.querySelector('.swal2-confirm'));
+
+    await waitFor('[data-test-add-file-link]');
+    await click('[data-test-add-file-link]');
+    await waitFor('[data-test-added-manuscript-row]');
+    assert.dom('[data-test-added-manuscript-row]').includesText('Nanometer-Scale');
 
     await click('[data-test-workflow-files-next]');
 
@@ -118,7 +162,7 @@ module('Acceptance | submission', function (hooks) {
     assert.dom('[data-test-workflow-review-title]').includesText('Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS');
     assert.dom('[data-test-workflow-review-doi]').includesText('10.1039/c7an01256j');
     assert.dom('[data-test-workflow-review-grant-list] li').includesText('Regulation of Synaptic Plasticity in Visual Cortex');
-    assert.dom('[data-test-workflow-review-file-name]').includesText('my-submission.pdf');
+    assert.dom('[data-test-workflow-review-file-name]').includesText('Nanometer-Scale');
 
     await click('[data-test-workflow-review-submit]');
 

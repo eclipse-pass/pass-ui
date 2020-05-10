@@ -85,8 +85,8 @@ module.exports = function (environment) {
   };
 
   ENV.oaManuscriptService = {
-    lookupUrl: '/downloadservice/lookup',
-    downloadUrl: '/downloadservice/download'
+    lookupUrl: 'https://pass.local/downloadservice/lookup',
+    downloadUrl: 'https://pass.local/downloadservice/download'
   };
 
   ENV.metadataSchemaUri = 'https://oa-pass.github.io/metadata-schemas/jhu/global.json';

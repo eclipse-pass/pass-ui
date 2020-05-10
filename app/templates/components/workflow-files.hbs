@@ -51,7 +51,14 @@
               {{input class="form-control file-description-width" value=manuscript.description}}
             </td>
             <td class="text-center vertical-align-middle">
-              <button type="button" class="btn btn-outline-danger" {{action 'deleteExistingFile' manuscript}}>Remove</button>
+              <button
+                type="button"
+                class="btn btn-outline-danger"
+                {{action 'deleteExistingFile' manuscript}}
+                data-test-remove-file-button
+              >
+                Remove
+              </button>
             </td>
           </tr>
         {{/if}}

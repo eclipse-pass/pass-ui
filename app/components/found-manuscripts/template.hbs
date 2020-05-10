@@ -16,7 +16,7 @@
       </p>
       {{#each this.foundManuscriptsToDisplay as |manuscript index|}}
         <div class="d-flex flex-row {{if (eq index 0) "border-top "}} border-bottom m-auto p-2 align-items-center justify-content-between">
-          <div class="d-flex flex-row flex-shrink-1 align-items-center pr-4 files-upload-action">
+          <div class="d-flex flex-row align-items-center pr-4">
             {{#unless this.addFileTaskInstance.isRunning}}
               <a
                 href="javascript:;"
@@ -67,7 +67,7 @@
               {{/if}}
             {{/unless}}
           </div>
-          <div class="flex-grow-1 ml-sm-4 files-download-action">
+          <div class="d-flex flex ml-sm-4 border-left">
             <a href="{{manuscript.url}}" target="_blank" class="px-4 py-2" title="Download this manuscript">
               <i class="fa fa-lg fa-cloud-download" aria-hidden="true"></i>
             </a>
