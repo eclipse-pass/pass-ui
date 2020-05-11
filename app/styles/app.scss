@@ -650,6 +650,23 @@ footer {
   border-color: #005eb8 transparent #005eb8 transparent;
   animation: lds-dual-ring 1.2s linear infinite;
 }
+.lds-dual-ring-sm {
+  margin-top: 300px;
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+}
+.lds-dual-ring-sm:after {
+  content: " ";
+  display: block;
+  width: 25px;
+  height: 25px;
+  margin: 1px;
+  border-radius: 50%;
+  border: 2.5px solid #005eb8;
+  border-color: #005eb8 transparent #005eb8 transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
 @keyframes lds-dual-ring {
   0% {
     transform: rotate(0deg);
@@ -722,16 +739,4 @@ footer {
   height: 500px;
   overflow: auto;
   background-color: $jhu-grey;
-}
-
-@media (max-width: 1199.98px) {
-  .files-upload-action {
-    border-right: solid 1px #a4b7c1;
-  }
-}
-
-@media (min-width: 1200px) {
-  .files-download-action {
-    border-left: solid 1px #a4b7c1;
-  }
 }

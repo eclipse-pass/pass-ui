@@ -36,7 +36,7 @@ module('Unit | Service | oaManuscriptService', (hooks) => {
       });
     };
 
-    const res = service.downloadManuscript(testUrl, 'doi');
+    const res = service.downloadManuscript.perform(testUrl, 'doi');
 
     assert.ok(res, 'No result found');
   });

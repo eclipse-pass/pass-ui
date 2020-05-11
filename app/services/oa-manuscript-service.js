@@ -1,5 +1,6 @@
 import Service from '@ember/service';
 import ENV from 'pass-ember/config/environment';
+import { task } from 'ember-concurrency-decorators';
 
 export default class OAManuscriptService extends Service {
   lookupUrl = ENV.oaManuscriptService.lookupUrl;
@@ -73,7 +74,8 @@ export default class OAManuscriptService extends Service {
    * @param {string} doi the DOI that these files are associated with
    * @returns {string} Fedora URL where the file bits can be found
    */
-  async downloadManuscript(url, doi) {
+  @task
+  * downloadManuscript(url, doi) {
     console.assert(!!this.downloadUrl, '%cOA Manuscript service download URL not found.', 'color: red;');
     console.assert(!!url, '%cfile url not provided', 'color: red;');
     console.assert(!!doi, '%cNo DOI provided to the OA manuscript downloader', 'color: red;');
@@ -88,8 +90,8 @@ export default class OAManuscriptService extends Service {
     // console.log(`%cOA Manuscripts Download service ${url}`, 'color: blue;');
     // return 'https://dash.harvard.edu/bitstream/1/12285462/1/Nanometer-Scale%20Thermometry.pdf';
 
-    const response = await fetch(serviceUrl, { method: 'POST' });
-    const text = await response.text();
+    const response = yield fetch(serviceUrl, { method: 'POST' });
+    const text = yield response.text();
 
     if (!response.ok) {
       throw new Error(text);
