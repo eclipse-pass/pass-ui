@@ -168,7 +168,7 @@ services:
       - back
 
   downloadservice:
-    image: oapass/download-service:v1.0.0@sha256:67a4ff5b35ae8b967823b02c17a1e72f04603dd176213fedfa2bf11bbeee1a00
+    image: oapass/download-service:v1.0.1@sha256:d410f3e743e6ae3d5469eb7a6482e357d2c8c65b6c3c37684fe6deb0e23498a0
     container_name: downloadservice
     env_file: .env
     ports:
