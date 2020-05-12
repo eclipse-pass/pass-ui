@@ -80,6 +80,8 @@ export default Component.extend({
           }
 
           this.get('submissionHandler').deleteFile(file);
+
+          document.querySelector('#file-multiple-input').value = null;
         }
       });
     },
