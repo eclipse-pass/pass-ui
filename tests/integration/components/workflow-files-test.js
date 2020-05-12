@@ -182,7 +182,7 @@ module('Integration | Component | workflow files', (hooks) => {
     assert.dom('[data-test-foundmss-component]').exists();
 
     assert.dom('[data-test-add-file-link]').exists();
-    assert.dom('[data-test-add-file-link]').includesText('This is a moo');
+    assert.dom('[data-test-add-file-link]').includesText('http://example.com/moo.pdf');
 
     await click('[data-test-add-file-link]');
     await waitFor('[data-test-added-manuscript-row]');
