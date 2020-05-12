@@ -30,13 +30,6 @@ module('Integration | Component | found-manuscripts', (hooks) => {
     }));
   });
 
-  test('it renders', async function (assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.set('myAction', function(val) { ... });
-    await render(hbs`<FoundManuscripts />`);
-    assert.equal(this.element.textContent.trim(), '');
-  });
-
   test('An OA MS is displayed', async function (assert) {
     // Mock the download service
     const mockMsService = Service.extend({
@@ -57,7 +50,8 @@ module('Integration | Component | found-manuscripts', (hooks) => {
   });
 
   test('Nothing renders when disabled', async function (assert) {
-    await render(hbs`<FoundManuscripts @disabled="true" />`);
+    set(this, 'disabled', true);
+    await render(hbs`<FoundManuscripts @disabled={{this.disabled}} />`);
     assert.equal(this.element.childElementCount, 0);
   });
 
@@ -97,5 +91,18 @@ module('Integration | Component | found-manuscripts', (hooks) => {
     assert.dom('[data-test-add-file-link]').includesText('This is a moo');
 
     await click('[data-test-add-file-link]');
+  });
+
+  test('Message should appear if NOT disabled AND no files found', async function (assert) {
+    const expected = 'We could not find any existing open access copies for your manuscript/article. Please upload your own copy.';
+    this.owner.register('service:oa-manuscript-service', Service.extend({
+      lookup(doi) {
+        assert.ok(doi, 'DOI still needs to be present');
+        return Promise.resolve([]);
+      }
+    }));
+
+    await render(hbs`<FoundManuscripts />`);
+    assert.ok(this.element.textContent.includes(expected));
   });
 });
