@@ -46,7 +46,7 @@ module('Integration | Component | found-manuscripts', (hooks) => {
 
     await render(hbs`<FoundManuscripts />`);
 
-    assert.ok(this.element.textContent.includes('This is a moo'));
+    assert.ok(this.element.textContent.includes('http://moo.example.com'));
   });
 
   test('Nothing renders when disabled', async function (assert) {
@@ -88,13 +88,14 @@ module('Integration | Component | found-manuscripts', (hooks) => {
 
     await render(hbs`<FoundManuscripts @handleExternalMs={{this.mockAction}}/>`);
 
-    assert.dom('[data-test-add-file-link]').includesText('This is a moo');
+    assert.dom('[data-test-add-file-link]').includesText('http://moo.example.com');
 
     await click('[data-test-add-file-link]');
   });
 
   test('Message should appear if NOT disabled AND no files found', async function (assert) {
     const expected = 'We could not find any existing open access copies for your manuscript/article. Please upload your own copy.';
+
     this.owner.register('service:oa-manuscript-service', Service.extend({
       lookup(doi) {
         assert.ok(doi, 'DOI still needs to be present');
