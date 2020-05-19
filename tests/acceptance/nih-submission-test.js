@@ -201,7 +201,7 @@ module('Acceptance | submission', function (hooks) {
     assert.dom('[data-test-covid-selection-checkbox:checked]');
 
     await waitFor('[data-test-workflow-basics-next]');
-    assert.equal(currentURL(), '/submissions/new/basics?covid=true');
+    assert.equal(currentURL(), '/submissions/new/basics');
     assert.dom('[data-test-doi-input]').exists();
     await fillIn('[data-test-doi-input]', '10.1039/c7an01256j');
 
@@ -227,7 +227,7 @@ module('Acceptance | submission', function (hooks) {
     await click('[data-test-workflow-basics-next]');
 
     await waitFor('[data-test-grants-selection-table] tbody tr td.projectname-date-column');
-    assert.equal(currentURL(), '/submissions/new/grants?covid=true');
+    assert.equal(currentURL(), '/submissions/new/grants');
     assert.dom('[data-test-grants-selection-table] tbody tr td.projectname-date-column').includesText('Regulation of Synaptic Plasticity in Visual Cortex');
     await click('[data-test-grants-selection-table] tbody tr td.projectname-date-column');
     await waitFor('[data-test-submission-funding-table] tbody tr td.projectname-date-column');
@@ -247,7 +247,7 @@ module('Acceptance | submission', function (hooks) {
     await click('[data-test-covid-selection-checkbox]');
     assert.dom('[data-test-covid-selection-checkbox:checked]');
 
-    assert.equal(currentURL(), '/submissions/new/policies?covid=true');
+    assert.equal(currentURL(), '/submissions/new/policies');
     await waitFor('input[type=radio]:checked');
     assert.dom('[data-test-workflow-policies-radio-no-direct-deposit:checked');
 
@@ -258,7 +258,7 @@ module('Acceptance | submission', function (hooks) {
     await waitFor('[data-test-covid-selection-checkbox]');
     assert.dom('[data-test-covid-selection-checkbox:checked]');
 
-    assert.equal(currentURL(), '/submissions/new/repositories?covid=true');
+    assert.equal(currentURL(), '/submissions/new/repositories');
     assert.dom('[data-test-workflow-repositories-required-list] li').includesText('PubMed Central - NATIONAL INSTITUTE OF HEALTH');
     assert.dom('[data-test-workflow-repositories-optional-list] li').includesText('JScholarship');
     assert.dom('[data-test-workflow-repositories-optional-list] li input:checked').hasValue('on');
@@ -266,7 +266,7 @@ module('Acceptance | submission', function (hooks) {
     await click('[data-test-workflow-repositories-next]');
 
     await waitFor('[data-test-metadata-form] textarea[name=title]');
-    assert.equal(currentURL(), '/submissions/new/metadata?covid=true');
+    assert.equal(currentURL(), '/submissions/new/metadata');
     assert.dom('[data-test-metadata-form] textarea[name=title]').hasValue('Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS');
     assert.dom('[data-test-metadata-form] input[name=journal-title]').hasValue('The Analyst');
 
@@ -274,7 +274,7 @@ module('Acceptance | submission', function (hooks) {
 
     await waitFor('input[type=file]');
 
-    assert.equal(currentURL(), '/submissions/new/files?covid=true');
+    assert.equal(currentURL(), '/submissions/new/files');
     const submissionFile = new Blob(['moo'], { type: 'application/pdf' });
     submissionFile.name = 'my-submission.pdf';
     await triggerEvent(
@@ -289,7 +289,7 @@ module('Acceptance | submission', function (hooks) {
     assert.dom('[data-test-covid-selection-checkbox:checked]');
 
     await waitFor('[data-test-workflow-review-submit]');
-    assert.equal(currentURL(), '/submissions/new/review?covid=true');
+    assert.equal(currentURL(), '/submissions/new/review');
     assert.dom('[data-test-workflow-review-title]').includesText('Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS');
     assert.dom('[data-test-workflow-review-doi]').includesText('10.1039/c7an01256j');
     assert.dom('[data-test-workflow-review-grant-list] li').includesText('Regulation of Synaptic Plasticity in Visual Cortex');

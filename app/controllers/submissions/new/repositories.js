@@ -115,7 +115,7 @@ export default class SubmissionsNewPolicies extends Controller {
 
   @action
   updateCovidSubmission() {
-    get(this, 'parent').send('updateCovidSubmission')
+    this.parent.updateCovidSubmission();
   }
 
   _getFunderNamesForRepo(repo, submission) {

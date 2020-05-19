@@ -254,7 +254,7 @@ export default class WorkflowMetadata extends Component {
    * model metadata field which is mutated by the covid selection box
    */
   hintsCleanup() {
-    let submission = get(this, 'submission');
+    let submission = get(this, 'args.submission');
     let metadata = get(this, 'metadata');
     let tags = [];
     let mdHasCovid = false;
@@ -284,7 +284,7 @@ export default class WorkflowMetadata extends Component {
         };
       }
     }
-  },
+  }
 
   /**
    * Used to set some information in the metadata blob

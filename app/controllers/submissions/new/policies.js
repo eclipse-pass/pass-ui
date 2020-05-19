@@ -1,5 +1,5 @@
 import Controller, { inject as controller } from '@ember/controller';
-import { action, get } from '@ember/object';
+import { action } from '@ember/object';
 import { alias } from '@ember/object/computed';
 
 export default class SubmissionsNewPolicies extends Controller {
@@ -34,6 +34,6 @@ export default class SubmissionsNewPolicies extends Controller {
 
   @action
   updateCovidSubmission() {
-    get(this, 'parent').send('updateCovidSubmission');
+    this.parent.updateCovidSubmission();
   }
 }

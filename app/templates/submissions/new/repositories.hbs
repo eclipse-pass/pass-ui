@@ -3,8 +3,8 @@
   @title={{this.publication.title}}
   @isProxySubmission={{this.submission.isProxySubmission}}
   @submissionEvents={{this.submissionEvents}}
-  @loadTab={{action "validateAndLoadTab"}}
-  @updateCovidSubmission={{action "updateCovidSubmission"}}
+  @loadTab={{this.validateAndLoadTab}}
+  @updateCovidSubmission={{this.updateCovidSubmission}}
 >
   <WorkflowRepositories
     @submission={{this.submission}}

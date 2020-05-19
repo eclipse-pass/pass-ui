@@ -1,7 +1,6 @@
 import Component from '@glimmer/component';
-import { action, set, computed } from '@ember/object';
+import { action, get, set, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
-import { computed, get, set } from '@ember/object';
 import { A } from '@ember/array';
 import { task } from 'ember-concurrency-decorators';
 
@@ -16,10 +15,10 @@ export default class WorkflowFiles extends Component {
     return !!get(this, 'manuscript');
   }
 
-  @computed('newFiles.[]', 'previouslyUploadedFiles.[]')
+  @computed('args.newFiles.[]', 'previouslyUploadedFiles.[]')
   get manuscript() {
-    const newFiles = get(this, 'newFiles') || A([]);
-    const prevFiles = get(this, 'previouslyUploadedFiles') || A([]);
+    const newFiles = get(this, 'args.newFiles') || A([]);
+    const prevFiles = get(this, 'args.previouslyUploadedFiles') || A([]);
 
     return [
       ...prevFiles.toArray(),
@@ -30,10 +29,10 @@ export default class WorkflowFiles extends Component {
   /**
    * Any non-manuscript files
    */
-  @computed('newFiles.[]', 'previouslyUploadedFiles.[]')
+  @computed('args.newFiles.[]', 'previouslyUploadedFiles.[]')
   get supplementalFiles() {
-    const newFiles = get(this, 'newFiles') || A([]);
-    const prevFiles = get(this, 'previouslyUploadedFiles') || A([]);
+    const newFiles = get(this, 'args.newFiles') || A([]);
+    const prevFiles = get(this, 'args.previouslyUploadedFiles') || A([]);
 
     return [
       ...prevFiles.toArray(),
@@ -46,8 +45,8 @@ export default class WorkflowFiles extends Component {
   }
 
   @task
-  * handleExternalMs(file) {
-    const newFiles = get(this, 'newFiles');
+  handleExternalMs = function*(file) {
+    const newFiles = get(this, 'args.newFiles');
 
     file.set('submission', get(this, 'submission'));
     if (!get(this, 'hasManuscript')) {
@@ -73,20 +72,20 @@ export default class WorkflowFiles extends Component {
       cancelButtonText: 'Never mind'
     }).then((result) => {
       if (result.value) {
-        const mFiles = this.get('previouslyUploadedFiles');
+        const mFiles = get(this, 'args.previouslyUploadedFiles');
         // Remove the file from the model
         if (mFiles) {
           mFiles.removeObject(file);
         }
 
-        const newFiles = get(this, 'newFiles');
+        const newFiles = get(this, 'args.newFiles');
         if (newFiles) {
           newFiles.removeObject(file);
         }
 
         this.submissionHandler.deleteFile(file);
 
-        document.querySelector('#file-multiple-input').value = null;;
+        document.querySelector('#file-multiple-input').value = null;
       }
     });
   }
@@ -103,7 +102,7 @@ export default class WorkflowFiles extends Component {
               toastr.error(`Your file '${file.name}' is ${Number.parseFloat(file.size / 1024 / 1024).toPrecision(3)}MB. This exceeds the maximum upload size of 100MB and the file was not added to the submission.`);
               continue; // eslint-disable-line
             }
-            const newFile = this.get('store').createRecord('file', {
+            const newFile = this.store.createRecord('file', {
               name: file.name,
               mimeType: file.type.substring(file.type.indexOf('/') + 1),
               description: file.description,
@@ -113,7 +112,7 @@ export default class WorkflowFiles extends Component {
             if (!get(this, 'hasManuscript')) {
               newFile.set('fileRole', 'manuscript');
             }
-            this.get('newFiles').pushObject(newFile);
+            get(this, 'args.newFiles').pushObject(newFile);
 
             // Immediately upload file
             this.submissionHandler.uploadFile(this.args.submission, newFile);

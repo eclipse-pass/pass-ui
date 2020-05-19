@@ -36,13 +36,13 @@ export default class FoundManuscriptsComponent extends Component {
   }
 
   @task
-  * getAppConfig() {
+  getAppConfig = function*() {
     let config = yield this.appStaticConfig.getStaticConfig();
     this.assetsUri = config.assetsUri;
   }
 
   @task
-  * setupManuscripts() {
+  setupManuscripts = function*() {
     const doi = this.workflow.getDoiInfo().DOI;
     const foundOAMss = yield this.oaManuscriptService.lookup(doi);
 
@@ -61,7 +61,7 @@ export default class FoundManuscriptsComponent extends Component {
    * }
    */
   @task
-  * _addFile(selectedManuscript) {
+  _addFile = function*(selectedManuscript) {
     this.manuscriptsWithErrors.removeObject(selectedManuscript.url);
     try {
       const doi = this.workflow.getDoiInfo().DOI;

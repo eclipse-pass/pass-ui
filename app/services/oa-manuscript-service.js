@@ -75,7 +75,7 @@ export default class OAManuscriptService extends Service {
    * @returns {string} Fedora URL where the file bits can be found
    */
   @task
-  * downloadManuscript(url, doi) {
+  downloadManuscript = function*(url, doi) {
     console.assert(!!this.downloadUrl, '%cOA Manuscript service download URL not found.', 'color: red;');
     console.assert(!!url, '%cfile url not provided', 'color: red;');
     console.assert(!!doi, '%cNo DOI provided to the OA manuscript downloader', 'color: red;');

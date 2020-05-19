@@ -23,8 +23,8 @@ module('Integration | Component | workflow wrapper', (hooks) => {
         @submission={{this.submission}}
         @publication={{this.publication}}
         @submissionEvents={{this.submissionEvents}}
-        @loadTab={{action this.validateAndLoadTab}}
-        @updateCovidSubmission={{action "updateCovidSubmission"}}
+        @loadTab={{this.validateAndLoadTab}}
+        @updateCovidSubmission={{this.updateCovidSubmission}}
       />
     `);
     assert.ok(true);

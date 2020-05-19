@@ -112,7 +112,7 @@ export default class SubmissionsNewBasics extends Controller {
 
   @action
   updateCovidSubmission() {
-    get(this, 'parent').send('updateCovidSubmission');
+    this.parent.updateCovidSubmission();
   }
 
   @action
