@@ -1,9 +1,7 @@
-
 import { inject as service } from '@ember/service';
 import $ from 'jquery';
 import Route from '@ember/routing/route';
 import ENV from '../config/environment';
-
 
 export default class CheckSessionRouteRoute extends Route {
   @service('toast')

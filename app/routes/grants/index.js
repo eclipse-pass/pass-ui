@@ -1,9 +1,7 @@
-
 import { inject as service } from '@ember/service';
 import { A } from '@ember/array';
 import CheckSessionRoute from '../check-session-route';
-import { hash, defer } from 'rsvp';
-
+import { defer } from 'rsvp';
 
 export default class IndexRoute extends CheckSessionRoute {
   @service('current-user')
@@ -20,7 +18,7 @@ export default class IndexRoute extends CheckSessionRoute {
    *  ]
    */
   model() {
-    const user = this.get('currentUser.user');
+    const user = get(this, 'currentUser.user');
     if (!user) {
       return;
     }

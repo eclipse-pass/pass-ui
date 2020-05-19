@@ -1,4 +1,3 @@
-
 import CheckSessionRoute from '../check-session-route';
 import { hash } from 'rsvp';
 

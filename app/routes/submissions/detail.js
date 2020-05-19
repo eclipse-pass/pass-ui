@@ -1,7 +1,5 @@
-
 import CheckSessionRoute from '../check-session-route';
 import { hash } from 'rsvp';
-
 
 export default class DetailRoute extends CheckSessionRoute {
   model(params) {

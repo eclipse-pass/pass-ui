@@ -1,9 +1,7 @@
-
-import { action } from '@ember/object';
+import { action, get } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { hash } from 'rsvp';
 import CheckSessionRoute from '../../check-session-route';
-
 
 export default class RepositoriesRoute extends CheckSessionRoute {
   @service('workflow')
@@ -16,7 +14,7 @@ export default class RepositoriesRoute extends CheckSessionRoute {
     const parentModel = this.modelFor('submissions.new');
     const submission = parentModel.newSubmission;
 
-    const repoPromise = await this.get('policyService.getRepositories').perform(submission);
+    const repoPromise = await get(this, 'policyService.getRepositories').perform(submission);
 
     return hash({
       newSubmission: submission,

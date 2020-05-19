@@ -1,8 +1,7 @@
-
 import { inject as service } from '@ember/service';
 import CheckSessionRoute from '../check-session-route';
 import RSVP from 'rsvp';
-
+import { get } from '@ember/object';
 
 export default class IndexRoute extends CheckSessionRoute {
   @service('current-user')
@@ -12,7 +11,7 @@ export default class IndexRoute extends CheckSessionRoute {
   searchHelper;
 
   async model() {
-    const user = this.get('currentUser.user');
+    const user = get(this, 'currentUser.user');
 
     let submissions = null;
 

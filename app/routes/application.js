@@ -1,20 +1,22 @@
 import CheckSessionRoute from './check-session-route';
 import RSVP from 'rsvp';
 import { inject as service } from '@ember/service';
+import { action, get } from '@ember/object';
 
-export default CheckSessionRoute.extend({
-  currentUser: service('current-user'),
-  staticConfig: service('app-static-config'),
+export default class ApplicationRoute extends CheckSessionRoute {
+  @service('current-user') currentUser;
+  @service('app-static-config') staticConfig;
 
   /* Used as route-action in templates */
-  actions: {
-    back() {
-      history.back();
-    },
-    transitionTo(route, model) {
-      this.transitionTo(route, model);
-    },
-  },
+  @action
+  back() {
+    history.back();
+  }
+
+  @action
+  transitionTo(route, model) {
+    this.transitionTo(route, model);
+  }
 
   /**
    * It is possible for unfortunate things to happen somewhere in the backend stack
@@ -54,14 +56,14 @@ export default CheckSessionRoute.extend({
       const targetId = intent.substring(prefix.length, q);
       this.replaceWith(intent.replace(targetId, `${encodeURIComponent(targetId)}`));
     }
-  },
+  }
 
   model() {
     const configurator = this.staticConfig;
     return RSVP.hash({
       staticConfig: configurator.getStaticConfig()
     });
-  },
+  }
 
   /**
    * Add styling from static branding. TODO: Should this be moved to an initializer or something?
@@ -80,9 +82,9 @@ export default CheckSessionRoute.extend({
       }
     }
     return this._loadCurrentUser(transition.to.queryParams.userToken);
-  },
+  }
 
   _loadCurrentUser(userToken) {
-    return this.get('currentUser.load').perform(userToken);
+    return get(this, 'currentUser.load').perform(userToken);
   }
-});
+}
