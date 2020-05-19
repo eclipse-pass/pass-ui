@@ -2,6 +2,7 @@ import Service, { inject as service } from '@ember/service';
 import ENV from 'pass-ember/config/environment';
 import Ajv from 'ajv'; // https://github.com/epoberezkin/ajv
 import _ from 'lodash';
+import { get } from '@ember/object';
 
 /**
  * Service to manipulate Alpaca schemas
@@ -54,7 +55,7 @@ export default class MetadataSchemaService extends Service {
       // If we've gotten repository objects, map them to their IDs
       repositories = repositories.map(repo => repo.get('id'));
     }
-    const url = this.get('schemaService.url');
+    const url = get(this, 'schemaService.url');
     const urlWithMerge = `${url}?merge=true`;
 
     const options = {

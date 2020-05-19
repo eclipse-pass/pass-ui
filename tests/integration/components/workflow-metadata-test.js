@@ -408,7 +408,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
   });
 
   test('DOI fields should be read-only, but non-DOI fields should be editable', async function (assert) {
-    let sub = this.get('submission');
+    let sub = get(this, 'submission');
     sub.set('metadata', JSON.stringify({
       ISSN: '123Moo'
     }));

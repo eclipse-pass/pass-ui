@@ -51,7 +51,7 @@ export default class PoliciesService extends Service {
    * ]
    */
   @task(function* (submission) {
-    const url = `${this.get('policyUrl')}?submission=${submission.get('id')}`;
+    const url = `${get(this, 'policyUrl')}?submission=${submission.get('id')}`;
 
     const result = yield fetch(url, {
       method: 'GET',
@@ -72,7 +72,7 @@ export default class PoliciesService extends Service {
      */
     const data = yield result.json();
 
-    return yield all(data.map(policyInfo => this.get('store').findRecord('policy', policyInfo.id)
+    return yield all(data.map(policyInfo => get(this, 'store').findRecord('policy', policyInfo.id)
       .then((pol) => {
         pol.set('_type', policyInfo.type);
         return pol;
@@ -101,7 +101,7 @@ export default class PoliciesService extends Service {
    * }
    */
   @task(function* (submission) {
-    const url = `${this.get('repoUrl')}?submission=${submission.get('id')}`;
+    const url = `${get(this, 'repoUrl')}?submission=${submission.get('id')}`;
 
     const response = yield fetch(url, {
       method: 'GET',
@@ -152,7 +152,7 @@ export default class PoliciesService extends Service {
    * @returns {array} list of Promises of Repository objects
    */
   @task(function* (repos) {
-    return yield all(repos.map(repoInfo => this.get('store').findRecord('repository', repoInfo['repository-id'])
+    return yield all(repos.map(repoInfo => get(this, 'store').findRecord('repository', repoInfo['repository-id'])
       .then((repo) => {
         repo.set('_selected', repoInfo.selected);
         return repo;

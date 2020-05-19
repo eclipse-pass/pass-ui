@@ -15,6 +15,7 @@ export default class AutocompleteService extends Service {
   @service('ajax') ajax;
 
   suggestSize = 100;
+  // eslint-disable-next-line camelcase
   es_field_suffix = '_suggest';
 
   @computed()
@@ -145,12 +146,11 @@ export default class AutocompleteService extends Service {
         });
     }
     return adapted;
-  },
+  }
 
   _headers() {
     return {
       'Content-Type': 'application/json; charset=utf-8'
     };
   }
-
 }

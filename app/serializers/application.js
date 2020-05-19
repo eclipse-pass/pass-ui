@@ -1,7 +1,5 @@
-
 import ENV from 'pass-ember/config/environment';
 import FedoraJsonLdSerializer from './fedora-jsonld';
-
 
 export default class Application extends FedoraJsonLdSerializer {
   contextURI = ENV.fedora.context;

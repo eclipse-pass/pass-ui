@@ -1,6 +1,7 @@
 import Service, { inject as service } from '@ember/service';
 import ENV from 'pass-ember/config/environment';
 import { task } from 'ember-concurrency-decorators';
+import { get } from '@ember/object';
 
 /**
  * Service which returns information about the logged in user.
@@ -24,15 +25,15 @@ export default class CurrentUserService extends Service {
   @task
   load = function* (userToken = null) {
     let params = userToken ? `?userToken=${encodeURIComponent(userToken)}` : null;
-    let url = `${this.get('whoamiUrl')}${params || ''}`;
-    let response = yield this.get('ajax').request(url, 'GET', {
+    let url = `${get(this, 'whoamiUrl')}${params || ''}`;
+    let response = yield get(this, 'ajax').request(url, 'GET', {
       headers: {
         Accept: 'application/json; charset=utf-8',
         withCredentials: 'include'
       }
     });
 
-    let user = yield this.get('store').findRecord('user', response['@id']);
+    let user = yield get(this, 'store').findRecord('user', response['@id']);
 
     this.set('user', user);
 

@@ -1,5 +1,5 @@
 import { A } from '@ember/array';
-import EmberObject from '@ember/object';
+import EmberObject, { get } from '@ember/object';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
@@ -66,7 +66,7 @@ module('Integration | Component | policy card', (hooks) => {
       const inputs = this.element.querySelectorAll('input');
       assert.equal(inputs.length, 2, `Found ${inputs.length} inputs, but was expecting 2`);
 
-      const effectivePolicies = this.get('submission.effectivePolicies');
+      const effectivePolicies = get(this, 'submission.effectivePolicies');
       assert.equal(effectivePolicies.length, 1, 'Should be ONE effective policy on submission');
       assert.ok(effectivePolicies.isAny('title', 'Moo title'));
     });
@@ -81,7 +81,7 @@ module('Integration | Component | policy card', (hooks) => {
       // Select option to remove this policy
       await click(inputs[0]);
 
-      const effectivePolicies = this.get('submission.effectivePolicies');
+      const effectivePolicies = get(this, 'submission.effectivePolicies');
       assert.equal(effectivePolicies.length, 0, 'Should be ZERO effective policies');
     });
 
@@ -94,7 +94,7 @@ module('Integration | Component | policy card', (hooks) => {
       const inputs = this.element.querySelectorAll('input');
       assert.equal(inputs.length, 0, 'should be ZERO input options rendered');
 
-      assert.equal(this.get('submission.effectivePolicies').length, 0, 'should be ZERO effective policies set');
+      assert.equal(get(this, 'submission.effectivePolicies').length, 0, 'should be ZERO effective policies set');
     });
   });
 });

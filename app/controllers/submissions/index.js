@@ -1,7 +1,7 @@
 import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import Bootstrap4Theme from 'ember-models-table/themes/bootstrap4';
-import { action, get, set } from '@ember/object';
+import { get } from '@ember/object';
 import { inject as service } from '@ember/service';
 
 export default class SubmissionsIndex extends Controller {
@@ -27,7 +27,7 @@ export default class SubmissionsIndex extends Controller {
 
   // Columns displayed depend on the user role
   get columns() {
-    if (this.get('currentUser.user.isAdmin')) {
+    if (get(this, 'currentUser.user.isAdmin')) {
       return [
         {
           propertyName: 'publication',
@@ -65,7 +65,7 @@ export default class SubmissionsIndex extends Controller {
           component: 'submissions-repoid-cell'
         }
       ];
-    } else if (this.get('currentUser.user.isSubmitter')) {
+    } else if (get(this, 'currentUser.user.isSubmitter')) {
       return [
         {
           propertyName: 'publicationTitle',

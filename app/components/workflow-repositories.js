@@ -133,7 +133,7 @@ export default class WorkflowRepositories extends Component {
   setSelected(repo) {
     const id = repo.id;
     const addedRepos = this.addedRepos;
-    const currentRepos = this.get('args.submission.repositories');
+    const currentRepos = get(this, 'args.submission.repositories');
 
     if (addedRepos.isAny('id', id)) {
       return;

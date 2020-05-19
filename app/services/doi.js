@@ -3,6 +3,7 @@ import { isArray } from '@ember/array';
 import Service, { inject as service } from '@ember/service';
 import ENV from 'pass-ember/config/environment';
 import { task } from 'ember-concurrency';
+import { get } from '@ember/object';
 
 /**
  * This service contains functions for interacting with Crossref and manipulating Crossref
@@ -32,23 +33,23 @@ export default class DoiService extends Service {
   * @returns {object}    Object with doiInfo and publication
   */
   @task(function* (doi) {
-    let url = `${this.get('doiServiceUrl')}?doi=${encodeURIComponent(doi)}`;
+    let url = `${get(this, 'doiServiceUrl')}?doi=${encodeURIComponent(doi)}`;
 
-    let response = yield this.get('ajax').request(url, 'GET', {
+    let response = yield get(this, 'ajax').request(url, 'GET', {
       headers: {
         Accept: 'application/json; charset=utf-8',
         withCredentials: 'include'
       }
     });
 
-    let journal = yield this.get('store').findRecord('journal', response['journal-id']);
+    let journal = yield get(this, 'store').findRecord('journal', response['journal-id']);
 
     let doiInfo = this._processRawDoi(response.crossref.message);
 
     // Needed by schemas
     doiInfo['journal-title'] = doiInfo['container-title'];
 
-    let publication = this.get('store').createRecord('publication', {
+    let publication = get(this, 'store').createRecord('publication', {
       doi,
       journal,
       title: Array.isArray(doiInfo.title) ? doiInfo.title.join(', ') : doiInfo.title,

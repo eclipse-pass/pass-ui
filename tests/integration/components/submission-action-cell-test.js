@@ -1,4 +1,4 @@
-import EmberObject from '@ember/object';
+import EmberObject, { get } from '@ember/object';
 import { A } from '@ember/array';
 import Service from '@ember/service';
 import { setupRenderingTest } from 'ember-qunit';
@@ -86,7 +86,7 @@ module('Integration | Component | submission action cell', (hooks) => {
 
     await settled();
 
-    const status = this.get('record.submissionStatus');
+    const status = get(this, 'record.submissionStatus');
     assert.equal(status, 'cancelled');
   });
 

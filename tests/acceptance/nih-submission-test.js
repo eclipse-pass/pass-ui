@@ -13,6 +13,7 @@ import {
 } from '@ember/test-helpers';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 import nihSubmission from '../../mirage/scenarios/nih-submission';
+import { get } from '@ember/object';
 
 module('Acceptance | submission', function (hooks) {
   setupApplicationTest(hooks);

@@ -1,12 +1,13 @@
 // import Component from '@ember/component';
 import Component from '@ember/component';
 import _ from 'lodash';
+import { get } from '@ember/object';
 
 export default Component.extend({
   didRender() {
     this._super(...arguments);
     const that = this;
-    const originalForm = this.get('schema');
+    const originalForm = get(this, 'schema');
     const newForm = JSON.parse(JSON.stringify(originalForm));
     if (!originalForm.options) {
       newForm.options = {};

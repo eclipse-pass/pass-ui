@@ -31,11 +31,7 @@ export default class ApplicationController extends Controller {
   }
 
   get homepage() {
-    return this.get('brand.homepage');
-  }
-
-  init() {
-    super.init(...arguments);
+    return get(this, 'brand.homepage');
   }
 
   _staticUrl(relativeUrl) {

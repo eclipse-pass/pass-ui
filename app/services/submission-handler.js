@@ -61,26 +61,26 @@ export default class SubmissionHandlerService extends Service {
    */
   @task
   _finishSubmission = function* (submission, comment) {
-    let subEvent = yield this.get('store').createRecord('submissionEvent');
+    let subEvent = yield get(this, 'store').createRecord('submissionEvent');
 
-    subEvent.set('performedBy', this.get('currentUser.user'));
+    subEvent.set('performedBy', get(this, 'currentUser.user'));
     subEvent.set('comment', comment);
     subEvent.set('performedDate', new Date());
     subEvent.set('submission', submission);
     subEvent.set('link', this._getSubmissionView(submission));
 
     // If the person clicking submit *is* the submitter, actually submit the submission.
-    if (submission.get('submitter.id') === this.get('currentUser.user.id')) {
+    if (submission.get('submitter.id') === get(this, 'currentUser.user.id')) {
       submission.set('submitted', true);
       submission.set('submissionStatus', 'submitted');
       submission.set('submittedDate', new Date());
 
       // Add agreements metadata
-      const agreemd = this.get('schemaService').getAgreementsBlob(submission.get('repositories'));
+      const agreemd = get(this, 'schemaService').getAgreementsBlob(submission.get('repositories'));
 
       if (agreemd) {
         let md = JSON.parse(submission.get('metadata'));
-        this.get('schemaService').mergeBlobs(md, agreemd);
+        get(this, 'schemaService').mergeBlobs(md, agreemd);
         submission.set('metadata', JSON.stringify(md));
       }
 
@@ -213,7 +213,7 @@ export default class SubmissionHandlerService extends Service {
 
     let se = this.store.createRecord('submissionEvent', {
       submission,
-      performedBy: this.get('currentUser.user'),
+      performedBy: get(this, 'currentUser.user'),
       performedDate: new Date(),
       comment,
       performerRole: 'submitter',

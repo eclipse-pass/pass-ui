@@ -1,5 +1,5 @@
 import { A } from '@ember/array';
-import EmberObject from '@ember/object';
+import EmberObject, { get } from '@ember/object';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 
@@ -14,11 +14,11 @@ module('Unit | Route | submissions/new', (hooks) => {
     this.set('journal', EmberObject.create({ journalName: 'International Moonthly' }));
     this.set('publication', EmberObject.create({
       title: 'Test Publication',
-      journal: this.get('journal')
+      journal: get(this, 'journal')
     }));
     this.set('submission', EmberObject.create({
       submissionStatus: 'draft',
-      publication: this.get('publication'),
+      publication: get(this, 'publication'),
       metadata: '{ "moo": "This is a moo" }'
     }));
   });
@@ -59,7 +59,7 @@ module('Unit | Route | submissions/new', (hooks) => {
   test('The mock submission returned from model() when it\'s ID is included', async function (assert) {
     assert.expect(6);
 
-    const mockSub = this.get('submission');
+    const mockSub = get(this, 'submission');
 
     const route = this.owner.lookup('route:submissions/new');
 

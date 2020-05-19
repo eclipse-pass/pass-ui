@@ -1,6 +1,6 @@
 import Service from '@ember/service';
 import { A } from '@ember/array';
-import EmberObject from '@ember/object';
+import EmberObject, { get } from '@ember/object';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
@@ -146,7 +146,7 @@ module('Integration | Component | workflow grants', (hooks) => {
 
     assert.equal(list.length, 1, 'One grant should be added to the list');
 
-    assert.equal(this.get('submission.grants.length'), 1, 'One grant should be attached to submission');
+    assert.equal(get(this, 'submission.grants.length'), 1, 'One grant should be attached to submission');
   });
 
   /**
@@ -185,7 +185,7 @@ module('Integration | Component | workflow grants', (hooks) => {
       .querySelectorAll('tbody tr');
     assert.ok(selectedRows[0].textContent.includes('Moo 2'));
 
-    const grants = this.get('submission.grants');
+    const grants = get(this, 'submission.grants');
     assert.equal(grants.get('length'), 1, 'There should be one grant attached to the submission');
 
     const grantRows = this.element.querySelectorAll('#grants-selection-table table tbody tr');

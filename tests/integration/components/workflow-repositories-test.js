@@ -1,6 +1,6 @@
 import Service from '@ember/service';
 import { A } from '@ember/array';
-import EmberObject from '@ember/object';
+import EmberObject, { get } from '@ember/object';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
@@ -141,7 +141,7 @@ module('Integration | Component | workflow repositories', (hooks) => {
       />
     `);
 
-    const repos = this.get('submission.repositories');
+    const repos = get(this, 'submission.repositories');
     assert.equal(repos.length, 2, 'unexpected number of repositories attached to the submission');
     assert.ok(repos.isAny('name', 'Moo-pository XYZ'));
 
@@ -178,7 +178,7 @@ module('Integration | Component | workflow repositories', (hooks) => {
       />
     `);
 
-    const repos = this.get('submission.repositories');
+    const repos = get(this, 'submission.repositories');
     assert.equal(repos.length, 3, 'unexpected number of repositories attached to submission');
     assert.notOk(repos.includes(undefined), 'should be no undefined items');
     assert.ok(repos.isAny('name', 'Moo-pository 00'), 'The optional repo should be present');

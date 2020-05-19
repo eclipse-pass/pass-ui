@@ -146,9 +146,9 @@ module('Integration | Component | workflow basics', (hooks) => {
     // Add a DOI to UI
     await fillIn('#doi', '1234/4321');
 
-    assert.equal(this.get('doiInfo').DOI, '10.1039/c7an01256j');
-    assert.equal(this.get('publication.doi'), '1234/4321');
-    assert.equal(this.get('publication.issue'), '1');
+    assert.equal(get(this, 'doiInfo').DOI, '10.1039/c7an01256j');
+    assert.equal(get(this, 'publication.doi'), '1234/4321');
+    assert.equal(get(this, 'publication.issue'), '1');
   });
 
   /**
@@ -164,8 +164,8 @@ module('Integration | Component | workflow basics', (hooks) => {
    * Publication should be displayed in the appropriate elements.
    */
   test('Info is filled in when a submission is provided with a publication and DOI', async function (assert) {
-    const publication = this.get('publication');
-    const submission = this.get('submission');
+    const publication = get(this, 'publication');
+    const submission = get(this, 'submission');
 
     publication.set('title', 'Moo title');
     publication.set('journal', EmberObject.create({ journalName: 'Moo Journal' }));
@@ -350,7 +350,7 @@ module('Integration | Component | workflow basics', (hooks) => {
     await triggerKeyEvent('input[id="doi"]', 'keyup', 'Enter');
     await settled();
     assert.notOk(
-      this.get('publication.doi'),
+      get(this, 'publication.doi'),
       'After clearing the DOI input, there should no longer be a doi value on the publication'
     );
 
@@ -371,6 +371,6 @@ module('Integration | Component | workflow basics', (hooks) => {
      */
     assert.dom('[data-test-find-journal]').doesNotExist();
 
-    assert.deepEqual(this.get('doiInfo'), {}, 'doiInfo should be empty');
+    assert.deepEqual(get(this, 'doiInfo'), {}, 'doiInfo should be empty');
   });
 });

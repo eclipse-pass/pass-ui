@@ -84,7 +84,7 @@ export default class SearchHelperService extends Service {
   //   const promise = defer();
   //   let count = 0;
 
-  //   const store = this.get('store');
+  //   const store = get(this, 'store');
 
   //   const timer = window.setInterval(() => {
   //     store.query(type, { term: { '@id': id } }).then((objs) => {

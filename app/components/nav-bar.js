@@ -30,7 +30,7 @@ export default class NavBar extends Component {
 
   @action
   invalidateSession() {
-    // this.get('session').invalidate();
+    // get(this, 'session').invalidate();
   }
 
   @action
