@@ -1,19 +1,20 @@
 import { A } from '@ember/array';
 import Service from '@ember/service';
 import ENV from 'pass-ember/config/environment';
+import { set } from '@ember/object';
 
-export default Service.extend({
-  configUrl: null,
+export default class AppStaticConfigService extends Service {
+  configUrl = null;
   /** List of URI strings, used to tell which static assets have already been loaded */
-  _loaded: A(),
+  _loaded = A();
 
   /** Cached static config object */
-  _config: null,
+  _config = null;
 
-  init() {
-    this._super(...arguments);
-    this.set('configUrl', ENV.APP.staticConfigUri);
-  },
+  constructor() {
+    super(...arguments);
+    set(this, 'configUrl', ENV.APP.staticConfigUri);
+  }
 
   /**
    * Get the static configuration for PASS
@@ -31,7 +32,7 @@ export default Service.extend({
     })
       .then(resp => resp.json())
       .then((data) => {
-        this.set('_config', data);
+        set(this, '_config', data);
         return data;
       })
       .catch((error) => {
@@ -46,7 +47,7 @@ export default Service.extend({
           }
         );
       });
-  },
+  }
 
   /**
    * Load a CSS file from a known URI and add it to the document head
@@ -64,7 +65,7 @@ export default Service.extend({
     window.document.head.appendChild(newLink);
 
     this._loaded.pushObject(uri);
-  },
+  }
 
   addFavicon(uri) {
     const fav = document.querySelector('head link[rel="icon"]');
@@ -77,10 +78,9 @@ export default Service.extend({
     newFav.setAttribute('href', uri);
 
     window.document.head.appendChild(newFav);
-  },
+  }
 
   _alreadyLoaded(uri) {
     return this._loaded.includes(uri);
   }
-
-});
+}

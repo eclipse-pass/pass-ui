@@ -1,4 +1,3 @@
-
 import Service, { inject as service } from '@ember/service';
 import ENV from 'pass-ember/config/environment';
 import Ajv from 'ajv'; // https://github.com/epoberezkin/ajv

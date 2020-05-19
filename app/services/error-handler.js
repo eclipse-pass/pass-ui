@@ -1,10 +1,8 @@
-
 import Service from '@ember/service';
 import ENV from 'pass-ember/config/environment';
 
 // Consolidates error handling.
 // The method handleError will figure out which handler to invoke.
-
 
 export default class ErrorHandlerService extends Service {
   handleError(error) {
