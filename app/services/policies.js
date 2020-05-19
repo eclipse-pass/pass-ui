@@ -15,8 +15,8 @@ export default class PoliciesService extends Service {
   @service('store')
   store;
 
-  init() {
-    super.init(...arguments);
+  constructor() {
+    super(...arguments);
 
     // this.set('base', ENV.policyService.url);
     const policyConf = ENV.policyService;

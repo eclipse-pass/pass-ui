@@ -25,8 +25,8 @@ export default class SearchHelperService extends Service {
   /** List of object IDs to ignore */
   ignoreList = [];
 
-  init() {
-    super.init(...arguments);
+  constructor() {
+    super(...arguments);
     this.clearIgnore();
   }
 

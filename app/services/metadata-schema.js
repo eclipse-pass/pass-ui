@@ -17,8 +17,8 @@ export default class MetadataSchemaService extends Service {
   // JSON schema validator
   validator = undefined;
 
-  init() {
-    super.init(...arguments);
+  constructor() {
+    super(...arguments);
     /**
      * We can adjust logging for the JSON schema validator here.
      *

@@ -5,7 +5,7 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { run } from '@ember/runloop';
-import { getContext, click, render, fillIn, waitFor } from '@ember/test-helpers';
+import { getContext, click, render, fillIn, waitFor, waitUntil } from '@ember/test-helpers';
 
 let submission;
 
