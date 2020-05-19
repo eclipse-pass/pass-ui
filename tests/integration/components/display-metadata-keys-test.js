@@ -92,38 +92,32 @@ module('Integration | Component | display-metadata-keys', (hooks) => {
       }
     };
 
-    const mockSchemaService = EmberObject.create({
-      displayMetadata(submission) {
-        return [
-          { label: 'Journal nlmta-id', value: 'MOO-ID', isArray: false },
-          {
-            label: 'Authors',
-            isArray: true,
-            value: [
-              { name: 'Moo Jones', orcid: '1234' },
-              { name: 'Moo Too' }
-            ]
-          },
-          {
-            label: 'Issns',
-            isArray: true,
-            value: [
-              { issn: '1234j-09ufe', pubType: 'Online' }
-            ]
-          },
-          { label: 'Title', isArray: false, value: 'This is the title moo' },
-          { label: 'Journal Title', isArray: false, value: 'Journal moo' }
-
-        ];
-      }
-    });
 
     this.set('submission', submission);
-    this.set('schemaService', mockSchemaService);
+    this.owner.lookup('service:metadata-schema').displayMetadata = submission => [
+      { label: 'Journal nlmta-id', value: 'MOO-ID', isArray: false },
+      {
+        label: 'Authors',
+        isArray: true,
+        value: [
+          { name: 'Moo Jones', orcid: '1234' },
+          { name: 'Moo Too' }
+        ]
+      },
+      {
+        label: 'Issns',
+        isArray: true,
+        value: [
+          { issn: '1234j-09ufe', pubType: 'Online' }
+        ]
+      },
+      { label: 'Title', isArray: false, value: 'This is the title moo' },
+      { label: 'Journal Title', isArray: false, value: 'Journal moo' }
+    ];
   });
 
   test('Check the "display" blob', async function (assert) {
-    const el = await render(hbs`{{display-metadata-keys submission=submission schemaService=schemaService}}`);
+    await render(hbs`<DisplayMetadataKeys @submission={{this.submission}} />`);
     const allText = this.element.textContent;
 
     assert.ok(allText.includes('Journal nlmta-id: MOO-ID'), 'Should include "Journal nlmta-id"');

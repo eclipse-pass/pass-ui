@@ -62,8 +62,8 @@ export default class WorkflowBasics extends Component {
   @action
   setupSubmission() {
     if (!this.isProxySubmission) {
-      this.set('submission.submitter', this.get('currentUser.user'));
-      this.set('submission.preparers', A());
+      set(this, 'submission.submitter', get(this, 'currentUser.user'));
+      set(this, 'submission.preparers', A());
     }
   }
 
@@ -182,7 +182,7 @@ export default class WorkflowBasics extends Component {
       });
 
       if (result.value) {
-        this.set('submission.grants', A());
+        set(this, 'submission.grants', A());
         this.updateSubmitterModel(isProxySubmission, submitter);
         toastr.info('Submitter and related grants removed from submission.');
       }
@@ -198,7 +198,7 @@ export default class WorkflowBasics extends Component {
     this.submission.submitterName = '';
     if (isProxySubmission) {
       this.submission.submitter = submitter;
-      this.submission.preparers = A([this.get('currentUser.user')]);
+      this.submission.preparers = A([get(this, 'currentUser.user')]);
     } else {
       this.submission.submitter = get(this, 'currentUser.user');
       this.submission.preparers = A();

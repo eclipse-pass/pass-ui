@@ -1,5 +1,4 @@
 import Controller, { inject as controller } from '@ember/controller';
-import { tracked } from '@glimmer/tracking';
 import { action, computed, get } from '@ember/object';
 import { alias } from '@ember/object/computed';
 
@@ -9,7 +8,7 @@ export default class SubmissionsNewReview extends Controller {
   @alias('model.publication') publication;
   @alias('model.submissionEvents') submissionEvents;
 
-  parent = controller('submissions.new');
+  @controller('submissions.new') parent;
 
   @computed('parent.waitingMessage')
   get waitingMessage() {
@@ -18,7 +17,6 @@ export default class SubmissionsNewReview extends Controller {
 
   @computed('parent', 'parent.uploading')
   get uploading() {
-    debugger;
     return get(this, 'parent.uploading');
   }
 
@@ -35,7 +33,7 @@ export default class SubmissionsNewReview extends Controller {
   @action
   loadTab(gotoRoute) {
     // add validation, processing
-    // this.get('submission').save().then(() => this.transitionToRoute(gotoRoute));
+    this.submission.save().then(() => this.transitionToRoute(gotoRoute));
     this.transitionToRoute(gotoRoute);
   }
 

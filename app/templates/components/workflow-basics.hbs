@@ -1,6 +1,7 @@
 {{yield}}
 <div
   {{did-insert this.setupDoiJournal}}
+  {{did-insert this.setupSubmission}}
   {{did-update this.setupSubmission}}
 />
 {{#unless (or @submission.id @preLoadedGrant)}}

@@ -1,5 +1,5 @@
 import Component from '@glimmer/component';
-import { action, computed, set } from '@ember/object';
+import { action, computed, get, set } from '@ember/object';
 import { inject as service } from '@ember/service';
 
 export default class PolicyCard extends Component {
@@ -33,7 +33,7 @@ export default class PolicyCard extends Component {
 
   @computed('journal')
   get methodAJournal() {
-    return this.args.journal.isMethodA;
+    return get(this, 'args.journal.isMethodA');
   }
 
   @computed
