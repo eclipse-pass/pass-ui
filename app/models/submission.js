@@ -1,72 +1,74 @@
+import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
 import { computed, get } from '@ember/object';
-import DS from 'ember-data';
 
-export default DS.Model.extend({
+export default class SubmissionModel extends Model {
   /** Possible values: not-started, in-progress, accepted */
-  aggregatedDepositStatus: DS.attr('string', {
+  @attr('string', {
     defaultValue: 'not-started'
-  }),
-  submittedDate: DS.attr('date'),
-  source: DS.attr('string', { defaultValue: 'pass' }),
-  metadata: DS.attr('string'), // Stringified JSON
-  submitted: DS.attr('boolean', { defaultValue: false }),
-  submissionStatus: DS.attr('string'),
-  submitterName: DS.attr('string'),
-  submitterEmail: DS.attr('string', {
-    defaultValue: null
-  }), // format: "mailto:jane@example.com"
-  submitter: DS.belongsTo('user'),
-  preparers: DS.hasMany('user'),
-  publication: DS.belongsTo('publication'),
-  repositories: DS.hasMany('repository', {
-    async: true
-  }),
-  effectivePolicies: DS.hasMany('policy', { async: true }),
+  }) aggregatedDepositStatus;
+  @attr('date') submittedDate;
+  @attr('string', { defaultValue: 'pass' }) source;
+  @attr('string') metadata;
+  @attr('boolean', { defaultValue: false }) submittedDate;
+  @attr('string') submissionStatus;
+  @attr('string') submitterName;
+  @attr('string') submitterEmail;
 
+  @belongsTo('user') submitter;
+  @belongsTo('publication') publication;
+
+  @hasMany('user') preparers;
+  @hasMany('repository') repositories;
+  @hasMany('policy') effectivePolicies;
   // not on this model on API
-  _submissionEvents: DS.hasMany('submissionEvent', {
+  @hasMany('submissionEvent', {
     async: true
-  }),
+  }) _submissionEvents;
   /**
    * List of grants related to the item being submitted. The grant PI determines who can perform
    * the submission and in the case that there are mutliple associated grants, they all should
    * have the same PI. If a grant has a different PI, it should be a separate submission.
    */
-  grants: DS.hasMany('grant', {
+  @hasMany('grant', {
     async: true
-  }),
+  }) grants;
 
   // computed attributes for tables and to support some logic
-  isProxySubmission: computed(
+  @computed(
     'submitterEmail', 'submitterEmail.length',
     'submitterName', 'submitterName.length',
-    'preparers', 'preparers.length',
-    function () {
-      return (this.submitterEmail && this.get('submitterEmail.length') > 0
-        && this.submitterName && this.get('submitterName.length') > 0
-      ) || (this.preparers && this.get('preparers.length') > 0);
-    }
-  ),
+    'preparers', 'preparers.length'
+  )
+  get isProxySubmission() {
+    return (this.submitterEmail && get(this, 'submitterEmail.length') > 0
+      && this.submitterName && get(this, 'submitterName.length') > 0
+    ) || (this.preparers && get(this, 'preparers.length') > 0);
+  }
 
-  submitterEmailDisplay: computed('submitterEmail', function () {
+  @computed('submitterEmail')
+  get submitterEmailDisplay() {
     if (this.submitterEmail) {
       return this.submitterEmail.replace('mailto:', '');
     }
     return this.submitterEmail;
-  }),
+  }
 
-  publicationTitle: computed('publication', function () {
-    return this.get('publication.title');
-  }),
+  @computed('publication')
+  get publicationTitle() {
+    return get(this, 'publication.title');
+  }
 
-  repositoryNames: computed('repositories', function () {
+  @computed('repositories')
+  get repositoryNames() {
     let repoNames = [];
     this.repositories.forEach((repo) => {
       repoNames.push(repo.get('name'));
     });
     return repoNames;
-  }),
-  grantInfo: computed('grants', function () {
+  }
+
+  @computed('grants')
+  get grantInfo() {
     let grants = [];
     this.grants.forEach((grant) => {
       grants.push(grant.get('awardNumber'));
@@ -74,23 +76,26 @@ export default DS.Model.extend({
       grants.push(grant.get('projectName'));
     });
     return grants;
-  }),
-  isStub: computed('source', 'submitted', function () {
+  }
+
+  @computed('source', 'submitted')
+  get isStub() {
     return this.source === 'other' && !(this.submitted);
-  }),
+  }
 
   /**
    * @returns {boolean} is this a draft submission?
    */
-  isDraft: computed('submitted', 'submissionStatus', function () {
+  @computed('submitted', 'submissionStatus')
+  get isDraft() {
     return this.submissionStatus === 'draft';
-    // return !this.get('submitted') && !this.get('submissionStatus');
-  }),
+  }
 
   /**
    * @returns {boolean} is this a covid related submission?
    */
-  isCovid: computed('metadata', function () {
+  @computed('metadata')
+  get isCovid() {
     let metadata = get(this, 'metadata') ? JSON.parse(get(this, 'metadata')) : {};
 
     if ('hints' in metadata) {
@@ -100,5 +105,5 @@ export default DS.Model.extend({
     }
 
     return false;
-  })
-});
+  }
+}

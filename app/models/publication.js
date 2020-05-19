@@ -1,14 +1,14 @@
-import DS from 'ember-data';
+import Model, { attr, belongsTo } from '@ember-data/model';
 
-export default DS.Model.extend({
+export default class PublicationModel extends Model {
   // doi, title, abstract, journal, volume, issue
-  doi: DS.attr('string'),
-  title: DS.attr('string'),
-  abstract: DS.attr('string'),
-  volume: DS.attr('string'),
-  issue: DS.attr('string'),
-  pmid: DS.attr('string'),
+  @attr('string') doi;
+  @attr('string') title;
+  @attr('string') abstract;
+  @attr('string') volume;
+  @attr('string') issue;
+  @attr('string') pmid;
 
-  journal: DS.belongsTo('journal', { autoSave: true }),
+  @belongsTo('journal', { autoSave: true }) journal;
   // submissions: DS.hasMany('submission', { async: true })
-});
+}

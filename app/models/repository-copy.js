@@ -1,9 +1,10 @@
-import DS from 'ember-data';
+import Model, { attr, belongsTo } from '@ember-data/model';
 
-export default DS.Model.extend({
-  externalIds: DS.attr('set'),
-  accessUrl: DS.attr('string'),
-  copyStatus: DS.attr('string'),
-  publication: DS.belongsTo('publication'),
-  repository: DS.belongsTo('repository'),
-});
+export default class RepositoryCopyModel extends Model {
+  @attr('set') externalIds;
+  @attr('string') accessUrl;
+  @attr('string') copyStatus;
+
+  @belongsTo('publication') publication;
+  @belongsTo('repository') repository;
+}

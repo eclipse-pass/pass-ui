@@ -52,6 +52,7 @@ module('Integration | Component | found-manuscripts', (hooks) => {
   test('Nothing renders when disabled', async function (assert) {
     set(this, 'disabled', true);
     await render(hbs`<FoundManuscripts @disabled={{this.disabled}} />`);
+    await this.pauseTest();
     assert.equal(this.element.childElementCount, 0);
   });
 

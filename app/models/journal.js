@@ -1,20 +1,24 @@
+import Model, { attr, belongsTo } from '@ember-data/model';
 import { computed } from '@ember/object';
-import DS from 'ember-data';
 
-export default DS.Model.extend({
+export default class JournalModel extends Model {
   /**
    * Name of the journal (REQUIRED)
    */
-  journalName: DS.attr('string'),
-  nlmta: DS.attr('string'),
-  pmcParticipation: DS.attr('string'),
-  issns: DS.attr('set'),
-  publisher: DS.belongsTo('publisher'),
+  @attr('string') journalName;
+  @attr('string') nlmta;
+  @attr('string') pmcParticipation;
+  @attr('set') issns;
 
-  isMethodA: computed('pmcParticipation', function () {
+  @belongsTo('publisher') publisher;
+
+  @computed('pmcParticipation')
+  get isMethodA() {
     return this.pmcParticipation ? this.pmcParticipation.toLowerCase() === 'a' : false;
-  }),
-  isMethodB: computed('pmcParticipation', function () {
+  }
+
+  @computed('pmcParticipation')
+  get isMethodB() {
     return this.pmcParticipation ? this.pmcParticipation.toLowerCase() === 'b' : false;
-  })
-});
+  }
+}
