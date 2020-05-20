@@ -9,7 +9,7 @@ export default class SubmissionModel extends Model {
   @attr('date') submittedDate;
   @attr('string', { defaultValue: 'pass' }) source;
   @attr('string') metadata;
-  @attr('boolean', { defaultValue: false }) submittedDate;
+  @attr('boolean', { defaultValue: false }) submitted;
   @attr('string') submissionStatus;
   @attr('string') submitterName;
   @attr('string') submitterEmail;

@@ -25,7 +25,7 @@ export default class SubmissionsRepoidCell extends Component {
       },
       from: 0,
       size: 100
-    }).then(rc => this.set('repoCopies', rc));
+    }).then(rc => set(this, 'repoCopies', rc));
   }
 
   setToolTip() {

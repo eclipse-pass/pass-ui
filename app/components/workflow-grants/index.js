@@ -117,8 +117,8 @@ export default class WorkflowGrants extends Component {
             {
               bool: {
                 should: [
-                  { term: { pi: get(this, 'submission.submitter.id') } },
-                  { term: { coPis: get(this, 'submission.submitter.id') } }
+                  { term: { pi: get(this, 'args.submission.submitter.id') } },
+                  { term: { coPis: get(this, 'args.submission.submitter.id') } }
                 ]
               }
             }

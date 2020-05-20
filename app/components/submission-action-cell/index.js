@@ -1,5 +1,5 @@
 
-import { action, computed } from '@ember/object';
+import { action, get } from '@ember/object';
 import { inject as service } from '@ember/service';
 import Component from '@glimmer/component';
 import swal from 'sweetalert2';
@@ -15,7 +15,7 @@ export default class SubmissionActionCell extends Component {
   }
 
   get isSubmitter() {
-    return this.currentUser.user.id === this.args.record.submitter.id;
+    return get(this, 'currentUser.user.id') === get(this, 'args.record.submitter.id');
   }
 
   get submissionIsDraft() {

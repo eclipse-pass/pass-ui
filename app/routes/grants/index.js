@@ -2,6 +2,7 @@ import { inject as service } from '@ember/service';
 import { A } from '@ember/array';
 import CheckSessionRoute from '../check-session-route';
 import { defer } from 'rsvp';
+import { get } from '@ember/object';
 
 export default class IndexRoute extends CheckSessionRoute {
   @service('current-user')
