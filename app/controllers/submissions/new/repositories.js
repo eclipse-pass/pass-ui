@@ -12,7 +12,7 @@ export default class SubmissionsNewPolicies extends Controller {
   @alias('model.publication') publication;
   @alias('model.submissionEvents') submissionEvents;
 
-  parent = controller('submissions.new');
+  @controller('submissions.new') parent;
 
   @tracked maxStep = this.workflow.maxStep;
   @tracked loadingNext = false;

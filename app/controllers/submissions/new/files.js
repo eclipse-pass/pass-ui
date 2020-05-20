@@ -12,7 +12,7 @@ export default class SubmissionsNewFiles extends Controller {
   @alias('model.publication') publication;
   @alias('model.submissionEvents') submissionEvents;
 
-  parent = controller('submissions.new');
+  @controller('submissions.new') parent;
 
   @tracked loadingNext = false;
   @tracked filesTemp = this.workflow.filesTemp;

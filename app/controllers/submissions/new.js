@@ -5,7 +5,7 @@ import { action, get, set } from '@ember/object';
 import { inject as service } from '@ember/service';
 
 export default class SubmissionsNew extends Controller {
-  queryParams = ['grant', 'submission'];
+  queryParams = ['grant', 'submission', 'covid'];
   @service currentUser;
   @service workflow;
   @service submissionHandler;

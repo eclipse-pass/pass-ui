@@ -14,7 +14,7 @@ export default class SubmissionsNewBasics extends Controller {
   @alias('model.submissionEvents') submissionEvents;
   @alias('model.journal') journal;
 
-  parent = controller('submissions.new');
+  @controller('submissions.new') parent;
 
   // these errors start as false since you don't want to immediately have all fields turn red
   @tracked titleError = false;
