@@ -53,7 +53,7 @@ services:
       - back
 
   static-html:
-    image: oapass/static-html:jhu-20200425-0703fd3@sha256:d2ba409d05b5d585d5f410551186892e4a3098e313771c3d788863a9fe716db2
+    image: oapass/static-html:jhu-20200518-451907e@sha256:a24021810cb6dde848a6641ecacd1f5a6e1094f5e2e91fdd138c75147777522a
     container_name: static-html
     env_file: .env
     ports:
@@ -168,7 +168,7 @@ services:
       - back
 
   downloadservice:
-    image: oapass/download-service:v1.0.1@sha256:d410f3e743e6ae3d5469eb7a6482e357d2c8c65b6c3c37684fe6deb0e23498a0
+    image: oapass/download-service:v1.0.2@sha256:53312fcca42a87668a46b34500f7f0153d65fdc5535df1dace755ad6bb3d90ba
     container_name: downloadservice
     env_file: .env
     ports:
