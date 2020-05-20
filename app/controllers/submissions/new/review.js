@@ -33,7 +33,7 @@ export default class SubmissionsNewReview extends Controller {
   @action
   loadTab(gotoRoute) {
     // add validation, processing
-    this.submission.save().then(() => this.transitionToRoute(gotoRoute));
+    // this.submission.save().then(() => this.transitionToRoute(gotoRoute));
     this.transitionToRoute(gotoRoute);
   }
 
