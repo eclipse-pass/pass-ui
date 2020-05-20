@@ -20,10 +20,9 @@ export default class SubmissionsDetail extends Controller {
   @tracked submitted = get(this, 'model.sub.submitted');
   @tracked repositories = get(this, 'model.sub.repositories');
   @tracked externalRepoMap = {};
-  @tracked currentUser = this.currentUser.user;
 
   get externalSubmission() {
-    if (!submitted) {
+    if (!this.submitted) {
       return [];
     }
     return this.externalSubmissionsMetadata || [];
@@ -77,7 +76,7 @@ export default class SubmissionsDetail extends Controller {
 
   get mustVisitWeblink() {
     const weblinkExists = this.weblinkRepos.length > 0;
-    const isSubmitter = this.currentUser.id === get(this, 'model.sub.submitter.id');
+    const isSubmitter = get(this, 'currentUser.user.id') === get(this, 'model.sub.submitter.id');
     const isProxySubmission = get(this, 'model.sub.isProxySubmission');
     const isSubmitted = this.submitted;
 
@@ -98,9 +97,9 @@ export default class SubmissionsDetail extends Controller {
    */
   get repoMap() {
     let hasStuff = false;
-    const repos = this.model.repos;
-    const deps = this.model.deposits;
-    const repoCopies = this.model.repoCopies;
+    const repos = get(this, 'model.repos');
+    const deps = get(this, 'model.deposits');
+    const repoCopies = get(this, 'model.repoCopies');
     if (!repos) {
       return null;
     }
@@ -115,13 +114,14 @@ export default class SubmissionsDetail extends Controller {
       deps.forEach((deposit) => {
         hasStuff = true;
         const repo = get(deposit, 'repository');
-        if (!map.hasOwnProperty(repo.id)) {
-          map[repo.id] = {
+        const repoId = get(repo, 'id');
+        if (!map.hasOwnProperty(repoId)) {
+          map[repoId] = {
             repo,
             deposit
           };
         } else {
-          map[repo.id] = Object.assign(map[repo.id], {
+          map[repoId] = Object.assign(map[repoId], {
             deposit,
             repositoryCopy: get(deposit, 'repositoryCopy')
           });
@@ -132,13 +132,14 @@ export default class SubmissionsDetail extends Controller {
       hasStuff = true;
       repoCopies.forEach((rc) => {
         const repo = rc.get('repository');
-        if (!map.hasOwnProperty(repo.id)) {
-          map[repo.id] = {
+        const repoId = get(repo, 'id');
+        if (!map.hasOwnProperty(repoId)) {
+          map[repoId] = {
             repo,
             repositoryCopy: rc
           };
         } else {
-          map[repo.id] = Object.assign(map[repo.id], {
+          map[repoId] = Object.assign(map[repoId], {
             repositoryCopy: rc
           });
         }
@@ -155,14 +156,14 @@ export default class SubmissionsDetail extends Controller {
 
   get isSubmitter() {
     return (
-      get(this, 'model.sub.submitter.id') === this.currentUser.id
+      get(this, 'model.sub.submitter.id') === get(this, 'currentUser.user.id')
     );
   }
 
   get isPreparer() {
     return get(this, 'model.sub.preparers')
       .map(x => x.id)
-      .includes(this.currentUser.id);
+      .includes(get(this, 'currentUser.user.id'));
   }
 
   get submissionNeedsPreparer() {
@@ -188,7 +189,7 @@ export default class SubmissionsDetail extends Controller {
     return '';
   }
 
-  displaySubmitterEmail() {
+  get displaySubmitterEmail() {
     if (get(this, 'model.sub.submitter.email')) {
       return get(this, 'model.sub.submitter.email');
     } else if (get(this, 'model.sub.submitterEmail')) {
