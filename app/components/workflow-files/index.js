@@ -48,7 +48,7 @@ export default class WorkflowFiles extends Component {
   handleExternalMs = function*(file) {
     const newFiles = get(this, 'args.newFiles');
 
-    file.set('submission', get(this, 'submission'));
+    file.set('submission', get(this, 'args.submission'));
     if (!get(this, 'hasManuscript')) {
       file.set('fileRole', 'manuscript');
     } else {
