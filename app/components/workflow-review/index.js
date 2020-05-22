@@ -161,9 +161,9 @@ export default class WorkflowReview extends Component {
               return false;
             }));
 
-            $('.block-user-input').css('display', 'block');
-
-            this.args.submit();
+            this.sendAction('submit');
+          } else {
+            $('.block-user-input').css('display', 'none');
           }
         } else {
           // there were repositories, but the user didn't sign any of the agreements
