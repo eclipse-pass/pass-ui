@@ -168,6 +168,14 @@ module('Acceptance | submission', function (hooks) {
 
     await waitFor(document.querySelector('#swal2-title'));
     assert.dom(document.querySelector('#swal2-title')).includesText('Deposit requirements for JScholarship');
+
+    await click(document.querySelector('.swal2-modal').parentElement);
+    assert.dom('#swal2-title').doesNotExist();
+
+    await click('[data-test-workflow-review-submit]');
+
+    await waitFor(document.querySelector('#swal2-title'));
+    assert.dom(document.querySelector('#swal2-title')).includesText('Deposit requirements for JScholarship');
     await click(document.querySelector('#swal2-checkbox'));
     await click(document.querySelector('.swal2-confirm'));
 
