@@ -150,9 +150,9 @@ export default Component.extend({
               return false;
             }));
 
-            $('.block-user-input').css('display', 'block');
-
             this.sendAction('submit');
+          } else {
+            $('.block-user-input').css('display', 'none');
           }
         } else {
           // there were repositories, but the user didn't sign any of the agreements
@@ -166,6 +166,7 @@ export default Component.extend({
             html: `You declined to agree to the deposit agreement(s) for ${JSON.stringify(reposUserDidNotAgreeToDeposit.map(repo => repo.id)).replace(/[\[\]']/g, '')}. Therefore, this submission cannot be submitted.`,
             confirmButtonText: 'Ok',
           });
+          $('.block-user-input').css('display', 'none');
         }
       } else {
         // no repositories associated with the submission
@@ -174,7 +175,11 @@ export default Component.extend({
           html: 'No repositories are associated with this submission. \n Return to the submission and edit it to include a repository.',
           confirmButtonText: 'Ok',
         });
+        $('.block-user-input').css('display', 'none');
       }
+    } else {
+      // User has cancelled out of the popup
+      $('.block-user-input').css('display', 'none');
     }
   }),
 
