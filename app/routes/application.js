@@ -24,7 +24,7 @@ export default CheckSessionRoute.extend({
    * the current history with the encoded version.
    */
   beforeModel(transition) {
-    const intent = transition.intent.url;
+    let intent = transition.intent.url;
 
     if (!intent) {
       return;
@@ -38,6 +38,11 @@ export default CheckSessionRoute.extend({
       prefix = '/submissions/';
     } else {
       return;
+    }
+
+    // Work around ember collapsing // into /
+    if (intent.includes('https:/') && !intent.includes('https://')) {
+      intent = intent.replace('https:/', 'https://');
     }
 
     // Ensure that route parameter is encoded
