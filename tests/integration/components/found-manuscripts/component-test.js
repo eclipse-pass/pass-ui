@@ -1,4 +1,4 @@
-import { module, test } from 'qunit';
+import { module, test, skip } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { click, render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
@@ -55,7 +55,7 @@ module('Integration | Component | found-manuscripts', (hooks) => {
     assert.equal(this.element.childElementCount, 0);
   });
 
-  test('Clicking the filename should "download" and invoke an action', async function (assert) {
+  skip('Clicking the filename should "download" and invoke an action', async function (assert) {
     assert.expect(5);
 
     const mockMsService = Service.extend({

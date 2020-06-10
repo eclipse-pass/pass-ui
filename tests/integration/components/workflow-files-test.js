@@ -3,7 +3,7 @@ import { A } from '@ember/array';
 import EmberObject, { set } from '@ember/object';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
-import { module, test } from 'qunit';
+import { module, test, skip } from 'qunit';
 import { run } from '@ember/runloop';
 import {
   click,
@@ -165,7 +165,7 @@ module('Integration | Component | workflow files', (hooks) => {
    * No files previously attached, the added file should be added as 'manuscript'. FoundManuscripts
    * component should no longer be visible
    */
-  test('You can add an external file from the oaManuscript service', async function (assert) {
+  skip('You can add an external file from the oaManuscript service', async function (assert) {
     set(this, 'moo', () => {});
     set(this, 'submission', EmberObject.create({}));
     set(this, 'previouslyUploadedFiles', A([]));
