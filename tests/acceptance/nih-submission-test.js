@@ -135,25 +135,25 @@ module('Acceptance | submission', function (hooks) {
     // another file. This passes on the first run, but can be flakey locally in subsequent
     // runs.
 
-    // assert.equal(currentURL(), '/submissions/new/files');
-    // const submissionFile = new Blob(['moo'], { type: 'application/pdf' });
-    // submissionFile.name = 'my-submission.pdf';
-    // await triggerEvent(
-    //   'input[type=file]',
-    //   'change',
-    //   { files: [submissionFile] }
-    // );
-    // assert.dom('[data-test-added-manuscript-row]').includesText('my-submission.pdf');
+    assert.equal(currentURL(), '/submissions/new/files');
+    const submissionFile = new Blob(['moo'], { type: 'application/pdf' });
+    submissionFile.name = 'my-submission.pdf';
+    await triggerEvent(
+      'input[type=file]',
+      'change',
+      { files: [submissionFile] }
+    );
+    assert.dom('[data-test-added-manuscript-row]').includesText('my-submission.pdf');
 
     // await click('[data-test-remove-file-button]');
     // await waitFor(document.querySelector('#swal2-title'));
     // assert.dom(document.querySelector('#swal2-title')).includesText('Are you sure?');
     // await click(document.querySelector('.swal2-confirm'));
 
-    await waitFor('[data-test-add-file-link]');
-    await click('[data-test-add-file-link]');
-    await waitFor('[data-test-added-manuscript-row]');
-    assert.dom('[data-test-added-manuscript-row]').includesText('Nanometer-Scale');
+    // await waitFor('[data-test-add-file-link]');
+    // await click('[data-test-add-file-link]');
+    // await waitFor('[data-test-added-manuscript-row]');
+    // assert.dom('[data-test-added-manuscript-row]').includesText('Nanometer-Scale');
 
     await click('[data-test-workflow-files-next]');
 
@@ -162,7 +162,7 @@ module('Acceptance | submission', function (hooks) {
     assert.dom('[data-test-workflow-review-title]').includesText('Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS');
     assert.dom('[data-test-workflow-review-doi]').includesText('10.1039/c7an01256j');
     assert.dom('[data-test-workflow-review-grant-list] li').includesText('Regulation of Synaptic Plasticity in Visual Cortex');
-    assert.dom('[data-test-workflow-review-file-name]').includesText('Nanometer-Scale');
+    assert.dom('[data-test-workflow-review-file-name]').includesText('my-submission.pdf');
 
     await click('[data-test-workflow-review-submit]');
 
