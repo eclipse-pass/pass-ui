@@ -11,28 +11,33 @@
           for inclusion in this submission. If you need help determining the appropriate copy to submit to PASS,
           please <a href="{{assetsUri}}contact.html" target="_blank">contact JHU's Office of Scholarly Communications</a>.
         </p>
-        <p class="text-muted mb-0">
+        {{!-- <p class="text-muted mb-0">
           Click the <i class="fa fa-plus" aria-hidden="true"></i> icon beside a file name
           to add it to your submission.
+        </p> --}}
+        <p class="text-muted mb-0">
+          Click the <i class="fa fa-cloud-download" aria-hidden="true"></i> icon or a file name to view and download a file first.
         </p>
         <p class="text-muted">
-          Click the <i class="fa fa-cloud-download" aria-hidden="true"></i> icon to open the file so you can see it first.
+          After downloading you may use the file upload tool to add a file to your submission.
         </p>
         {{#each this.foundManuscriptsToDisplay as |manuscript index|}}
           <div class="d-flex flex-row {{if (eq index 0) "border-top "}} border-bottom m-auto p-2 align-items-center justify-content-between">
             <div class="d-flex flex-row flex-shrink-1 align-items-center pr-4">
               {{#unless this.addFileTaskInstance.isRunning}}
                 <a
-                  href="javascript:;"
+                  {{!-- href="javascript:;" --}}
+                  href="{{manuscript.url}}" target="_blank"
                   class="p-2 {{if (contains manuscript.url this.manuscriptsWithErrors) 'text-danger'}}"
-                  title="Add this manuscript to your submission"
-                  {{on "click" (fn this.addFile manuscript)}}
+                  title="Download this manuscript"
+                  {{!-- title="Add this manuscript to your submission"
+                  {{on "click" (fn this.addFile manuscript)}} --}}
                   data-test-add-file-link
                 >
                     {{#if (contains manuscript.url this.manuscriptsWithErrors)}}
                       <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
                     {{else}}
-                      <i class="fa fa-lg fa-plus" aria-hidden="true"></i>
+                      {{!-- <i class="fa fa-lg fa-plus" aria-hidden="true"></i> --}}
                     {{/if}}
                     <span class="pl-2">{{manuscript.url}}</span>
                     {{#if manuscript.repositoryLabel}}
