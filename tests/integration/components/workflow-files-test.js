@@ -3,7 +3,8 @@ import { A } from '@ember/array';
 import EmberObject, { set } from '@ember/object';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
-import { module, test } from 'qunit';
+import { module, test, skip } from 'qunit';
+import { run } from '@ember/runloop';
 import {
   click,
   render,
