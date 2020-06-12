@@ -181,7 +181,7 @@ export default Controller.extend({
     }
   ),
 
-  displaySubmitterName: computed('model.sub', function () {
+  displaySubmitterName: computed('model.sub', 'model.sub.submitter.firstName', function () {
     if (this.get('model.sub.submitter.displayName')) {
       return this.get('model.sub.submitter.displayName');
     } else if (this.get('model.sub.submitter.firstName')) {
@@ -192,7 +192,7 @@ export default Controller.extend({
     return '';
   }),
 
-  displaySubmitterEmail: computed('model.sub', function () {
+  displaySubmitterEmail: computed('model.sub', 'model.sub.submitter.email', function () {
     if (this.get('model.sub.submitter.email')) {
       return this.get('model.sub.submitter.email');
     } else if (this.get('model.sub.submitterEmail')) {

@@ -22,7 +22,7 @@ export default Component.extend({
   }),
   inputSubmitterEmail: computed('submission.submitterEmail', {
     get(key) {
-      return this.get('submission.submitterEmail').replace('mailto:', '');
+      return this.get('submission.submitterEmailDisplay');
     },
     set(key, value) {
       this.set('submission.submitterEmail', `mailto:${value}`);
@@ -169,7 +169,7 @@ export default Component.extend({
     },
     updateSubmitterModel(isProxySubmission, submitter) {
       this.get('workflow').setMaxStep(1);
-      this.set('submission.submitterEmail', '');
+      this.set('submission.submitterEmail', null);
       this.set('submission.submitterName', '');
       if (isProxySubmission) {
         this.set('submission.submitter', submitter);
