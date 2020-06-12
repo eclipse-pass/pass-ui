@@ -12,7 +12,9 @@ export default DS.Model.extend({
   submitted: DS.attr('boolean', { defaultValue: false }),
   submissionStatus: DS.attr('string'),
   submitterName: DS.attr('string'),
-  submitterEmail: DS.attr('string'), // format: "mailto:jane@example.com"
+  submitterEmail: DS.attr('string', {
+    defaultValue: null
+  }), // format: "mailto:jane@example.com"
   submitter: DS.belongsTo('user'),
   preparers: DS.hasMany('user'),
   publication: DS.belongsTo('publication'),
