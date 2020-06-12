@@ -1,6 +1,6 @@
 import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
-import { action, get } from '@ember/object';
+import { action, get, computed } from '@ember/object';
 import ENV from 'pass-ember/config/environment';
 import { inject as service } from '@ember/service';
 
@@ -20,6 +20,30 @@ export default class SubmissionsDetail extends Controller {
   @tracked submitted = get(this, 'model.sub.submitted');
   @tracked repositories = get(this, 'model.sub.repositories');
   @tracked externalRepoMap = {};
+
+  @computed('model.sub', 'model.sub.submitter.firstName')
+  get displaySubmitterName() {
+    if (get(this, 'model.sub.submitter.displayName')) {
+      return get(this, 'model.sub.submitter.displayName');
+    } else if (get(this, 'model.sub.submitter.firstName')) {
+      return `${get(this, 'model.sub.submitter.firstName')} ${get(this, 'model.sub.submitter.lastName')}`;
+    } else if (get(this, 'model.sub.submitterName')) {
+      return get(this, 'model.sub.submitterName');
+    }
+
+    return '';
+  }
+
+  @computed('model.sub', 'model.sub.submitter.email')
+  get displaySubmitterEmail() {
+    if (get(this, 'model.sub.submitter.email')) {
+      return get(this, 'model.sub.submitter.email');
+    } else if (get(this, 'model.sub.submitterEmail')) {
+      return get(this, 'model.sub.submitterEmailDisplay');
+    }
+
+    return '';
+  }
 
   get externalSubmission() {
     if (!this.submitted) {
@@ -175,28 +199,6 @@ export default class SubmissionsDetail extends Controller {
       get(this, 'model.sub.submissionStatus') === 'approval-requested' ||
       get(this, 'model.sub.submissionStatus') === 'approval-requested-newuser'
     );
-  }
-
-  get displaySubmitterName() {
-    if (get(this, 'model.sub.submitter.displayName')) {
-      return get(this, 'model.sub.submitter.displayName');
-    } else if (get(this, 'model.sub.submitter.firstName')) {
-      return `${get(this, 'model.sub.submitter.firstName')} ${get(this, 'model.sub.submitter.lastName')}`;
-    } else if (get(this, 'model.sub.submitterName')) {
-      return get(this, 'model.sub.submitterName');
-    }
-
-    return '';
-  }
-
-  get displaySubmitterEmail() {
-    if (get(this, 'model.sub.submitter.email')) {
-      return get(this, 'model.sub.submitter.email');
-    } else if (get(this, 'model.sub.submitterEmail')) {
-      return get(this, 'model.sub.submitterEmailDisplay');
-    }
-
-    return '';
   }
 
   @action

@@ -12,7 +12,9 @@ export default class SubmissionModel extends Model {
   @attr('boolean', { defaultValue: false }) submitted;
   @attr('string') submissionStatus;
   @attr('string') submitterName;
-  @attr('string') submitterEmail;
+  @attr('string', {
+    defaultValue: null
+  }) submitterEmail;
 
   @belongsTo('user') submitter;
   @belongsTo('publication') publication;

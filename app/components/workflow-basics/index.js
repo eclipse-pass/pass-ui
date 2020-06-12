@@ -30,7 +30,7 @@ export default class WorkflowBasics extends Component {
   }
 
   get inputSubmitterEmail() {
-    return get(this, 'submission.submitterEmail').replace('mailto:', '');
+    return get(this, 'submission.submitterEmailDisplay');
   }
 
   set inputSubmitterEmail(value) {
@@ -194,7 +194,7 @@ export default class WorkflowBasics extends Component {
   @action
   updateSubmitterModel(isProxySubmission, submitter) {
     this.workflow.setMaxStep(1);
-    this.submission.submitterEmail = '';
+    this.submission.submitterEmail = null;
     this.submission.submitterName = '';
     if (isProxySubmission) {
       this.submission.submitter = submitter;
