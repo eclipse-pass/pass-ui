@@ -81,6 +81,7 @@ export default class WorkflowReview extends Component {
     }
 
     if (!disableSubmit) {
+      const elements = document.querySelectorAll('.block-user-input');
       elements.forEach((el) => {
         el.style.display = 'none';
       });
@@ -182,6 +183,7 @@ export default class WorkflowReview extends Component {
             html: `You declined to agree to the deposit agreement(s) for ${JSON.stringify(reposUserDidNotAgreeToDeposit.map(repo => repo.id)).replace(/[\[\]']/g, '')}. Therefore, this submission cannot be submitted.`,
             confirmButtonText: 'Ok',
           });
+          const elements = document.querySelectorAll('.block-user-input');
           elements.forEach((el) => {
             el.style.display = 'none';
           });
@@ -193,12 +195,14 @@ export default class WorkflowReview extends Component {
           html: 'No repositories are associated with this submission. \n Return to the submission and edit it to include a repository.',
           confirmButtonText: 'Ok',
         });
+        const elements = document.querySelectorAll('.block-user-input');
         elements.forEach((el) => {
           el.style.display = 'none';
         });
       }
     } else {
       // User has cancelled out of the popup
+      const elements = document.querySelectorAll('.block-user-input');
       elements.forEach((el) => {
         el.style.display = 'none';
       });
