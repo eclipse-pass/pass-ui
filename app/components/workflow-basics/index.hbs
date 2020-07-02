@@ -42,7 +42,7 @@
   <div class="form-inline">
   <Input
     class={{concat "mt-1 mb-3 form-control w-50 " this.submitterEmailClass}}
-    @keyUp={{action @validateSubmitterEmail}}
+    @key-up={{action @validateSubmitterEmail}}
     @disabled={{@submission.submitter.id}}
     @value={{this.inputSubmitterEmail}}
     placeholder="Email address"

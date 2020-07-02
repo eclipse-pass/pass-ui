@@ -284,6 +284,6 @@ export default class WorkflowBasics extends Component {
 
   @action
   cancel() {
-    this.sendAction('abort');
+    this.args.abort();
   }
 }

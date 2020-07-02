@@ -51,7 +51,7 @@ export default class SubmissionsNewBasics extends Controller {
     let emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     let email = get(this, 'submission.submitterEmailDisplay');
 
-    return (!this.submitterId) && (!email || !emailPattern.test(email));
+    return (!get(this, 'submission.submitter.id')) && (!email || !emailPattern.test(email));
   }
 
   @action
@@ -92,7 +92,7 @@ export default class SubmissionsNewBasics extends Controller {
         toastr.warning('You have indicated that you are submitting on behalf of someone, please select the user or enter their name and email address.');
         return;
       }
-      if (!this.submitterId) {
+      if (!get(this, 'submission.submitter.id')) {
         set(this, 'submitterEmailError', this.submitterEmailIsInvalid);
         if (this.submitterEmailIsInvalid) {
           set(this, 'submitterEmailError', true);

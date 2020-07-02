@@ -1,6 +1,6 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
-import { action, computed, get, set } from '@ember/object';
+import { action, get, set } from '@ember/object';
 import { A } from '@ember/array';
 import { inject as service } from '@ember/service';
 import { task } from 'ember-concurrency-decorators';
@@ -81,7 +81,9 @@ export default class WorkflowReview extends Component {
     }
 
     if (!disableSubmit) {
-      $('.block-user-input').css('display', 'none');
+      elements.forEach((el) => {
+        el.style.display = 'none';
+      });
       return;
     }
 
@@ -161,9 +163,12 @@ export default class WorkflowReview extends Component {
               return false;
             }));
 
-            this.sendAction('submit');
+            this.args.submit();
           } else {
-            $('.block-user-input').css('display', 'none');
+            const elements = document.querySelectorAll('.block-user-input');
+            elements.forEach((el) => {
+              el.style.display = 'none';
+            });
           }
         } else {
           // there were repositories, but the user didn't sign any of the agreements
@@ -177,7 +182,9 @@ export default class WorkflowReview extends Component {
             html: `You declined to agree to the deposit agreement(s) for ${JSON.stringify(reposUserDidNotAgreeToDeposit.map(repo => repo.id)).replace(/[\[\]']/g, '')}. Therefore, this submission cannot be submitted.`,
             confirmButtonText: 'Ok',
           });
-          $('.block-user-input').css('display', 'none');
+          elements.forEach((el) => {
+            el.style.display = 'none';
+          });
         }
       } else {
         // no repositories associated with the submission
@@ -186,11 +193,15 @@ export default class WorkflowReview extends Component {
           html: 'No repositories are associated with this submission. \n Return to the submission and edit it to include a repository.',
           confirmButtonText: 'Ok',
         });
-        $('.block-user-input').css('display', 'none');
+        elements.forEach((el) => {
+          el.style.display = 'none';
+        });
       }
     } else {
       // User has cancelled out of the popup
-      $('.block-user-input').css('display', 'none');
+      elements.forEach((el) => {
+        el.style.display = 'none';
+      });
     }
   }
 
