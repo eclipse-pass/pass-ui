@@ -158,7 +158,7 @@
     </div>
   </div>
 </div>
-<button class="btn btn-outline-primary" {{action "back"}}>Back</button>
+<button class="btn btn-outline-primary" {{action "back"}} data-test-workflow-review-back>Back</button>
 <button class="btn btn-outline-danger ml-2" {{action "cancel"}}>Abort</button>
 {{#if @uploading}}
   <button class="btn btn-primary pull-right submit" disabled>{{@waitingMessage}}</button>

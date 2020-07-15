@@ -126,6 +126,11 @@ module('Acceptance | submission', function (hooks) {
 
     await waitFor('input[type=file]');
 
+    await click('[data-test-workflow-files-next]');
+
+    await waitFor(document.querySelector('.toast-message'));
+    assert.dom(document.querySelector('.toast-message')).includesText('At least one manuscript file is required');
+
     // TODO (Jared):
     // Resolve identity map problem that occurs in test when removing and adding
     // another file. This passes on the first run, but can be flakey locally in subsequent

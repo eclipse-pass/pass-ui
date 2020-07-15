@@ -21,7 +21,7 @@ export default class SubmissionsNew extends Controller {
 
   get userIsSubmitter() {
     return (
-      get(this, 'model.newSubmission.submitter.id') === get(this, 'currentUser.user')
+      get(this, 'model.newSubmission.submitter.id') === this.user.id
     );
   }
 

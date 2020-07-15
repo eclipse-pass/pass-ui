@@ -170,7 +170,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
       name: 'Moo Jones',
       ranking: 'invalid-moo'
     };
-    // debugger
+
     assert.notOk(service.validate(get(this, 'mockSchema'), data), 'Validation should fail');
 
     const errors = service.getErrors();

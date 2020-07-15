@@ -227,6 +227,20 @@ module('Acceptance | proxy submission', function (hooks) {
 
     await waitFor('input[type=file]');
 
+    await click('[data-test-workflow-files-next]');
+
+    await waitFor(document.querySelector('#swal2-title'));
+    assert.dom(document.querySelector('#swal2-title')).includesText('No manuscript present');
+    await click(document.querySelector('.swal2-confirm'));
+    assert.dom('#swal2-title').doesNotExist();
+
+    await waitFor('[data-test-workflow-review-submit]');
+    assert.equal(currentURL(), '/submissions/new/review');
+
+    await click('[data-test-workflow-review-back]');
+
+    await waitFor('input[type=file]');
+
     assert.equal(currentURL(), '/submissions/new/files');
     const submissionFile = new Blob(['moo'], { type: 'application/pdf' });
     submissionFile.name = 'my-submission.pdf';
