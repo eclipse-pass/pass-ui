@@ -4,17 +4,20 @@ import { action, get, set } from '@ember/object';
 import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import { A } from '@ember/array';
+import { dropTask } from 'ember-concurrency-decorators';
+import { timeout } from 'ember-concurrency';
+
+const DEBOUNCE_MS = 250;
 
 export default class WorkflowBasics extends Component {
   @service store;
   @service workflow;
   @service currentUser;
-  @service doi;
-  @service metadataService;
+  @service('doi') doiService;
+  @service metadataSchema;
   @service appStaticConfig;
 
   @tracked assetsUri = null;
-  @tracked inFlight = false;
   @tracked doiServiceError = false;
   @tracked isShowingUserSearchModal = false;
 
@@ -82,7 +85,7 @@ export default class WorkflowBasics extends Component {
    * @param {boolean} setPublication DOI lookup should set the Publication object on the submission
    */
   lookupDoiAndJournal(setPublication) {
-    this.lookupDOI(setPublication);
+    this.lookupDOI.perform(setPublication);
     /**
      * If a Journal object exists in the model, then we have loaded an existing Submission
      * with a Publication and a Journal. We need to make sure that this journal makes it
@@ -96,7 +99,7 @@ export default class WorkflowBasics extends Component {
   }
 
   get isValidDOI() {
-    return !this.doiServiceError && this.doi.isValidDOI(get(this, 'publication.doi'));
+    return !this.doiServiceError && this.doiService.isValidDOI(get(this, 'publication.doi'));
   }
 
   get titleClass() {
@@ -157,7 +160,7 @@ export default class WorkflowBasics extends Component {
 
   @action
   toggleUserSearchModal() {
-    this.toggleProperty('isShowingUserSearchModal');
+    this.isShowingUserSearchModal = !this.isShowingUserSearchModal;
   }
 
   @action
@@ -205,65 +208,6 @@ export default class WorkflowBasics extends Component {
     }
   }
 
-  /**
-   * lookupDOI - Set publication, publication journal, and doiInfo based on DOI.
-   *
-   * @param {boolean} setPublication DOI lookup should set the Publication object on the submission
-   */
-  @action
-  async lookupDOI(setPublication) {
-    this.doiServiceError = false;
-    if (this.inFlight) {
-      console.log('%cA request is already in flight, ignoring this call', 'color:blue;');
-      return;
-    }
-
-    const publication = this.publication;
-    if (!publication || !get(publication, 'doi')) {
-      // Note that any metadata now does NOT come from Xref
-      this.clearDoiData();
-      return;
-    }
-
-    const doiService = this.doi;
-    let doi = get(publication, 'doi');
-
-    doi = doiService.formatDOI(doi);
-    if (!doi || doi === '' || doiService.isValidDOI(doi) === false) {
-      this.clearDoiData(doi); // Clear out title/Journal if user enters a valid DOI, then changes it to an invalid DOI
-      return;
-    }
-
-    set(publication, 'doi', doi);
-    this.inFlight = true;
-
-    toastr.info('Please wait while we look up information about your DOI', '', {
-      timeOut: 0,
-      extendedTimeOut: 0
-    });
-
-    doiService.get('resolveDOI').perform(doi).then(async (result) => {
-      if (setPublication) {
-        this.args.updatePublication(result.publication);
-      }
-
-      this.args.updateDoiInfo(result.doiInfo);
-      get(this, 'workflow').setFromCrossref(true);
-
-      toastr.remove();
-      toastr.success('We\'ve pre-populated information from the DOI provided!');
-      this.args.validateTitle();
-      this.args.validateJournal();
-    }).catch((error) => {
-      console.log(`DOI service request failed: ${error.payload.error}`);
-      toastr.remove();
-
-      this.clearDoiData(doi);
-      set(this, 'doiServiceError', error.payload.error);
-    // eslint-disable-next-line newline-per-chained-call
-    }).finally(() => set(this, 'inFlight', false));
-  }
-
   /** Sets the selected journal for the current publication.
    * @param journal {DS.Model} The journal
    */
@@ -273,7 +217,7 @@ export default class WorkflowBasics extends Component {
     // Formats metadata and adds journal metadata
     let metadata = this.doiService.doiToMetadata(doiInfo, journal);
     metadata['journal-title'] = get(journal, 'journalName');
-    doiInfo = this.metadataService.mergeBlobs(doiInfo, metadata);
+    doiInfo = this.metadataSchema.mergeBlobs(doiInfo, metadata);
 
     this.args.updateDoiInfo(doiInfo);
 
@@ -285,5 +229,63 @@ export default class WorkflowBasics extends Component {
   @action
   cancel() {
     this.args.abort();
+  }
+
+  /**
+   * lookupDOI - Set publication, publication journal, and doiInfo based on DOI.
+   *
+   * @param {boolean} setPublication DOI lookup should set the Publication object on the submission
+   */
+  @dropTask
+  lookupDOI = function* (setPublication) {
+    yield timeout(DEBOUNCE_MS);
+
+    try {
+      this.doiServiceError = false;
+
+      const publication = this.publication;
+      if (!publication || !get(publication, 'doi')) {
+        // Note that any metadata now does NOT come from Xref
+        this.clearDoiData();
+        return;
+      }
+
+      const doiService = this.doiService;
+      let doi = get(publication, 'doi');
+
+      doi = doiService.formatDOI(doi);
+      if (!doi || doi === '' || doiService.isValidDOI(doi) === false) {
+        this.clearDoiData(this.publication.doi); // Clear out title/Journal if user enters a valid DOI, then changes it to an invalid DOI
+        return;
+      }
+
+      set(publication, 'doi', doi);
+
+      toastr.info('Please wait while we look up information about your DOI', '', {
+        timeOut: 0,
+        extendedTimeOut: 0
+      });
+
+      const result = yield doiService.get('resolveDOI').perform(doi);
+
+      if (setPublication) {
+        this.args.updatePublication(result.publication);
+      }
+
+      this.args.updateDoiInfo(result.doiInfo);
+      get(this, 'workflow').setFromCrossref(true);
+
+      toastr.remove();
+      toastr.success('We\'ve pre-populated information from the DOI provided!');
+      this.args.validateTitle();
+      this.args.validateJournal();
+    } catch (error) {
+      console.log(`DOI service request failed: ${error.payload.error}`);
+      toastr.remove();
+
+      this.clearDoiData(this.publication.doi);
+      set(this, 'doiServiceError', error.payload.error);
+      // eslint-disable-next-line newline-per-chained-call
+    }
   }
 }

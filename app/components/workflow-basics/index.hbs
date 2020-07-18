@@ -75,11 +75,11 @@
   </p>
 
   <Input
+    id="doi"
     class={{this.doiClass}}
     placeholder="Leave blank if your manuscript or article has not yet been assigned a DOI"
     @value={{@publication.doi}}
-    @input={{action "lookupDOI" true}}
-    @id="doi"
+    {{on "keyup" (perform this.lookupDOI true)}}
     data-test-doi-input={{true}}
   />
   <div class="text-danger">

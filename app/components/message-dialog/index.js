@@ -10,7 +10,7 @@ export default class MessageDialog extends Component {
 
   @action
   toggleModal() {
-    this.toggleProperty('show');
+    this.show = !this.show;
   }
 
   @action
