@@ -3,7 +3,7 @@ import { A } from '@ember/array';
 import EmberObject, { set } from '@ember/object';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
-import { module, test, skip } from 'qunit';
+import { module, test } from 'qunit';
 import { run } from '@ember/runloop';
 import {
   click,
@@ -52,9 +52,6 @@ module('Integration | Component | workflow files', (hooks) => {
         name: 'This is a moo',
         url: 'http://example.com/moo.pdf'
       }]),
-      downloadManuscript: {
-        perform: () => Promise.resolve('Resting-place')
-      }
     }));
 
     // Inline configure mirage to respond to File saves
@@ -164,38 +161,6 @@ module('Integration | Component | workflow files', (hooks) => {
 
     const workflowFiles = this.previouslyUploadedFiles;
     assert.equal(workflowFiles.length, 0, 'Should have 0 files tracked');
-  });
-
-  /**
-   * No files previously attached, the added file should be added as 'manuscript'. FoundManuscripts
-   * component should no longer be visible
-   */
-  skip('You can add an external file from the oaManuscript service', async function (assert) {
-    set(this, 'moo', () => {});
-    set(this, 'submission', EmberObject.create({}));
-    set(this, 'previouslyUploadedFiles', A([]));
-
-    await render(hbs`<WorkflowFiles
-      @submission={{this.submission}}
-      @previouslyUploadedFiles={{this.previouslyUploadedFiles}}
-      @newFiles={{this.newFiles}}
-      @next={{this.moo}}
-      @back={{this.moo}}
-      @abort={{this.moo}}
-    />`);
-
-    assert.dom('[data-test-foundmss-component]').exists();
-
-    assert.dom('[data-test-add-file-link]').exists();
-    assert.dom('[data-test-add-file-link]').includesText('http://example.com/moo.pdf');
-
-    await click('[data-test-add-file-link]');
-    await waitFor('[data-test-added-manuscript-row]');
-
-    assert.dom('[data-test-added-manuscript-row]').includesText('This is a moo');
-    assert.dom('[data-test-added-manuscript-row]').includesText('Manuscript');
-
-    assert.dom('[data-test-foundmss-component]').doesNotExist();
   });
 
   /**
