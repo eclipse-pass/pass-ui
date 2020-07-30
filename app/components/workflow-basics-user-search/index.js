@@ -37,7 +37,7 @@ export default class WorkflowBasicsUserSearch extends Component {
   constructor() {
     super(...arguments);
 
-    if (this.searchInput) {
+    if (this.args.searchInput) {
       this.searchForUsers.perform(1);
     }
   }
@@ -50,7 +50,7 @@ export default class WorkflowBasicsUserSearch extends Component {
     this.currentPage = page;
     const size = this.usersPerPage;
     let info = {};
-    let input = this.searchInput;
+    let input = this.args.searchInput;
     let users = yield this.store.query('user', {
       query: {
         bool: {
