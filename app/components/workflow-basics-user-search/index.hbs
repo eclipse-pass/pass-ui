@@ -1,5 +1,5 @@
 <div style="min-height:300px;" class="p-4">
-  <button style="position:absolute;right:15px;top:15px;border:none;" class="btn btn-outline-primary" {{action @toggleUserSearchModal}}>X</button>
+  <button style="position:absolute;right:15px;top:15px;border:none;" class="btn btn-outline-primary" {{on "click" @toggleUserSearchModal}}>X</button>
   <div class="container">
     <h2>Search Users</h2>
     <p class="text-muted">Search by name or email and click on a user to assign them to the submitter role.</p>
@@ -14,7 +14,7 @@
       <div class="row user-search-results">
         {{#each this.filteredUsers as |user|}}
           <div class="col-6">
-            <a href="#" {{action @pickSubmitter user}}>
+            <a href="#" {{on "click" (fn @pickSubmitter user)}} data-test-found-proxy-user>
               {{user.firstName}} {{user.lastName}} {{#if user.email}}({{user.email}}){{/if}}
             </a>
           </div>

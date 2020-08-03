@@ -12,7 +12,7 @@
       Myself
     </label>
     <label>
-      <input type="radio" checked={{ this.isProxySubmission }} onchange={{action 'proxyStatusToggled' true}} />
+      <input type="radio" checked={{ this.isProxySubmission }} onchange={{action 'proxyStatusToggled' true}} data-test-proxy-radio-button />
       Someone else
     </label>
   </p>
@@ -25,9 +25,9 @@
   </p>
   <p class="mb-0">Please indicate on behalf of whom this submission is being completed:</p>
     <div class="input-group pb-3">
-      <Input @enter={{action "toggleUserSearchModal"}} @value={{this.userSearchTerm}} class="form-control" />
+      <Input @enter={{action "toggleUserSearchModal"}} @value={{this.userSearchTerm}} class="form-control" data-test-proxy-search-input />
       <span class="input-group-btn">
-        <button id='search-for-users' class="btn btn-primary" {{action 'toggleUserSearchModal'}} type="button">Search</button>
+        <button id='search-for-users' class="btn btn-primary" {{action 'toggleUserSearchModal'}} type="button" data-test-proxy-user-search-button>Search</button>
       </span>
     </div>
     {{#if @submission.submitter.id}}
@@ -143,8 +143,8 @@
       @containerClass="user-search-modal"
     >
       <WorkflowBasicsUserSearch
-        @toggleUserSearchModal={{action "toggleUserSearchModal"}}
-        @pickSubmitter={{action "pickSubmitter"}}
+        @toggleUserSearchModal={{this.toggleUserSearchModal}}
+        @pickSubmitter={{this.pickSubmitter}}
         @searchInput={{this.userSearchTerm}}
       />
     </ModalDialog>

@@ -167,7 +167,7 @@ export default class WorkflowBasics extends Component {
   pickSubmitter(submitter) {
     this.changeSubmitter(true, submitter);
     this.toggleUserSearchModal();
-    this.userSearchTerm('');
+    this.userSearchTerm = '';
     this.args.validateSubmitterEmail(); // remove red border if there is one
   }
 

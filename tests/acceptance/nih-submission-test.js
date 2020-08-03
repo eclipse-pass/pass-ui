@@ -12,8 +12,7 @@ import {
   triggerEvent
 } from '@ember/test-helpers';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
-import nihSubmission from '../../mirage/scenarios/nih-submission';
-import { get } from '@ember/object';
+import sharedScenario from '../../mirage/scenarios/shared';
 
 module('Acceptance | submission', function (hooks) {
   setupApplicationTest(hooks);
@@ -62,7 +61,7 @@ module('Acceptance | submission', function (hooks) {
   });
 
   test('can walk through an nih submission workflow and make a submission - base case', async function (assert) {
-    nihSubmission(this.server);
+    sharedScenario(this.server);
 
     await visit('/?userToken=https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95');
     assert.equal(currentURL(), '/?userToken=https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95');
@@ -143,16 +142,6 @@ module('Acceptance | submission', function (hooks) {
       { files: [submissionFile] }
     );
     assert.dom('[data-test-added-manuscript-row]').includesText('my-submission.pdf');
-
-    // await click('[data-test-remove-file-button]');
-    // await waitFor(document.querySelector('#swal2-title'));
-    // assert.dom(document.querySelector('#swal2-title')).includesText('Are you sure?');
-    // await click(document.querySelector('.swal2-confirm'));
-
-    // await waitFor('[data-test-add-file-link]');
-    // await click('[data-test-add-file-link]');
-    // await waitFor('[data-test-added-manuscript-row]');
-    // assert.dom('[data-test-added-manuscript-row]').includesText('Nanometer-Scale');
 
     await click('[data-test-workflow-files-next]');
 
