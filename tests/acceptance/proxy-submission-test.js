@@ -9,7 +9,7 @@ import {
   fillIn,
   waitFor,
   triggerKeyEvent,
-  triggerEvent
+  triggerEvent,
 } from '@ember/test-helpers';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 import sharedScenario from '../../mirage/scenarios/shared';
@@ -113,7 +113,7 @@ module('Acceptance | proxy submission', function (hooks) {
     this.owner.register('service:app-static-config', mockStaticConfig);
   });
 
-  test('can walk through a proxy submission workflow and make a submission', async function (assert) {
+  test('can walk through a proxy submission workflow and make a submission – with pass account', async function (assert) {
     sharedScenario(this.server);
 
     await visit('/?userToken=https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95');
@@ -130,6 +130,26 @@ module('Acceptance | proxy submission', function (hooks) {
     await waitFor(document.querySelector('[data-test-found-proxy-user]'));
     await click(document.querySelector('[data-test-found-proxy-user]'));
 
+    await walkThroughSubmissionFlow(assert, true); // eslint-disable-line no-use-before-define
+  });
+
+  test('can walk through a proxy submission workflow and make a submission – without pass account', async function (assert) {
+    sharedScenario(this.server);
+
+    await visit('/?userToken=https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95');
+    assert.equal(currentURL(), '/?userToken=https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95');
+
+    assert.dom('[data-test-start-new-submission]').exists();
+    await click(find('[data-test-start-new-submission]'));
+
+    await click('[data-test-proxy-radio-button]');
+    await fillIn('[data-test-proxy-submitter-email-input]', 'nopass@account.com');
+    await fillIn('[data-test-proxy-submitter-name-input]', 'John Moo');
+
+    await walkThroughSubmissionFlow(assert, false); // eslint-disable-line no-use-before-define
+  });
+
+  async function walkThroughSubmissionFlow(assert, hasAccount) {
     await waitFor('[data-test-workflow-basics-next]');
     assert.equal(currentURL(), '/submissions/new/basics');
     assert.dom('[data-test-doi-input]').exists();
@@ -156,12 +176,18 @@ module('Acceptance | proxy submission', function (hooks) {
     await waitFor('[data-test-workflow-basics-next]');
     await click('[data-test-workflow-basics-next]');
 
-    await waitFor('[data-test-grants-selection-table] tbody tr td.projectname-date-column');
-    assert.equal(currentURL(), '/submissions/new/grants');
-    assert.dom('[data-test-grants-selection-table] tbody tr td.projectname-date-column').includesText('Regulation of Synaptic Plasticity in Visual Cortex');
-    await click('[data-test-grants-selection-table] tbody tr td.projectname-date-column');
-    await waitFor('[data-test-submission-funding-table] tbody tr td.projectname-date-column');
-    assert.dom('[data-test-submission-funding-table] tbody tr td.projectname-date-column').includesText('Regulation of Synaptic Plasticity in Visual Cortex');
+    if (hasAccount) {
+      await waitFor('[data-test-grants-selection-table] tbody tr td.projectname-date-column');
+      assert.equal(currentURL(), '/submissions/new/grants');
+      assert.dom('[data-test-grants-selection-table] tbody tr td.projectname-date-column').includesText('Regulation of Synaptic Plasticity in Visual Cortex');
+      await click('[data-test-grants-selection-table] tbody tr td.projectname-date-column');
+      await waitFor('[data-test-submission-funding-table] tbody tr td.projectname-date-column');
+      assert.dom('[data-test-submission-funding-table] tbody tr td.projectname-date-column').includesText('Regulation of Synaptic Plasticity in Visual Cortex');
+    } else {
+      await waitFor('[data-test-workflow-grants-next]');
+      assert.dom('[data-test-workflow-grants-no-account-message]').includesText('Because the person you are submitting on behalf of is not yet in our system, PASS does not have information about his/her grant(s) and cannot associate this submission with a grant. Please click Next to continue.');
+      await click('[data-test-workflow-grants-next]');
+    }
 
     await click('[data-test-workflow-grants-next]');
 
@@ -174,7 +200,11 @@ module('Acceptance | proxy submission', function (hooks) {
 
     await waitFor('[data-test-workflow-repositories-next]');
     assert.equal(currentURL(), '/submissions/new/repositories');
-    assert.dom('[data-test-workflow-repositories-required-list] li').includesText('PubMed Central - NATIONAL INSTITUTE OF HEALTH');
+    if (hasAccount) {
+      assert.dom('[data-test-workflow-repositories-required-list] li').includesText('PubMed Central - NATIONAL INSTITUTE OF HEALTH');
+    } else {
+      assert.dom('[data-test-workflow-repositories-required-list] li').includesText('PubMed Central');
+    }
     assert.dom('[data-test-workflow-repositories-optional-list] li').includesText('JScholarship');
     assert.dom('[data-test-workflow-repositories-optional-list] li input:checked').hasValue('on');
 
@@ -206,7 +236,6 @@ module('Acceptance | proxy submission', function (hooks) {
     assert.equal(currentURL(), '/submissions/new/review');
     assert.dom('[data-test-workflow-review-title]').includesText('Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS');
     assert.dom('[data-test-workflow-review-doi]').includesText('10.1039/c7an01256j');
-    assert.dom('[data-test-workflow-review-grant-list] li').includesText('Regulation of Synaptic Plasticity in Visual Cortex');
     assert.dom('[data-test-workflow-review-file-name]').includesText('my-submission.pdf');
     assert.dom('[data-test-workflow-review-submitter]').includesText('This submission is prepared on behalf of');
 
@@ -214,6 +243,7 @@ module('Acceptance | proxy submission', function (hooks) {
 
     await waitFor('[data-test-workflow-thanks-thank-you]');
     assert.dom('[data-test-workflow-thanks-thank-you]').includesText('Thank you!');
-    assert.equal(currentURL(), '/thanks?submission=https%3A%2F%2Fpass.local%2Ffcrepo%2Frest%2Fsubmissions%2F6a%2Fe3%2Fc0%2F91%2F6ae3c091-e87e-4249-a744-72cb93415a95');
-  });
+    assert.ok(currentURL().includes('/thanks'));
+  }
 });
+

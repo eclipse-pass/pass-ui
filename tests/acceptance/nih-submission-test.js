@@ -173,7 +173,7 @@ module('Acceptance | submission', function (hooks) {
 
     await waitFor('[data-test-workflow-thanks-thank-you]');
     assert.dom('[data-test-workflow-thanks-thank-you]').includesText('Thank you!');
-    assert.equal(currentURL(), '/thanks?submission=https%3A%2F%2Fpass.local%2Ffcrepo%2Frest%2Fsubmissions%2F6a%2Fe3%2Fc0%2F91%2F6ae3c091-e87e-4249-a744-72cb93415a95');
+    assert.ok(currentURL().includes('/thanks'));
   });
 
   test('can walk through an nih submission workflow and make a submission - covid case', async function (assert) {
@@ -297,7 +297,7 @@ module('Acceptance | submission', function (hooks) {
 
     await waitFor('[data-test-workflow-thanks-thank-you]');
     assert.dom('[data-test-workflow-thanks-thank-you]').includesText('Thank you!');
-    assert.equal(currentURL(), '/thanks?submission=https%3A%2F%2Fpass.local%2Ffcrepo%2Frest%2Fsubmissions%2F6a%2Fe3%2Fc0%2F91%2F6ae3c091-e87e-4249-a744-72cb93415a95');
+    assert.ok(currentURL().includes('/thanks'));
   });
 });
 

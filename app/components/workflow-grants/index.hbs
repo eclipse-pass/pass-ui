@@ -59,10 +59,10 @@
   {{/if}}
 
 {{else}}
-  <p>Because the person you are submitting on behalf of is not yet in our system, PASS does not have information about his/her grant(s) and cannot associate this submission with a grant. Please click Next to continue.</p>
+  <p data-test-workflow-grants-no-account-message>Because the person you are submitting on behalf of is not yet in our system, PASS does not have information about his/her grant(s) and cannot associate this submission with a grant. Please click Next to continue.</p>
 {{/if}}
 <br>
 <button class="btn btn-outline-primary" {{action @back}}>Back</button>
 <button class="btn btn-outline-danger ml-2" {{action "abortSubmission"}}>Abort</button>
-<button class="btn btn-primary next pull-right" {{action @next}}>Next</button>
+<button class="btn btn-primary next pull-right" {{action @next}} data-test-workflow-grants-next>Next</button>
 {{yield}}
