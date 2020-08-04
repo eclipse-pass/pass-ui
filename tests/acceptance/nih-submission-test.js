@@ -177,7 +177,7 @@ module('Acceptance | submission', function (hooks) {
   });
 
   test('can walk through an nih submission workflow and make a submission - covid case', async function (assert) {
-    nihSubmission(this.server);
+    sharedScenario(this.server);
 
     await visit('/?userToken=https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95&covid=true');
     assert.equal(currentURL(), '/?userToken=https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95&covid=true');
