@@ -20,6 +20,7 @@ export default class SubmissionsDetail extends Controller {
   @tracked submitted = get(this, 'model.sub.submitted');
   @tracked repositories = get(this, 'model.sub.repositories');
   @tracked externalRepoMap = {};
+  @tracked _hasVisitedWeblink = null;
 
   @computed('model.sub', 'model.sub.submitter.firstName')
   get displaySubmitterName() {
@@ -64,7 +65,14 @@ export default class SubmissionsDetail extends Controller {
    * This map is then turned into an array for use in the template
    */
   get hasVisitedWeblink() {
+    if (this._hasVisitedWeblink) {
+      return this._hasVisitedWeblink;
+    }
     return Object.values(this.externalRepoMap).every(val => val === true);
+  }
+
+  set hasVisitedWeblink(value) {
+    this._hasVisitedWeblink = value;
   }
 
   /**
@@ -220,7 +228,7 @@ export default class SubmissionsDetail extends Controller {
     this.externalRepoMap[repo.name] = true;
     const allLinksVisited = Object.values(this.externalRepoMap).every(val => val === true);
     if (allLinksVisited) {
-      this.set('hasVisitedWeblink', true);
+      this.hasVisitedWeblink = true;
     }
     $('#externalSubmission').modal('hide');
 
