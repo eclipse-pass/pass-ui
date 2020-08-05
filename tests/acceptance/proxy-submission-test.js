@@ -56,8 +56,6 @@ module('Acceptance | proxy submission', function (hooks) {
       ]
     }));
 
-    this.server.post('https://pass.local/downloadservice/download', () => 'https://pass.local/fcrepo/rest/files/45/70/f3/40/4570f340-344f-46db-88f1-9cd82f49efc3');
-
     /**
      * Create the user in the database with both top level attrs and
      * attrs inside _source for the adapter to process elastic response

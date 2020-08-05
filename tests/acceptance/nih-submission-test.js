@@ -55,8 +55,6 @@ module('Acceptance | submission', function (hooks) {
       ]
     }));
 
-    this.server.post('https://pass.local/downloadservice/download', () => 'https://pass.local/fcrepo/rest/files/45/70/f3/40/4570f340-344f-46db-88f1-9cd82f49efc3');
-
     this.owner.register('service:app-static-config', mockStaticConfig);
   });
 
