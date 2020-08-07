@@ -151,26 +151,26 @@
             {{/if}}
             <tr>
               <td class="text-nowrap"><strong>Submitter</strong></td>
-              <td>
+              <td data-test-submission-detail-submitter>
                 {{#if (eq this.model.sub.source "other")}}
-                <i>This submission did not originate from PASS</i>
+                  <i>This submission did not originate from PASS</i>
                 {{else if this.displaySubmitterName}}
-                {{this.displaySubmitterName}}
+                  {{this.displaySubmitterName}}
                 {{/if}}
                 {{#if this.displaySubmitterEmail}}
-                &nbsp;(<a href="mailto:{{this.displaySubmitterEmail}}">{{this.displaySubmitterEmail}}</a>)
+                  &nbsp;(<a href="mailto:{{this.displaySubmitterEmail}}">{{this.displaySubmitterEmail}}</a>)
                 {{/if}}
               </td>
             </tr>
             {{#if (await this.model.sub.preparers)}}
             <tr>
               <td class="text-nowrap"><strong>Preparer(s)</strong></td>
-              <td>
+              <td data-test-submission-detail-preparer>
                 {{#each (await this.model.sub.preparers) as |preparer index|}}
-                {{#if index}}, {{/if}} {{get (await preparer) 'displayName'}}
-                {{#if (get (await preparer) 'email')}}
-                &nbsp;(<a href="mailto:{{get (await preparer) 'email'}}">{{get (await preparer) 'email'}}</a>)
-                {{/if}}
+                  {{#if index}}, {{/if}} {{get (await preparer) 'displayName'}}
+                  {{#if (get (await preparer) 'email')}}
+                    &nbsp;(<a href="mailto:{{get (await preparer) 'email'}}">{{get (await preparer) 'email'}}</a>)
+                  {{/if}}
                 {{/each}}
               </td>
             </tr>

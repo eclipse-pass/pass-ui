@@ -1,5 +1,3 @@
 import { Model, hasMany } from 'ember-cli-mirage';
 
-export default Model.extend({
-  funders: hasMany('funder')
-});
+export default Model.extend({});

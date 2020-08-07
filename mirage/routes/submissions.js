@@ -34,10 +34,17 @@ export default function (server) {
   server.patch('https://pass.local/fcrepo/rest/submissions/**', () => new Response(204));
 
   /**
-   * Mock the response from fcrepo for creating a submission event
+   * Mock the response from fcrepo for getting a submission
    */
-  server.post('http://localhost:8080/fcrepo/rest/submissionEvents', () => new Response(201, {
-    Location: 'https://pass.local/fcrepo/rest/submissionEvents/9e/bb/b4/16/9ebbb416-04a1-4c21-9a40-331624ee1e77',
-    'Content-Type': 'text/plain; charset=UTF-8'
-  }));
+  server.get('https://pass.local/fcrepo/rest/submissions/**', (schema, request) => {
+    let submission;
+
+    try {
+      submission = schema.submissions.findBy({ '@id': request.responseURL });
+    } catch (e) {
+      console.log(e);
+    }
+
+    return new Response(200, {}, JSON.stringify(submission));
+  });
 }

@@ -8,8 +8,10 @@ import {
   currentURL,
   fillIn,
   waitFor,
+  waitUntil,
   triggerKeyEvent,
   triggerEvent,
+  setupOnerror
 } from '@ember/test-helpers';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 import sharedScenario from '../../mirage/scenarios/shared';
@@ -117,7 +119,7 @@ module('Acceptance | proxy submission', function (hooks) {
     await visit('/?userToken=https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95');
     assert.equal(currentURL(), '/?userToken=https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95');
 
-    assert.dom('[data-test-start-new-submission]').exists();
+    await waitFor('[data-test-start-new-submission]');
     await click(find('[data-test-start-new-submission]'));
 
     await click('[data-test-proxy-radio-button]');
@@ -129,6 +131,11 @@ module('Acceptance | proxy submission', function (hooks) {
     await click(document.querySelector('[data-test-found-proxy-user]'));
 
     await walkThroughSubmissionFlow(assert, true); // eslint-disable-line no-use-before-define
+
+    assert.dom('[data-test-submission-detail-submitter]').includesText('Staff Hasgrants');
+    assert.dom('[data-test-submission-detail-submitter]').includesText('(staffWithGrants@jhu.edu)');
+    assert.dom('[data-test-submission-detail-preparer]').includesText('Nihu Ser');
+    assert.dom('[data-test-submission-detail-preparer]').includesText('(nihuser@jhu.edu)');
   });
 
   test('can walk through a proxy submission workflow and make a submission – without pass account', async function (assert) {
@@ -137,7 +144,7 @@ module('Acceptance | proxy submission', function (hooks) {
     await visit('/?userToken=https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95');
     assert.equal(currentURL(), '/?userToken=https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95');
 
-    assert.dom('[data-test-start-new-submission]').exists();
+    await waitFor('[data-test-start-new-submission]');
     await click(find('[data-test-start-new-submission]'));
 
     await click('[data-test-proxy-radio-button]');
@@ -145,6 +152,11 @@ module('Acceptance | proxy submission', function (hooks) {
     await fillIn('[data-test-proxy-submitter-name-input]', 'John Moo');
 
     await walkThroughSubmissionFlow(assert, false); // eslint-disable-line no-use-before-define
+
+    assert.dom('[data-test-submission-detail-submitter]').includesText('John Moo');
+    assert.dom('[data-test-submission-detail-submitter]').includesText('(nopass@account.com)');
+    assert.dom('[data-test-submission-detail-preparer]').includesText('Nihu Ser');
+    assert.dom('[data-test-submission-detail-preparer]').includesText('(nihuser@jhu.edu)');
   });
 
   async function walkThroughSubmissionFlow(assert, hasAccount) {
@@ -242,6 +254,14 @@ module('Acceptance | proxy submission', function (hooks) {
     await waitFor('[data-test-workflow-thanks-thank-you]');
     assert.dom('[data-test-workflow-thanks-thank-you]').includesText('Thank you!');
     assert.ok(currentURL().includes('/thanks'));
+
+    await click('[data-test-workflow-thanks-link-to-submissions]');
+    assert.equal(currentURL(), '/submissions');
+
+    await waitFor('[data-test-submissions-index-submissions-table]');
+    await click('table > tbody > tr > td > a');
+    assert.ok(currentURL().includes('/submissions/https:'));
+    assert.dom('[data-test-submission-detail-status]').includesText('approval requested');
   }
 });
 

@@ -7,6 +7,7 @@ import funders from './routes/funders';
 import repositories from './routes/repositories';
 import publications from './routes/publications';
 import submissions from './routes/submissions';
+import submissionEvents from './routes/submission-events';
 import files from './routes/files';
 import schemas from './routes/schemas';
 
@@ -23,8 +24,10 @@ export default function () {
   repositories(this);
   publications(this);
   submissions(this);
+  submissionEvents(this);
   files(this);
   schemas(this);
+
 
   this.passthrough();
   this.passthrough(`${ENV.fedora.base}**`);

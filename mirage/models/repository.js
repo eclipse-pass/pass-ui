@@ -1,6 +1,3 @@
-import { Model, hasMany, belongsTo } from 'ember-cli-mirage';
+import { Model } from 'ember-cli-mirage';
 
-export default Model.extend({
-  policy: belongsTo('policy'),
-  submissions: hasMany('submission')
-});
+export default Model.extend({});

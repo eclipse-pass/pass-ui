@@ -190,7 +190,6 @@ module('Integration | Component | workflow basics', (hooks) => {
 
     assert.ok(this.element);
 
-    // await waitUntil(() => new Promise(resolve => setTimeout(() => { debugger; resolve(); }, 1000)));
     // 2 inputs, 1 textarea
     const inputs = this.element.querySelectorAll('input');
     const title = this.element.querySelector('textarea');

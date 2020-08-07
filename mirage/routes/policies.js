@@ -2,9 +2,11 @@ export default function (server) {
   /**
    * Mock the response from fcrepo for getting a policy
    */
-  server.get('https://pass.local/fcrepo/rest/policies/**/', (schema, request) => {
+  server.get('https://pass.local/fcrepo/rest/policies/**', (schema, request) => {
+    let policy;
+
     let policies = schema.policies.all();
-    let policy = policies.models.find(policy => policy.attrs._source['@id'] === request.url);
+    policy = policies.models.find(policy => policy.attrs._source['@id'] === request.url);
 
     return policy.attrs._source;
   });
