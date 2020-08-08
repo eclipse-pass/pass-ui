@@ -1,0 +1,25 @@
+.text-gray {
+  color: gray;
+}
+
+.line-height-35 {
+  line-height: 35px;
+}
+
+table td {
+  border: 1px dotted silver;
+  word-break: break-all;
+}
+
+.fa-30 {
+  font-size: 30px !important;
+  margin-top: 4px;
+}
+
+.files-table tbody.striped tr:nth-of-type(odd) {
+  background-color: white;
+}
+
+.files-table tbody.striped tr {
+  background: #fdfdfd;
+}

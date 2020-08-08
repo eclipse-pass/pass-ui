@@ -1,15 +1,6 @@
-<style>
-  .fa-exclamation-triangle {
-    font-size: 0.8em;
-  }
-  .fa-circle {
-    color: #f86c6b;
-    font-size: 0.8em;
-  }
-</style>
 {{#if this.isStalled}}
   <div class="text-center">
-    <p><i class="fas fa-circle mr-1"></i> <span class="test">stalled (<a href="#">?</a>)</span></p>
+    <p><i local-class="fa-circle" class="fas fa-circle mr-1"></i> <span class="test">stalled (<a href="#">?</a>)</span></p>
   </div>
 {{else}}
   no issues detected

@@ -1,12 +1,3 @@
-<style>
-  .table-text {
-    display: inline-block;
-    overflow: hidden;
-    white-space: pre-wrap;
-    width: 200px;
-  }
-</style>
-
 {{#each @submission.repositories as |repo| }}
   {{#if (eq repo.name "PubMed Central")}}
     <p class="lead text-muted">
