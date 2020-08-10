@@ -172,6 +172,16 @@ module('Acceptance | submission', function (hooks) {
     await waitFor('[data-test-workflow-thanks-thank-you]');
     assert.dom('[data-test-workflow-thanks-thank-you]').includesText('Thank you!');
     assert.ok(currentURL().includes('/thanks'));
+
+    await click('[data-test-workflow-thanks-link-to-submissions]');
+    assert.equal(currentURL(), '/submissions');
+
+    await waitFor('[data-test-submissions-index-submissions-table]');
+    await click('table > tbody > tr > td > a');
+    assert.ok(currentURL().includes('/submissions/https:'));
+    assert.dom('[data-test-submission-detail-status]').includesText('submitted');
+    assert.dom('[data-test-submission-detail-submitter]').includesText('Nihu Ser');
+    assert.dom('[data-test-submission-detail-submitter]').includesText('(nihuser@jhu.edu)');
   });
 
   test('can walk through an nih submission workflow and make a submission - covid case', async function (assert) {
@@ -296,6 +306,17 @@ module('Acceptance | submission', function (hooks) {
     await waitFor('[data-test-workflow-thanks-thank-you]');
     assert.dom('[data-test-workflow-thanks-thank-you]').includesText('Thank you!');
     assert.ok(currentURL().includes('/thanks'));
+
+    await click('[data-test-workflow-thanks-link-to-submissions]');
+    assert.equal(currentURL(), '/submissions');
+
+    await waitFor('[data-test-submissions-index-submissions-table]');
+    await click('table > tbody > tr > td > a');
+    assert.ok(currentURL().includes('/submissions/https:'));
+    assert.dom('[data-test-submission-detail-status]').includesText('submitted');
+    assert.dom('[data-test-submission-detail-covid]').includesText('This submission was marked as pertaining to COVID-19 research');
+    assert.dom('[data-test-submission-detail-submitter]').includesText('Nihu Ser');
+    assert.dom('[data-test-submission-detail-submitter]').includesText('(nihuser@jhu.edu)');
   });
 });
 
