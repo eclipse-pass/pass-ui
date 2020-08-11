@@ -13,6 +13,7 @@ export default class SubmissionsNewBasics extends Controller {
   @alias('model.preLoadedGrant') preLoadedGrant;
   @alias('model.submissionEvents') submissionEvents;
   @alias('model.journal') journal;
+  @alias('workflow.doiInfo') doiInfo;
 
   @controller('submissions.new') parent;
 
@@ -20,7 +21,6 @@ export default class SubmissionsNewBasics extends Controller {
   @tracked titleError = false;
   @tracked journalError = false;
   @tracked submitterEmailError = false;
-  @tracked doiInfo = get(this, 'workflow.doiInfo');
 
   get flaggedFields() {
     let fields = A();
