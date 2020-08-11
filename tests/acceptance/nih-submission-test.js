@@ -9,8 +9,7 @@ import {
   fillIn,
   waitFor,
   triggerKeyEvent,
-  triggerEvent,
-  setupOnerror
+  triggerEvent
 } from '@ember/test-helpers';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 import sharedScenario from '../../mirage/scenarios/shared';
@@ -471,10 +470,6 @@ module('Acceptance | submission', function (hooks) {
 
 
   test('reset DOI part way through submission', async function (assert) {
-    setupOnerror((error) => {
-      // do nothing, throw, whatever you want
-      console.log(`%c ${error}`, 'color: red;');
-    });
     sharedScenario(this.server);
 
     await visit('/?userToken=https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95');
