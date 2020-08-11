@@ -3,11 +3,13 @@ import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
 import { render } from '@ember/test-helpers';
 
-module('Integration | Component | grant submission cell', (hooks) => {
+module('Integration | Component | submission nav', (hooks) => {
   setupRenderingTest(hooks);
 
   test('it renders', async function (assert) {
-    await render(hbs`<SubmissionNav />`);
+    this.loadTab = () => assert.ok(true);
+
+    await render(hbs`<SubmissionNav @loadTab={{this.loadTab}} />`);
 
     assert.ok(true);
   });
