@@ -72,7 +72,10 @@ export default class WorkflowBasics extends Component {
 
   @action
   setupDoiJournal() {
-    get(this, 'workflow').setFromCrossref(false);
+    // TODO: commenting this out will produce orphaned publications in Fedora
+    // but including it was causing non-deterministic behavior (race condition?) when restarting a submission
+    // there may be a better way to achieve what was previously being done here.
+    // get(this, 'workflow').setFromCrossref(false);
 
     const shouldSet = this.shouldSetPublication();
     this.lookupDoiAndJournal(shouldSet);

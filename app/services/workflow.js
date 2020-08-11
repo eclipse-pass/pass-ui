@@ -4,6 +4,8 @@ import { tracked } from '@glimmer/tracking';
 
 // service to hold workflow form state information that is not part of the model
 export default class Workflow extends Service {
+  dataFromCrossref = false;
+
   @tracked currentStep = 0;
   @tracked maxStep = 1;
   /**
@@ -13,7 +15,6 @@ export default class Workflow extends Service {
   @tracked pmcPublisherDeposit = false;
 
   @tracked doiInfo = {};
-  @tracked dataFromCrossref = false;
 
   @tracked filesTemp = [];
   @tracked defaultRepoLoaded = false; // you only want to load the default setting on first access, after that is should respect he user's choice.

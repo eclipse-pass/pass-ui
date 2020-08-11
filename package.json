@@ -70,7 +70,7 @@
     "ember-composable-helpers": "^2.1.0",
     "ember-data": "3.12.3",
     "ember-export-application-global": "^2.0.1",
-    "ember-fedora-adapter": "0.0.6",
+    "ember-fedora-adapter": "v1.0.0",
     "ember-font-awesome": "^4.0.0-rc.4",
     "ember-load-initializers": "^2.1.1",
     "ember-modal-dialog": "^3.0.1",

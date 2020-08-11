@@ -61,7 +61,15 @@ export default function (server) {
     issns: ['Print:0003-2654', 'Online:1364-5528'],
     journalName: 'The Analyst',
     nlmta: 'Analyst',
-    '@context': 'https://oa-pass.github.io/pass-data-model/src/main/resources/context-3.2.jsonld'
+    '@context': 'https://oa-pass.github.io/pass-data-model/src/main/resources/context-3.2.jsonld',
+    _source: {
+      '@id': 'https://pass.local/fcrepo/rest/journals/f5/62/2a/cf/f5622acf-ca44-40cb-ac3d-4ca76448ded4',
+      '@type': 'Journal',
+      issns: ['Print:0003-2654', 'Online:1364-5528'],
+      journalName: 'The Analyst',
+      nlmta: 'Analyst',
+      '@context': 'https://oa-pass.github.io/pass-data-model/src/main/resources/context-3.2.jsonld'
+    }
   });
 
   server.create('schema', metaDataSchema);

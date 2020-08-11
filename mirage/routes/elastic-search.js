@@ -9,22 +9,34 @@ export default function (server) {
    * Mock the responses from elastic search
    */
   server.post('http://localhost:9200/pass/**', (schema, request) => {
-    let type = JSON.parse(request.requestBody)
-      .query.bool.filter
-      .term['@type']
-      .toLowerCase();
-    type = pluralize(type);
+    let models;
+    let suggest;
+    let elasticResponse = {};
+    let searchSuggest = JSON.parse(request.requestBody).suggest;
 
-    let models = schema[type].all().models.map(model => model.attrs);
+    if (searchSuggest && Object.keys(searchSuggest).firstObject === 'journalName') {
+      suggest = [schema.journals.findBy({ journalName: JSON.parse(request.requestBody).suggest.journalName.prefix })];
+      elasticResponse.suggest = {
+        journalName: [{
+          options: suggest
+        }]
+      };
+    } else {
+      let type = JSON.parse(request.requestBody)
+        .query.bool.filter
+        .term['@type']
+        .toLowerCase();
+      type = pluralize(type);
 
-    var elasticReponse = {
-      hits: {
+      models = schema[type].all().models.map(model => model.attrs);
+
+      elasticResponse.hits = {
         max_score: 1,
         hits: models,
         total: models.length
-      }
-    };
+      };
+    }
 
-    return elasticReponse;
+    return elasticResponse;
   });
 }

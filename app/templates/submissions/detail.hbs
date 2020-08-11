@@ -12,7 +12,12 @@
         Finish submission
       </LinkTo>
     {{else if this.model.sub.isDraft}}
-      <LinkTo @route="submissions.new" @query={{hash submission=this.model.sub.id}} class="btn btn-outline-primary text-right">
+      <LinkTo
+        @route="submissions.new"
+        @query={{hash submission=this.model.sub.id}}
+        class="btn btn-outline-primary text-right"
+        data-test-submission-detail-edit-submission
+      >
         Edit submission
       </LinkTo>
       <button {{action "deleteSubmission" this.model.sub}} class="btn btn-outline-danger text-right">
@@ -55,8 +60,8 @@
               <td>
                 <ul class="list-unstyled">
                   {{#each this.model.sub.grants as |grant|}}
-                  <li><b>{{grant.awardNumber}}</b>: {{grant.projectName}}</li>
-                  <li><b>Funder</b>: {{grant.primaryFunder.name}}</li>
+                  <li data-test-submission-detail-grant><b>{{grant.awardNumber}}</b>: {{grant.projectName}}</li>
+                  <li data-test-submission-detail-funder><b>Funder</b>: {{grant.primaryFunder.name}}</li>
                   {{#if (not-eq grant this.model.sub.grants.lastObject)}}
                   <hr>
                   {{/if}}
