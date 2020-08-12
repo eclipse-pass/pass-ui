@@ -72,5 +72,7 @@ export default function (server) {
     }
   });
 
-  server.create('schema', metaDataSchema);
+  metaDataSchema.forEach((schema) => {
+    server.create('schema', schema);
+  });
 }

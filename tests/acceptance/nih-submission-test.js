@@ -145,6 +145,8 @@ module('Acceptance | submission', function (hooks) {
 
     await waitFor('[data-test-workflow-review-submit]');
     assert.equal(currentURL(), '/submissions/new/review');
+    assert.dom('[data-test-workflow-review-repository-list]').includesText('JScholarship');
+    assert.dom('[data-test-workflow-review-repository-list]').includesText('PubMed Central');
     assert.dom('[data-test-workflow-review-title]').includesText('Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS');
     assert.dom('[data-test-workflow-review-doi]').includesText('10.1039/c7an01256j');
     assert.dom('[data-test-workflow-review-grant-list] li').includesText('Regulation of Synaptic Plasticity in Visual Cortex');
@@ -468,7 +470,6 @@ module('Acceptance | submission', function (hooks) {
     assert.dom('[data-test-submission-detail-submitter]').includesText('(nihuser@jhu.edu)');
   });
 
-
   test('reset DOI part way through submission', async function (assert) {
     sharedScenario(this.server);
 
@@ -553,8 +554,6 @@ module('Acceptance | submission', function (hooks) {
     await waitFor('[data-test-metadata-form] textarea[name=title]');
     assert.equal(currentURL(), '/submissions/new/metadata');
 
-    // await this.pauseTest();
-
     assert.dom('[data-test-metadata-form] textarea[name=title]').hasValue('My article');
     assert.dom('[data-test-metadata-form] input[name=journal-title]').hasValue('The Analyst');
 
@@ -590,7 +589,140 @@ module('Acceptance | submission', function (hooks) {
 
 
     assert.dom('[data-test-workflow-review-title]').includesText('My article');
-    // assert.dom('[data-test-workflow-review-doi]').includesText('');
+    assert.dom('[data-test-workflow-review-grant-list] li').includesText('Regulation of Synaptic Plasticity in Visual Cortex');
+    assert.dom('[data-test-workflow-review-file-name]').includesText('my-submission.pdf');
+
+    await click('[data-test-workflow-review-submit]');
+
+    await waitFor(document.querySelector('#swal2-title'));
+    assert.dom(document.querySelector('#swal2-title')).includesText('Deposit requirements for JScholarship');
+
+    await click(document.querySelector('.swal2-modal').parentElement);
+    assert.dom('#swal2-title').doesNotExist();
+
+    await click('[data-test-workflow-review-submit]');
+
+    await waitFor(document.querySelector('#swal2-title'));
+    assert.dom(document.querySelector('#swal2-title')).includesText('Deposit requirements for JScholarship');
+    await click(document.querySelector('#swal2-checkbox'));
+    await click(document.querySelector('.swal2-confirm'));
+
+    await waitFor(document.querySelector('#swal2-title'));
+    assert.dom(document.querySelector('#swal2-title')).includesText('Confirm submission');
+    await click(document.querySelector('.swal2-confirm'));
+
+    await waitFor('[data-test-workflow-thanks-thank-you]');
+    assert.dom('[data-test-workflow-thanks-thank-you]').includesText('Thank you!');
+    assert.ok(currentURL().includes('/thanks'));
+  });
+
+  test('opt out of PMC policy', async function (assert) {
+    sharedScenario(this.server);
+
+    await visit('/?userToken=https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95');
+    assert.equal(currentURL(), '/?userToken=https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95');
+
+    assert.dom('[data-test-start-new-submission]').exists();
+    await click(find('[data-test-start-new-submission]'));
+
+    await waitFor('[data-test-workflow-basics-next]');
+    assert.equal(currentURL(), '/submissions/new/basics');
+
+    await waitFor('[data-test-doi-input]');
+    await fillIn('[data-test-doi-input]', '');
+    await fillIn('[data-test-article-title-text-area]', 'My article');
+
+    await click('.ember-power-select-trigger');
+    await fillIn('.ember-power-select-search-input', 'The Analyst');
+    await click('.ember-power-select-option');
+
+    await waitFor('[data-test-workflow-basics-next]');
+    await click('[data-test-workflow-basics-next]');
+
+    await waitFor('[data-test-grants-selection-table] tbody tr td.projectname-date-column');
+    assert.equal(currentURL(), '/submissions/new/grants');
+    assert.dom('[data-test-grants-selection-table] tbody tr td.projectname-date-column').includesText('Regulation of Synaptic Plasticity in Visual Cortex');
+    await click('[data-test-grants-selection-table] tbody tr td.projectname-date-column');
+    await waitFor('[data-test-submission-funding-table] tbody tr td.projectname-date-column');
+    assert.dom('[data-test-submission-funding-table] tbody tr td.projectname-date-column').includesText('Regulation of Synaptic Plasticity in Visual Cortex');
+
+    await click('[data-test-workflow-grants-next]');
+
+    await waitFor('[data-test-workflow-policies-next]');
+    assert.equal(currentURL(), '/submissions/new/policies');
+
+    await waitFor('input[type=radio]:checked');
+    assert.dom('[data-test-workflow-policies-radio-no-direct-deposit:checked');
+    await click('[data-test-workflow-policies-radio-direct-deposit]');
+    await waitFor('[data-test-workflow-policies-radio-direct-deposit]');
+    assert.dom('[data-test-workflow-policies-radio-direct-deposit:checked]');
+
+    /**
+    * Mock the response from the policy service for getting repositories
+    */
+    this.server.get('https://pass.local/policyservice/repositories', () => ({
+      required: [],
+      'one-of': [],
+      optional: [
+        {
+          'repository-id': 'https://pass.local/fcrepo/rest/repositories/41/96/0a/92/41960a92-d3f8-4616-86a6-9e9cadc1a269',
+          selected: true
+        }
+      ]
+    }));
+
+    await click('[data-test-workflow-policies-next]');
+
+    await waitFor('[data-test-workflow-repositories-next]');
+
+    assert.equal(currentURL(), '/submissions/new/repositories');
+    assert.dom('[data-test-workflow-repositories-required-list] li').doesNotExist();
+    assert.dom('[data-test-workflow-repositories-optional-list]').doesNotIncludeText('PubMed Central - NATIONAL INSTITUTE OF HEALTH');
+    assert.dom('[data-test-workflow-repositories-optional-list] li').includesText('JScholarship');
+    assert.dom('[data-test-workflow-repositories-optional-list] li input:checked').hasValue('on');
+
+    await click('[data-test-workflow-repositories-next]');
+
+    await waitFor('[data-test-metadata-form] textarea[name=title]');
+    assert.equal(currentURL(), '/submissions/new/metadata');
+
+    assert.dom('[data-test-metadata-form] textarea[name=title]').hasValue('My article');
+    assert.dom('[data-test-metadata-form] input[name=journal-title]').hasValue('The Analyst');
+    assert.dom('[data-test-metadata-form] input[name=journal-NLMTA-ID]').doesNotExist();
+
+    await click('.alpaca-form-button-Next');
+
+    await waitFor(document.querySelector('#swal2-content'));
+    assert.dom(document.querySelector('#swal2-content')).includesText("should have required property 'authors'");
+    await click(document.querySelector('.swal2-confirm'));
+
+    await click(document.querySelectorAll('.alpaca-array-toolbar-action')[1]);
+
+    await waitFor('input[name=authors_0_author]');
+    await fillIn('input[name=authors_0_author]', 'John Moo');
+
+    await click('.alpaca-form-button-Next');
+
+    await waitFor('input[type=file]');
+
+    assert.equal(currentURL(), '/submissions/new/files');
+    const submissionFile = new Blob(['moo'], { type: 'application/pdf' });
+    submissionFile.name = 'my-submission.pdf';
+    await triggerEvent(
+      'input[type=file]',
+      'change',
+      { files: [submissionFile] }
+    );
+    assert.dom('[data-test-added-manuscript-row]').includesText('my-submission.pdf');
+
+    await click('[data-test-workflow-files-next]');
+
+    await waitFor('[data-test-workflow-review-submit]');
+    assert.equal(currentURL(), '/submissions/new/review');
+
+    assert.dom('[data-test-workflow-review-repository-list]').doesNotIncludeText('PubMed Central');
+    assert.dom('[data-test-workflow-review-repository-list]').includesText('JScholarship');
+    assert.dom('[data-test-workflow-review-title]').includesText('My article');
     assert.dom('[data-test-workflow-review-grant-list] li').includesText('Regulation of Synaptic Plasticity in Visual Cortex');
     assert.dom('[data-test-workflow-review-file-name]').includesText('my-submission.pdf');
 
