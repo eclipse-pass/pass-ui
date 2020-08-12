@@ -10,6 +10,7 @@ import submissions from './routes/submissions';
 import submissionEvents from './routes/submission-events';
 import files from './routes/files';
 import schemas from './routes/schemas';
+import grants from './routes/grants';
 
 export default function () {
   this.urlPrefix = ENV.host;
@@ -27,6 +28,7 @@ export default function () {
   submissionEvents(this);
   files(this);
   schemas(this);
+  grants(this);
 
 
   this.passthrough();

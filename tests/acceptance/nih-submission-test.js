@@ -184,6 +184,30 @@ module('Acceptance | submission', function (hooks) {
     assert.dom('[data-test-submission-detail-status]').includesText('submitted');
     assert.dom('[data-test-submission-detail-submitter]').includesText('Nihu Ser');
     assert.dom('[data-test-submission-detail-submitter]').includesText('(nihuser@jhu.edu)');
+
+    await click('[data-test-navbar-grants-link]');
+    await waitFor('td.projectname-column');
+    assert.dom('td.projectname-column').exists({ count: 9 });
+    assert.dom('td.projectname-column').includesText('Regulation of Synaptic Plasticity in Visual Cortex');
+    assert.dom('td.funder-column').includesText('NATIONAL INSTITUTE OF HEALTH');
+    assert.dom('td.awardnum-column').includesText('R01EY012124');
+    assert.dom('td.date-column').includesText('06/29/2022');
+    assert.dom(document.querySelector('tr > td:nth-child(5)')).includesText('1');
+    assert.dom(document.querySelector('tr > td:nth-child(6)')).includesText('active');
+    assert.dom(document.querySelector('tr > td:nth-child(7)')).includesText('no issues detected');
+
+    await click('td.projectname-column a');
+
+    await waitFor('[data-test-grants-detail-name]');
+    assert.dom('[data-test-grants-detail-name]').includesText('Regulation of Synaptic Plasticity in Visual Cortex');
+    assert.dom('[data-test-grants-detail-award-number]').includesText('R01EY012124');
+    assert.dom('[data-test-grants-detail-funder]').includesText('NATIONAL INSTITUTE OF HEALTH');
+    assert.dom(document.querySelector('tr > td:nth-child(1)')).includesText('Quantitative profiling of carbonyl');
+    assert.dom(document.querySelector('tr > td:nth-child(2)')).includesText('R01EY012124');
+    assert.dom(document.querySelector('tr > td:nth-child(3)')).includesText('PubMed Central');
+    assert.equal((new Date(document.querySelector('tr > td:nth-child(4)').innerText)).toLocaleDateString(), (new Date()).toLocaleDateString());
+    assert.dom(document.querySelector('tr > td:nth-child(5)')).includesText('submitted');
+    assert.dom(document.querySelector('tr > td:nth-child(6)')).includesText('Not available');
   });
 
   test('can walk through an nih submission workflow and make a submission - covid case', async function (assert) {

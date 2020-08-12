@@ -12,9 +12,9 @@
 <div id="grant-details-body" class='grant-details'>
   <div class='row'>
     <ul class='col-sm-6'>
-      <li><strong>Project Name:</strong> {{this.grant.projectName}}</li>
-      <li><strong>Award Number:</strong> {{this.grant.awardNumber}}</li>
-      <li><strong>Funder:</strong> {{this.grant.primaryFunder.name}}</li>
+      <li data-test-grants-detail-name><strong>Project Name:</strong> {{this.grant.projectName}}</li>
+      <li data-test-grants-detail-award-number><strong>Award Number:</strong> {{this.grant.awardNumber}}</li>
+      <li data-test-grants-detail-funder><strong>Funder:</strong> {{this.grant.primaryFunder.name}}</li>
       <li><strong>Start:</strong> {{format-date this.grant.startDate }}</li>
       <li><strong>End:</strong> {{format-date this.grant.endDate}}</li>
     </ul>

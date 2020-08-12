@@ -11,6 +11,7 @@ export default function (server) {
     try {
       const submission = _schema.submissions.findBy({ '@id': attrs.submission });
       submission.submissionStatus = attrs.eventType === 'approval-requested-newuser' ? 'approval-requested' : attrs.eventType;
+      submission._source.submissionStatus = attrs.eventType === 'approval-requested-newuser' ? 'approval-requested' : attrs.eventType;
       submission.save();
     } catch (e) {
       console.log(e);
