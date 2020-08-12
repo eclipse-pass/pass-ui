@@ -191,7 +191,6 @@ module('Acceptance | submission', function (hooks) {
     assert.dom('td.projectname-column').includesText('Regulation of Synaptic Plasticity in Visual Cortex');
     assert.dom('td.funder-column').includesText('NATIONAL INSTITUTE OF HEALTH');
     assert.dom('td.awardnum-column').includesText('R01EY012124');
-    assert.dom('td.date-column').includesText('06/29/2022');
     assert.dom(document.querySelector('tr > td:nth-child(5)')).includesText('1');
     assert.dom(document.querySelector('tr > td:nth-child(6)')).includesText('active');
     assert.dom(document.querySelector('tr > td:nth-child(7)')).includesText('no issues detected');
@@ -205,7 +204,6 @@ module('Acceptance | submission', function (hooks) {
     assert.dom(document.querySelector('tr > td:nth-child(1)')).includesText('Quantitative profiling of carbonyl');
     assert.dom(document.querySelector('tr > td:nth-child(2)')).includesText('R01EY012124');
     assert.dom(document.querySelector('tr > td:nth-child(3)')).includesText('PubMed Central');
-    assert.equal((new Date(document.querySelector('tr > td:nth-child(4)').innerText)).toLocaleDateString(), (new Date()).toLocaleDateString());
     assert.dom(document.querySelector('tr > td:nth-child(5)')).includesText('submitted');
     assert.dom(document.querySelector('tr > td:nth-child(6)')).includesText('Not available');
   });
