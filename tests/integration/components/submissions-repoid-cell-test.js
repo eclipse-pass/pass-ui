@@ -23,7 +23,15 @@ module('Integration | Component | submissions repoid cell', (hooks) => {
   });
 
   test('it renders', async function (assert) {
-    await render(hbs`<SubmissionsRepoidCell />`);
+    await render(hbs`
+      <th class='table-header' />
+      <th class='table-header' />
+      <th class='table-header' />
+      <th class='table-header' />
+      <th class='table-header' />
+      <th class='table-header' />
+      <SubmissionsRepoidCell />
+    `);
 
     assert.ok(true);
   });
@@ -44,7 +52,15 @@ module('Integration | Component | submissions repoid cell', (hooks) => {
     });
     this.set('record', record);
 
-    await render(hbs`<SubmissionsRepoidCell />`);
+    await render(hbs`
+      <th class='table-header' />
+      <th class='table-header' />
+      <th class='table-header' />
+      <th class='table-header' />
+      <th class='table-header' />
+      <th class='table-header' />
+      <SubmissionsRepoidCell />
+    `);
     assert.ok(true);
   });
 });
