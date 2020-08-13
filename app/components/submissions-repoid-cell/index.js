@@ -29,8 +29,18 @@ export default class SubmissionsRepoidCell extends Component {
   }
 
   setToolTip() {
-    if (document.querySelector('#manuscriptIdTooltip').length == 0) {
-      (document.querySelector('.table-header:nth-child(6)')).append('<span id="manuscriptIdTooltip" tooltip-position="bottom" tooltip="ID are assigned to manuscript by target repositories."><i class="fas fa-info-circle d-inline"></i></span>');
+    if (!document.querySelector('#manuscriptIdTooltip')) {
+      let th = document.querySelector('.table-header:nth-child(6)');
+      let span = document.createElement('span');
+      let icon = document.createElement('i');
+
+      span.id = 'manuscriptIdTooltip';
+      span.setAttribute('tooltip-position', 'bottom');
+      span.setAttribute('tooltip', 'IDs are assigned to manuscripts by target repositories.');
+      icon.classList.add('fas', 'fa-info-circle', 'd-inline');
+
+      span.appendChild(icon);
+      th.appendChild(span);
     }
   }
 
