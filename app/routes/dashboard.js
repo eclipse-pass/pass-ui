@@ -1,42 +1,45 @@
 import CheckSessionRoute from './check-session-route';
 import ENV from 'pass-ember/config/environment';
 import { inject as service } from '@ember/service';
+import { get } from '@ember/object';
 
-export default CheckSessionRoute.extend({
-  currentUser: service('current-user'),
-  ajax: service('ajax'),
-  headers: { 'Content-Type': 'application/json; charset=utf-8' },
+export default class DashboardRoute extends CheckSessionRoute {
+  @service('current-user') currentUser;
+  @service('ajax') ajax;
+
+  headers = { 'Content-Type': 'application/json; charset=utf-8' };
+
   async model() {
     const query = {
       bool: {
         must: [
           { term: { submissionStatus: 'approval-requested' } },
-          { term: { submitter: this.get('currentUser.user.id') } }
+          { term: { submitter: get(this, 'currentUser.user.id') } }
         ],
         filter: { term: { '@type': 'Submission' } }
       }
     };
-    let approvalResults = await this.get('ajax').post(ENV.fedora.elasticsearch, {
+    let approvalResults = await this.ajax.post(ENV.fedora.elasticsearch, {
       data: {
         size: 500, from: 0, query, _source: { excludes: '*_suggest' }
       },
-      headers: this.get('headers'),
+      headers: this.headers,
       xhrFields: { withCredentials: true }
     });
     const secondQuery = {
       bool: {
         must: [
           { term: { submissionStatus: 'changes-requested' } },
-          { term: { preparers: this.get('currentUser.user.id') } }
+          { term: { preparers: get(this, 'currentUser.user.id') } }
         ],
         filter: { term: { '@type': 'Submission' } }
       },
     };
-    let editsResults = await this.get('ajax').post(ENV.fedora.elasticsearch, {
+    let editsResults = await this.ajax.post(ENV.fedora.elasticsearch, {
       data: {
         size: 500, from: 0, query: secondQuery, _source: { excludes: '*_suggest' }
       },
-      headers: this.get('headers'),
+      headers: this.headers,
       xhrFields: { withCredentials: true }
     });
     const numberAwaitingEdits = editsResults.hits.total;
@@ -47,4 +50,4 @@ export default CheckSessionRoute.extend({
       numberAwaitingEdits
     };
   }
-});
+}

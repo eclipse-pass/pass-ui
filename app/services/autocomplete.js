@@ -11,11 +11,17 @@ import ENV from 'pass-ember/config/environment';
  *
  * TODO do we need to pass authentication headers?
  */
-export default Service.extend({
-  suggestSize: 100,
-  ajax: service(),
-  base: computed(() => ENV.fedora.elasticsearch),
-  es_field_suffix: '_suggest',
+export default class AutocompleteService extends Service {
+  @service('ajax') ajax;
+
+  suggestSize = 100;
+  // eslint-disable-next-line camelcase
+  es_field_suffix = '_suggest';
+
+  @computed()
+  get base() {
+    return ENV.fedora.elasticsearch;
+  }
 
   /**
    * Get suggestions for autocomplete possibilities based on the given
@@ -74,24 +80,24 @@ export default Service.extend({
       data.suggest[fieldName] = this._suggestQueryPart(fieldName, suggestPrefix, context);
     }
 
-    return this.get('ajax').post(this.get('base'), {
+    return this.ajax.post(this.base, {
       data,
       headers: this._headers(),
       xhrFields: { withCredentials: true }
     }).then(res => this._adaptResults(res, type));
-  },
+  }
 
   _suggestQueryPart(fieldName, prefix, context) {
     let esFieldName = fieldName;
-    if (!esFieldName.endsWith(this.get('es_field_suffix'))) {
-      esFieldName += this.get('es_field_suffix');
+    if (!esFieldName.endsWith(this.es_field_suffix)) {
+      esFieldName += this.es_field_suffix;
     }
 
     let query = {
       prefix,
       completion: {
         field: esFieldName,
-        size: this.get('suggestSize')
+        size: this.suggestSize
       }
     };
 
@@ -100,7 +106,7 @@ export default Service.extend({
       return query;
     }
     return query;
-  },
+  }
 
   /**
    * Adapt Elasticsearch results to a flat array.
@@ -122,7 +128,7 @@ export default Service.extend({
       results = results.concat(this._adapt(response.suggest[field][0], type));
     });
     return results;
-  },
+  }
 
   _adapt(results, type) {
     let adapted = [];
@@ -140,12 +146,11 @@ export default Service.extend({
         });
     }
     return adapted;
-  },
+  }
 
   _headers() {
     return {
       'Content-Type': 'application/json; charset=utf-8'
     };
-  },
-
-});
+  }
+}

@@ -1,17 +1,17 @@
-{{#workflow-wrapper
-  submission=submission
-  title=publication.title
-  isProxySubmission=submission.isProxySubmission
-  submissionEvents=submissionEvents
-  loadTab=(action 'loadTab')
-  updateCovidSubmission=(action "updateCovidSubmission")
-}}
-{{workflow-metadata
-  submission=submission
-  publication=publication
-  repositories=repositories
-  next=(action "loadNext")
-  back=(action "loadPrevious")
-  abort=(action "abort")
-}}
-{{/workflow-wrapper}}
+<WorkflowWrapper
+  @submission={{this.submission}}
+  @title={{this.publication.title}}
+  @isProxySubmission={{this.submission.isProxySubmission}}
+  @submissionEvents={{this.submissionEvents}}
+  @loadTab={{this.loadTab}}
+  @updateCovidSubmission={{this.updateCovidSubmission}}
+>
+  <WorkflowMetadata
+    @submission={{this.submission}}
+    @publication={{this.publication}}
+    @repositories={{this.repositories}}
+    @next={{action "loadNext"}}
+    @back={{action "loadPrevious"}}
+    @abort={{action "abort"}}
+  />
+</WorkflowWrapper>

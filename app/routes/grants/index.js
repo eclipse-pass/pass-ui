@@ -1,10 +1,12 @@
+import { inject as service } from '@ember/service';
 import { A } from '@ember/array';
 import CheckSessionRoute from '../check-session-route';
-import { hash, defer } from 'rsvp';
-import { inject as service } from '@ember/service';
+import { defer } from 'rsvp';
+import { get } from '@ember/object';
 
-export default CheckSessionRoute.extend({
-  currentUser: service('current-user'),
+export default class IndexRoute extends CheckSessionRoute {
+  @service('current-user')
+  currentUser;
 
   /**
    * Returns model:
@@ -17,7 +19,7 @@ export default CheckSessionRoute.extend({
    *  ]
    */
   model() {
-    const user = this.get('currentUser.user');
+    const user = get(this, 'currentUser.user');
     if (!user) {
       return;
     }
@@ -48,7 +50,7 @@ export default CheckSessionRoute.extend({
     };
 
     // First search for all Grants associated with the current user
-    this.get('store').query('grant', grantQuery).then((grants) => {
+    this.store.query('grant', grantQuery).then((grants) => {
       let results = [];
       let grantIds = [];
 
@@ -71,7 +73,7 @@ export default CheckSessionRoute.extend({
         },
         size: querySize
       };
-      this.get('store').query('submission', query).then((subs) => {
+      this.store.query('submission', query).then((subs) => {
         subs.forEach((submission) => {
           submission.get('grants').forEach((grant) => {
             let match = results.find(res => res.grant.get('id') === grant.get('id'));
@@ -86,5 +88,5 @@ export default CheckSessionRoute.extend({
     });
 
     return promise.promise;
-  },
-});
+  }
+}

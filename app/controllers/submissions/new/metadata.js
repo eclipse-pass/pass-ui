@@ -1,30 +1,39 @@
 import Controller, { inject as controller } from '@ember/controller';
+import { action } from '@ember/object';
 import { alias } from '@ember/object/computed';
-import { get } from '@ember/object';
 
-export default Controller.extend({
-  submission: alias('model.newSubmission'),
-  repositories: alias('model.repositories'),
-  publication: alias('model.publication'),
-  submissionEvents: alias('model.submissionEvents'),
-  parent: controller('submissions.new'),
+export default class SubmissionsNewMetadata extends Controller {
+  @alias('model.newSubmission') submission;
+  @alias('model.repositories') repositories;
+  @alias('model.publication') publication;
+  @alias('model.submissionEvents') submissionEvents;
 
-  actions: {
-    loadNext() {
-      this.send('loadTab', 'submissions.new.files');
-    },
-    loadPrevious() {
-      this.send('loadTab', 'submissions.new.repositories');
-    },
-    loadTab(gotoRoute) {
-      // add validation, processing
-      this.get('submission').save().then(() => this.transitionToRoute(gotoRoute));
-    },
-    abort() {
-      this.get('parent').send('abort');
-    },
-    updateCovidSubmission() {
-      get(this, 'parent').send('updateCovidSubmission');
-    }
+  @controller('submissions.new') parent;
+
+  @action
+  loadNext() {
+    this.loadTab('submissions.new.files');
   }
-});
+
+  @action
+  loadPrevious() {
+    this.loadTab('submissions.new.repositories');
+  }
+
+  @action
+  async loadTab(gotoRoute) {
+    // add validation, processing
+    await this.submission.save();
+    this.transitionToRoute(gotoRoute);
+  }
+
+  @action
+  abort() {
+    this.parent.abort();
+  }
+
+  @action
+  updateCovidSubmission() {
+    this.parent.updateCovidSubmission();
+  }
+}

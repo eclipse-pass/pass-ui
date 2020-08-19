@@ -1,16 +1,17 @@
+
 import { A, isArray } from '@ember/array';
 import Service, { inject as service } from '@ember/service';
 import ENV from 'pass-ember/config/environment';
-import { task } from 'ember-concurrency';
+import { task } from 'ember-concurrency-decorators';
 import { get } from '@ember/object';
 
 /**
  * Service to manage submissions.
  */
-export default Service.extend({
-  store: service('store'),
-  currentUser: service('current-user'),
-  schemaService: service('metadata-schema'),
+export default class SubmissionHandlerService extends Service {
+  @service store;
+  @service currentUser;
+  @service('metadata-schema') schemaService;
 
   /**
    * Get all repositories associated with grants.
@@ -34,7 +35,7 @@ export default Service.extend({
     });
 
     return result.compact().uniqBy('id');
-  },
+  }
 
   /**
    * _getSubmissionView - Internal method which returns the URL to view a submission.
@@ -46,7 +47,7 @@ export default Service.extend({
     let baseURL = window.location.href.replace(new RegExp(`${ENV.rootURL}.*`), '');
 
     return `${baseURL}${ENV.rootURL}submissions/${encodeURIComponent(`${submission.id}`)}`;
-  },
+  }
 
   /**
    * _finishSubmission - Internal method to finish a submission which has had all
@@ -58,27 +59,28 @@ export default Service.extend({
    * @param  {string} comment    Added to SubmissionEvent
    * @returns {Promise}          Promise resolves to the updated submission.
    */
-  _finishSubmission: task(function* (submission, comment) {
-    let subEvent = yield this.get('store').createRecord('submissionEvent');
+  @task
+  _finishSubmission = function* (submission, comment) {
+    let subEvent = yield get(this, 'store').createRecord('submissionEvent');
 
-    subEvent.set('performedBy', this.get('currentUser.user'));
+    subEvent.set('performedBy', get(this, 'currentUser.user'));
     subEvent.set('comment', comment);
     subEvent.set('performedDate', new Date());
     subEvent.set('submission', submission);
     subEvent.set('link', this._getSubmissionView(submission));
 
     // If the person clicking submit *is* the submitter, actually submit the submission.
-    if (submission.get('submitter.id') === this.get('currentUser.user.id')) {
+    if (submission.get('submitter.id') === get(this, 'currentUser.user.id')) {
       submission.set('submitted', true);
       submission.set('submissionStatus', 'submitted');
       submission.set('submittedDate', new Date());
 
       // Add agreements metadata
-      const agreemd = this.get('schemaService').getAgreementsBlob(submission.get('repositories'));
+      const agreemd = get(this, 'schemaService').getAgreementsBlob(submission.get('repositories'));
 
       if (agreemd) {
         let md = JSON.parse(submission.get('metadata'));
-        this.get('schemaService').mergeBlobs(md, agreemd);
+        get(this, 'schemaService').mergeBlobs(md, agreemd);
         submission.set('metadata', JSON.stringify(md));
       }
 
@@ -101,7 +103,7 @@ export default Service.extend({
     // Save the updated submission, then save the submissionEvent
     yield subEvent.save();
     yield submission.save();
-  }),
+  }
 
   /**
    * _uploadFile - method which adds a file to a submission in the
@@ -157,7 +159,7 @@ export default Service.extend({
 
       reader.readAsArrayBuffer(file.get('_file'));
     });
-  },
+  }
 
   /**
    * submit - Perform or prepares a submission. Persists the publication, associate
@@ -174,7 +176,8 @@ export default Service.extend({
    * @param  {String} comment          Comment added as to SubmissionEvent.
    * @returns {Promise}                Promise to perform the operation.
    */
-  submit: task(function* (submission, publication, files, comment) {
+  @task
+  submit = function* (submission, publication, files, comment) {
     const p = yield publication.save();
 
     submission.set('submitted', false);
@@ -186,7 +189,7 @@ export default Service.extend({
     yield get(this, '_finishSubmission').perform(s, comment).catch((e) => {
       if (!didCancel(e)) { throw e; }
     });
-  }),
+  }
 
   /**
    * approveSubmission - Submitter approves submission. Metadata is added to
@@ -200,17 +203,17 @@ export default Service.extend({
    */
   approveSubmission(submission, comment) {
     // Add agreements metadata
-    const agreemd = this.get('schemaService').getAgreementsBlob(submission.get('repositories'));
+    const agreemd = this.schemaService.getAgreementsBlob(submission.get('repositories'));
 
     if (agreemd) {
       let md = JSON.parse(submission.get('metadata'));
-      this.get('schemaService').mergeBlobs(md, agreemd);
+      this.schemaService.mergeBlobs(md, agreemd);
       submission.set('metadata', JSON.stringify(md));
     }
 
-    let se = this.get('store').createRecord('submissionEvent', {
+    let se = this.store.createRecord('submissionEvent', {
       submission,
-      performedBy: this.get('currentUser.user'),
+      performedBy: get(this, 'currentUser.user'),
       performedDate: new Date(),
       comment,
       performerRole: 'submitter',
@@ -224,7 +227,7 @@ export default Service.extend({
       submission.set('submitted', true);
       return submission.save();
     });
-  },
+  }
 
   /**
    * requestSubmissionChanges - Request that submission be changed before approval
@@ -236,7 +239,7 @@ export default Service.extend({
    * @returns {Promise}          Promise which performs the operation.
    */
   requestSubmissionChanges(submission, comment) {
-    let se = this.get('store').createRecord('submissionEvent', {
+    let se = this.store.createRecord('submissionEvent', {
       submission,
       comment,
       performedBy: submission.get('submitter'),
@@ -250,7 +253,7 @@ export default Service.extend({
       submission.set('submissionStatus', 'changes-requested');
       return submission.save();
     });
-  },
+  }
 
   /**
    * cancelSubmission - Cancel a prepared submission on behalf of submitter.
@@ -262,7 +265,7 @@ export default Service.extend({
    * @returns {Promise}            Promise which performs the operation.
    */
   cancelSubmission(submission, comment) {
-    let se = this.get('store').createRecord('submissionEvent', {
+    let se = this.store.createRecord('submissionEvent', {
       submission,
       comment,
       performedBy: submission.get('submitter'),
@@ -276,17 +279,17 @@ export default Service.extend({
       submission.set('submissionStatus', 'cancelled');
       return submission.save();
     });
-  },
+  }
 
   /**
    * @param {string} submissionId
    * @returns {array} query result set of all files linked to the given submission ID
    */
   _getFiles(submissionId) {
-    return this.get('store').query('file', {
+    return this.store.query('file', {
       term: { submission: submissionId }
     });
-  },
+  }
 
   /**
    * Simply set submission.submissionStatus to 'cancelled'. This operation is
@@ -304,7 +307,7 @@ export default Service.extend({
     return submission.save().then(() => {
       submission.unloadRecord();
     });
-  },
+  }
 
   /**
    * Remove a file from a submission.
@@ -324,4 +327,4 @@ export default Service.extend({
     file.set('submission', undefined);
     return file.save().then(() => file.unloadRecord());
   }
-});
+}

@@ -1,16 +1,20 @@
+import { action, get } from '@ember/object';
+import { inject as service } from '@ember/service';
 import { hash } from 'rsvp';
 import CheckSessionRoute from '../../check-session-route';
-import { inject as service } from '@ember/service';
 
-export default CheckSessionRoute.extend({
-  workflow: service('workflow'),
-  policyService: service('policies'),
+export default class RepositoriesRoute extends CheckSessionRoute {
+  @service('workflow')
+  workflow;
+
+  @service('policies')
+  policyService;
 
   async model() {
     const parentModel = this.modelFor('submissions.new');
     const submission = parentModel.newSubmission;
 
-    const repoPromise = await this.get('policyService.getRepositories').perform(submission);
+    const repoPromise = await get(this, 'policyService.getRepositories').perform(submission);
 
     return hash({
       newSubmission: submission,
@@ -19,11 +23,10 @@ export default CheckSessionRoute.extend({
       optionalRepositories: repoPromise.optional,
       choiceRepositories: repoPromise['one-of']
     });
-  },
-
-  actions: {
-    didTransition() {
-      this.get('workflow').setCurrentStep(4);
-    }
   }
-});
+
+  @action
+  didTransition() {
+    this.workflow.setCurrentStep(4);
+  }
+}

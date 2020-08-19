@@ -1,0 +1,31 @@
+{{#if @record.isStub}}
+  <LinkTo @route="submissions.new" @query={{hash submission=@record.id}} class="btn btn-outline-primary">
+    Finish submission
+  </LinkTo>
+{{else if (and (eq @record.submissionStatus 'changes-requested') this.isSubmitter)}}
+  <span style="min-width: 130px;display: block;"><i>Awaiting changes. No actions available.</i></span>
+{{else if (and (eq @record.submissionStatus 'changes-requested') this.isPreparer)}}
+  <LinkTo @route="submissions.new" @query={{hash submission=@record.id}} class="btn btn-outline-primary">
+    Edit submission
+  </LinkTo>
+{{else if (and (eq @record.submissionStatus 'approval-requested') this.isSubmitter)}}
+  <LinkTo @route="submissions.detail" @model={{@record.id}} class="btn btn-outline-primary">
+    Review submission
+  </LinkTo>
+{{else if (and (eq @record.submissionStatus 'approval-requested') this.isPreparer)}}
+  <span style="min-width: 130px;display: block;"><i>Awaiting approval. No actions available.</i></span>
+{{else if (and (eq @record.submissionStatus 'needs-attention') this.isSubmitter)}}
+  <LinkTo @route="submissions.detail" @model={{@record.id}} class="btn btn-outline-primary">
+    Review submission
+  </LinkTo>
+{{else if this.submissionIsDraft}}
+  <LinkTo @route="submissions.new" @query={{hash submission=@record.id}} class="btn btn-outline-primary w-100 mb-2">
+    Edit
+  </LinkTo>
+  <a class="btn btn-outline-danger text-danger w-100 delete-button" {{action "deleteSubmission" @record}}>
+    Delete
+  </a>
+{{else}}
+  <span style="min-width: 130px;display: block;"><i>No actions available.</i></span>
+{{/if}}
+

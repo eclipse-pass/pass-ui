@@ -1,6 +1,6 @@
 import Service from '@ember/service';
 import { A } from '@ember/array';
-import EmberObject from '@ember/object';
+import EmberObject, { get } from '@ember/object';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
@@ -22,11 +22,15 @@ module('Integration | Component | workflow repositories', (hooks) => {
   });
 
   test('it renders', async (assert) => {
-    await render(hbs`{{workflow-repositories
-      submission=submission
-      requiredRepositories=requiredRepositories
-      optionalRepositories=optionalRepositories
-      choiceRepositories=choiceRepositories}}`);
+    await render(hbs`
+      <WorkflowRepositories
+        @submission={{this.submission}}
+        @requiredRepositories={{this.requiredRepositories}}
+        @optionalRepositories={{this.optionalRepositories}}
+        @choiceRepositories={{this.choiceRepositories}}
+      />
+    `);
+
     assert.ok(true);
   });
 
@@ -37,11 +41,14 @@ module('Integration | Component | workflow repositories', (hooks) => {
       }
     ]));
 
-    await render(hbs`{{workflow-repositories
-      submission=submission
-      requiredRepositories=requiredRepositories
-      optionalRepositories=optionalRepositories
-      choiceRepositories=choiceRepositories}}`);
+    await render(hbs`
+      <WorkflowRepositories
+        @submission={{this.submission}}
+        @requiredRepositories={{this.requiredRepositories}}
+        @optionalRepositories={{this.optionalRepositories}}
+        @choiceRepositories={{this.choiceRepositories}}
+      />
+    `);
 
     assert.ok(this.element.textContent.includes('Moo-pository 1'), 'couldn\'t find repository name');
 
@@ -60,10 +67,14 @@ module('Integration | Component | workflow repositories', (hooks) => {
       { selected: false, repository: EmberObject.create({ name: 'Moo-pository 00' }) }
     ]));
 
-    await render(hbs`{{workflow-repositories
-      submission=submission
-      optionalRepositories=optionalRepositories
-      choiceRepositories=choiceRepositories}}`);
+    await render(hbs`
+      <WorkflowRepositories
+        @submission={{this.submission}}
+        @requiredRepositories={{this.requiredRepositories}}
+        @optionalRepositories={{this.optionalRepositories}}
+        @choiceRepositories={{this.choiceRepositories}}
+      />
+    `);
 
     const text = this.element.textContent;
     assert.ok(text, 'No text found');
@@ -82,9 +93,14 @@ module('Integration | Component | workflow repositories', (hooks) => {
       ])
     ]));
 
-    await render(hbs`{{workflow-repositories
-      submission=submission
-      choiceRepositories=choiceRepositories}}`);
+    await render(hbs`
+      <WorkflowRepositories
+        @submission={{this.submission}}
+        @requiredRepositories={{this.requiredRepositories}}
+        @optionalRepositories={{this.optionalRepositories}}
+        @choiceRepositories={{this.choiceRepositories}}
+      />
+    `);
 
     assert.ok(this.element, 'failed to render');
 
@@ -93,6 +109,7 @@ module('Integration | Component | workflow repositories', (hooks) => {
      * The user should not be able to unselect this repo because it is the
      * only one selected
      */
+
     const checkboxes = this.element.querySelectorAll('input[type="checkbox"]');
     assert.ok(checkboxes[0].checked, 'first checkbox should be checked');
 
@@ -115,13 +132,16 @@ module('Integration | Component | workflow repositories', (hooks) => {
       { selected: false, repository: EmberObject.create({ name: 'Moo-pository 00' }) }
     ]));
 
-    await render(hbs`{{workflow-repositories
-      submission=submission
-      requiredRepositories=requiredRepositories
-      optionalRepositories=optionalRepositories
-      choiceRepositories=choiceRepositories}}`);
+    await render(hbs`
+      <WorkflowRepositories
+        @submission={{this.submission}}
+        @requiredRepositories={{this.requiredRepositories}}
+        @optionalRepositories={{this.optionalRepositories}}
+        @choiceRepositories={{this.choiceRepositories}}
+      />
+    `);
 
-    const repos = this.get('submission.repositories');
+    const repos = get(this, 'submission.repositories');
     assert.equal(repos.length, 2, 'unexpected number of repositories attached to the submission');
     assert.ok(repos.isAny('name', 'Moo-pository XYZ'));
 
@@ -149,13 +169,16 @@ module('Integration | Component | workflow repositories', (hooks) => {
       { repository: EmberObject.create({ name: 'Moo-pository 00', _selected: true }) }
     ]));
 
-    await render(hbs`{{workflow-repositories
-      submission=submission
-      requiredRepositories=requiredRepositories
-      optionalRepositories=optionalRepositories
-      choiceRepositories=choiceRepositories}}`);
+    await render(hbs`
+      <WorkflowRepositories
+        @submission={{this.submission}}
+        @requiredRepositories={{this.requiredRepositories}}
+        @optionalRepositories={{this.optionalRepositories}}
+        @choiceRepositories={{this.choiceRepositories}}
+      />
+    `);
 
-    const repos = this.get('submission.repositories');
+    const repos = get(this, 'submission.repositories');
     assert.equal(repos.length, 3, 'unexpected number of repositories attached to submission');
     assert.notOk(repos.includes(undefined), 'should be no undefined items');
     assert.ok(repos.isAny('name', 'Moo-pository 00'), 'The optional repo should be present');
@@ -203,16 +226,19 @@ module('Integration | Component | workflow repositories', (hooks) => {
       ])
     }));
 
-    await render(hbs`{{workflow-repositories
-      submission=submission
-      requiredRepositories=requiredRepositories
-      optionalRepositories=optionalRepositories
-      choiceRepositories=choiceRepositories}}`);
+    await render(hbs`
+      <WorkflowRepositories
+        @submission={{this.submission}}
+        @requiredRepositories={{this.requiredRepositories}}
+        @optionalRepositories={{this.optionalRepositories}}
+        @choiceRepositories={{this.choiceRepositories}}
+      />
+    `);
 
-    const checkboxes = this.element.querySelectorAll('input[type="checkbox"]');
+    const checkboxes = this.element.querySelectorAll('[data-test-workflow-repositories-optional-list] > li > input[type="checkbox"]');
     assert.equal(checkboxes.length, 3, 'Should be two checkboxes showing');
-    assert.ok(checkboxes[0].checked, 'First checkbox should be checked');
-    assert.notOk(checkboxes[1].checked, 'Second checkbox should NOT be checked');
+    assert.notOk(checkboxes[0].checked, 'First checkbox should NOT be checked');
+    assert.ok(checkboxes[1].checked, 'Second checkbox should be checked');
     assert.ok(checkboxes[2].checked, 'Third checkbox should be selected');
   });
 });

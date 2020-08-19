@@ -1,13 +1,17 @@
+import { inject as service } from '@ember/service';
 import CheckSessionRoute from '../check-session-route';
 import RSVP from 'rsvp';
-import { inject as service } from '@ember/service';
+import { get } from '@ember/object';
 
-export default CheckSessionRoute.extend({
-  currentUser: service('current-user'),
-  searchHelper: service('search-helper'),
+export default class IndexRoute extends CheckSessionRoute {
+  @service('current-user')
+  currentUser;
+
+  @service('search-helper')
+  searchHelper;
 
   async model() {
-    const user = this.get('currentUser.user');
+    const user = get(this, 'currentUser.user');
 
     let submissions = null;
 
@@ -17,15 +21,15 @@ export default CheckSessionRoute.extend({
       submissions = this._doSubmitter(user);
     }
 
-    submissions.then(() => this.get('searchHelper').clearIgnore());
+    submissions.then(() => this.searchHelper.clearIgnore());
 
     return RSVP.hash({
       submissions
     });
-  },
+  }
 
   _doAdmin() {
-    const ignoreList = this.get('searchHelper').getIgnoreList();
+    const ignoreList = this.searchHelper.getIgnoreList();
 
     const query = {
       sort: [{
@@ -48,10 +52,10 @@ export default CheckSessionRoute.extend({
     }
 
     return this.store.query('submission', query);
-  },
+  }
 
   _doSubmitter(user) {
-    const ignoreList = this.get('searchHelper').getIgnoreList();
+    const ignoreList = this.searchHelper.getIgnoreList();
 
     const query = {
       sort: [
@@ -78,5 +82,5 @@ export default CheckSessionRoute.extend({
     }
 
     return this.store.query('submission', query);
-  },
-});
+  }
+}

@@ -1,10 +1,8 @@
 import Service from '@ember/service';
 import ENV from 'pass-ember/config/environment';
-import { task } from 'ember-concurrency-decorators';
 
 export default class OAManuscriptService extends Service {
   lookupUrl = ENV.oaManuscriptService.lookupUrl;
-  downloadUrl = ENV.oaManuscriptService.downloadUrl;
 
   constructor() {
     super(...arguments);
@@ -45,15 +43,6 @@ export default class OAManuscriptService extends Service {
 
     const url = `${this.lookupUrl}?doi=${doi}`;
 
-    // console.log(`%cdownloader service: ${url}`, 'color: blue;');
-    // return Promise.resolve({
-    //   url: 'https://dash.harvard.edu/bitstream/1/12285462/1/Nanometer-Scale%20Thermometry.pdf',
-    //   name: 'Nanometer-Scale Thermometry.pdf',
-    //   type: 'application/pdf',
-    //   source: 'Unpaywall',
-    //   repositoryLabel: 'Harvard University - Digital Access to Scholarship at Harvard (DASH)'
-    // });
-
     return fetch(url, { method: 'GET' })
       .then((resp) => {
         if (resp.status !== 200) {
@@ -64,39 +53,5 @@ export default class OAManuscriptService extends Service {
       })
       .then(data => data.manuscripts)
       .catch(e => console.log(e));
-  }
-
-  /**
-   * Request that the service download the file found at the provided URL and
-   * return the Fedora URI where the downloaded bits can be found.
-   *
-   * @param {array} urls list of URLs of the files to get
-   * @param {string} doi the DOI that these files are associated with
-   * @returns {string} Fedora URL where the file bits can be found
-   */
-  @task
-  * downloadManuscript(url, doi) {
-    console.assert(!!this.downloadUrl, '%cOA Manuscript service download URL not found.', 'color: red;');
-    console.assert(!!url, '%cfile url not provided', 'color: red;');
-    console.assert(!!doi, '%cNo DOI provided to the OA manuscript downloader', 'color: red;');
-
-    if (!this.downloadUrl || !url || !doi) {
-      return;
-    }
-
-    // TODO: just grab the first string for now :(
-    const serviceUrl = `${this.downloadUrl}?doi=${doi}&url=${url}`;
-
-    // console.log(`%cOA Manuscripts Download service ${url}`, 'color: blue;');
-    // return 'https://dash.harvard.edu/bitstream/1/12285462/1/Nanometer-Scale%20Thermometry.pdf';
-
-    const response = yield fetch(serviceUrl, { method: 'POST' });
-    const text = yield response.text();
-
-    if (!response.ok) {
-      throw new Error(text);
-    }
-
-    return text;
   }
 }

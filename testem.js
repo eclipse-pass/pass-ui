@@ -8,6 +8,7 @@ module.exports = {
   ],
   launch_in_dev: [
   ],
+  browser_start_timeout: 120,
   browser_args: {
     Chrome: {
       ci: [

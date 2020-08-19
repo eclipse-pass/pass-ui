@@ -1,6 +1,6 @@
 import { A } from '@ember/array';
 import Service from '@ember/service';
-import EmberObject from '@ember/object';
+import EmberObject, { get } from '@ember/object';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
@@ -39,6 +39,8 @@ module('Integration | Component | workflow basics', (hooks) => {
     this.set('validateJournal', (actual) => { });
     this.set('validateSubmitterEmail', (actual) => { });
     this.set('loadNext', (actual) => {});
+    this.set('updatePublication', publication => this.set('publication', publication));
+    this.set('updateDoiInfo', doiInfo => this.set('doiInfo', doiInfo));
 
     const mockDoiService = Service.extend({
       resolveDOI: task(function* (doi) {
@@ -125,23 +127,28 @@ module('Integration | Component | workflow basics', (hooks) => {
   test('lookupDOI should set doiInfo and publication', async function (assert) {
     this.set('validateTitle', () => assert.ok(true));
 
-    await render(hbs`{{workflow-basics
-      submission=submission
-      publication=publication
-      preLoadedGrant=preLoadedGrant
-      doiInfo=doiInfo
-      flaggedFields=flaggedFields
-      validateTitle=(action validateTitle)
-      validateJournal=(action validateJournal)
-      validateSubmitterEmail=(action validateSubmitterEmail)
-      next=(action loadNext)}}`);
+    await render(hbs`
+      <WorkflowBasics
+        @submission={{this.submission}}
+        @publication={{this.publication}}
+        @preLoadedGrant={{this.preLoadedGrant}}
+        @doiInfo={{this.doiInfo}}
+        @flaggedFields={{this.flaggedFields}}
+        @validateTitle={{action validateTitle}}
+        @validateJournal={{action validateJournal}}
+        @validateSubmitterEmail={{action validateSubmitterEmail}}
+        @updatePublication={{action this.updatePublication}}
+        @updateDoiInfo={{action this.updateDoiInfo}}
+        @next={{action loadNext}}
+      />
+    `);
 
     // Add a DOI to UI
     await fillIn('#doi', '1234/4321');
 
-    assert.equal(this.get('doiInfo').DOI, '10.1039/c7an01256j');
-    assert.equal(this.get('publication.doi'), '1234/4321');
-    assert.equal(this.get('publication.issue'), '1');
+    assert.equal(get(this, 'doiInfo').DOI, '10.1039/c7an01256j');
+    assert.equal(get(this, 'publication.doi'), '1234/4321');
+    assert.equal(get(this, 'publication.issue'), '1');
   });
 
   /**
@@ -157,27 +164,32 @@ module('Integration | Component | workflow basics', (hooks) => {
    * Publication should be displayed in the appropriate elements.
    */
   test('Info is filled in when a submission is provided with a publication and DOI', async function (assert) {
-    const publication = this.get('publication');
-    const submission = this.get('submission');
+    const publication = get(this, 'publication');
+    const submission = get(this, 'submission');
 
     publication.set('title', 'Moo title');
     publication.set('journal', EmberObject.create({ journalName: 'Moo Journal' }));
 
     submission.set('publication', publication);
 
-    await render(hbs`{{workflow-basics
-      submission=submission
-      publication=publication
-      preLoadedGrant=preLoadedGrant
-      doiInfo=doiInfo
-      flaggedFields=flaggedFields
-      validateTitle=(action validateTitle)
-      validateJournal=(action validateJournal)
-      validateSubmitterEmail=(action validateSubmitterEmail)
-      next=(action loadNext)}}`);
+    await render(hbs`
+      <WorkflowBasics
+        @submission={{submission}}
+        @publication={{publication}}
+        @preLoadedGrant={{this.preLoadedGrant}}
+        @doiInfo={{this.doiInfo}}
+        @flaggedFields={{this.flaggedFields}}
+        @validateTitle={{action validateTitle}}
+        @validateJournal={{action validateJournal}}
+        @validateSubmitterEmail={{action validateSubmitterEmail}}
+        @updatePublication={{action this.updatePublication}}
+        @updateDoiInfo={{action this.updateDoiInfo}}
+        @next={{action loadNext}}
+      />
+    `);
+
     assert.ok(this.element);
 
-    // await waitUntil(() => new Promise(resolve => setTimeout(() => { debugger; resolve(); }, 1000)));
     // 2 inputs, 1 textarea
     const inputs = this.element.querySelectorAll('input');
     const title = this.element.querySelector('textarea');
@@ -229,28 +241,34 @@ module('Integration | Component | workflow basics', (hooks) => {
       isValidDOI: () => true
     }));
 
-    await render(hbs`{{workflow-basics
-      submission=submission
-      publication=publication
-      preLoadedGrant=preLoadedGrant
-      doiInfo=doiInfo
-      flaggedFields=flaggedFields
-      validateTitle=(action validateTitle)
-      validateJournal=(action validateJournal)
-      validateSubmitterEmail=(action validateSubmitterEmail)
-      next=(action loadNext)}}`);
+    await render(hbs`
+      <WorkflowBasics
+        @submission={{this.submission}}
+        @publication={{this.publication}}
+        @preLoadedGrant={{this.preLoadedGrant}}
+        @doiInfo={{this.doiInfo}}
+        @flaggedFields={{this.flaggedFields}}
+        @validateTitle={{action validateTitle}}
+        @validateJournal={{action validateJournal}}
+        @validateSubmitterEmail={{action validateSubmitterEmail}}
+        @updatePublication={{action this.updatePublication}}
+        @updateDoiInfo={{action this.updateDoiInfo}}
+        @next={{action loadNext}}
+      />
+    `);
+
     assert.ok(this.element);
 
-    const doiInfo = this.get('doiInfo');
+    const doiInfo = get(this, 'doiInfo');
     assert.ok(doiInfo, 'No doiInfo found');
     assert.equal(doiInfo.title, 'You better use this', 'Unexpected doiInfo.title found');
 
-    const publication = this.get('publication');
+    const publication = get(this, 'publication');
     assert.ok(publication, 'No publication found');
     assert.equal(publication.get('title'), 'Moo title', 'Unexpected publication title found');
     assert.equal(publication.get('journal.journalName'), 'Moo Journal', 'Unexpected journal title found');
 
-    const metadata = this.get('submission.metadata');
+    const metadata = get(this, 'submission.metadata');
     assert.equal(metadata, '{}', 'Metadata should be empty');
   });
 
@@ -309,23 +327,29 @@ module('Integration | Component | workflow basics', (hooks) => {
     this.owner.unregister('service:doi');
     this.owner.register('service:doi', mockDoiService);
 
-    await render(hbs`{{workflow-basics
-      submission=submission
-      publication=publication
-      preLoadedGrant=preLoadedGrant
-      doiInfo=doiInfo
-      flaggedFields=flaggedFields
-      validateTitle=(action validateTitle)
-      validateJournal=(action validateJournal)
-      validateSubmitterEmail=(action validateSubmitterEmail)
-      next=(action loadNext)}}`);
+    await render(hbs`
+      <WorkflowBasics
+        @submission={{this.submission}}
+        @publication={{this.publication}}
+        @preLoadedGrant={{this.preLoadedGrant}}
+        @doiInfo={{this.doiInfo}}
+        @flaggedFields={{this.flaggedFields}}
+        @validateTitle={{action validateTitle}}
+        @validateJournal={{action validateJournal}}
+        @validateSubmitterEmail={{action validateSubmitterEmail}}
+        @updatePublication={{action this.updatePublication}}
+        @updateDoiInfo={{action this.updateDoiInfo}}
+        @next={{action loadNext}}
+      />
+    `);
+
     assert.ok(this.element);
 
     await fillIn('input[id="doi"]', '');
     await triggerKeyEvent('input[id="doi"]', 'keyup', 'Enter');
     await settled();
     assert.notOk(
-      this.get('publication.doi'),
+      get(this, 'publication.doi'),
       'After clearing the DOI input, there should no longer be a doi value on the publication'
     );
 
@@ -344,13 +368,8 @@ module('Integration | Component | workflow basics', (hooks) => {
      * input should change from a normal text input to a PowerSelect when
      * theh DOI goes away
      */
-    const journalSelector = this.element.querySelector('div#journal');
-    assert.ok(journalSelector, 'Couldn\'t find journal selector');
-    assert.notOk(
-      journalSelector.textContent.includes('Moo Journal'),
-      'No journal should be selected now'
-    );
+    assert.dom('[data-test-find-journal]').doesNotExist();
 
-    assert.deepEqual(this.get('doiInfo'), {}, 'doiInfo should be empty');
+    assert.deepEqual(get(this, 'doiInfo'), {}, 'doiInfo should be empty');
   });
 });

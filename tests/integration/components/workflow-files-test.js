@@ -3,13 +3,14 @@ import { A } from '@ember/array';
 import EmberObject, { set } from '@ember/object';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
-import { module, test, skip } from 'qunit';
+import { module, test } from 'qunit';
 import { run } from '@ember/runloop';
 import {
   click,
   render,
   triggerEvent,
-  waitFor
+  waitFor,
+  getContext
 } from '@ember/test-helpers';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 
@@ -51,9 +52,6 @@ module('Integration | Component | workflow files', (hooks) => {
         name: 'This is a moo',
         url: 'http://example.com/moo.pdf'
       }]),
-      downloadManuscript: {
-        perform: () => Promise.resolve('Resting-place')
-      }
     }));
 
     // Inline configure mirage to respond to File saves
@@ -70,7 +68,7 @@ module('Integration | Component | workflow files', (hooks) => {
    * In this case, submission-handler#uploadFiles() should be called once for each
    * mock file
    */
-  test('Files should upload immediately', function (assert) {
+  test('Files should upload immediately', async function (assert) {
     assert.expect(6);
 
     this.owner.register('service:store', Service.extend({
@@ -87,28 +85,29 @@ module('Integration | Component | workflow files', (hooks) => {
       }
     }));
 
-    run(() => {
-      const component = this.owner.lookup('component:workflow-files');
+    let { owner } = getContext();
+    let componentManager = owner.lookup('component-manager:glimmer');
+    let { class: componentClass } = owner.factoryFor('component:workflow-files');
+    let component = componentManager.createComponent(componentClass, { named: {} });
 
-      // Crappily mock this function on the component so we don't have to mess with
-      // the 'document' object...
-      component.set('_getFilesElement', () => {
-        assert.ok(true);
-        return ({
-          files: [
-            {
-              size: 100,
-              name: 'Fake-file-name',
-              type: 'text/plain'
-            }
-          ]
-        });
+    // Crappily mock this function on the component so we don't have to mess with
+    // the 'document' object...
+    set(component, '_getFilesElement', () => {
+      assert.ok(true);
+      return ({
+        files: [
+          {
+            size: 100,
+            name: 'Fake-file-name',
+            type: 'text/plain'
+          }
+        ]
       });
-      component.set('newFiles', A());
-      component.set('submission', EmberObject.create());
-
-      component.send('getFiles');
     });
+    set(component, 'args.newFiles', A());
+    set(component, 'args.submission', EmberObject.create());
+
+    component.getFiles();
   });
 
   /**
@@ -140,12 +139,15 @@ module('Integration | Component | workflow files', (hooks) => {
     // Bogus action so component actions don't complain
     this.set('moo', () => {});
 
-    await render(hbs`{{workflow-files
-      submission=submission
-      previouslyUploadedFiles=previouslyUploadedFiles
-      next=(action moo)
-      back=(action moo)
-      abort=(action moo)}}`);
+    await render(hbs`
+      <WorkflowFiles
+        @submission={{this.submission}}
+        @previouslyUploadedFiles={{this.previouslyUploadedFiles}}
+        @next={{action this.moo}}
+        @back={{action this.moo}}
+        @abort={{action this.moo}}
+      />
+    `);
 
     const btn = this.element.querySelector('button');
     assert.ok(btn);
@@ -157,40 +159,8 @@ module('Integration | Component | workflow files', (hooks) => {
     assert.ok(sweetAlertBtn);
     await click(sweetAlertBtn);
 
-    const workflowFiles = this.get('previouslyUploadedFiles');
+    const workflowFiles = this.previouslyUploadedFiles;
     assert.equal(workflowFiles.length, 0, 'Should have 0 files tracked');
-  });
-
-  /**
-   * No files previously attached, the added file should be added as 'manuscript'. FoundManuscripts
-   * component should no longer be visible
-   */
-  skip('You can add an external file from the oaManuscript service', async function (assert) {
-    set(this, 'moo', () => {});
-    set(this, 'submission', EmberObject.create({}));
-    set(this, 'previouslyUploadedFiles', A([]));
-
-    await render(hbs`<WorkflowFiles
-      @submission={{this.submission}}
-      @previouslyUploadedFiles={{this.previouslyUploadedFiles}}
-      @newFiles={{this.newFiles}}
-      @next={{this.moo}}
-      @back={{this.moo}}
-      @abort={{this.moo}}
-    />`);
-
-    assert.dom('[data-test-foundmss-component]').exists();
-
-    assert.dom('[data-test-add-file-link]').exists();
-    assert.dom('[data-test-add-file-link]').includesText('http://example.com/moo.pdf');
-
-    await click('[data-test-add-file-link]');
-    await waitFor('[data-test-added-manuscript-row]');
-
-    assert.dom('[data-test-added-manuscript-row]').includesText('This is a moo');
-    assert.dom('[data-test-added-manuscript-row]').includesText('Manuscript');
-
-    assert.dom('[data-test-foundmss-component]').doesNotExist();
   });
 
   /**

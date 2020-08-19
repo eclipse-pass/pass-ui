@@ -1,4 +1,3 @@
-
 // @import "ember-cli-bootstrap-4/bootstrap";
 @import "ember-modal-dialog/ember-modal-structure";
 @import "ember-modal-dialog/ember-modal-appearance";
@@ -32,6 +31,21 @@ $transition-duration: 0.3s;
   margin-bottom: 0;
 }
 
+.error-text {
+  font-size: 2em !important;
+  margin-bottom: 0;
+  height: auto;
+}
+.helpful-text {
+  font-size: 1.3em !important;
+}
+.error-icon {
+  width:120px;
+  float:left;
+  margin-top:50px;
+  margin-right:20px;
+}
+
 .info-banner {
   background-color: #F1C400;
   color: black;
@@ -49,7 +63,6 @@ $transition-duration: 0.3s;
   border-color: #FF9E1B;
   border-radius: 0;
   height: 35px;
-  overflow: auto;
   a {
     padding-left: 0.25rem;
     font-style: italic;

@@ -1,7 +1,6 @@
-import EmberObject from '@ember/object';
+import EmberObject, { get } from '@ember/object';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import { run } from '@ember/runloop';
 
 module('Unit | Service | doi', (hooks) => {
   setupTest(hooks);
@@ -64,7 +63,7 @@ module('Unit | Service | doi', (hooks) => {
   // Test DOI object here based on CrossRef data
   test('check doi data processing', function (assert) {
     const service = this.owner.lookup('service:doi');
-    const doiInfo = this.get('mockDoiInfo');
+    const doiInfo = get(this, 'mockDoiInfo');
     const journal = EmberObject.create({
       issns: ['odd', 'Print:moo', 'Online:chitter', 'malformed:', ':oddagain', ':'],
     });
@@ -121,7 +120,7 @@ module('Unit | Service | doi', (hooks) => {
   });
 
   test('make sure we only get valid fields back', function (assert) {
-    let doiInfo = this.get('mockDoiInfo');
+    let doiInfo = get(this, 'mockDoiInfo');
     doiInfo.invalid = 'Bad moo';
     const journal = EmberObject.create({
       issns: ['Print:moo'],
@@ -132,7 +131,7 @@ module('Unit | Service | doi', (hooks) => {
   });
 
   test('should stringify array values', function (assert) {
-    const doiInfo = this.get('mockDoiInfo2');
+    const doiInfo = get(this, 'mockDoiInfo2');
 
     const result = this.owner.lookup('service:doi')._processRawDoi(doiInfo);
     assert.ok(result);
@@ -144,7 +143,7 @@ module('Unit | Service | doi', (hooks) => {
 
   test('resolve DOI', function (assert) {
     const service = this.owner.lookup('service:doi');
-    const doiInfo = this.get('mockDoiInfo2');
+    const doiInfo = get(this, 'mockDoiInfo2');
     const journalId = 'blah';
 
     service.set('ajax', EmberObject.create({
@@ -193,7 +192,7 @@ module('Unit | Service | doi', (hooks) => {
     const journal = EmberObject.create({
       nlmta: 'NLmooTA'
     });
-    const doiInfo = this.get('mockDoiInfo');
+    const doiInfo = get(this, 'mockDoiInfo');
     const service = this.owner.lookup('service:doi');
 
     const result = service.doiToMetadata(doiInfo, journal);

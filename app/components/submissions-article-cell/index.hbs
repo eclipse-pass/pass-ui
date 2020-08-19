@@ -1,0 +1,5 @@
+{{#if (get @record 'publication')}}
+  <LinkTo @route="submissions.detail" @model={{@record.id}} class="moo">
+    {{get @record 'publication.title'}}
+  </LinkTo>
+{{/if}}

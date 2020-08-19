@@ -7,14 +7,16 @@ import fetch from 'fetch';
 /**
  * Service that can get policies and associated repositories for a submission
  */
-export default Service.extend({
-  policyUrl: '',
-  repoUrl: '',
 
-  store: service('store'),
+export default class PoliciesService extends Service {
+  policyUrl = '';
+  repoUrl = '';
 
-  init() {
-    this._super(...arguments);
+  @service('store')
+  store;
+
+  constructor() {
+    super(...arguments);
 
     // this.set('base', ENV.policyService.url);
     const policyConf = ENV.policyService;
@@ -34,7 +36,7 @@ export default Service.extend({
       repoUrl = `${policyConf.url}${policyConf.repoSuffix}`;
     }
     this.set('repoUrl', repoUrl);
-  },
+  }
 
   /**
    * Get a list of applicable policies for a given submission.
@@ -48,8 +50,8 @@ export default Service.extend({
    *    {Policy}, ...
    * ]
    */
-  getPolicies: task(function* (submission) {
-    const url = `${this.get('policyUrl')}?submission=${submission.get('id')}`;
+  @task(function* (submission) {
+    const url = `${get(this, 'policyUrl')}?submission=${submission.get('id')}`;
 
     const result = yield fetch(url, {
       method: 'GET',
@@ -70,12 +72,13 @@ export default Service.extend({
      */
     const data = yield result.json();
 
-    return yield all(data.map(policyInfo => this.get('store').findRecord('policy', policyInfo.id)
+    return yield all(data.map(policyInfo => get(this, 'store').findRecord('policy', policyInfo.id)
       .then((pol) => {
         pol.set('_type', policyInfo.type);
         return pol;
       })));
-  }),
+  })
+  getPolicies;
 
   /**
    * Get a set of repositories based on effective policies applied to the submission.
@@ -97,8 +100,8 @@ export default Service.extend({
    *    'optional': []
    * }
    */
-  getRepositories: task(function* (submission) {
-    const url = `${this.get('repoUrl')}?submission=${submission.get('id')}`;
+  @task(function* (submission) {
+    const url = `${get(this, 'repoUrl')}?submission=${submission.get('id')}`;
 
     const response = yield fetch(url, {
       method: 'GET',
@@ -136,7 +139,8 @@ export default Service.extend({
     }
 
     return yield hash(result);
-  }),
+  })
+  getRepositories;
 
   /**
    * Transform a list of repository information objects to Repository model objects
@@ -147,12 +151,12 @@ export default Service.extend({
    * }
    * @returns {array} list of Promises of Repository objects
    */
-  _resolveRepos: task(function* (repos) {
-    return yield all(repos.map(repoInfo => this.get('store').findRecord('repository', repoInfo['repository-id'])
+  @task(function* (repos) {
+    return yield all(repos.map(repoInfo => get(this, 'store').findRecord('repository', repoInfo['repository-id'])
       .then((repo) => {
         repo.set('_selected', repoInfo.selected);
         return repo;
       })));
   })
-
-});
+  _resolveRepos;
+}

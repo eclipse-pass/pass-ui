@@ -1,17 +1,19 @@
 import Controller from '@ember/controller';
+import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 
-export default Controller.extend({
-  queryParams: ['submission'],
-  submission: null,
+export default class ThanksController extends Controller {
+  queryParams = ['submission'];
 
-  configurator: service('app-static-config'),
+  @service('app-static-config')
+  configurator;
 
-  assetsUri: null,
+  @tracked submission = null;
+  @tracked assetsUri = null;
 
-  init() {
-    this._super(...arguments);
-    this.get('configurator').getStaticConfig()
+  constructor() {
+    super(...arguments);
+    this.configurator.getStaticConfig()
       .then(config => this.set('assetsUri', config.assetsUri));
   }
-});
+}

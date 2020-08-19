@@ -2,19 +2,23 @@ import Service, { inject as service } from '@ember/service';
 import ENV from 'pass-ember/config/environment';
 import Ajv from 'ajv'; // https://github.com/epoberezkin/ajv
 import _ from 'lodash';
+import { get } from '@ember/object';
 
 /**
  * Service to manipulate Alpaca schemas
  */
-export default Service.extend({
-  ajax: service('ajax'),
-  schemaService: ENV.schemaService,
+
+export default class MetadataSchemaService extends Service {
+  @service('ajax')
+  ajax;
+
+  schemaService = ENV.schemaService;
 
   // JSON schema validator
-  validator: undefined,
+  validator = undefined;
 
-  init() {
-    this._super(...arguments);
+  constructor() {
+    super(...arguments);
     /**
      * We can adjust logging for the JSON schema validator here.
      *
@@ -33,7 +37,7 @@ export default Service.extend({
       logger: false,
       addUsedSchema: false
     }));
-  },
+  }
 
   /**
    * First try to get a single merged schema that combines all repository schema.
@@ -51,7 +55,7 @@ export default Service.extend({
       // If we've gotten repository objects, map them to their IDs
       repositories = repositories.map(repo => repo.get('id'));
     }
-    const url = this.get('schemaService.url');
+    const url = get(this, 'schemaService.url');
     const urlWithMerge = `${url}?merge=true`;
 
     const options = {
@@ -64,7 +68,7 @@ export default Service.extend({
     };
 
     // TODO: would be nice if this used Fetch API, but current tests are written for AJAX
-    return this.get('ajax')
+    return this.ajax
       .request(urlWithMerge, options)
       .catch((response, jqXHR, payload) => {
         /**
@@ -78,9 +82,9 @@ export default Service.extend({
           throw new Error(msg);
         }
 
-        return this.get('ajax').request(url, options);
+        return this.ajax.request(url, options);
       });
-  },
+  }
 
   /**
    * Add data to a metadata form schema to be prepopulated in the rendered form. Optionally
@@ -115,7 +119,7 @@ export default Service.extend({
     }
 
     return schema;
-  },
+  }
 
   /**
    * Map a JSON schema to on that Alpaca will recognize.
@@ -142,7 +146,7 @@ export default Service.extend({
       schema: schema.definitions.form,
       options: schema.definitions.options || schema.definitions.form.options
     };
-  },
+  }
 
   /**
    * Remove the schema's title to avoid showing it in the UI
@@ -152,15 +156,15 @@ export default Service.extend({
   untitleSchema(schema) {
     delete schema.definitions.form.title;
     return schema;
-  },
+  }
 
   validate(schema, data) {
-    return this.get('validator').validate(schema, data);
-  },
+    return this.validator.validate(schema, data);
+  }
 
   getErrors() {
-    return this.get('validator').errors;
-  },
+    return this.validator.errors;
+  }
 
   /**
    * Get all unique field names across a set of schema. This includes any unique field
@@ -203,7 +207,7 @@ export default Service.extend({
       });
 
     return fields;
-  },
+  }
 
   /**
    * Get a "title" value for a schema property. If a 'title' property exists, use that value. If
@@ -215,7 +219,7 @@ export default Service.extend({
    */
   propertyTitle(property, key) {
     return property.title || _.capitalize(key.replace('-', ' '));
-  },
+  }
 
   /**
    * Return map from field key to field title. Use title from the schema or
@@ -253,7 +257,7 @@ export default Service.extend({
     });
 
     return map;
-  },
+  }
 
   /**
    * Merge data from metadata blob2 into metadata blob1 and output the result as a new
@@ -286,7 +290,7 @@ export default Service.extend({
     }
 
     return blob;
-  },
+  }
 
   /**
    * Get a metadata blob containing information about repository agreements. The resulting
@@ -311,7 +315,7 @@ export default Service.extend({
     return {
       agreements: result
     };
-  },
+  }
 
   /**
    * Return metadata object as a set of label, string entries for display.
@@ -339,7 +343,7 @@ export default Service.extend({
     }
 
     return obj;
-  },
+  }
 
   /**
    * Return metadata value for display.
@@ -357,7 +361,7 @@ export default Service.extend({
     }
 
     return null;
-  },
+  }
 
   /**
    * Returns an array of values suitable to display the metadata asscoiated with a
@@ -391,4 +395,4 @@ export default Service.extend({
 
     return result;
   }
-});
+}

@@ -1,95 +1,110 @@
-import { computed, get } from '@ember/object';
 import Controller, { inject as controller } from '@ember/controller';
+import { tracked } from '@glimmer/tracking';
+import { action, computed, get, set } from '@ember/object';
 import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 
-export default Controller.extend({
-  workflow: service('workflow'),
+export default class SubmissionsNewFiles extends Controller {
+  @service workflow;
 
-  parent: controller('submissions.new'),
-  submission: alias('model.newSubmission'),
-  files: alias('model.files'),
-  publication: alias('model.publication'),
-  submissionEvents: alias('model.submissionEvents'),
-  nextTabIsActive: computed('workflow.maxStep', function () {
-    return (this.get('workflow').getMaxStep() > 6);
-  }),
-  loadingNext: false,
-  needValidation: computed('nextTabIsActive', 'loadingNext', function () {
-    return (this.get('nextTabIsActive') || this.get('loadingNext'));
-  }),
-  newFiles: computed('workflow.filesTemp', {
-    get(key) {
-      return this.get('workflow').getFilesTemp();
-    },
-    set(key, value) {
-      this.get('workflow').setFilesTemp(value);
-      return value;
-    }
-  }),
-  actions: {
-    loadNext() {
-      this.set('loadingNext', true);
-      this.send('validateAndLoadTab', 'submissions.new.review');
-    },
-    loadPrevious() {
-      this.send('validateAndLoadTab', 'submissions.new.metadata');
-    },
-    loadTab(gotoRoute) {
-      this.send('updateRelatedData');
-      this.get('submission').save().then(() => {
-        this.transitionToRoute(gotoRoute);
-        this.set('loadingNext', false); // reset for next time
-      });
-    },
-    validateAndLoadTab(gotoTab) {
-      let needValidation = this.get('needValidation');
-      if (needValidation) {
-        let files = this.get('files');
-        let manuscriptFiles = [].concat(this.get('newFiles'), files && files.toArray())
-          .filter(file => file && file.get('fileRole') === 'manuscript');
-        let userIsSubmitter = this.get('parent').get('userIsSubmitter');
-        if (manuscriptFiles.length == 0 && !userIsSubmitter) {
-          swal({
-            title: 'No manuscript present',
-            text: 'If no manuscript is attached, the designated submitter will need to add one before final submission',
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'OK',
-            cancelButtonText: 'Cancel'
-          }).then((result) => {
-            if (!result.dismiss) {
-              this.send('loadTab', gotoTab);
-            }
-          });
-        } else if (manuscriptFiles.length == 0) {
-          toastr.warning('At least one manuscript file is required');
-        } else if (manuscriptFiles.length > 1) {
-          toastr.warning(`Only one file may be designated as the manuscript.  Instead, found ${manuscriptFiles.length}`);
-        } else {
-          this.send('loadTab', gotoTab);
-        }
-      } else {
-        this.send('loadTab', gotoTab);
-      }
-    },
-    updateRelatedData() {
-      let files = this.get('files');
-      // Update any *existing* files that have had their details modified
-      if (files) {
-        files.forEach((file) => {
-          if (file.get('hasDirtyAttributes')) {
-            // Asynchronously save the updated file metadata.
-            file.save();
-          }
+  @alias('model.newSubmission') submission;
+  @alias('model.files') files;
+  @alias('model.publication') publication;
+  @alias('model.submissionEvents') submissionEvents;
+
+  @controller('submissions.new') parent;
+
+  @tracked loadingNext = false;
+  @tracked filesTemp = this.workflow.filesTemp;
+
+  @computed('workflow.maxStep')
+  get nextTabIsActive() {
+    return get(this, 'workflow').getMaxStep() > 6;
+  }
+
+  @computed('nextTabIsActive', 'loadingNext')
+  get needValidation() {
+    return this.nextTabIsActive || this.loadingNext;
+  }
+
+  @computed('workflow.filesTemp')
+  get newFiles() {
+    return get(this, 'workflow').getFilesTemp();
+  }
+
+  @action
+  loadNext() {
+    set(this, 'loadingNext', true);
+    this.validateAndLoadTab('submissions.new.review');
+  }
+
+  @action
+  loadPrevious() {
+    this.validateAndLoadTab('submissions.new.metadata');
+  }
+
+  @action
+  async loadTab(gotoRoute) {
+    this.updateRelatedData();
+    await this.submission.save();
+    set(this, 'loadingNext', false); // reset for next time
+    this.transitionToRoute(gotoRoute);
+  }
+
+  @action
+  async validateAndLoadTab(gotoTab) {
+    let needValidation = this.needValidation;
+    if (needValidation) {
+      let files = this.files;
+      let manuscriptFiles = [].concat(this.newFiles, files && files.toArray())
+        .filter(file => file && get(file, 'fileRole') === 'manuscript');
+
+      if (manuscriptFiles.length == 0 && !this.parent.userIsSubmitter) {
+        let result = await swal({
+          title: 'No manuscript present',
+          text: 'If no manuscript is attached, the designated submitter will need to add one before final submission',
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel'
         });
+
+        if (!result.dismiss) {
+          this.loadTab(gotoTab);
+        }
+      } else if (manuscriptFiles.length == 0) {
+        toastr.warning('At least one manuscript file is required');
+      } else if (manuscriptFiles.length > 1) {
+        toastr.warning(`Only one file may be designated as the manuscript.  Instead, found ${manuscriptFiles.length}`);
+      } else {
+        this.loadTab(gotoTab);
       }
-    },
-    abort() {
-      this.get('parent').send('abort');
-    },
-    updateCovidSubmission() {
-      get(this, 'parent').send('updateCovidSubmission');
+    } else {
+      this.loadTab(gotoTab);
     }
   }
-});
+
+  @action
+  updateRelatedData() {
+    let files = this.files;
+    // Update any *existing* files that have had their details modified
+    if (files) {
+      files.forEach((file) => {
+        if (get(file, 'hasDirtyAttributes')) {
+          // Asynchronously save the updated file metadata.
+          file.save();
+        }
+      });
+    }
+  }
+
+  @action
+  abort() {
+    this.parent.abort();
+  }
+
+  @action
+  updateCovidSubmission() {
+    this.parent.updateCovidSubmission();
+  }
+}

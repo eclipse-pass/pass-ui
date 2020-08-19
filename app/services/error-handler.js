@@ -4,7 +4,7 @@ import ENV from 'pass-ember/config/environment';
 // Consolidates error handling.
 // The method handleError will figure out which handler to invoke.
 
-export default Service.extend({
+export default class ErrorHandlerService extends Service {
   handleError(error) {
     if (error.name == 'TransitionAborted') {
       // Ignore what seems to be spurious transition errors.
@@ -46,7 +46,7 @@ export default Service.extend({
 
       this.handleUnknownError(error);
     }
-  },
+  }
 
   handleSessionTimeout(error) {
     swal({
@@ -58,20 +58,20 @@ export default Service.extend({
         window.location.reload(true);
       }
     });
-  },
+  }
 
   handleLoginFailure(error) {
     window.location.replace('/401.html');
-  },
+  }
 
   handleAuthorizationProblem(error) {
     window.location.replace('/403.html');
-  },
+  }
 
   handleNotFound(error) {
     // Assume rootURL ends in '/'
     window.location.replace(`${ENV.rootURL}404`);
-  },
+  }
 
   handleDidNotLoadDataError(error) {
     swal({
@@ -83,7 +83,7 @@ export default Service.extend({
         window.location.reload(true);
       }
     });
-  },
+  }
 
   handleUnknownError(error) {
     swal({
@@ -96,4 +96,4 @@ export default Service.extend({
       }
     });
   }
-});
+}

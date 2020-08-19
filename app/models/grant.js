@@ -1,19 +1,19 @@
-import DS from 'ember-data';
+import Model, { attr, belongsTo } from '@ember-data/model';
 
-export default DS.Model.extend({
+export default class GrantModel extends Model {
   /** Award number from a funder (REQUIRED) */
-  awardNumber: DS.attr('string'),
+  @attr('string') awardNumber;
   /** Possible values: active, pre_award, terminated */
-  awardStatus: DS.attr('string'),
-  localKey: DS.attr('string'),
-  projectName: DS.attr('string'),
-  awardDate: DS.attr('date'),
-  startDate: DS.attr('date'),
+  @attr('string') awardStatus;
+  @attr('string') localKey;
+  @attr('string') projectName;
+  @attr('date') awardDate;
+  @attr('date') startDate;
   /** Date the grant ended */
-  endDate: DS.attr('date'),
+  @attr('date') endDate;
 
-  pi: DS.belongsTo('user'),
-  coPis: DS.hasMany('user', { async: true }),
-  primaryFunder: DS.belongsTo('funder'),
-  directFunder: DS.belongsTo('funder'),
-});
+  @belongsTo('user') pi;
+  @belongsTo('user') coPis;
+  @belongsTo('funder') primaryFunder;
+  @belongsTo('funder') directFunder;
+}

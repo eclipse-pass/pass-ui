@@ -15,7 +15,7 @@ module('Unit | Controller | submissions/new/repositories', (hooks) => {
   test('transition aborted if no repositories', function (assert) {
     let controller = this.owner.lookup('controller:submissions/new/repositories');
     this.owner.register('service:workflow', EmberObject.extend({
-      getMaxStep() { return 5; }
+      getMaxStep() { return 7; }
     }));
     let submission = EmberObject.create({
       repositories: []

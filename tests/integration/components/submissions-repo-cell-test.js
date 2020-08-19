@@ -1,16 +1,14 @@
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
+import { render } from '@ember/test-helpers';
 
 module('Integration | Component | submissions repo cell', (hooks) => {
   setupRenderingTest(hooks);
 
-  test('it renders', function (assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
+  test('it renders', async function (assert) {
+    await render(hbs`<SubmissionsRepoCell />`);
 
-    // Template usage:
-    this.render(hbs`{{submissions-repo-cell}}`);
     assert.ok(true);
   });
 });

@@ -10,7 +10,7 @@ module('Integration | Component | choice repositories card', (hooks) => {
 
   test('it renders', async function (assert) {
     this.set('choiceGroup', A());
-    await render(hbs`{{choice-repositories-card choiceGroup=choiceGroup}}`);
+    await render(hbs`<ChoiceRepositoriesCard @choiceGroup={{this.choiceGroup}} />`);
     assert.ok(true, 'failed to render');
   });
 
@@ -26,7 +26,7 @@ module('Integration | Component | choice repositories card', (hooks) => {
       })
     ]));
 
-    await render(hbs`{{choice-repositories-card choiceGroup=choiceGroup}}`);
+    await render(hbs`<ChoiceRepositoriesCard @choiceGroup={{this.choiceGroup}} />`);
     assert.ok(true, 'failed to render');
 
     const checkboxes = this.element.querySelectorAll('input[type="checkbox"]');
@@ -50,7 +50,7 @@ module('Integration | Component | choice repositories card', (hooks) => {
       })
     ]));
 
-    await render(hbs`{{choice-repositories-card choiceGroup=choiceGroup}}`);
+    await render(hbs`<ChoiceRepositoriesCard @choiceGroup={{this.choiceGroup}} />`);
     assert.ok(this.element, 'failed to render');
 
     const checkbox = this.element.querySelector('input[type="checkbox"]');
@@ -77,7 +77,7 @@ module('Integration | Component | choice repositories card', (hooks) => {
       assert.ok(true); // always fails because it should not be called
     });
 
-    await render(hbs`{{choice-repositories-card choiceGroup=choiceGroup toggleRepository=toggleRepository}}`);
+    await render(hbs`<ChoiceRepositoriesCard @choiceGroup={{this.choiceGroup}} @toggleRepository={{this.toggleRepository}} />`);
     assert.ok(this.element, 'failed to render');
 
     const checkboxes = this.element.querySelectorAll('input[type="checkbox"]');

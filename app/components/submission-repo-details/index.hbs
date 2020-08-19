@@ -1,0 +1,38 @@
+<li>
+  <div class="card float-left col-5 mr-3 mb-0">
+    <div local-class="sub-status" class="card-body">
+      <div local-class="card-title" class="row card-title">
+        {{#if @repo.url}}
+          <a href={{@repo.url}} target="_blank">{{@repo.name}}</a>
+        {{else}}
+          {{@repo.name}}
+        {{/if}}
+      </div>
+      <p class="card-text">
+        <div class="row">
+          <strong class="col-5 px-0">Deposit status: </strong>
+          {{#unless this.isExternalRepo}}
+            <div class="col">
+              {{#if this.tooltip}}
+                <span class="{{this.status}}" tooltip-position="left" tooltip="{{this.tooltip}}">
+                  <i local-class="deposit-status-icon" class="fas fa-info-circle"></i>
+                  {{#if (eq this.status "not-submitted")}}
+                    n&#47;a
+                  {{else}}
+                    {{status}}
+                  {{/if}}
+                </span>
+              {{else}}
+                <span class="{{this.status}}">
+                  <i local-class="deposit-status-icon" class="fas fa-circle"></i> {{status}}
+                </span>
+              {{/if}}
+            </div>
+          {{/unless}}
+        </div>
+        <hr class="my-2">
+        <RepocopyDisplay @repoCopy={{@repoCopy}} />
+      </p>
+    </div>
+  </div>
+</li>

@@ -12,7 +12,15 @@ module('Unit | Controller | submissions/new/review', (hooks) => {
   });
 
   test('loadPrevious triggers transition', function (assert) {
-    let controller = this.owner.lookup('controller:submissions/new/review');
+    const controller = this.owner.lookup('controller:submissions/new/review');
+    const model = EmberObject.create({
+      newSubmission: EmberObject.create({
+        save: () => Promise.resolve(assert.ok(true))
+      })
+    });
+
+    controller.set('model', model);
+
     let loadTabAccessed = false;
     controller.transitionToRoute = function (route) {
       loadTabAccessed = true;

@@ -1,4 +1,4 @@
-import EmberObject from '@ember/object';
+import EmberObject, { get } from '@ember/object';
 import Service from '@ember/service';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
@@ -123,7 +123,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
       feedback: 'Feedbag'
     };
     const service = this.owner.lookup('service:metadata-schema');
-    const schema = service.alpacafySchema(this.get('mockSchema'));
+    const schema = service.alpacafySchema(get(this, 'mockSchema'));
     const result = this.owner.lookup('service:metadata-schema').addDisplayData(schema, data);
 
     assert.ok(result.data, 'No data found in result');
@@ -143,7 +143,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
     const readonly = ['name'];
 
     const service = this.owner.lookup('service:metadata-schema');
-    const schema = service.alpacafySchema(this.get('mockSchema'));
+    const schema = service.alpacafySchema(get(this, 'mockSchema'));
     const result = service.addDisplayData(schema, data, readonly);
 
     assert.ok(result, 'No result found');
@@ -156,7 +156,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
   test('Validation should fail when "name" field is not present in data', function (assert) {
     const service = this.owner.lookup('service:metadata-schema');
 
-    assert.notOk(service.validate(this.get('mockSchema'), {}), 'Should not validate');
+    assert.notOk(service.validate(get(this, 'mockSchema'), {}), 'Should not validate');
 
     const errors = service.getErrors();
     assert.equal(1, errors.length, 'Should be 1 error');
@@ -170,8 +170,8 @@ module('Unit | Service | metadata-schema', (hooks) => {
       name: 'Moo Jones',
       ranking: 'invalid-moo'
     };
-    // debugger
-    assert.notOk(service.validate(this.get('mockSchema'), data), 'Validation should fail');
+
+    assert.notOk(service.validate(get(this, 'mockSchema'), data), 'Validation should fail');
 
     const errors = service.getErrors();
     assert.equal(1, errors.length, 'Should have found 1 error');
@@ -191,7 +191,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
       ]
     };
 
-    assert.notOk(service.validate(this.get('mockSchema'), data), 'Validation should fail');
+    assert.notOk(service.validate(get(this, 'mockSchema'), data), 'Validation should fail');
 
     const errors = service.getErrors();
     assert.equal(1, errors.length, 'Should have found 1 error');
@@ -199,7 +199,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
 
   test('Get fields includes \'allOf\' properties', function (assert) {
     const service = this.owner.lookup('service:metadata-schema');
-    const result = service.getFields([this.get('mockSchema')]);
+    const result = service.getFields([get(this, 'mockSchema')]);
 
     assert.ok(result, 'No results found');
     assert.ok(result.includes('issns'));
@@ -207,7 +207,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
 
   test('Get fields does not include \'allOf\' properties when told not to', function (assert) {
     const service = this.owner.lookup('service:metadata-schema');
-    const result = service.getFields([this.get('mockSchema')], true);
+    const result = service.getFields([get(this, 'mockSchema')], true);
 
     assert.ok(result, 'No results found');
     assert.notOk(result.includes('issns'));
@@ -216,7 +216,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
   test('Get field to title map', function (assert) {
     const service = this.owner.lookup('service:metadata-schema');
 
-    const result = service.getFieldTitleMap([this.get('mockSchema')]);
+    const result = service.getFieldTitleMap([get(this, 'mockSchema')]);
 
     assert.ok(result);
     assert.equal(result.name, 'Full name');

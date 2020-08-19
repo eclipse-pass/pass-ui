@@ -1,27 +1,30 @@
+import Model, { attr } from '@ember-data/model';
 import { computed } from '@ember/object';
-import DS from 'ember-data';
 
-export default DS.Model.extend({
+export default class UserModel extends Model {
   /**
    * (Required)
    */
-  username: DS.attr('string'),
-  firstName: DS.attr('string'),
-  middleName: DS.attr('string'),
-  lastName: DS.attr('string'),
-  displayName: DS.attr('string'),
-  email: DS.attr('string'),
+  @attr('string') username;
+  @attr('string') firstName;
+  @attr('string') middleName;
+  @attr('string') lastName;
+  @attr('string') displayName;
+  @attr('string') email;
+  @attr('string') orcidId;
 
-  affiliation: DS.attr('set'),
-  locatorIds: DS.attr('set'),
-  orcidId: DS.attr('string'),
+  @attr('set') affiliation;
+  @attr('set') locatorIds;
   /** Possible values: admin, submitter */
-  roles: DS.attr('set'),
+  @attr('set') roles;
 
-  isSubmitter: computed('roles.[]', function () {
-    return this.get('roles') ? this.get('roles').includes('submitter') : false;
-  }),
-  isAdmin: computed('roles.[]', function () {
-    return this.get('roles') ? this.get('roles').includes('admin') : false;
-  })
-});
+  @computed('roles.[]')
+  get isSubmitter() {
+    return this.roles ? this.roles.includes('submitter') : false;
+  }
+
+  @computed('roles.[]')
+  get isAdmin() {
+    return this.roles ? this.roles.includes('admin') : false;
+  }
+}

@@ -1,6 +1,7 @@
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
+import { render, click } from '@ember/test-helpers';
 
 module('Unit | Controller | submissions/new/files', (hooks) => {
   setupTest(hooks);
@@ -11,7 +12,7 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
     assert.ok(controller);
   });
 
-  test('No manuscript files, user is submitter, stops transition', function (assert) {
+  test('No manuscript files, user is submitter, stops transition', async function (assert) {
     let controller = this.owner.lookup('controller:submissions/new/files');
     let loadTabAccessed = false;
     this.owner.register('controller:submissions.new', EmberObject.extend({
@@ -28,6 +29,7 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
       loadTabAccessed = true;
     };
     assert.equal(controller.get('workflow').getFilesTemp().length, 0);
+    swal = result => new Promise(resolve => (assert.ok(true)));
     controller.send('validateAndLoadTab', 'submissions.new.basics');
     assert.equal(loadTabAccessed, false);
   });

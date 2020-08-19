@@ -1,0 +1,10 @@
+<PowerSelect
+  @triggerClass={{if (eq @journalClass 'is-invalid') (local-class 'is-invalid') (local-class 'is-valid')}}
+  @search={{action "searchJournals"}}
+  @selected={{@value}}
+  @placeholder="Journal"
+  data-test-find-journal-select
+  @onchange={{action "onSelect"}} as |journal|
+>
+  {{get journal 'journalName'}}
+</PowerSelect>

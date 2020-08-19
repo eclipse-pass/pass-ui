@@ -1,4 +1,3 @@
-/* eslint-disable prefer-arrow-callback */
 import ENV from 'pass-ember/config/environment';
 import users from './routes/users';
 import elastic from './routes/elastic-search';
@@ -8,8 +7,10 @@ import funders from './routes/funders';
 import repositories from './routes/repositories';
 import publications from './routes/publications';
 import submissions from './routes/submissions';
+import submissionEvents from './routes/submission-events';
 import files from './routes/files';
 import schemas from './routes/schemas';
+import grants from './routes/grants';
 
 export default function () {
   this.urlPrefix = ENV.host;
@@ -24,8 +25,11 @@ export default function () {
   repositories(this);
   publications(this);
   submissions(this);
+  submissionEvents(this);
   files(this);
   schemas(this);
+  grants(this);
+
 
   this.passthrough();
   this.passthrough(`${ENV.fedora.base}**`);

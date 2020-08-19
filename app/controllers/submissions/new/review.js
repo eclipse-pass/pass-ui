@@ -1,45 +1,54 @@
-import { computed, get } from '@ember/object';
 import Controller, { inject as controller } from '@ember/controller';
+import { action, computed, get } from '@ember/object';
 import { alias } from '@ember/object/computed';
 
-export default Controller.extend({
-  submission: alias('model.newSubmission'),
-  files: alias('model.files'),
-  publication: alias('model.publication'),
-  submissionEvents: alias('model.submissionEvents'),
-  parent: controller('submissions.new'),
-  waitingMessage: computed('parent.waitingMessage', function () {
-    return this.get('parent').get('waitingMessage');
-  }),
-  uploading: computed('parent.uploading', function () {
-    return this.get('parent').get('uploading');
-  }),
-  comment: computed('parent.comment', {
-    get(key) {
-      return this.get('parent').get('comment');
-    },
-    set(key, value) {
-      this.get('parent').set('comment', value);
-      return value;
-    }
-  }),
-  actions: {
-    loadPrevious() {
-      this.send('loadTab', 'submissions.new.files');
-    },
-    loadTab(gotoRoute) {
-      // add validation, processing
-      // this.get('submission').save().then(() => this.transitionToRoute(gotoRoute));
-      this.transitionToRoute(gotoRoute);
-    },
-    submit() {
-      this.get('parent').send('submit');
-    },
-    abort() {
-      this.get('parent').send('abort');
-    },
-    updateCovidSubmission() {
-      get(this, 'parent').send('updateCovidSubmission');
-    }
+export default class SubmissionsNewReview extends Controller {
+  @alias('model.newSubmission') submission;
+  @alias('model.files') files;
+  @alias('model.publication') publication;
+  @alias('model.submissionEvents') submissionEvents;
+
+  @controller('submissions.new') parent;
+
+  @computed('parent.waitingMessage')
+  get waitingMessage() {
+    return get(this, 'parent.waitingMessage');
   }
-});
+
+  @computed('parent', 'parent.uploading')
+  get uploading() {
+    return get(this, 'parent.uploading');
+  }
+
+  @computed('parent.comment')
+  get comment() {
+    return get(this, 'parent.comment');
+  }
+
+  @action
+  loadPrevious() {
+    this.loadTab('submissions.new.files');
+  }
+
+  @action
+  loadTab(gotoRoute) {
+    // add validation, processing
+    // this.submission.save().then(() => this.transitionToRoute(gotoRoute));
+    this.transitionToRoute(gotoRoute);
+  }
+
+  @action
+  submit() {
+    this.parent.submit();
+  }
+
+  @action
+  abort() {
+    this.parent.abort();
+  }
+
+  @action
+  updateCovidSubmission() {
+    this.parent.updateCovidSubmission();
+  }
+}

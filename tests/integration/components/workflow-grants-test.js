@@ -1,6 +1,6 @@
 import Service from '@ember/service';
 import { A } from '@ember/array';
-import EmberObject from '@ember/object';
+import EmberObject, { get } from '@ember/object';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
@@ -56,11 +56,14 @@ module('Integration | Component | workflow grants', (hooks) => {
   });
 
   test('it renders', async function (assert) {
-    await render(hbs`{{workflow-grants
-      submission=submission
-      preLoadedGrant=preLoadedGrant
-      next=(action loadNext)
-      back=(action loadPrevious)}}`);
+    await render(hbs`
+      <WorkflowGrants
+        @submission={{this.submission}}
+        @preLoadedGrant={{this.preLoadedGrant}}
+        @next={{action loadNext}}
+        @back={{action loadPrevious}}
+      />
+    `);
     // Settled is required to let the call to store.query return before
     // checking the rendered component
     await settled();
@@ -75,11 +78,15 @@ module('Integration | Component | workflow grants', (hooks) => {
 
     this.set('preLoadedGrant', knownGrant);
 
-    await render(hbs`{{workflow-grants
-      submission=submission
-      preLoadedGrant=preLoadedGrant
-      next=(action loadNext)
-      back=(action loadPrevious)}}`);
+    await render(hbs`
+      <WorkflowGrants
+        @submission={{this.submission}}
+        @preLoadedGrant={{this.preLoadedGrant}}
+        @next={{action loadNext}}
+        @back={{action loadPrevious}}
+      />
+    `);
+
     await settled();
 
     const selectedRows = this.element.querySelector('h5').nextElementSibling
@@ -116,11 +123,15 @@ module('Integration | Component | workflow grants', (hooks) => {
       clearAddedGrants: () => { list.clear(); }
     }));
 
-    await render(hbs`{{workflow-grants
-      submission=submission
-      preLoadedGrant=preLoadedGrant
-      next=(action loadNext)
-      back=(action loadPrevious)}}`);
+    await render(hbs`
+      <WorkflowGrants
+        @submission={{this.submission}}
+        @preLoadedGrant={{this.preLoadedGrant}}
+        @next={{action loadNext}}
+        @back={{action loadPrevious}}
+      />
+    `);
+
     await settled();
 
     const rows = this.element.querySelectorAll('#grants-selection-table table tbody tr');
@@ -135,7 +146,7 @@ module('Integration | Component | workflow grants', (hooks) => {
 
     assert.equal(list.length, 1, 'One grant should be added to the list');
 
-    assert.equal(this.get('submission.grants.length'), 1, 'One grant should be attached to submission');
+    assert.equal(get(this, 'submission.grants.length'), 1, 'One grant should be attached to submission');
   });
 
   /**
@@ -159,18 +170,22 @@ module('Integration | Component | workflow grants', (hooks) => {
 
     this.set('preLoadedGrant', knownGrant);
 
-    await render(hbs`{{workflow-grants
-      submission=submission
-      preLoadedGrant=preLoadedGrant
-      next=(action loadNext)
-      back=(action loadPrevious)}}`);
+    await render(hbs`
+      <WorkflowGrants
+        @submission={{this.submission}}
+        @preLoadedGrant={{this.preLoadedGrant}}
+        @next={{action loadNext}}
+        @back={{action loadPrevious}}
+      />
+    `);
+
     await settled();
 
     const selectedRows = this.element.querySelector('h5').nextElementSibling
       .querySelectorAll('tbody tr');
     assert.ok(selectedRows[0].textContent.includes('Moo 2'));
 
-    const grants = this.get('submission.grants');
+    const grants = get(this, 'submission.grants');
     assert.equal(grants.get('length'), 1, 'There should be one grant attached to the submission');
 
     const grantRows = this.element.querySelectorAll('#grants-selection-table table tbody tr');
