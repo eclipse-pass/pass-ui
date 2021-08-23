@@ -1,0 +1,7 @@
+version: '3.1'
+
+services:
+  assets:
+    image: oapass/assets:2021-08-09_3.4
+    volumes:
+      - passdata:/data
