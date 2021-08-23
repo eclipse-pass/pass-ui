@@ -16,6 +16,7 @@ Note that the indexing process is asynchronous. An object persisted to Fedora wi
 You will need the following things properly installed on your computer.
 
 * [Git](https://git-scm.com/)
+* [Docker](https://www.docker.com/) along with docker-compose.
 
 The `hosts` (`C:\Windows\System32\Drivers\etc\hosts` for windows, `/etc/hosts` for *nix) file on your development computer needs to be updated to alias `pass.local` to your loopback address (`127.0.0.1`) or to your docker-machine address (e.g. `192.168.99.100`). For example, to alias `pass.local` to your loopback address, you would make sure your `hosts` file contains the line: `127.0.0.1  pass.local`
 
