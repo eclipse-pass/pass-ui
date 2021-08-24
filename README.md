@@ -74,10 +74,10 @@ set FEDORA_ADAPTER_USER and FEDORA_ADAPTER_PASSWORD to empty strings.
 
 Login to the ember container with `docker exec -it ember /bin/sh`.
 Then run ember with `./node_modules/ember-cli/bin/ember`.
-This can be useful for adding and updating depdencies.
+This can be useful for adding and updating dependencies.
 You can run also run tests, but you may have to install other dependencies such as google-chrome.
 
 ### Running ember locally
 
 If you wish, you may install ember locally. The application will not be able to run due to the need to access various web services,
-but running tests can be useful. See documentation at [ember.js](https://emberjs.com/). (Note that tests can be run in a browser by visiting the URL given above.)
+but running tests on the command line can be useful. See documentation at [ember.js](https://emberjs.com/). There may be dependency issues requiring node-sass to be rebuilt for your environment.
