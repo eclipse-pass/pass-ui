@@ -2,8 +2,9 @@ version: '3.1'
 
 services:
   ember:
-    build: ember-dev/
-    image: oapass/ember-dev
+    build:
+      context: ember-dev/
+    image: oapass/ember-dev:20200823
     container_name: ember
     env_file: .env
     volumes:
