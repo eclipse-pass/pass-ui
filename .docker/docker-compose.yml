@@ -4,7 +4,7 @@ services:
   ember:
     build:
       context: ember-dev/
-    image: oapass/ember-dev:20200823@sha256:771f4af831b8d55b8672bac41878e7e6bf72c0d5f237d6fbd329f6a99be327d8
+    image: oapass/ember-dev:20200823
     container_name: ember
     env_file: .env
     volumes:
