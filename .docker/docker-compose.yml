@@ -1,4 +1,4 @@
-version: '3.1'
+version: "3.1"
 
 services:
   ember:
@@ -11,7 +11,7 @@ services:
       - ../:/app:Z
       - /app/node_modules
     ports:
-      - '${EMBER_PORT}:${EMBER_PORT}'
+      - "${EMBER_PORT}:${EMBER_PORT}"
     networks:
       - back
 
@@ -177,6 +177,28 @@ services:
     networks:
       - front
       - back
+
+  matomo:
+    image: matomo
+    container_name: matomo
+    env_file: .env
+    ports:
+      - 3299:80
+    networks:
+      - front
+      - back
+
+  db:
+    image: mariadb
+    container_name: mariadb
+    env_file: .env
+    ports:
+      - 3306:3306
+    networks:
+      - back
+    volumes:
+      - /Users/georgepara/PASS/mariadb:/var/lib/mysql
+     
 
 volumes:
   passdata:
