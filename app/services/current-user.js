@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 import Service, { inject as service } from '@ember/service';
 import ENV from 'pass-ember/config/environment';
 import { task } from 'ember-concurrency-decorators';
@@ -12,6 +13,7 @@ export default class CurrentUserService extends Service {
 
   @service store;
   @service ajax;
+  @service session;
 
   user = null;
 
@@ -24,19 +26,29 @@ export default class CurrentUserService extends Service {
    */
   @task
   load = function* (userToken = null) {
-    let params = userToken ? `?userToken=${encodeURIComponent(userToken)}` : null;
-    let url = `${get(this, 'whoamiUrl')}${params || ''}`;
-    let response = yield get(this, 'ajax').request(url, 'GET', {
-      headers: {
-        Accept: 'application/json; charset=utf-8',
-        withCredentials: 'include'
+    try {
+      let params = userToken ? `?userToken=${encodeURIComponent(userToken)}` : null;
+      let url = `${get(this, 'whoamiUrl')}${params || ''}`;
+      const response = yield fetch(url);
+
+      // TODO: since html of login page is shibb's response and not json
+      // this will throw an error if not authenticated, but we should figure
+      // out a way to teach the SP to
+      // return a 401 if not authorized rather redirecting
+      const data = yield response.json();
+
+      if (!(data.username)) {
+        transition.abort();
+        this.session.invalidate();
       }
-    });
 
-    let user = yield get(this, 'store').findRecord('user', response['@id']);
+      let user = yield get(this, 'store').findRecord('user', response['@id']);
 
-    this.set('user', user);
+      this.set('user', user);
 
-    return user;
+      return user;
+    } catch (error) {
+      this.session.invalidate();
+    }
   }
 }

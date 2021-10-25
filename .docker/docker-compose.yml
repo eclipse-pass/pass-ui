@@ -4,7 +4,7 @@ services:
   ember:
     build:
       context: ember-dev/
-    image: oapass/ember-dev:20200823
+    image: oapass/ember-dev:moop
     container_name: ember
     env_file: .env
     volumes:
@@ -100,7 +100,7 @@ services:
       - back
 
   sp:
-    image: oapass/sp:20200507@sha256:03d652dc51adf919f6f6982bbb5b32188bd8a8053600271dfe0cf9022c2d31fd
+    image: oapass/sp:moo
     container_name: sp
     networks:
       - back

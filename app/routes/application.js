@@ -4,7 +4,6 @@ import { inject as service } from '@ember/service';
 import { action, get } from '@ember/object';
 
 export default class ApplicationRoute extends CheckSessionRoute {
-  @service('current-user') currentUser;
   @service('app-static-config') staticConfig;
 
   /* Used as route-action in templates */
@@ -81,10 +80,5 @@ export default class ApplicationRoute extends CheckSessionRoute {
         this.staticConfig.addFavicon(favicon);
       }
     }
-    return this._loadCurrentUser(transition.to.queryParams.userToken);
-  }
-
-  _loadCurrentUser(userToken) {
-    return get(this, 'currentUser.load').perform(userToken);
   }
 }
