@@ -38,7 +38,6 @@ export default class CurrentUserService extends Service {
       const data = yield response.json();
 
       if (!(data.username)) {
-        transition.abort();
         this.session.invalidate();
       }
 
