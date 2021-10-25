@@ -13,6 +13,6 @@ module.exports = {
   */
   liveReload: false,
   yarn: true,
-  watcher: 'polling',
+  watcher: process.env.WATCHER || 'polling',
   disableAnalytics: false,
 };
