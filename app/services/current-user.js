@@ -1,4 +1,5 @@
 /* eslint-disable ember/no-get, ember/classic-decorator-no-classic-methods */
+/* eslint-disable no-debugger */
 import Service, { inject as service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
 import { task } from 'ember-concurrency-decorators';
@@ -13,28 +14,25 @@ export default class CurrentUserService extends Service {
 
   @service store;
   @service ajax;
+  @service session;
 
   user = null;
 
   /**
-   * load - Retrieve the logged in User from the whoami service and also set the
+   * load - Retrieve the logged in User and also sets the
    * user property.
    *
-   * @param  {type} userToken  Optionally specify token representing user to retrieve.
    * @returns {Promise}        Promise which resolves to the User.
    */
   @task
-  load = function* (userToken = null) {
-    // let params = userToken ? `?userToken=${encodeURIComponent(userToken)}` : null;
-    // let url = `${get(this, 'whoamiUrl')}${params || ''}`;
-    // let response = yield get(this, 'ajax').request(url, 'GET', {
-    //   headers: {
-    //     Accept: 'application/json; charset=utf-8',
-    //     withCredentials: 'include',
-    //   },
-    // });
-    // let user = yield get(this, 'store').findRecord('user', response['@id']);
-    // this.set('user', user);
-    // return user;
+  load = function* () {
+    let userId = this.session.data.authenticated.user_id;
+
+    if (userId) {
+      let user = yield this.store.findRecord('user', userId);
+      this.user = user;
+    }
+
+    return user;
   };
 }

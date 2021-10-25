@@ -7,7 +7,7 @@ module.exports = function (environment) {
     modulePrefix: 'pass-ui',
     environment,
     // rootURL: '/fcrepo/rest',
-    rootURL: '/',
+    rootURL: '/app/',
     host: 'http://localhost:8080',
     locationType: 'auto',
     'ember-load': {
@@ -66,7 +66,7 @@ module.exports = function (environment) {
     elasticsearch: 'http://localhost:9200/pass/_search',
   };
   ENV.userService = {
-    url: '/pass-user-service/whoami',
+    url: 'https://pass.local:8080/pass-user-service/whoami',
   };
 
   ENV.doiService = {

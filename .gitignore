@@ -30,3 +30,4 @@ bower.json.ember-try
 package.json.ember-try
 
 .python-version
+.env

@@ -1,4 +1,3 @@
-{{! template-lint-disable no-inline-styles require-presentational-children }}
 <nav
   id="header-navbar"
   class="navbar navbar-light navbar-expand-md w-100"
@@ -6,6 +5,7 @@
   {{did-update this.scrollToAnchor}}
 >
   <div class={{if @fullWidth "container-fluid" "container"}}>
+    {{! template-lint-disable no-inline-styles }}
     <div class="col-xs-12" style="width:100%;">
       <button
         class="navbar-toggler text-center border-none"
@@ -19,35 +19,40 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        {{! template-lint-disable no-inline-styles }}
         <ul class="navbar-nav" style="width:100%">
-          <li class="nav-item"><LinkTo @route="dashboard" class="nav-link pl-0 ml-0">Dashboard</LinkTo></li>
+          <li class="nav-item">
+            <LinkTo @route="dashboard" class="nav-link pl-0 ml-0">
+              Dashboard
+            </LinkTo>
+          </li>
           {{#if this.hasAUser}}
-            <li class="nav-item"><LinkTo
-                @route="grants"
-                class="nav-link"
-                data-test-navbar-grants-link
-              >Grants</LinkTo></li>
-            <li class="nav-item"><LinkTo
-                @route="submissions"
-                class="nav-link"
-                data-test-navbar-submissions-link
-              >Submissions</LinkTo></li>
-          {{/if}}
-          {{#if this.aboutUrl}}
             <li class="nav-item">
-              <a class="nav-link" href="{{this.aboutUrl}}">About</a>
+              <LinkTo @route="grants" class="nav-link" data-test-navbar-grants-link>
+                Grants
+              </LinkTo>
+            </li>
+            <li class="nav-item">
+              <LinkTo @route="submissions" class="nav-link" data-test-navbar-submissions-link>
+                Submissions
+              </LinkTo>
             </li>
           {{/if}}
-          {{#if this.contactUrl}}
-            <li class="nav-item">
-              <a class="nav-link" href="{{this.contactUrl}}">Contact</a>
-            </li>
-          {{/if}}
-          {{#if this.faqUrl}}
-            <li class="nav-item">
-              <a class="nav-link" href="{{this.faqUrl}}">FAQ</a>
-            </li>
-          {{/if}}
+          <li class="nav-item">
+            <a class="nav-link" href="{{this.assetsUri}}about.html">
+              About
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{this.assetsUri}}contact.html">
+              Contact
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{this.assetsUri}}faq.html">
+              FAQ
+            </a>
+          </li>
           <li class="nav-item dropdown ml-auto">
             <a
               id="user-menu-name"
@@ -59,6 +64,7 @@
               aria-expanded="false"
             >
               <span class="pr-1">
+                {{! template-lint-disable require-presentational-children }}
                 <GravatarImage
                   @email={{this.currentUser.user.email}}
                   @title={{this.currentUser.user.email}}
@@ -73,10 +79,15 @@
             </a>
             <div id="user-menu" class="dropdown-menu dropdown-menu-right">
               <div id="user-menu-title" class="dropdown-header text-center">
-                <strong>Account</strong>
+                <strong>
+                  Account
+                </strong>
               </div>
               <div class="divider"></div>
-              <a class="dropdown-item" href="/logout"><i class="fa fa-lock"></i>Logout</a>
+              <a class="dropdown-item" href="#" {{on "click" this.logOut}}>
+                <i class="fa fa-lock"></i>
+                Logout
+              </a>
             </div>
           </li>
         </ul>
