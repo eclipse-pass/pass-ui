@@ -31,17 +31,13 @@ export default class CurrentUserService extends Service {
       let url = `${get(this, 'whoamiUrl')}${params || ''}`;
       const response = yield fetch(url);
 
-      // TODO: since html of login page is shibb's response and not json
-      // this will throw an error if not authenticated, but we should figure
-      // out a way to teach the SP to
-      // return a 401 if not authorized rather redirecting
-      const data = yield response.json();
-
-      if (!(data.username)) {
+      if ([401, 403].includes(response.status)) {
         this.session.invalidate();
       }
 
-      let user = yield get(this, 'store').findRecord('user', response['@id']);
+      const data = yield response.json();
+
+      let user = yield get(this, 'store').findRecord('user', data['@id']);
 
       this.set('user', user);
 

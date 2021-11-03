@@ -1,7 +1,8 @@
 import { inject as service } from '@ember/service';
-import CheckSessionRoute from '../check-session-route';
+// import Route from '../check-session-route';
+import Route from '@ember/routing/route';
 
-export default class IndexRoute extends CheckSessionRoute {
+export default class IndexRoute extends Route {
   @service('workflow')
   workflow;
 

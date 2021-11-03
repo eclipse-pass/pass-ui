@@ -14,6 +14,7 @@ export default class SessionService extends BaseSessionService {
   */
   handleInvalidation() {
     // TODO: figure out if we need to test and guard against an actual external redirect
-    window.location.replace(ENV.postSessionInvalidationUrl || 'http://pass.local/');
+    // window.location.replace(ENV.postSessionInvalidationUrl || 'http://pass.local/auth');
+    window.location.replace('https://pass.local/Shibboleth.sso/Logout?return=https://pass.local/idp/profile/Logout');
   }
 }

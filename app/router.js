@@ -28,6 +28,7 @@ Router.map(function () {
   });
   this.route('not-found-error', { path: '/*path' });
   this.route('thanks');
+  this.route('moo');
 });
 
 export default Router;

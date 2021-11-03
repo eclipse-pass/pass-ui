@@ -2,6 +2,7 @@
 import Base from 'ember-simple-auth/authenticators/base';
 import classic from 'ember-classic-decorator';
 import RSVP from 'rsvp';
+import { isEmpty } from '@ember/utils';
 
 @classic
 export default class Shibboleth extends Base {

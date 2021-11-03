@@ -38,7 +38,7 @@ module.exports = function (environment) {
     routeAfterAuthentication: 'dashboard',
   };
 
-  ENV.postSessionInvalidationUrl = 'http://pass.local/';
+  ENV.postSessionInvalidationUrl = 'http://pass.local/auth';
 
   if (environment === 'development') {
     // ENV.APP.LOG_RESOLVER = true;

@@ -54,7 +54,7 @@ services:
       - back
 
   static-html:
-    image: oapass/static-html:jhu-20200518-451907e@sha256:a24021810cb6dde848a6641ecacd1f5a6e1094f5e2e91fdd138c75147777522a
+    image: oapass/static-html:jhu-20211026-d6786b8@sha256:ccdd5132adf885a8d1d2b89d79d5d8e74d0d7096ead2442699b02a5ccadffaf5
     container_name: static-html
     env_file: .env
     ports:
@@ -64,7 +64,7 @@ services:
       - front
 
   proxy:
-    image: oapass/httpd-proxy:20200507@sha256:e8ad2e759fe270998efc80bdcacbeb3f965b4b83d875478e36b0ce4c104bb2d3
+    image: oapass/httpd-proxy:mooz
     container_name: proxy
     networks:
       - front
@@ -94,7 +94,7 @@ services:
       - source: idp_sealer
 
   ldap:
-    image: oapass/ldap:20190813-jhu@sha256:a5547be7962dabfaff604475e20001f631ad2450a21590bd0a3bd68b3e976b94
+    image: oapass/ldap:20200610-jhu@sha256:44d56b80763c8f11d5db082d3bd2ab78614fcb8e7b6544a146b48d098a2672ce
     container_name: ldap
     networks:
       - back
