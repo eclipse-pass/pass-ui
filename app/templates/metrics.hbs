@@ -9,5 +9,22 @@
       </p>
     </div>
   </div>
+  <div class="row justify-content-center grant-table">
+    <div class="col-12" style="overflow-x:auto;">
+      <div class="grant-table">
+        <ModelsTable
+          @data={{this.model}}
+          @columns={{this.columns}}
+          @themeInstance={{this.themeInstance}}
+          @showColumnsDropdown={{false}}
+          @useFilteringByColumns={{false}}
+          @filteringIgnoreCase={{true}}
+          @multipleColumnsSorting={{false}}
+          @piSelected="piclick"
+          @pageSize={{this.tablePageSize}}
+          @pageSizeValues={{this.tablePageSizeValues}}
+        />
+      </div>
+    </div>
+  </div>
 </div>
-
