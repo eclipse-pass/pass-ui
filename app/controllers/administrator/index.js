@@ -27,7 +27,8 @@ export default class SubmissionsIndex extends Controller {
 
   // Columns displayed depend on the user role
   get columns() {
-    if (get(this, 'currentUser.user.isAdmin')) {
+    //TODO: Change currentUser.user.isAdmin
+    if (get(this, 'currentUser.user.isSubmitter')) {
       return [
         {
           propertyName: 'publication',
@@ -57,6 +58,18 @@ export default class SubmissionsIndex extends Controller {
           title: 'Status',
           className: 'status-column',
           component: 'submissions-status-cell'
+        },
+        {
+          propertyName: 'submitterName',
+          title: 'Submitter Name',
+          className: 'name-column',
+          component: 'submissions-name-cell'
+        },
+        {
+          propertyName: 'submitterEmail',
+          title: 'Submitter Email',
+          className: 'email-column',
+          component: 'submissions-email-cell'
         },
         {
           // propertyName: 'repoCopies',
