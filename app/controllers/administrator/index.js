@@ -1,13 +1,15 @@
 import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import Bootstrap4Theme from 'ember-models-table/themes/bootstrap4';
-import { get } from '@ember/object';
+import { set, get } from '@ember/object';
 import { inject as service } from '@ember/service';
+import {action} from '@ember/object';
 
 export default class SubmissionsIndex extends Controller {
   @service currentUser;
   @service('app-static-config') configurator;
 
+  actionData = null;
   @tracked assetsUri = null;
   @tracked themeInstance = Bootstrap4Theme.create();
   // Bound to message dialog.
@@ -45,7 +47,7 @@ export default class SubmissionsIndex extends Controller {
           propertyName: 'repositories',
           title: 'Repositories',
           className: 'repositories-column',
-          component: 'submissions-repo-cell'
+          component: 'submissions-repo-cell',
         },
         {
           propertyName: 'submittedDate',
@@ -82,4 +84,43 @@ export default class SubmissionsIndex extends Controller {
       return [];
     }
   }
+
+  @action 
+  myAction(data) {
+      let filteredColumn = this.getFilteredColumns(data);
+      let sortedColumn = this.getSortedColumns(data);
+ 
+      this.send('updateTable', {sortedColumn: sortedColumn, 
+                                filteredColumn: filteredColumn})
+  }
+
+  getSortedColumns(data) {
+    if (data.sort.length === 0) {
+        return undefined;
+    }
+    let sort = data.sort[0].split(':')
+    let propertyName = sort[0];
+    let sortDirection = sort[1]; 
+
+    let querySort = {};
+    querySort[propertyName] = {
+        missing: '_last',
+        order: `${sortDirection}`
+    }
+    return [querySort];
+  }
+
+  getFilteredColumns(data) {
+    if (Object.keys(data.columnFilters).length === 0) {
+        return undefined;
+    }
+    let filterSort = [];
+    for (let column in data.columnFilters) {
+        let query = { 'term' : {}}
+        query['term'][column] = data.columnFilters[column]
+        filterSort.push(query)
+    }
+    return filterSort;
+  }
+  
 }
