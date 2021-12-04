@@ -3,6 +3,7 @@ import CheckSessionRoute from '../check-session-route';
 import RSVP from 'rsvp';
 import { get } from '@ember/object';
 import {action} from '@ember/object';
+import PublicationModel from '../../models/publication';
 
 export default class IndexRoute extends CheckSessionRoute {
   @service('current-user')
@@ -80,7 +81,6 @@ export default class IndexRoute extends CheckSessionRoute {
 
   _doSubmitter(user, sortedColumn = this.defaultSubmitterSort, filteredColumn = []) {
     const ignoreList = this.searchHelper.getIgnoreList();
-
     const query = {
       sort: sortedColumn,
       query: {
@@ -89,19 +89,19 @@ export default class IndexRoute extends CheckSessionRoute {
             { term: { submitter: user.get('id') } },
             { term: { preparers: user.get('id') } },
           ],
-          filter: filteredColumn,
           must_not: [
             { term: { submissionStatus: 'cancelled' } }
           ]
-        }
+          
+        },
       },
       size: 500
     };
-
     if (ignoreList && ignoreList.length > 0) {
       query.query.bool.must_not.push({ terms: { '@id': ignoreList } });
     }
 
+    console.log("tets")
     return this.store.query('submission', query);
   }
 
