@@ -17,7 +17,7 @@ export default class SubmissionsIndex extends Controller {
   @tracked messageTo = '';
   @tracked messageSubject = '';
   @tracked messageText = '';
-  @tracked tablePageSize = 50;
+  @tracked tablePageSize = 10;
   @tracked tablePageSizeValues = [10, 25, 50];
 
   constructor() {
@@ -29,19 +29,31 @@ export default class SubmissionsIndex extends Controller {
 
   // Columns displayed depend on the user role
   get columns() {
-    //TODO: Change currentUser.user.isAdmin
-    if (get(this, 'currentUser.user.isSubmitter')) {
+    if (get(this, 'currentUser.user.isAdmin')) {
       return [
         {
           propertyName: 'publication',
           title: 'Article',
           className: 'title-column',
-          component: 'submissions-article-cell'
+          component: 'submissions-article-cell',
+          disableSorting: true,
+          disableFiltering: true
         },
         {
-          title: 'Award Number (Funder)',
+          propertyName: 'awardNumber',
+          title: 'Award Number',
           className: 'awardnum-funder-column',
-          component: 'submissions-award-cell'
+          component: 'submissions-award-cell',
+          disableSorting: true,
+          disableFiltering: true
+        },
+        {
+          propertyName: 'Funder',
+          title: 'Funder',
+          className: 'funder-column',
+          component: 'submissions-funder-cell',
+          disableSorting: true,
+          disableFiltering: true
         },
         {
           propertyName: 'repositories',
@@ -59,7 +71,8 @@ export default class SubmissionsIndex extends Controller {
           propertyName: 'submissionStatus',
           title: 'Status',
           className: 'status-column',
-          component: 'submissions-status-cell'
+          component: 'submissions-status-cell',
+          filterWithSelect: true
         },
         {
           propertyName: 'submitterName',
@@ -74,10 +87,12 @@ export default class SubmissionsIndex extends Controller {
           component: 'submissions-email-cell'
         },
         {
-          // propertyName: 'repoCopies',
+          propertyName: 'repoCopies',
           title: 'Manuscript IDs',
           className: 'msid-column',
-          component: 'submissions-repoid-cell'
+          component: 'submissions-repoid-cell',
+          disableSorting: true,
+          disableFiltering: true
         }
       ];
     } else { // eslint-disable-line
@@ -107,6 +122,7 @@ export default class SubmissionsIndex extends Controller {
         missing: '_last',
         order: `${sortDirection}`
     }
+    console.log(querySort)
     return [querySort];
   }
 
@@ -117,6 +133,8 @@ export default class SubmissionsIndex extends Controller {
     let filterSort = [];
     for (let column in data.columnFilters) {
         let query = { 'term' : {}}
+        if (column === "publication") {
+        }
         query['term'][column] = data.columnFilters[column]
         filterSort.push(query)
     }
