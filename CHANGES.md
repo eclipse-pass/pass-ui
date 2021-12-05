@@ -5,7 +5,7 @@ The goal of this branch is to implement usage statistics for PASS and keep user 
 ## Matomo
 
 Matomo was the data tracking platform of choice to implement this goal.
-Matomo was chosen because of it is not linked to Google's analytics platform and the
+Matomo was chosen because it is not linked to Google's analytics platform and the
 service can be hosted on one of our own servers.
 This ensures that users' information and data stay within the PASS system and has no
 contact with the internet or hosting companies.
@@ -46,7 +46,7 @@ The container currently uses no environment variables but they can be added to `
 
 (https://developer.matomo.org/guides/tracking-javascript-guide)
 
-The matomo tracking code is a script added to the web app in order to integrate matomo.
+The matomo tracking code is a script added to the PASS web app in order to integrate matomo.
 The matomo tracking code was added to `index.html` on lines 15-29:
 
 ```html
@@ -108,9 +108,40 @@ database to matomo.
 
 ### Reverse Proxy
 
+When configuring the matomo docker container and attempting to access the matomo dashboard,
+we ran into a roadblock. Matomo, by default, uses `http` in order to access the login/dashboard.
+Chrome did not like the fact that matomo uses `http` and wanted it to use `https`. We attempted
+to fix this by using a reverse proxy in order to be able to use `https://pass.local/matomo`
+instead of `http://pass.local/matomo` to access the login/dashboard. This is the reason for the
+`httpd.conf` located in `.docker/`.
+
 ### Matomo Setup
 
 The matomo setup and dashboard can be accessed by going to `http://pass.local/matomo`.
 Upon first installing matomo, a setup page will be displayed.
 Complete the setup by creating the matomo account used to access the dashboard and by
 linking the mariadb database.
+
+## Metrics Page
+
+Matomo is a good service for tracking metrics in terms of actual app usage.
+However, more specific metrics regarding data within PASS can not be gathered
+using Matomo. Therefore, a Metrics page was created within the pass web app
+itself.
+
+The page can be found on the main navigation bar when a user logs into PASS.
+It can also be found in the footer of any page in the PASS web app.
+
+In order to create this page, three files were created:
+ * `templates/metrics.hbs`
+ * `routes/metrics.js`
+ * `controllers/metrics.js`
+
+Virtually any metric that involves the actual data stored in PASS can be
+displayed here. There is one metric that is already implemented which is a
+list of the Journals and how many Submissions have been made per Journal.
+The metric is calculated in `routes/metrics.js`. I was unable to actually
+calculate the metric because the actual PASS data is inaccessible from my
+local copy of pass-ember. The test data does not have enough data in order
+to determine whether the calculation of the metric is working correctly or 
+not.

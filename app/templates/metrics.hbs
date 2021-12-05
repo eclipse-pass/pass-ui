@@ -1,15 +1,27 @@
-<div id="metrics-container" class='row row-eq-height'>
-  <div class='card'>
-    <div class='card-body'>
-      <h2 class='card-title font-weight-light'>
-        Welcome to the Metrics Page!
-      </h2>
-      <p class='card-text'>
-        Here, you'll find some metrics on different information from PASS
-      </p>
+<div id="metrics-container" class='grid'>
+  <div class="row">
+    <div class='card'>
+      <div class='card-body'>
+        <h2 class='card-title font-weight-light'>
+          Welcome to the Metrics Page!
+        </h2>
+        <p class='card-text'>
+          Here, you'll find some metrics on different information from PASS
+        </p>
+      </div>
     </div>
   </div>
-  <div class="row justify-content-center grant-table">
+  <table>
+    <tr>
+      <th>Journal</th>
+      <th>Submissions</th>
+    </tr>
+    {{#each this.model.journals}}
+      <td>{{this.name}}</td>
+      <td>{{this.value}}</td>
+    {{/each}}
+  </table>
+  {{!-- <div class="row justify-content-center grant-table">
     <div class="col-12" style="overflow-x:auto;">
       <div class="grant-table">
         <ModelsTable
@@ -26,5 +38,5 @@
         />
       </div>
     </div>
-  </div>
+  </div> --}}
 </div>
