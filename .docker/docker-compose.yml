@@ -1,4 +1,4 @@
-version: '3.1'
+version: "3.1"
 
 services:
   ember:
@@ -11,7 +11,7 @@ services:
       - ../:/app:Z
       - /app/node_modules
     ports:
-      - '${EMBER_PORT}:${EMBER_PORT}'
+      - "${EMBER_PORT}:${EMBER_PORT}"
     networks:
       - back
 
@@ -64,7 +64,7 @@ services:
       - front
 
   proxy:
-    image: oapass/httpd-proxy:20200507@sha256:e8ad2e759fe270998efc80bdcacbeb3f965b4b83d875478e36b0ce4c104bb2d3
+    image: httpd-proxy:george
     container_name: proxy
     networks:
       - front
@@ -177,6 +177,30 @@ services:
     networks:
       - front
       - back
+
+  matomo:
+    image: matomo
+    container_name: matomo
+    env_file: .env
+    networks:
+      - front
+      - back
+    ports:
+      - 3299:80
+    volumes:
+      - /Users/georgepara/PASS/geepara-pass-ember/pass-ember/.docker/config.ini.php:/var/www/html/config/config.ini.php
+
+  db:
+    image: mariadb
+    container_name: mariadb
+    env_file: .env
+    ports:
+      - 3306:3306
+    networks:
+      - back
+    volumes:
+      - /Users/georgepara/PASS/mariadb:/var/lib/mysql
+     
 
 volumes:
   passdata:

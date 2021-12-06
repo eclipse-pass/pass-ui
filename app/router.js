@@ -9,6 +9,7 @@ class Router extends EmberRouter {
 
 Router.map(function () {
   this.route('dashboard', { path: '/' });
+  this.route('metrics', { path: '/metrics' });
   this.route('submissions', function () {
     this.route('detail', { path: '/*path' });
     this.route('detail', { path: '/:submission_id' });

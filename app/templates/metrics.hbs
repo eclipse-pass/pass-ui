@@ -1,0 +1,42 @@
+<div id="metrics-container" class='grid'>
+  <div class="row">
+    <div class='card'>
+      <div class='card-body'>
+        <h2 class='card-title font-weight-light'>
+          Welcome to the Metrics Page!
+        </h2>
+        <p class='card-text'>
+          Here, you'll find some metrics on different information from PASS
+        </p>
+      </div>
+    </div>
+  </div>
+  <table>
+    <tr>
+      <th>Journal</th>
+      <th>Submissions</th>
+    </tr>
+    {{#each this.model.journals}}
+      <td>{{this.name}}</td>
+      <td>{{this.value}}</td>
+    {{/each}}
+  </table>
+  {{!-- <div class="row justify-content-center grant-table">
+    <div class="col-12" style="overflow-x:auto;">
+      <div class="grant-table">
+        <ModelsTable
+          @data={{this.model}}
+          @columns={{this.columns}}
+          @themeInstance={{this.themeInstance}}
+          @showColumnsDropdown={{false}}
+          @useFilteringByColumns={{false}}
+          @filteringIgnoreCase={{true}}
+          @multipleColumnsSorting={{false}}
+          @piSelected="piclick"
+          @pageSize={{this.tablePageSize}}
+          @pageSizeValues={{this.tablePageSizeValues}}
+        />
+      </div>
+    </div>
+  </div> --}}
+</div>
