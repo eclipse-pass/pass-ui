@@ -161,7 +161,7 @@ export default class WorkflowGrants extends Component {
 
     if (i > 1) {
       set(this, 'pageNumber', i - 1);
-      this.updateGrants();
+      this.updateGrants.perform();
     }
   }
 
@@ -171,7 +171,7 @@ export default class WorkflowGrants extends Component {
 
     if (i < this.pageCount) {
       set(this, 'pageNumber', i + 1);
-      this.updateGrants();
+      this.updateGrants.perform();
     }
   }
 
