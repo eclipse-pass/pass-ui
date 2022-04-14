@@ -1,0 +1,8 @@
+{
+  "branding": {
+    "homepage": "https://jhu.edu",
+    "logo": "/app/fullSizeLogo.png",
+    "favicon": "/app/favicon.png",
+    "stylesheet": "/app/branding.css"
+  }
+}

@@ -53,15 +53,15 @@ services:
       - front
       - back
 
-  static-html:
-    image: oapass/static-html:jhu-20200518-451907e@sha256:a24021810cb6dde848a6641ecacd1f5a6e1094f5e2e91fdd138c75147777522a
-    container_name: static-html
-    env_file: .env
-    ports:
-      - "${STATIC_HTML_PORT}:${STATIC_HTML_PORT}"
-    networks:
-      - back
-      - front
+  # static-html:
+  #   image: oapass/static-html:jhu-20200518-451907e@sha256:a24021810cb6dde848a6641ecacd1f5a6e1094f5e2e91fdd138c75147777522a
+  #   container_name: static-html
+  #   env_file: .env
+  #   ports:
+  #     - "${STATIC_HTML_PORT}:${STATIC_HTML_PORT}"
+  #   networks:
+  #     - back
+  #     - front
 
   proxy:
     image: oapass/httpd-proxy:20200507@sha256:e8ad2e759fe270998efc80bdcacbeb3f965b4b83d875478e36b0ce4c104bb2d3

@@ -18,7 +18,6 @@ export default class ApplicationController extends Controller {
 
   @tracked userToken = null;
   @tracked wideRoutes = ['grants.index', 'grants.detail', 'submissions.index'];
-  @tracked assetsUri = get(this, 'staticConfig.assetsUri');
   @tracked brand = get(this, 'staticConfig.branding');
   @tracked currentRouteName = this.router.currentRouteName;
 
@@ -27,14 +26,10 @@ export default class ApplicationController extends Controller {
   }
 
   get logoUri() {
-    return this._staticUrl(get(this, 'brand.logo'));
+    return get(this, 'brand.logo');
   }
 
   get homepage() {
     return get(this, 'brand.homepage');
-  }
-
-  _staticUrl(relativeUrl) {
-    return `${this.assetsUri}${relativeUrl}`;
   }
 }
