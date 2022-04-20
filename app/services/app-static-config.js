@@ -1,18 +1,7 @@
 import Service from '@ember/service';
 import ENV from 'pass-ember/config/environment';
-import { set } from '@ember/object';
 
 export default class AppStaticConfigService extends Service {
-  configUrl = null;
-
-  /** Cached static config object */
-  _config = null;
-
-  constructor() {
-    super(...arguments);
-    set(this, 'configUrl', ENV.APP.staticConfigUri);
-  }
-
   /**
    * Get the static configuration for PASS -- from ENV vars
    *
@@ -22,6 +11,7 @@ export default class AppStaticConfigService extends Service {
    * @returns {Promise}
    */
   getStaticConfig() {
+    // return Promise.resolve(ENV.APP.staticConfig);
     return Promise.resolve(PassEmber);
   }
 

@@ -99,10 +99,6 @@ module.exports = function (environment) {
 
   ENV.metadataSchemaUri = 'https://oa-pass.github.io/metadata-schemas/jhu/global.json';
 
-  if (process.env.STATIC_CONFIG_URI) {
-    ENV.APP.staticConfigUri = process.env.STATIC_CONFIG_URI;
-  }
-
   if (process.env.EMBER_ROOT_URL) {
     ENV.rootURL = process.env.EMBER_ROOT_URL;
   }
