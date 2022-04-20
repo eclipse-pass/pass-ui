@@ -27,10 +27,12 @@
   </div>
   <footer class="app-footer justify-content-center mt-3">
     <div class='text-center p-1'>
-      <small>
-        Interested in making PASS even better? Want to have PASS for your institution?
-        <a href="{{this.assetsUri}}contact.html">Contact us!</a>
-      </small>
+      {{#if this.contactUrl}}
+        <small>
+          Interested in making PASS even better? Want to have PASS for your institution?
+          <a href="{{this.assetsUri}}contact.html">Contact us!</a>
+        </small>
+      {{/if}}
       <br>
       <small>rev. {{app-version hideVersion=true}}</small>
     </div>

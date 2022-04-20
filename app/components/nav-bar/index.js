@@ -5,15 +5,16 @@ import { inject as service } from '@ember/service';
 import { task } from 'ember-concurrency-decorators';
 
 /**
- * Some links in the navbar point to static pages hosted outside of Ember. Those
- * URLs are relative to 'assetsUri' which is known from the static configuration
+ * Some links in the navbar point to static pages hosted outside of Ember.
  */
 
 export default class NavBar extends Component {
   @service currentUser;
   @service appStaticConfig;
 
-  @tracked assetsUri = null;
+  @tracked aboutUrl = null;
+  @tracked contactUrl = null;
+  @tracked faqUrl = null;
 
   constructor() {
     super(...arguments);
@@ -43,6 +44,8 @@ export default class NavBar extends Component {
   @task
   _setupAppStaticConfig = function* () {
     let config = yield this.appStaticConfig.getStaticConfig();
-    this.assetsUri = config.assetsUri;
+    this.aboutUrl = config.branding.pages.aboutUrl;
+    this.contactUrl = config.branding.pages.contactUrl;
+    this.faqUrl = config.branding.pages.faqUrl;
   }
 }

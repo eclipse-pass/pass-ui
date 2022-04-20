@@ -32,7 +32,14 @@ module.exports = function (environment) {
         logo: process.env.BRANDING_LOGO || '/app/fullSizeLogo.png',
         favicon: process.env.BRANDING_FAVICON || '/app/favicon.png',
         stylesheet: process.env.BRANDING_STYLESHEET || '/app/branding.css',
-        contact: process.env.BRANDING_CONTACT_PAGE
+        pages: {
+          contactUrl: process.env.BRANDING_CONTACT_URL,
+          aboutUrl: process.env.BRANDING_ABOUT_URL,
+          faqUrl: process.env.BRANDING_FAQ_URL,
+        },
+        error: {
+          icon: process.env.BRANDING_ERROR_GENERIC_ICON,
+        }
       }
     }
   };

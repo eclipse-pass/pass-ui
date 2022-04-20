@@ -11,7 +11,7 @@ export default class GrantsIndexController extends Controller {
     super(...arguments);
 
     this.configurator.getStaticConfig()
-      .then(config => this.set('assetsUri', config.assetsUri));
+      .then(config => this.set('faqUrl', config.branding.pages.faqUrl));
   }
 
   themeInstance = Bootstrap4Theme.create();
@@ -127,7 +127,7 @@ export default class GrantsIndexController extends Controller {
     }
   ]
 
-  @tracked assetsUri = null;
+  @tracked faqUrl = null;
   // Bound to message dialog.
   @tracked messageShow = false;
   @tracked messageTo = '';

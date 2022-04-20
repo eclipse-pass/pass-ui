@@ -109,9 +109,11 @@
 <div class="form-group">
   <div>
     <label>Journal <span class="text-muted">(required)</span></label>
-    <a class="btn btn-link pull-right pr-0" href="{{this.assetsUri}}contact.html">
-      Can't find your journal? Contact us to add it.
-    </a>
+    {{#if this.contactUrl}}
+      <a class="btn btn-link pull-right pr-0" href="{{this.contactUrl}}">
+        Can't find your journal? Contact us to add it.
+      </a>
+    {{/if}}
   </div>
   <div class="w-100">
     {{#unless this.isValidDOI}}

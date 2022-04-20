@@ -18,7 +18,7 @@ export default class WorkflowGrants extends Component {
   @service workflow;
   @service appStaticConfig;
 
-  @tracked assetsUri = null;
+  @tracked contactUrl = null;
   @tracked workflowStep = 2;
 
   @tracked pageNumber = 1;
@@ -90,7 +90,7 @@ export default class WorkflowGrants extends Component {
   @task
   setup = function* () {
     let config = yield get(this, 'appStaticConfig.getStaticConfig');
-    this.assetsUri = config.assetsUri;
+    this.contactUrl = config.branding.pages.contactUrl;
 
     if (this.args.preLoadedGrant) {
       this.initialAddGrant.perform(this.args.preLoadedGrant);

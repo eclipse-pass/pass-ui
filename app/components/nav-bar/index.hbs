@@ -16,15 +16,21 @@
               <li class="nav-item"><LinkTo @route="grants" class="nav-link" data-test-navbar-grants-link>Grants</LinkTo></li>
               <li class="nav-item"><LinkTo @route="submissions" class="nav-link" data-test-navbar-submissions-link>Submissions</LinkTo></li>
             {{/if}}
-            <li class="nav-item">
-              <a class="nav-link" href="{{this.assetsUri}}about.html">About</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{this.assetsUri}}contact.html">Contact</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{this.assetsUri}}faq.html">FAQ</a>
-            </li>
+            {{#if this.aboutUrl}}
+              <li class="nav-item">
+                <a class="nav-link" href="{{this.aboutUrl}}">About</a>
+              </li>
+            {{/if}}
+            {{#if this.contactUrl}}
+              <li class="nav-item">
+                <a class="nav-link" href="{{this.contactUrl}}">Contact</a>
+              </li>
+            {{/if}}
+            {{#if this.faqUrl}}
+              <li class="nav-item">
+                <a class="nav-link" href="{{this.faqUrl}}">FAQ</a>
+              </li>
+            {{/if}}
             <li class="nav-item dropdown ml-auto">
               <a id="user-menu-name" class="nav-link accountInfo pr-1" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                 <span class="pr-1">

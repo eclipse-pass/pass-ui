@@ -11,9 +11,11 @@ module('Integration | Component | found-manuscripts', (hooks) => {
   hooks.beforeEach(function () {
     this.owner.register('service:app-static-config', Service.extend({
       getStaticConfig: () => Promise.resolve({
-        assetsUri: '',
         branding: {
-          stylesheet: ''
+          stylesheet: '',
+          pages: {
+            contactUrl: ''
+          }
         }
       }),
       addCss: () => {}

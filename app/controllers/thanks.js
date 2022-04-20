@@ -9,11 +9,11 @@ export default class ThanksController extends Controller {
   configurator;
 
   @tracked submission = null;
-  @tracked assetsUri = null;
+  @tracked faqUrl = null;
 
   constructor() {
     super(...arguments);
     this.configurator.getStaticConfig()
-      .then(config => this.set('assetsUri', config.assetsUri));
+      .then(config => this.set('faqUrl', config.branding.pages.faqUrl));
   }
 }

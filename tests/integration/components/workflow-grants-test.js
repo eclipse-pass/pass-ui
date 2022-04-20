@@ -31,9 +31,11 @@ module('Integration | Component | workflow grants', (hooks) => {
 
     const mockStaticConfig = Service.extend({
       getStaticConfig: () => Promise.resolve({
-        assetsUri: '',
         branding: {
-          stylesheet: ''
+          stylesheet: '',
+          pages: {
+            contactUrl: '',
+          }
         }
       }),
       addCss: () => {}
