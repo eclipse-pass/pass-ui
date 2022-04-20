@@ -26,7 +26,14 @@ module.exports = function (environment) {
     },
 
     APP: { // This is available in the app by calling PassEmber.varName
-      staticConfigUri: '/config.json'
+      staticConfigUri: '/config.json',
+      branding: {
+        homepage: process.env.BRANDING_HOMEPAGE || 'https://pass.local',
+        logo: process.env.BRANDING_LOGO || '/app/fullSizeLogo.png',
+        favicon: process.env.BRANDING_FAVICON || '/app/favicon.png',
+        stylesheet: process.env.BRANDING_STYLESHEET || '/app/branding.css',
+        contact: process.env.BRANDING_CONTACT_PAGE
+      }
     }
   };
   // Disable mirage entirely.
