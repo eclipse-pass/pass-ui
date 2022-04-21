@@ -2,6 +2,16 @@ import Service from '@ember/service';
 import ENV from 'pass-ember/config/environment';
 
 export default class AppStaticConfigService extends Service {
+  configUrl = null;
+
+  /** Cached static config object */
+  _config = null;
+
+  constructor() {
+    super(...arguments);
+    this.configUrl = ENV.APP.staticConfigUri;
+  }
+
   /**
    * Get the static configuration for PASS -- from ENV vars
    *
@@ -11,8 +21,33 @@ export default class AppStaticConfigService extends Service {
    * @returns {Promise}
    */
   getStaticConfig() {
-    // return Promise.resolve(ENV.APP.staticConfig);
-    return Promise.resolve(PassEmber);
+    // return Promise.resolve(PassEmber);
+    const cached = this._config;
+    if (cached) {
+      return Promise.resolve(cached);
+    }
+
+    return fetch(this.configUrl, {
+      headers: { 'Content-Type': 'application/json' }
+    })
+      .then(resp => resp.json())
+      .then((data) => {
+        // set(this, '_config', data);
+        this._config = data;
+        return data;
+      })
+      .catch((error) => {
+        console.log(`%cFailed to get static 'config.json'. ${error}`, 'color:red;');
+        toastr.error(
+          'Unable to load theme. PASS may look different than expected.',
+          null,
+          {
+            timeOut: 0,
+            extendedTimeOut: 0,
+            preventDuplicates: true
+          }
+        );
+      });
   }
 
   /**
