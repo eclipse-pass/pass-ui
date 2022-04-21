@@ -58,7 +58,7 @@ export default class WorkflowBasics extends Component {
   }
 
   async setupConfig() {
-    let config = await get(this, 'appStaticConfig.getStaticConfig');
+    let config = await this.appStaticConfig.getStaticConfig();
     this.contactUrl = config.branding.pages.contactUrl;
   }
 

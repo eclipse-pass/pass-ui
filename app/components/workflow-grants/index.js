@@ -89,7 +89,7 @@ export default class WorkflowGrants extends Component {
 
   @task
   setup = function* () {
-    let config = yield get(this, 'appStaticConfig.getStaticConfig');
+    let config = yield this.appStaticConfig.getStaticConfig();
     this.contactUrl = config.branding.pages.contactUrl;
 
     if (this.args.preLoadedGrant) {
