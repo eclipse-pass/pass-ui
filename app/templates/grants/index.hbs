@@ -1,10 +1,12 @@
 <div class="row">
   <div class="col-12">
     <h1 class="font-weight-light">Your Grants</h1>
-    <p>
-      For information about which grants are displayed in PASS, please see our
-      <a href="{{this.assetsUri}}faq.html#grants-expected">FAQ page</a>.
-    </p>
+    {{#if this.faqUrl}}
+      <p>
+        For information about which grants are displayed in PASS, please see our
+        <a href="{{this.faqUrl}}">FAQ page</a>.
+      </p>
+    {{/if}}
   </div>
 </div>
 <div class="row justify-content-center grant-table">

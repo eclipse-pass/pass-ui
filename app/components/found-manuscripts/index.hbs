@@ -8,8 +8,11 @@
       <div class="border p-4" data-test-foundmss-component>
         <p class="text-muted">
           We found the following OA copies of your manuscript/article. Please select only a peer-reviewed copy
-          for inclusion in this submission. If you need help determining the appropriate copy to submit to PASS,
-          please <a href="{{assetsUri}}contact.html" target="_blank">contact JHU's Office of Scholarly Communications</a>.
+          for inclusion in this submission.&nbsp;
+          {{#if this.contactUrl}}
+            If you need help determining the appropriate copy to submit to PASS, please&nbsp;
+            <a href="{{this.contactUrl}}" target="_blank" rel="noopener noreferrer">contact us</a>.
+          {{/if}}
         </p>
         <p class="text-muted mb-0">
           Click the <i class="fa fa-cloud-download" aria-hidden="true"></i> icon or a file name to view and download a file first.

@@ -14,7 +14,7 @@ export default class FoundManuscriptsComponent extends Component {
   @tracked foundManuscripts = A([]);
   @tracked manuscriptsWithErrors = A([]);
   @tracked selectedManuscript = null;
-  @tracked assetsUri;
+  @tracked contactUrl;
 
   constructor() {
     super(...arguments);
@@ -38,7 +38,7 @@ export default class FoundManuscriptsComponent extends Component {
   @task
   getAppConfig = function*() {
     let config = yield this.appStaticConfig.getStaticConfig();
-    this.assetsUri = config.assetsUri;
+    this.contactUrl = config.branding.pages.contactUrl;
   }
 
   @task

@@ -17,7 +17,7 @@ export default class WorkflowBasics extends Component {
   @service metadataSchema;
   @service appStaticConfig;
 
-  @tracked assetsUri = null;
+  @tracked contactUrl = null;
   @tracked doiServiceError = false;
   @tracked isShowingUserSearchModal = false;
 
@@ -54,12 +54,12 @@ export default class WorkflowBasics extends Component {
   constructor() {
     super(...arguments);
 
-    this.setupAssetsUri();
+    this.setupConfig();
   }
 
-  async setupAssetsUri() {
-    let config = await get(this, 'appStaticConfig.getStaticConfig');
-    this.assetsUri = config.assetsUri;
+  async setupConfig() {
+    let config = await this.appStaticConfig.getStaticConfig();
+    this.contactUrl = config.branding.pages.contactUrl;
   }
 
   @action

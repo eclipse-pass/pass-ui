@@ -1,27 +1,27 @@
-import { A } from '@ember/array';
 import Service from '@ember/service';
 import ENV from 'pass-ember/config/environment';
-import { set } from '@ember/object';
 
 export default class AppStaticConfigService extends Service {
   configUrl = null;
-  /** List of URI strings, used to tell which static assets have already been loaded */
-  _loaded = A();
 
   /** Cached static config object */
   _config = null;
 
   constructor() {
     super(...arguments);
-    set(this, 'configUrl', ENV.APP.staticConfigUri);
+    this.configUrl = ENV.APP.staticConfigUri;
   }
 
   /**
-   * Get the static configuration for PASS
+   * Get the static configuration for PASS -- from ENV vars
+   *
+   * Note: returning a Promise to ease refactoring effort
+   * TODO: don't use a Promise, will effect a lot of controllers and components
    *
    * @returns {Promise}
    */
   getStaticConfig() {
+    // return Promise.resolve(PassEmber);
     const cached = this._config;
     if (cached) {
       return Promise.resolve(cached);
@@ -32,7 +32,8 @@ export default class AppStaticConfigService extends Service {
     })
       .then(resp => resp.json())
       .then((data) => {
-        set(this, '_config', data);
+        // set(this, '_config', data);
+        this._config = data;
         return data;
       })
       .catch((error) => {
@@ -55,16 +56,15 @@ export default class AppStaticConfigService extends Service {
    * @param {string} uri URI of CSS resource
    */
   addCSS(uri) {
-    if (this._alreadyLoaded(uri)) {
+    if (window.document.querySelector(`link[rel="${uri}"`)) {
       return;
     }
+
     const newLink = window.document.createElement('link');
     newLink.setAttribute('rel', 'stylesheet');
     newLink.setAttribute('href', uri);
 
     window.document.head.appendChild(newLink);
-
-    this._loaded.pushObject(uri);
   }
 
   addFavicon(uri) {
@@ -78,9 +78,5 @@ export default class AppStaticConfigService extends Service {
     newFav.setAttribute('href', uri);
 
     window.document.head.appendChild(newFav);
-  }
-
-  _alreadyLoaded(uri) {
-    return this._loaded.includes(uri);
   }
 }

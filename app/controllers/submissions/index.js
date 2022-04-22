@@ -8,7 +8,7 @@ export default class SubmissionsIndex extends Controller {
   @service currentUser;
   @service('app-static-config') configurator;
 
-  @tracked assetsUri = null;
+  @tracked faqUrl = null;
   @tracked themeInstance = Bootstrap4Theme.create();
   // Bound to message dialog.
   @tracked messageShow = false
@@ -22,7 +22,7 @@ export default class SubmissionsIndex extends Controller {
     super(...arguments);
 
     this.configurator.getStaticConfig()
-      .then(config => this.set('assetsUri', config.assetsUri));
+      .then(config => this.set('faqUrl', config.branding.pages.faqUrl));
   }
 
   // Columns displayed depend on the user role

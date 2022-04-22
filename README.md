@@ -70,6 +70,29 @@ and Elasticsearch are and generally will not need to be modified during developm
 In order to prevent an Authorization header being sent to Fedora and Elasticsearch,
 set FEDORA_ADAPTER_USER and FEDORA_ADAPTER_PASSWORD to empty strings.
 
+The application also gets "branding" configuration from a `config.json` file, with a default implementation found in the `public/` directory, which is automatically made available by default at `/app/config.json`.
+
+`config.json`
+``` js
+{
+  "branding": {
+    "homepage": "https://example.com",
+    "logo": "/app/fullSizeLogo.png", // Default asset found in public/ dir
+    "favicon": "/app/favicon.png", // Default asset found in public/ dir
+    "stylesheet": "/app/branding.css", // Default asset found in public/ dir
+    "pages": {
+      "contactUrl": "", // If you provide a branded page with contact info
+      "aboutUrl": "", // If you provide a branded About page for PASS
+      "faqUrl": "", // If you provide a branded FAQ page
+    },
+    "error": {
+      "icon": "", // Error icon to display on the application's error page
+    }
+  }
+}
+```
+
+
 ### Using ember in the container.
 
 Login to the ember container with `docker exec -it ember /bin/sh`.

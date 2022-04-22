@@ -1,0 +1,234 @@
+:root {
+  --jhu-bg-primary: white;
+  --pass-blue-primary: #418FDE;
+  --pass-blue-header: #005EB8;
+
+  /* JHU Primary Colors */
+  --jhu-blue-spirit: #68ACE5;
+  --jhu-blue-heritage: #002D72;
+  --jhu-black: #31261D;
+
+  /* JHU Secondary Colors */
+  --jhu-secondary-1: #CF4520;
+  --jhu-secondary-2: #76232F;
+  --jhu-secondary-3: #A15A95;
+  --jhu-secondary-4: #009B77;
+  --jhu-secondary-5: #0072CE;
+  --jhu-secondary-6: #F1C400;
+
+  /* JHU Accent Colors */
+  --jhu-accent-1: #CBA052;
+  --jhu-accent-2: #FF9E1B;
+  --jhu-accent-3: #FF6900;
+  --jhu-accent-4: #9E5330;
+  --jhu-accent-5: #4F2C1D;
+  --jhu-accent-6: #E8927C;
+  --jhu-accent-7: #A6192E;
+  --jhu-accent-8: #51284F;
+  --jhu-accent-9: #A192B2;
+  --jhu-accent-10: #418FDE;
+  --jhu-accent-11: #86C8BC;
+  --jhu-accent-12: #286140;
+  --jhu-accent-13: #179949;
+
+  /* Fonts */
+  --font-headline: serif;
+  --font-subhead: serif;
+  --font-bodycopy-accent: serif;
+  --font-bodycopy: tahoma, sans-serif;
+
+  /* Other colors */
+  --btn-active-color: #C9C9C9;
+  --header-color: #4A484C;
+}
+
+/* ---------------- */
+/* .bg-main {
+  background-color: white;
+}
+.bg1 {
+  background-color: var(--jhu-blue-heritage);
+}
+.bg2 {
+  background-color: var(--jhu-blue-spirit);
+}
+.bg-primary {
+  background-color: var(--jhu-accent-10);
+}
+
+.color-secondary {
+  color: var(--jhu-blue-heritage);
+}
+.color-accent {
+  color: var(--jhu-accent-10);
+}
+
+.white {
+  color: white;
+}
+.black {
+  color: var(--jhu-black);
+}
+.text-link {
+  color: var(--jhu-secondary-5);
+}
+.text-link:hover {
+  color: var(--jhu-accent-10);
+}
+
+.header {
+  font-family: var(--font-headline);
+} */
+/* ---------------- */
+
+body {
+  font-family: var(--font-bodycopy);
+  color: var(--jhu-black);
+}
+h1, h2, h3, h4, h5 {
+  font-family: var(--font-headline);
+}
+h1, h2 {
+  color: var(--header-color);
+}
+a, .btn-link {
+  color: var(--jhu-secondary-5);
+}
+a:hover, .btn-link:hover {
+ color: var(--jhu-accent-10);
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: var(--pass-blue-primary) !important;
+  border-color: var(--pass-blue-primary) !important;
+  color:white;
+}
+.btn-primary:hover {
+  background-color: var(--pass-blue-primary);
+  border-color: var(--pass-blue-primary);
+}
+/*
+ * This mess must be done in order to properly override Bootstrap styles for a clicked button
+ */
+.btn-primary:not(:disabled):not(.disabled):active {
+  background-color: var(--pass-blue-primary);
+  border-color: var(--pass-blue-primary);
+}
+
+.btn-outline-primary {
+  border-color: var(--pass-blue-primary);
+  color: var(--pass-blue-primary);
+}
+.btn-outline-primary:hover {
+  background-color: var(--pass-blue-primary);
+  border-color: var(--pass-blue-primary);
+  color: white;
+}
+.btn-outline-primary:not(:disabled):not(.disabled):active {
+  background-color: var(--pass-blue-primary);
+  border-color: var(--pass-blue-primary);
+  color: white;
+}
+
+.btn-danger	{
+  color: white;
+  background-color: var(--jhu-secondary-1);
+}
+.btn-danger:hover {
+  background-color: var(--jhu-accent-7);
+  border-color: var(--jhu-accent-7);
+}
+.btn-danger:not(:disabled):not(.disabled):active {
+  background-color: var(--jhu-accent-7);
+  border-color: var(--jhu-accent-7);
+}
+
+.btn {
+  font-size: 1em !important;
+}
+
+/* Header */
+#brand-site-container {
+  background-color: var(--jhu-bg-primary);
+}
+#brand-header {
+  background-color: var(--pass-blue-header);
+  color: var(--jhu-blue-spirit);
+}
+#brand-header-title {
+  color: white;
+}
+#header-navbar {
+  font-family: var(--font-bodycopy);
+  background-color: var(--jhu-bg-primary);
+}
+#header-navbar .nav-item .active {
+  font-weight: bold;
+}
+#header-navbar .nav-link {
+  color: var(--jhu-black);
+}
+#user-menu {
+  color: var(--jhu-black);
+}
+#user-menu-title {
+  background-color: var(--jhu-secondary-5);
+  color: white;
+}
+#user-menu .dropdown-item:active {
+  background-color: var(--btn-active-color);
+}
+#brand-logo {
+  height: 110px;
+  margin-top: -10px;
+  margin-right: -35px;
+  margin-bottom: -10px;
+}
+
+/* Status icons */
+.manuscript-required>.fa-circle, .manuscript-required .fa-info-circle,
+.approval-requested>.fa-circle, .approval-requested .fa-info-circle,
+.changes-requested>.fa-circle, .changes-requested .fa-info-circle,
+.needs-attention>.fa-circle, .needs-attention .fa-info-circle,
+.stalled>.fa-circle, .stalled .fa-info-circle,
+.failed>.fa-circle, .failed .fa-info-circle,
+.rejected>.fa-circle, .rejected .fa-info-circle {
+  color: var(--jhu-secondary-6);
+}
+.cancelled>.fa-circle, .cancelled .fa-info-circle,
+.not-submitted>.fa-circle, .not-submitted .fa-info-circle {
+  color: var(--jhu-accent-10);
+}
+.submitted>.fa-circle, .submitted .fa-info-circle,
+.complete>.fa-circle, .complete .fa-info-circle {
+  color: var(--jhu-accent-11);
+}
+.draft>.fa-circle, .draft .fa-info-circle {
+  color: gray;
+}
+
+/* Submission workflow */
+#proxy-input-block {
+  background-color: var(--jhu-blue-spirit);
+  color: var(--jhu-black);
+}
+#on-behalf-of-block {
+  background-color: var(--jhu-blue-spirit);
+  color: var(--jhu-black);
+}
+
+th.table-header > i {
+  color: var(--jhu-black);
+  opacity: 0.8;
+}
+#grant-details-title .back-arrow, #submission-details-title .back-arrow {
+  color: var(--jhu-black);
+  opacity: 0.7;
+}
+#grant-details-title .back-arrow:hover,
+#submission-details-title .back-arrow:hover {
+  opacity: 0.5;
+}
+
+

@@ -10,9 +10,11 @@
 </div>
 <p>This list contains all Submissions that you have initiated through PASS. If you have an NIH grant,
   it may also contain pre-loaded information about incomplete, in-progress, or completed Submissions
-  to PubMed Central that cite a grant for which you are the PI. Find out more about these pre-loaded
-  NIH submissions on the
-  <a href="{{this.assetsUri}}faq.html#nih-submissions">FAQ page</a>
+  to PubMed Central that cite a grant for which you are the PI.
+  {{#if this.faqUrl}}
+    Find out more about these pre-loaded NIH submissions on the
+     <a href="{{this.faqUrl}}#nih-submissions">FAQ page</a>
+  {{/if}}
 </p>
 <div class="row">
   <div class="col-12" style="overflow-x: auto;">

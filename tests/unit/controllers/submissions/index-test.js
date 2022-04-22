@@ -9,9 +9,11 @@ module('Unit | Controller | submissions/index', (hooks) => {
   hooks.beforeEach(function () {
     const mockStaticConfig = Service.extend({
       getStaticConfig: () => Promise.resolve({
-        assetsUri: '',
         branding: {
-          stylesheet: ''
+          stylesheet: '',
+          pages: {
+            faqUrl: '',
+          }
         }
       }),
       addCss: () => {}

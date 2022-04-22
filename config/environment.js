@@ -26,7 +26,7 @@ module.exports = function (environment) {
     },
 
     APP: { // This is available in the app by calling PassEmber.varName
-      staticConfigUri: '/config.json'
+      staticConfigUri: process.env.STATIC_CONFIG_URL || '/app/config.json',
     }
   };
   // Disable mirage entirely.
@@ -91,10 +91,6 @@ module.exports = function (environment) {
   };
 
   ENV.metadataSchemaUri = 'https://oa-pass.github.io/metadata-schemas/jhu/global.json';
-
-  if (process.env.STATIC_CONFIG_URI) {
-    ENV.APP.staticConfigUri = process.env.STATIC_CONFIG_URI;
-  }
 
   if (process.env.EMBER_ROOT_URL) {
     ENV.rootURL = process.env.EMBER_ROOT_URL;

@@ -71,13 +71,13 @@ export default class ApplicationRoute extends CheckSessionRoute {
   afterModel(model, transition) {
     if (model.staticConfig) {
       if (model.staticConfig.branding.stylesheet) {
-        const stylesheet = `${model.staticConfig.assetsUri}${model.staticConfig.branding.stylesheet}`;
+        const stylesheet = `${model.staticConfig.branding.stylesheet}`;
         this.staticConfig.addCSS(stylesheet);
       } else {
         console.log('%cNo branding stylesheet was configured', 'color:red');
       }
       if (model.staticConfig.branding.favicon) {
-        const favicon = `${model.staticConfig.assetsUri}${model.staticConfig.branding.favicon}`;
+        const favicon = `${model.staticConfig.branding.favicon}`;
         this.staticConfig.addFavicon(favicon);
       }
     }
