@@ -54,7 +54,7 @@ services:
       - back
 
   proxy:
-    image: oapass/httpd-proxy:20200507@sha256:e8ad2e759fe270998efc80bdcacbeb3f965b4b83d875478e36b0ce4c104bb2d3
+    image: oapass/httpd-proxy:20220426@sha256:3caf4ebebc432bc9eee29110091a3bed41a71a5094257a820befa40786992e7b
     container_name: proxy
     networks:
       - front
