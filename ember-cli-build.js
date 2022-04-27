@@ -29,6 +29,13 @@ module.exports = function (defaults) {
 
         return className;
       },
+    },
+    fingerprint: {
+      exclude: [
+        'branding.css',
+        'error-icon.png',
+        'fullSizeLogo.png'
+      ]
     }
   });
 
