@@ -13,6 +13,9 @@
           <ul class="navbar-nav" style="width:100%">
             <li class="nav-item"><LinkTo @route="dashboard" class="nav-link pl-0 ml-0">Dashboard</LinkTo></li>
             {{#if this.hasAUser}}
+              {{#if this.currentUser.isAdmin}}
+                <li class="nav-item"><LinkTo @route="administrator" class="nav-link" data-test-navbar-administrator-link>Administrator</LinkTo></li>
+              {{/if}}
               <li class="nav-item"><LinkTo @route="grants" class="nav-link" data-test-navbar-grants-link>Grants</LinkTo></li>
               <li class="nav-item"><LinkTo @route="submissions" class="nav-link" data-test-navbar-submissions-link>Submissions</LinkTo></li>
             {{/if}}

@@ -9,6 +9,10 @@ class Router extends EmberRouter {
 
 Router.map(function () {
   this.route('dashboard', { path: '/' });
+  this.route('administrator', function() {
+      this.route('detail', {path: '/*path'});
+      this.route('detail', {path: '/:submission_id'});
+  });
   this.route('submissions', function () {
     this.route('detail', { path: '/*path' });
     this.route('detail', { path: '/:submission_id' });
@@ -26,6 +30,7 @@ Router.map(function () {
     this.route('detail', { path: '/*path' });
     this.route('detail', { path: '/:grant_id' });
   });
+
   this.route('not-found-error', { path: '/*path' });
   this.route('thanks');
 });

@@ -1,0 +1,241 @@
+<div class="block-user-input text-center">
+  <div class="lds-dual-ring mx-auto"></div>
+</div>
+<div id="submission-details-title" class="row mb-2">
+  <div class="col-6">
+    <LinkTo @route="submissions" class="btn btn-small back-arrow"><i class="fa fa-arrow-left fa-lg"></i></LinkTo>
+    <h2 class="font-weight-light d-inline-block">Submission Detail</h2>
+  </div>
+  <div class="col-6 text-right">
+    {{#if this.model.sub.isStub}}
+      <LinkTo @route="submissions.new" @query={{hash submission=this.model.sub.id}} class="btn btn-outline-primary text-right">
+        Finish submission
+      </LinkTo>
+    {{else if this.model.sub.isDraft}}
+      <LinkTo
+        @route="submissions.new"
+        @query={{hash submission=this.model.sub.id}}
+        class="btn btn-outline-primary text-right"
+        data-test-submission-detail-edit-submission
+      >
+        Edit submission
+      </LinkTo>
+      <button {{action "deleteSubmission" this.model.sub}} class="btn btn-outline-danger text-right">
+        Delete
+      </button>
+    {{/if}}
+  </div>
+</div>
+<div id="submission-details-body" class="form-group row">
+  <div class="col-12">
+    <div class="list-group">
+      <div href="#" class="list-group-item flex-column align-items-start">
+        <div class="d-flex w-100 justify-content-between">
+          <h5 class="mb-1"> {{this.model.sub.publication.title}}</h5>
+          {{#if this.model.sub.submittedDate}}<small class="text-muted text-right">Submitted {{format-date
+            this.model.sub.submittedDate}}</small>{{/if}}
+        </div>
+        <p class="mb-1">DOI: {{#if this.model.sub.publication.doi}}{{this.model.sub.publication.doi}}{{else}}<span class="text-muted">None</span>{{/if}}</p>
+        <table class="table table-responsive-sm table-bordered w-100 d-flex">
+          <tbody>
+            <tr>
+              <td><strong>Submission status</strong></td>
+              <td>
+                <SubmissionStatus @submissionStatus={{this.model.sub.submissionStatus}} />
+              </td>
+            </tr>
+            {{#if this.model.sub.isCovid}}
+              <tr class="font-weight-bold">
+                <td></td>
+                <td>
+                  <div data-test-submission-detail-covid>
+                    This submission was marked as pertaining to COVID-19 research
+                    <a href="/faq.html#covid-19" target="_blank">(What does this mean?)</a>
+                  </div>
+                </td>
+              </tr>
+            {{/if}}
+            <tr>
+              <td><strong>Grants</strong></td>
+              <td>
+                <ul class="list-unstyled">
+                  {{#each this.model.sub.grants as |grant|}}
+                  <li data-test-submission-detail-grant><b>{{grant.awardNumber}}</b>: {{grant.projectName}}</li>
+                  <li data-test-submission-detail-funder><b>Funder</b>: {{grant.primaryFunder.name}}</li>
+                  {{#if (not-eq grant this.model.sub.grants.lastObject)}}
+                  <hr>
+                  {{/if}}
+                  {{/each}}
+                </ul>
+              </td>
+            </tr>
+            {{!-- Consolidate repository, deposit, repoCopy info --}}
+            {{#if this.repoMap}}
+            <tr>
+              <td class="text-nowrap"><strong>Repositories</strong></td>
+              <td>
+                <ul class="list-unstyled">
+                  {{#each this.repoMap as |repoInfo index|}}
+                    <SubmissionRepoDetails
+                      @repo={{repoInfo.repo}}
+                      @deposit={{repoInfo.deposit}}
+                      @repoCopy={{repoInfo.repositoryCopy}}
+                      @submission={{this.model.sub}}
+                    />
+                  {{/each}}
+                </ul>
+              </td>
+            </tr>
+            {{/if}}
+            {{#if this.externalSubmission}}
+            <tr>
+              <td><strong>External Submission Repositories</strong></td>
+              <td>
+                <ul class="list-unstyled">
+                  {{#each this.externalSubmission as |sub|}}
+                  <li>{{sub.message}}</li>
+                  {{/each}}
+                </ul>
+              </td>
+            </tr>
+            {{/if}}
+            <tr>
+              <td class="text-nowrap"><strong>Submitter</strong></td>
+              <td data-test-submission-detail-submitter>
+                {{#if (eq this.model.sub.source "other")}}
+                  <i>This submission did not originate from PASS</i>
+                {{else if this.displaySubmitterName}}
+                  {{this.displaySubmitterName}}
+                {{/if}}
+                {{#if this.displaySubmitterEmail}}
+                  &nbsp;(<a href="mailto:{{this.displaySubmitterEmail}}">{{this.displaySubmitterEmail}}</a>)
+                {{/if}}
+              </td>
+            </tr>
+            {{#if (await this.model.sub.preparers)}}
+            <tr>
+              <td class="text-nowrap"><strong>Preparer(s)</strong></td>
+              <td data-test-submission-detail-preparer>
+                {{#each (await this.model.sub.preparers) as |preparer index|}}
+                  {{#if index}}, {{/if}} {{get (await preparer) 'displayName'}}
+                  {{#if (get (await preparer) 'email')}}
+                    &nbsp;(<a href="mailto:{{get (await preparer) 'email'}}">{{get (await preparer) 'email'}}</a>)
+                  {{/if}}
+                {{/each}}
+              </td>
+            </tr>
+            {{/if}}
+            {{#if this.mustVisitWeblink}}
+            <tr>
+              <td id="externalSubmission">
+                <strong>External Submission Required</strong>
+                <br>
+                {{#if this.disableSubmit}}
+                <i class="fa fa-exclamation-triangle fa-2x mt-3 ml-3 notice-triangle"></i>
+                {{/if}}
+              </td>
+              <td>
+                <label class="">
+                  Please visit the following web portal to submit your manuscript directly. Metadata displayed above
+                  could be used to aid in your submission progress.
+                </label>
+                <ul class="m-0">
+                  {{#each this.weblinkRepos as |repo|}}
+                  <li>
+                    <button type="button" class="btn btn-link" {{action "openWeblinkAlert" repo}}>
+                      {{repo.url}}
+                    </button>
+                  </li>
+                  {{/each}}
+                </ul>
+              </td>
+            </tr>
+            {{/if}}
+            <tr>
+              <td><strong>Details</strong></td>
+              <td>
+                <DisplayMetadataKeys @submission={{this.model.sub}} />
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Files</strong></td>
+              <td>
+                {{#if (eq this.model.sub.source "other")}}
+                <p class="mb-0">
+                  <i>We do not have a copy of manuscript files because this submission did not originate from PASS</i>
+                </p>
+                {{else}}
+                <table local-class="files-table" class="w-100">
+                  <thead>
+                    <tr>
+                      <th scope="col"></th>
+                      <th scope="col" class="font-weight-light">Name</th>
+                      <th scope="col" class="font-weight-light">Type</th>
+                      <th scope="col" class="font-weight-light">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody class="striped">
+                    {{#each (get this.model 'files') as |file|}}
+                    <tr>
+                      <td data-label="icon">
+                        {{#if (eq file.mimeType 'png')}}
+                        <i local-class="line-height-35 text-gray fa-30" class="fas fa-file-image"></i> {{else if (eq file.mimeType
+                        'vnd.openxmlformats-officedocument.presentationml.presentation')}}
+                        <i local-class="line-height-35 text-gray fa-30" class="fas fa-file-powerpoint"></i> {{else if (eq
+                        file.mimeType 'msword')}}
+                        <i local-class="line-height-35 text-gray fa-30" class="fas fa-file-word"></i> {{else if (eq file.mimeType
+                        'pdf')}}
+                        <i local-class="line-height-35 text-gray fa-30" class="fas fa-file-pdf"></i>
+                        {{else}}
+                        <i local-class="line-height-35 text-gray fa-30" class="far fa-file"></i>
+                        {{/if}}
+                      </td>
+                      <td data-label="name" style="min-width:200px;">
+                        <a href={{file.uri}}>{{file.name}}</a>
+                      </td>
+                      <td data-label="type" class="text-nowrap">
+                        {{file.fileRole}}
+                      </td>
+                      <td data-label="description">
+                        {{file.description}}
+                      </td>
+                    </tr>
+                    {{/each}}
+                  </tbody>
+                </table>
+                {{/if}}
+              </td>
+            </tr>
+            {{#if (or this.this.isPreparer this.isSubmitter)}}
+              <tr>
+                <td class="text-nowrap"><strong>Comments</strong></td>
+                <td>
+                  <CommentingBlock @submissionEvents={{this.model.submissionEvents}} />
+                  {{#if (or (and this.isSubmitter this.submissionNeedsSubmitter) (and this.isPreparer this.submissionNeedsPreparer))}}
+                  <Textarea placeholder="Add comment" @value={{this.message}} class="form-control custom-control p-2" @rows="2" @style="resize:none; min-height: 38px!important;" />                {{/if}}              </td>
+              </tr>
+            {{/if}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{{#if (and this.isSubmitter this.submissionNeedsSubmitter)}}
+  <div class="row">
+    <div class="col-12 text-right">
+      <button class="btn btn-primary" onclick={{action 'approveChanges'}}>Submit</button>
+      <button class="btn btn-outline-primary" onclick={{action 'requestMoreChanges'}}>Request More Changes</button>
+      <LinkTo @route="submissions.new" @query={{hash submission=this.model.sub.id}} class="btn btn-outline-primary">Edit Submission</LinkTo>
+      <button class="btn btn-danger" onclick={{action 'cancelSubmission'}}>Cancel Submission</button>
+    </div>
+  </div>
+{{/if}}
+{{#if (and this.isPreparer this.submissionNeedsPreparer)}}
+  <div class="row">
+    <div class="col-12 text-right">
+      <LinkTo @route="submissions.new" @query={{hash submission=this.model.sub.id}} class="btn btn-primary">Edit this
+      submission</LinkTo>
+    </div>
+  </div>
+{{/if}}
