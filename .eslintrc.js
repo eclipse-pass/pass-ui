@@ -5,20 +5,14 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module',
     ecmaFeatures: {
-      legacyDecorators: true
-    }
+      legacyDecorators: true,
+    },
   },
-  plugins: [
-    'ember'
-  ],
-  extends: [
-    'eslint:recommended',
-    'plugin:ember/recommended'
-  ],
+  plugins: ['ember'],
+  extends: ['eslint:recommended', 'plugin:ember/recommended'],
   env: {
-    browser: true
+    browser: true,
   },
-  'extends': 'airbnb-base',
 
   rules: {
     'import/extensions': 'off',
@@ -26,7 +20,7 @@ module.exports = {
     'no-underscore-dangle': 'off',
     'no-undef': 'off',
     'func-names': 'off',
-    'eqeqeq': 'off',
+    eqeqeq: 'off',
     'one-var': 'off',
     'prefer-rest-params': 'off',
     // eventually re-enable these:
@@ -57,10 +51,22 @@ module.exports = {
     'no-lonely-if': 'off',
     'no-useless-escape': 'off',
     'class-methods-use-this': 'off',
-    'generator-star-spacing': 'off'
+    'generator-star-spacing': 'off',
     // we're not enabling this yet
     // 'ember/no-jquery': 'error'
   },
+  ignorePatterns: [
+    '.eslintrc.js',
+    '.prettierrc.js',
+    '.template-lintrc.js',
+    'ember-cli-build.js',
+    'testem.js',
+    'blueprints/*/index.js',
+    'config/**/*.js',
+    'lib/*/index.js',
+    'server/**/*.js',
+    'dist/**/*',
+  ],
   overrides: [
     // node files
     {
@@ -70,15 +76,15 @@ module.exports = {
         'testem.js',
         'blueprints/*/index.js',
         'config/**/*.js',
-        'lib/*/index.js'
+        'lib/*/index.js',
       ],
       parserOptions: {
-        sourceType: 'script'
+        sourceType: 'script',
       },
       env: {
         browser: false,
-        node: true
-      }
+        node: true,
+      },
     },
     // ember tests
     {
@@ -87,5 +93,5 @@ module.exports = {
         'prefer-arrow-callback': 'off',
       },
     },
-  ]
+  ],
 };

@@ -40,10 +40,29 @@
     "ember-qunit": "^4.6.0",
     "ember-test-selectors": "^2.1.0",
     "ember-tether": "^1.0.0",
-    "eslint-plugin-ember": "^7.9.0",
+    "prettier": "^2.6.2",
+    "ember-template-lint": "^4.4.1",
+    "eslint": "^7.27.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-ember": "^10.6.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-qunit": "^7.2.0",
+    "lint-staged": "^10.2.13",
+    "husky": "^7.0.0",
     "merge": ">=1.2.1",
     "qunit-dom": "^1.0.0",
     "toastr": "^2.1.4"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix"
+    ]
   },
   "engines": {
     "node": "10.* || >= 12"
@@ -61,7 +80,6 @@
     "ember-cli-babel": "^7.22.1",
     "ember-cli-bootstrap-4": "^0.9.1",
     "ember-cli-dependency-checker": "^3.2.0",
-    "ember-cli-eslint": "^4.2.3",
     "ember-cli-gravatar": "^3.10.2",
     "ember-cli-htmlbars": "^4.2.3",
     "ember-cli-inject-live-reload": "^2.0.2",
@@ -87,12 +105,6 @@
     "ember-toastr": "^1.7.1",
     "ember-truth-helpers": "^2.1.0",
     "ember-welcome-page": "^3.2.0",
-    "eslint": "^4.19.1",
-    "eslint-config-airbnb": "^16.1.0",
-    "eslint-config-airbnb-base": "^12.1.0",
-    "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-jsx-a11y": "^6.1.2",
-    "eslint-plugin-react": "^7.11.1",
     "faker": "^4.1.0",
     "jquery": "3.5.1",
     "loader.js": "^4.7.0",
