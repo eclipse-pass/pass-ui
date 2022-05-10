@@ -1,4 +1,3 @@
-
 'use strict';
 
 const { setEdition } = require('@ember/edition-utils');
@@ -13,8 +12,7 @@ module.exports = {
     Setting `disableAnalytics` to true will prevent any data from being sent.
   */
   liveReload: false,
-  testPort: 4200,
   yarn: true,
   watcher: 'polling',
-  disableAnalytics: false
+  disableAnalytics: false,
 };

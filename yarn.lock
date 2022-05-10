@@ -6848,6 +6848,13 @@ ember-sticky-element@^0.2.3:
     ember-cli-htmlbars "^2.0.1"
     ember-in-viewport "~3.0.0"
 
+ember-template-lint-plugin-prettier@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/ember-template-lint-plugin-prettier/-/ember-template-lint-plugin-prettier-4.0.0.tgz#37b49529232cf3b484b138a30e637d93c4e4044a"
+  integrity sha512-tQTiS60SAIHp49a++oRO9Hh1YzXvjIw8LM8PjOYyHv5WrNA3ATiTpJjHjcvQUog8Bw8TT+u0G16VmKkYHtSUQg==
+  dependencies:
+    prettier-linter-helpers "^1.0.0"
+
 ember-template-lint@^4.4.1:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/ember-template-lint/-/ember-template-lint-4.6.0.tgz#9802a7a4a23d369877a7de3c11cc5a15bc59c8aa"
