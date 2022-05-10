@@ -7,7 +7,7 @@ module.exports = function (environment) {
     modulePrefix: 'pass-ember',
     environment,
     // rootURL: '/fcrepo/rest',
-    rootURL: '/',
+    rootURL: '/app/',
     host: 'http://localhost:8080',
     locationType: 'auto',
     'ember-load': {
@@ -65,13 +65,13 @@ module.exports = function (environment) {
   }
 
   ENV.fedora = {
-    base: 'http://localhost:8080/fcrepo/rest/',
+    base: 'https://pass.local/fcrepo/rest/',
     context: 'https://oa-pass.github.io/pass-data-model/src/main/resources/context-3.4.jsonld',
-    data: 'http://oapass.org/ns/pass#',
-    elasticsearch: 'http://localhost:9200/pass/_search'
+    data: 'https://oapass.org/ns/pass#',
+    elasticsearch: 'https://pass.local/es'
   };
   ENV.userService = {
-    url: 'https://pass.local:8080/pass-user-service/whoami'
+    url: 'https://pass.local/pass-user-service/whoami'
   };
 
   ENV.doiService = {

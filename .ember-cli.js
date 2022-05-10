@@ -16,5 +16,5 @@ module.exports = {
   testPort: 4200,
   yarn: true,
   watcher: process.env.WATCHER || 'polling',
-  disableAnalytics: false
+  disableAnalytics: false,
 };

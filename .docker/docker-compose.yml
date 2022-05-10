@@ -100,7 +100,7 @@ services:
       - back
 
   sp:
-    image: oapass/sp:moo
+    image: oapass/sp:20211102
     container_name: sp
     networks:
       - back
