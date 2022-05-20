@@ -9,9 +9,9 @@ export function formatOapCompliance([compliance]) {
   const value = compliance.toLowerCase();
 
   if (value === 'yes') {
-    return (htmlSafe(`<span class='text-success'>${compliance}</span>`));
+    return htmlSafe(`<span class='text-success'>${compliance}</span>`);
   } else if (value === 'no') {
-    return (htmlSafe(`<span class='text-danger'>${compliance}</span>`));
+    return htmlSafe(`<span class='text-danger'>${compliance}</span>`);
   }
 
   return '';

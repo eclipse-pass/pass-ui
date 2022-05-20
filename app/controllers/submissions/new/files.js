@@ -56,8 +56,9 @@ export default class SubmissionsNewFiles extends Controller {
     let needValidation = this.needValidation;
     if (needValidation) {
       let files = this.files;
-      let manuscriptFiles = [].concat(this.newFiles, files && files.toArray())
-        .filter(file => file && get(file, 'fileRole') === 'manuscript');
+      let manuscriptFiles = []
+        .concat(this.newFiles, files && files.toArray())
+        .filter((file) => file && get(file, 'fileRole') === 'manuscript');
 
       if (manuscriptFiles.length == 0 && !this.parent.userIsSubmitter) {
         let result = await swal({
@@ -66,7 +67,7 @@ export default class SubmissionsNewFiles extends Controller {
           type: 'warning',
           showCancelButton: true,
           confirmButtonText: 'OK',
-          cancelButtonText: 'Cancel'
+          cancelButtonText: 'Cancel',
         });
 
         if (!result.dismiss) {

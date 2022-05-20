@@ -1,33 +1,33 @@
 :root {
   --jhu-bg-primary: white;
-  --pass-blue-primary: #418FDE;
-  --pass-blue-header: #005EB8;
+  --pass-blue-primary: #418fde;
+  --pass-blue-header: #005eb8;
 
   /* JHU Primary Colors */
-  --jhu-blue-spirit: #68ACE5;
-  --jhu-blue-heritage: #002D72;
-  --jhu-black: #31261D;
+  --jhu-blue-spirit: #68ace5;
+  --jhu-blue-heritage: #002d72;
+  --jhu-black: #31261d;
 
   /* JHU Secondary Colors */
-  --jhu-secondary-1: #CF4520;
-  --jhu-secondary-2: #76232F;
-  --jhu-secondary-3: #A15A95;
-  --jhu-secondary-4: #009B77;
-  --jhu-secondary-5: #0072CE;
-  --jhu-secondary-6: #F1C400;
+  --jhu-secondary-1: #cf4520;
+  --jhu-secondary-2: #76232f;
+  --jhu-secondary-3: #a15a95;
+  --jhu-secondary-4: #009b77;
+  --jhu-secondary-5: #0072ce;
+  --jhu-secondary-6: #f1c400;
 
   /* JHU Accent Colors */
-  --jhu-accent-1: #CBA052;
-  --jhu-accent-2: #FF9E1B;
-  --jhu-accent-3: #FF6900;
-  --jhu-accent-4: #9E5330;
-  --jhu-accent-5: #4F2C1D;
-  --jhu-accent-6: #E8927C;
-  --jhu-accent-7: #A6192E;
-  --jhu-accent-8: #51284F;
-  --jhu-accent-9: #A192B2;
-  --jhu-accent-10: #418FDE;
-  --jhu-accent-11: #86C8BC;
+  --jhu-accent-1: #cba052;
+  --jhu-accent-2: #ff9e1b;
+  --jhu-accent-3: #ff6900;
+  --jhu-accent-4: #9e5330;
+  --jhu-accent-5: #4f2c1d;
+  --jhu-accent-6: #e8927c;
+  --jhu-accent-7: #a6192e;
+  --jhu-accent-8: #51284f;
+  --jhu-accent-9: #a192b2;
+  --jhu-accent-10: #418fde;
+  --jhu-accent-11: #86c8bc;
   --jhu-accent-12: #286140;
   --jhu-accent-13: #179949;
 
@@ -38,8 +38,8 @@
   --font-bodycopy: tahoma, sans-serif;
 
   /* Other colors */
-  --btn-active-color: #C9C9C9;
-  --header-color: #4A484C;
+  --btn-active-color: #c9c9c9;
+  --header-color: #4a484c;
 }
 
 /* ---------------- */
@@ -85,24 +85,31 @@ body {
   font-family: var(--font-bodycopy);
   color: var(--jhu-black);
 }
-h1, h2, h3, h4, h5 {
+h1,
+h2,
+h3,
+h4,
+h5 {
   font-family: var(--font-headline);
 }
-h1, h2 {
+h1,
+h2 {
   color: var(--header-color);
 }
-a, .btn-link {
+a,
+.btn-link {
   color: var(--jhu-secondary-5);
 }
-a:hover, .btn-link:hover {
- color: var(--jhu-accent-10);
+a:hover,
+.btn-link:hover {
+  color: var(--jhu-accent-10);
 }
 
 /* Buttons */
 .btn-primary {
   background-color: var(--pass-blue-primary) !important;
   border-color: var(--pass-blue-primary) !important;
-  color:white;
+  color: white;
 }
 .btn-primary:hover {
   background-color: var(--pass-blue-primary);
@@ -131,7 +138,7 @@ a:hover, .btn-link:hover {
   color: white;
 }
 
-.btn-danger	{
+.btn-danger {
   color: white;
   background-color: var(--jhu-secondary-1);
 }
@@ -187,24 +194,36 @@ a:hover, .btn-link:hover {
 }
 
 /* Status icons */
-.manuscript-required>.fa-circle, .manuscript-required .fa-info-circle,
-.approval-requested>.fa-circle, .approval-requested .fa-info-circle,
-.changes-requested>.fa-circle, .changes-requested .fa-info-circle,
-.needs-attention>.fa-circle, .needs-attention .fa-info-circle,
-.stalled>.fa-circle, .stalled .fa-info-circle,
-.failed>.fa-circle, .failed .fa-info-circle,
-.rejected>.fa-circle, .rejected .fa-info-circle {
+.manuscript-required > .fa-circle,
+.manuscript-required .fa-info-circle,
+.approval-requested > .fa-circle,
+.approval-requested .fa-info-circle,
+.changes-requested > .fa-circle,
+.changes-requested .fa-info-circle,
+.needs-attention > .fa-circle,
+.needs-attention .fa-info-circle,
+.stalled > .fa-circle,
+.stalled .fa-info-circle,
+.failed > .fa-circle,
+.failed .fa-info-circle,
+.rejected > .fa-circle,
+.rejected .fa-info-circle {
   color: var(--jhu-secondary-6);
 }
-.cancelled>.fa-circle, .cancelled .fa-info-circle,
-.not-submitted>.fa-circle, .not-submitted .fa-info-circle {
+.cancelled > .fa-circle,
+.cancelled .fa-info-circle,
+.not-submitted > .fa-circle,
+.not-submitted .fa-info-circle {
   color: var(--jhu-accent-10);
 }
-.submitted>.fa-circle, .submitted .fa-info-circle,
-.complete>.fa-circle, .complete .fa-info-circle {
+.submitted > .fa-circle,
+.submitted .fa-info-circle,
+.complete > .fa-circle,
+.complete .fa-info-circle {
   color: var(--jhu-accent-11);
 }
-.draft>.fa-circle, .draft .fa-info-circle {
+.draft > .fa-circle,
+.draft .fa-info-circle {
   color: gray;
 }
 
@@ -222,7 +241,8 @@ th.table-header > i {
   color: var(--jhu-black);
   opacity: 0.8;
 }
-#grant-details-title .back-arrow, #submission-details-title .back-arrow {
+#grant-details-title .back-arrow,
+#submission-details-title .back-arrow {
   color: var(--jhu-black);
   opacity: 0.7;
 }
@@ -230,5 +250,3 @@ th.table-header > i {
 #submission-details-title .back-arrow:hover {
   opacity: 0.5;
 }
-
-

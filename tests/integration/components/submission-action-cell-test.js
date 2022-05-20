@@ -14,13 +14,13 @@ module('Integration | Component | submission action cell', (hooks) => {
     const currentUserStub = Service.extend({
       user: {
         id: 1,
-      }
+      },
     });
 
     const mockStore = Service.extend({
       query() {
         return Promise.resolve(A());
-      }
+      },
     });
 
     run(() => {

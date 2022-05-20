@@ -24,13 +24,14 @@
                 </span>
               {{else}}
                 <span class="{{this.status}}">
-                  <i local-class="deposit-status-icon" class="fas fa-circle"></i> {{status}}
+                  <i local-class="deposit-status-icon" class="fas fa-circle"></i>
+                  {{status}}
                 </span>
               {{/if}}
             </div>
           {{/unless}}
         </div>
-        <hr class="my-2">
+        <hr class="my-2" />
         <RepocopyDisplay @repoCopy={{@repoCopy}} />
       </p>
     </div>

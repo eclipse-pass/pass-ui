@@ -52,10 +52,10 @@ export default class AutocompleteService extends Service {
    */
   suggest(fieldName, suggestPrefix, context, type) {
     if (!fieldName || fieldName === '') {
-      return Promise.reject(new Error('No \'fieldName\' was provided to the autocomplete service'));
+      return Promise.reject(new Error("No 'fieldName' was provided to the autocomplete service"));
     }
     if (!suggestPrefix) {
-      return Promise.reject(new Error('No \'suggestPrefix\' was provided to the autocomplete service.'));
+      return Promise.reject(new Error("No 'suggestPrefix' was provided to the autocomplete service."));
     }
     if (context && Array.isArray(context.pi)) {
       context.pi = context.pi.map((id) => {
@@ -66,7 +66,8 @@ export default class AutocompleteService extends Service {
     } else if (context && context.pi && context.pi.startsWith(ENV.fedora.base)) {
       context.pi = context.pi.slice(ENV.fedora.base.length - 1);
     }
-    if (type) { // Make sure first letter is capitalized
+    if (type) {
+      // Make sure first letter is capitalized
       type = type.charAt(0).toUpperCase() + type.slice(1);
     }
 
@@ -80,11 +81,13 @@ export default class AutocompleteService extends Service {
       data.suggest[fieldName] = this._suggestQueryPart(fieldName, suggestPrefix, context);
     }
 
-    return this.ajax.post(this.base, {
-      data,
-      headers: this._headers(),
-      xhrFields: { withCredentials: true }
-    }).then(res => this._adaptResults(res, type));
+    return this.ajax
+      .post(this.base, {
+        data,
+        headers: this._headers(),
+        xhrFields: { withCredentials: true },
+      })
+      .then((res) => this._adaptResults(res, type));
   }
 
   _suggestQueryPart(fieldName, prefix, context) {
@@ -97,8 +100,8 @@ export default class AutocompleteService extends Service {
       prefix,
       completion: {
         field: esFieldName,
-        size: this.suggestSize
-      }
+        size: this.suggestSize,
+      },
     };
 
     if (context) {
@@ -136,7 +139,7 @@ export default class AutocompleteService extends Service {
       // First, if 'type' is declared, filter options by given type
       // If 'type' is not declared, then pass all options
       results.options
-        .filter(option => !type || option._source['@type'] === type)
+        .filter((option) => !type || option._source['@type'] === type)
         .forEach((option) => {
           if (!option._source || !option._source['@id']) {
             return;
@@ -150,7 +153,7 @@ export default class AutocompleteService extends Service {
 
   _headers() {
     return {
-      'Content-Type': 'application/json; charset=utf-8'
+      'Content-Type': 'application/json; charset=utf-8',
     };
   }
 }

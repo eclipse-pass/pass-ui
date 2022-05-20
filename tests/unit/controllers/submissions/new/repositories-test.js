@@ -14,14 +14,19 @@ module('Unit | Controller | submissions/new/repositories', (hooks) => {
 
   test('transition aborted if no repositories', function (assert) {
     let controller = this.owner.lookup('controller:submissions/new/repositories');
-    this.owner.register('service:workflow', EmberObject.extend({
-      getMaxStep() { return 7; }
-    }));
+    this.owner.register(
+      'service:workflow',
+      EmberObject.extend({
+        getMaxStep() {
+          return 7;
+        },
+      })
+    );
     let submission = EmberObject.create({
-      repositories: []
+      repositories: [],
     });
     let model = EmberObject.create({
-      newSubmission: submission
+      newSubmission: submission,
     });
     controller.set('model', model);
     let loadTabAccessed = false;
@@ -29,7 +34,7 @@ module('Unit | Controller | submissions/new/repositories', (hooks) => {
       loadTabAccessed = true;
     };
     // override swal so it doesn't pop up
-    swal = result => new Promise(resolve => (assert.ok(true)));
+    swal = (result) => new Promise((resolve) => assert.ok(true));
     controller.send('validateAndLoadTab');
     assert.equal(loadTabAccessed, false);
   });
@@ -38,19 +43,24 @@ module('Unit | Controller | submissions/new/repositories', (hooks) => {
     assert.ok(2);
 
     let controller = this.owner.lookup('controller:submissions/new/repositories');
-    this.owner.register('service:workflow', EmberObject.extend({
-      getMaxStep() { return 5; }
-    }));
+    this.owner.register(
+      'service:workflow',
+      EmberObject.extend({
+        getMaxStep() {
+          return 5;
+        },
+      })
+    );
 
     let repository = EmberObject.create({
       id: 'test:repo',
-      formSchema: '{ "id": "nih", "title": "med data" }'
+      formSchema: '{ "id": "nih", "title": "med data" }',
     });
     const model = EmberObject.create({
       newSubmission: EmberObject.create({
         repositories: A([repository]),
-        save: () => Promise.resolve(assert.ok(true))
-      })
+        save: () => Promise.resolve(assert.ok(true)),
+      }),
     });
     controller.set('model', model);
 
@@ -94,8 +104,8 @@ module('Unit | Controller | submissions/new/repositories', (hooks) => {
     const repositories = A([
       EmberObject.create({
         id: 'test:repo',
-        formSchema: '{ "id": "nih", "title": "med data" }'
-      })
+        formSchema: '{ "id": "nih", "title": "med data" }',
+      }),
     ]);
     const model = EmberObject.create({
       newSubmission: EmberObject.create({
@@ -103,14 +113,13 @@ module('Unit | Controller | submissions/new/repositories', (hooks) => {
         save: () => {
           subSaved = true;
           return Promise.resolve();
-        }
-      })
+        },
+      }),
     });
 
     controller.set('model', model);
-    controller.set(
-      'transitionToRoute',
-      route => assert.ok(['submissions.new.metadata', 'submissions.new.policies'].includes(route))
+    controller.set('transitionToRoute', (route) =>
+      assert.ok(['submissions.new.metadata', 'submissions.new.policies'].includes(route))
     );
 
     controller.send('loadNext');
@@ -134,7 +143,6 @@ module('Unit | Controller | submissions/new/repositories', (hooks) => {
   //     name: 'Moo funder 2',
   //     repositories: Ember.A([repo1, repo2])
   //   });
-
 
   //   const grants = Ember.A([
   //     Ember.Object.create({

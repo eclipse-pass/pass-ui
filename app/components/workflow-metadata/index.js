@@ -76,7 +76,7 @@ export default class WorkflowMetadata extends Component {
     // 10.4137/CMC.S38446
     // 10.1039/c7an01256j
     if (!this.schemas) {
-      const repos = get(this, 'args.submission.repositories').map(repo => repo.id);
+      const repos = get(this, 'args.submission.repositories').map((repo) => repo.id);
 
       // Load schemas by calling the Schema service
       try {
@@ -86,11 +86,7 @@ export default class WorkflowMetadata extends Component {
         const journal = yield get(this, 'args.publication.journal');
 
         // Add relevant fields from DOI data to submission metadata
-        const metadataFromDoi = this.doi.doiToMetadata(
-          doiInfo,
-          journal,
-          this.metadataSchema.getFields(schemas)
-        );
+        const metadataFromDoi = this.doi.doiToMetadata(doiInfo, journal, this.metadataSchema.getFields(schemas));
 
         if (this.workflow.isDataFromCrossref()) {
           this.setReadOnly(metadataFromDoi);
@@ -105,7 +101,7 @@ export default class WorkflowMetadata extends Component {
         console.log(e);
       }
     }
-  }
+  };
 
   /**
    * Set the object keys as read-only metadata fields. This assumes that incoming metadata captured
@@ -136,7 +132,7 @@ export default class WorkflowMetadata extends Component {
       swal({
         type: 'error',
         title: 'Form Validation Error',
-        html: this.validationErrorMsg(metadataSchema.getErrors())
+        html: this.validationErrorMsg(metadataSchema.getErrors()),
       });
       return;
     }
@@ -219,11 +215,7 @@ export default class WorkflowMetadata extends Component {
       deletableFields = this.metadataSchema.getFields([this.currentSchema], true);
     }
 
-    mergedBlob = this.metadataSchema.mergeBlobs(
-      this.metadata,
-      newMetadata,
-      deletableFields
-    );
+    mergedBlob = this.metadataSchema.mergeBlobs(this.metadata, newMetadata, deletableFields);
 
     set(this, 'metadata', mergedBlob);
   }
@@ -242,7 +234,7 @@ export default class WorkflowMetadata extends Component {
    */
   finalizeMetadata() {
     this.updateMetadata({
-      agent_information: this.getBrowserInfo()
+      agent_information: this.getBrowserInfo(),
     });
 
     const finalMetadata = this.metadata;
@@ -266,7 +258,7 @@ export default class WorkflowMetadata extends Component {
 
     if (mdHasCovid && !submission.isCovid) {
       if (tags.length > 1) {
-        let tagsWithoutCovid = tags.filter(tag => tag != 'covid');
+        let tagsWithoutCovid = tags.filter((tag) => tag != 'covid');
         metadata.hints['collection-tags'] = tagsWithoutCovid;
       }
 
@@ -280,7 +272,7 @@ export default class WorkflowMetadata extends Component {
         metadata.hints['collection-tags'].push('covid');
       } else {
         metadata.hints = {
-          'collection-tags': ['covid']
+          'collection-tags': ['covid'],
         };
       }
     }
@@ -295,7 +287,7 @@ export default class WorkflowMetadata extends Component {
     let M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
     if (/trident/i.test(M[1])) {
       tem = /\brv[ :]+(\d+)/g.exec(ua) || [];
-      return { name: 'IE ', version: (tem[1] || '') };
+      return { name: 'IE ', version: tem[1] || '' };
     }
     if (M[1] === 'Chrome') {
       tem = ua.match(/\bOPR\/(\d+)/);
@@ -305,10 +297,12 @@ export default class WorkflowMetadata extends Component {
     }
     M = M[2] ? [M[1], M[2]] : [navigator.appName, navigator.appVersion, '-?'];
     //  eslint-disable-next-line
-    if((tem=ua.match(/version\/(\d+)/i))!=null) {M.splice(1,1,tem[1]);}
+    if ((tem = ua.match(/version\/(\d+)/i)) != null) {
+      M.splice(1, 1, tem[1]);
+    }
     return {
       name: M[0],
-      version: M[1]
+      version: M[1],
     };
   }
 

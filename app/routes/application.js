@@ -61,7 +61,7 @@ export default class ApplicationRoute extends CheckSessionRoute {
   model() {
     const configurator = this.staticConfig;
     return RSVP.hash({
-      staticConfig: configurator.getStaticConfig()
+      staticConfig: configurator.getStaticConfig(),
     });
   }
 

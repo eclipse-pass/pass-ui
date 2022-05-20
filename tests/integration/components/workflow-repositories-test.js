@@ -35,11 +35,14 @@ module('Integration | Component | workflow repositories', (hooks) => {
   });
 
   test('required repositories should display with no checkboxes', async function (assert) {
-    this.set('requiredRepositories', A([
-      {
-        repository: EmberObject.create({ name: 'Moo-pository 1' })
-      }
-    ]));
+    this.set(
+      'requiredRepositories',
+      A([
+        {
+          repository: EmberObject.create({ name: 'Moo-pository 1' }),
+        },
+      ])
+    );
 
     await render(hbs`
       <WorkflowRepositories
@@ -50,22 +53,26 @@ module('Integration | Component | workflow repositories', (hooks) => {
       />
     `);
 
-    assert.ok(this.element.textContent.includes('Moo-pository 1'), 'couldn\'t find repository name');
+    assert.ok(this.element.textContent.includes('Moo-pository 1'), "couldn't find repository name");
 
     const checkboxes = this.element.querySelectorAll('input[type="checkbox"]');
     assert.equal(checkboxes.length, 0, 'should be zero checkboxes rendered');
   });
 
   test('optional/choice repos chould display with checkboxes', async function (assert) {
-    this.set('choiceRepositories', A([
+    this.set(
+      'choiceRepositories',
       A([
-        { selected: true, repository: EmberObject.create({ name: 'Moo-pository 1' }) },
-        { selected: false, repository: EmberObject.create({ name: 'Moo-pository 2' }) }
+        A([
+          { selected: true, repository: EmberObject.create({ name: 'Moo-pository 1' }) },
+          { selected: false, repository: EmberObject.create({ name: 'Moo-pository 2' }) },
+        ]),
       ])
-    ]));
-    this.set('optionalRepositories', A([
-      { selected: false, repository: EmberObject.create({ name: 'Moo-pository 00' }) }
-    ]));
+    );
+    this.set(
+      'optionalRepositories',
+      A([{ selected: false, repository: EmberObject.create({ name: 'Moo-pository 00' }) }])
+    );
 
     await render(hbs`
       <WorkflowRepositories
@@ -86,12 +93,15 @@ module('Integration | Component | workflow repositories', (hooks) => {
   });
 
   test('User cannot deselect all choice repos', async function (assert) {
-    this.set('choiceRepositories', A([
+    this.set(
+      'choiceRepositories',
       A([
-        { repository: EmberObject.create({ name: 'Moo-pository 1', _selected: true }) },
-        { repository: EmberObject.create({ name: 'Moo-pository 2', _selected: false }) }
+        A([
+          { repository: EmberObject.create({ name: 'Moo-pository 1', _selected: true }) },
+          { repository: EmberObject.create({ name: 'Moo-pository 2', _selected: false }) },
+        ]),
       ])
-    ]));
+    );
 
     await render(hbs`
       <WorkflowRepositories
@@ -119,18 +129,20 @@ module('Integration | Component | workflow repositories', (hooks) => {
   });
 
   test('Selecting an optional repo adds it to submission', async function (assert) {
-    this.set('requiredRepositories', A([
-      { repository: EmberObject.create({ name: 'Moo-pository XYZ' }) }
-    ]));
-    this.set('choiceRepositories', A([
+    this.set('requiredRepositories', A([{ repository: EmberObject.create({ name: 'Moo-pository XYZ' }) }]));
+    this.set(
+      'choiceRepositories',
       A([
-        { repository: EmberObject.create({ name: 'Moo-pository 1', _selected: true }) },
-        { repository: EmberObject.create({ name: 'Moo-pository 2', _selected: false }) }
+        A([
+          { repository: EmberObject.create({ name: 'Moo-pository 1', _selected: true }) },
+          { repository: EmberObject.create({ name: 'Moo-pository 2', _selected: false }) },
+        ]),
       ])
-    ]));
-    this.set('optionalRepositories', A([
-      { selected: false, repository: EmberObject.create({ name: 'Moo-pository 00' }) }
-    ]));
+    );
+    this.set(
+      'optionalRepositories',
+      A([{ selected: false, repository: EmberObject.create({ name: 'Moo-pository 00' }) }])
+    );
 
     await render(hbs`
       <WorkflowRepositories
@@ -156,18 +168,20 @@ module('Integration | Component | workflow repositories', (hooks) => {
   });
 
   test('Unselecting optional repo removes it from submission', async function (assert) {
-    this.set('requiredRepositories', A([
-      { repository: EmberObject.create({ name: 'Moo-pository XYZ' }) }
-    ]));
-    this.set('choiceRepositories', A([
+    this.set('requiredRepositories', A([{ repository: EmberObject.create({ name: 'Moo-pository XYZ' }) }]));
+    this.set(
+      'choiceRepositories',
       A([
-        { repository: EmberObject.create({ name: 'Moo-pository 1', _selected: true }) },
-        { repository: EmberObject.create({ name: 'Moo-pository 2', _selected: false }) }
+        A([
+          { repository: EmberObject.create({ name: 'Moo-pository 1', _selected: true }) },
+          { repository: EmberObject.create({ name: 'Moo-pository 2', _selected: false }) },
+        ]),
       ])
-    ]));
-    this.set('optionalRepositories', A([
-      { repository: EmberObject.create({ name: 'Moo-pository 00', _selected: true }) }
-    ]));
+    );
+    this.set(
+      'optionalRepositories',
+      A([{ repository: EmberObject.create({ name: 'Moo-pository 00', _selected: true }) }])
+    );
 
     await render(hbs`
       <WorkflowRepositories
@@ -203,28 +217,36 @@ module('Integration | Component | workflow repositories', (hooks) => {
    * This could happen when editing a draft submission.
    */
   test('Repos on submission are selected initially', async function (assert) {
-    this.set('submission', EmberObject.create({
-      repositories: A([
-        EmberObject.create({ id: 1, name: 'Test Repo 1' })
-      ])
-    }));
+    this.set(
+      'submission',
+      EmberObject.create({
+        repositories: A([EmberObject.create({ id: 1, name: 'Test Repo 1' })]),
+      })
+    );
 
     const addedRepo = EmberObject.create({ id: 3, name: 'Test Repo 3', _selected: true });
-    this.set('optionalRepositories', A([
-      { repository: EmberObject.create({ id: 1, name: 'Test Repo 1', _selected: false }) },
-      { repository: EmberObject.create({ id: 2, name: 'Test Repo 2', _selected: true }) },
-      { repository: addedRepo }
-    ]));
-    this.owner.register('service:workflow', Service.extend({
-      setMaxStep: () => {},
-      getAddedGrants: () => A([
-        EmberObject.create({
-          primaryFunder: EmberObject.create({
-            policy: EmberObject.create({ repositories: A([addedRepo]) })
-          })
-        })
+    this.set(
+      'optionalRepositories',
+      A([
+        { repository: EmberObject.create({ id: 1, name: 'Test Repo 1', _selected: false }) },
+        { repository: EmberObject.create({ id: 2, name: 'Test Repo 2', _selected: true }) },
+        { repository: addedRepo },
       ])
-    }));
+    );
+    this.owner.register(
+      'service:workflow',
+      Service.extend({
+        setMaxStep: () => {},
+        getAddedGrants: () =>
+          A([
+            EmberObject.create({
+              primaryFunder: EmberObject.create({
+                policy: EmberObject.create({ repositories: A([addedRepo]) }),
+              }),
+            }),
+          ]),
+      })
+    );
 
     await render(hbs`
       <WorkflowRepositories
@@ -235,7 +257,9 @@ module('Integration | Component | workflow repositories', (hooks) => {
       />
     `);
 
-    const checkboxes = this.element.querySelectorAll('[data-test-workflow-repositories-optional-list] > li > input[type="checkbox"]');
+    const checkboxes = this.element.querySelectorAll(
+      '[data-test-workflow-repositories-optional-list] > li > input[type="checkbox"]'
+    );
     assert.equal(checkboxes.length, 3, 'Should be two checkboxes showing');
     assert.notOk(checkboxes[0].checked, 'First checkbox should NOT be checked');
     assert.ok(checkboxes[1].checked, 'Second checkbox should be checked');

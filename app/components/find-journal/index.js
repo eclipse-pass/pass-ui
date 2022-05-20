@@ -1,4 +1,3 @@
-
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 import Component from '@glimmer/component';
@@ -26,6 +25,6 @@ export default class FindJournal extends Component {
 
   @action
   onSelect(selected) {
-    this.store.findRecord('journal', selected.id).then(journal => this.args.selectJournal(journal));
+    this.store.findRecord('journal', selected.id).then((journal) => this.args.selectJournal(journal));
   }
 }

@@ -16,10 +16,10 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
     let submission = EmberObject.create({
       submitterEmailDisplay: 'badtestemail',
       repositories: [],
-      grants: []
+      grants: [],
     });
     let model = {
-      newSubmission: submission
+      newSubmission: submission,
     };
     controller.set('model', model);
     assert.equal(controller.get('submitterEmailIsInvalid'), true);
@@ -50,13 +50,13 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
     let controller = this.owner.lookup('controller:submissions/new/basics');
     let submission = EmberObject.create({
       repositories: [],
-      grants: []
+      grants: [],
     });
     let submitter = EmberObject.create({
-      id: 'https://fake.id'
+      id: 'https://fake.id',
     });
     let model = {
-      newSubmission: submission
+      newSubmission: submission,
     };
     controller.set('model', model);
     assert.equal(controller.get('submitterEmailIsInvalid'), true);
@@ -74,13 +74,13 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
 
   test('check title and journal validation', function (assert) {
     let controller = this.owner.lookup('controller:submissions/new/basics');
-    let submission = EmberObject.create({ });
+    let submission = EmberObject.create({});
     let publication = EmberObject.create({
-      journal: []
+      journal: [],
     });
     let model = {
       newSubmission: submission,
-      publication
+      publication,
     };
     controller.set('model', model);
     assert.equal(controller.get('journalIsInvalid'), true);
@@ -99,13 +99,13 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
 
   test('check validateAndLoadTab rejects empty journal and title', function (assert) {
     let controller = this.owner.lookup('controller:submissions/new/basics');
-    let submission = EmberObject.create({ });
+    let submission = EmberObject.create({});
     let publication = EmberObject.create({
-      journal: []
+      journal: [],
     });
     let model = {
       newSubmission: submission,
-      publication
+      publication,
     };
     controller.set('model', model);
     assert.equal(controller.get('titleError'), false);
@@ -126,17 +126,17 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
     let controller = this.owner.lookup('controller:submissions/new/basics');
     let loadTabAccessed = false;
     let submission = EmberObject.create({
-      isProxySubmission: true
+      isProxySubmission: true,
     });
     let publication = EmberObject.create({
       title: 'Test publication title',
       journal: {
-        id: 'journal:id'
-      }
+        id: 'journal:id',
+      },
     });
     let model = {
       newSubmission: submission,
-      publication
+      publication,
     };
     controller.set('model', model);
     controller.transitionToRoute = function () {
@@ -174,21 +174,21 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
         assert.ok(true);
         subSaved = true;
         return Promise.resolve();
-      }
+      },
     });
     let publication = EmberObject.create({
       title: 'Test publication title',
       journal: {
-        id: 'journal:id'
+        id: 'journal:id',
       },
       save() {
         assert.ok(true);
         return Promise.resolve();
-      }
+      },
     });
     let model = {
       newSubmission: submission,
-      publication
+      publication,
     };
 
     controller.set('model', model);
@@ -222,13 +222,13 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
       publication: EmberObject.create({
         title: 'This is the moo-iest',
         journal: EmberObject.create({
-          id: 'journal:id'
+          id: 'journal:id',
         }),
-        save: () => Promise.resolve(assert.ok(true))
+        save: () => Promise.resolve(assert.ok(true)),
       }),
       newSubmission: EmberObject.create({
-        save: () => Promise.resolve(assert.ok(true))
-      })
+        save: () => Promise.resolve(assert.ok(true)),
+      }),
     };
 
     controller.set('transitionToRoute', (route) => {});

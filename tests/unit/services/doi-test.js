@@ -9,7 +9,7 @@ module('Unit | Service | doi', (hooks) => {
     this.set('mockDoiInfo', {
       'issn-map': {
         '0003-2654': { 'pub-type': ['Print'] },
-        '1364-5528': { 'pub-type': ['Electronic'] }
+        '1364-5528': { 'pub-type': ['Electronic'] },
       },
       author: [
         {
@@ -17,21 +17,22 @@ module('Unit | Service | doi', (hooks) => {
           'authenticated-orcid': false,
           given: 'Moo',
           family: 'Jones',
-          sequence: 'first'
+          sequence: 'first',
         },
         {
           given: 'Moo, Jr',
           family: 'Jones',
-          sequence: 'additional'
-        }
-      ]
+          sequence: 'additional',
+        },
+      ],
     });
 
     this.set('mockDoiInfo2', {
       publisher: 'Royal Society of Chemistry (RSC)',
       issue: 1,
       'short-container-title': 'Analyst',
-      abstract: '<p>The investigators report a dramatically improved chemoselective analysis for carbonyls in crude biological extracts by turning to a catalyst and freezing conditions for derivatization.</p>',
+      abstract:
+        '<p>The investigators report a dramatically improved chemoselective analysis for carbonyls in crude biological extracts by turning to a catalyst and freezing conditions for derivatization.</p>',
       DOI: '10.1039/c7an01256j',
       type: 'journal-article',
       page: '311-322',
@@ -39,7 +40,7 @@ module('Unit | Service | doi', (hooks) => {
       source: 'Crossref',
       'is-referenced-by-count': 5,
       title: [
-        'Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS'
+        'Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS',
       ],
       prefix: '10.1039',
       volume: '143',
@@ -49,7 +50,7 @@ module('Unit | Service | doi', (hooks) => {
       ISSN: ['0003-2654', '1364-5528'],
       'issn-type': [
         { value: '0003-2654', type: 'print' },
-        { value: '1364-5528', type: 'electronic' }
+        { value: '1364-5528', type: 'electronic' },
       ],
     });
   });
@@ -84,15 +85,15 @@ module('Unit | Service | doi', (hooks) => {
           family: 'Jones',
           sequence: 'first',
           orcid: 'http://orcid.org/0000-0003-2974-7389',
-          author: 'Moo Jones'
+          author: 'Moo Jones',
         },
         {
           given: 'Moo, Jr',
           family: 'Jones',
           sequence: 'additional',
           orcid: undefined,
-          author: 'Moo, Jr Jones'
-        }
+          author: 'Moo, Jr Jones',
+        },
       ],
       'Unexpected "authors" found'
     );
@@ -101,19 +102,19 @@ module('Unit | Service | doi', (hooks) => {
       result.issns,
       [
         {
-          issn: 'odd'
+          issn: 'odd',
         },
         {
           issn: 'moo',
-          pubType: 'Print'
+          pubType: 'Print',
         },
         {
           issn: 'chitter',
-          pubType: 'Online'
+          pubType: 'Online',
         },
         {
-          issn: 'oddagain'
-        }
+          issn: 'oddagain',
+        },
       ],
       'Unexpected "issns" found'
     );
@@ -146,51 +147,60 @@ module('Unit | Service | doi', (hooks) => {
     const doiInfo = get(this, 'mockDoiInfo2');
     const journalId = 'blah';
 
-    service.set('ajax', EmberObject.create({
-      request(url, method, options) {
-        assert.ok(true);
+    service.set(
+      'ajax',
+      EmberObject.create({
+        request(url, method, options) {
+          assert.ok(true);
 
-        let journal = EmberObject.create({ id: 'journal' });
+          let journal = EmberObject.create({ id: 'journal' });
 
-        let result = {
-          crossref: { message: doiInfo },
-          'journal-id': journalId
-        };
+          let result = {
+            crossref: { message: doiInfo },
+            'journal-id': journalId,
+          };
 
-        return new Promise(resolve => resolve(result));
-      }
-    }));
+          return new Promise((resolve) => resolve(result));
+        },
+      })
+    );
 
-    service.set('store', EmberObject.create({
-      findRecord(type, id) {
-        assert.ok(true);
-        assert.equal(type, 'journal');
+    service.set(
+      'store',
+      EmberObject.create({
+        findRecord(type, id) {
+          assert.ok(true);
+          assert.equal(type, 'journal');
 
-        let journal = EmberObject.create({ id: 'journal' });
-        return new Promise(resolve => resolve(journal));
-      },
+          let journal = EmberObject.create({ id: 'journal' });
+          return new Promise((resolve) => resolve(journal));
+        },
 
-      createRecord(type, values) {
-        assert.equal(type, 'publication');
+        createRecord(type, values) {
+          assert.equal(type, 'publication');
 
-        return EmberObject.create(values);
-      }
-    }));
+          return EmberObject.create(values);
+        },
+      })
+    );
 
     assert.expect(8);
 
-    return service.get('resolveDOI').perform(doiInfo.DOI).then((result) => {
-      assert.ok(result.publication);
-      assert.ok(result.doiInfo);
+    return service
+      .get('resolveDOI')
+      .perform(doiInfo.DOI)
+      .then((result) => {
+        assert.ok(result.publication);
+        assert.ok(result.doiInfo);
 
-      assert.equal(doiInfo.DOI, result.publication.doi);
-      assert.equal(doiInfo.DOI, result.doiInfo.DOI);
-    });
+        assert.equal(doiInfo.DOI, result.publication.doi);
+        assert.equal(doiInfo.DOI, result.doiInfo.DOI);
+      });
   });
 
-  test('Make sure we don\'t choke on journal with no ISSNs', function (assert) {
+  test("Make sure we don't choke on journal with no ISSNs", function (assert) {
     const journal = EmberObject.create({
-      nlmta: 'NLmooTA'
+      nlmta: 'NLmooTA',
     });
     const doiInfo = get(this, 'mockDoiInfo');
     const service = this.owner.lookup('service:doi');

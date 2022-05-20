@@ -5,9 +5,7 @@
 const EmberApp = require('ember-cli/lib/broccoli/ember-app');
 const stringHash = require('string-hash');
 
-const disableCssModules = [
-  '/pass-ember/styles/app.scss'
-];
+const disableCssModules = ['/pass-ember/styles/app.scss'];
 
 module.exports = function (defaults) {
   let app = new EmberApp(defaults, {
@@ -16,7 +14,7 @@ module.exports = function (defaults) {
       only: ['queue', 'compute', 'invoke'],
     },
     'ember-cli-babel': {
-      includePolyfill: true
+      includePolyfill: true,
     },
     cssModules: {
       generateScopedName(className, modulePath) {
@@ -31,12 +29,8 @@ module.exports = function (defaults) {
       },
     },
     fingerprint: {
-      exclude: [
-        'branding.css',
-        'error-icon.png',
-        'fullSizeLogo.png'
-      ]
-    }
+      exclude: ['branding.css', 'error-icon.png', 'fullSizeLogo.png'],
+    },
   });
 
   // Use `app.import` to add additional libraries to the generated

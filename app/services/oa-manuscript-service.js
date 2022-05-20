@@ -51,7 +51,7 @@ export default class OAManuscriptService extends Service {
         }
         return resp.json();
       })
-      .then(data => data.manuscripts)
-      .catch(e => console.log(e));
+      .then((data) => data.manuscripts)
+      .catch((e) => console.log(e));
   }
 }

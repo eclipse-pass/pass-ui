@@ -15,16 +15,19 @@ module('Integration | Component | choice repositories card', (hooks) => {
   });
 
   test('selected repos are checked by default', async function (assert) {
-    this.set('choiceGroup', A([
-      EmberObject.create({
-        'repository-id': 'moo-1',
-        repository: EmberObject.create({ name: 'Moo the First', _selected: true })
-      }),
-      EmberObject.create({
-        'repository-id': 'moo-2',
-        repository: EmberObject.create({ name: 'Moo the Second', _selected: false })
-      })
-    ]));
+    this.set(
+      'choiceGroup',
+      A([
+        EmberObject.create({
+          'repository-id': 'moo-1',
+          repository: EmberObject.create({ name: 'Moo the First', _selected: true }),
+        }),
+        EmberObject.create({
+          'repository-id': 'moo-2',
+          repository: EmberObject.create({ name: 'Moo the Second', _selected: false }),
+        }),
+      ])
+    );
 
     await render(hbs`<ChoiceRepositoriesCard @choiceGroup={{this.choiceGroup}} />`);
     assert.ok(true, 'failed to render');
@@ -39,22 +42,25 @@ module('Integration | Component | choice repositories card', (hooks) => {
   test('toggleRespositories blocks actions to deselect the only selected repo', async function (assert) {
     assert.expect(3);
 
-    this.set('choiceGroup', A([
-      EmberObject.create({
-        'repository-id': 'moo-1',
-        repository: EmberObject.create({ name: 'Moo the First', _selected: true })
-      }),
-      EmberObject.create({
-        'repository-id': 'moo-2',
-        repository: EmberObject.create({ name: 'Moo the Second', _selected: false })
-      })
-    ]));
+    this.set(
+      'choiceGroup',
+      A([
+        EmberObject.create({
+          'repository-id': 'moo-1',
+          repository: EmberObject.create({ name: 'Moo the First', _selected: true }),
+        }),
+        EmberObject.create({
+          'repository-id': 'moo-2',
+          repository: EmberObject.create({ name: 'Moo the Second', _selected: false }),
+        }),
+      ])
+    );
 
     await render(hbs`<ChoiceRepositoriesCard @choiceGroup={{this.choiceGroup}} />`);
     assert.ok(this.element, 'failed to render');
 
     const checkbox = this.element.querySelector('input[type="checkbox"]');
-    assert.ok(checkbox, 'couldn\'t find checkbox');
+    assert.ok(checkbox, "couldn't find checkbox");
 
     await click(checkbox);
     assert.ok(checkbox.checked, 'Checkbox should still be checked');
@@ -63,21 +69,26 @@ module('Integration | Component | choice repositories card', (hooks) => {
   test('toggleRepositories bubbles actions', async function (assert) {
     assert.expect(3);
 
-    this.set('choiceGroup', A([
-      EmberObject.create({
-        'repository-id': 'moo-1',
-        repository: EmberObject.create({ name: 'Moo the First', _selected: true })
-      }),
-      EmberObject.create({
-        'repository-id': 'moo-2',
-        repository: EmberObject.create({ name: 'Moo the Second', _selected: false })
-      })
-    ]));
+    this.set(
+      'choiceGroup',
+      A([
+        EmberObject.create({
+          'repository-id': 'moo-1',
+          repository: EmberObject.create({ name: 'Moo the First', _selected: true }),
+        }),
+        EmberObject.create({
+          'repository-id': 'moo-2',
+          repository: EmberObject.create({ name: 'Moo the Second', _selected: false }),
+        }),
+      ])
+    );
     this.set('toggleRepository', () => {
       assert.ok(true); // always fails because it should not be called
     });
 
-    await render(hbs`<ChoiceRepositoriesCard @choiceGroup={{this.choiceGroup}} @toggleRepository={{this.toggleRepository}} />`);
+    await render(
+      hbs`<ChoiceRepositoriesCard @choiceGroup={{this.choiceGroup}} @toggleRepository={{this.toggleRepository}} />`
+    );
     assert.ok(this.element, 'failed to render');
 
     const checkboxes = this.element.querySelectorAll('input[type="checkbox"]');

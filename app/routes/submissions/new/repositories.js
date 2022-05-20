@@ -21,7 +21,7 @@ export default class RepositoriesRoute extends CheckSessionRoute {
       preLoadedGrant: parentModel.preLoadedGrant,
       requiredRepositories: repoPromise.required,
       optionalRepositories: repoPromise.optional,
-      choiceRepositories: repoPromise['one-of']
+      choiceRepositories: repoPromise['one-of'],
     });
   }
 

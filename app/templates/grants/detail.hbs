@@ -4,21 +4,25 @@
     <h2 class="font-weight-light d-inline-block">Grant Details</h2>
   </div>
   <div class="col-6">
-    {{#if (get (await this.currentUser.user) 'isSubmitter')}}
-      <LinkTo @route="submissions.new" @query={{hash grant=this.grant.id}} class="btn btn-primary btn-small pull-right">Create new submission</LinkTo>
+    {{#if (get (await this.currentUser.user) "isSubmitter")}}
+      <LinkTo
+        @route="submissions.new"
+        @query={{hash grant=this.grant.id}}
+        class="btn btn-primary btn-small pull-right"
+      >Create new submission</LinkTo>
     {{/if}}
   </div>
 </div>
-<div id="grant-details-body" class='grant-details'>
-  <div class='row'>
-    <ul class='col-sm-6'>
+<div id="grant-details-body" class="grant-details">
+  <div class="row">
+    <ul class="col-sm-6">
       <li data-test-grants-detail-name><strong>Project Name:</strong> {{this.grant.projectName}}</li>
       <li data-test-grants-detail-award-number><strong>Award Number:</strong> {{this.grant.awardNumber}}</li>
       <li data-test-grants-detail-funder><strong>Funder:</strong> {{this.grant.primaryFunder.name}}</li>
-      <li><strong>Start:</strong> {{format-date this.grant.startDate }}</li>
+      <li><strong>Start:</strong> {{format-date this.grant.startDate}}</li>
       <li><strong>End:</strong> {{format-date this.grant.endDate}}</li>
     </ul>
-    <ul class='col-sm-6'>
+    <ul class="col-sm-6">
       <li><strong>Status:</strong> {{this.grant.awardStatus}}</li>
       <li><strong>PI:</strong> {{this.grant.pi.displayName}}</li>
       <li><strong>Co-PI(s) / Co-I(s):</strong>

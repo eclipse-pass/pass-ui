@@ -1,4 +1,3 @@
-
 import { A, isArray } from '@ember/array';
 import Service, { inject as service } from '@ember/service';
 import ENV from 'pass-ember/config/environment';
@@ -103,7 +102,7 @@ export default class SubmissionHandlerService extends Service {
     // Save the updated submission, then save the submissionEvent
     yield subEvent.save();
     yield submission.save();
-  }
+  };
 
   /**
    * _uploadFile - method which adds a file to a submission in the
@@ -136,12 +135,15 @@ export default class SubmissionHandlerService extends Service {
           file.set('submission', sub);
           file.set('uri', results.target.response);
 
-          file.save().then((f) => {
-            resolve(f);
-          }).catch((error) => {
-            console.log(error);
-            reject(new Error(`Error creating file object: ${error.message}`));
-          });
+          file
+            .save()
+            .then((f) => {
+              resolve(f);
+            })
+            .catch((error) => {
+              console.log(error);
+              reject(new Error(`Error creating file object: ${error.message}`));
+            });
         };
 
         xhr.onerror = (error) => {
@@ -186,10 +188,14 @@ export default class SubmissionHandlerService extends Service {
     submission.set('publication', p);
 
     const s = yield submission.save();
-    yield get(this, '_finishSubmission').perform(s, comment).catch((e) => {
-      if (!didCancel(e)) { throw e; }
-    });
-  }
+    yield get(this, '_finishSubmission')
+      .perform(s, comment)
+      .catch((e) => {
+        if (!didCancel(e)) {
+          throw e;
+        }
+      });
+  };
 
   /**
    * approveSubmission - Submitter approves submission. Metadata is added to
@@ -218,7 +224,7 @@ export default class SubmissionHandlerService extends Service {
       comment,
       performerRole: 'submitter',
       eventType: 'submitted',
-      link: this._getSubmissionView(submission)
+      link: this._getSubmissionView(submission),
     });
 
     return se.save().then(() => {
@@ -246,7 +252,7 @@ export default class SubmissionHandlerService extends Service {
       performedDate: new Date(),
       performerRole: 'submitter',
       eventType: 'changes-requested',
-      link: this._getSubmissionView(submission)
+      link: this._getSubmissionView(submission),
     });
 
     return se.save().then(() => {
@@ -272,7 +278,7 @@ export default class SubmissionHandlerService extends Service {
       performedDate: new Date(),
       performerRole: 'submitter',
       eventType: 'cancelled',
-      link: this._getSubmissionView(submission)
+      link: this._getSubmissionView(submission),
     });
 
     return se.save().then(() => {
@@ -287,7 +293,7 @@ export default class SubmissionHandlerService extends Service {
    */
   _getFiles(submissionId) {
     return this.store.query('file', {
-      term: { submission: submissionId }
+      term: { submission: submissionId },
     });
   }
 

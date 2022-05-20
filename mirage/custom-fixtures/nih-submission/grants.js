@@ -12,7 +12,7 @@ export default [
     projectName: 'Regulation of Synaptic Plasticity in Visual Cortex',
     startDate: '2017-07-01T00:00:00.000Z',
     directFunder: 'https://pass.local/fcrepo/rest/funders/3c/ea/b8/00/3ceab800-d61f-49c9-87f9-30bf055e7df1',
-    localKey: `johnshopkins.edu:grant:${Math.ceil(Math.random() * 1000000)}`
+    localKey: `johnshopkins.edu:grant:${Math.ceil(Math.random() * 1000000)}`,
   },
   {
     endDate: '2018-08-31T00:00:00.000Z',
@@ -27,7 +27,7 @@ export default [
     projectName: 'Reversible activation of critical period plasticity in visual cortex',
     startDate: '2015-09-01T00:00:00.000Z',
     directFunder: 'https://pass.local/fcrepo/rest/funders/45/c4/53/8d/45c4538d-d65a-4866-a6a2-d7e968080c20',
-    localKey: `johnshopkins.edu:grant:${Math.ceil(Math.random() * 1000000)}`
+    localKey: `johnshopkins.edu:grant:${Math.ceil(Math.random() * 1000000)}`,
   },
   {
     endDate: '2018-03-31T00:00:00.000Z',
@@ -42,7 +42,7 @@ export default [
     projectName: 'IBRO-USCRC North American Research Fellowship',
     startDate: '2017-04-01T00:00:00.000Z',
     directFunder: 'https://pass.local/fcrepo/rest/funders/cf/38/e5/10/cf38e510-690d-4d8f-93a6-df2263452c01',
-    localKey: `johnshopkins.edu:grant:${Math.ceil(Math.random() * 1000000)}`
+    localKey: `johnshopkins.edu:grant:${Math.ceil(Math.random() * 1000000)}`,
   },
   {
     endDate: '2017-06-30T00:00:00.000Z',
@@ -57,7 +57,7 @@ export default [
     projectName: 'Regulation of Synaptic Plasticity in Visual Cortex',
     startDate: '2013-08-01T00:00:00.000Z',
     directFunder: 'https://pass.local/fcrepo/rest/funders/9a/fe/8c/b1/9afe8cb1-9edd-47d7-96f7-d9f151d4d1f4',
-    localKey: `johnshopkins.edu:grant:${Math.ceil(Math.random() * 1000000)}`
+    localKey: `johnshopkins.edu:grant:${Math.ceil(Math.random() * 1000000)}`,
   },
   {
     endDate: '2017-06-30T00:00:00.000Z',
@@ -72,7 +72,7 @@ export default [
     projectName: 'Admin. Supplement - Regulation of Synaptic Plasticity in Visual Cortex',
     startDate: '2013-08-01T00:00:00.000Z',
     directFunder: 'https://pass.local/fcrepo/rest/funders/9a/fe/8c/b1/9afe8cb1-9edd-47d7-96f7-d9f151d4d1f4',
-    localKey: `johnshopkins.edu:grant:${Math.ceil(Math.random() * 1000000)}`
+    localKey: `johnshopkins.edu:grant:${Math.ceil(Math.random() * 1000000)}`,
   },
   {
     endDate: '2017-01-31T00:00:00.000Z',
@@ -87,14 +87,12 @@ export default [
     projectName: 'Metaplasticity in a Transgenic Mouse Model of Alzheimer Disease',
     startDate: '2016-02-01T00:00:00.000Z',
     directFunder: 'https://pass.local/fcrepo/rest/funders/01/5e/b2/42/015eb242-8e55-47b6-8b2c-efaa6d1facde',
-    localKey: `johnshopkins.edu:grant:${Math.ceil(Math.random() * 1000000)}`
+    localKey: `johnshopkins.edu:grant:${Math.ceil(Math.random() * 1000000)}`,
   },
   {
     endDate: '2015-07-31T00:00:00.000Z',
     '@type': 'Grant',
-    coPis: [
-      'https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95'
-    ],
+    coPis: ['https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95'],
     awardNumber: 'P01AG009973',
     primaryFunder: 'https://pass.local/fcrepo/rest/funders/3c/ea/b8/00/3ceab800-d61f-49c9-87f9-30bf055e7df1',
     awardDate: '2008-03-31T00:00:00.000Z',
@@ -105,7 +103,7 @@ export default [
     projectName: 'Cognition and Hippocampal/ Cortical Systems in Aging',
     startDate: '2008-04-01T00:00:00.000Z',
     directFunder: 'https://pass.local/fcrepo/rest/funders/3c/ea/b8/00/3ceab800-d61f-49c9-87f9-30bf055e7df1',
-    localKey: `johnshopkins.edu:grant:${Math.ceil(Math.random() * 1000000)}`
+    localKey: `johnshopkins.edu:grant:${Math.ceil(Math.random() * 1000000)}`,
   },
   {
     endDate: '2015-07-31T00:00:00.000Z',
@@ -120,7 +118,7 @@ export default [
     projectName: 'Synaptic Function & Plasticity in CA3 Circuits in the Aging Hippocampus',
     startDate: '2009-08-15T00:00:00.000Z',
     directFunder: 'https://pass.local/fcrepo/rest/funders/3c/ea/b8/00/3ceab800-d61f-49c9-87f9-30bf055e7df1',
-    localKey: `johnshopkins.edu:grant:${Math.ceil(Math.random() * 1000000)}`
+    localKey: `johnshopkins.edu:grant:${Math.ceil(Math.random() * 1000000)}`,
   },
   {
     endDate: '2013-07-31T00:00:00.000Z',
@@ -135,6 +133,6 @@ export default [
     projectName: 'Regulation of Synaptic Plasticity in Visual Cortex',
     startDate: '2008-12-01T00:00:00.000Z',
     directFunder: 'https://pass.local/fcrepo/rest/funders/3c/ea/b8/00/3ceab800-d61f-49c9-87f9-30bf055e7df1',
-    localKey: `johnshopkins.edu:grant:${Math.ceil(Math.random() * 1000000)}`
-  }
+    localKey: `johnshopkins.edu:grant:${Math.ceil(Math.random() * 1000000)}`,
+  },
 ];

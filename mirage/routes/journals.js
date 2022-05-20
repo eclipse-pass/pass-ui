@@ -5,11 +5,11 @@ export default function (server) {
   server.get('https://pass.local/doiservice/journal', (schema, request) => {
     let journals = schema.journals.all();
 
-    let journal = journals.models.find(journal => journal.attrs.crossref.message.DOI === request.queryParams.doi);
+    let journal = journals.models.find((journal) => journal.attrs.crossref.message.DOI === request.queryParams.doi);
 
     return {
       'journal-id': journal['journal-id'],
-      crossref: journal.crossref
+      crossref: journal.crossref,
     };
   });
 

@@ -1,7 +1,6 @@
 version: '3.1'
 
 services:
-
   ember:
     build: ember-dev/
     image: oapass/ember-dev
@@ -20,8 +19,8 @@ services:
     container_name: fcrepo
     env_file: .harvard_env
     ports:
-      - "${FCREPO_PORT}:${FCREPO_PORT}"
-      - "${FCREPO_DEBUG_PORT}:${FCREPO_DEBUG_PORT}"
+      - '${FCREPO_PORT}:${FCREPO_PORT}'
+      - '${FCREPO_DEBUG_PORT}:${FCREPO_DEBUG_PORT}'
     networks:
       - front
       - back
@@ -36,9 +35,9 @@ services:
     container_name: activemq
     env_file: .harvard_env
     ports:
-      - "${ACTIVEMQ_JMS_PORT}:${ACTIVEMQ_JMS_PORT}"
-      - "${ACTIVEMQ_STOMP_PORT}:${ACTIVEMQ_STOMP_PORT}"
-      - "${ACTIVEMQ_WEBCONSOLE_PORT}:${ACTIVEMQ_WEBCONSOLE_PORT}"
+      - '${ACTIVEMQ_JMS_PORT}:${ACTIVEMQ_JMS_PORT}'
+      - '${ACTIVEMQ_STOMP_PORT}:${ACTIVEMQ_STOMP_PORT}'
+      - '${ACTIVEMQ_WEBCONSOLE_PORT}:${ACTIVEMQ_WEBCONSOLE_PORT}'
     networks:
       - front
       - back
@@ -48,7 +47,7 @@ services:
     container_name: static-html
     env_file: .harvard_env
     ports:
-      - "${STATIC_HTML_PORT}:${STATIC_HTML_PORT}"
+      - '${STATIC_HTML_PORT}:${STATIC_HTML_PORT}'
     networks:
       - back
       - front
@@ -57,45 +56,45 @@ services:
     image: oapass/httpd-proxy:201900508@sha256:a915ada2286a551d32b0494d4ce874ba7fe204c07f029cc9bba5e05b2a9087fc
     container_name: proxy
     networks:
-     - front
-     - back
+      - front
+      - back
     ports:
-     - "80:80"
-     - "443:443"
+      - '80:80'
+      - '443:443'
 
   idp:
     image: oapass/idp:20190821-harvard@sha256:8d5de05ef52eb2b7ad8822087c55bd1ea4069ecb3545cd4712a85469c7665a82
     container_name: idp
     depends_on:
-     - ldap
+      - ldap
     environment:
-     - JETTY_MAX_HEAP=64m
-     - JETTY_BROWSER_SSL_KEYSTORE_PASSWORD=password
-     - JETTY_BACKCHANNEL_SSL_KEYSTORE_PASSWORD=password
+      - JETTY_MAX_HEAP=64m
+      - JETTY_BROWSER_SSL_KEYSTORE_PASSWORD=password
+      - JETTY_BACKCHANNEL_SSL_KEYSTORE_PASSWORD=password
     expose:
-     - "4443"
+      - '4443'
     networks:
-     - back
+      - back
     secrets:
-     - source: idp_backchannel
-     - source: idp_browser
-     - source: idp_encryption
-     - source: idp_signing
-     - source: idp_sealer
+      - source: idp_backchannel
+      - source: idp_browser
+      - source: idp_encryption
+      - source: idp_signing
+      - source: idp_sealer
 
   ldap:
     image: oapass/ldap:20190821-harvard@sha256:15cd758aa16b7cd59ba8c457b9981b261848d3a2901b9eacb36fb686ab301566
     container_name: ldap
     networks:
-     - back
+      - back
 
   sp:
     image: oapass/sp:20190813@sha256:d75554dd82191ec3201494a2c0db5ba632d0e37141bba6561b5d48fdee916f38
     container_name: sp
     networks:
-     - back
+      - back
     secrets:
-     - source: sp_key
+      - source: sp_key
 
   indexer:
     image: oapass/indexer:0.0.18-3.4-1@sha256:3375ea702e0a1c7a5e0e7e06635d28e49af436aeb1c3d88a03d4cb494d7b40bf
@@ -111,7 +110,7 @@ services:
     environment:
       - discovery.type=single-node
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
     ulimits:
       memlock:
         soft: -1
@@ -119,7 +118,7 @@ services:
     volumes:
       - passdata-harvard:/usr/share/elasticsearch/data
     ports:
-      - "${ES_PORT}:${ES_PORT}"
+      - '${ES_PORT}:${ES_PORT}'
     networks:
       - front
       - back
@@ -143,7 +142,7 @@ services:
     container_name: schemaservice
     env_file: .harvard_env
     ports:
-      - "${SCHEMA_SERVICE_PORT}:${SCHEMA_SERVICE_PORT}"
+      - '${SCHEMA_SERVICE_PORT}:${SCHEMA_SERVICE_PORT}'
     networks:
       - front
       - back
@@ -153,7 +152,7 @@ services:
     container_name: policyservice
     env_file: .harvard_env
     ports:
-      - "${POLICY_SERVICE_PORT}:${POLICY_SERVICE_PORT}"
+      - '${POLICY_SERVICE_PORT}:${POLICY_SERVICE_PORT}'
     networks:
       - front
       - back
@@ -163,7 +162,7 @@ services:
     container_name: doiservice
     env_file: .harvard_env
     ports:
-      - "${PASS_DOI_SERVICE_PORT}:8080"
+      - '${PASS_DOI_SERVICE_PORT}:8080'
     networks:
       - front
       - back

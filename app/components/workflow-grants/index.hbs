@@ -1,7 +1,7 @@
 <p class="lead text-muted" data-test-workflow-grants-lead-text>
-    Please select the grant(s)/award(s) that funded this work. This information will help determine which
-    public access policies are applicable to your work. If the work you’re about to submit was not
-    supported by a grant, leave this page blank and go to the next step.
+  Please select the grant(s)/award(s) that funded this work. This information will help determine which public access
+  policies are applicable to your work. If the work you’re about to submit was not supported by a grant, leave this page
+  blank and go to the next step.
 </p>
 
 {{#if @submission.grants}}
@@ -9,8 +9,8 @@
   <SubmissionFundingTable @grants={{@submission.grants}} @remove={{action this.removeGrant}} />
   <button class="btn btn-outline-primary" {{action @back}}>Back</button>
   <button class="btn btn-primary next pull-right" {{action @next}} data-test-workflow-grants-next>Next</button>
-  <br>
-  <br>
+  <br />
+  <br />
 {{/if}}
 
 {{#if @submission.submitter.id}}
@@ -20,12 +20,16 @@
   <p>
     PASS receives information about grants from the University grant database.&nbsp;
     {{#if this.contactUrl}}
-      If your grant is not listed, <a href="{{this.contactUrl}}" target="_blank">please contact us</a>.
+      If your grant is not listed,
+      <a href="{{this.contactUrl}}" target="_blank">please contact us</a>.
     {{/if}}
   </p>
 
   {{#if (gt this.pageCount "1")}}
-  <p  class="font-italic">Showing {{this.pageFirstMatchNumber}}-{{this.pageLastMatchNumber}} of total {{this.totalGrants}}</p>
+    <p class="font-italic">Showing
+      {{this.pageFirstMatchNumber}}-{{this.pageLastMatchNumber}}
+      of total
+      {{this.totalGrants}}</p>
   {{/if}}
   <ModelsTable
     @id="grants-selection-table"
@@ -61,9 +65,11 @@
   {{/if}}
 
 {{else}}
-  <p data-test-workflow-grants-no-account-message>Because the person you are submitting on behalf of is not yet in our system, PASS does not have information about his/her grant(s) and cannot associate this submission with a grant. Please click Next to continue.</p>
+  <p data-test-workflow-grants-no-account-message>Because the person you are submitting on behalf of is not yet in our
+    system, PASS does not have information about his/her grant(s) and cannot associate this submission with a grant.
+    Please click Next to continue.</p>
 {{/if}}
-<br>
+<br />
 <button class="btn btn-outline-primary" {{action @back}} data-test-workflow-grants-back>Back</button>
 <button class="btn btn-outline-danger ml-2" {{action "abortSubmission"}}>Abort</button>
 <button class="btn btn-primary next pull-right" {{action @next}} data-test-workflow-grants-next>Next</button>

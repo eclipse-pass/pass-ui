@@ -15,13 +15,23 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
   test('No manuscript files, user is submitter, stops transition', async function (assert) {
     let controller = this.owner.lookup('controller:submissions/new/files');
     let loadTabAccessed = false;
-    this.owner.register('controller:submissions.new', EmberObject.extend({
-      userIsSubmitter: true
-    }));
-    this.owner.register('service:workflow', EmberObject.extend({
-      getFilesTemp() { return []; },
-      getMaxStep() { return 6; }
-    }));
+    this.owner.register(
+      'controller:submissions.new',
+      EmberObject.extend({
+        userIsSubmitter: true,
+      })
+    );
+    this.owner.register(
+      'service:workflow',
+      EmberObject.extend({
+        getFilesTemp() {
+          return [];
+        },
+        getMaxStep() {
+          return 6;
+        },
+      })
+    );
     let model = { files: [] };
     controller.set('model', model);
     controller.set('loadingNext', true);
@@ -29,7 +39,7 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
       loadTabAccessed = true;
     };
     assert.equal(controller.get('workflow').getFilesTemp().length, 0);
-    swal = result => new Promise(resolve => (assert.ok(true)));
+    swal = (result) => new Promise((resolve) => assert.ok(true));
     controller.send('validateAndLoadTab', 'submissions.new.basics');
     assert.equal(loadTabAccessed, false);
   });
@@ -37,13 +47,23 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
   test('No manuscript files, user not submitter, warns before transition', function (assert) {
     let controller = this.owner.lookup('controller:submissions/new/files');
     let loadTabAccessed = false;
-    this.owner.register('controller:submissions.new', EmberObject.extend({
-      userIsSubmitter: false
-    }));
-    this.owner.register('service:workflow', EmberObject.extend({
-      getFilesTemp() { return []; },
-      getMaxStep() { return 7; }
-    }));
+    this.owner.register(
+      'controller:submissions.new',
+      EmberObject.extend({
+        userIsSubmitter: false,
+      })
+    );
+    this.owner.register(
+      'service:workflow',
+      EmberObject.extend({
+        getFilesTemp() {
+          return [];
+        },
+        getMaxStep() {
+          return 7;
+        },
+      })
+    );
     let model = { files: [] };
     controller.set('model', model);
     controller.transitionToRoute = function () {
@@ -51,7 +71,7 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
     };
     assert.equal(controller.get('workflow').getFilesTemp().length, 0);
     // override swal so it doesn't pop up
-    swal = result => new Promise(resolve => (assert.ok(true)));
+    swal = (result) => new Promise((resolve) => assert.ok(true));
     controller.send('validateAndLoadTab', 'submissions.new.basics');
     assert.equal(loadTabAccessed, false);
   });
@@ -60,17 +80,25 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
     let controller = this.owner.lookup('controller:submissions/new/files');
     let loadTabAccessed = false;
     let file = EmberObject.create({
-      fileRole: 'manuscript'
+      fileRole: 'manuscript',
     });
-    this.owner.register('controller:submissions.new', EmberObject.extend({
-      userIsSubmitter: false
-    }));
-    this.owner.register('service:workflow', EmberObject.extend({
-      getFilesTemp() {
-        return [file];
-      },
-      getMaxStep() { return 7; }
-    }));
+    this.owner.register(
+      'controller:submissions.new',
+      EmberObject.extend({
+        userIsSubmitter: false,
+      })
+    );
+    this.owner.register(
+      'service:workflow',
+      EmberObject.extend({
+        getFilesTemp() {
+          return [file];
+        },
+        getMaxStep() {
+          return 7;
+        },
+      })
+    );
     let files = [file];
     let model = { files };
     controller.set('model', model);
@@ -86,20 +114,28 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
   test('Valid files page does transition', function (assert) {
     let controller = this.owner.lookup('controller:submissions/new/files');
 
-    this.owner.register('controller:submissions.new', EmberObject.extend({
-      userIsSubmitter: false
-    }));
-    this.owner.register('service:workflow', EmberObject.extend({
-      getFilesTemp() {
-        return [];
-      },
-      getMaxStep() { return 7; }
-    }));
+    this.owner.register(
+      'controller:submissions.new',
+      EmberObject.extend({
+        userIsSubmitter: false,
+      })
+    );
+    this.owner.register(
+      'service:workflow',
+      EmberObject.extend({
+        getFilesTemp() {
+          return [];
+        },
+        getMaxStep() {
+          return 7;
+        },
+      })
+    );
 
     let subSaved = false;
 
     let file = EmberObject.create({
-      fileRole: 'manuscript'
+      fileRole: 'manuscript',
     });
 
     let model = {
@@ -108,8 +144,8 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
         save: () => {
           subSaved = true;
           return Promise.resolve();
-        }
-      })
+        },
+      }),
     };
     controller.set('model', model);
     controller.transitionToRoute = function () {

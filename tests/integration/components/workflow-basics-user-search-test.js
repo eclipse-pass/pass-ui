@@ -9,8 +9,8 @@ module('Integration | Component | workflow basics user search', (hooks) => {
   test('it renders', async function (assert) {
     this.set('userSearchTerm', '');
     // pass in actions that do nothing
-    this.set('pickSubmitter', (actual) => { });
-    this.set('toggleUserSearchModal', (actual) => { });
+    this.set('pickSubmitter', (actual) => {});
+    this.set('toggleUserSearchModal', (actual) => {});
 
     await render(hbs`
       <WorkflowBasicsUserSearch

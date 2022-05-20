@@ -10,8 +10,7 @@ export default class GrantsIndexController extends Controller {
   constructor() {
     super(...arguments);
 
-    this.configurator.getStaticConfig()
-      .then(config => this.set('faqUrl', config.branding.pages.faqUrl));
+    this.configurator.getStaticConfig().then((config) => this.set('faqUrl', config.branding.pages.faqUrl));
   }
 
   themeInstance = Bootstrap4Theme.create();
@@ -21,7 +20,7 @@ export default class GrantsIndexController extends Controller {
       propertyName: 'grant.projectName',
       title: 'Project Name',
       className: 'projectname-column',
-      component: 'grant-link-cell'
+      component: 'grant-link-cell',
     },
     {
       propertyName: 'grant.primaryFunder.name',
@@ -35,26 +34,26 @@ export default class GrantsIndexController extends Controller {
       title: 'Award Number',
       className: 'awardnum-column',
       disableFiltering: true,
-      component: 'grant-link-cell'
+      component: 'grant-link-cell',
     },
     {
       title: 'PI',
       propertyName: 'grant.pi',
-      component: 'pi-list-cell'
+      component: 'pi-list-cell',
     },
     {
       propertyName: 'grant.startDate',
       title: 'Start',
       disableFiltering: true,
       className: 'date-column',
-      component: 'date-cell'
+      component: 'date-cell',
     },
     {
       propertyName: 'grant.endDate',
       title: 'End',
       disableFiltering: true,
       className: 'date-column',
-      component: 'date-cell'
+      component: 'date-cell',
     },
     {
       propertyName: 'grant.awardStatus',
@@ -66,7 +65,7 @@ export default class GrantsIndexController extends Controller {
       propertyName: 'submissions.length',
       title: 'Submissions count',
       disableFiltering: true,
-      component: 'grant-link-cell'
+      component: 'grant-link-cell',
     },
     {
       propertyName: 'grant.oapCompliance',
@@ -75,14 +74,14 @@ export default class GrantsIndexController extends Controller {
       filterWithSelect: true,
       predefinedFilterOptions: ['No', 'Yes'],
     },
-  ]
+  ];
 
   piColumns = [
     {
       propertyName: 'grant.projectName',
       title: 'Project Name',
       className: 'projectname-column',
-      component: 'grant-link-cell'
+      component: 'grant-link-cell',
     },
     {
       propertyName: 'grant.primaryFunder.name',
@@ -96,20 +95,20 @@ export default class GrantsIndexController extends Controller {
       title: 'Award #',
       className: 'awardnum-column',
       disableFiltering: true,
-      component: 'grant-link-cell'
+      component: 'grant-link-cell',
     },
     {
       propertyName: 'grant.endDate',
       title: 'End Date',
       disableFiltering: true,
       className: 'date-column',
-      component: 'date-cell'
+      component: 'date-cell',
     },
     {
       propertyName: 'submissions.length',
       title: '# of Submissions',
       disableFiltering: true,
-      component: 'grant-submission-cell'
+      component: 'grant-submission-cell',
     },
     {
       propertyName: 'grant.awardStatus',
@@ -123,9 +122,9 @@ export default class GrantsIndexController extends Controller {
     },
     {
       title: 'Actions',
-      component: 'grant-action-cell'
-    }
-  ]
+      component: 'grant-action-cell',
+    },
+  ];
 
   @tracked faqUrl = null;
   // Bound to message dialog.

@@ -12,15 +12,21 @@ module('Unit | Route | submissions/new', (hooks) => {
    */
   hooks.beforeEach(function () {
     this.set('journal', EmberObject.create({ journalName: 'International Moonthly' }));
-    this.set('publication', EmberObject.create({
-      title: 'Test Publication',
-      journal: get(this, 'journal')
-    }));
-    this.set('submission', EmberObject.create({
-      submissionStatus: 'draft',
-      publication: get(this, 'publication'),
-      metadata: '{ "moo": "This is a moo" }'
-    }));
+    this.set(
+      'publication',
+      EmberObject.create({
+        title: 'Test Publication',
+        journal: get(this, 'journal'),
+      })
+    );
+    this.set(
+      'submission',
+      EmberObject.create({
+        submissionStatus: 'draft',
+        publication: get(this, 'publication'),
+        metadata: '{ "moo": "This is a moo" }',
+      })
+    );
   });
 
   test('fresh submission returned by model() when no ID is provided', async function (assert) {
@@ -42,7 +48,7 @@ module('Unit | Route | submissions/new', (hooks) => {
         }
       },
       findRecord: (type, id) => Promise.resolve(EmberObject.create()),
-      query: () => Promise.resolve(A())
+      query: () => Promise.resolve(A()),
     });
 
     const result = await route.model({});
@@ -56,7 +62,7 @@ module('Unit | Route | submissions/new', (hooks) => {
    *
    * Expect that createRecord and findRecord are each called once and that
    */
-  test('The mock submission returned from model() when it\'s ID is included', async function (assert) {
+  test("The mock submission returned from model() when it's ID is included", async function (assert) {
     assert.expect(6);
 
     const mockSub = get(this, 'submission');
@@ -84,13 +90,13 @@ module('Unit | Route | submissions/new', (hooks) => {
             return Promise.resolve(EmberObject.create());
         }
       },
-      query: () => Promise.resolve(A())
+      query: () => Promise.resolve(A()),
     });
     route.set('workflow', {
       setDoiInfo(data) {
         assert.ok(data);
         assert.equal(data.moo, 'This is a moo');
-      }
+      },
     });
 
     const result = await route.model({ submission: 'moo' });

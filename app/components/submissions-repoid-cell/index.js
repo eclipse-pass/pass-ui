@@ -19,13 +19,15 @@ export default class SubmissionsRepoidCell extends Component {
       set(this, 'repoCopies', A());
       return;
     }
-    this.store.query('repositoryCopy', {
-      query: {
-        term: { publication: publicationId }
-      },
-      from: 0,
-      size: 100
-    }).then(rc => set(this, 'repoCopies', rc));
+    this.store
+      .query('repositoryCopy', {
+        query: {
+          term: { publication: publicationId },
+        },
+        from: 0,
+        size: 100,
+      })
+      .then((rc) => set(this, 'repoCopies', rc));
   }
 
   setToolTip() {
@@ -64,21 +66,24 @@ export default class SubmissionsRepoidCell extends Component {
       return [];
     }
 
-    return rc.filter(repoCopy => !!repoCopy.externalIds).map((repoCopy) => {
-      const check = this.jscholarshipCheckString;
+    return rc
+      .filter((repoCopy) => !!repoCopy.externalIds)
+      .map((repoCopy) => {
+        const check = this.jscholarshipCheckString;
 
-      // If an ID has the 'check' string, only display the sub-string after the 'check' string
-      let ids = repoCopy.externalIds.map((id) => { // eslint-disable-line
+        // If an ID has the 'check' string, only display the sub-string after the 'check' string
+        let ids = repoCopy.externalIds.map((id) => {
+          // eslint-disable-line
+          return {
+            title: id,
+            display: id.includes(check) ? id.slice(id.indexOf(check) + check.length) : id,
+          };
+        });
         return {
-          title: id,
-          display: id.includes(check) ? id.slice(id.indexOf(check) + check.length) : id
+          url: repoCopy.accessUrl,
+          ids,
         };
+        // Note the 'ids' notation in the above object gets translated to: ids: ids
       });
-      return {
-        url: repoCopy.accessUrl,
-        ids
-      };
-      // Note the 'ids' notation in the above object gets translated to: ids: ids
-    });
   }
 }

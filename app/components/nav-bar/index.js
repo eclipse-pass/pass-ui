@@ -47,5 +47,5 @@ export default class NavBar extends Component {
     this.aboutUrl = config.branding.pages.aboutUrl;
     this.contactUrl = config.branding.pages.contactUrl;
     this.faqUrl = config.branding.pages.faqUrl;
-  }
+  };
 }

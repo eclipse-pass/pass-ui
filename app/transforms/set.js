@@ -10,5 +10,5 @@ export default Transform.extend({
     if (Array.isArray(deserialized)) {
       return deserialized;
     }
-  }
+  },
 });

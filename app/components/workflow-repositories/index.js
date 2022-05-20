@@ -2,7 +2,7 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action, get, set } from '@ember/object';
 import { A } from '@ember/array';
-import { inject as service, } from '@ember/service';
+import { inject as service } from '@ember/service';
 
 /**
  * Display required, optional, and choice repositories to a user. The user can interact with
@@ -92,24 +92,25 @@ export default class WorkflowRepositories extends Component {
        * Use IDs instead of full Repository objects to try to avoid weird JS equality
        * nonsense.
        */
-      currentRepos.filter(repo => !validRepos.includes(repo.id))
-        .forEach(repo => currentRepos.removeObject(repo));
+      currentRepos.filter((repo) => !validRepos.includes(repo.id)).forEach((repo) => currentRepos.removeObject(repo));
     } else {
       /**
        * If no repositories have been saved to the submission yet, force add all required repositories
        * as well as any other repositories marked as 'selected'
        */
       if (req) {
-        req.forEach(repoInfo => this.addRepository(repoInfo.repository, false));
+        req.forEach((repoInfo) => this.addRepository(repoInfo.repository, false));
       }
       if (opt) {
-        opt.filter(repoInfo => get(repoInfo, 'repository._selected'))
-          .forEach(repoInfo => this.addRepository(repoInfo.repository, false));
+        opt
+          .filter((repoInfo) => get(repoInfo, 'repository._selected'))
+          .forEach((repoInfo) => this.addRepository(repoInfo.repository, false));
       }
       if (choice) {
         choice.forEach((group) => {
-          group.filter(repoInfo => get(repoInfo, 'repository._selected'))
-            .forEach(repoInfo => this.addRepository(repoInfo.repository, false));
+          group
+            .filter((repoInfo) => get(repoInfo, 'repository._selected'))
+            .forEach((repoInfo) => this.addRepository(repoInfo.repository, false));
         });
       }
     }

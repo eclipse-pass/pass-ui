@@ -51,7 +51,7 @@ export default class PoliciesRoute extends CheckSessionRoute {
       newSubmission: parentModel.newSubmission,
       publication: parentModel.publication,
       preLoadedGrant: parentModel.preLoadedGrant,
-      policies: Promise.all(policies)
+      policies: Promise.all(policies),
     });
   }
 

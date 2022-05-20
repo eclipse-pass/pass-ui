@@ -8,30 +8,29 @@ export default [
             $schema: 'http://json-schema.org/draft-07/schema#',
             additionalProperties: false,
             dependencies: {
-              'Embargo-end-date': [
-                'under-embargo'
-              ]
+              'Embargo-end-date': ['under-embargo'],
             },
             description: 'Defines all possible metadata fields for PASS deposit',
             options: {
               fields: {
                 'Embargo-end-date': {
                   dependencies: {
-                    'under-embargo': true
+                    'under-embargo': true,
                   },
                   fieldClass: 'date-time-picker',
-                  helper: '\u003ci\u003eAfter the embargo end date, your submission manuscripts or article can be made public. \u003cb\u003eIf this publication is not under embargo, please leave this field blank.\u003cb\u003e\u003c/i\u003e',
+                  helper:
+                    '\u003ci\u003eAfter the embargo end date, your submission manuscripts or article can be made public. \u003cb\u003eIf this publication is not under embargo, please leave this field blank.\u003cb\u003e\u003c/i\u003e',
                   helpersPosition: 'above',
                   inputType: 'date',
                   label: 'Embargo End Date',
                   order: 12,
                   picker: {
                     allowInputToggle: true,
-                    format: 'MM/DD/YY'
+                    format: 'MM/DD/YY',
                   },
                   placeholder: 'dd/mm/yyyy',
                   type: 'date',
-                  validate: true
+                  validate: true,
                 },
                 abstract: {
                   fieldClass: 'clearfix',
@@ -39,7 +38,7 @@ export default [
                   label: 'Abstract \u003csmall class="text-muted"\u003e(optional)\u003c/small\u003e',
                   order: 9,
                   placeholder: 'Enter abstract',
-                  type: 'textarea'
+                  type: 'textarea',
                 },
                 authors: {
                   hidden: false,
@@ -47,17 +46,17 @@ export default [
                     fields: {
                       author: {
                         fieldClass: 'body-text col-6 pull-left pl-0',
-                        label: 'Name'
+                        label: 'Name',
                       },
                       orcid: {
                         fieldClass: 'body-text col-6 pull-left pr-0',
-                        label: 'ORCiD'
-                      }
+                        label: 'ORCiD',
+                      },
                     },
-                    label: '\u003cspan class="d-none"\u003e\u003c/span\u003e'
+                    label: '\u003cspan class="d-none"\u003e\u003c/span\u003e',
                   },
                   label: '\u003cdiv\u003eAuthors\u003c/div\u003e\u003chr/\u003e',
-                  order: 10
+                  order: 10,
                 },
                 issns: {
                   fieldClass: '',
@@ -67,52 +66,52 @@ export default [
                     fields: {
                       issn: {
                         fieldClass: 'body-text col-6 pull-left ',
-                        label: 'ISSN'
+                        label: 'ISSN',
                       },
                       pubType: {
                         fieldClass: 'body-text col-6 pull-left md-pubtype',
                         label: 'Publication Type',
                         removeDefaultNone: true,
-                        vertical: false
-                      }
+                        vertical: false,
+                      },
                     },
-                    label: '\u003cspan class="d-none"\u003e\u003c/span\u003e'
+                    label: '\u003cspan class="d-none"\u003e\u003c/span\u003e',
                   },
                   label: '\u003cdiv\u003eISSN Information\u003c/div\u003e\u003chr/\u003e',
-                  order: 6
+                  order: 6,
                 },
                 issue: {
                   hidden: false,
                   label: 'Issue  \u003csmall class="text-muted"\u003e(optional)\u003c/small\u003e',
                   order: 5,
                   placeholder: 'Enter issue',
-                  type: 'text'
+                  type: 'text',
                 },
                 'journal-NLMTA-ID': {
                   label: 'Journal NLMTA ID \u003csmall class="text-muted"\u003e(optional)\u003c/small\u003e',
                   order: 3,
                   placeholder: 'nlmta',
-                  type: 'text'
+                  type: 'text',
                 },
                 'journal-title': {
                   hidden: false,
                   label: 'Journal Title \u003csmall class="text-muted"\u003e(required)\u003c/small\u003e',
                   order: 2,
                   placeholder: 'Enter the journal title',
-                  type: 'text'
+                  type: 'text',
                 },
                 publicationDate: {
                   hidden: false,
                   label: 'Publication Date  \u003csmall class="text-muted"\u003e(optional)\u003c/small\u003e',
                   order: 8,
-                  type: 'date'
+                  type: 'date',
                 },
                 publisher: {
                   hidden: false,
                   label: 'Publisher \u003csmall class="text-muted"\u003e(optional)\u003c/small\u003e',
                   order: 7,
                   placeholder: 'Enter the Publisher',
-                  type: 'text'
+                  type: 'text',
                 },
                 title: {
                   cols: 100,
@@ -121,112 +120,112 @@ export default [
                   order: 1,
                   placeholder: 'Enter the manuscript title',
                   rows: 2,
-                  type: 'textarea'
+                  type: 'textarea',
                 },
                 'under-embargo': {
                   fieldClass: 'm-0 mt-4',
                   hidden: false,
                   order: 11,
                   rightLabel: 'The material being submitted is published under an embargo.',
-                  type: 'checkbox'
+                  type: 'checkbox',
                 },
                 volume: {
                   hidden: false,
                   label: 'Volume  \u003csmall class="text-muted"\u003e(optional)\u003c/small\u003e',
                   order: 4,
                   placeholder: 'Enter the volume',
-                  type: 'text'
-                }
-              }
+                  type: 'text',
+                },
+              },
             },
             properties: {
               $schema: {
                 description: 'The JSON schema that applies to the resulting metadata blob',
                 title: 'JSON schema',
-                type: 'string'
+                type: 'string',
               },
               'Embargo-end-date': {
                 description: 'Date at which the article or manuscript may be made public',
                 format: 'date',
                 title: 'Embargo end date',
-                type: 'string'
+                type: 'string',
               },
               abstract: {
                 description: 'The abstract of the article or manuscript being submitted',
                 title: 'Abstract',
-                type: 'string'
+                type: 'string',
               },
               agent_information: {
                 description: "Contains the identity and version of the user's browser",
                 properties: {
                   name: {
                     title: 'User agent (browser) name',
-                    type: 'string'
+                    type: 'string',
                   },
                   version: {
                     title: 'User agent (browser) version',
-                    type: 'string'
-                  }
+                    type: 'string',
+                  },
                 },
                 title: 'User agent (browser) information',
-                type: 'object'
+                type: 'object',
               },
               agreements: {
                 $comment: "This was formerly known as 'embargo', available only for JScholarship metadata",
-                description: 'Maps repository keys to the text or links containing the agreements accepted by the submitter',
+                description:
+                  'Maps repository keys to the text or links containing the agreements accepted by the submitter',
                 patternProperties: {
                   '^.+$': {
                     $comment: "Example: {'jScholarship': 'http://example.org/agreementText'}",
                     description: 'Text or link agreed to for the given repository key',
                     title: 'Agreement',
-                    type: 'string'
-                  }
+                    type: 'string',
+                  },
                 },
                 title: 'Agreements to deposit conditions',
-                type: 'object'
+                type: 'object',
               },
               authors: {
                 description: 'List of authors and their associated ORCIDS, if available',
                 items: {
                   properties: {
                     author: {
-                      type: 'string'
+                      type: 'string',
                     },
                     orcid: {
-                      type: 'string'
-                    }
+                      type: 'string',
+                    },
                   },
-                  required: [
-                    'author'
-                  ],
+                  required: ['author'],
                   title: 'Author',
-                  type: 'object'
+                  type: 'object',
                 },
                 title: 'Authors of this article or manuscript',
                 type: 'array',
-                uniqueItems: true
+                uniqueItems: true,
               },
               doi: {
                 description: 'The DOI of the individual article or manuscript submitted',
                 pattern: '^10\\..+?/.+?$',
                 title: 'DOI of article',
-                type: 'string'
+                type: 'string',
               },
               hints: {
                 additionalProperties: false,
-                description: 'Hints have semantics shared by the UI and the backend that are intended to influence the backend processing of the submission.',
+                description:
+                  'Hints have semantics shared by the UI and the backend that are intended to influence the backend processing of the submission.',
                 properties: {
                   'collection-tags': {
                     items: {
-                      type: 'string'
+                      type: 'string',
                     },
                     title: 'Tags impacting the collection used by Deposit Services for deposit',
                     type: 'array',
-                    uniqueItems: true
-                  }
+                    uniqueItems: true,
+                  },
                 },
                 title: 'Hints provided by the UI to backend services',
-                type: 'object'
+                type: 'object',
               },
               issns: {
                 description: 'List of ISSN numbers with optional publication type',
@@ -234,79 +233,73 @@ export default [
                   properties: {
                     issn: {
                       title: 'ISSN ',
-                      type: 'string'
+                      type: 'string',
                     },
                     pubType: {
-                      enum: [
-                        'Print',
-                        'Online'
-                      ],
+                      enum: ['Print', 'Online'],
                       title: 'publication type',
-                      type: 'string'
-                    }
+                      type: 'string',
+                    },
                   },
                   title: 'ISSN info',
-                  type: 'object'
+                  type: 'object',
                 },
                 title: "ISSN information for the manuscript's journal",
                 type: 'array',
-                uniqueItems: true
+                uniqueItems: true,
               },
               issue: {
                 description: 'Issue number of the journal this article or manuscript was submitted to',
                 title: 'Journal issue',
-                type: 'string'
+                type: 'string',
               },
               'journal-NLMTA-ID': {
                 description: 'NLM identifier for a journal',
                 title: 'NTMLA',
-                type: 'string'
+                type: 'string',
               },
               'journal-title': {
                 description: 'Title of the journal the individual article or manuscript was submitted to',
                 title: 'Journal title',
-                type: 'string'
+                type: 'string',
               },
               'journal-title-short': {
                 description: 'Short journal title from CrossRef',
                 title: 'Short journal title',
-                type: 'string'
+                type: 'string',
               },
               publicationDate: {
-                $comment: "This was formerly date-time format, but that appears too precise for values like 'Summer 2018'",
+                $comment:
+                  "This was formerly date-time format, but that appears too precise for values like 'Summer 2018'",
                 description: 'Publication date of the journal or article this manuscript was submitted to',
                 title: 'Publication Date',
-                type: 'string'
+                type: 'string',
               },
               publisher: {
                 description: 'Publisher of the journal this article or manuscript was submitted to',
                 title: 'Publisher',
-                type: 'string'
+                type: 'string',
               },
               title: {
                 description: 'The title of the individual article or manuscript that was submitted',
                 title: 'Article / Manuscript Title',
-                type: 'string'
+                type: 'string',
               },
               'under-embargo': {
                 $comment: 'This should probably be a boolean',
                 description: 'Indicates wither the article or manuscript is under embargo',
                 title: 'Under Embargo',
-                type: 'string'
+                type: 'string',
               },
               volume: {
                 description: 'journal volume this article or manuscript was published in',
                 title: 'Journal Volume',
-                type: 'string'
-              }
+                type: 'string',
+              },
             },
-            required: [
-              '$schema',
-              'title',
-              'journal-title'
-            ],
+            required: ['$schema', 'title', 'journal-title'],
             title: 'JHU global schema',
-            type: 'object'
+            type: 'object',
           },
           {
             anyOf: [
@@ -315,13 +308,11 @@ export default [
                   'journal-NLMTA-ID': {
                     description: 'NLM identifier for a journal',
                     title: 'NTMLA',
-                    type: 'string'
-                  }
+                    type: 'string',
+                  },
                 },
-                required: [
-                  'journal-NLMTA-ID'
-                ],
-                type: 'object'
+                required: ['journal-NLMTA-ID'],
+                type: 'object',
               },
               {
                 properties: {
@@ -329,24 +320,21 @@ export default [
                     contains: {
                       properties: {
                         issn: {
-                          type: 'string'
+                          type: 'string',
                         },
                         pubType: {
-                          type: 'string'
-                        }
+                          type: 'string',
+                        },
                       },
-                      required: [
-                        'issn',
-                        'pubType'
-                      ],
-                      type: 'object'
+                      required: ['issn', 'pubType'],
+                      type: 'object',
                     },
-                    type: 'array'
-                  }
+                    type: 'array',
+                  },
                 },
-                type: 'object'
-              }
-            ]
+                type: 'object',
+              },
+            ],
           },
           {
             properties: {
@@ -356,32 +344,30 @@ export default [
                   properties: {
                     issn: {
                       title: 'ISSN ',
-                      type: 'string'
+                      type: 'string',
                     },
                     pubType: {
-                      enum: [
-                        'Print',
-                        'Online'
-                      ],
+                      enum: ['Print', 'Online'],
                       title: 'publication type',
-                      type: 'string'
-                    }
+                      type: 'string',
+                    },
                   },
                   title: 'ISSN info',
-                  type: 'object'
+                  type: 'object',
                 },
                 title: "ISSN information for the manuscript's journal",
                 type: 'array',
-                uniqueItems: true
+                uniqueItems: true,
               },
               'journal-NLMTA-ID': {
                 description: 'NLM identifier for a journal',
                 title: 'NTMLA',
-                type: 'string'
-              }
+                type: 'string',
+              },
             },
-            title: "NIH Manuscript Submission System (NIHMS) \u003cbr\u003e\u003cp class='lead text-muted'\u003eThe following metadata fields will be part of the NIHMS submission.\u003c/p\u003e",
-            type: 'object'
+            title:
+              "NIH Manuscript Submission System (NIHMS) \u003cbr\u003e\u003cp class='lead text-muted'\u003eThe following metadata fields will be part of the NIHMS submission.\u003c/p\u003e",
+            type: 'object',
           },
           {
             properties: {
@@ -390,57 +376,53 @@ export default [
                 items: {
                   properties: {
                     author: {
-                      type: 'string'
+                      type: 'string',
                     },
                     orcid: {
-                      type: 'string'
-                    }
+                      type: 'string',
+                    },
                   },
-                  required: [
-                    'author'
-                  ],
+                  required: ['author'],
                   title: 'Author',
-                  type: 'object'
+                  type: 'object',
                 },
                 title: 'Authors of this article or manuscript',
                 type: 'array',
-                uniqueItems: true
-              }
+                uniqueItems: true,
+              },
             },
-            required: [
-              'authors'
-            ],
-            title: "Johns Hopkins - JScholarship \u003cbr\u003e\u003cp class='lead text-muted'\u003eDeposit requirements for JH's institutional repository JScholarship\u003c/p\u003e",
-            type: 'object'
-          }
+            required: ['authors'],
+            title:
+              "Johns Hopkins - JScholarship \u003cbr\u003e\u003cp class='lead text-muted'\u003eDeposit requirements for JH's institutional repository JScholarship\u003c/p\u003e",
+            type: 'object',
+          },
         ],
         definitions: {
           form: {
             $comment: 'These properties are intended to be displayed in an Alpaca form',
             dependencies: {
-              'Embargo-end-date': [
-                'under-embargo'
-              ]
+              'Embargo-end-date': ['under-embargo'],
             },
             options: {
               fields: {
                 'Embargo-end-date': {
                   dependencies: {
-                    'under-embargo': true
+                    'under-embargo': true,
                   },
                   fieldClass: 'date-time-picker',
-                  helper: '\u003ci\u003eAfter the embargo end date, your submission manuscripts or article can be made public. \u003cb\u003eIf this publication is not under embargo, please leave this field blank.\u003cb\u003e\u003c/i\u003e',
+                  helper:
+                    '\u003ci\u003eAfter the embargo end date, your submission manuscripts or article can be made public. \u003cb\u003eIf this publication is not under embargo, please leave this field blank.\u003cb\u003e\u003c/i\u003e',
                   helpersPosition: 'above',
                   inputType: 'date',
                   label: 'Embargo End Date',
                   order: 12,
                   picker: {
                     allowInputToggle: true,
-                    format: 'MM/DD/YY'
+                    format: 'MM/DD/YY',
                   },
                   placeholder: 'dd/mm/yyyy',
                   type: 'date',
-                  validate: true
+                  validate: true,
                 },
                 abstract: {
                   fieldClass: 'clearfix',
@@ -448,7 +430,7 @@ export default [
                   label: 'Abstract \u003csmall class="text-muted"\u003e(optional)\u003c/small\u003e',
                   order: 9,
                   placeholder: 'Enter abstract',
-                  type: 'textarea'
+                  type: 'textarea',
                 },
                 authors: {
                   hidden: false,
@@ -456,17 +438,17 @@ export default [
                     fields: {
                       author: {
                         fieldClass: 'body-text col-6 pull-left pl-0',
-                        label: 'Name'
+                        label: 'Name',
                       },
                       orcid: {
                         fieldClass: 'body-text col-6 pull-left pr-0',
-                        label: 'ORCiD'
-                      }
+                        label: 'ORCiD',
+                      },
                     },
-                    label: '\u003cspan class="d-none"\u003e\u003c/span\u003e'
+                    label: '\u003cspan class="d-none"\u003e\u003c/span\u003e',
                   },
                   label: '\u003cdiv\u003eAuthors\u003c/div\u003e\u003chr/\u003e',
-                  order: 10
+                  order: 10,
                 },
                 issns: {
                   fieldClass: '',
@@ -476,52 +458,52 @@ export default [
                     fields: {
                       issn: {
                         fieldClass: 'body-text col-6 pull-left ',
-                        label: 'ISSN'
+                        label: 'ISSN',
                       },
                       pubType: {
                         fieldClass: 'body-text col-6 pull-left md-pubtype',
                         label: 'Publication Type',
                         removeDefaultNone: true,
-                        vertical: false
-                      }
+                        vertical: false,
+                      },
                     },
-                    label: '\u003cspan class="d-none"\u003e\u003c/span\u003e'
+                    label: '\u003cspan class="d-none"\u003e\u003c/span\u003e',
                   },
                   label: '\u003cdiv\u003eISSN Information\u003c/div\u003e\u003chr/\u003e',
-                  order: 6
+                  order: 6,
                 },
                 issue: {
                   hidden: false,
                   label: 'Issue  \u003csmall class="text-muted"\u003e(optional)\u003c/small\u003e',
                   order: 5,
                   placeholder: 'Enter issue',
-                  type: 'text'
+                  type: 'text',
                 },
                 'journal-NLMTA-ID': {
                   label: 'Journal NLMTA ID \u003csmall class="text-muted"\u003e(optional)\u003c/small\u003e',
                   order: 3,
                   placeholder: 'nlmta',
-                  type: 'text'
+                  type: 'text',
                 },
                 'journal-title': {
                   hidden: false,
                   label: 'Journal Title \u003csmall class="text-muted"\u003e(required)\u003c/small\u003e',
                   order: 2,
                   placeholder: 'Enter the journal title',
-                  type: 'text'
+                  type: 'text',
                 },
                 publicationDate: {
                   hidden: false,
                   label: 'Publication Date  \u003csmall class="text-muted"\u003e(optional)\u003c/small\u003e',
                   order: 8,
-                  type: 'date'
+                  type: 'date',
                 },
                 publisher: {
                   hidden: false,
                   label: 'Publisher \u003csmall class="text-muted"\u003e(optional)\u003c/small\u003e',
                   order: 7,
                   placeholder: 'Enter the Publisher',
-                  type: 'text'
+                  type: 'text',
                 },
                 title: {
                   cols: 100,
@@ -530,56 +512,54 @@ export default [
                   order: 1,
                   placeholder: 'Enter the manuscript title',
                   rows: 2,
-                  type: 'textarea'
+                  type: 'textarea',
                 },
                 'under-embargo': {
                   fieldClass: 'm-0 mt-4',
                   hidden: false,
                   order: 11,
                   rightLabel: 'The material being submitted is published under an embargo.',
-                  type: 'checkbox'
+                  type: 'checkbox',
                 },
                 volume: {
                   hidden: false,
                   label: 'Volume  \u003csmall class="text-muted"\u003e(optional)\u003c/small\u003e',
                   order: 4,
                   placeholder: 'Enter the volume',
-                  type: 'text'
-                }
-              }
+                  type: 'text',
+                },
+              },
             },
             properties: {
               'Embargo-end-date': {
                 description: 'Date at which the article or manuscript may be made public',
                 format: 'date',
                 title: 'Embargo end date',
-                type: 'string'
+                type: 'string',
               },
               abstract: {
                 description: 'The abstract of the article or manuscript being submitted',
                 title: 'Abstract',
-                type: 'string'
+                type: 'string',
               },
               authors: {
                 description: 'List of authors and their associated ORCIDS, if available',
                 items: {
                   properties: {
                     author: {
-                      type: 'string'
+                      type: 'string',
                     },
                     orcid: {
-                      type: 'string'
-                    }
+                      type: 'string',
+                    },
                   },
-                  required: [
-                    'author'
-                  ],
+                  required: ['author'],
                   title: 'Author',
-                  type: 'object'
+                  type: 'object',
                 },
                 title: 'Authors of this article or manuscript',
                 type: 'array',
-                uniqueItems: true
+                uniqueItems: true,
               },
               issns: {
                 description: 'List of ISSN numbers with optional publication type',
@@ -587,72 +567,69 @@ export default [
                   properties: {
                     issn: {
                       title: 'ISSN ',
-                      type: 'string'
+                      type: 'string',
                     },
                     pubType: {
-                      enum: [
-                        'Print',
-                        'Online'
-                      ],
+                      enum: ['Print', 'Online'],
                       title: 'publication type',
-                      type: 'string'
-                    }
+                      type: 'string',
+                    },
                   },
                   title: 'ISSN info',
-                  type: 'object'
+                  type: 'object',
                 },
                 title: "ISSN information for the manuscript's journal",
                 type: 'array',
-                uniqueItems: true
+                uniqueItems: true,
               },
               issue: {
                 description: 'Issue number of the journal this article or manuscript was submitted to',
                 title: 'Journal issue',
-                type: 'string'
+                type: 'string',
               },
               'journal-NLMTA-ID': {
                 description: 'NLM identifier for a journal',
                 title: 'NTMLA',
-                type: 'string'
+                type: 'string',
               },
               'journal-title': {
                 description: 'Title of the journal the individual article or manuscript was submitted to',
                 title: 'Journal title',
-                type: 'string'
+                type: 'string',
               },
               publicationDate: {
-                $comment: "This was formerly date-time format, but that appears too precise for values like 'Summer 2018'",
+                $comment:
+                  "This was formerly date-time format, but that appears too precise for values like 'Summer 2018'",
                 description: 'Publication date of the journal or article this manuscript was submitted to',
                 title: 'Publication Date',
-                type: 'string'
+                type: 'string',
               },
               publisher: {
                 description: 'Publisher of the journal this article or manuscript was submitted to',
                 title: 'Publisher',
-                type: 'string'
+                type: 'string',
               },
               title: {
                 description: 'The title of the individual article or manuscript that was submitted',
                 title: 'Article / Manuscript Title',
-                type: 'string'
+                type: 'string',
               },
               'under-embargo': {
                 $comment: 'This should probably be a boolean',
                 description: 'Indicates wither the article or manuscript is under embargo',
                 title: 'Under Embargo',
-                type: 'string'
+                type: 'string',
               },
               volume: {
                 description: 'journal volume this article or manuscript was published in',
                 title: 'Journal Volume',
-                type: 'string'
-              }
+                type: 'string',
+              },
             },
-            required: [
-              'authors'
-            ],
-            title: "Johns Hopkins - JScholarship \u003cbr\u003e\u003cp class='lead text-muted'\u003eDeposit requirements for JH's institutional repository JScholarship\u003c/p\u003e",
-            type: 'object'
+            required: ['authors'],
+            title:
+              "Johns Hopkins - JScholarship \u003cbr\u003e\u003cp class='lead text-muted'\u003eDeposit requirements for JH's institutional repository JScholarship\u003c/p\u003e",
+            type: 'object',
           },
           issn_present: {
             properties: {
@@ -660,55 +637,51 @@ export default [
                 contains: {
                   properties: {
                     issn: {
-                      type: 'string'
+                      type: 'string',
                     },
                     pubType: {
-                      type: 'string'
-                    }
+                      type: 'string',
+                    },
                   },
-                  required: [
-                    'issn',
-                    'pubType'
-                  ],
-                  type: 'object'
+                  required: ['issn', 'pubType'],
+                  type: 'object',
                 },
-                type: 'array'
-              }
+                type: 'array',
+              },
             },
-            type: 'object'
+            type: 'object',
           },
           nlmta_present: {
             properties: {
               'journal-NLMTA-ID': {
                 description: 'NLM identifier for a journal',
                 title: 'NTMLA',
-                type: 'string'
-              }
+                type: 'string',
+              },
             },
-            required: [
-              'journal-NLMTA-ID'
-            ],
-            type: 'object'
+            required: ['journal-NLMTA-ID'],
+            type: 'object',
           },
           options: {
             fields: {
               'Embargo-end-date': {
                 dependencies: {
-                  'under-embargo': true
+                  'under-embargo': true,
                 },
                 fieldClass: 'date-time-picker',
-                helper: '\u003ci\u003eAfter the embargo end date, your submission manuscripts or article can be made public. \u003cb\u003eIf this publication is not under embargo, please leave this field blank.\u003cb\u003e\u003c/i\u003e',
+                helper:
+                  '\u003ci\u003eAfter the embargo end date, your submission manuscripts or article can be made public. \u003cb\u003eIf this publication is not under embargo, please leave this field blank.\u003cb\u003e\u003c/i\u003e',
                 helpersPosition: 'above',
                 inputType: 'date',
                 label: 'Embargo End Date',
                 order: 12,
                 picker: {
                   allowInputToggle: true,
-                  format: 'MM/DD/YY'
+                  format: 'MM/DD/YY',
                 },
                 placeholder: 'dd/mm/yyyy',
                 type: 'date',
-                validate: true
+                validate: true,
               },
               abstract: {
                 fieldClass: 'clearfix',
@@ -716,7 +689,7 @@ export default [
                 label: 'Abstract \u003csmall class="text-muted"\u003e(optional)\u003c/small\u003e',
                 order: 9,
                 placeholder: 'Enter abstract',
-                type: 'textarea'
+                type: 'textarea',
               },
               authors: {
                 hidden: false,
@@ -724,17 +697,17 @@ export default [
                   fields: {
                     author: {
                       fieldClass: 'body-text col-6 pull-left pl-0',
-                      label: 'Name'
+                      label: 'Name',
                     },
                     orcid: {
                       fieldClass: 'body-text col-6 pull-left pr-0',
-                      label: 'ORCiD'
-                    }
+                      label: 'ORCiD',
+                    },
                   },
-                  label: '\u003cspan class="d-none"\u003e\u003c/span\u003e'
+                  label: '\u003cspan class="d-none"\u003e\u003c/span\u003e',
                 },
                 label: '\u003cdiv\u003eAuthors\u003c/div\u003e\u003chr/\u003e',
-                order: 10
+                order: 10,
               },
               issns: {
                 fieldClass: '',
@@ -744,52 +717,52 @@ export default [
                   fields: {
                     issn: {
                       fieldClass: 'body-text col-6 pull-left ',
-                      label: 'ISSN'
+                      label: 'ISSN',
                     },
                     pubType: {
                       fieldClass: 'body-text col-6 pull-left md-pubtype',
                       label: 'Publication Type',
                       removeDefaultNone: true,
-                      vertical: false
-                    }
+                      vertical: false,
+                    },
                   },
-                  label: '\u003cspan class="d-none"\u003e\u003c/span\u003e'
+                  label: '\u003cspan class="d-none"\u003e\u003c/span\u003e',
                 },
                 label: '\u003cdiv\u003eISSN Information\u003c/div\u003e\u003chr/\u003e',
-                order: 6
+                order: 6,
               },
               issue: {
                 hidden: false,
                 label: 'Issue  \u003csmall class="text-muted"\u003e(optional)\u003c/small\u003e',
                 order: 5,
                 placeholder: 'Enter issue',
-                type: 'text'
+                type: 'text',
               },
               'journal-NLMTA-ID': {
                 label: 'Journal NLMTA ID \u003csmall class="text-muted"\u003e(optional)\u003c/small\u003e',
                 order: 3,
                 placeholder: 'nlmta',
-                type: 'text'
+                type: 'text',
               },
               'journal-title': {
                 hidden: false,
                 label: 'Journal Title \u003csmall class="text-muted"\u003e(required)\u003c/small\u003e',
                 order: 2,
                 placeholder: 'Enter the journal title',
-                type: 'text'
+                type: 'text',
               },
               publicationDate: {
                 hidden: false,
                 label: 'Publication Date  \u003csmall class="text-muted"\u003e(optional)\u003c/small\u003e',
                 order: 8,
-                type: 'date'
+                type: 'date',
               },
               publisher: {
                 hidden: false,
                 label: 'Publisher \u003csmall class="text-muted"\u003e(optional)\u003c/small\u003e',
                 order: 7,
                 placeholder: 'Enter the Publisher',
-                type: 'text'
+                type: 'text',
               },
               title: {
                 cols: 100,
@@ -798,23 +771,23 @@ export default [
                 order: 1,
                 placeholder: 'Enter the manuscript title',
                 rows: 2,
-                type: 'textarea'
+                type: 'textarea',
               },
               'under-embargo': {
                 fieldClass: 'm-0 mt-4',
                 hidden: false,
                 order: 11,
                 rightLabel: 'The material being submitted is published under an embargo.',
-                type: 'checkbox'
+                type: 'checkbox',
               },
               volume: {
                 hidden: false,
                 label: 'Volume  \u003csmall class="text-muted"\u003e(optional)\u003c/small\u003e',
                 order: 4,
                 placeholder: 'Enter the volume',
-                type: 'text'
-              }
-            }
+                type: 'text',
+              },
+            },
           },
           prerequisites: {
             anyOf: [
@@ -823,13 +796,11 @@ export default [
                   'journal-NLMTA-ID': {
                     description: 'NLM identifier for a journal',
                     title: 'NTMLA',
-                    type: 'string'
-                  }
+                    type: 'string',
+                  },
                 },
-                required: [
-                  'journal-NLMTA-ID'
-                ],
-                type: 'object'
+                required: ['journal-NLMTA-ID'],
+                type: 'object',
               },
               {
                 properties: {
@@ -837,30 +808,26 @@ export default [
                     contains: {
                       properties: {
                         issn: {
-                          type: 'string'
+                          type: 'string',
                         },
                         pubType: {
-                          type: 'string'
-                        }
+                          type: 'string',
+                        },
                       },
-                      required: [
-                        'issn',
-                        'pubType'
-                      ],
-                      type: 'object'
+                      required: ['issn', 'pubType'],
+                      type: 'object',
                     },
-                    type: 'array'
-                  }
+                    type: 'array',
+                  },
                 },
-                type: 'object'
-              }
-            ]
-          }
+                type: 'object',
+              },
+            ],
+          },
         },
-        type: 'object'
-      }
-
-    ]
+        type: 'object',
+      },
+    ],
   },
   {
     schema: [
@@ -871,30 +838,29 @@ export default [
             $schema: 'http://json-schema.org/draft-07/schema#',
             additionalProperties: false,
             dependencies: {
-              'Embargo-end-date': [
-                'under-embargo'
-              ]
+              'Embargo-end-date': ['under-embargo'],
             },
             description: 'Defines all possible metadata fields for PASS deposit',
             options: {
               fields: {
                 'Embargo-end-date': {
                   dependencies: {
-                    'under-embargo': true
+                    'under-embargo': true,
                   },
                   fieldClass: 'date-time-picker',
-                  helper: '\u003ci\u003eAfter the embargo end date, your submission manuscripts or article can be made public. \u003cb\u003eIf this publication is not under embargo, please leave this field blank.\u003cb\u003e\u003c/i\u003e',
+                  helper:
+                    '\u003ci\u003eAfter the embargo end date, your submission manuscripts or article can be made public. \u003cb\u003eIf this publication is not under embargo, please leave this field blank.\u003cb\u003e\u003c/i\u003e',
                   helpersPosition: 'above',
                   inputType: 'date',
                   label: 'Embargo End Date',
                   order: 12,
                   picker: {
                     allowInputToggle: true,
-                    format: 'MM/DD/YY'
+                    format: 'MM/DD/YY',
                   },
                   placeholder: 'dd/mm/yyyy',
                   type: 'date',
-                  validate: true
+                  validate: true,
                 },
                 abstract: {
                   fieldClass: 'clearfix',
@@ -902,7 +868,7 @@ export default [
                   label: 'Abstract \u003csmall class="text-muted"\u003e(optional)\u003c/small\u003e',
                   order: 9,
                   placeholder: 'Enter abstract',
-                  type: 'textarea'
+                  type: 'textarea',
                 },
                 authors: {
                   hidden: false,
@@ -910,17 +876,17 @@ export default [
                     fields: {
                       author: {
                         fieldClass: 'body-text col-6 pull-left pl-0',
-                        label: 'Name'
+                        label: 'Name',
                       },
                       orcid: {
                         fieldClass: 'body-text col-6 pull-left pr-0',
-                        label: 'ORCiD'
-                      }
+                        label: 'ORCiD',
+                      },
                     },
-                    label: '\u003cspan class="d-none"\u003e\u003c/span\u003e'
+                    label: '\u003cspan class="d-none"\u003e\u003c/span\u003e',
                   },
                   label: '\u003cdiv\u003eAuthors\u003c/div\u003e\u003chr/\u003e',
-                  order: 10
+                  order: 10,
                 },
                 issns: {
                   fieldClass: '',
@@ -930,52 +896,52 @@ export default [
                     fields: {
                       issn: {
                         fieldClass: 'body-text col-6 pull-left ',
-                        label: 'ISSN'
+                        label: 'ISSN',
                       },
                       pubType: {
                         fieldClass: 'body-text col-6 pull-left md-pubtype',
                         label: 'Publication Type',
                         removeDefaultNone: true,
-                        vertical: false
-                      }
+                        vertical: false,
+                      },
                     },
-                    label: '\u003cspan class="d-none"\u003e\u003c/span\u003e'
+                    label: '\u003cspan class="d-none"\u003e\u003c/span\u003e',
                   },
                   label: '\u003cdiv\u003eISSN Information\u003c/div\u003e\u003chr/\u003e',
-                  order: 6
+                  order: 6,
                 },
                 issue: {
                   hidden: false,
                   label: 'Issue  \u003csmall class="text-muted"\u003e(optional)\u003c/small\u003e',
                   order: 5,
                   placeholder: 'Enter issue',
-                  type: 'text'
+                  type: 'text',
                 },
                 'journal-NLMTA-ID': {
                   label: 'Journal NLMTA ID \u003csmall class="text-muted"\u003e(optional)\u003c/small\u003e',
                   order: 3,
                   placeholder: 'nlmta',
-                  type: 'text'
+                  type: 'text',
                 },
                 'journal-title': {
                   hidden: false,
                   label: 'Journal Title \u003csmall class="text-muted"\u003e(required)\u003c/small\u003e',
                   order: 2,
                   placeholder: 'Enter the journal title',
-                  type: 'text'
+                  type: 'text',
                 },
                 publicationDate: {
                   hidden: false,
                   label: 'Publication Date  \u003csmall class="text-muted"\u003e(optional)\u003c/small\u003e',
                   order: 8,
-                  type: 'date'
+                  type: 'date',
                 },
                 publisher: {
                   hidden: false,
                   label: 'Publisher \u003csmall class="text-muted"\u003e(optional)\u003c/small\u003e',
                   order: 7,
                   placeholder: 'Enter the Publisher',
-                  type: 'text'
+                  type: 'text',
                 },
                 title: {
                   cols: 100,
@@ -984,112 +950,112 @@ export default [
                   order: 1,
                   placeholder: 'Enter the manuscript title',
                   rows: 2,
-                  type: 'textarea'
+                  type: 'textarea',
                 },
                 'under-embargo': {
                   fieldClass: 'm-0 mt-4',
                   hidden: false,
                   order: 11,
                   rightLabel: 'The material being submitted is published under an embargo.',
-                  type: 'checkbox'
+                  type: 'checkbox',
                 },
                 volume: {
                   hidden: false,
                   label: 'Volume  \u003csmall class="text-muted"\u003e(optional)\u003c/small\u003e',
                   order: 4,
                   placeholder: 'Enter the volume',
-                  type: 'text'
-                }
-              }
+                  type: 'text',
+                },
+              },
             },
             properties: {
               $schema: {
                 description: 'The JSON schema that applies to the resulting metadata blob',
                 title: 'JSON schema',
-                type: 'string'
+                type: 'string',
               },
               'Embargo-end-date': {
                 description: 'Date at which the article or manuscript may be made public',
                 format: 'date',
                 title: 'Embargo end date',
-                type: 'string'
+                type: 'string',
               },
               abstract: {
                 description: 'The abstract of the article or manuscript being submitted',
                 title: 'Abstract',
-                type: 'string'
+                type: 'string',
               },
               agent_information: {
                 description: "Contains the identity and version of the user's browser",
                 properties: {
                   name: {
                     title: 'User agent (browser) name',
-                    type: 'string'
+                    type: 'string',
                   },
                   version: {
                     title: 'User agent (browser) version',
-                    type: 'string'
-                  }
+                    type: 'string',
+                  },
                 },
                 title: 'User agent (browser) information',
-                type: 'object'
+                type: 'object',
               },
               agreements: {
                 $comment: "This was formerly known as 'embargo', available only for JScholarship metadata",
-                description: 'Maps repository keys to the text or links containing the agreements accepted by the submitter',
+                description:
+                  'Maps repository keys to the text or links containing the agreements accepted by the submitter',
                 patternProperties: {
                   '^.+$': {
                     $comment: "Example: {'jScholarship': 'http://example.org/agreementText'}",
                     description: 'Text or link agreed to for the given repository key',
                     title: 'Agreement',
-                    type: 'string'
-                  }
+                    type: 'string',
+                  },
                 },
                 title: 'Agreements to deposit conditions',
-                type: 'object'
+                type: 'object',
               },
               authors: {
                 description: 'List of authors and their associated ORCIDS, if available',
                 items: {
                   properties: {
                     author: {
-                      type: 'string'
+                      type: 'string',
                     },
                     orcid: {
-                      type: 'string'
-                    }
+                      type: 'string',
+                    },
                   },
-                  required: [
-                    'author'
-                  ],
+                  required: ['author'],
                   title: 'Author',
-                  type: 'object'
+                  type: 'object',
                 },
                 title: 'Authors of this article or manuscript',
                 type: 'array',
-                uniqueItems: true
+                uniqueItems: true,
               },
               doi: {
                 description: 'The DOI of the individual article or manuscript submitted',
                 pattern: '^10\\..+?/.+?$',
                 title: 'DOI of article',
-                type: 'string'
+                type: 'string',
               },
               hints: {
                 additionalProperties: false,
-                description: 'Hints have semantics shared by the UI and the backend that are intended to influence the backend processing of the submission.',
+                description:
+                  'Hints have semantics shared by the UI and the backend that are intended to influence the backend processing of the submission.',
                 properties: {
                   'collection-tags': {
                     items: {
-                      type: 'string'
+                      type: 'string',
                     },
                     title: 'Tags impacting the collection used by Deposit Services for deposit',
                     type: 'array',
-                    uniqueItems: true
-                  }
+                    uniqueItems: true,
+                  },
                 },
                 title: 'Hints provided by the UI to backend services',
-                type: 'object'
+                type: 'object',
               },
               issns: {
                 description: 'List of ISSN numbers with optional publication type',
@@ -1097,79 +1063,73 @@ export default [
                   properties: {
                     issn: {
                       title: 'ISSN ',
-                      type: 'string'
+                      type: 'string',
                     },
                     pubType: {
-                      enum: [
-                        'Print',
-                        'Online'
-                      ],
+                      enum: ['Print', 'Online'],
                       title: 'publication type',
-                      type: 'string'
-                    }
+                      type: 'string',
+                    },
                   },
                   title: 'ISSN info',
-                  type: 'object'
+                  type: 'object',
                 },
                 title: "ISSN information for the manuscript's journal",
                 type: 'array',
-                uniqueItems: true
+                uniqueItems: true,
               },
               issue: {
                 description: 'Issue number of the journal this article or manuscript was submitted to',
                 title: 'Journal issue',
-                type: 'string'
+                type: 'string',
               },
               'journal-NLMTA-ID': {
                 description: 'NLM identifier for a journal',
                 title: 'NTMLA',
-                type: 'string'
+                type: 'string',
               },
               'journal-title': {
                 description: 'Title of the journal the individual article or manuscript was submitted to',
                 title: 'Journal title',
-                type: 'string'
+                type: 'string',
               },
               'journal-title-short': {
                 description: 'Short journal title from CrossRef',
                 title: 'Short journal title',
-                type: 'string'
+                type: 'string',
               },
               publicationDate: {
-                $comment: "This was formerly date-time format, but that appears too precise for values like 'Summer 2018'",
+                $comment:
+                  "This was formerly date-time format, but that appears too precise for values like 'Summer 2018'",
                 description: 'Publication date of the journal or article this manuscript was submitted to',
                 title: 'Publication Date',
-                type: 'string'
+                type: 'string',
               },
               publisher: {
                 description: 'Publisher of the journal this article or manuscript was submitted to',
                 title: 'Publisher',
-                type: 'string'
+                type: 'string',
               },
               title: {
                 description: 'The title of the individual article or manuscript that was submitted',
                 title: 'Article / Manuscript Title',
-                type: 'string'
+                type: 'string',
               },
               'under-embargo': {
                 $comment: 'This should probably be a boolean',
                 description: 'Indicates wither the article or manuscript is under embargo',
                 title: 'Under Embargo',
-                type: 'string'
+                type: 'string',
               },
               volume: {
                 description: 'journal volume this article or manuscript was published in',
                 title: 'Journal Volume',
-                type: 'string'
-              }
+                type: 'string',
+              },
             },
-            required: [
-              '$schema',
-              'title',
-              'journal-title'
-            ],
+            required: ['$schema', 'title', 'journal-title'],
             title: 'JHU global schema',
-            type: 'object'
+            type: 'object',
           },
           {
             properties: {
@@ -1178,57 +1138,53 @@ export default [
                 items: {
                   properties: {
                     author: {
-                      type: 'string'
+                      type: 'string',
                     },
                     orcid: {
-                      type: 'string'
-                    }
+                      type: 'string',
+                    },
                   },
-                  required: [
-                    'author'
-                  ],
+                  required: ['author'],
                   title: 'Author',
-                  type: 'object'
+                  type: 'object',
                 },
                 title: 'Authors of this article or manuscript',
                 type: 'array',
-                uniqueItems: true
-              }
+                uniqueItems: true,
+              },
             },
-            required: [
-              'authors'
-            ],
-            title: "Johns Hopkins - JScholarship \u003cbr\u003e\u003cp class='lead text-muted'\u003eDeposit requirements for JH's institutional repository JScholarship\u003c/p\u003e",
-            type: 'object'
-          }
+            required: ['authors'],
+            title:
+              "Johns Hopkins - JScholarship \u003cbr\u003e\u003cp class='lead text-muted'\u003eDeposit requirements for JH's institutional repository JScholarship\u003c/p\u003e",
+            type: 'object',
+          },
         ],
         definitions: {
           form: {
             $comment: 'These properties are intended to be displayed in an Alpaca form',
             dependencies: {
-              'Embargo-end-date': [
-                'under-embargo'
-              ]
+              'Embargo-end-date': ['under-embargo'],
             },
             options: {
               fields: {
                 'Embargo-end-date': {
                   dependencies: {
-                    'under-embargo': true
+                    'under-embargo': true,
                   },
                   fieldClass: 'date-time-picker',
-                  helper: '\u003ci\u003eAfter the embargo end date, your submission manuscripts or article can be made public. \u003cb\u003eIf this publication is not under embargo, please leave this field blank.\u003cb\u003e\u003c/i\u003e',
+                  helper:
+                    '\u003ci\u003eAfter the embargo end date, your submission manuscripts or article can be made public. \u003cb\u003eIf this publication is not under embargo, please leave this field blank.\u003cb\u003e\u003c/i\u003e',
                   helpersPosition: 'above',
                   inputType: 'date',
                   label: 'Embargo End Date',
                   order: 12,
                   picker: {
                     allowInputToggle: true,
-                    format: 'MM/DD/YY'
+                    format: 'MM/DD/YY',
                   },
                   placeholder: 'dd/mm/yyyy',
                   type: 'date',
-                  validate: true
+                  validate: true,
                 },
                 abstract: {
                   fieldClass: 'clearfix',
@@ -1236,7 +1192,7 @@ export default [
                   label: 'Abstract \u003csmall class="text-muted"\u003e(optional)\u003c/small\u003e',
                   order: 9,
                   placeholder: 'Enter abstract',
-                  type: 'textarea'
+                  type: 'textarea',
                 },
                 authors: {
                   hidden: false,
@@ -1244,17 +1200,17 @@ export default [
                     fields: {
                       author: {
                         fieldClass: 'body-text col-6 pull-left pl-0',
-                        label: 'Name'
+                        label: 'Name',
                       },
                       orcid: {
                         fieldClass: 'body-text col-6 pull-left pr-0',
-                        label: 'ORCiD'
-                      }
+                        label: 'ORCiD',
+                      },
                     },
-                    label: '\u003cspan class="d-none"\u003e\u003c/span\u003e'
+                    label: '\u003cspan class="d-none"\u003e\u003c/span\u003e',
                   },
                   label: '\u003cdiv\u003eAuthors\u003c/div\u003e\u003chr/\u003e',
-                  order: 10
+                  order: 10,
                 },
                 issns: {
                   fieldClass: '',
@@ -1264,52 +1220,52 @@ export default [
                     fields: {
                       issn: {
                         fieldClass: 'body-text col-6 pull-left ',
-                        label: 'ISSN'
+                        label: 'ISSN',
                       },
                       pubType: {
                         fieldClass: 'body-text col-6 pull-left md-pubtype',
                         label: 'Publication Type',
                         removeDefaultNone: true,
-                        vertical: false
-                      }
+                        vertical: false,
+                      },
                     },
-                    label: '\u003cspan class="d-none"\u003e\u003c/span\u003e'
+                    label: '\u003cspan class="d-none"\u003e\u003c/span\u003e',
                   },
                   label: '\u003cdiv\u003eISSN Information\u003c/div\u003e\u003chr/\u003e',
-                  order: 6
+                  order: 6,
                 },
                 issue: {
                   hidden: false,
                   label: 'Issue  \u003csmall class="text-muted"\u003e(optional)\u003c/small\u003e',
                   order: 5,
                   placeholder: 'Enter issue',
-                  type: 'text'
+                  type: 'text',
                 },
                 'journal-NLMTA-ID': {
                   label: 'Journal NLMTA ID \u003csmall class="text-muted"\u003e(optional)\u003c/small\u003e',
                   order: 3,
                   placeholder: 'nlmta',
-                  type: 'text'
+                  type: 'text',
                 },
                 'journal-title': {
                   hidden: false,
                   label: 'Journal Title \u003csmall class="text-muted"\u003e(required)\u003c/small\u003e',
                   order: 2,
                   placeholder: 'Enter the journal title',
-                  type: 'text'
+                  type: 'text',
                 },
                 publicationDate: {
                   hidden: false,
                   label: 'Publication Date  \u003csmall class="text-muted"\u003e(optional)\u003c/small\u003e',
                   order: 8,
-                  type: 'date'
+                  type: 'date',
                 },
                 publisher: {
                   hidden: false,
                   label: 'Publisher \u003csmall class="text-muted"\u003e(optional)\u003c/small\u003e',
                   order: 7,
                   placeholder: 'Enter the Publisher',
-                  type: 'text'
+                  type: 'text',
                 },
                 title: {
                   cols: 100,
@@ -1318,56 +1274,54 @@ export default [
                   order: 1,
                   placeholder: 'Enter the manuscript title',
                   rows: 2,
-                  type: 'textarea'
+                  type: 'textarea',
                 },
                 'under-embargo': {
                   fieldClass: 'm-0 mt-4',
                   hidden: false,
                   order: 11,
                   rightLabel: 'The material being submitted is published under an embargo.',
-                  type: 'checkbox'
+                  type: 'checkbox',
                 },
                 volume: {
                   hidden: false,
                   label: 'Volume  \u003csmall class="text-muted"\u003e(optional)\u003c/small\u003e',
                   order: 4,
                   placeholder: 'Enter the volume',
-                  type: 'text'
-                }
-              }
+                  type: 'text',
+                },
+              },
             },
             properties: {
               'Embargo-end-date': {
                 description: 'Date at which the article or manuscript may be made public',
                 format: 'date',
                 title: 'Embargo end date',
-                type: 'string'
+                type: 'string',
               },
               abstract: {
                 description: 'The abstract of the article or manuscript being submitted',
                 title: 'Abstract',
-                type: 'string'
+                type: 'string',
               },
               authors: {
                 description: 'List of authors and their associated ORCIDS, if available',
                 items: {
                   properties: {
                     author: {
-                      type: 'string'
+                      type: 'string',
                     },
                     orcid: {
-                      type: 'string'
-                    }
+                      type: 'string',
+                    },
                   },
-                  required: [
-                    'author'
-                  ],
+                  required: ['author'],
                   title: 'Author',
-                  type: 'object'
+                  type: 'object',
                 },
                 title: 'Authors of this article or manuscript',
                 type: 'array',
-                uniqueItems: true
+                uniqueItems: true,
               },
               issns: {
                 description: 'List of ISSN numbers with optional publication type',
@@ -1375,87 +1329,85 @@ export default [
                   properties: {
                     issn: {
                       title: 'ISSN ',
-                      type: 'string'
+                      type: 'string',
                     },
                     pubType: {
-                      enum: [
-                        'Print',
-                        'Online'
-                      ],
+                      enum: ['Print', 'Online'],
                       title: 'publication type',
-                      type: 'string'
-                    }
+                      type: 'string',
+                    },
                   },
                   title: 'ISSN info',
-                  type: 'object'
+                  type: 'object',
                 },
                 title: "ISSN information for the manuscript's journal",
                 type: 'array',
-                uniqueItems: true
+                uniqueItems: true,
               },
               issue: {
                 description: 'Issue number of the journal this article or manuscript was submitted to',
                 title: 'Journal issue',
-                type: 'string'
+                type: 'string',
               },
               'journal-title': {
                 description: 'Title of the journal the individual article or manuscript was submitted to',
                 title: 'Journal title',
-                type: 'string'
+                type: 'string',
               },
               publicationDate: {
-                $comment: "This was formerly date-time format, but that appears too precise for values like 'Summer 2018'",
+                $comment:
+                  "This was formerly date-time format, but that appears too precise for values like 'Summer 2018'",
                 description: 'Publication date of the journal or article this manuscript was submitted to',
                 title: 'Publication Date',
-                type: 'string'
+                type: 'string',
               },
               publisher: {
                 description: 'Publisher of the journal this article or manuscript was submitted to',
                 title: 'Publisher',
-                type: 'string'
+                type: 'string',
               },
               title: {
                 description: 'The title of the individual article or manuscript that was submitted',
                 title: 'Article / Manuscript Title',
-                type: 'string'
+                type: 'string',
               },
               'under-embargo': {
                 $comment: 'This should probably be a boolean',
                 description: 'Indicates wither the article or manuscript is under embargo',
                 title: 'Under Embargo',
-                type: 'string'
+                type: 'string',
               },
               volume: {
                 description: 'journal volume this article or manuscript was published in',
                 title: 'Journal Volume',
-                type: 'string'
-              }
+                type: 'string',
+              },
             },
-            required: [
-              'authors'
-            ],
-            title: "Johns Hopkins - JScholarship \u003cbr\u003e\u003cp class='lead text-muted'\u003eDeposit requirements for JH's institutional repository JScholarship\u003c/p\u003e",
-            type: 'object'
+            required: ['authors'],
+            title:
+              "Johns Hopkins - JScholarship \u003cbr\u003e\u003cp class='lead text-muted'\u003eDeposit requirements for JH's institutional repository JScholarship\u003c/p\u003e",
+            type: 'object',
           },
           options: {
             fields: {
               'Embargo-end-date': {
                 dependencies: {
-                  'under-embargo': true
+                  'under-embargo': true,
                 },
                 fieldClass: 'date-time-picker',
-                helper: '\u003ci\u003eAfter the embargo end date, your submission manuscripts or article can be made public. \u003cb\u003eIf this publication is not under embargo, please leave this field blank.\u003cb\u003e\u003c/i\u003e',
+                helper:
+                  '\u003ci\u003eAfter the embargo end date, your submission manuscripts or article can be made public. \u003cb\u003eIf this publication is not under embargo, please leave this field blank.\u003cb\u003e\u003c/i\u003e',
                 helpersPosition: 'above',
                 inputType: 'date',
                 label: 'Embargo End Date',
                 order: 12,
                 picker: {
                   allowInputToggle: true,
-                  format: 'MM/DD/YY'
+                  format: 'MM/DD/YY',
                 },
                 placeholder: 'dd/mm/yyyy',
                 type: 'date',
-                validate: true
+                validate: true,
               },
               abstract: {
                 fieldClass: 'clearfix',
@@ -1463,7 +1415,7 @@ export default [
                 label: 'Abstract \u003csmall class="text-muted"\u003e(optional)\u003c/small\u003e',
                 order: 9,
                 placeholder: 'Enter abstract',
-                type: 'textarea'
+                type: 'textarea',
               },
               authors: {
                 hidden: false,
@@ -1471,17 +1423,17 @@ export default [
                   fields: {
                     author: {
                       fieldClass: 'body-text col-6 pull-left pl-0',
-                      label: 'Name'
+                      label: 'Name',
                     },
                     orcid: {
                       fieldClass: 'body-text col-6 pull-left pr-0',
-                      label: 'ORCiD'
-                    }
+                      label: 'ORCiD',
+                    },
                   },
-                  label: '\u003cspan class="d-none"\u003e\u003c/span\u003e'
+                  label: '\u003cspan class="d-none"\u003e\u003c/span\u003e',
                 },
                 label: '\u003cdiv\u003eAuthors\u003c/div\u003e\u003chr/\u003e',
-                order: 10
+                order: 10,
               },
               issns: {
                 fieldClass: '',
@@ -1491,52 +1443,52 @@ export default [
                   fields: {
                     issn: {
                       fieldClass: 'body-text col-6 pull-left ',
-                      label: 'ISSN'
+                      label: 'ISSN',
                     },
                     pubType: {
                       fieldClass: 'body-text col-6 pull-left md-pubtype',
                       label: 'Publication Type',
                       removeDefaultNone: true,
-                      vertical: false
-                    }
+                      vertical: false,
+                    },
                   },
-                  label: '\u003cspan class="d-none"\u003e\u003c/span\u003e'
+                  label: '\u003cspan class="d-none"\u003e\u003c/span\u003e',
                 },
                 label: '\u003cdiv\u003eISSN Information\u003c/div\u003e\u003chr/\u003e',
-                order: 6
+                order: 6,
               },
               issue: {
                 hidden: false,
                 label: 'Issue  \u003csmall class="text-muted"\u003e(optional)\u003c/small\u003e',
                 order: 5,
                 placeholder: 'Enter issue',
-                type: 'text'
+                type: 'text',
               },
               'journal-NLMTA-ID': {
                 label: 'Journal NLMTA ID \u003csmall class="text-muted"\u003e(optional)\u003c/small\u003e',
                 order: 3,
                 placeholder: 'nlmta',
-                type: 'text'
+                type: 'text',
               },
               'journal-title': {
                 hidden: false,
                 label: 'Journal Title \u003csmall class="text-muted"\u003e(required)\u003c/small\u003e',
                 order: 2,
                 placeholder: 'Enter the journal title',
-                type: 'text'
+                type: 'text',
               },
               publicationDate: {
                 hidden: false,
                 label: 'Publication Date  \u003csmall class="text-muted"\u003e(optional)\u003c/small\u003e',
                 order: 8,
-                type: 'date'
+                type: 'date',
               },
               publisher: {
                 hidden: false,
                 label: 'Publisher \u003csmall class="text-muted"\u003e(optional)\u003c/small\u003e',
                 order: 7,
                 placeholder: 'Enter the Publisher',
-                type: 'text'
+                type: 'text',
               },
               title: {
                 cols: 100,
@@ -1545,27 +1497,27 @@ export default [
                 order: 1,
                 placeholder: 'Enter the manuscript title',
                 rows: 2,
-                type: 'textarea'
+                type: 'textarea',
               },
               'under-embargo': {
                 fieldClass: 'm-0 mt-4',
                 hidden: false,
                 order: 11,
                 rightLabel: 'The material being submitted is published under an embargo.',
-                type: 'checkbox'
+                type: 'checkbox',
               },
               volume: {
                 hidden: false,
                 label: 'Volume  \u003csmall class="text-muted"\u003e(optional)\u003c/small\u003e',
                 order: 4,
                 placeholder: 'Enter the volume',
-                type: 'text'
-              }
-            }
-          }
+                type: 'text',
+              },
+            },
+          },
         },
-        type: 'object'
-      }
-    ]
-  }
+        type: 'object',
+      },
+    ],
+  },
 ];

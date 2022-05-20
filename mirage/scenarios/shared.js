@@ -25,27 +25,27 @@ export default function (server) {
       `johnshopkins.edu:jhed:${Math.ceil(Math.random() * 1000000)}`,
       `johnshopkins.edu:hopkinsid:${Math.ceil(Math.random() * 1000000)}`,
       `johnshopkins.edu:employeeid:${Math.ceil(Math.random() * 1000000)}`,
-      `johnshopkins.edu:jhed:${Math.ceil(Math.random() * 1000000)}`
+      `johnshopkins.edu:jhed:${Math.ceil(Math.random() * 1000000)}`,
     ],
     roles: ['submitter'],
-    username: 'nih-user@johnshopkins.edu'
+    username: 'nih-user@johnshopkins.edu',
   });
 
   repos.forEach((repo) => {
     server.create('repository', {
-      _source: repo
+      _source: repo,
     });
   });
 
   policies.forEach((policy) => {
     server.create('policy', {
-      _source: policy
+      _source: policy,
     });
   });
 
   grants.forEach((grant) => {
     server.create('grant', {
-      _source: grant
+      _source: grant,
     });
   });
 
@@ -68,8 +68,8 @@ export default function (server) {
       issns: ['Print:0003-2654', 'Online:1364-5528'],
       journalName: 'The Analyst',
       nlmta: 'Analyst',
-      '@context': 'https://oa-pass.github.io/pass-data-model/src/main/resources/context-3.2.jsonld'
-    }
+      '@context': 'https://oa-pass.github.io/pass-data-model/src/main/resources/context-3.2.jsonld',
+    },
   });
 
   metaDataSchema.forEach((schema) => {

@@ -1,13 +1,11 @@
 function fuzzySet(arr, useLevenshtein, gramSizeLower, gramSizeUpper) {
-  const fuzzyset = {
+  const fuzzyset = {};
 
-  };
-
-    // default options
+  // default options
   arr = arr || [];
   fuzzyset.gramSizeLower = gramSizeLower || 2;
   fuzzyset.gramSizeUpper = gramSizeUpper || 3;
-  fuzzyset.useLevenshtein = (typeof useLevenshtein !== 'boolean') ? true : useLevenshtein;
+  fuzzyset.useLevenshtein = typeof useLevenshtein !== 'boolean' ? true : useLevenshtein;
 
   // define all the object functions and attributes
   fuzzyset.exactSet = {};
@@ -23,8 +21,14 @@ function fuzzySet(arr, useLevenshtein, gramSizeLower, gramSizeUpper) {
     for (let i = 0; i <= str2.length; i++) {
       for (let j = 0; j <= str1.length; j++) {
         if (i && j) {
-          if (str1.charAt(j - 1) === str2.charAt(i - 1)) { value = prev; } else { value = Math.min(current[j], current[j - 1], prev) + 1; }
-        } else { value = i + j; }
+          if (str1.charAt(j - 1) === str2.charAt(i - 1)) {
+            value = prev;
+          } else {
+            value = Math.min(current[j], current[j - 1], prev) + 1;
+          }
+        } else {
+          value = i + j;
+        }
 
         prev = current[j];
         current[j] = value;
@@ -34,11 +38,12 @@ function fuzzySet(arr, useLevenshtein, gramSizeLower, gramSizeUpper) {
     return current.pop();
   };
 
-    // return an edit distance from 0 to 1
+  // return an edit distance from 0 to 1
   const _distance = function (str1, str2) {
     if (str1 === null && str2 === null) throw 'Trying to compare two null values';
     if (str1 === null || str2 === null) return 0;
-    str1 = String(str1); str2 = String(str2);
+    str1 = String(str1);
+    str2 = String(str2);
 
     const distance = levenshtein(str1, str2);
     if (str1.length > str2.length) {
@@ -80,7 +85,7 @@ function fuzzySet(arr, useLevenshtein, gramSizeLower, gramSizeUpper) {
     return result;
   };
 
-    // the main functions
+  // the main functions
   fuzzyset.get = function (value, defaultValue, minMatchScore) {
     // check for value in set, returning defaultValue or null if none found
     if (minMatchScore === undefined) {
@@ -141,7 +146,9 @@ function fuzzySet(arr, useLevenshtein, gramSizeLower, gramSizeUpper) {
 
     function isEmptyObject(obj) {
       for (const prop in obj) {
-        if (obj.hasOwnProperty(prop)) { return false; }
+        if (obj.hasOwnProperty(prop)) {
+          return false;
+        }
       }
       return true;
     }
@@ -224,7 +231,8 @@ function fuzzySet(arr, useLevenshtein, gramSizeLower, gramSizeUpper) {
   };
 
   fuzzyset._normalizeStr = function (str) {
-    if (Object.prototype.toString.call(str) !== '[object String]') throw 'Must use a string as argument to FuzzySet functions';
+    if (Object.prototype.toString.call(str) !== '[object String]')
+      throw 'Must use a string as argument to FuzzySet functions';
     return str.toLowerCase();
   };
 
@@ -261,7 +269,6 @@ function fuzzySet(arr, useLevenshtein, gramSizeLower, gramSizeUpper) {
     }
     return values;
   };
-
 
   // initialization
   let i = fuzzyset.gramSizeLower;

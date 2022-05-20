@@ -17,7 +17,7 @@ module('Integration | Component | workflow review', (hooks) => {
   test('it renders', async function (assert) {
     let submission = EmberObject.create({
       metadata: '[]',
-      repositories: []
+      repositories: [],
     });
     let publication = EmberObject.create({});
     let files = [EmberObject.create({})];
@@ -51,22 +51,28 @@ module('Integration | Component | workflow review', (hooks) => {
     assert.ok(controller);
 
     let repo1 = EmberObject.create({
-      id: 'test:repo1', integrationType: 'full', agreementText: 'Cows are the best', name: 'repo1'
+      id: 'test:repo1',
+      integrationType: 'full',
+      agreementText: 'Cows are the best',
+      name: 'repo1',
     });
     let repo2 = EmberObject.create({ id: 'test:repo2', integrationType: 'web-link', name: 'repo2' });
     let submitted = false;
 
-    this.owner.register('service:current-user', EmberObject.extend({
-      user: { id: 'preparer' }
-    }));
+    this.owner.register(
+      'service:current-user',
+      EmberObject.extend({
+        user: { id: 'preparer' },
+      })
+    );
 
     let submission = EmberObject.create({
       submitter: {
-        id: 'pi'
+        id: 'pi',
       },
       preparers: A([get(this, 'currentUser.user')]),
       repositories: A([repo1, repo2]),
-      metadata: '[]'
+      metadata: '[]',
     });
 
     let publication = EmberObject.create({});
@@ -74,7 +80,9 @@ module('Integration | Component | workflow review', (hooks) => {
 
     this.set('submission', submission);
     this.set('publication', publication);
-    this.set('submit', (actual) => { submitted = true; });
+    this.set('submit', (actual) => {
+      submitted = true;
+    });
     this.set('files', files);
     this.set('comment', '');
     this.set('uploading', '');
@@ -110,28 +118,31 @@ module('Integration | Component | workflow review', (hooks) => {
       integrationType: 'full',
       agreementText: 'Cows are the best',
       name: 'repo1',
-      _isWebLink: false
+      _isWebLink: false,
     });
     let repo2 = EmberObject.create({
       id: 'test:repo2',
       integrationType: 'web-link',
       url: '',
       name: 'repo2',
-      _isWebLink: true
+      _isWebLink: true,
     });
     let submitted = false;
 
-    this.owner.register('service:current-user', EmberObject.extend({
-      user: { id: 'pi' }
-    }));
+    this.owner.register(
+      'service:current-user',
+      EmberObject.extend({
+        user: { id: 'pi' },
+      })
+    );
 
     let submission = EmberObject.create({
       submitter: {
-        id: 'pi'
+        id: 'pi',
       },
       preparers: A([get(this, 'currentUser.user')]),
       repositories: A([repo1, repo2]),
-      metadata: '[]'
+      metadata: '[]',
     });
 
     let publication = EmberObject.create({});
@@ -139,7 +150,9 @@ module('Integration | Component | workflow review', (hooks) => {
 
     this.set('submission', submission);
     this.set('publication', publication);
-    this.set('submit', (actual) => { submitted = true; });
+    this.set('submit', (actual) => {
+      submitted = true;
+    });
     this.set('files', files);
     this.set('comment', '');
     this.set('uploading', '');
@@ -186,21 +199,24 @@ module('Integration | Component | workflow review', (hooks) => {
       id: 'test:repo2',
       integrationType: 'web-link',
       name: 'repo2',
-      _isWebLink: true
+      _isWebLink: true,
     });
     let submitted = false;
 
-    this.owner.register('service:current-user', EmberObject.extend({
-      user: { id: 'pi' }
-    }));
+    this.owner.register(
+      'service:current-user',
+      EmberObject.extend({
+        user: { id: 'pi' },
+      })
+    );
 
     let submission = EmberObject.create({
       submitter: {
-        id: 'pi'
+        id: 'pi',
       },
       preparers: A([get(this, 'currentUser.user')]),
       repositories: A([repo2]),
-      metadata: '[]'
+      metadata: '[]',
     });
 
     let publication = EmberObject.create({});
@@ -208,7 +224,9 @@ module('Integration | Component | workflow review', (hooks) => {
 
     this.set('submission', submission);
     this.set('publication', publication);
-    this.set('submit', (actual) => { submitted = true; });
+    this.set('submit', (actual) => {
+      submitted = true;
+    });
     this.set('files', files);
     this.set('comment', '');
     this.set('uploading', '');
@@ -242,21 +260,27 @@ module('Integration | Component | workflow review', (hooks) => {
     assert.ok(controller);
 
     let repo1 = EmberObject.create({
-      id: 'test:repo1', integrationType: 'full', agreementText: 'Cows are the best', name: 'repo1'
+      id: 'test:repo1',
+      integrationType: 'full',
+      agreementText: 'Cows are the best',
+      name: 'repo1',
     });
     let submitted = false;
 
-    this.owner.register('service:current-user', EmberObject.extend({
-      user: { id: 'pi' }
-    }));
+    this.owner.register(
+      'service:current-user',
+      EmberObject.extend({
+        user: { id: 'pi' },
+      })
+    );
 
     let submission = EmberObject.create({
       submitter: {
-        id: 'pi'
+        id: 'pi',
       },
       preparers: A([get(this, 'currentUser.user')]),
       repositories: A([repo1]),
-      metadata: '[]'
+      metadata: '[]',
     });
 
     let publication = EmberObject.create({});
@@ -264,7 +288,9 @@ module('Integration | Component | workflow review', (hooks) => {
 
     this.set('submission', submission);
     this.set('publication', publication);
-    this.set('submit', (actual) => { submitted = true; });
+    this.set('submit', (actual) => {
+      submitted = true;
+    });
     this.set('files', files);
     this.set('comment', '');
     this.set('uploading', '');

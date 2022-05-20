@@ -1,4 +1,3 @@
-
 import { isArray } from '@ember/array';
 import Service, { inject as service } from '@ember/service';
 import ENV from 'pass-ember/config/environment';
@@ -24,22 +23,22 @@ export default class DoiService extends Service {
   metadataSchemaUri = ENV.metadataSchemaUri;
 
   /**
-  * resolveDOI - Lookup information about a DOI using the PASS doi service. Return that information along
-  * with a publication. The publication will have a persisted journal set, but will not itself be persisted. The doi information
-  * is in a normalized crossref format. (The normalization collaspses the array values of some keys to string values.)
-  * The raw crossref format is defined here: https://github.com/CrossRef/rest-api-doc/blob/master/api_format.md
-  *
-  * @param  {string} doi
-  * @returns {object}    Object with doiInfo and publication
-  */
+   * resolveDOI - Lookup information about a DOI using the PASS doi service. Return that information along
+   * with a publication. The publication will have a persisted journal set, but will not itself be persisted. The doi information
+   * is in a normalized crossref format. (The normalization collaspses the array values of some keys to string values.)
+   * The raw crossref format is defined here: https://github.com/CrossRef/rest-api-doc/blob/master/api_format.md
+   *
+   * @param  {string} doi
+   * @returns {object}    Object with doiInfo and publication
+   */
   @task(function* (doi) {
     let url = `${get(this, 'doiServiceUrl')}?doi=${encodeURIComponent(doi)}`;
 
     let response = yield get(this, 'ajax').request(url, 'GET', {
       headers: {
         Accept: 'application/json; charset=utf-8',
-        withCredentials: 'include'
-      }
+        withCredentials: 'include',
+      },
     });
 
     let journal = yield get(this, 'store').findRecord('journal', response['journal-id']);
@@ -62,7 +61,7 @@ export default class DoiService extends Service {
 
     return {
       publication,
-      doiInfo
+      doiInfo,
     };
   })
   resolveDOI;
@@ -134,7 +133,7 @@ export default class DoiService extends Service {
       doiCopy.author.forEach((author) => {
         let a = {
           author: `${author.given} ${author.family}`,
-          orcid: author.ORCID
+          orcid: author.ORCID,
         };
         doiCopy.authors.push(Object.assign(a, author));
       });
@@ -158,8 +157,9 @@ export default class DoiService extends Service {
 
     // Remove "invalid" properties if given a list of valid fields
     if (validFields && Array.isArray(validFields) && validFields.length > 0) {
-      Object.keys(doiCopy).filter(key => !validFields.includes(key))
-        .forEach(key => delete doiCopy[key]);
+      Object.keys(doiCopy)
+        .filter((key) => !validFields.includes(key))
+        .forEach((key) => delete doiCopy[key]);
     }
 
     doiCopy.$schema = this.metadataSchemaUri;
@@ -205,7 +205,8 @@ export default class DoiService extends Service {
   _processRawDoi(data) {
     const toProcess = ['container-title', 'short-container-title', 'title', 'original-title', 'short-title'];
 
-    toProcess.filter(key => data.hasOwnProperty(key))
+    toProcess
+      .filter((key) => data.hasOwnProperty(key))
       .forEach((key) => {
         data[key] = this._maybeArrayToString(key, data);
       });

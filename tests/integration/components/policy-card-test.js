@@ -17,10 +17,10 @@ module('Integration | Component | policy card', (hooks) => {
     });
 
     const journal = EmberObject.create({
-      isMethodA: false
+      isMethodA: false,
     });
     const submission = EmberObject.create({
-      effectivePolicies: A()
+      effectivePolicies: A(),
     });
 
     // this.set('workflow', workflow);
@@ -41,17 +41,19 @@ module('Integration | Component | policy card', (hooks) => {
   module('PMC tests', (hooks) => {
     hooks.beforeEach(function () {
       const policy = EmberObject.create({
-        repositories: A([EmberObject.create({
-          repositoryKey: 'pmc'
-        })]),
+        repositories: A([
+          EmberObject.create({
+            repositoryKey: 'pmc',
+          }),
+        ]),
         description: 'This is a moo-scription',
-        title: 'Moo title'
+        title: 'Moo title',
       });
       const journal = EmberObject.create({
-        isMethodA: false
+        isMethodA: false,
       });
       const submission = EmberObject.create({
-        effectivePolicies: A()
+        effectivePolicies: A(),
       });
 
       this.set('policy', policy);
