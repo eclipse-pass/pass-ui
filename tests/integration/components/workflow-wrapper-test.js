@@ -8,9 +8,9 @@ module('Integration | Component | workflow wrapper', (hooks) => {
   setupRenderingTest(hooks);
 
   test('it renders', async function (assert) {
-    let submission = EmberObject.create({ });
-    let publication = EmberObject.create({ });
-    let submissionEvent = EmberObject.create({ });
+    let submission = EmberObject.create({});
+    let publication = EmberObject.create({});
+    let submissionEvent = EmberObject.create({});
 
     this.set('submission', submission);
     this.set('publication', publication);

@@ -7,9 +7,11 @@ module('Unit | Model | submission', (hooks) => {
   setupTest(hooks);
 
   test('submitterEmailDisplay should remove mailto from submitterEmail', function (assert) {
-    const submission = run(() => this.owner.lookup('service:store').createRecord('submission', {
-      submitterEmail: 'mailto:test@test.com'
-    }));
+    const submission = run(() =>
+      this.owner.lookup('service:store').createRecord('submission', {
+        submitterEmail: 'mailto:test@test.com',
+      })
+    );
 
     assert.equal(submission.get('submitterEmailDisplay'), 'test@test.com');
   });
@@ -19,10 +21,12 @@ module('Unit | Model | submission', (hooks) => {
     // it isn't any kind of submission yet, let alone a proxy submission!
     assert.equal(submission.get('isProxySubmission'), false);
 
-    const user = run(() => this.owner.lookup('service:store').createRecord('user', {
-      id: 'test:user',
-      submitter: user
-    }));
+    const user = run(() =>
+      this.owner.lookup('service:store').createRecord('user', {
+        id: 'test:user',
+        submitter: user,
+      })
+    );
 
     // there is a submitter, but no preparer, still not a proxy submission
     assert.equal(submission.get('isProxySubmission'), false);

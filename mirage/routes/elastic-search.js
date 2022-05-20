@@ -17,23 +17,22 @@ export default function (server) {
     if (searchSuggest && Object.keys(searchSuggest).firstObject === 'journalName') {
       suggest = [schema.journals.findBy({ journalName: JSON.parse(request.requestBody).suggest.journalName.prefix })];
       elasticResponse.suggest = {
-        journalName: [{
-          options: suggest
-        }]
+        journalName: [
+          {
+            options: suggest,
+          },
+        ],
       };
     } else {
-      let type = JSON.parse(request.requestBody)
-        .query.bool.filter
-        .term['@type']
-        .toLowerCase();
+      let type = JSON.parse(request.requestBody).query.bool.filter.term['@type'].toLowerCase();
       type = pluralize(type);
 
-      models = schema[type].all().models.map(model => model.attrs);
+      models = schema[type].all().models.map((model) => model.attrs);
 
       elasticResponse.hits = {
         max_score: 1,
         hits: models,
-        total: models.length
+        total: models.length,
       };
     }
 

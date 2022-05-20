@@ -7,7 +7,8 @@ module('Integration | Helper | format oap compliance', (hooks) => {
   setupRenderingTest(hooks);
 
   // Replace this with your real tests.
-  test('it renders', async function(assert) { // eslint-disable-line
+  test('it renders', async function (assert) {
+    // eslint-disable-line
     this.set('inputValue', 'Yes');
 
     await render(hbs`{{format-oap-compliance inputValue}}`);

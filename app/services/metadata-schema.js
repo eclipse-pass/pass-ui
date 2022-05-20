@@ -33,10 +33,13 @@ export default class MetadataSchemaService extends Service {
      * Speed can be improved if we enable this feature, then selectively add JSON schemas to avoid
      * the re-compile step.
      */
-    this.set('validator', new Ajv({
-      logger: false,
-      addUsedSchema: false
-    }));
+    this.set(
+      'validator',
+      new Ajv({
+        logger: false,
+        addUsedSchema: false,
+      })
+    );
   }
 
   /**
@@ -50,10 +53,10 @@ export default class MetadataSchemaService extends Service {
    * @returns {array} list of schemas relevant to the given repositories
    */
   getMetadataSchemas(repositories) {
-    const areObjects = repositories.map(repos => typeof repos).includes('object');
+    const areObjects = repositories.map((repos) => typeof repos).includes('object');
     if (areObjects) {
       // If we've gotten repository objects, map them to their IDs
-      repositories = repositories.map(repo => repo.get('id'));
+      repositories = repositories.map((repo) => repo.get('id'));
     }
     const url = get(this, 'schemaService.url');
     const urlWithMerge = `${url}?merge=true`;
@@ -61,29 +64,27 @@ export default class MetadataSchemaService extends Service {
     const options = {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json; charset=utf-8'
+        'Content-Type': 'application/json; charset=utf-8',
       },
       processData: false,
-      data: repositories
+      data: repositories,
     };
 
     // TODO: would be nice if this used Fetch API, but current tests are written for AJAX
-    return this.ajax
-      .request(urlWithMerge, options)
-      .catch((response, jqXHR, payload) => {
-        /**
-         * error handling with `ember-ajax`: https://github.com/ember-cli/ember-ajax#access-the-response-in-case-of-error
-         * jqXHR info : https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
-         */
-        if (jqXHR.status !== 409) {
-          // Unknown error
-          const msg = `Unknown error fetching merged metadata schema: ${jqXHR.statusText}`;
-          // console.log(`msg \n${response}`, 'color:red;');
-          throw new Error(msg);
-        }
+    return this.ajax.request(urlWithMerge, options).catch((response, jqXHR, payload) => {
+      /**
+       * error handling with `ember-ajax`: https://github.com/ember-cli/ember-ajax#access-the-response-in-case-of-error
+       * jqXHR info : https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
+       */
+      if (jqXHR.status !== 409) {
+        // Unknown error
+        const msg = `Unknown error fetching merged metadata schema: ${jqXHR.statusText}`;
+        // console.log(`msg \n${response}`, 'color:red;');
+        throw new Error(msg);
+      }
 
-        return this.ajax.request(url, options);
-      });
+      return this.ajax.request(url, options);
+    });
   }
 
   /**
@@ -108,14 +109,16 @@ export default class MetadataSchemaService extends Service {
        * set the field's 'readonly' to true, and 'toolbarSticky' to false iff the
        * key refers to an array
        */
-      Object.keys(data).filter(key => readonly.includes(key)).forEach((key) => {
-        if (key in schema.options.fields) {
-          if (Array.isArray(data[key])) {
-            schema.options.fields[key].toolbarSticky = false;
+      Object.keys(data)
+        .filter((key) => readonly.includes(key))
+        .forEach((key) => {
+          if (key in schema.options.fields) {
+            if (Array.isArray(data[key])) {
+              schema.options.fields[key].toolbarSticky = false;
+            }
+            schema.options.fields[key].readonly = true;
           }
-          schema.options.fields[key].readonly = true;
-        }
-      });
+        });
     }
 
     return schema;
@@ -134,7 +137,8 @@ export default class MetadataSchemaService extends Service {
       return schema;
     }
 
-    Object.keys(schema.definitions.form.properties).filter(key => schema.definitions.form.properties[key].type === 'array')
+    Object.keys(schema.definitions.form.properties)
+      .filter((key) => schema.definitions.form.properties[key].type === 'array')
       .forEach((key) => {
         const req = schema.definitions.form.required;
         if (Array.isArray(req) && req.includes(key)) {
@@ -144,7 +148,7 @@ export default class MetadataSchemaService extends Service {
 
     return {
       schema: schema.definitions.form,
-      options: schema.definitions.options || schema.definitions.form.options
+      options: schema.definitions.options || schema.definitions.form.options,
     };
   }
 
@@ -179,11 +183,12 @@ export default class MetadataSchemaService extends Service {
   getFields(schemas, onlyVisibleFields) {
     let fields = [];
 
-    schemas.map(schema => this.alpacafySchema(schema))
+    schemas
+      .map((schema) => this.alpacafySchema(schema))
       .forEach((schema) => {
         Object.keys(schema.schema.properties)
-          .filter(key => !fields.includes(key))
-          .forEach(key => fields.push(key));
+          .filter((key) => !fields.includes(key))
+          .forEach((key) => fields.push(key));
       });
 
     // Return early
@@ -195,14 +200,17 @@ export default class MetadataSchemaService extends Service {
      * Add fields from properties defined in schema.allOf
      * Make sure the top level `schema.additionalProperties` is not explicitly set to FALSE
      */
-    schemas.filter(schema => (schema.additionalProperties !== false) && schema.allOf)
-      .map(schema => schema.allOf)
+    schemas
+      .filter((schema) => schema.additionalProperties !== false && schema.allOf)
+      .map((schema) => schema.allOf)
       .forEach((allOf) => {
-        allOf.filter(schema => schema.properties) // Make sure the schema has a 'properties' property
-          .map(schema => schema.properties) // Operate on schema.properties
+        allOf
+          .filter((schema) => schema.properties) // Make sure the schema has a 'properties' property
+          .map((schema) => schema.properties) // Operate on schema.properties
           .forEach((props) => {
-            Object.keys(props).filter(key => !fields.includes(key))
-              .forEach(key => fields.push(key));
+            Object.keys(props)
+              .filter((key) => !fields.includes(key))
+              .forEach((key) => fields.push(key));
           });
       });
 
@@ -244,8 +252,9 @@ export default class MetadataSchemaService extends Service {
        * See logic from #getFields
        */
       if (schema.additionalProperties !== false && Array.isArray(schema.allOf)) {
-        schema.allOf.filter(schema => schema.properties)
-          .map(schema => schema.properties)
+        schema.allOf
+          .filter((schema) => schema.properties)
+          .map((schema) => schema.properties)
           .forEach((props) => {
             Object.keys(props).forEach((key) => {
               if (!map.hasOwnProperty(key)) {
@@ -285,8 +294,9 @@ export default class MetadataSchemaService extends Service {
 
     if (Array.isArray(deletableFields) && deletableFields.length > 0) {
       // Filter out only keys that DO NOT appear in "blob2" and DO appear in the deletableFields list
-      Object.keys(blob).filter(key => !(key in blob2) && deletableFields.includes(key))
-        .forEach(key => delete blob[key]);
+      Object.keys(blob)
+        .filter((key) => !(key in blob2) && deletableFields.includes(key))
+        .forEach((key) => delete blob[key]);
     }
 
     return blob;
@@ -308,12 +318,16 @@ export default class MetadataSchemaService extends Service {
   getAgreementsBlob(repositories) {
     const result = [];
 
-    repositories.filter(repo => repo.get('agreementText')).forEach(repo => result.push({
-      [repo.get('name')]: repo.get('agreementText')
-    }));
+    repositories
+      .filter((repo) => repo.get('agreementText'))
+      .forEach((repo) =>
+        result.push({
+          [repo.get('name')]: repo.get('agreementText'),
+        })
+      );
 
     return {
-      agreements: result
+      agreements: result,
     };
   }
 
@@ -353,7 +367,7 @@ export default class MetadataSchemaService extends Service {
    */
   _formatMetadata(key, val) {
     if (Array.isArray(val)) {
-      return val.map(o => this._formatComplexMetadataObject(key, o));
+      return val.map((o) => this._formatComplexMetadataObject(key, o));
     } else if (typeof val === 'object') {
       return this._formatComplexMetadataObject(key, val);
     } else if (typeof val === 'string') {
@@ -372,26 +386,41 @@ export default class MetadataSchemaService extends Service {
    */
   async displayMetadata(submission) {
     // Metadata keys to display and the order to display them in.
-    const whiteList = ['authors', 'abstract', 'doi', 'Embargo-end-date', 'journal-NLMTA-ID', 'journal-title', 'journal-title-short', 'issue', 'issns',
-      'publisher', 'publicationDate', 'title', 'volume'];
+    const whiteList = [
+      'authors',
+      'abstract',
+      'doi',
+      'Embargo-end-date',
+      'journal-NLMTA-ID',
+      'journal-title',
+      'journal-title-short',
+      'issue',
+      'issns',
+      'publisher',
+      'publicationDate',
+      'title',
+      'volume',
+    ];
 
     const schemas = await this.getMetadataSchemas(submission.get('repositories'));
     const titleMap = this.getFieldTitleMap(schemas);
     const metadata = JSON.parse(submission.get('metadata'));
 
     const result = [];
-    whiteList.filter(key => key in metadata).forEach((key) => {
-      const value = this._formatMetadata(key, metadata[key]);
-      const isArray = Array.isArray(value);
+    whiteList
+      .filter((key) => key in metadata)
+      .forEach((key) => {
+        const value = this._formatMetadata(key, metadata[key]);
+        const isArray = Array.isArray(value);
 
-      if (value) {
-        result.push({
-          label: titleMap[key],
-          value,
-          isArray
-        });
-      }
-    });
+        if (value) {
+          result.push({
+            label: titleMap[key],
+            value,
+            isArray,
+          });
+        }
+      });
 
     return result;
   }

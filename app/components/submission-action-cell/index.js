@@ -1,4 +1,3 @@
-
 import { action, get } from '@ember/object';
 import { inject as service } from '@ember/service';
 import Component from '@glimmer/component';
@@ -11,7 +10,7 @@ export default class SubmissionActionCell extends Component {
   get isPreparer() {
     let userId = this.currentUser.user.id;
     let preparers = this.args.record.preparers;
-    return preparers.map(x => x.id).includes(userId);
+    return preparers.map((x) => x.id).includes(userId);
   }
 
   get isSubmitter() {

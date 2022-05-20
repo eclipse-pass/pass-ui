@@ -11,22 +11,26 @@ export default function (server) {
 
     server.create('submission', {
       ...attrs,
-      _source: attrs
+      _source: attrs,
     });
 
     return new Response(201, {
       Location: attrs['@id'],
-      'Content-Type': 'text/plain; charset=UTF-8'
+      'Content-Type': 'text/plain; charset=UTF-8',
     });
   });
 
   /**
    * Mock the response from fcrepo for creating a submission
    */
-  server.post('https://pass.local/fcrepo/rest/submissions/**', (_schema, request) => new Response(201, {
-    Location: request.responseURL,
-    'Content-Type': 'text/plain; charset=UTF-8'
-  }));
+  server.post(
+    'https://pass.local/fcrepo/rest/submissions/**',
+    (_schema, request) =>
+      new Response(201, {
+        Location: request.responseURL,
+        'Content-Type': 'text/plain; charset=UTF-8',
+      })
+  );
 
   /**
    * Mock the response from fcrepo for updating a submission

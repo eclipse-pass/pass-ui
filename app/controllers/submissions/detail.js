@@ -68,7 +68,7 @@ export default class SubmissionsDetail extends Controller {
     if (this._hasVisitedWeblink) {
       return this._hasVisitedWeblink;
     }
-    return Object.values(this.externalRepoMap).every(val => val === true);
+    return Object.values(this.externalRepoMap).every((val) => val === true);
   }
 
   set hasVisitedWeblink(value) {
@@ -81,12 +81,13 @@ export default class SubmissionsDetail extends Controller {
   get externalSubmissionsMetadata() {
     let result = [];
 
-    this.repositories.filter(repo => repo._isWebLink)
+    this.repositories
+      .filter((repo) => repo._isWebLink)
       .forEach((repo) => {
         result.push({
           message: `Deposit into ${repo.name} was prompted`,
           name: repo.name,
-          url: repo.url
+          url: repo.url,
         });
       });
 
@@ -136,11 +137,13 @@ export default class SubmissionsDetail extends Controller {
       return null;
     }
     let map = {};
-    repos.filter(repo => !repo._isWebLink).forEach((r) => {
-      (map[r.id] = {
-        repo: r
+    repos
+      .filter((repo) => !repo._isWebLink)
+      .forEach((r) => {
+        map[r.id] = {
+          repo: r,
+        };
       });
-    });
 
     if (deps) {
       deps.forEach((deposit) => {
@@ -150,12 +153,12 @@ export default class SubmissionsDetail extends Controller {
         if (!map.hasOwnProperty(repoId)) {
           map[repoId] = {
             repo,
-            deposit
+            deposit,
           };
         } else {
           map[repoId] = Object.assign(map[repoId], {
             deposit,
-            repositoryCopy: get(deposit, 'repositoryCopy')
+            repositoryCopy: get(deposit, 'repositoryCopy'),
           });
         }
       });
@@ -168,18 +171,18 @@ export default class SubmissionsDetail extends Controller {
         if (!map.hasOwnProperty(repoId)) {
           map[repoId] = {
             repo,
-            repositoryCopy: rc
+            repositoryCopy: rc,
           };
         } else {
           map[repoId] = Object.assign(map[repoId], {
-            repositoryCopy: rc
+            repositoryCopy: rc,
           });
         }
       });
     }
     if (hasStuff) {
       let results = [];
-      Object.keys(map).forEach(k => results.push(map[k]));
+      Object.keys(map).forEach((k) => results.push(map[k]));
       return results;
     }
 
@@ -187,14 +190,12 @@ export default class SubmissionsDetail extends Controller {
   }
 
   get isSubmitter() {
-    return (
-      get(this, 'model.sub.submitter.id') === get(this, 'currentUser.user.id')
-    );
+    return get(this, 'model.sub.submitter.id') === get(this, 'currentUser.user.id');
   }
 
   get isPreparer() {
     return get(this, 'model.sub.preparers')
-      .map(x => x.id)
+      .map((x) => x.id)
       .includes(get(this, 'currentUser.user.id'));
   }
 
@@ -213,11 +214,10 @@ export default class SubmissionsDetail extends Controller {
   async openWeblinkAlert(repo) {
     let value = await swal({
       title: 'Notice!',
-      text:
-        'You are being sent to an external site. This will open a new tab.',
+      text: 'You are being sent to an external site. This will open a new tab.',
       showCancelButton: true,
       cancelButtonText: 'Cancel',
-      confirmButtonText: 'Open new tab'
+      confirmButtonText: 'Open new tab',
     });
 
     if (value.dismiss) {
@@ -226,7 +226,7 @@ export default class SubmissionsDetail extends Controller {
     }
     // Go to the weblink repo
     this.externalRepoMap[repo.name] = true;
-    const allLinksVisited = Object.values(this.externalRepoMap).every(val => val === true);
+    const allLinksVisited = Object.values(this.externalRepoMap).every((val) => val === true);
     if (allLinksVisited) {
       this.hasVisitedWeblink = true;
     }
@@ -242,11 +242,7 @@ export default class SubmissionsDetail extends Controller {
     let message = this.message;
 
     if (!message) {
-      swal(
-        'Comment field empty',
-        'Please add a comment before requesting changes.',
-        'warning'
-      );
+      swal('Comment field empty', 'Please add a comment before requesting changes.', 'warning');
     } else {
       $('.block-user-input').css('display', 'block');
       await this.submissionHandler.requestSubmissionChanges(sub, message);
@@ -266,14 +262,17 @@ export default class SubmissionsDetail extends Controller {
           $('.fa-exclamation-triangle').css('color', '#b0b0b0');
           $('.fa-exclamation-triangle').css('font-size', '2em');
         }, 4000);
-        toastr.warning('Please visit the listed web portal(s) to submit your manuscript directly. Metadata displayed on this page can be used to help in the submission process.');
+        toastr.warning(
+          'Please visit the listed web portal(s) to submit your manuscript directly. Metadata displayed on this page can be used to help in the submission process.'
+        );
       }
       return;
     }
 
     // Validate manuscript files
-    let manuscriptFiles = [].concat(this.filesTemp, get(this, 'model.files') && get(this, 'model.files').toArray())
-      .filter(file => file && file.get('fileRole') === 'manuscript');
+    let manuscriptFiles = []
+      .concat(this.filesTemp, get(this, 'model.files') && get(this, 'model.files').toArray())
+      .filter((file) => file && file.get('fileRole') === 'manuscript');
 
     if (manuscriptFiles.length == 0) {
       swal(
@@ -292,32 +291,37 @@ export default class SubmissionsDetail extends Controller {
     }
 
     let reposWithAgreementText = get(this, 'model.repos')
-      .filter(repo => (!get(repo, '_isWebLink')) && get(repo, 'agreementText'))
-      .map(repo => ({
+      .filter((repo) => !get(repo, '_isWebLink') && get(repo, 'agreementText'))
+      .map((repo) => ({
         id: get(repo, 'name'),
         title: `Deposit requirements for ${get(repo, 'name')}`,
-        html: `<textarea rows="16" cols="40" name="embargo" class="alpaca-control form-control disabled" disabled="" autocomplete="off">${get(repo, 'agreementText')}</textarea>`
+        html: `<textarea rows="16" cols="40" name="embargo" class="alpaca-control form-control disabled" disabled="" autocomplete="off">${get(
+          repo,
+          'agreementText'
+        )}</textarea>`,
       }));
 
     let reposWithoutAgreementText = get(this, 'model.repos')
-      .filter(repo => !get(repo, '_isWebLink') && !get(repo, 'agreementText'))
-      .map(repo => ({
-        id: get(repo, 'name')
+      .filter((repo) => !get(repo, '_isWebLink') && !get(repo, 'agreementText'))
+      .map((repo) => ({
+        id: get(repo, 'name'),
       }));
 
     let reposWithWebLink = get(this, 'model.repos')
-      .filter(repo => get(repo, '_isWebLink'))
-      .map(repo => ({
-        id: get(repo, 'name')
+      .filter((repo) => get(repo, '_isWebLink'))
+      .map((repo) => ({
+        id: get(repo, 'name'),
       }));
 
-    const result = await swal.mixin({
-      input: 'checkbox',
-      inputPlaceholder: 'I agree to the above statement on today\'s date ',
-      confirmButtonText: 'Next &rarr;',
-      showCancelButton: true,
-      progressSteps: reposWithAgreementText.map((repo, index) => index + 1),
-    }).queue(reposWithAgreementText);
+    const result = await swal
+      .mixin({
+        input: 'checkbox',
+        inputPlaceholder: "I agree to the above statement on today's date ",
+        confirmButtonText: 'Next &rarr;',
+        showCancelButton: true,
+        progressSteps: reposWithAgreementText.map((repo, index) => index + 1),
+      })
+      .queue(reposWithAgreementText);
     if (result.value) {
       let reposThatUserAgreedToDeposit = reposWithAgreementText.filter((repo, index) => {
         // if the user agreed to depost to this repo === 1
@@ -327,13 +331,25 @@ export default class SubmissionsDetail extends Controller {
       });
       // make sure there are repos to submit to.
       if (get(this, 'model.sub.repositories.length') > 0) {
-        if (reposWithoutAgreementText.length > 0 || reposThatUserAgreedToDeposit.length > 0 || reposWithWebLink.length > 0) {
-          let swalMsg = 'Once you click confirm you will no longer be able to edit this submission or add repositories.<br/>';
+        if (
+          reposWithoutAgreementText.length > 0 ||
+          reposThatUserAgreedToDeposit.length > 0 ||
+          reposWithWebLink.length > 0
+        ) {
+          let swalMsg =
+            'Once you click confirm you will no longer be able to edit this submission or add repositories.<br/>';
           if (reposWithoutAgreementText.length > 0 || reposThatUserAgreedToDeposit.length) {
-            swalMsg = `${swalMsg}You are about to submit your files to: <pre><code>${JSON.stringify(reposThatUserAgreedToDeposit.map(repo => repo.id)).replace(/[\[\]']/g, '')}${JSON.stringify(reposWithoutAgreementText.map(repo => repo.id)).replace(/[\[\]']/g, '')} </code></pre>`;
+            swalMsg = `${swalMsg}You are about to submit your files to: <pre><code>${JSON.stringify(
+              reposThatUserAgreedToDeposit.map((repo) => repo.id)
+            ).replace(/[\[\]']/g, '')}${JSON.stringify(reposWithoutAgreementText.map((repo) => repo.id)).replace(
+              /[\[\]']/g,
+              ''
+            )} </code></pre>`;
           }
           if (reposWithWebLink.length > 0) {
-            swalMsg = `${swalMsg}You were prompted to submit to: <code><pre>${JSON.stringify(reposWithWebLink.map(repo => repo.id)).replace(/[\[\]']/g, '')}</code></pre>`;
+            swalMsg = `${swalMsg}You were prompted to submit to: <code><pre>${JSON.stringify(
+              reposWithWebLink.map((repo) => repo.id)
+            ).replace(/[\[\]']/g, '')}</code></pre>`;
           }
 
           let result = await swal({
@@ -346,18 +362,21 @@ export default class SubmissionsDetail extends Controller {
           if (result.value) {
             // Update repos to reflect repos that user agreed to deposit.
             // Must keep web-link repos.
-            this.set('model.sub.repositories', get(this, 'model.sub.repositories').filter((repo) => {
-              if (get(repo, '_isWebLink')) {
-                return true;
-              }
-              let temp = reposWithAgreementText.map(x => x.id).includes(get(repo, 'name'));
-              if (!temp) {
-                return true;
-              } else if (reposThatUserAgreedToDeposit.map(r => r.id).includes(get(repo, 'name'))) {
-                return true;
-              }
-              return false;
-            }));
+            this.set(
+              'model.sub.repositories',
+              get(this, 'model.sub.repositories').filter((repo) => {
+                if (get(repo, '_isWebLink')) {
+                  return true;
+                }
+                let temp = reposWithAgreementText.map((x) => x.id).includes(get(repo, 'name'));
+                if (!temp) {
+                  return true;
+                } else if (reposThatUserAgreedToDeposit.map((r) => r.id).includes(get(repo, 'name'))) {
+                  return true;
+                }
+                return false;
+              })
+            );
 
             let sub = get(this, 'model.sub');
             let message = this.message;
@@ -372,10 +391,15 @@ export default class SubmissionsDetail extends Controller {
           });
           let result = await swal({
             title: 'Your submission cannot be submitted.',
-            html: `You declined to agree to the deposit agreement(s) for ${JSON.stringify(reposUserDidNotAgreeToDeposit.map(repo => repo.id)).replace(/[\[\]']/g, '')}. Therefore, this submission cannot be submitted. \n You can either (a) cancel the submission or (b) return to the submission to provide required input and try again.`,
+            html: `You declined to agree to the deposit agreement(s) for ${JSON.stringify(
+              reposUserDidNotAgreeToDeposit.map((repo) => repo.id)
+            ).replace(
+              /[\[\]']/g,
+              ''
+            )}. Therefore, this submission cannot be submitted. \n You can either (a) cancel the submission or (b) return to the submission to provide required input and try again.`,
             confirmButtonText: 'Cancel submission',
             showCancelButton: true,
-            cancelButtonText: 'Go back to edit information'
+            cancelButtonText: 'Go back to edit information',
           });
 
           if (result.value) {
@@ -389,7 +413,7 @@ export default class SubmissionsDetail extends Controller {
           html: 'No repositories are associated with this submission. \n You can either (a) cancel the submission or (b) return to the submission and edit it to include a repository.',
           confirmButtonText: 'Cancel submission',
           showCancelButton: true,
-          cancelButtonText: 'Go back to edit information'
+          cancelButtonText: 'Go back to edit information',
         });
 
         if (result.value) {
@@ -405,11 +429,7 @@ export default class SubmissionsDetail extends Controller {
     let sub = get(this, 'model.sub');
 
     if (!message) {
-      swal(
-        'Comment field empty',
-        'Please add a comment for your cancellation.',
-        'warning'
-      );
+      swal('Comment field empty', 'Please add a comment for your cancellation.', 'warning');
       return;
     }
 
@@ -435,7 +455,7 @@ export default class SubmissionsDetail extends Controller {
       text: 'Are you sure you want to delete this draft submission? This cannot be undone.',
       confirmButtonText: 'Delete',
       confirmButtonColor: '#f86c6b',
-      showCancelButton: true
+      showCancelButton: true,
     });
 
     if (result.value) {

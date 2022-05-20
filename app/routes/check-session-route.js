@@ -16,7 +16,7 @@ export default class CheckSessionRouteRoute extends Route {
       url = ENV.userService.url;
     }
     $.get(url, (data) => {
-      if (!(data.username)) {
+      if (!data.username) {
         transition.abort();
         this.errorHandler.handleError(new Error('shib302'));
       }

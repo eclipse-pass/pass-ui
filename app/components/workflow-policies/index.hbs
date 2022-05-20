@@ -1,15 +1,10 @@
 <div class="form-group">
-    <p class="lead text-muted" data-test-workflow-policies-lead-text>
-      Based on the information you provided so far, these are the public access
-      policies that are applicable to your work:
-    </p>
-    {{#each @policies as |policy|}}
-      <PolicyCard
-        @policy={{policy}}
-        @journal={{@publication.journal}}
-        @submission={{@submission}}
-      />
-    {{/each}}
+  <p class="lead text-muted" data-test-workflow-policies-lead-text>
+    Based on the information you provided so far, these are the public access policies that are applicable to your work:
+  </p>
+  {{#each @policies as |policy|}}
+    <PolicyCard @policy={{policy}} @journal={{@publication.journal}} @submission={{@submission}} />
+  {{/each}}
 </div>
 
 <button class="btn btn-outline-primary" {{action @back}} data-test-workflow-policies-back>Back</button>

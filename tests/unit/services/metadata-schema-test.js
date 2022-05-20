@@ -15,19 +15,19 @@ module('Unit | Service | metadata-schema', (hooks) => {
             fields: {
               name: { helper: 'Please enter your name' },
               feedback: { type: 'textarea' },
-              ranking: { type: 'select', optionLabels: ['Awesome', 'It\'s OK'] }
-            }
+              ranking: { type: 'select', optionLabels: ['Awesome', "It's OK"] },
+            },
           },
           properties: {
             name: { type: 'string', title: 'Full name' },
             feedback: { type: 'string' },
             ranking: {
               type: 'string',
-              enum: ['excellent', 'ok', 'moo']
-            }
+              enum: ['excellent', 'ok', 'moo'],
+            },
           },
-          type: 'object'
-        }
+          type: 'object',
+        },
       },
       allOf: [
         {
@@ -40,22 +40,22 @@ module('Unit | Service | metadata-schema', (hooks) => {
               items: {
                 properties: {
                   issn: { type: 'string', title: 'ISSN' },
-                  pubType: { type: 'string', title: 'Publication Type', enum: ['Print', 'Online'] }
+                  pubType: { type: 'string', title: 'Publication Type', enum: ['Print', 'Online'] },
                 },
-                type: 'object'
-              }
-            }
+                type: 'object',
+              },
+            },
           },
-          required: ['name', 'ranking']
-        }
-      ]
+          required: ['name', 'ranking'],
+        },
+      ],
     };
     this.set('mockSchema', mockSchema);
 
     const mockAjax = Service.extend({
       request() {
         return Promise.resolve([mockSchema]);
-      }
+      },
     });
 
     run(() => {
@@ -69,7 +69,9 @@ module('Unit | Service | metadata-schema', (hooks) => {
    * set of schema
    */
   test('Test against mocked AJAX', function (assert) {
-    this.owner.lookup('service:metadata-schema').getMetadataSchemas(['moo', 'too'])
+    this.owner
+      .lookup('service:metadata-schema')
+      .getMetadataSchemas(['moo', 'too'])
       .then((result) => {
         assert.ok(result, 'No result found');
         assert.ok(result[0].definitions, 'mockSchema.definitions not found');
@@ -82,26 +84,28 @@ module('Unit | Service | metadata-schema', (hooks) => {
     let triedWithMerge = false;
     let triedWithoutMerge = false;
 
-    service.set('ajax', EmberObject.create({
-      request: (url, options) => {
-        if (url.includes('merge')) {
-          triedWithMerge = true;
-        } else {
-          triedWithoutMerge = true;
-        }
-        assert.ok(true);
-        return $.Deferred().reject({}, { status: 409 });
-      },
-    }));
+    service.set(
+      'ajax',
+      EmberObject.create({
+        request: (url, options) => {
+          if (url.includes('merge')) {
+            triedWithMerge = true;
+          } else {
+            triedWithoutMerge = true;
+          }
+          assert.ok(true);
+          return $.Deferred().reject({}, { status: 409 });
+        },
+      })
+    );
 
-    service.getMetadataSchemas(['moo', 'too'])
-      .then(
-        result => assert.ok(false),
-        (failure) => {
-          assert.ok(triedWithMerge, 'Request did not try with the "merge" query param');
-          assert.ok(triedWithoutMerge, 'Request did not try without the "merge" query param');
-        }
-      );
+    service.getMetadataSchemas(['moo', 'too']).then(
+      (result) => assert.ok(false),
+      (failure) => {
+        assert.ok(triedWithMerge, 'Request did not try with the "merge" query param');
+        assert.ok(triedWithoutMerge, 'Request did not try without the "merge" query param');
+      }
+    );
   });
 
   test('Alpacafication works as expected', function (assert) {
@@ -120,7 +124,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
   test('Test adding display data, editable', function (assert) {
     const data = {
       name: 'Moo Jones',
-      feedback: 'Feedbag'
+      feedback: 'Feedbag',
     };
     const service = this.owner.lookup('service:metadata-schema');
     const schema = service.alpacafySchema(get(this, 'mockSchema'));
@@ -137,7 +141,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
   test('Test adding read-only display data', function (assert) {
     const data = {
       name: 'Moo Jones',
-      feedback: 'Feedbag'
+      feedback: 'Feedbag',
     };
 
     const readonly = ['name'];
@@ -149,8 +153,8 @@ module('Unit | Service | metadata-schema', (hooks) => {
     assert.ok(result, 'No result found');
     assert.ok(result.data, 'No data found in result');
 
-    assert.ok(result.options.fields.name.readonly, 'Property \'name\' not marked as read only');
-    assert.notOk(result.options.fields.feedback.readonly, 'Property \'feedback\' marked as read only');
+    assert.ok(result.options.fields.name.readonly, "Property 'name' not marked as read only");
+    assert.notOk(result.options.fields.feedback.readonly, "Property 'feedback' marked as read only");
   });
 
   test('Validation should fail when "name" field is not present in data', function (assert) {
@@ -160,7 +164,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
 
     const errors = service.getErrors();
     assert.equal(1, errors.length, 'Should be 1 error');
-    assert.equal(errors[0].message, 'should have required property \'name\'');
+    assert.equal(errors[0].message, "should have required property 'name'");
   });
 
   test('Validation should fail when "ranking" value is something not in enum', function (assert) {
@@ -168,7 +172,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
 
     const data = {
       name: 'Moo Jones',
-      ranking: 'invalid-moo'
+      ranking: 'invalid-moo',
     };
 
     assert.notOk(service.validate(get(this, 'mockSchema'), data), 'Validation should fail');
@@ -186,9 +190,9 @@ module('Unit | Service | metadata-schema', (hooks) => {
       issns: [
         {
           issn: '1234',
-          pubType: 'Electronic'
-        }
-      ]
+          pubType: 'Electronic',
+        },
+      ],
     };
 
     assert.notOk(service.validate(get(this, 'mockSchema'), data), 'Validation should fail');
@@ -197,7 +201,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
     assert.equal(1, errors.length, 'Should have found 1 error');
   });
 
-  test('Get fields includes \'allOf\' properties', function (assert) {
+  test("Get fields includes 'allOf' properties", function (assert) {
     const service = this.owner.lookup('service:metadata-schema');
     const result = service.getFields([get(this, 'mockSchema')]);
 
@@ -205,7 +209,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
     assert.ok(result.includes('issns'));
   });
 
-  test('Get fields does not include \'allOf\' properties when told not to', function (assert) {
+  test("Get fields does not include 'allOf' properties when told not to", function (assert) {
     const service = this.owner.lookup('service:metadata-schema');
     const result = service.getFields([get(this, 'mockSchema')], true);
 
@@ -229,11 +233,8 @@ module('Unit | Service | metadata-schema', (hooks) => {
     const submission = EmberObject.create({
       repositories: [],
       metadata: JSON.stringify({
-        issns: [
-          { issn: '123-moo' },
-          { issn: 'moo-321', pubType: 'Print' }
-        ]
-      })
+        issns: [{ issn: '123-moo' }, { issn: 'moo-321', pubType: 'Print' }],
+      }),
     });
 
     const result = await service.displayMetadata(submission);
@@ -241,11 +242,8 @@ module('Unit | Service | metadata-schema', (hooks) => {
       {
         label: 'ISSNs',
         isArray: true,
-        value: [
-          { ISSN: '123-moo' },
-          { ISSN: 'moo-321 (Print)' }
-        ]
-      }
+        value: [{ ISSN: '123-moo' }, { ISSN: 'moo-321 (Print)' }],
+      },
     ];
 
     assert.deepEqual(result, expected);
@@ -255,7 +253,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
     const service = this.owner.lookup('service:metadata-schema');
     const submission = EmberObject.create({
       repositories: [],
-      metadata: JSON.stringify({ name: 'Bessie Cow' })
+      metadata: JSON.stringify({ name: 'Bessie Cow' }),
     });
 
     const result = await service.displayMetadata(submission);

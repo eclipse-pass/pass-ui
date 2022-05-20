@@ -1,5 +1,5 @@
-{{#each (await (get @record 'repositories')) as |repo index|}}
-{{if index ', '}}
+{{#each (await (get @record "repositories")) as |repo index|}}
+  {{if index ", "}}
   {{#if repo.name}}
     {{repo.name}}
   {{/if}}

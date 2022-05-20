@@ -12,7 +12,7 @@ module.exports = function (environment) {
     locationType: 'auto',
     'ember-load': {
       // This is the default value, if you don't set this opton
-      loadingIndicatorClass: 'app-loader'
+      loadingIndicatorClass: 'app-loader',
     },
     EmberENV: {
       FEATURES: {
@@ -21,17 +21,18 @@ module.exports = function (environment) {
       },
       EXTEND_PROTOTYPES: {
         // Prevent Ember Data from overriding Date.parse.
-        Date: false
-      }
+        Date: false,
+      },
     },
 
-    APP: { // This is available in the app by calling PassEmber.varName
+    APP: {
+      // This is available in the app by calling PassEmber.varName
       staticConfigUri: process.env.STATIC_CONFIG_URL || '/app/config.json',
-    }
+    },
   };
   // Disable mirage entirely.
   ENV['ember-cli-mirage'] = {
-    enabled: false
+    enabled: false,
   };
 
   if (environment === 'development') {
@@ -41,7 +42,6 @@ module.exports = function (environment) {
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
   }
-
 
   if (environment === 'test') {
     ENV.APP.autoboot = false;
@@ -55,7 +55,7 @@ module.exports = function (environment) {
     ENV.APP.rootElement = '#ember-testing';
     // Disable mirage entirely.
     ENV['ember-cli-mirage'] = {
-      enabled: true
+      enabled: true,
     };
   }
 
@@ -63,18 +63,18 @@ module.exports = function (environment) {
     base: 'http://localhost:8080/fcrepo/rest/',
     context: 'https://oa-pass.github.io/pass-data-model/src/main/resources/context-3.4.jsonld',
     data: 'http://oapass.org/ns/pass#',
-    elasticsearch: 'http://localhost:9200/pass/_search'
+    elasticsearch: 'http://localhost:9200/pass/_search',
   };
   ENV.userService = {
-    url: 'https://pass.local:8080/pass-user-service/whoami'
+    url: 'https://pass.local:8080/pass-user-service/whoami',
   };
 
   ENV.doiService = {
-    url: 'https://pass.local/doiservice/journal'
+    url: 'https://pass.local/doiservice/journal',
   };
 
   ENV.schemaService = {
-    url: 'https://pass.local/schemaservice'
+    url: 'https://pass.local/schemaservice',
   };
 
   ENV.policyService = {
@@ -87,7 +87,7 @@ module.exports = function (environment) {
 
   ENV.oaManuscriptService = {
     lookupUrl: 'https://pass.local/downloadservice/lookup',
-    downloadUrl: 'https://pass.local/downloadservice/download'
+    downloadUrl: 'https://pass.local/downloadservice/download',
   };
 
   ENV.metadataSchemaUri = 'https://oa-pass.github.io/metadata-schemas/jhu/global.json';

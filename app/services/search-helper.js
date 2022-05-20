@@ -1,4 +1,3 @@
-
 import Service, { inject as service } from '@ember/service';
 // import { defer } from 'rsvp';
 
@@ -52,7 +51,7 @@ export default class SearchHelperService extends Service {
 
   unignore(id) {
     if (typeof id !== 'string') {
-      console.log('%cYou can only remove ID \'strings\' to the ignore list', 'color: red;');
+      console.log("%cYou can only remove ID 'strings' to the ignore list", 'color: red;');
       return;
     }
 

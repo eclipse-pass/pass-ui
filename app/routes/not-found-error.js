@@ -7,7 +7,7 @@ export default class NotFoundErrorRoute extends CheckSessionRoute {
 
   model() {
     return RSVP.hash({
-      config: this.staticConfig.getStaticConfig()
+      config: this.staticConfig.getStaticConfig(),
     });
   }
 }

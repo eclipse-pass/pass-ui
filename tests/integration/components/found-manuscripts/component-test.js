@@ -9,26 +9,36 @@ module('Integration | Component | found-manuscripts', (hooks) => {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.owner.register('service:app-static-config', Service.extend({
-      getStaticConfig: () => Promise.resolve({
-        branding: {
-          stylesheet: '',
-          pages: {
-            contactUrl: ''
-          }
-        }
-      }),
-      addCss: () => {}
-    }));
+    this.owner.register(
+      'service:app-static-config',
+      Service.extend({
+        getStaticConfig: () =>
+          Promise.resolve({
+            branding: {
+              stylesheet: '',
+              pages: {
+                contactUrl: '',
+              },
+            },
+          }),
+        addCss: () => {},
+      })
+    );
 
-    this.owner.register('service:workflow', Service.extend({
-      getDoiInfo: () => ({ DOI: 'doi-moo' })
-    }));
+    this.owner.register(
+      'service:workflow',
+      Service.extend({
+        getDoiInfo: () => ({ DOI: 'doi-moo' }),
+      })
+    );
 
     // Dumb service mock to prevent random fetches
-    this.owner.register('service:oa-manuscript-service', Service.extend({
-      lookup: () => Promise.resolve([]),
-    }));
+    this.owner.register(
+      'service:oa-manuscript-service',
+      Service.extend({
+        lookup: () => Promise.resolve([]),
+      })
+    );
   });
 
   test('An OA MS is displayed', async function (assert) {
@@ -36,11 +46,13 @@ module('Integration | Component | found-manuscripts', (hooks) => {
     const mockMsService = Service.extend({
       lookup(doi) {
         assert.ok(doi, 'DOI needs to be present');
-        return Promise.resolve([{
-          name: 'This is a moo',
-          url: 'http://moo.example.com'
-        }]);
-      }
+        return Promise.resolve([
+          {
+            name: 'This is a moo',
+            url: 'http://moo.example.com',
+          },
+        ]);
+      },
     });
 
     this.owner.register('service:oa-manuscript-service', mockMsService);
@@ -57,14 +69,18 @@ module('Integration | Component | found-manuscripts', (hooks) => {
   });
 
   test('Message should appear if NOT disabled AND no files found', async function (assert) {
-    const expected = 'We could not find any existing open access copies for your manuscript/article. Please upload your own copy.';
+    const expected =
+      'We could not find any existing open access copies for your manuscript/article. Please upload your own copy.';
 
-    this.owner.register('service:oa-manuscript-service', Service.extend({
-      lookup(doi) {
-        assert.ok(doi, 'DOI still needs to be present');
-        return Promise.resolve([]);
-      }
-    }));
+    this.owner.register(
+      'service:oa-manuscript-service',
+      Service.extend({
+        lookup(doi) {
+          assert.ok(doi, 'DOI still needs to be present');
+          return Promise.resolve([]);
+        },
+      })
+    );
 
     await render(hbs`<FoundManuscripts />`);
     assert.ok(this.element.textContent.includes(expected));

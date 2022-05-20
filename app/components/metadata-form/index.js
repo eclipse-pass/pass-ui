@@ -35,8 +35,8 @@ export default Component.extend({
           styles: 'pull-left btn btn-outline-danger ml-2',
           click() {
             that.cancel();
-          }
-        }
+          },
+        },
       },
     };
 
@@ -51,8 +51,11 @@ export default Component.extend({
    * @param {JSONObject} object
    */
   stripEmptyArrays(object) {
-    Object.keys(object).filter(key => Array.isArray(object[key]) && object[key].length === 0)
-      .forEach((key) => { delete object[key]; });
+    Object.keys(object)
+      .filter((key) => Array.isArray(object[key]) && object[key].length === 0)
+      .forEach((key) => {
+        delete object[key];
+      });
     return object;
-  }
+  },
 });

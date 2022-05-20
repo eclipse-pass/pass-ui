@@ -10,7 +10,7 @@ module('Integration | Component | workflow policies', (hooks) => {
   test('it renders', async function (assert) {
     let submission = EmberObject.create({
       repositories: [],
-      grants: []
+      grants: [],
     });
     let policies = [];
     let publication = EmberObject.create({});

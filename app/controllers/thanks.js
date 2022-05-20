@@ -13,7 +13,6 @@ export default class ThanksController extends Controller {
 
   constructor() {
     super(...arguments);
-    this.configurator.getStaticConfig()
-      .then(config => this.set('faqUrl', config.branding.pages.faqUrl));
+    this.configurator.getStaticConfig().then((config) => this.set('faqUrl', config.branding.pages.faqUrl));
   }
 }

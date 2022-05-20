@@ -8,15 +8,16 @@ module('Unit | Controller | submissions/index', (hooks) => {
 
   hooks.beforeEach(function () {
     const mockStaticConfig = Service.extend({
-      getStaticConfig: () => Promise.resolve({
-        branding: {
-          stylesheet: '',
-          pages: {
-            faqUrl: '',
-          }
-        }
-      }),
-      addCss: () => {}
+      getStaticConfig: () =>
+        Promise.resolve({
+          branding: {
+            stylesheet: '',
+            pages: {
+              faqUrl: '',
+            },
+          },
+        }),
+      addCss: () => {},
     });
 
     this.owner.register('service:app-static-config', mockStaticConfig);
@@ -30,17 +31,23 @@ module('Unit | Controller | submissions/index', (hooks) => {
 
   test('properly returns admin roles', function (assert) {
     let controller = this.owner.lookup('controller:submissions/index');
-    controller.set('currentUser.user', EmberObject.create({
-      isAdmin: true
-    }));
+    controller.set(
+      'currentUser.user',
+      EmberObject.create({
+        isAdmin: true,
+      })
+    );
     assert.equal(controller.get('columns.length'), 6);
   });
 
   test('properly returns submitter roles', function (assert) {
     let controller = this.owner.lookup('controller:submissions/index');
-    controller.set('currentUser.user', EmberObject.create({
-      isSubmitter: true
-    }));
+    controller.set(
+      'currentUser.user',
+      EmberObject.create({
+        isSubmitter: true,
+      })
+    );
     assert.equal(controller.get('columns.length'), 7);
   });
 });

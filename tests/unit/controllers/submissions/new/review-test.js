@@ -15,8 +15,8 @@ module('Unit | Controller | submissions/new/review', (hooks) => {
     const controller = this.owner.lookup('controller:submissions/new/review');
     const model = EmberObject.create({
       newSubmission: EmberObject.create({
-        save: () => Promise.resolve(assert.ok(true))
-      })
+        save: () => Promise.resolve(assert.ok(true)),
+      }),
     });
 
     controller.set('model', model);
@@ -33,11 +33,14 @@ module('Unit | Controller | submissions/new/review', (hooks) => {
   test('parent properties are retrieved', function (assert) {
     let controller = this.owner.lookup('controller:submissions/new/review');
     let submitTriggered = false;
-    this.owner.register('controller:submissions/new', EmberObject.extend({
-      uploading: 'is uploading',
-      comment: 'test comment',
-      waitingMessage: 'test waiting message'
-    }));
+    this.owner.register(
+      'controller:submissions/new',
+      EmberObject.extend({
+        uploading: 'is uploading',
+        comment: 'test comment',
+        waitingMessage: 'test waiting message',
+      })
+    );
 
     assert.equal(controller.get('uploading'), 'is uploading');
     assert.equal(controller.get('waitingMessage'), 'test waiting message');

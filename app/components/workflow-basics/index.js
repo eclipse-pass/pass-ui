@@ -106,15 +106,15 @@ export default class WorkflowBasics extends Component {
   }
 
   get titleClass() {
-    return (this.flaggedFields.indexOf('title') > -1) ? 'form-control is-invalid' : 'form-control';
+    return this.flaggedFields.indexOf('title') > -1 ? 'form-control is-invalid' : 'form-control';
   }
 
   get journalClass() {
-    return (this.flaggedFields.indexOf('journal') > -1) ? 'is-invalid' : 'is-valid';
+    return this.flaggedFields.indexOf('journal') > -1 ? 'is-invalid' : 'is-valid';
   }
 
   get submitterEmailClass() {
-    return (this.flaggedFields.indexOf('submitterEmail') > -1) ? 'is-invalid' : '';
+    return this.flaggedFields.indexOf('submitterEmail') > -1 ? 'is-invalid' : '';
   }
 
   get doiClass() {
@@ -149,14 +149,14 @@ export default class WorkflowBasics extends Component {
       volume: '',
       issue: '',
       pmid: '',
-      journal: undefined
+      journal: undefined,
     });
   }
 
   @action
   proxyStatusToggled(isProxySubmission) {
     // do only if the values indicate a switch of proxy
-    if (this.isProxySubmission && !isProxySubmission || !this.isProxySubmission && isProxySubmission) {
+    if ((this.isProxySubmission && !isProxySubmission) || (!this.isProxySubmission && isProxySubmission)) {
       this.changeSubmitter(isProxySubmission, null);
     }
   }
@@ -184,7 +184,7 @@ export default class WorkflowBasics extends Component {
         html: 'Changing the submitter will also <strong>remove any grants</strong> currently attached to your submission. Are you sure you want to proceed?',
         showCancelButton: true,
         cancelButtonText: 'Never mind',
-        confirmButtonText: 'Yes, I\'m sure'
+        confirmButtonText: "Yes, I'm sure",
       });
 
       if (result.value) {
@@ -266,7 +266,7 @@ export default class WorkflowBasics extends Component {
 
       toastr.info('Please wait while we look up information about your DOI', '', {
         timeOut: 0,
-        extendedTimeOut: 0
+        extendedTimeOut: 0,
       });
 
       const result = yield doiService.get('resolveDOI').perform(doi);
@@ -279,7 +279,7 @@ export default class WorkflowBasics extends Component {
       get(this, 'workflow').setFromCrossref(true);
 
       toastr.remove();
-      toastr.success('We\'ve pre-populated information from the DOI provided!');
+      toastr.success("We've pre-populated information from the DOI provided!");
       this.args.validateTitle();
       this.args.validateJournal();
     } catch (error) {
@@ -290,5 +290,5 @@ export default class WorkflowBasics extends Component {
       set(this, 'doiServiceError', error.payload.error);
       // eslint-disable-next-line newline-per-chained-call
     }
-  }
+  };
 }

@@ -17,8 +17,8 @@ module('Unit | Controller | submissions/new/policies', (hooks) => {
     const controller = this.owner.lookup('controller:submissions/new/policies');
     const model = EmberObject.create({
       newSubmission: EmberObject.create({
-        save: () => Promise.resolve(assert.ok(true))
-      })
+        save: () => Promise.resolve(assert.ok(true)),
+      }),
     });
 
     controller.set('model', model);
@@ -34,8 +34,8 @@ module('Unit | Controller | submissions/new/policies', (hooks) => {
     const controller = this.owner.lookup('controller:submissions/new/policies');
     const model = EmberObject.create({
       newSubmission: EmberObject.create({
-        save: () => Promise.resolve(assert.ok(true))
-      })
+        save: () => Promise.resolve(assert.ok(true)),
+      }),
     });
 
     controller.set('model', model);
@@ -51,14 +51,13 @@ module('Unit | Controller | submissions/new/policies', (hooks) => {
     const controller = this.owner.lookup('controller:submissions/new/policies');
     const model = EmberObject.create({
       newSubmission: EmberObject.create({
-        save: () => Promise.resolve(assert.ok(true))
-      })
+        save: () => Promise.resolve(assert.ok(true)),
+      }),
     });
 
     controller.set('model', model);
-    controller.set(
-      'transitionToRoute',
-      route => assert.ok(route === 'submissions.new.repositories' || route === 'submissions.new.grants')
+    controller.set('transitionToRoute', (route) =>
+      assert.ok(route === 'submissions.new.repositories' || route === 'submissions.new.grants')
     );
 
     controller.send('loadNext');

@@ -22,15 +22,15 @@ export default class DetailRoute extends CheckSessionRoute {
     const query = {
       bool: {
         must: { term: { grants: params.grant_id } },
-        must_not: { term: { submissionStatus: 'cancelled' } }
+        must_not: { term: { submissionStatus: 'cancelled' } },
       },
-      size: 500
+      size: 500,
     };
     let submissions = this.store.query('submission', query);
 
     return hash({
       grant,
-      submissions
+      submissions,
     });
   }
 }

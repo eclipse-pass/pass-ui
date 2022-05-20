@@ -9,17 +9,18 @@ module('Integration | Component | nav bar', (hooks) => {
 
   test('it renders', async function (assert) {
     const mockStaticConfig = Service.extend({
-      getStaticConfig: () => Promise.resolve({
-        branding: {
-          stylesheet: '',
-          pages: {
-            aboutUrl: '',
-            contactUrl: '',
-            faqUrl: '',
-          }
-        }
-      }),
-      addCss: () => {}
+      getStaticConfig: () =>
+        Promise.resolve({
+          branding: {
+            stylesheet: '',
+            pages: {
+              aboutUrl: '',
+              contactUrl: '',
+              faqUrl: '',
+            },
+          },
+        }),
+      addCss: () => {},
     });
 
     this.owner.register('service:app-static-config', mockStaticConfig);

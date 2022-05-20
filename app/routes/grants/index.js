@@ -27,26 +27,20 @@ export default class IndexRoute extends CheckSessionRoute {
     let promise = defer();
     const querySize = 500;
     const grantQuery = {
-      sort: [
-        'awardStatus',
-        { endDate: 'desc' }
-      ],
+      sort: ['awardStatus', { endDate: 'desc' }],
       query: {
         bool: {
           must: [
             { range: { endDate: { gte: '2011-01-01' } } },
             {
               bool: {
-                should: [
-                  { term: { pi: user.get('id') } },
-                  { term: { coPis: user.get('id') } }
-                ]
-              }
-            }
-          ]
-        }
+                should: [{ term: { pi: user.get('id') } }, { term: { coPis: user.get('id') } }],
+              },
+            },
+          ],
+        },
       },
-      size: querySize
+      size: querySize,
     };
 
     // First search for all Grants associated with the current user
@@ -59,7 +53,7 @@ export default class IndexRoute extends CheckSessionRoute {
 
         results.push({
           grant,
-          submissions: A()
+          submissions: A(),
         });
       });
 
@@ -68,15 +62,15 @@ export default class IndexRoute extends CheckSessionRoute {
         query: {
           bool: {
             must: { terms: { grants: grantIds } },
-            must_not: { term: { submissionStatus: 'cancelled' } }
-          }
+            must_not: { term: { submissionStatus: 'cancelled' } },
+          },
         },
-        size: querySize
+        size: querySize,
       };
       this.store.query('submission', query).then((subs) => {
         subs.forEach((submission) => {
           submission.get('grants').forEach((grant) => {
-            let match = results.find(res => res.grant.get('id') === grant.get('id'));
+            let match = results.find((res) => res.grant.get('id') === grant.get('id'));
             if (match) {
               match.submissions.pushObject(submission);
             }

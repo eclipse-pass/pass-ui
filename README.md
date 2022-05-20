@@ -1,4 +1,5 @@
 # pass-ember
+
 [![Build Status](https://travis-ci.org/OA-PASS/pass-ember.png?branch=master)](https://travis-ci.org/OA-PASS/pass-ember)
 [![Coverage Status](https://coveralls.io/repos/github/OA-PASS/pass-ember/badge.svg)](https://coveralls.io/github/OA-PASS/pass-ember)
 
@@ -15,26 +16,26 @@ Note that the indexing process is asynchronous. An object persisted to Fedora wi
 
 You will need the following things properly installed on your computer.
 
-* [Git](https://git-scm.com/)
-* [Docker](https://www.docker.com/) along with docker-compose.
+- [Git](https://git-scm.com/)
+- [Docker](https://www.docker.com/) along with docker-compose.
 
-The `hosts` (`C:\Windows\System32\Drivers\etc\hosts` for windows, `/etc/hosts` for *nix) file on your development computer needs to be updated to alias `pass.local` to your loopback address (`127.0.0.1`) or to your docker-machine address (e.g. `192.168.99.100`). For example, to alias `pass.local` to your loopback address, you would make sure your `hosts` file contains the line: `127.0.0.1  pass.local`
+The `hosts` (`C:\Windows\System32\Drivers\etc\hosts` for windows, `/etc/hosts` for \*nix) file on your development computer needs to be updated to alias `pass.local` to your loopback address (`127.0.0.1`) or to your docker-machine address (e.g. `192.168.99.100`). For example, to alias `pass.local` to your loopback address, you would make sure your `hosts` file contains the line: `127.0.0.1 pass.local`
 
 ## Installation
 
-* `git clone <repository-url>` this repository
-* `cd pass-ember`
+- `git clone <repository-url>` this repository
+- `cd pass-ember`
 
 ## Running / Development
 
 A docker environement which relies on a Shibboleth proxy is in .docker/. All services should
 be available at https://pass.local/.
 
-* In .docker/ run `docker-compose pull`
-  * To start PASS with JHU assets, run `docker-compose up -d`.
-  * To run the Harvard development stack, do `docker-compose -f harvard.yml up -d`
-  * To start PASS with only a few test assets, run `docker-compose -f docker-compose.yml -f docker-compose.public.yml up -d`
-* Wait for the containers to finish coming up, this could take 5-10 minutes. There will be a long pause while the `ember` container builds. When you see the "Build successful" message from `ember` and a small table listing the "Slowest Nodes" that indicates the application is ready to use. It will look similar to:
+- In .docker/ run `docker-compose pull`
+  - To start PASS with JHU assets, run `docker-compose up -d`.
+  - To run the Harvard development stack, do `docker-compose -f harvard.yml up -d`
+  - To start PASS with only a few test assets, run `docker-compose -f docker-compose.yml -f docker-compose.public.yml up -d`
+- Wait for the containers to finish coming up, this could take 5-10 minutes. There will be a long pause while the `ember` container builds. When you see the "Build successful" message from `ember` and a small table listing the "Slowest Nodes" that indicates the application is ready to use. It will look similar to:
 
 ```
 ember            | Slowest Nodes (totalTime => 5% )              | Total (avg)
@@ -45,14 +46,14 @@ ember            | Babel: ember-lodash (1)                       | 5960ms
 ember            | Babel: ember-data (2)                         | 5386ms (2693 ms)
 ```
 
-* The local code runs in the `ember` container, and changes in the local code will be reflected there.
-  * The app directory is bind mounted into the container.
-* Visit your app at https://pass.local/. You will have to login as a test user.
-* Run your tests at https://pass.local/app/tests
-* Fedora repository is at https://pass.local/fcrepo/
-* Elasticsearch index search endpoint is at https://pass.local/es/
-* In order to remove persisted data, stop all the containers and `docker volume prune`
-* Your web browser may complain about unsigned certificates, but the complaints can be ignored.
+- The local code runs in the `ember` container, and changes in the local code will be reflected there.
+  - The app directory is bind mounted into the container.
+- Visit your app at https://pass.local/. You will have to login as a test user.
+- Run your tests at https://pass.local/app/tests
+- Fedora repository is at https://pass.local/fcrepo/
+- Elasticsearch index search endpoint is at https://pass.local/es/
+- In order to remove persisted data, stop all the containers and `docker volume prune`
+- Your web browser may complain about unsigned certificates, but the complaints can be ignored.
 
 ### Test users
 
@@ -73,7 +74,8 @@ set FEDORA_ADAPTER_USER and FEDORA_ADAPTER_PASSWORD to empty strings.
 The application also gets "branding" configuration from a `config.json` file, with a default implementation found in the `public/` directory, which is automatically made available by default at `/app/config.json`.
 
 `config.json`
-``` js
+
+```js
 {
   "branding": {
     "homepage": "https://example.com",
@@ -91,7 +93,6 @@ The application also gets "branding" configuration from a `config.json` file, wi
   }
 }
 ```
-
 
 ### Using ember in the container.
 

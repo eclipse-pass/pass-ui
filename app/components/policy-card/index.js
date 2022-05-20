@@ -28,7 +28,9 @@ export default class PolicyCard extends Component {
   // checks if the radio buttons need to be displayed
   @computed('policy.repositories')
   get usesPmcRepository() {
-    return this.args.policy.repositories ? (this.args.policy.repositories.filter(repo => repo.get('repositoryKey') === 'pmc').length > 0) : false;
+    return this.args.policy.repositories
+      ? this.args.policy.repositories.filter((repo) => repo.get('repositoryKey') === 'pmc').length > 0
+      : false;
   }
 
   @computed('journal')
@@ -37,7 +39,8 @@ export default class PolicyCard extends Component {
   }
 
   @computed
-  get policyIsJHU() { // eslint-ignore-line
+  get policyIsJHU() {
+    // eslint-ignore-line
     return this.args.policy.title === 'Johns Hopkins University (JHU) Open Access Policy';
   }
 
@@ -96,7 +99,6 @@ export default class PolicyCard extends Component {
   }
 
   _hasEffectivePolicy(policyId) {
-    return this.args.submission.effectivePolicies &&
-      this.args.submission.effectivePolicies.isAny('id', policyId);
+    return this.args.submission.effectivePolicies && this.args.submission.effectivePolicies.isAny('id', policyId);
   }
 }

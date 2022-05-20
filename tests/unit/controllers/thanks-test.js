@@ -7,15 +7,16 @@ module('Unit | Controller | thanks', (hooks) => {
 
   hooks.beforeEach(function () {
     const mockStaticConfig = Service.extend({
-      getStaticConfig: () => Promise.resolve({
-        branding: {
-          stylesheet: '',
-          pages: {
-            faqUrl: '',
-          }
-        }
-      }),
-      addCss: () => {}
+      getStaticConfig: () =>
+        Promise.resolve({
+          branding: {
+            stylesheet: '',
+            pages: {
+              faqUrl: '',
+            },
+          },
+        }),
+      addCss: () => {},
     });
 
     this.owner.register('service:app-static-config', mockStaticConfig);

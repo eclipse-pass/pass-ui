@@ -10,17 +10,18 @@ export default function (server) {
     attrs['@id'] = `https://pass.local/fcrepo/rest/submissionEvents/${uuid()}`;
     try {
       const submission = _schema.submissions.findBy({ '@id': attrs.submission });
-      submission.submissionStatus = attrs.eventType === 'approval-requested-newuser' ? 'approval-requested' : attrs.eventType;
-      submission._source.submissionStatus = attrs.eventType === 'approval-requested-newuser' ? 'approval-requested' : attrs.eventType;
+      submission.submissionStatus =
+        attrs.eventType === 'approval-requested-newuser' ? 'approval-requested' : attrs.eventType;
+      submission._source.submissionStatus =
+        attrs.eventType === 'approval-requested-newuser' ? 'approval-requested' : attrs.eventType;
       submission.save();
     } catch (e) {
       console.log(e);
     }
 
-
     return new Response(201, {
       Location: attrs['@id'],
-      'Content-Type': 'text/plain; charset=UTF-8'
+      'Content-Type': 'text/plain; charset=UTF-8',
     });
   });
 }

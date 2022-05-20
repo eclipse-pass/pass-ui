@@ -20,10 +20,7 @@ export default class WorkflowFiles extends Component {
     const newFiles = get(this, 'args.newFiles') || A([]);
     const prevFiles = get(this, 'args.previouslyUploadedFiles') || A([]);
 
-    return [
-      ...prevFiles.toArray(),
-      ...newFiles.toArray()
-    ].find(file => file.fileRole === 'manuscript');
+    return [...prevFiles.toArray(), ...newFiles.toArray()].find((file) => file.fileRole === 'manuscript');
   }
 
   /**
@@ -34,10 +31,7 @@ export default class WorkflowFiles extends Component {
     const newFiles = get(this, 'args.newFiles') || A([]);
     const prevFiles = get(this, 'args.previouslyUploadedFiles') || A([]);
 
-    return [
-      ...prevFiles.toArray(),
-      ...newFiles.toArray()
-    ].filter(file => file.fileRole !== 'manuscript');
+    return [...prevFiles.toArray(), ...newFiles.toArray()].filter((file) => file.fileRole !== 'manuscript');
   }
 
   _getFilesElement() {
@@ -45,7 +39,7 @@ export default class WorkflowFiles extends Component {
   }
 
   @task
-  handleExternalMs = function*(file) {
+  handleExternalMs = function* (file) {
     const newFiles = get(this, 'args.newFiles');
 
     file.set('submission', get(this, 'args.submission'));
@@ -57,7 +51,7 @@ export default class WorkflowFiles extends Component {
 
     newFiles.pushObject(file);
     yield file.save();
-  }
+  };
 
   @action
   deleteExistingFile(file) {
@@ -69,7 +63,7 @@ export default class WorkflowFiles extends Component {
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'I Agree',
-      cancelButtonText: 'Never mind'
+      cancelButtonText: 'Never mind',
     }).then((result) => {
       if (result.value) {
         const mFiles = get(this, 'args.previouslyUploadedFiles');
@@ -98,8 +92,12 @@ export default class WorkflowFiles extends Component {
         for (let i = 0; i < uploads.files.length; i++) {
           const file = uploads.files[i];
           if (file) {
-            if (file.size > (1024 * 1024 * 100)) {
-              toastr.error(`Your file '${file.name}' is ${Number.parseFloat(file.size / 1024 / 1024).toPrecision(3)}MB. This exceeds the maximum upload size of 100MB and the file was not added to the submission.`);
+            if (file.size > 1024 * 1024 * 100) {
+              toastr.error(
+                `Your file '${file.name}' is ${Number.parseFloat(file.size / 1024 / 1024).toPrecision(
+                  3
+                )}MB. This exceeds the maximum upload size of 100MB and the file was not added to the submission.`
+              );
               continue; // eslint-disable-line
             }
             const newFile = this.store.createRecord('file', {
@@ -107,7 +105,7 @@ export default class WorkflowFiles extends Component {
               mimeType: file.type.substring(file.type.indexOf('/') + 1),
               description: file.description,
               fileRole: 'supplemental',
-              _file: file
+              _file: file,
             });
             if (!get(this, 'hasManuscript')) {
               newFile.set('fileRole', 'manuscript');

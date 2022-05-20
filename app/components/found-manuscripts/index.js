@@ -27,27 +27,24 @@ export default class FoundManuscriptsComponent extends Component {
     let prevFiles = this.args.previouslyUploadedFiles || A([]);
     let newFiles = this.args.newFiles || A([]);
 
-    const allFileNames = [
-      ...newFiles.toArray(),
-      ...prevFiles.toArray()
-    ].map(file => file.name);
+    const allFileNames = [...newFiles.toArray(), ...prevFiles.toArray()].map((file) => file.name);
 
-    return this.foundManuscripts.filter(foundMs => !allFileNames.includes(foundMs.name));
+    return this.foundManuscripts.filter((foundMs) => !allFileNames.includes(foundMs.name));
   }
 
   @task
-  getAppConfig = function*() {
+  getAppConfig = function* () {
     let config = yield this.appStaticConfig.getStaticConfig();
     this.contactUrl = config.branding.pages.contactUrl;
-  }
+  };
 
   @task
-  setupManuscripts = function*() {
+  setupManuscripts = function* () {
     const doi = this.workflow.getDoiInfo().DOI;
     const foundOAMss = yield this.oaManuscriptService.lookup(doi);
 
     if (foundOAMss) {
       this.foundManuscripts.pushObjects(foundOAMss);
     }
-  }
+  };
 }

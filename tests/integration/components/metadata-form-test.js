@@ -11,19 +11,20 @@ module('Integration | Component | metadata-form', (hooks) => {
       id: 'nih',
       data: {},
       schema: {
-        title: 'NIH Manuscript Submission System (NIHMS) <br><p class="lead text-muted">The following metadata fields will be part of the NIHMS submission.</p>',
+        title:
+          'NIH Manuscript Submission System (NIHMS) <br><p class="lead text-muted">The following metadata fields will be part of the NIHMS submission.</p>',
         type: 'object',
         properties: {
           'journal-NLMTA-ID': { type: 'string', required: true },
-          ISSN: { type: 'string', required: true }
-        }
+          ISSN: { type: 'string', required: true },
+        },
       },
       options: {
         fields: {
           'journal-NLMTA-ID': { type: 'text', label: 'Journal NLMTA ID', placeholder: '' },
-          ISSN: { type: 'text', label: 'ISSN', placeholder: '' }
-        }
-      }
+          ISSN: { type: 'text', label: 'ISSN', placeholder: '' },
+        },
+      },
     };
     this.set('schema', schema);
   });
@@ -51,7 +52,7 @@ module('Integration | Component | metadata-form', (hooks) => {
       four: [''],
       five: [{}],
       six: {},
-      seven: { moo: [] }
+      seven: { moo: [] },
     };
     const result = component.stripEmptyArrays(obj);
 

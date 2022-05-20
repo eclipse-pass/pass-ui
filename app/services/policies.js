@@ -57,8 +57,8 @@ export default class PoliciesService extends Service {
       method: 'GET',
       headers: {
         // 'Content-Type': 'application/json'
-        credentials: 'include'
-      }
+        credentials: 'include',
+      },
     });
 
     if (!result.ok) {
@@ -72,11 +72,16 @@ export default class PoliciesService extends Service {
      */
     const data = yield result.json();
 
-    return yield all(data.map(policyInfo => get(this, 'store').findRecord('policy', policyInfo.id)
-      .then((pol) => {
-        pol.set('_type', policyInfo.type);
-        return pol;
-      })));
+    return yield all(
+      data.map((policyInfo) =>
+        get(this, 'store')
+          .findRecord('policy', policyInfo.id)
+          .then((pol) => {
+            pol.set('_type', policyInfo.type);
+            return pol;
+          })
+      )
+    );
   })
   getPolicies;
 
@@ -106,8 +111,8 @@ export default class PoliciesService extends Service {
     const response = yield fetch(url, {
       method: 'GET',
       headers: {
-        credentials: 'include'
-      }
+        credentials: 'include',
+      },
     });
 
     if (!response.ok) {
@@ -152,11 +157,16 @@ export default class PoliciesService extends Service {
    * @returns {array} list of Promises of Repository objects
    */
   @task(function* (repos) {
-    return yield all(repos.map(repoInfo => get(this, 'store').findRecord('repository', repoInfo['repository-id'])
-      .then((repo) => {
-        repo.set('_selected', repoInfo.selected);
-        return repo;
-      })));
+    return yield all(
+      repos.map((repoInfo) =>
+        get(this, 'store')
+          .findRecord('repository', repoInfo['repository-id'])
+          .then((repo) => {
+            repo.set('_selected', repoInfo.selected);
+            return repo;
+          })
+      )
+    );
   })
   _resolveRepos;
 }

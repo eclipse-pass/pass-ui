@@ -1,4 +1,3 @@
-
 import CheckSessionRoute from '../check-session-route';
 import { inject as service } from '@ember/service';
 import { set } from '@ember/object';
@@ -20,8 +19,8 @@ export default class NewRoute extends CheckSessionRoute {
   resetController(controller, isExiting, transition) {
     // Explicitly clear the 'grant' query parameter when reloading this route
     if (isExiting) {
-      controller.queryParams.forEach(param => controller.set(param, null));
-      this.store.peekAll('submission').forEach(s => s.rollbackAttributes());
+      controller.queryParams.forEach((param) => controller.set(param, null));
+      this.store.peekAll('submission').forEach((s) => s.rollbackAttributes());
     }
   }
 
@@ -53,21 +52,21 @@ export default class NewRoute extends CheckSessionRoute {
       journal = publication.get('journal');
 
       submissionEvents = this.store.query('submissionEvent', {
-        sort: [
-          { performedDate: 'asc' }
-        ],
+        sort: [{ performedDate: 'asc' }],
         query: {
           term: {
-            submission: newSubmission.get('id')
-          }
-        }
+            submission: newSubmission.get('id'),
+          },
+        },
       });
 
-      files = this.store.query('file', {
-        term: {
-          submission: newSubmission.get('id')
-        }
-      }).then(files => [...files.toArray()]);
+      files = this.store
+        .query('file', {
+          term: {
+            submission: newSubmission.get('id'),
+          },
+        })
+        .then((files) => [...files.toArray()]);
 
       // Also seed workflow.doiInfo with metadata from the Submission
       const metadata = newSubmission.get('metadata');
@@ -80,14 +79,14 @@ export default class NewRoute extends CheckSessionRoute {
       publication = this.store.createRecord('publication');
 
       newSubmission = this.store.createRecord('submission', {
-        submissionStatus: 'draft'
+        submissionStatus: 'draft',
       });
 
       if (params.covid) {
         let covidHint = {
           hints: {
-            'collection-tags': ['covid']
-          }
+            'collection-tags': ['covid'],
+          },
         };
 
         set(newSubmission, 'metadata', JSON.stringify(covidHint));
@@ -102,7 +101,7 @@ export default class NewRoute extends CheckSessionRoute {
       policies,
       preLoadedGrant,
       files,
-      journal
+      journal,
     });
   }
 }

@@ -17,48 +17,48 @@ export default Controller.extend({
           propertyName: 'publicationTitle',
           className: 'title-column',
           title: 'Article',
-          component: 'submissions-article-cell'
+          component: 'submissions-article-cell',
         },
         {
           title: 'Award Number (Funder)',
           propertyName: 'grantInfo',
           className: 'awardnum-funder-column',
           component: 'submissions-award-cell',
-          disableSorting: true
+          disableSorting: true,
         },
         {
           propertyName: 'repositoryNames',
           title: 'Repositories',
           component: 'submissions-repo-cell',
           className: 'repositories-column',
-          disableSorting: true
+          disableSorting: true,
         },
         {
           propertyName: 'submittedDate',
           title: 'Submitted Date',
           className: 'date-column',
-          component: 'date-cell'
+          component: 'date-cell',
         },
         {
           propertyName: 'submissionStatus',
           title: 'Status',
           className: 'status-column',
-          component: 'submissions-status-cell'
+          component: 'submissions-status-cell',
         },
         {
           propertyName: 'repoCopies',
           className: 'msid-column',
           title: 'Manuscript IDs',
           component: 'submissions-repoid-cell',
-          disableSorting: true
+          disableSorting: true,
         },
         {
           title: 'Actions',
           className: 'actions-column',
-          component: 'submission-action-cell'
-        }
+          component: 'submission-action-cell',
+        },
       ];
-    }
+    },
   }),
 
   themeInstance: Bootstrap4Theme.create(),

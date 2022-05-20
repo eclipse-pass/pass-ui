@@ -1,27 +1,24 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>PASS Tests</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    {{content-for "head"}}
-    {{content-for "test-head"}}
+    {{content-for "head"}} {{content-for "test-head"}}
 
-    <link rel="stylesheet" href="{{rootURL}}assets/vendor.css">
-    <link rel="stylesheet" href="{{rootURL}}assets/pass-ember.css">
-    <link rel="stylesheet" href="{{rootURL}}assets/test-support.css">
-    <link rel="icon" href="{{rootURL}}favicon.png">
-    <link rel="stylesheet" href="{{rootURL}}coreUI.css">
+    <link rel="stylesheet" href="{{rootURL}}assets/vendor.css" />
+    <link rel="stylesheet" href="{{rootURL}}assets/pass-ember.css" />
+    <link rel="stylesheet" href="{{rootURL}}assets/test-support.css" />
+    <link rel="icon" href="{{rootURL}}favicon.png" />
+    <link rel="stylesheet" href="{{rootURL}}coreUI.css" />
 
-    {{content-for "head-footer"}}
-    {{content-for "test-head-footer"}}
+    {{content-for "head-footer"}} {{content-for "test-head-footer"}}
   </head>
   <body>
-    {{content-for "body"}}
-    {{content-for "test-body"}}
+    {{content-for "body"}} {{content-for "test-body"}}
 
     <script src="/testem.js" integrity=""></script>
     <script src="{{rootURL}}assets/vendor.js"></script>
@@ -34,8 +31,10 @@
     <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.js"></script>
     <script type="text/javascript" src="//code.cloudcms.com/alpaca/1.5.24/bootstrap/alpaca.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sweetalert2@7.26.10/dist/sweetalert2.all.min.js"></script>
-    {{content-for "body-footer"}}
-    {{content-for "test-body-footer"}}
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/sweetalert2@7.26.10/dist/sweetalert2.all.min.js"
+    ></script>
+    {{content-for "body-footer"}} {{content-for "test-body-footer"}}
   </body>
 </html>

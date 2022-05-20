@@ -1,68 +1,83 @@
 {{yield}}
-<div
-  {{did-insert this.setupDoiJournal}}
-  {{did-insert this.setupSubmission}}
-  {{did-update this.setupSubmission}}
-/>
+<div {{did-insert this.setupDoiJournal}} {{did-insert this.setupSubmission}} {{did-update this.setupSubmission}}></div>
 {{#unless (or @submission.id @preLoadedGrant)}}
-<div class="py-0 mt-2 alert alert-secondary" id="on-behalf-of-block">
-  <p class="my-2 lead">I'm creating this submission on behalf of:
-    <label>
-      <input type="radio" checked={{ not this.isProxySubmission }} onchange={{action 'proxyStatusToggled' false}} />
-      Myself
-    </label>
-    <label>
-      <input type="radio" checked={{ this.isProxySubmission }} onchange={{action 'proxyStatusToggled' true}} data-test-proxy-radio-button />
-      Someone else
-    </label>
-  </p>
-</div>
-{{#if this.isProxySubmission}}
-<div id="proxy-input-block" class="alert alert-info">
-  <p>
-    When a submission is created on someone's behalf, PASS will contact that person to acquire their approval before
-    finalizing the submission and sending it to its corresponding repositories.
-  </p>
-  <p class="mb-0">Please indicate on behalf of whom this submission is being completed:</p>
-    <div class="input-group pb-3">
-      <Input @enter={{action "toggleUserSearchModal"}} @value={{this.userSearchTerm}} class="form-control" data-test-proxy-search-input />
-      <span class="input-group-btn">
-        <button id='search-for-users' class="btn btn-primary" {{action 'toggleUserSearchModal'}} type="button" data-test-proxy-user-search-button>Search</button>
-      </span>
-    </div>
-    {{#if @submission.submitter.id}}
-    <p>
-      Currently selected submitter:<br>{{@submission.submitter.firstName}} {{@submission.submitter.lastName}}
-       (<a href="mailto:{{@submission.submitter.email}}">{{@submission.submitter.email}}</a>)<br>(<a href="#" {{action 'changeSubmitter' this.isProxySubmission null}}>Remove submitter</a>)
+  <div class="py-0 mt-2 alert alert-secondary" id="on-behalf-of-block">
+    <p class="my-2 lead">I'm creating this submission on behalf of:
+      <label>
+        <input type="radio" checked={{not this.isProxySubmission}} onchange={{action "proxyStatusToggled" false}} />
+        Myself
+      </label>
+      <label>
+        <input
+          type="radio"
+          checked={{this.isProxySubmission}}
+          onchange={{action "proxyStatusToggled" true}}
+          data-test-proxy-radio-button
+        />
+        Someone else
+      </label>
     </p>
-    {{/if}}
-  <p class="mb-0"><strong>If the person you are submitting for does not have an account with PASS</strong>, please
-    provide their email address and name so we may notify them:
-  </p>
-  <div class="form-inline">
-  <Input
-    class={{concat "mt-1 mb-3 form-control w-50 " this.submitterEmailClass}}
-    @key-up={{action @validateSubmitterEmail}}
-    @disabled={{@submission.submitter.id}}
-    @value={{this.inputSubmitterEmail}}
-    placeholder="Email address"
-    data-test-proxy-submitter-email-input
-  />
-  <Input
-    class="mt-1 mb-3 form-control w-50"
-    @disabled={{@submission.submitter.id}}
-    @value={{@submission.submitterName}}
-    placeholder="Name"
-    data-test-proxy-submitter-name-input
-  />
   </div>
-</div>
-{{/if}}
+  {{#if this.isProxySubmission}}
+    <div id="proxy-input-block" class="alert alert-info">
+      <p>
+        When a submission is created on someone's behalf, PASS will contact that person to acquire their approval before
+        finalizing the submission and sending it to its corresponding repositories.
+      </p>
+      <p class="mb-0">Please indicate on behalf of whom this submission is being completed:</p>
+      <div class="input-group pb-3">
+        <Input
+          @enter={{action "toggleUserSearchModal"}}
+          @value={{this.userSearchTerm}}
+          class="form-control"
+          data-test-proxy-search-input
+        />
+        <span class="input-group-btn">
+          <button
+            id="search-for-users"
+            class="btn btn-primary"
+            {{action "toggleUserSearchModal"}}
+            type="button"
+            data-test-proxy-user-search-button
+          >Search</button>
+        </span>
+      </div>
+      {{#if @submission.submitter.id}}
+        <p>
+          Currently selected submitter:<br />{{@submission.submitter.firstName}}
+          {{@submission.submitter.lastName}}
+          (<a href="mailto:{{@submission.submitter.email}}">{{@submission.submitter.email}}</a>)<br />(<a
+            href="#"
+            {{action "changeSubmitter" this.isProxySubmission null}}
+          >Remove submitter</a>)
+        </p>
+      {{/if}}
+      <p class="mb-0"><strong>If the person you are submitting for does not have an account with PASS</strong>, please
+        provide their email address and name so we may notify them:
+      </p>
+      <div class="form-inline">
+        <Input
+          class={{concat "mt-1 mb-3 form-control w-50 " this.submitterEmailClass}}
+          @key-up={{action @validateSubmitterEmail}}
+          @disabled={{@submission.submitter.id}}
+          @value={{this.inputSubmitterEmail}}
+          placeholder="Email address"
+          data-test-proxy-submitter-email-input
+        />
+        <Input
+          class="mt-1 mb-3 form-control w-50"
+          @disabled={{@submission.submitter.id}}
+          @value={{@submission.submitterName}}
+          placeholder="Name"
+          data-test-proxy-submitter-name-input
+        />
+      </div>
+    </div>
+  {{/if}}
 {{/unless}}
 <p class="lead text-muted">
-  If the manuscript/article you are submitting has been assigned a Digital
-  Object Identifier (DOI), please provide it now to pre-populate submission
-  forms.
+  If the manuscript/article you are submitting has been assigned a Digital Object Identifier (DOI), please provide it
+  now to pre-populate submission forms.
 </p>
 <div class="form-group">
   <label>DOI</label>
@@ -85,7 +100,7 @@
     data-test-doi-input={{true}}
   />
   <div class="text-danger">
-    {{if (and @publication.doi (not this.isValidDOI)) 'Please provide a valid DOI'}}
+    {{if (and @publication.doi (not this.isValidDOI)) "Please provide a valid DOI"}}
   </div>
   {{#if this.doiServiceError}}
     <div class="text-danger">{{{this.doiServiceError}}}</div>
@@ -117,21 +132,27 @@
   </div>
   <div class="w-100">
     {{#unless this.isValidDOI}}
-    <FindJournal
-      @id="journal"
-      @selectJournal={{action "selectJournal"}}
-      @value={{@publication.journal}}
-      @journalClass={{this.journalClass}}
-      @isValidDOI={{this.isValidDOI}}
-      data-test-find-journal
-    />
+      <FindJournal
+        @id="journal"
+        @selectJournal={{action "selectJournal"}}
+        @value={{@publication.journal}}
+        @journalClass={{this.journalClass}}
+        @isValidDOI={{this.isValidDOI}}
+        data-test-find-journal
+      />
     {{else}}
-      <input type="text" class="form-control" value={{@publication.journal.journalName}} readonly data-test-journal-name-input>
+      <input
+        type="text"
+        class="form-control"
+        value={{@publication.journal.journalName}}
+        readonly
+        data-test-journal-name-input
+      />
     {{/unless}}
   </div>
 </div>
 <LinkTo @route="submissions.index" class="btn btn-outline-primary">Back</LinkTo>
-<button class="btn btn-outline-danger ml-2" {{action 'cancel'}}>Abort</button>
+<button class="btn btn-outline-danger ml-2" {{action "cancel"}}>Abort</button>
 {{#if this.inFlight}}
   <button class="btn btn-primary pull-right next" disabled>Next</button>
 {{else}}
