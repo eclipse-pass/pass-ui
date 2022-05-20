@@ -7,12 +7,15 @@ module('Unit | Controller | dashboard', (hooks) => {
   setupTest(hooks);
 
   test('should properly identify a submitter', function (assert) {
-    this.owner.register('service:currentUser', Service.extend({
-      /* mock code */
-      user: EmberObject.create({
-        roles: ['submitter', 'admin', 'moderator']
+    this.owner.register(
+      'service:currentUser',
+      Service.extend({
+        /* mock code */
+        user: EmberObject.create({
+          roles: ['submitter', 'admin', 'moderator'],
+        }),
       })
-    }));
+    );
     // assert.expect(4);
 
     // get the controller instance
@@ -33,13 +36,16 @@ module('Unit | Controller | dashboard', (hooks) => {
     // assert.equal(controller.get('propA'), 'Testing is cool', 'propA updated');
     // assert.equal(controller.get('propB'), 'Testing Rocks!', 'propB updated');
   });
-  test('should properly identify someone who isn\'t a submitter', function (assert) {
-    this.owner.register('service:currentUser', Service.extend({
-      /* mock code */
-      user: EmberObject.create({
-        roles: ['admin', 'moderator']
+  test("should properly identify someone who isn't a submitter", function (assert) {
+    this.owner.register(
+      'service:currentUser',
+      Service.extend({
+        /* mock code */
+        user: EmberObject.create({
+          roles: ['admin', 'moderator'],
+        }),
       })
-    }));
+    );
     assert.ok(true);
   });
 });

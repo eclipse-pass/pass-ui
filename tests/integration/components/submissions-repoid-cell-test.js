@@ -12,7 +12,7 @@ module('Integration | Component | submissions repoid cell', (hooks) => {
   // Inject mocked store that on query returns a single user
   hooks.beforeEach(function () {
     let store = Service.extend({
-      query: (type, q) => Promise.resolve([EmberObject.create({ id: 'test' })])
+      query: (type, q) => Promise.resolve([EmberObject.create({ id: 'test' })]),
     });
 
     run(() => {
@@ -42,13 +42,16 @@ module('Integration | Component | submissions repoid cell', (hooks) => {
   test('it renders with when data is missing', async function (assert) {
     assert.expect(1);
 
-    this.set('store', Service.extend({
-      query(type, q) {
-        assert.ok(true);
-      }
-    }));
+    this.set(
+      'store',
+      Service.extend({
+        query(type, q) {
+          assert.ok(true);
+        },
+      })
+    );
     const record = EmberObject.create({
-      publication: EmberObject.create({})
+      publication: EmberObject.create({}),
     });
     this.set('record', record);
 

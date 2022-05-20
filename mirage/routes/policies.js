@@ -6,7 +6,7 @@ export default function (server) {
     let policy;
 
     let policies = schema.policies.all();
-    policy = policies.models.find(policy => policy.attrs._source['@id'] === request.url);
+    policy = policies.models.find((policy) => policy.attrs._source['@id'] === request.url);
 
     return policy.attrs._source;
   });
@@ -17,12 +17,12 @@ export default function (server) {
   server.get('https://pass.local/policyservice/policies', () => [
     {
       id: 'https://pass.local/fcrepo/rest/policies/e7/3f/26/70/e73f2670-6ef6-4201-bbcd-04631a93d852',
-      type: 'funder'
+      type: 'funder',
     },
     {
       id: 'https://pass.local/fcrepo/rest/policies/5e/2e/16/92/5e2e1692-c128-4fb4-b1a0-95c0e355defd',
-      type: 'institution'
-    }
+      type: 'institution',
+    },
   ]);
 
   /**
@@ -32,26 +32,28 @@ export default function (server) {
     required: [
       {
         'repository-id': 'https://pass.local/fcrepo/rest/repositories/77/64/12/ec/776412ec-0f5e-488e-97dc-15bb427d27e2',
-        selected: false
-      }
+        selected: false,
+      },
     ],
     'one-of': [
       [
         {
-          'repository-id': 'https://pass.local/fcrepo/rest/repositories/77/64/12/ec/776412ec-0f5e-488e-97dc-15bb427d27e2',
-          selected: false
+          'repository-id':
+            'https://pass.local/fcrepo/rest/repositories/77/64/12/ec/776412ec-0f5e-488e-97dc-15bb427d27e2',
+          selected: false,
         },
         {
-          'repository-id': 'https://pass.local/fcrepo/rest/repositories/41/96/0a/92/41960a92-d3f8-4616-86a6-9e9cadc1a269',
-          selected: true
-        }
-      ]
+          'repository-id':
+            'https://pass.local/fcrepo/rest/repositories/41/96/0a/92/41960a92-d3f8-4616-86a6-9e9cadc1a269',
+          selected: true,
+        },
+      ],
     ],
     optional: [
       {
         'repository-id': 'https://pass.local/fcrepo/rest/repositories/41/96/0a/92/41960a92-d3f8-4616-86a6-9e9cadc1a269',
-        selected: true
-      }
-    ]
+        selected: true,
+      },
+    ],
   }));
 }

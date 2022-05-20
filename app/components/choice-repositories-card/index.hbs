@@ -1,9 +1,9 @@
-{{!--
+{{!
 {
   choiceGroup: Ember.A(), // Array of repoInfo objects
   toggleRepository: an Ember action
 }
---}}
+}}
 <ul class="list-group choice-repository-card-list">
   {{#each @choiceGroup as |repoInfo|}}
     <RepositoryCard
@@ -11,7 +11,8 @@
       @funders={{repoInfo.funders}}
       @choice="true"
       @type="choice"
-      @toggleRepository={{action "toggleRepository"}} />
+      @toggleRepository={{action "toggleRepository"}}
+    />
   {{/each}}
 </ul>
 {{yield}}

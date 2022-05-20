@@ -18,7 +18,7 @@ module('Integration | Component | workflow grants', (hooks) => {
 
     const submission = EmberObject.create({
       grants: A(),
-      submitter: EmberObject.create({ id: '00' })
+      submitter: EmberObject.create({ id: '00' }),
     });
     this.set('submission', submission);
 
@@ -26,31 +26,35 @@ module('Integration | Component | workflow grants', (hooks) => {
       EmberObject.create({ id: 1, awardNumber: '1', projectName: 'Moo 1' }),
       knownGrant,
       EmberObject.create({ id: 3, awardNumber: '3', projectName: 'Moo 3' }),
-      EmberObject.create({ id: 4, awardNumber: '4', projectName: 'Moo 4' })
+      EmberObject.create({ id: 4, awardNumber: '4', projectName: 'Moo 4' }),
     ]);
 
     const mockStaticConfig = Service.extend({
-      getStaticConfig: () => Promise.resolve({
-        branding: {
-          stylesheet: '',
-          pages: {
-            contactUrl: '',
-          }
-        }
-      }),
-      addCss: () => {}
+      getStaticConfig: () =>
+        Promise.resolve({
+          branding: {
+            stylesheet: '',
+            pages: {
+              contactUrl: '',
+            },
+          },
+        }),
+      addCss: () => {},
     });
 
     run(() => {
       this.owner.unregister('service:store');
-      this.owner.register('service:store', Service.extend({
-        query(type, query) {
-          return Promise.resolve(grants);
-        },
-        findRecord(type, id) {
-          return Promise.resolve(grants.findBy('id', id));
-        }
-      }));
+      this.owner.register(
+        'service:store',
+        Service.extend({
+          query(type, query) {
+            return Promise.resolve(grants);
+          },
+          findRecord(type, id) {
+            return Promise.resolve(grants.findBy('id', id));
+          },
+        })
+      );
 
       this.owner.unregister('service:app-static-config');
       this.owner.register('service:app-static-config', mockStaticConfig);
@@ -91,8 +95,7 @@ module('Integration | Component | workflow grants', (hooks) => {
 
     await settled();
 
-    const selectedRows = this.element.querySelector('h5').nextElementSibling
-      .querySelectorAll('tbody tr');
+    const selectedRows = this.element.querySelector('h5').nextElementSibling.querySelectorAll('tbody tr');
     assert.equal(selectedRows.length, 1, 'Should be 1 grant in this table');
     assert.ok(selectedRows[0].textContent.includes('Remove'), 'Should have a "Remove" button');
     assert.ok(selectedRows[0].textContent.includes('Moo 2'));
@@ -113,17 +116,22 @@ module('Integration | Component | workflow grants', (hooks) => {
     this.set('preLoadedGrant', undefined);
 
     const list = A();
-    this.owner.register('service:workflow', Service.extend({
-      setMaxStep: (step) => {},
-      addGrant(grant) {
-        assert.ok(grant);
-        list.pushObject(grant);
-      },
-      getAddedGrants() {
-        return list;
-      },
-      clearAddedGrants: () => { list.clear(); }
-    }));
+    this.owner.register(
+      'service:workflow',
+      Service.extend({
+        setMaxStep: (step) => {},
+        addGrant(grant) {
+          assert.ok(grant);
+          list.pushObject(grant);
+        },
+        getAddedGrants() {
+          return list;
+        },
+        clearAddedGrants: () => {
+          list.clear();
+        },
+      })
+    );
 
     await render(hbs`
       <WorkflowGrants
@@ -141,8 +149,7 @@ module('Integration | Component | workflow grants', (hooks) => {
 
     await click(rows[0]);
 
-    const selectedRows = this.element.querySelector('h5').nextElementSibling
-      .querySelectorAll('tbody tr');
+    const selectedRows = this.element.querySelector('h5').nextElementSibling.querySelectorAll('tbody tr');
     assert.equal(selectedRows.length, 1);
     assert.ok(selectedRows[0].textContent.includes('Moo 1'), 'Only "Moo 1" should be selected');
 
@@ -159,16 +166,23 @@ module('Integration | Component | workflow grants', (hooks) => {
     assert.expect(6);
 
     const list = A();
-    this.owner.register('service:workflow', Service.extend({
-      setMaxStep: () => {},
-      clearAddedGrants: () => { list.clear(); },
-      getAddedGrants: () => list,
-      addGrant: (grant) => { list.pushObject(grant); },
-      removeGrant(grant) {
-        assert.ok(true);
-        list.removeObject(grant);
-      }
-    }));
+    this.owner.register(
+      'service:workflow',
+      Service.extend({
+        setMaxStep: () => {},
+        clearAddedGrants: () => {
+          list.clear();
+        },
+        getAddedGrants: () => list,
+        addGrant: (grant) => {
+          list.pushObject(grant);
+        },
+        removeGrant(grant) {
+          assert.ok(true);
+          list.removeObject(grant);
+        },
+      })
+    );
 
     this.set('preLoadedGrant', knownGrant);
 
@@ -183,8 +197,7 @@ module('Integration | Component | workflow grants', (hooks) => {
 
     await settled();
 
-    const selectedRows = this.element.querySelector('h5').nextElementSibling
-      .querySelectorAll('tbody tr');
+    const selectedRows = this.element.querySelector('h5').nextElementSibling.querySelectorAll('tbody tr');
     assert.ok(selectedRows[0].textContent.includes('Moo 2'));
 
     const grants = get(this, 'submission.grants');

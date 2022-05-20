@@ -11,7 +11,7 @@ module('Integration | Component | submissions article cell', (hooks) => {
       id: 1,
       publication: {
         title: 'Balancing excitation and inhibition.',
-      }
+      },
     };
 
     this.set('record', record);

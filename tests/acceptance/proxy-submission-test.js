@@ -1,16 +1,7 @@
 import Service from '@ember/service';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
-import {
-  find,
-  click,
-  visit,
-  currentURL,
-  fillIn,
-  waitFor,
-  triggerKeyEvent,
-  triggerEvent
-} from '@ember/test-helpers';
+import { find, click, visit, currentURL, fillIn, waitFor, triggerKeyEvent, triggerEvent } from '@ember/test-helpers';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 import sharedScenario from '../../mirage/scenarios/shared';
 import { pluralize } from 'ember-inflector';
@@ -21,13 +12,14 @@ module('Acceptance | proxy submission', function (hooks) {
 
   hooks.beforeEach(function () {
     const mockStaticConfig = Service.extend({
-      getStaticConfig: () => Promise.resolve({
-        branding: {
-          stylesheet: '',
-          pages: {}
-        }
-      }),
-      addCss: () => {}
+      getStaticConfig: () =>
+        Promise.resolve({
+          branding: {
+            stylesheet: '',
+            pages: {},
+          },
+        }),
+      addCss: () => {},
     });
 
     this.server.get('https://pass.local/downloadservice/lookup', () => ({
@@ -37,23 +29,23 @@ module('Acceptance | proxy submission', function (hooks) {
           repositoryLabel: 'Harvard University - Digital Access to Scholarship at Harvard (DASH)',
           type: 'application/pdf',
           source: 'Unpaywall',
-          name: 'Nanometer-Scale Thermometry.pdf'
+          name: 'Nanometer-Scale Thermometry.pdf',
         },
         {
           url: 'http://europepmc.org/articles/pmc4221854?pdf=render',
           repositoryLabel: 'pubmedcentral.nih.gov',
           type: 'application/pdf',
           source: 'Unpaywall',
-          name: 'pmc4221854?pdf=render'
+          name: 'pmc4221854?pdf=render',
         },
         {
           url: 'http://arxiv.org/pdf/1304.1068',
           repositoryLabel: 'arXiv.org',
           type: 'application/pdf',
           source: 'Unpaywall',
-          name: '1304.1068'
-        }
-      ]
+          name: '1304.1068',
+        },
+      ],
     }));
 
     /**
@@ -72,10 +64,10 @@ module('Acceptance | proxy submission', function (hooks) {
         `johnshopkins.edu:jhed:${Math.ceil(Math.random() * 1000000)}`,
         `johnshopkins.edu:hopkinsid:${Math.ceil(Math.random() * 1000000)}`,
         `johnshopkins.edu:employeeid:${Math.ceil(Math.random() * 1000000)}`,
-        `johnshopkins.edu:jhed:${Math.ceil(Math.random() * 1000000)}`
+        `johnshopkins.edu:jhed:${Math.ceil(Math.random() * 1000000)}`,
       ],
       roles: ['submitter'],
-      username: 'staff1@johnshopkins.edu'
+      username: 'staff1@johnshopkins.edu',
     };
 
     this.server.create('user', { ...attrs, _source: attrs });
@@ -85,24 +77,21 @@ module('Acceptance | proxy submission', function (hooks) {
      */
     this.server.post('http://localhost:9200/pass/**', (schema, request) => {
       let models;
-      let type = JSON.parse(request.requestBody)
-        .query.bool.filter
-        .term['@type']
-        .toLowerCase();
+      let type = JSON.parse(request.requestBody).query.bool.filter.term['@type'].toLowerCase();
       type = pluralize(type);
 
       if (type === 'users') {
-        models = schema.users.where({ firstName: 'Staff' }).models.map(model => model.attrs);
+        models = schema.users.where({ firstName: 'Staff' }).models.map((model) => model.attrs);
       } else {
-        models = schema[type].all().models.map(model => model.attrs);
+        models = schema[type].all().models.map((model) => model.attrs);
       }
 
       let elasticReponse = {
         hits: {
           max_score: 1,
           hits: models,
-          total: models.length
-        }
+          total: models.length,
+        },
       };
 
       return elasticReponse;
@@ -115,7 +104,10 @@ module('Acceptance | proxy submission', function (hooks) {
     sharedScenario(this.server);
 
     await visit('/?userToken=https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95');
-    assert.equal(currentURL(), '/?userToken=https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95');
+    assert.equal(
+      currentURL(),
+      '/?userToken=https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95'
+    );
 
     await waitFor('[data-test-start-new-submission]');
     await click(find('[data-test-start-new-submission]'));
@@ -140,7 +132,10 @@ module('Acceptance | proxy submission', function (hooks) {
     sharedScenario(this.server);
 
     await visit('/?userToken=https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95');
-    assert.equal(currentURL(), '/?userToken=https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95');
+    assert.equal(
+      currentURL(),
+      '/?userToken=https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95'
+    );
 
     await waitFor('[data-test-start-new-submission]');
     await click(find('[data-test-start-new-submission]'));
@@ -164,8 +159,14 @@ module('Acceptance | proxy submission', function (hooks) {
     await fillIn('[data-test-doi-input]', '10.1039/c7an01256j');
 
     await waitFor(document.querySelector('.toast-message'));
-    assert.dom(document.querySelector('.toast-message')).includesText('We\'ve pre-populated information from the DOI provided!');
-    assert.dom('[data-test-article-title-text-area]').hasValue('Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS');
+    assert
+      .dom(document.querySelector('.toast-message'))
+      .includesText("We've pre-populated information from the DOI provided!");
+    assert
+      .dom('[data-test-article-title-text-area]')
+      .hasValue(
+        'Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS'
+      );
     assert.dom('[data-test-journal-name-input]').hasValue('The Analyst');
 
     await focus('[data-test-article-title-text-area]');
@@ -178,7 +179,11 @@ module('Acceptance | proxy submission', function (hooks) {
     await triggerKeyEvent('[data-test-journal-name-input]', 'keydown', 79 /* o */);
     await triggerKeyEvent('[data-test-journal-name-input]', 'keydown', 79 /* o */);
 
-    assert.dom('[data-test-article-title-text-area]').hasValue('Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS');
+    assert
+      .dom('[data-test-article-title-text-area]')
+      .hasValue(
+        'Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS'
+      );
     assert.dom('[data-test-journal-name-input]').hasValue('The Analyst');
 
     await waitFor('[data-test-workflow-basics-next]');
@@ -187,13 +192,21 @@ module('Acceptance | proxy submission', function (hooks) {
     if (hasAccount) {
       await waitFor('[data-test-grants-selection-table] tbody tr td.projectname-date-column');
       assert.equal(currentURL(), '/submissions/new/grants');
-      assert.dom('[data-test-grants-selection-table] tbody tr td.projectname-date-column').includesText('Regulation of Synaptic Plasticity in Visual Cortex');
+      assert
+        .dom('[data-test-grants-selection-table] tbody tr td.projectname-date-column')
+        .includesText('Regulation of Synaptic Plasticity in Visual Cortex');
       await click('[data-test-grants-selection-table] tbody tr td.projectname-date-column');
       await waitFor('[data-test-submission-funding-table] tbody tr td.projectname-date-column');
-      assert.dom('[data-test-submission-funding-table] tbody tr td.projectname-date-column').includesText('Regulation of Synaptic Plasticity in Visual Cortex');
+      assert
+        .dom('[data-test-submission-funding-table] tbody tr td.projectname-date-column')
+        .includesText('Regulation of Synaptic Plasticity in Visual Cortex');
     } else {
       await waitFor('[data-test-workflow-grants-next]');
-      assert.dom('[data-test-workflow-grants-no-account-message]').includesText('Because the person you are submitting on behalf of is not yet in our system, PASS does not have information about his/her grant(s) and cannot associate this submission with a grant. Please click Next to continue.');
+      assert
+        .dom('[data-test-workflow-grants-no-account-message]')
+        .includesText(
+          'Because the person you are submitting on behalf of is not yet in our system, PASS does not have information about his/her grant(s) and cannot associate this submission with a grant. Please click Next to continue.'
+        );
       await click('[data-test-workflow-grants-next]');
     }
 
@@ -209,7 +222,9 @@ module('Acceptance | proxy submission', function (hooks) {
     await waitFor('[data-test-workflow-repositories-next]');
     assert.equal(currentURL(), '/submissions/new/repositories');
     if (hasAccount) {
-      assert.dom('[data-test-workflow-repositories-required-list] li').includesText('PubMed Central - NATIONAL INSTITUTE OF HEALTH');
+      assert
+        .dom('[data-test-workflow-repositories-required-list] li')
+        .includesText('PubMed Central - NATIONAL INSTITUTE OF HEALTH');
     } else {
       assert.dom('[data-test-workflow-repositories-required-list] li').includesText('PubMed Central');
     }
@@ -220,7 +235,11 @@ module('Acceptance | proxy submission', function (hooks) {
 
     await waitFor('[data-test-metadata-form] textarea[name=title]');
     assert.equal(currentURL(), '/submissions/new/metadata');
-    assert.dom('[data-test-metadata-form] textarea[name=title]').hasValue('Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS');
+    assert
+      .dom('[data-test-metadata-form] textarea[name=title]')
+      .hasValue(
+        'Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS'
+      );
     assert.dom('[data-test-metadata-form] input[name=journal-title]').hasValue('The Analyst');
 
     await click('.alpaca-form-button-Next');
@@ -244,11 +263,7 @@ module('Acceptance | proxy submission', function (hooks) {
     assert.equal(currentURL(), '/submissions/new/files');
     const submissionFile = new Blob(['moo'], { type: 'application/pdf' });
     submissionFile.name = 'my-submission.pdf';
-    await triggerEvent(
-      'input[type=file]',
-      'change',
-      { files: [submissionFile] }
-    );
+    await triggerEvent('input[type=file]', 'change', { files: [submissionFile] });
     assert.dom('[data-test-added-manuscript-row]').includesText('my-submission.pdf');
 
     await click('[data-test-workflow-files-next]');
@@ -256,7 +271,11 @@ module('Acceptance | proxy submission', function (hooks) {
     await waitFor('[data-test-workflow-review-submit]');
 
     assert.equal(currentURL(), '/submissions/new/review');
-    assert.dom('[data-test-workflow-review-title]').includesText('Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS');
+    assert
+      .dom('[data-test-workflow-review-title]')
+      .includesText(
+        'Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS'
+      );
     assert.dom('[data-test-workflow-review-doi]').includesText('10.1039/c7an01256j');
     assert.dom('[data-test-workflow-review-file-name]').includesText('my-submission.pdf');
     assert.dom('[data-test-workflow-review-submitter]').includesText('This submission is prepared on behalf of');
@@ -276,4 +295,3 @@ module('Acceptance | proxy submission', function (hooks) {
     assert.dom('[data-test-submission-detail-status]').includesText('approval requested');
   }
 });
-

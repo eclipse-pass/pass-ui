@@ -28,9 +28,9 @@ export default class AppStaticConfigService extends Service {
     }
 
     return fetch(this.configUrl, {
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': 'application/json' },
     })
-      .then(resp => resp.json())
+      .then((resp) => resp.json())
       .then((data) => {
         // set(this, '_config', data);
         this._config = data;
@@ -38,15 +38,11 @@ export default class AppStaticConfigService extends Service {
       })
       .catch((error) => {
         console.log(`%cFailed to get static 'config.json'. ${error}`, 'color:red;');
-        toastr.error(
-          'Unable to load theme. PASS may look different than expected.',
-          null,
-          {
-            timeOut: 0,
-            extendedTimeOut: 0,
-            preventDuplicates: true
-          }
-        );
+        toastr.error('Unable to load theme. PASS may look different than expected.', null, {
+          timeOut: 0,
+          extendedTimeOut: 0,
+          preventDuplicates: true,
+        });
       });
   }
 

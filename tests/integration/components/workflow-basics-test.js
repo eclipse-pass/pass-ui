@@ -4,12 +4,7 @@ import EmberObject, { get } from '@ember/object';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
-import {
-  fillIn,
-  render,
-  settled,
-  triggerKeyEvent
-} from '@ember/test-helpers';
+import { fillIn, render, settled, triggerKeyEvent } from '@ember/test-helpers';
 import { run } from '@ember/runloop';
 import { task } from 'ember-concurrency';
 
@@ -19,7 +14,7 @@ module('Integration | Component | workflow basics', (hooks) => {
   hooks.beforeEach(function () {
     let submission = EmberObject.create({
       repositories: [],
-      grants: []
+      grants: [],
     });
     let publication = EmberObject.create({
       doi: 'test',
@@ -35,12 +30,12 @@ module('Integration | Component | workflow basics', (hooks) => {
     this.set('doiInfo', doiInfo);
     this.set('flaggedFields', '[]');
     // pass in actions that do nothing
-    this.set('validateTitle', (actual) => { });
-    this.set('validateJournal', (actual) => { });
-    this.set('validateSubmitterEmail', (actual) => { });
+    this.set('validateTitle', (actual) => {});
+    this.set('validateJournal', (actual) => {});
+    this.set('validateSubmitterEmail', (actual) => {});
     this.set('loadNext', (actual) => {});
-    this.set('updatePublication', publication => this.set('publication', publication));
-    this.set('updateDoiInfo', doiInfo => this.set('doiInfo', doiInfo));
+    this.set('updatePublication', (publication) => this.set('publication', publication));
+    this.set('updateDoiInfo', (doiInfo) => this.set('doiInfo', doiInfo));
 
     const mockDoiService = Service.extend({
       resolveDOI: task(function* (doi) {
@@ -49,14 +44,16 @@ module('Integration | Component | workflow basics', (hooks) => {
             publisher: 'Royal Society of Chemistry (RSC)',
             issue: 1,
             'short-container-title': 'Analyst',
-            abstract: '<p>The investigators report a dramatically improved chemoselective analysis for carbonyls in crude biological extracts by turning to a catalyst and freezing conditions for derivatization.</p>',
+            abstract:
+              '<p>The investigators report a dramatically improved chemoselective analysis for carbonyls in crude biological extracts by turning to a catalyst and freezing conditions for derivatization.</p>',
             DOI: '10.1039/c7an01256j',
             type: 'journal-article',
             page: '311-322',
             'update-policy': 'http://dx.doi.org/10.1039/rsc_crossmark_policy',
             source: 'Crossref',
             'is-referenced-by-count': 5,
-            title: 'Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS',
+            title:
+              'Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS',
             prefix: '10.1039',
             volume: '143',
             'container-title': 'The Analyst',
@@ -65,17 +62,19 @@ module('Integration | Component | workflow basics', (hooks) => {
             ISSN: ['0003-2654', '1364-5528'],
             'issn-type': [
               { value: '0003-2654', type: 'print' },
-              { value: '1364-5528', type: 'electronic' }
+              { value: '1364-5528', type: 'electronic' },
             ],
           },
           publication: EmberObject.create({
-            abstract: '<p>The investigators report a dramatically improved chemoselective analysis for carbonyls in crude biological extracts by turning to a catalyst and freezing conditions for derivatization.</p>',
+            abstract:
+              '<p>The investigators report a dramatically improved chemoselective analysis for carbonyls in crude biological extracts by turning to a catalyst and freezing conditions for derivatization.</p>',
             doi: '1234/4321',
             issue: 1,
-            title: 'Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS',
+            title:
+              'Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS',
             volume: '143',
-            journal: EmberObject.create({ journalName: 'moo-title' })
-          })
+            journal: EmberObject.create({ journalName: 'moo-title' }),
+          }),
         });
       }),
       formatDOI(doi) {
@@ -86,7 +85,7 @@ module('Integration | Component | workflow basics', (hooks) => {
       },
       getJournalTitle() {
         return 'moo-title';
-      }
+      },
     });
 
     const mockStore = Service.extend({
@@ -97,21 +96,22 @@ module('Integration | Component | workflow basics', (hooks) => {
         return EmberObject.create({
           save() {
             return Promise.resolve();
-          }
+          },
         });
-      }
+      },
     });
 
     const mockStaticConfig = Service.extend({
-      getStaticConfig: () => Promise.resolve({
-        branding: {
-          stylesheet: '',
-          pages: {
-            contactUrl: '',
-          }
-        }
-      }),
-      addCss: () => {}
+      getStaticConfig: () =>
+        Promise.resolve({
+          branding: {
+            stylesheet: '',
+            pages: {
+              contactUrl: '',
+            },
+          },
+        }),
+      addCss: () => {},
     });
 
     run(() => {
@@ -219,29 +219,32 @@ module('Integration | Component | workflow basics', (hooks) => {
     const pub = EmberObject.create({
       doi: 'ThisIsADOI',
       title: 'Moo title',
-      journal: EmberObject.create({ journalName: 'Moo Journal' })
+      journal: EmberObject.create({ journalName: 'Moo Journal' }),
     });
     this.set('publication', pub);
 
     // Add metadata to submission
     const submission = EmberObject.create({
       publication: pub,
-      metadata: '{}'
+      metadata: '{}',
     });
     this.set('submission', submission);
 
-    this.owner.register('service:doi', Service.extend({
-      resolveDOI: task(function* () {
-        return yield Promise.resolve({
-          publication: EmberObject.create({
-            title: 'Do not want'
-          }), // This publication should not be used
-          doiInfo: { title: 'You better use this' }
-        });
-      }),
-      formatDOI: () => 'Formatted-Moo',
-      isValidDOI: () => true
-    }));
+    this.owner.register(
+      'service:doi',
+      Service.extend({
+        resolveDOI: task(function* () {
+          return yield Promise.resolve({
+            publication: EmberObject.create({
+              title: 'Do not want',
+            }), // This publication should not be used
+            doiInfo: { title: 'You better use this' },
+          });
+        }),
+        formatDOI: () => 'Formatted-Moo',
+        isValidDOI: () => true,
+      })
+    );
 
     await render(hbs`
       <WorkflowBasics
@@ -297,8 +300,8 @@ module('Integration | Component | workflow basics', (hooks) => {
       doi: 'moo',
       title: 'Moo title',
       journal: EmberObject.create({
-        journalName: 'Moo Journalitics'
-      })
+        journalName: 'Moo Journalitics',
+      }),
     });
     this.set('publication', publication);
 
@@ -306,10 +309,8 @@ module('Integration | Component | workflow basics', (hooks) => {
       publication,
       metadata: JSON.stringify({
         title: 'this is a moo, please ignore',
-        authors: [
-          { author: 'Moo Jones' }
-        ]
-      })
+        authors: [{ author: 'Moo Jones' }],
+      }),
     });
     this.set('submission', submission);
 
@@ -317,13 +318,13 @@ module('Integration | Component | workflow basics', (hooks) => {
       resolveDOI: task(function* () {
         return yield Promise.resolve({
           doiInfo: {
-            title: 'Don\'t use'
+            title: "Don't use",
           },
-          publication
+          publication,
         });
       }),
-      isValidDOI: doi => !!doi,
-      formatDOI: doi => doi
+      isValidDOI: (doi) => !!doi,
+      formatDOI: (doi) => doi,
     });
 
     this.owner.unregister('service:doi');
@@ -357,7 +358,7 @@ module('Integration | Component | workflow basics', (hooks) => {
 
     const inputs = this.element.querySelectorAll('input');
     assert.equal(inputs.length, 1, 'There should be one text input');
-    inputs.forEach(input => assert.notOk(input.hasAttribute('readonly')));
+    inputs.forEach((input) => assert.notOk(input.hasAttribute('readonly')));
 
     const titleIn = this.element.querySelector('textarea');
     assert.ok(titleIn);

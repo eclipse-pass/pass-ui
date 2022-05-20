@@ -33,7 +33,7 @@ export default class SubmissionsNewBasics extends Controller {
 
   @computed('publication.title')
   get titleIsInvalid() {
-    return !(get(this, 'publication.title'));
+    return !get(this, 'publication.title');
   }
 
   @computed('publication.journal.id', 'publication.journal.journalName')
@@ -43,7 +43,10 @@ export default class SubmissionsNewBasics extends Controller {
 
   @computed('submission.submitter.id', 'submission.submitterEmail', 'submission.submitterName')
   get submitterIsInvalid() {
-    return (!get(this, 'submission.submitter.id') && (!get(this, 'submission.submitterEmail') || !get(this, 'submission.submitterName')));
+    return (
+      !get(this, 'submission.submitter.id') &&
+      (!get(this, 'submission.submitterEmail') || !get(this, 'submission.submitterName'))
+    );
   }
 
   @computed('submission.submitterEmailDisplay')
@@ -51,7 +54,7 @@ export default class SubmissionsNewBasics extends Controller {
     let emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     let email = get(this, 'submission.submitterEmailDisplay');
 
-    return (!get(this, 'submission.submitter.id')) && (!email || !emailPattern.test(email));
+    return !get(this, 'submission.submitter.id') && (!email || !emailPattern.test(email));
   }
 
   @action
@@ -89,7 +92,9 @@ export default class SubmissionsNewBasics extends Controller {
     if (get(this, 'submission.isProxySubmission')) {
       // If there's no submitter or submitter info and the submission is a new proxy submission:
       if (this.submitterIsInvalid) {
-        toastr.warning('You have indicated that you are submitting on behalf of someone, please select the user or enter their name and email address.');
+        toastr.warning(
+          'You have indicated that you are submitting on behalf of someone, please select the user or enter their name and email address.'
+        );
         return;
       }
       if (!get(this, 'submission.submitter.id')) {

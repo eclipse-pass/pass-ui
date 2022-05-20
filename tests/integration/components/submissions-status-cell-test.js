@@ -16,7 +16,7 @@ module('Integration | Component | submissions status cell', (hooks) => {
 
   test('draft submission renders', async function (assert) {
     const record = {
-      submissionStatus: 'draft'
+      submissionStatus: 'draft',
     };
     this.set('record', record);
 

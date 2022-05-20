@@ -29,8 +29,8 @@ export default class CurrentUserService extends Service {
     let response = yield get(this, 'ajax').request(url, 'GET', {
       headers: {
         Accept: 'application/json; charset=utf-8',
-        withCredentials: 'include'
-      }
+        withCredentials: 'include',
+      },
     });
 
     let user = yield get(this, 'store').findRecord('user', response['@id']);
@@ -38,5 +38,5 @@ export default class CurrentUserService extends Service {
     this.set('user', user);
 
     return user;
-  }
+  };
 }

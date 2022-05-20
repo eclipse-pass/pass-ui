@@ -36,9 +36,9 @@ export default class SubmissionsNewPolicies extends Controller {
     let req = get(this, 'model.requiredRepositories');
     const submission = this.submission;
 
-    return req.map(repo => ({
+    return req.map((repo) => ({
       repository: repo,
-      funders: this._getFunderNamesForRepo(repo, submission)
+      funders: this._getFunderNamesForRepo(repo, submission),
     }));
   }
 
@@ -47,9 +47,9 @@ export default class SubmissionsNewPolicies extends Controller {
     const submission = this.submission;
     let optionals = get(this, 'model.optionalRepositories');
 
-    return optionals.map(repo => ({
+    return optionals.map((repo) => ({
       repository: repo,
-      funders: this._getFunderNamesForRepo(repo, submission)
+      funders: this._getFunderNamesForRepo(repo, submission),
     }));
   }
 
@@ -59,9 +59,9 @@ export default class SubmissionsNewPolicies extends Controller {
     let choices = get(this, 'model.choiceRepositories');
 
     choices.forEach((group) => {
-      group.map(repo => ({
+      group.map((repo) => ({
         repository: repo,
-        funders: this._getFunderNamesForRepo(repo, submission)
+        funders: this._getFunderNamesForRepo(repo, submission),
       }));
     });
     return choices;
@@ -92,11 +92,12 @@ export default class SubmissionsNewPolicies extends Controller {
       let value = await swal({
         type: 'warning',
         title: 'No repositories selected',
-        html: 'If you don\'t plan on submitting to any repositories, you can stop at this time. Click "Exit '
-              + 'submission" to return to the dashboard, or "Continue submission" to go back and select a repository',
+        html:
+          'If you don\'t plan on submitting to any repositories, you can stop at this time. Click "Exit ' +
+          'submission" to return to the dashboard, or "Continue submission" to go back and select a repository',
         showCancelButton: true,
         cancelButtonText: 'Exit Submission',
-        confirmButtonText: 'Continue submission'
+        confirmButtonText: 'Continue submission',
       });
 
       if (value.dismiss) {
@@ -119,15 +120,18 @@ export default class SubmissionsNewPolicies extends Controller {
   }
 
   _getFunderNamesForRepo(repo, submission) {
-    const funders = get(submission, 'grants').map(grant => get(grant, 'primaryFunder'));
-    const fundersWithRepos = funders.filter(funder => get(funder, 'policy.repositories'));
+    const funders = get(submission, 'grants').map((grant) => get(grant, 'primaryFunder'));
+    const fundersWithRepos = funders.filter((funder) => get(funder, 'policy.repositories'));
     // List of funders that include this repository
-    const fundersWithOurRepo = fundersWithRepos.filter(funder => get(funder, 'policy') &&
-      funder.get('policy.repositories').includes(repo));
+    const fundersWithOurRepo = fundersWithRepos.filter(
+      (funder) => get(funder, 'policy') && funder.get('policy.repositories').includes(repo)
+    );
 
     if (fundersWithRepos && fundersWithOurRepo.length > 0) {
-      return fundersWithOurRepo.map(funder => get(funder, 'name'))
-        .filter((item, index, arr) => arr.indexOf(item) == index).join(', ');
+      return fundersWithOurRepo
+        .map((funder) => get(funder, 'name'))
+        .filter((item, index, arr) => arr.indexOf(item) == index)
+        .join(', ');
     }
     return '';
   }

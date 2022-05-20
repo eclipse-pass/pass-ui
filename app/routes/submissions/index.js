@@ -24,7 +24,7 @@ export default class IndexRoute extends CheckSessionRoute {
     submissions.then(() => this.searchHelper.clearIgnore());
 
     return RSVP.hash({
-      submissions
+      submissions,
     });
   }
 
@@ -32,19 +32,19 @@ export default class IndexRoute extends CheckSessionRoute {
     const ignoreList = this.searchHelper.getIgnoreList();
 
     const query = {
-      sort: [{
-        submittedDate: {
-          missing: '_last',
-          order: 'desc'
-        }
-      }],
+      sort: [
+        {
+          submittedDate: {
+            missing: '_last',
+            order: 'desc',
+          },
+        },
+      ],
       query: {
         match_all: {},
-        must_not: [
-          { term: { submissionStatus: 'cancelled' } }
-        ]
+        must_not: [{ term: { submissionStatus: 'cancelled' } }],
       },
-      size: 500
+      size: 500,
     };
 
     if (ignoreList && ignoreList.length > 0) {
@@ -61,20 +61,15 @@ export default class IndexRoute extends CheckSessionRoute {
       sort: [
         { submitted: { missing: '_last', order: 'asc' } },
         { submittedDate: { missing: '_last', order: 'desc' } },
-        { submissionStatus: { missing: '_last', order: 'asc' } }
+        { submissionStatus: { missing: '_last', order: 'asc' } },
       ],
       query: {
         bool: {
-          should: [
-            { term: { submitter: user.get('id') } },
-            { term: { preparers: user.get('id') } },
-          ],
-          must_not: [
-            { term: { submissionStatus: 'cancelled' } }
-          ]
-        }
+          should: [{ term: { submitter: user.get('id') } }, { term: { preparers: user.get('id') } }],
+          must_not: [{ term: { submissionStatus: 'cancelled' } }],
+        },
       },
-      size: 500
+      size: 500,
     };
 
     if (ignoreList && ignoreList.length > 0) {

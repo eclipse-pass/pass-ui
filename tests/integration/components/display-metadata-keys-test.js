@@ -14,23 +14,23 @@ module('Integration | Component | display-metadata-keys', (hooks) => {
       authors: [
         {
           name: 'Moo Jones',
-          orcid: '1234'
+          orcid: '1234',
         },
         {
-          name: 'Moo Too'
-        }
+          name: 'Moo Too',
+        },
       ],
       issns: [
         {
           issn: '1234j-09ufe',
-          pubType: 'Online'
-        }
+          pubType: 'Online',
+        },
       ],
       title: 'This is the title moo',
-      'journal-title': 'Journal moo'
+      'journal-title': 'Journal moo',
     };
     const submission = EmberObject.create({
-      metadata: JSON.stringify(mockData)
+      metadata: JSON.stringify(mockData),
     });
 
     const mockSchema = {
@@ -45,18 +45,18 @@ module('Integration | Component | display-metadata-keys', (hooks) => {
             title: 'Author',
             properties: {
               author: {
-                type: 'string'
+                type: 'string',
               },
               orcid: {
-                type: 'string'
-              }
-            }
-          }
+                type: 'string',
+              },
+            },
+          },
         },
         title: {
           type: 'string',
           title: 'Article / Manuscript Title',
-          description: 'The title of the individual article or manuscript that was submitted'
+          description: 'The title of the individual article or manuscript that was submitted',
         },
         issns: {
           type: 'array',
@@ -69,50 +69,44 @@ module('Integration | Component | display-metadata-keys', (hooks) => {
             properties: {
               issn: {
                 type: 'string',
-                title: 'ISSN '
+                title: 'ISSN ',
               },
               pubType: {
                 type: 'string',
                 title: 'publication type',
-                enum: ['Print', 'Online']
-              }
-            }
-          }
+                enum: ['Print', 'Online'],
+              },
+            },
+          },
         },
         'journal-NLMTA-ID': {
           type: 'string',
           title: 'NTMLA',
-          description: 'NLM identifier for a journal'
+          description: 'NLM identifier for a journal',
         },
         'journal-title': {
           type: 'string',
           title: 'Journal title',
-          description: 'Title of the journal the individual article or manuscript was submitted to'
+          description: 'Title of the journal the individual article or manuscript was submitted to',
         },
-      }
+      },
     };
 
-
     this.set('submission', submission);
-    this.owner.lookup('service:metadata-schema').displayMetadata = submission => [
+    this.owner.lookup('service:metadata-schema').displayMetadata = (submission) => [
       { label: 'Journal nlmta-id', value: 'MOO-ID', isArray: false },
       {
         label: 'Authors',
         isArray: true,
-        value: [
-          { name: 'Moo Jones', orcid: '1234' },
-          { name: 'Moo Too' }
-        ]
+        value: [{ name: 'Moo Jones', orcid: '1234' }, { name: 'Moo Too' }],
       },
       {
         label: 'Issns',
         isArray: true,
-        value: [
-          { issn: '1234j-09ufe', pubType: 'Online' }
-        ]
+        value: [{ issn: '1234j-09ufe', pubType: 'Online' }],
       },
       { label: 'Title', isArray: false, value: 'This is the title moo' },
-      { label: 'Journal Title', isArray: false, value: 'Journal moo' }
+      { label: 'Journal Title', isArray: false, value: 'Journal moo' },
     ];
   });
 

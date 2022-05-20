@@ -52,7 +52,7 @@ export default class SubmissionRepoDetails extends Component {
       case 'rejected':
         return 'This target repository has rejected your submission. Please contact us for more details or try to submit your manuscript again.';
       case 'not-submitted':
-        return 'The submission has not been officially submitted to PASS. When the submitter approves the submission, the status will update to \'Submitted\'';
+        return "The submission has not been officially submitted to PASS. When the submitter approves the submission, the status will update to 'Submitted'";
       default:
         return '';
     }

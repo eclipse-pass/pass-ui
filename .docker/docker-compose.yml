@@ -20,8 +20,8 @@ services:
     container_name: fcrepo
     env_file: .env
     ports:
-      - "${FCREPO_PORT}:${FCREPO_PORT}"
-      - "${FCREPO_DEBUG_PORT}:${FCREPO_DEBUG_PORT}"
+      - '${FCREPO_PORT}:${FCREPO_PORT}'
+      - '${FCREPO_DEBUG_PORT}:${FCREPO_DEBUG_PORT}'
     networks:
       - front
       - back
@@ -36,7 +36,7 @@ services:
     container_name: schemaservice
     env_file: .env
     ports:
-      - "${SCHEMA_SERVICE_PORT}:${SCHEMA_SERVICE_PORT}"
+      - '${SCHEMA_SERVICE_PORT}:${SCHEMA_SERVICE_PORT}'
     networks:
       - front
       - back
@@ -46,9 +46,9 @@ services:
     container_name: activemq
     env_file: .env
     ports:
-      - "${ACTIVEMQ_JMS_PORT}:${ACTIVEMQ_JMS_PORT}"
-      - "${ACTIVEMQ_STOMP_PORT}:${ACTIVEMQ_STOMP_PORT}"
-      - "${ACTIVEMQ_WEBCONSOLE_PORT}:${ACTIVEMQ_WEBCONSOLE_PORT}"
+      - '${ACTIVEMQ_JMS_PORT}:${ACTIVEMQ_JMS_PORT}'
+      - '${ACTIVEMQ_STOMP_PORT}:${ACTIVEMQ_STOMP_PORT}'
+      - '${ACTIVEMQ_WEBCONSOLE_PORT}:${ACTIVEMQ_WEBCONSOLE_PORT}'
     networks:
       - front
       - back
@@ -60,8 +60,8 @@ services:
       - front
       - back
     ports:
-      - "80:80"
-      - "443:443"
+      - '80:80'
+      - '443:443'
 
   idp:
     image: oapass/idp:20190813-jhu@sha256:f7a37180964e0e90e1db15440846a39c39659f20999a11c556b99f43d65c7fcb
@@ -73,7 +73,7 @@ services:
       - JETTY_BROWSER_SSL_KEYSTORE_PASSWORD=password
       - JETTY_BACKCHANNEL_SSL_KEYSTORE_PASSWORD=password
     expose:
-      - "4443"
+      - '4443'
     networks:
       - back
     secrets:
@@ -111,7 +111,7 @@ services:
     environment:
       - discovery.type=single-node
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
     ulimits:
       memlock:
         soft: -1
@@ -119,7 +119,7 @@ services:
     volumes:
       - passdata:/usr/share/elasticsearch/data
     ports:
-      - "${ES_PORT}:${ES_PORT}"
+      - '${ES_PORT}:${ES_PORT}'
     networks:
       - front
       - back
@@ -143,7 +143,7 @@ services:
     container_name: policyservice
     env_file: .env
     ports:
-      - "${POLICY_SERVICE_PORT}:${POLICY_SERVICE_PORT}"
+      - '${POLICY_SERVICE_PORT}:${POLICY_SERVICE_PORT}'
     networks:
       - front
       - back
@@ -153,7 +153,7 @@ services:
     container_name: doiservice
     env_file: .env
     ports:
-      - "${PASS_DOI_SERVICE_PORT}:8080"
+      - '${PASS_DOI_SERVICE_PORT}:8080'
     networks:
       - front
       - back
@@ -163,7 +163,7 @@ services:
     container_name: downloadservice
     env_file: .env
     ports:
-      - "${DOWNLOAD_SERVICE_PORT}:${DOWNLOAD_SERVICE_PORT}"
+      - '${DOWNLOAD_SERVICE_PORT}:${DOWNLOAD_SERVICE_PORT}'
     networks:
       - front
       - back

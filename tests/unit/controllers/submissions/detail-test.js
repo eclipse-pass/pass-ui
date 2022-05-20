@@ -15,21 +15,25 @@ module('Unit | Controller | submissions/detail', (hooks) => {
     assert.expect(3);
 
     // Mock the global SweetAlert object to always return immediately
-    swal = () => Promise.resolve({
-      value: 'moo'
-    });
+    swal = () =>
+      Promise.resolve({
+        value: 'moo',
+      });
 
     const submission = EmberObject.create();
 
     const controller = this.owner.lookup('controller:submissions/detail');
     assert.ok(controller, 'controller not found');
 
-    controller.set('submissionHandler', EmberObject.create({
-      deleteSubmission() {
-        assert.ok(true);
-        return Promise.resolve();
-      }
-    }));
+    controller.set(
+      'submissionHandler',
+      EmberObject.create({
+        deleteSubmission() {
+          assert.ok(true);
+          return Promise.resolve();
+        },
+      })
+    );
     controller.set('transitionToRoute', () => assert.ok(true));
 
     controller.send('deleteSubmission', submission);

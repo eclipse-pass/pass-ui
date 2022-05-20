@@ -15,14 +15,12 @@ export default class SubmissionsNew extends Controller {
   @tracked uploading = false;
   @tracked waitingMessage = '';
   @tracked user = this.currentUser.user;
-  @tracked submitter = this.model.newSubmission.submitter
+  @tracked submitter = this.model.newSubmission.submitter;
   @tracked covid = null;
   @tracked filesTemp = get(this, 'workflow.filesTemp');
 
   get userIsSubmitter() {
-    return (
-      get(this, 'model.newSubmission.submitter.id') === this.user.id
-    );
+    return get(this, 'model.newSubmission.submitter.id') === this.user.id;
   }
 
   /**
@@ -42,7 +40,7 @@ export default class SubmissionsNew extends Controller {
 
     if (selectedCovid && !submission.isCovid) {
       let covidHint = {
-        'collection-tags': ['covid']
+        'collection-tags': ['covid'],
       };
 
       if ('hints' in metadata) {
@@ -61,7 +59,7 @@ export default class SubmissionsNew extends Controller {
         let tags = metadata.hints['collection-tags'];
 
         if (tags.length > 1) {
-          let tagsWithoutCovid = tags.filter(tag => tag != 'covid');
+          let tagsWithoutCovid = tags.filter((tag) => tag != 'covid');
           metadata.hints['collection-tags'] = tagsWithoutCovid;
         }
 
@@ -78,15 +76,12 @@ export default class SubmissionsNew extends Controller {
 
   @action
   async submit() {
-    let manuscriptFiles = [].concat(this.filesTemp, get(this, 'model.files') && get(this, 'model.files').toArray())
-      .filter(file => file && get(file, 'fileRole') === 'manuscript');
+    let manuscriptFiles = []
+      .concat(this.filesTemp, get(this, 'model.files') && get(this, 'model.files').toArray())
+      .filter((file) => file && get(file, 'fileRole') === 'manuscript');
 
     if (manuscriptFiles.length == 0 && this.userIsSubmitter) {
-      swal(
-        'Manuscript Is Missing',
-        'At least one manuscript file is required.  Please go back and add one',
-        'warning'
-      );
+      swal('Manuscript Is Missing', 'At least one manuscript file is required.  Please go back and add one', 'warning');
     } else if (manuscriptFiles.length > 1) {
       swal(
         'Incorrect Manuscript Count',
@@ -102,10 +97,12 @@ export default class SubmissionsNew extends Controller {
       this.set('uploading', true);
       this.set('waitingMessage', 'Saving your submission');
 
-      await get(this, 'submissionHandler.submit').perform(sub, pub, files, comment).catch((error) => {
-        this.set('uploading', false);
-        toastr.error(`Submission failed: ${error.message}`);
-      });
+      await get(this, 'submissionHandler.submit')
+        .perform(sub, pub, files, comment)
+        .catch((error) => {
+          this.set('uploading', false);
+          toastr.error(`Submission failed: ${error.message}`);
+        });
 
       set(this, 'uploading', false);
       set(this, 'comment', '');
@@ -121,10 +118,10 @@ export default class SubmissionsNew extends Controller {
 
     let result = await swal({
       title: 'Discard Draft',
-      text: 'This will abort the current submission and discard progress you\'ve made. This cannot be undone.',
+      text: "This will abort the current submission and discard progress you've made. This cannot be undone.",
       confirmButtonText: 'Abort',
       confirmButtonColor: '#f86c6b',
-      showCancelButton: true
+      showCancelButton: true,
     });
 
     if (result.value) {

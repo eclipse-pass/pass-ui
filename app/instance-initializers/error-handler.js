@@ -5,7 +5,6 @@ import { on } from 'rsvp';
 export function initialize(app) {
   let errorHandler = app.lookup('service:error-handler');
 
-
   Ember.onerror = (error) => {
     if (Ember.testing) {
       throw error;
@@ -19,5 +18,5 @@ export function initialize(app) {
 }
 
 export default {
-  initialize
+  initialize,
 };

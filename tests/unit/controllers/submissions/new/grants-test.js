@@ -17,8 +17,8 @@ module('Unit | Controller | submissions/new/grants', (hooks) => {
     const controller = this.owner.lookup('controller:submissions/new/grants');
     const model = EmberObject.create({
       newSubmission: EmberObject.create({
-        save: () => Promise.resolve(assert.ok(true))
-      })
+        save: () => Promise.resolve(assert.ok(true)),
+      }),
     });
 
     controller.set('model', model);
@@ -35,8 +35,8 @@ module('Unit | Controller | submissions/new/grants', (hooks) => {
     let controller = this.owner.lookup('controller:submissions/new/grants');
     const model = EmberObject.create({
       newSubmission: EmberObject.create({
-        save: () => Promise.resolve(assert.ok(true))
-      })
+        save: () => Promise.resolve(assert.ok(true)),
+      }),
     });
 
     controller.set('model', model);
@@ -57,8 +57,8 @@ module('Unit | Controller | submissions/new/grants', (hooks) => {
     const controller = this.owner.lookup('controller:submissions/new/grants');
     const model = EmberObject.create({
       newSubmission: EmberObject.create({
-        save: () => Promise.resolve(assert.ok(true))
-      })
+        save: () => Promise.resolve(assert.ok(true)),
+      }),
     });
 
     controller.set('model', model);

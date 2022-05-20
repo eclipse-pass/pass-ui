@@ -9,24 +9,30 @@ module('Unit | Service | submission-handler', (hooks) => {
   test('prepare submission', function (assert) {
     let service = this.owner.lookup('service:submission-handler');
 
-    this.owner.register('service:current-user', EmberObject.extend({
-      user: { id: 'proxy-user-id' }
-    }));
+    this.owner.register(
+      'service:current-user',
+      EmberObject.extend({
+        user: { id: 'proxy-user-id' },
+      })
+    );
 
     let submissionEvent = {};
 
-    service.set('store', EmberObject.create({
-      createRecord(type, values) {
-        submissionEvent = EmberObject.create(values);
+    service.set(
+      'store',
+      EmberObject.create({
+        createRecord(type, values) {
+          submissionEvent = EmberObject.create(values);
 
-        submissionEvent.set('save', () => {
-          assert.ok(true);
-          return new Promise(resolve => resolve(this));
-        });
+          submissionEvent.set('save', () => {
+            assert.ok(true);
+            return new Promise((resolve) => resolve(this));
+          });
 
-        return submissionEvent;
-      }
-    }));
+          return submissionEvent;
+        },
+      })
+    );
 
     let repo1 = EmberObject.create({ id: 'test:repo1', integrationType: 'full' });
     let repo2 = EmberObject.create({ id: 'test:repo2', integrationType: 'web-link' });
@@ -34,22 +40,22 @@ module('Unit | Service | submission-handler', (hooks) => {
     let submission = EmberObject.create({
       id: '0',
       submitter: {
-        id: 'submitter:test-id'
+        id: 'submitter:test-id',
       },
       metadata: '{}',
       repositories: A([repo1, repo2]),
       save() {
         assert.ok(true);
-        return new Promise(resolve => resolve(this));
-      }
+        return new Promise((resolve) => resolve(this));
+      },
     });
 
     let publication = EmberObject.create({
       id: '1',
       save() {
         assert.ok(true);
-        return new Promise(resolve => resolve(this));
-      }
+        return new Promise((resolve) => resolve(this));
+      },
     });
 
     let files = A();
@@ -57,43 +63,52 @@ module('Unit | Service | submission-handler', (hooks) => {
 
     assert.expect(13);
 
-    return service.get('submit').perform(submission, publication, files, comment).then(() => {
-      assert.equal(submission.get('submitted'), false);
-      assert.equal(submission.get('submissionStatus'), 'approval-requested');
+    return service
+      .get('submit')
+      .perform(submission, publication, files, comment)
+      .then(() => {
+        assert.equal(submission.get('submitted'), false);
+        assert.equal(submission.get('submissionStatus'), 'approval-requested');
 
-      // web-link repo should not be removed
-      assert.equal(submission.get('repositories.length'), 2);
+        // web-link repo should not be removed
+        assert.equal(submission.get('repositories.length'), 2);
 
-      assert.equal(submissionEvent.get('eventType'), 'approval-requested');
-      assert.equal(submissionEvent.get('performerRole'), 'preparer');
-      assert.equal(submissionEvent.get('performedBy.id'), 'proxy-user-id');
-      assert.equal(submissionEvent.get('comment'), comment);
-      assert.equal(submissionEvent.get('submission.id'), submission.get('id'));
-      assert.ok(submissionEvent.get('link').includes(submission.get('id')));
-    });
+        assert.equal(submissionEvent.get('eventType'), 'approval-requested');
+        assert.equal(submissionEvent.get('performerRole'), 'preparer');
+        assert.equal(submissionEvent.get('performedBy.id'), 'proxy-user-id');
+        assert.equal(submissionEvent.get('comment'), comment);
+        assert.equal(submissionEvent.get('submission.id'), submission.get('id'));
+        assert.ok(submissionEvent.get('link').includes(submission.get('id')));
+      });
   });
 
   test('submit', function (assert) {
     let service = this.owner.lookup('service:submission-handler');
 
-    this.owner.register('service:current-user', EmberObject.extend({
-      user: { id: 'submitter:test-id' }
-    }));
+    this.owner.register(
+      'service:current-user',
+      EmberObject.extend({
+        user: { id: 'submitter:test-id' },
+      })
+    );
 
     let submissionEvent = {};
 
-    service.set('store', EmberObject.create({
-      createRecord(type, values) {
-        submissionEvent = EmberObject.create(values);
+    service.set(
+      'store',
+      EmberObject.create({
+        createRecord(type, values) {
+          submissionEvent = EmberObject.create(values);
 
-        submissionEvent.set('save', () => {
-          assert.ok(true);
-          return new Promise(resolve => resolve(this));
-        });
+          submissionEvent.set('save', () => {
+            assert.ok(true);
+            return new Promise((resolve) => resolve(this));
+          });
 
-        return submissionEvent;
-      }
-    }));
+          return submissionEvent;
+        },
+      })
+    );
 
     let repo1 = EmberObject.create({ id: 'test:repo1', integrationType: 'full' });
     let repo2 = EmberObject.create({ id: 'test:repo2', integrationType: 'web-link' });
@@ -101,22 +116,22 @@ module('Unit | Service | submission-handler', (hooks) => {
     let submission = EmberObject.create({
       id: '0',
       submitter: {
-        id: 'submitter:test-id'
+        id: 'submitter:test-id',
       },
       metadata: '{}',
       repositories: A([repo1, repo2]),
       save() {
         assert.ok(true);
-        return new Promise(resolve => resolve(this));
-      }
+        return new Promise((resolve) => resolve(this));
+      },
     });
 
     let publication = EmberObject.create({
       id: '1',
       save() {
         assert.ok(true);
-        return new Promise(resolve => resolve(this));
-      }
+        return new Promise((resolve) => resolve(this));
+      },
     });
 
     let files = A();
@@ -124,20 +139,23 @@ module('Unit | Service | submission-handler', (hooks) => {
 
     assert.expect(13);
 
-    return service.get('submit').perform(submission, publication, files, comment).then(() => {
-      assert.equal(submission.get('submitted'), true);
-      assert.equal(submission.get('submissionStatus'), 'submitted');
+    return service
+      .get('submit')
+      .perform(submission, publication, files, comment)
+      .then(() => {
+        assert.equal(submission.get('submitted'), true);
+        assert.equal(submission.get('submissionStatus'), 'submitted');
 
-      // web-link repo should NOT be removed
-      assert.equal(submission.get('repositories.length'), 2);
-      assert.equal(submission.get('repositories.firstObject.id'), repo1.id);
+        // web-link repo should NOT be removed
+        assert.equal(submission.get('repositories.length'), 2);
+        assert.equal(submission.get('repositories.firstObject.id'), repo1.id);
 
-      assert.equal(submissionEvent.get('eventType'), 'submitted');
-      assert.equal(submissionEvent.get('performerRole'), 'submitter');
-      assert.equal(submissionEvent.get('comment'), comment);
-      assert.equal(submissionEvent.get('submission.id'), submission.get('id'));
-      assert.ok(submissionEvent.get('link').includes(submission.get('id')));
-    });
+        assert.equal(submissionEvent.get('eventType'), 'submitted');
+        assert.equal(submissionEvent.get('performerRole'), 'submitter');
+        assert.equal(submissionEvent.get('comment'), comment);
+        assert.equal(submissionEvent.get('submission.id'), submission.get('id'));
+        assert.ok(submissionEvent.get('link').includes(submission.get('id')));
+      });
   });
 
   test('approve submission', function (assert) {
@@ -145,18 +163,21 @@ module('Unit | Service | submission-handler', (hooks) => {
 
     let submissionEvent = {};
 
-    service.set('store', EmberObject.create({
-      createRecord(type, values) {
-        submissionEvent = EmberObject.create(values);
+    service.set(
+      'store',
+      EmberObject.create({
+        createRecord(type, values) {
+          submissionEvent = EmberObject.create(values);
 
-        submissionEvent.set('save', () => {
-          assert.ok(true);
-          return new Promise(resolve => resolve(this));
-        });
+          submissionEvent.set('save', () => {
+            assert.ok(true);
+            return new Promise((resolve) => resolve(this));
+          });
 
-        return submissionEvent;
-      }
-    }));
+          return submissionEvent;
+        },
+      })
+    );
 
     let repo1 = EmberObject.create({ id: 'test:repo1', integrationType: 'full' });
     let repo2 = EmberObject.create({ id: 'test:repo2', integrationType: 'web-link' });
@@ -164,14 +185,14 @@ module('Unit | Service | submission-handler', (hooks) => {
     let submission = EmberObject.create({
       id: '0',
       submitter: {
-        id: 'submitter:test-id'
+        id: 'submitter:test-id',
       },
       metadata: '{}',
       repositories: A([repo1, repo2]),
       save() {
         assert.ok(true);
-        return new Promise(resolve => resolve(this));
-      }
+        return new Promise((resolve) => resolve(this));
+      },
     });
 
     let comment = 'blarg';
@@ -200,29 +221,32 @@ module('Unit | Service | submission-handler', (hooks) => {
 
     let submissionEvent = {};
 
-    service.set('store', EmberObject.create({
-      createRecord(type, values) {
-        submissionEvent = EmberObject.create(values);
+    service.set(
+      'store',
+      EmberObject.create({
+        createRecord(type, values) {
+          submissionEvent = EmberObject.create(values);
 
-        submissionEvent.set('save', () => {
-          assert.ok(true);
-          return new Promise(resolve => resolve(this));
-        });
+          submissionEvent.set('save', () => {
+            assert.ok(true);
+            return new Promise((resolve) => resolve(this));
+          });
 
-        return submissionEvent;
-      }
-    }));
+          return submissionEvent;
+        },
+      })
+    );
 
     let submission = EmberObject.create({
       id: '0',
       submitter: {
-        id: 'submitter:test-id'
+        id: 'submitter:test-id',
       },
       repositories: A(),
       save() {
         assert.ok(true);
-        return new Promise(resolve => resolve(this));
-      }
+        return new Promise((resolve) => resolve(this));
+      },
     });
 
     let comment = 'blarg';
@@ -244,29 +268,32 @@ module('Unit | Service | submission-handler', (hooks) => {
 
     let submissionEvent = {};
 
-    service.set('store', EmberObject.create({
-      createRecord(type, values) {
-        submissionEvent = EmberObject.create(values);
+    service.set(
+      'store',
+      EmberObject.create({
+        createRecord(type, values) {
+          submissionEvent = EmberObject.create(values);
 
-        submissionEvent.set('save', () => {
-          assert.ok(true);
-          return new Promise(resolve => resolve(this));
-        });
+          submissionEvent.set('save', () => {
+            assert.ok(true);
+            return new Promise((resolve) => resolve(this));
+          });
 
-        return submissionEvent;
-      }
-    }));
+          return submissionEvent;
+        },
+      })
+    );
 
     let submission = EmberObject.create({
       id: '0',
       submitter: {
-        id: 'submitter:test-id'
+        id: 'submitter:test-id',
       },
       repositories: A(),
       save() {
         assert.ok(true);
-        return new Promise(resolve => resolve(this));
-      }
+        return new Promise((resolve) => resolve(this));
+      },
     });
 
     let comment = 'blarg';
@@ -297,7 +324,7 @@ module('Unit | Service | submission-handler', (hooks) => {
       unloadRecord: () => {
         assert.ok(true);
         return Promise.resolve();
-      }
+      },
     });
 
     const service = this.owner.lookup('service:submission-handler');

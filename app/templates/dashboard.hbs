@@ -1,19 +1,20 @@
-<div id="dashboard-container" class='row row-eq-height'>
-  <div class='col-md-6 mt-4 mb-4'>
-    <div class='card'>
-      <div class='card-body'>
-        <h2 class='card-title font-weight-light'>
+<div id="dashboard-container" class="row row-eq-height">
+  <div class="col-md-6 mt-4 mb-4">
+    <div class="card">
+      <div class="card-body">
+        <h2 class="card-title font-weight-light">
           Manage Publication Submissions
         </h2>
-        <p class='card-text'>
+        <p class="card-text">
           The submissions view allows you to:
           <ul>
-            <li>create submissions to one or more repository in order to comply with the access policies of your funders and institutions</li>
+            <li>create submissions to one or more repository in order to comply with the access policies of your funders
+              and institutions</li>
             <li>review the statuses of previous submissions</li>
           </ul>
         </p>
         <div class="text-center">
-          {{#if (get (await this.currentUser.user) 'isSubmitter')}}
+          {{#if (get (await this.currentUser.user) "isSubmitter")}}
             <LinkTo @route="submissions.new" class="btn btn-primary mt-1 mr-1" data-test-start-new-submission={{true}}>
               Start new submission
             </LinkTo>
@@ -25,11 +26,11 @@
       </div>
     </div>
   </div>
-  <div class='col-md-6 mb-4 mt-4'>
-    <div class='card'>
-      <div class='card-body'>
-        <h2 class='card-title font-weight-light'>Manage Grants Compliance</h2>
-        <p class='card-text'>
+  <div class="col-md-6 mb-4 mt-4">
+    <div class="card">
+      <div class="card-body">
+        <h2 class="card-title font-weight-light">Manage Grants Compliance</h2>
+        <p class="card-text">
           The grants view allows you to:
           <ul>
             <li>see an overview of submission statuses at the grant level</li>
@@ -49,12 +50,14 @@
   <div class="row">
     <div class="col-12">
       <div class="alert alert-info">
-        You have:<br>
+        You have:<br />
         {{#if this.model.numberAwaitingApproval}}
-          <LinkTo @route="submissions.index">{{this.model.numberAwaitingApproval}} submission(s)</LinkTo> awaiting your approval.<br>
+          <LinkTo @route="submissions.index">{{this.model.numberAwaitingApproval}} submission(s)</LinkTo>
+          awaiting your approval.<br />
         {{/if}}
         {{#if this.model.numberAwaitingEdits}}
-          <LinkTo @route="submissions.index">{{this.model.numberAwaitingEdits}} submission(s)</LinkTo> with a submitter waiting for you to edit them.
+          <LinkTo @route="submissions.index">{{this.model.numberAwaitingEdits}} submission(s)</LinkTo>
+          with a submitter waiting for you to edit them.
         {{/if}}
       </div>
     </div>

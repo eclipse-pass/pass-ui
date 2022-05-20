@@ -41,23 +41,23 @@ export default class WorkflowGrants extends Component {
       title: 'Project name (funding period)',
       className: 'projectname-date-column',
       component: 'grant-title-date-cell',
-      disableSorting: true
+      disableSorting: true,
     },
     {
       propertyName: 'primaryFunder.name',
       title: 'Funder',
       className: 'funder-column',
-      disableSorting: true
+      disableSorting: true,
     },
     {
       component: 'select-row-toggle',
-      mayBeHidden: false
-    }
+      mayBeHidden: false,
+    },
   ];
 
   // Matches numbered starting at 1. Return number of first match on current page.
   get pageFirstMatchNumber() {
-    return ((this.pageNumber - 1) * this.pageSize) + 1;
+    return (this.pageNumber - 1) * this.pageSize + 1;
   }
 
   // Matches numbered starting at 1. Return number of last match on current page.
@@ -73,7 +73,12 @@ export default class WorkflowGrants extends Component {
   }
 
   get filteredGrants() {
-    return this.submitterGrants.filter(g => !get(this, 'submission.grants').map(x => x.id).includes(g.get('id')));
+    return this.submitterGrants.filter(
+      (g) =>
+        !get(this, 'submission.grants')
+          .map((x) => x.id)
+          .includes(g.get('id'))
+    );
   }
 
   constructor() {
@@ -103,7 +108,7 @@ export default class WorkflowGrants extends Component {
 
     this._selectedGrants.clear();
     this._selectedGrants.addObjects(get(this, 'args.submission.grants'));
-  }
+  };
 
   @task
   updateGrants = function* () {
@@ -118,23 +123,23 @@ export default class WorkflowGrants extends Component {
               bool: {
                 should: [
                   { term: { pi: get(this, 'args.submission.submitter.id') } },
-                  { term: { coPis: get(this, 'args.submission.submitter.id') } }
-                ]
-              }
-            }
-          ]
-        }
+                  { term: { coPis: get(this, 'args.submission.submitter.id') } },
+                ],
+              },
+            },
+          ],
+        },
       },
       from: (this.pageNumber - 1) * this.pageSize,
       size: this.pageSize,
       sort: [{ endDate: 'desc' }],
-      info
+      info,
     });
 
     set(this, 'submitterGrants', results);
     set(this, 'totalGrants', info.total);
     set(this, 'pageCount', Math.ceil(info.total / this.pageSize));
-  }
+  };
 
   /**
    * Only really triggered on #init by a pre-loaded grant...
@@ -153,7 +158,7 @@ export default class WorkflowGrants extends Component {
       this.addGrant(grant);
       document.querySelectorAll('select')[0].selectedIndex = 0;
     }
-  }
+  };
 
   @action
   prevPage() {
@@ -259,16 +264,14 @@ export default class WorkflowGrants extends Component {
        * present in the previous selection state. If not, make sure it is
        * added everywhere appropriate.
        */
-      selectedItems.filter(grant => !previousSelection.includes(grant))
-        .forEach(grant => this.addGrant(grant));
+      selectedItems.filter((grant) => !previousSelection.includes(grant)).forEach((grant) => this.addGrant(grant));
     } else if (curLen < prevLen) {
       /**
        * Grant removed. For each previously selected grant, check if it is
        * present in current selection. If not, make sure it is removed where
        * appropriate.
        */
-      previousSelection.filter(grant => !selectedItems.includes(grant))
-        .forEach(grant => this.removeGrant(grant));
+      previousSelection.filter((grant) => !selectedItems.includes(grant)).forEach((grant) => this.removeGrant(grant));
     }
 
     set(this, '_selectedGrants', selectedItems);

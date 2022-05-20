@@ -13,7 +13,7 @@ module('Unit | Service | autocomplete', (hooks) => {
         assert.ok(data, 'POST should have request data');
 
         const query = data.data.suggest;
-        assert.ok(query, 'Request data should have a \'suggest\' object');
+        assert.ok(query, "Request data should have a 'suggest' object");
         assert.ok(query.projectName);
         assert.equal(query.projectName.prefix, 'aa');
         assert.equal(query.projectName.completion.field, 'projectName_suggest');
@@ -24,14 +24,14 @@ module('Unit | Service | autocomplete', (hooks) => {
           _shards: { total: 5, successful: 5, skipped: 0, failed: 0 }, // eslint-disable-line
           hits: { total: 0, max_score: 0.0, hits: [] },
           suggest: {
-            projectName: [{ text: 'aa', offset: 0, length: 2, options: [] }] // eslint-disable-line
-          }
+            projectName: [{ text: 'aa', offset: 0, length: 2, options: [] }], // eslint-disable-line
+          },
         });
-      }
+      },
     };
 
     const service = this.owner.factoryFor('service:autocomplete').create({
-      ajax: fakeAjax
+      ajax: fakeAjax,
     });
 
     assert.ok(service);
@@ -45,14 +45,13 @@ module('Unit | Service | autocomplete', (hooks) => {
         assert.ok(data, 'POST should have request data');
 
         const query = data.data.suggest;
-        assert.ok(query, 'Request data should have a \'suggest\' object');
+        assert.ok(query, "Request data should have a 'suggest' object");
         assert.ok(query.projectName);
         assert.equal(query.projectName.prefix, 'aa');
         assert.equal(query.projectName.completion.field, 'projectName_suggest');
         assert.ok(query.awardNumber);
         assert.equal(query.awardNumber.prefix, 'aa');
         assert.equal(query.awardNumber.completion.field, 'awardNumber_suggest');
-
 
         return RSVP.resolve({
           took: 42,
@@ -61,14 +60,14 @@ module('Unit | Service | autocomplete', (hooks) => {
           hits: { total: 0, max_score: 0.0, hits: [] },
           suggest: {
             projectName: [{ text: 'aa', offset: 0, length: 2, options: [] }], // eslint-disable-line
-            awardNumber: [{ text: 'aa', offset: 0, length: 2, options: [] }] // eslint-disable-line
-          }
+            awardNumber: [{ text: 'aa', offset: 0, length: 2, options: [] }], // eslint-disable-line
+          },
         });
-      }
+      },
     };
 
     const service = this.owner.factoryFor('service:autocomplete').create({
-      ajax: fakeAjax
+      ajax: fakeAjax,
     });
 
     assert.ok(service);
@@ -85,21 +84,20 @@ module('Unit | Service | autocomplete', (hooks) => {
         assert.ok(query.journalName.completion.context);
         assert.equal(query.journalName.completion.context.pi, 'moo');
 
-
         return RSVP.resolve({
           took: 42,
           timed_out: false,
           _shards: { total: 5, successful: 5, skipped: 0, failed: 0 }, // eslint-disable-line
           hits: { total: 0, max_score: 0.0, hits: [] },
           suggest: {
-            journalName: [{ text: 'aa', offset: 0, length: 2, options: [] }] // eslint-disable-line
-          }
+            journalName: [{ text: 'aa', offset: 0, length: 2, options: [] }], // eslint-disable-line
+          },
         });
-      }
+      },
     };
 
     const service = this.owner.factoryFor('service:autocomplete').create({
-      ajax: fakeAjax
+      ajax: fakeAjax,
     });
 
     assert.ok(service);

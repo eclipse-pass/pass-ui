@@ -13,7 +13,7 @@ export default function (server) {
     try {
       server.create('publication', {
         ...attrs,
-        _source: attrs
+        _source: attrs,
       });
     } catch (e) {
       console.log(e);
@@ -21,7 +21,7 @@ export default function (server) {
 
     return new Response(201, {
       Location: attrs['@id'],
-      'Content-Type': 'text/plain; charset=UTF-8'
+      'Content-Type': 'text/plain; charset=UTF-8',
     });
   });
 

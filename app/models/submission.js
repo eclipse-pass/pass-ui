@@ -4,8 +4,9 @@ import { computed, get } from '@ember/object';
 export default class SubmissionModel extends Model {
   /** Possible values: not-started, in-progress, accepted */
   @attr('string', {
-    defaultValue: 'not-started'
-  }) aggregatedDepositStatus;
+    defaultValue: 'not-started',
+  })
+  aggregatedDepositStatus;
   @attr('date') submittedDate;
   @attr('string', { defaultValue: 'pass' }) source;
   @attr('string') metadata;
@@ -13,8 +14,9 @@ export default class SubmissionModel extends Model {
   @attr('string') submissionStatus;
   @attr('string') submitterName;
   @attr('string', {
-    defaultValue: null
-  }) submitterEmail;
+    defaultValue: null,
+  })
+  submitterEmail;
 
   @belongsTo('user') submitter;
   @belongsTo('publication') publication;
@@ -24,27 +26,36 @@ export default class SubmissionModel extends Model {
   @hasMany('policy') effectivePolicies;
   // not on this model on API
   @hasMany('submissionEvent', {
-    async: true
-  }) _submissionEvents;
+    async: true,
+  })
+  _submissionEvents;
   /**
    * List of grants related to the item being submitted. The grant PI determines who can perform
    * the submission and in the case that there are mutliple associated grants, they all should
    * have the same PI. If a grant has a different PI, it should be a separate submission.
    */
   @hasMany('grant', {
-    async: true
-  }) grants;
+    async: true,
+  })
+  grants;
 
   // computed attributes for tables and to support some logic
   @computed(
-    'submitterEmail', 'submitterEmail.length',
-    'submitterName', 'submitterName.length',
-    'preparers', 'preparers.length'
+    'submitterEmail',
+    'submitterEmail.length',
+    'submitterName',
+    'submitterName.length',
+    'preparers',
+    'preparers.length'
   )
   get isProxySubmission() {
-    return (this.submitterEmail && get(this, 'submitterEmail.length') > 0
-      && this.submitterName && get(this, 'submitterName.length') > 0
-    ) || (this.preparers && get(this, 'preparers.length') > 0);
+    return (
+      (this.submitterEmail &&
+        get(this, 'submitterEmail.length') > 0 &&
+        this.submitterName &&
+        get(this, 'submitterName.length') > 0) ||
+      (this.preparers && get(this, 'preparers.length') > 0)
+    );
   }
 
   @computed('submitterEmail')
@@ -82,7 +93,7 @@ export default class SubmissionModel extends Model {
 
   @computed('source', 'submitted')
   get isStub() {
-    return this.source === 'other' && !(this.submitted);
+    return this.source === 'other' && !this.submitted;
   }
 
   /**

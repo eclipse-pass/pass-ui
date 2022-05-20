@@ -1,9 +1,7 @@
-
 import { observes } from '@ember-decorators/object';
 import { inject as service } from '@ember/service';
 import { setProperties } from '@ember/object';
 import Helper, { helper } from '@ember/component/helper';
-
 
 export default class SearchAssociated extends Helper {
   @service('store')
@@ -44,7 +42,7 @@ export default class SearchAssociated extends Helper {
     setProperties(this, {
       type: params[0],
       propertyName: params[1],
-      associatedId: params[2]
+      associatedId: params[2],
     });
 
     return this.content;

@@ -6,7 +6,7 @@ export default function (server) {
     let grant;
 
     let grants = schema.grants.all();
-    grant = grants.models.find(grant => grant.attrs._source['@id'] === request.url);
+    grant = grants.models.find((grant) => grant.attrs._source['@id'] === request.url);
 
     return grant.attrs._source;
   });

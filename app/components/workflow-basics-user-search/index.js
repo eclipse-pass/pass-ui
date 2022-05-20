@@ -26,12 +26,12 @@ export default class WorkflowBasicsUserSearch extends Component {
   }
 
   get moreThanOnePage() {
-    return this.numberOfPages ? (this.numberOfPages > 1) : false;
+    return this.numberOfPages ? this.numberOfPages > 1 : false;
   }
 
   get filteredUsers() {
     let users = this.matchingUsers;
-    return users.filter(u => u.id !== get(this, 'currentUser.user.id'));
+    return users.filter((u) => u.id !== get(this, 'currentUser.user.id'));
   }
 
   constructor() {
@@ -55,20 +55,20 @@ export default class WorkflowBasicsUserSearch extends Component {
       query: {
         bool: {
           filter: {
-            exists: { field: 'email' }
+            exists: { field: 'email' },
           },
           should: {
-            multi_match: { query: input, fields: ['firstName', 'middleName', 'lastName', 'email', 'displayName'] }
+            multi_match: { query: input, fields: ['firstName', 'middleName', 'lastName', 'email', 'displayName'] },
           },
-          minimum_should_match: 1
-        }
+          minimum_should_match: 1,
+        },
       },
       from: (page - 1) * size,
       size,
-      info
+      info,
     });
 
     this.matchingUsers = users;
     if (info.total !== null) this.numberOfMatches = info.total;
-  }
+  };
 }

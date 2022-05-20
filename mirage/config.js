@@ -28,7 +28,6 @@ export default function () {
   schemas(this);
   grants(this);
 
-
   this.passthrough();
   this.passthrough(`${ENV.fedora.base}**`);
   this.passthrough(`${ENV.fedora.base}`.replace('_search', '_stats/index'));

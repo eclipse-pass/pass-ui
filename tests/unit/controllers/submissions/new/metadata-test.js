@@ -21,8 +21,8 @@ module('Unit | Controller | submissions/new/metadata', (hooks) => {
         save: () => {
           subSaved = true;
           return Promise.resolve();
-        }
-      })
+        },
+      }),
     });
 
     controller.set('model', model);
@@ -42,8 +42,8 @@ module('Unit | Controller | submissions/new/metadata', (hooks) => {
         save: () => {
           subSaved = true;
           return Promise.resolve();
-        }
-      })
+        },
+      }),
     });
 
     controller.set('model', model);

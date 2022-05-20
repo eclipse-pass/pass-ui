@@ -1,8 +1,6 @@
-
 import ENV from 'pass-ember/config/environment';
 import FedoraJsonLdAdapter from './fedora-jsonld';
 import DataAdapterMixin from 'ember-simple-auth/mixins/data-adapter-mixin';
-
 
 export default class Application extends FedoraJsonLdAdapter {
   baseURI = ENV.fedora.base;
