@@ -105,3 +105,9 @@ You can run also run tests, but you may have to install other dependencies such 
 
 If you wish, you may install ember locally. The application will not be able to run due to the need to access various web services,
 but running tests on the command line can be useful. See documentation at [ember.js](https://emberjs.com/). There may be dependency issues requiring node-sass to be rebuilt for your environment.
+
+### Linting
+
+This project uses `es-lint`, `ember-template-lint` and `prettier` to enforce style decisions and code formatting. You may consider installing [an integration tool](https://prettier.io/docs/en/editors.html) for your editor of choice.
+
+This project uses (husky)[https://github.com/typicode/husky] to run a command from (lint-staged)[https://github.com/okonet/lint-staged] to run `es-lint --fix` and `prettier --write` over the staged files in a pre-commit hook. If you are unable to make a commit it might be because either one or both of these commands has failed. Check the output in the terminal for what failures have occurred.
