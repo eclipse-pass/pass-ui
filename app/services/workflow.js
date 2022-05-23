@@ -1,3 +1,4 @@
+/* eslint-disable ember/classic-decorator-no-classic-methods */
 import { A } from '@ember/array';
 import Service from '@ember/service';
 import { tracked } from '@glimmer/tracking';

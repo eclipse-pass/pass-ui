@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-get */
 import { A } from '@ember/array';
 import EmberObject, { get } from '@ember/object';
 import { setupRenderingTest } from 'ember-qunit';

@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-computed-properties-in-native-classes */
 import { computed } from '@ember/object';
 import Service, { inject as service } from '@ember/service';
 import ENV from 'pass-ember/config/environment';

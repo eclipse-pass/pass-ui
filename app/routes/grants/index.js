@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-get */
 import { inject as service } from '@ember/service';
 import { A } from '@ember/array';
 import CheckSessionRoute from '../check-session-route';

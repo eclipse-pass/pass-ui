@@ -1,3 +1,4 @@
+{{! template-lint-disable no-action }}
 {{!-- {{#each (get record column.propertyName) as |user index|}} --}}
 <a href="javascript:;" {{action "sendAction" "authorSelected" @record}} title="Click to contact corresponding author">
   {{get @record (concat @column.propertyName ".displayName")}}

@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-classes */
 import { A } from '@ember/array';
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';

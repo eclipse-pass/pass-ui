@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-get */
 import { A, isArray } from '@ember/array';
 import Service, { inject as service } from '@ember/service';
 import ENV from 'pass-ember/config/environment';
