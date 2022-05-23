@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-get, ember/classic-decorator-no-classic-methods */
 import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import { A } from '@ember/array';

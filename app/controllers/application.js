@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-computed-properties-in-native-classes, ember/no-get */
 import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import { get } from '@ember/object';

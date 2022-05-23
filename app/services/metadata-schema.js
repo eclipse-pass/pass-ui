@@ -1,3 +1,4 @@
+/* eslint-disable ember/classic-decorator-no-classic-methods, ember/no-get, ember/no-string-prototype-extensions */
 import Service, { inject as service } from '@ember/service';
 import ENV from 'pass-ember/config/environment';
 import Ajv from 'ajv'; // https://github.com/epoberezkin/ajv

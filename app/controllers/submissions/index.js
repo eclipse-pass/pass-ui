@@ -1,3 +1,4 @@
+/* eslint-disable ember/classic-decorator-no-classic-methods, ember/no-get */
 import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import Bootstrap4Theme from 'ember-models-table/themes/bootstrap4';

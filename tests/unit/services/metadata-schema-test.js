@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-classes, ember/no-get */
 import EmberObject, { get } from '@ember/object';
 import Service from '@ember/service';
 import { module, test } from 'qunit';
