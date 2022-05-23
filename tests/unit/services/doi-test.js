@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-get */
 import EmberObject, { get } from '@ember/object';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';

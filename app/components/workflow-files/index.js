@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-computed-properties-in-native-classes, ember/no-get, ember/require-computed-property-dependencies */
 import Component from '@glimmer/component';
 import { action, get, set, computed } from '@ember/object';
 import { inject as service } from '@ember/service';

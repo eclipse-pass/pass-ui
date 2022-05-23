@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-observers */
 
 import { observes } from '@ember-decorators/object';
 import { inject as service } from '@ember/service';

@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-classes, ember/avoid-leaking-state-in-ember-objects, ember/no-settled-after-test-helper, ember/no-get */
 import EmberObject, { get } from '@ember/object';
 import { A } from '@ember/array';
 import Service from '@ember/service';

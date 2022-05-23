@@ -1,3 +1,4 @@
+{{! template-lint-disable prettier }}
 {{#each @record.grants as |grant index|}}
   {{if index ',<br>'}}
     <LinkTo @route="grants.detail" @model={{grant.id}}>{{grant.awardNumber}}</LinkTo> ({{grant.primaryFunder.name}})

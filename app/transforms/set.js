@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-classes */
 import Transform from '@ember-data/serializer/transform';
 
 export default Transform.extend({

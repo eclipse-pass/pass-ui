@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-classes, ember/avoid-leaking-state-in-ember-objects */
 import EmberObject from '@ember/object';
 import Service from '@ember/service';
 import { module, test } from 'qunit';

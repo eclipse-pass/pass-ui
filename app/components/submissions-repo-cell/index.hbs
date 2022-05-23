@@ -1,3 +1,4 @@
+{{! template-lint-disable prettier }}
 {{#each (await (get @record 'repositories')) as |repo index|}}
 {{if index ', '}}
   {{#if repo.name}}

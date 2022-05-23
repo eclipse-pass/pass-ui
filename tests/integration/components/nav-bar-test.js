@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-classes */
 import Service from '@ember/service';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';

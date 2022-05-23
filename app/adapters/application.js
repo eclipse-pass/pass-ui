@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-mixins */
 
 import ENV from 'pass-ember/config/environment';
 import FedoraJsonLdAdapter from './fedora-jsonld';

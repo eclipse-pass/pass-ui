@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-get */
 
 import Controller from '@ember/controller';
 import { get } from '@ember/object';

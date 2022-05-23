@@ -1,3 +1,4 @@
+/* eslint-disable ember/classic-decorator-no-classic-methods */
 
 import Service, { inject as service } from '@ember/service';
 // import { defer } from 'rsvp';

@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-computed-properties-in-native-classes, ember/no-get, ember/require-computed-property-dependencies */
 import Controller, { inject as controller } from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import { action, computed, get, set } from '@ember/object';

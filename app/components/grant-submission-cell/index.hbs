@@ -1,3 +1,4 @@
+{{! template-lint-disable prettier }}
 <LinkTo @route="grants.detail" @model={{get @record 'grant.id'}}>
   {{await (get @record @column.propertyName)}}
 </LinkTo>

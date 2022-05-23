@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-get */
 import CheckSessionRoute from './check-session-route';
 import RSVP from 'rsvp';
 import { inject as service } from '@ember/service';
