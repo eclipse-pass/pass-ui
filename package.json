@@ -97,7 +97,7 @@
     "ember-export-application-global": "^2.0.1",
     "ember-fedora-adapter": "1.0.0",
     "ember-font-awesome": "^4.0.0-rc.4",
-    "ember-load-initializers": "^2.1.1",
+    "ember-load-initializers": "^2.1.2",
     "ember-modal-dialog": "^3.0.1",
     "ember-models-table": "^2.7.0",
     "ember-power-select": "2.3.5",
