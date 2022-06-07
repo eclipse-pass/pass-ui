@@ -54,7 +54,7 @@
     "lint-to-the-future": "^1.1.0",
     "lint-to-the-future-ember-template": "^1.0.0",
     "lint-to-the-future-eslint": "^0.4.0",
-    "merge": ">=1.2.1",
+    "merge": ">=2.1.1",
     "prettier": "^2.6.2",
     "qunit-dom": "^1.0.0",
     "toastr": "^2.1.4"
