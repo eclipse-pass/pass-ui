@@ -1,4 +1,4 @@
-FROM node:10.20.1-alpine3.11 as ember-builder
+FROM node:14-alpine3.15 as ember-builder
 
 ARG EMBER_GIT_REPO
 ARG EMBER_GIT_BRANCH
