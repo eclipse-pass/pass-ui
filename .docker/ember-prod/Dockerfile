@@ -27,11 +27,14 @@ ENV EMBER_GIT_BRANCH=${EMBER_GIT_BRANCH:-main} \
 
 RUN apk add --no-cache git && \
     node -v && npm -v && yarn -v && \
-    npm install --global --production build-tools && \
-    mkdir -p ${EMBER_BUILD_DIR} && \
+    npm install --global --production build-tools
+
+RUN mkdir -p ${EMBER_BUILD_DIR} && \
     cd ${EMBER_BUILD_DIR} && \
     git clone ${EMBER_GIT_REPO} . && \
-    git checkout ${EMBER_GIT_BRANCH} && \
+    git checkout ${EMBER_GIT_BRANCH}
+
+RUN cd ${EMBER_BUILD_DIR} && \
     yarn install && \
     echo "Build environment: " && \
     env | sort && \
