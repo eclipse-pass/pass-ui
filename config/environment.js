@@ -4,7 +4,7 @@
 
 module.exports = function (environment) {
   let ENV = {
-    modulePrefix: 'pass-ember',
+    modulePrefix: 'pass-ui',
     environment,
     // rootURL: '/fcrepo/rest',
     rootURL: '/',

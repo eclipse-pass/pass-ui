@@ -1,5 +1,5 @@
 import Service from '@ember/service';
-import ENV from 'pass-ember/config/environment';
+import ENV from 'pass-ui/config/environment';
 
 export default class OAManuscriptService extends Service {
   lookupUrl = ENV.oaManuscriptService.lookupUrl;

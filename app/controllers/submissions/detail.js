@@ -2,7 +2,7 @@
 import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import { action, get, computed } from '@ember/object';
-import ENV from 'pass-ember/config/environment';
+import ENV from 'pass-ui/config/environment';
 import { inject as service } from '@ember/service';
 
 export default class SubmissionsDetail extends Controller {

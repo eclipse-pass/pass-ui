@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-get */
 import { A, isArray } from '@ember/array';
 import Service, { inject as service } from '@ember/service';
-import ENV from 'pass-ember/config/environment';
+import ENV from 'pass-ui/config/environment';
 import { task } from 'ember-concurrency-decorators';
 import { get } from '@ember/object';
 
@@ -129,7 +129,7 @@ export default class SubmissionHandlerService extends Service {
         xhr.setRequestHeader('Content-Type', contentType);
 
         // Hacks to handle different environments
-        if (ENV.environment === 'travis' || ENV.environment === 'development') xhr.withCredentials = true;
+        if (ENV.environment === 'development') xhr.withCredentials = true;
         if (ENV.environment === 'development') xhr.setRequestHeader('Authorization', 'Basic YWRtaW46bW9v');
 
         xhr.onload = (results) => {
