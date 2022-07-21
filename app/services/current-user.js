@@ -1,6 +1,6 @@
 /* eslint-disable ember/no-get, ember/classic-decorator-no-classic-methods */
 import Service, { inject as service } from '@ember/service';
-import ENV from 'pass-ember/config/environment';
+import ENV from 'pass-ui/config/environment';
 import { task } from 'ember-concurrency-decorators';
 import { get } from '@ember/object';
 

@@ -1,6 +1,6 @@
 /* eslint-disable ember/no-get */
 import CheckSessionRoute from './check-session-route';
-import ENV from 'pass-ember/config/environment';
+import ENV from 'pass-ui/config/environment';
 import { inject as service } from '@ember/service';
 import { get } from '@ember/object';
 

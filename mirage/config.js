@@ -1,4 +1,4 @@
-import ENV from 'pass-ember/config/environment';
+import ENV from 'pass-ui/config/environment';
 import users from './routes/users';
 import elastic from './routes/elastic-search';
 import journals from './routes/journals';

@@ -1,15 +1,12 @@
-# pass-ember
-
-[![Build Status](https://travis-ci.org/OA-PASS/pass-ember.png?branch=master)](https://travis-ci.org/OA-PASS/pass-ember)
-[![Coverage Status](https://coveralls.io/repos/github/OA-PASS/pass-ember/badge.svg)](https://coveralls.io/github/OA-PASS/pass-ember)
+# pass-ui
 
 PASS is an ember application which provides a unified user interface that allow its users to deposit their manuscripts
 into multiple repositories as required by applicable funding agency's public access policies
 
 PASS communicates with a Fedora repository on the backend using JSON-LD. See the
-[ember-fedora-adapter](https://github.com/OA-PASS/ember-fedora-adapter) for more information.
+[pass-ember-adapter](https://github.com/eclipse-pass/pass-ember-adapter) for more information.
 Objects persisted to Fedora are automatically indexed by Elasticsearch. See
-[pass-indexer](https://github.com/OA-PASS/pass-indexer) for more information about how this works.
+[pass-indexer](https://github.com/eclipse-pass/pass-indexer) for more information about how this works.
 Note that the indexing process is asynchronous. An object persisted to Fedora will not immediately be available in Elasticsearch.
 
 ## Prerequisites
@@ -24,7 +21,7 @@ The `hosts` (`C:\Windows\System32\Drivers\etc\hosts` for windows, `/etc/hosts` f
 ## Installation
 
 - `git clone <repository-url>` this repository
-- `cd pass-ember`
+- `cd pass-ui`
 
 ## Running / Development
 
@@ -40,7 +37,7 @@ be available at https://pass.local/.
 ```
 ember            | Slowest Nodes (totalTime => 5% )              | Total (avg)
 ember            | ----------------------------------------------+---------------------
-ember            | Babel: pass-ember (4)                         | 15209ms (3802 ms)
+ember            | Babel: pass-ui (4)                         | 15209ms (3802 ms)
 ember            | broccoli-persistent-filter:EslintValid... (3) | 6654ms (2218 ms)
 ember            | Babel: ember-lodash (1)                       | 5960ms
 ember            | Babel: ember-data (2)                         | 5386ms (2693 ms)
@@ -57,14 +54,14 @@ ember            | Babel: ember-data (2)                         | 5386ms (2693 
 
 ### Test users
 
-See [https://github.com/OA-PASS/pass-docker/blob/master/README.md#shibboleth-users] for a list of test users. Each has a password of `moo`.
+See [https://github.com/eclipse-pass/pass-docker/blob/master/README.md#shibboleth-users] for a list of test users. Each has a password of `moo`.
 
 ### Configuration
 
 The configuration for the docker environment occurs in .env. See documentation on the individual
 components for configuration options.
 
-The pass-ember application configures the Fedora adapter uses these environment variables.
+The pass-ui application configures the Fedora adapter uses these environment variables.
 There are also defaults specified in config/environment.js. They tell the adapter where Fedora
 and Elasticsearch are and generally will not need to be modified during development.
 

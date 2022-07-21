@@ -1,6 +1,6 @@
 import Application from '@ember/application';
 import { run } from '@ember/runloop';
-import { initialize } from 'pass-ember/instance-initializers/error-handler';
+import { initialize } from 'pass-ui/instance-initializers/error-handler';
 import { module, test } from 'qunit';
 import destroyApp from '../../helpers/destroy-app';
 import { setupTest } from 'ember-qunit';

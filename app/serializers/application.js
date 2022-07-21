@@ -1,4 +1,4 @@
-import ENV from 'pass-ember/config/environment';
+import ENV from 'pass-ui/config/environment';
 import FedoraJsonLdSerializer from './fedora-jsonld';
 
 export default class Application extends FedoraJsonLdSerializer {
