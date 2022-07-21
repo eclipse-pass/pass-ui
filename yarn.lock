@@ -11810,9 +11810,9 @@ pascalcase@^0.1.1:
   resolved "https://registry.yarnpkg.com/pascalcase/-/pascalcase-0.1.1.tgz#b363e55e8006ca6fe21784d2db22bd15d7917f14"
   integrity sha1-s2PlXoAGym/iF4TS2yK9FdeRfxQ=
 
-pass-ui-adapter@0.1.0:
+pass-ember-adapter@0.1.0:
   version "0.1.0"
-  resolved "https://registry.yarnpkg.com/pass-ui-adapter/-/pass-ui-adapter-0.1.0.tgz#8215cd0db5f11a3d66aa15671690658e42a43ece"
+  resolved "https://registry.yarnpkg.com/pass-ember-adapter/-/pass-ember-adapter-0.1.0.tgz#8215cd0db5f11a3d66aa15671690658e42a43ece"
   integrity sha512-FBsfnz9VRnmUiehNHeb6GmPCl2wVgQuN3kMCqzxJvLv3t8TGqInwFofQ3qGrDJb1H+E4CRc3hPg2QNQpmbZ9iQ==
   dependencies:
     ember-cli-babel "^7.18.0"
