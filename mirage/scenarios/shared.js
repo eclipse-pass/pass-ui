@@ -8,24 +8,22 @@
 import metaDataSchema from '../custom-fixtures/nih-submission/schemas';
 import repos from '../custom-fixtures/nih-submission/repositories';
 import policies from '../custom-fixtures/nih-submission/policies';
-import doiJournals from '../custom-fixtures/nih-submission/doi-journals';
+import doiJournals from '../fixtures/doi-journals';
 import grants from '../custom-fixtures/nih-submission/grants';
 import funders from '../custom-fixtures/nih-submission/funders';
 
 export default function (server) {
   server.create('user', {
-    '@id': 'https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95',
-    '@type': 'User',
-    '@context': 'https://oa-pass.github.io/pass-data-model/src/main/resources/context-3.4.jsonld',
+    id: '0',
     displayName: 'Nihu Ser',
     email: 'nihuser@jhu.edu',
     firstName: 'Nihu',
     lastName: 'Ser',
     locatorIds: [
-      `johnshopkins.edu:jhed:${Math.ceil(Math.random() * 1000000)}`,
-      `johnshopkins.edu:hopkinsid:${Math.ceil(Math.random() * 1000000)}`,
-      `johnshopkins.edu:employeeid:${Math.ceil(Math.random() * 1000000)}`,
-      `johnshopkins.edu:jhed:${Math.ceil(Math.random() * 1000000)}`,
+      `johnshopkins.edu:jhed:123425`,
+      `johnshopkins.edu:hopkinsid:12345`,
+      `johnshopkins.edu:employeeid:12345`,
+      `johnshopkins.edu:jhed:12345`,
     ],
     roles: ['submitter'],
     username: 'nih-user@johnshopkins.edu',

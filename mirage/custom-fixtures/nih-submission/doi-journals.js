@@ -1,5 +1,6 @@
 export default {
-  'journal-id': 'https://pass.local/fcrepo/rest/journals/f5/62/2a/cf/f5622acf-ca44-40cb-ac3d-4ca76448ded4',
+  // 'journal-id': 'https://pass.local/fcrepo/rest/journals/f5/62/2a/cf/f5622acf-ca44-40cb-ac3d-4ca76448ded4',
+  'journal-id': 'https://pass.local/journal/1',
   crossref: {
     status: 'ok',
     'message-type': 'work',

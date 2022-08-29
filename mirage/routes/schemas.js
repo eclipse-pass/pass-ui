@@ -1,5 +1,5 @@
 export default function (server) {
-  server.post('https://pass.local/schemaservice', (schema, request) => {
+  server.post('/schemaservice', (schema, request) => {
     // if there are more than one reponsitories in the request body return the
     // the schema that includes PMC, otherwise return the schema without PMC
     let metaDataSchema;
