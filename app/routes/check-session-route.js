@@ -12,15 +12,15 @@ export default class CheckSessionRouteRoute extends Route {
   errorHandler;
 
   beforeModel(transition) {
-    // let url = 'Make sure you set your ENV.userService.url value in ~config/environment.js or your .env file';
-    // if (ENV.userService.url) {
-    //   url = ENV.userService.url;
-    // }
-    // $.get(url, (data) => {
-    //   if (!data.username) {
-    //     transition.abort();
-    //     this.errorHandler.handleError(new Error('shib302'));
-    //   }
-    // });
+    let url = 'Make sure you set your ENV.userService.url value in ~config/environment.js or your .env file';
+    if (ENV.userService.url) {
+      url = ENV.userService.url;
+    }
+    $.get(url, (data) => {
+      if (!data.username) {
+        transition.abort();
+        this.errorHandler.handleError(new Error('shib302'));
+      }
+    });
   }
 }
