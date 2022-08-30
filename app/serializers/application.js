@@ -1,10 +1,8 @@
-import ENV from 'pass-ui/config/environment';
-import FedoraJsonLdSerializer from './fedora-jsonld';
+import { camelize } from '@ember/string';
+import JSONAPISerializer from '@ember-data/serializer/json-api';
 
-export default class Application extends FedoraJsonLdSerializer {
-  contextURI = ENV.fedora.context;
-  dataURI = ENV.fedora.data;
+export default class ApplicationSerializer extends JSONAPISerializer {
+  keyForAttribute(attr) {
+    return camelize(attr);
+  }
 }
-// import DS from 'ember-data';
-
-// export default DS.JSONAPISerializer.extend({});

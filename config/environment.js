@@ -70,15 +70,15 @@ module.exports = function (environment) {
   };
 
   ENV.doiService = {
-    url: 'https://pass.local/doiservice/journal',
+    url: '/doiservice/journal',
   };
 
   ENV.schemaService = {
-    url: 'https://pass.local/schemaservice',
+    url: '/schemaservice',
   };
 
   ENV.policyService = {
-    url: 'https://pass.local/policyservice',
+    url: '/policyservice',
     policySuffix: '/policies',
     repoSuffix: '/repositories',
     // policyEndpoint: 'https://pass.local/policyservice/policies',
@@ -86,11 +86,11 @@ module.exports = function (environment) {
   };
 
   ENV.oaManuscriptService = {
-    lookupUrl: 'https://pass.local/downloadservice/lookup',
-    downloadUrl: 'https://pass.local/downloadservice/download',
+    lookupUrl: '/downloadservice/lookup',
+    downloadUrl: '/downloadservice/download',
   };
 
-  ENV.metadataSchemaUri = 'https://oa-pass.github.io/metadata-schemas/jhu/global.json';
+  ENV.metadataSchemaUri = 'https://eclipse-pass.github.io/metadata-schemas/jhu/global.json';
 
   if (process.env.EMBER_ROOT_URL) {
     ENV.rootURL = process.env.EMBER_ROOT_URL;
