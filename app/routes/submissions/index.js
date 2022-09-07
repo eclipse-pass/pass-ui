@@ -3,7 +3,6 @@ import { inject as service } from '@ember/service';
 import CheckSessionRoute from '../check-session-route';
 import RSVP from 'rsvp';
 import { get } from '@ember/object';
-import QueryBuilder from '../../util/query-builder';
 
 export default class IndexRoute extends CheckSessionRoute {
   @service('current-user')
@@ -12,18 +11,21 @@ export default class IndexRoute extends CheckSessionRoute {
   async model() {
     const user = get(this, 'currentUser.user');
 
-    let filter = new QueryBuilder('submission');
+    let query;
 
     if (user.get('isAdmin')) {
-      filter.notEq('submissionStatus', 'CANCELLED');
+      query = {
+        filter: { submission: 'submissionStatus=out=CANCELLED' },
+      };
     } else if (user.get('isSubmitter')) {
-      filter.eq('submitter.id', user.get('id')).noEq('submissionStatus', 'CANCELLED');
+      query = {
+        filter: { submission: `submitter.id==${user.get('id')};submissionStatus=out=CANCELLED` },
+        sort: '-submittedDate',
+      };
     }
 
-    filter = filter.build();
-
     // TODO: do we need to do anything to limit or not-limit results set size?
-    const submissions = this.store.query('submission', filter);
+    const submissions = this.store.query('submission', query);
 
     return RSVP.hash({
       submissions,
