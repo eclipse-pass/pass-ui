@@ -20,11 +20,9 @@ export default class DetailRoute extends CheckSessionRoute {
     let grant = this.store.findRecord('grant', params.grant_id);
 
     const query = {
-      bool: {
-        must: { term: { grants: params.grant_id } },
-        must_not: { term: { submissionStatus: 'cancelled' } },
+      filter: {
+        submission: `grants.id==${params.grant_id};submissionStatus=out=CANCELLED`,
       },
-      size: 500,
     };
     let submissions = this.store.query('submission', query);
 
