@@ -21,11 +21,11 @@ export default class UserModel extends Model {
 
   @computed('roles.[]')
   get isSubmitter() {
-    return this.roles ? this.roles.includes('submitter') : false;
+    return this.roles ? this.roles.includes('submitter') || this.roles.includes('SUBMITTER') : false;
   }
 
   @computed('roles.[]')
   get isAdmin() {
-    return this.roles ? this.roles.includes('admin') : false;
+    return this.roles ? this.roles.includes('admin') || this.roles.includes('ADMIN') : false;
   }
 }

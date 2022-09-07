@@ -4,6 +4,7 @@ import { tracked } from '@glimmer/tracking';
 import { get, set } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { A } from '@ember/array';
+import QueryBuilder from 'pass-ui/util/query-builder';
 
 export default class SubmissionsRepoidCell extends Component {
   @service store;
@@ -20,15 +21,10 @@ export default class SubmissionsRepoidCell extends Component {
       set(this, 'repoCopies', A());
       return;
     }
-    this.store
-      .query('repositoryCopy', {
-        query: {
-          term: { publication: publicationId },
-        },
-        from: 0,
-        size: 100,
-      })
-      .then((rc) => set(this, 'repoCopies', rc));
+
+    const filter = new QueryBuilder().eq('repositoryCopy', 'publication.id', publicationId).build();
+
+    this.store.query('repositoryCopy', filter).then((rc) => set(this, 'repoCopies', rc));
   }
 
   setToolTip() {
