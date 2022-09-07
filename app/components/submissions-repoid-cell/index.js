@@ -22,7 +22,7 @@ export default class SubmissionsRepoidCell extends Component {
       return;
     }
 
-    const filter = new QueryBuilder().eq('repositoryCopy', 'publication.id', publicationId).build();
+    const filter = new QueryBuilder('repositoryCopy').eq('publication.id', publicationId).build();
 
     this.store.query('repositoryCopy', filter).then((rc) => set(this, 'repoCopies', rc));
   }

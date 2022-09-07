@@ -12,12 +12,12 @@ export default class IndexRoute extends CheckSessionRoute {
   async model() {
     const user = get(this, 'currentUser.user');
 
-    let filter = new QueryBuilder();
+    let filter = new QueryBuilder('submission');
 
     if (user.get('isAdmin')) {
-      filter.notEq('submission', 'submissionStatus', 'CANCELLED');
+      filter.notEq('submissionStatus', 'CANCELLED');
     } else if (user.get('isSubmitter')) {
-      filter.eq('submission', 'submitter.id', user.get('id')).noEq('submission', 'submissionStatus', 'CANCELLED');
+      filter.eq('submitter.id', user.get('id')).noEq('submissionStatus', 'CANCELLED');
     }
 
     filter = filter.build();

@@ -12,7 +12,7 @@ module('Unit | Util | query builder', (hooks) => {
       },
     };
 
-    const result = new QueryBuilder().eq('submission', 'submitter.id', '3').build();
+    const result = new QueryBuilder('submission').eq('submitter.id', '3').build();
 
     assert.equal(result, expected);
   });
@@ -24,7 +24,7 @@ module('Unit | Util | query builder', (hooks) => {
       },
     };
 
-    const result = new QueryBuilder().notEq('submission', 'submitter.id', '3').build();
+    const result = new QueryBuilder('submission').notEq('submitter.id', '3').build();
 
     assert.equal(result, expected);
   });
@@ -36,9 +36,9 @@ module('Unit | Util | query builder', (hooks) => {
       },
     };
 
-    const result = new QueryBuilder()
-      .eq('submission', 'submitter.id', '3')
-      .notEq('submission', 'submissionStatus', 'CANCELLED')
+    const result = new QueryBuilder('submission')
+      .eq('submitter.id', '3')
+      .notEq('submissionStatus', 'CANCELLED')
       .build();
 
     assert.equal(result, expected);
