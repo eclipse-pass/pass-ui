@@ -11,16 +11,12 @@ export default class FindJournal extends Component {
   /**
    * Search for journals by autocompleting based on the term prefix.
    *
-   * @param term {string} The search term
-   * @returns {array} array of objects
-   *                  {
-   *                    id: `string ID of the associated Journal model object`
-   *                    ... // properties from the source document in the search index
-   *                  }
+   * @param {string} term  The search term
+   * @returns {array} array of Journals
    */
   @action
   searchJournals(term) {
-    return this.autocomplete.suggest('journalName', term);
+    return this.autocomplete.suggest('journal', 'journalName', term);
   }
 
   @action

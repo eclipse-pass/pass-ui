@@ -1,106 +1,82 @@
 import Service from '@ember/service';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import RSVP from 'rsvp';
 
 module('Unit | Service | autocomplete', (hooks) => {
   setupTest(hooks);
 
-  test('it exists and posts', function (assert) {
-    const fakeAjax = {
-      post(url, data, headers) {
-        assert.ok(url, 'POST should have URL');
-        assert.ok(data, 'POST should have request data');
+  test('it exists and queries', function (assert) {
+    const TYPE = 'myType';
+    const FIELD = 'myField';
+    const INPUT = 'text';
 
-        const query = data.data.suggest;
-        assert.ok(query, "Request data should have a 'suggest' object");
-        assert.ok(query.projectName);
-        assert.equal(query.projectName.prefix, 'aa');
-        assert.equal(query.projectName.completion.field, 'projectName_suggest');
+    class StoreStub extends Service {
+      query(type, query) {
+        assert.equal(type, TYPE);
+        assert.ok(query);
+        assert.ok('Query object should include the field name somewhere', query.filter[type].includes(FIELD));
+        assert.ok('Query object should include the input value', query.filter[type].includes(INPUT));
+        return Promise.resolve();
+      }
+    }
 
-        return RSVP.resolve({
-          took: 42,
-          timed_out: false,
-          _shards: { total: 5, successful: 5, skipped: 0, failed: 0 }, // eslint-disable-line
-          hits: { total: 0, max_score: 0.0, hits: [] },
-          suggest: {
-            projectName: [{ text: 'aa', offset: 0, length: 2, options: [] }], // eslint-disable-line
-          },
-        });
-      },
-    };
-
-    const service = this.owner.factoryFor('service:autocomplete').create({
-      ajax: fakeAjax,
+    const service = this.owner.lookup('service:autocomplete');
+    service.set('store', new StoreStub());
+    service.suggest(TYPE, FIELD, INPUT).then((res) => {
+      assert.ok('Suggest service resolves');
     });
-
-    assert.ok(service);
-    assert.ok(service.suggest('projectName', 'aa'));
   });
 
-  test('fieldName as array creates two part suggest query', function (assert) {
-    const fakeAjax = {
-      post(url, data, headers) {
-        assert.ok(url, 'POST should have URL');
-        assert.ok(data, 'POST should have request data');
+  test('suggestion query appended to existing context', function (assert) {
+    const TYPE = 'myType';
+    const FIELD = 'myField';
+    const INPUT = 'text';
+    const CONTEXT = { filter: { [TYPE]: 'queryFragment' } };
 
-        const query = data.data.suggest;
-        assert.ok(query, "Request data should have a 'suggest' object");
-        assert.ok(query.projectName);
-        assert.equal(query.projectName.prefix, 'aa');
-        assert.equal(query.projectName.completion.field, 'projectName_suggest');
-        assert.ok(query.awardNumber);
-        assert.equal(query.awardNumber.prefix, 'aa');
-        assert.equal(query.awardNumber.completion.field, 'awardNumber_suggest');
+    class StoreStub extends Service {
+      query(type, query) {
+        assert.equal(type, TYPE);
+        const filter = query.filter[type];
+        assert.ok(filter);
+        assert.ok(filter.startsWith('queryFragment'));
+        assert.ok(filter.includes(FIELD));
+        assert.ok(filter.includes(INPUT));
+        return Promise.resolve();
+      }
+    }
 
-        return RSVP.resolve({
-          took: 42,
-          timed_out: false,
-          _shards: { total: 5, successful: 5, skipped: 0, failed: 0 }, // eslint-disable-line
-          hits: { total: 0, max_score: 0.0, hits: [] },
-          suggest: {
-            projectName: [{ text: 'aa', offset: 0, length: 2, options: [] }], // eslint-disable-line
-            awardNumber: [{ text: 'aa', offset: 0, length: 2, options: [] }], // eslint-disable-line
-          },
-        });
-      },
-    };
+    const service = this.owner.lookup('service:autocomplete');
+    service.set('store', new StoreStub());
 
-    const service = this.owner.factoryFor('service:autocomplete').create({
-      ajax: fakeAjax,
+    service.suggest(TYPE, FIELD, INPUT, CONTEXT).then(() => {
+      assert.ok('Resolves fine');
     });
-
-    assert.ok(service);
-    assert.ok(service.suggest(['projectName', 'awardNumber'], 'aa'));
   });
 
-  test('with PI restriction creates query with a context', function (assert) {
-    const fakeAjax = {
-      post(url, data, headers) {
-        assert.ok(url, 'POST should have URL');
-        assert.ok(data, 'POST should have request data');
+  test('Suggestion query with two fields', function (assert) {
+    const TYPE = 'myType';
+    const FIELDS = ['myField1', 'myField2'];
+    const INPUT = 'text';
 
-        const query = data.data.suggest;
-        assert.ok(query.journalName.completion.context);
-        assert.equal(query.journalName.completion.context.pi, 'moo');
+    class StoreStub extends Service {
+      query(type, query) {
+        assert.equal(type, TYPE);
 
-        return RSVP.resolve({
-          took: 42,
-          timed_out: false,
-          _shards: { total: 5, successful: 5, skipped: 0, failed: 0 }, // eslint-disable-line
-          hits: { total: 0, max_score: 0.0, hits: [] },
-          suggest: {
-            journalName: [{ text: 'aa', offset: 0, length: 2, options: [] }], // eslint-disable-line
-          },
-        });
-      },
-    };
+        const filter = query.filter[type];
+        assert.ok(filter);
+        assert.ok(filter.includes(FIELDS[0]));
+        assert.ok(filter.includes(FIELDS[1]));
+        assert.ok(filter.includes(INPUT));
 
-    const service = this.owner.factoryFor('service:autocomplete').create({
-      ajax: fakeAjax,
+        return Promise.resolve();
+      }
+    }
+
+    const service = this.owner.lookup('service:autocomplete');
+    service.set('store', new StoreStub());
+
+    service.suggest(TYPE, FIELDS, INPUT).then(() => {
+      assert.ok('Suggest function resolves');
     });
-
-    assert.ok(service);
-    assert.ok(service.suggest('journalName', 'aa', { pi: 'moo' }));
   });
 });
