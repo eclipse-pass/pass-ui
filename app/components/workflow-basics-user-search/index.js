@@ -43,6 +43,13 @@ export default class WorkflowBasicsUserSearch extends Component {
     }
   }
 
+  userFilter(input) {
+    const match = `=ini=*${input}*`;
+    return [`firstName${match}`, `middleName${match}`, `lastName${match}`, `email${match}`, `displayName${match}`].join(
+      ','
+    );
+  }
+
   @task
   searchForUsers = function* (page) {
     if (page === 0 || page === null || page === undefined || !page) {
@@ -52,22 +59,18 @@ export default class WorkflowBasicsUserSearch extends Component {
     const size = this.usersPerPage;
     let info = {};
     let input = this.args.searchInput;
-    let users = yield this.store.query('user', {
-      query: {
-        bool: {
-          filter: {
-            exists: { field: 'email' },
-          },
-          should: {
-            multi_match: { query: input, fields: ['firstName', 'middleName', 'lastName', 'email', 'displayName'] },
-          },
-          minimum_should_match: 1,
-        },
+
+    // TODO: sanitize input before building filter!!
+    const userQuery = {
+      filter: {
+        user: `email=isnull=false;${this.userFilter(input)}`,
       },
-      from: (page - 1) * size,
-      size,
-      info,
-    });
+      page: {
+        offset: (page - 1) * size,
+      },
+    };
+
+    let users = yield this.store.query('user', userQuery);
 
     this.matchingUsers = users;
     if (info.total !== null) this.numberOfMatches = info.total;
