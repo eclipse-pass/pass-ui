@@ -115,29 +115,22 @@ export default class WorkflowGrants extends Component {
   updateGrants = function* () {
     let info = {};
 
-    let results = yield this.store.query('grant', {
-      query: {
-        bool: {
-          must: [
-            { range: { endDate: { gte: '2011-01-01' } } },
-            {
-              bool: {
-                should: [
-                  { term: { pi: get(this, 'args.submission.submitter.id') } },
-                  { term: { coPis: get(this, 'args.submission.submitter.id') } },
-                ],
-              },
-            },
-          ],
-        },
+    const userId = get(this, 'args.submission.submitter.id');
+    // TODO: Ignore date filter for now ( >= 2011-01-01 )
+    const grantQuery = {
+      filter: {
+        grant: `pi.id==${userId},coPis.id==${userId}`,
       },
-      from: (this.pageNumber - 1) * this.pageSize,
-      size: this.pageSize,
-      sort: [{ endDate: 'desc' }],
-      info,
-    });
+      sort: '-endDate',
+      page: {
+        offset: (this.pageNumber - 1) * this.pageSize,
+        limit: this.pageSize,
+      },
+    };
+    let results = yield this.store.query('grant', grantQuery);
 
     set(this, 'submitterGrants', results);
+    // TODO: How do we get pagination to work with store.query like this?
     set(this, 'totalGrants', info.total);
     set(this, 'pageCount', Math.ceil(info.total / this.pageSize));
   };

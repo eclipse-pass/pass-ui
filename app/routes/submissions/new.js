@@ -82,7 +82,7 @@ export default class NewRoute extends CheckSessionRoute {
       publication = this.store.createRecord('publication');
 
       newSubmission = this.store.createRecord('submission', {
-        submissionStatus: 'draft',
+        submissionStatus: 'DRAFT',
       });
 
       if (params.covid) {
