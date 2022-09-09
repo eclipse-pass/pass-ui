@@ -2,6 +2,7 @@
 import CheckSessionRoute from './check-session-route';
 import { inject as service } from '@ember/service';
 import { get } from '@ember/object';
+import { SubmissionStatus } from 'pass-ui/models/submission';
 
 export default class DashboardRoute extends CheckSessionRoute {
   @service('current-user') currentUser;
@@ -12,11 +13,11 @@ export default class DashboardRoute extends CheckSessionRoute {
     const userId = get(this, 'currentUser.user.id');
 
     const awaitingApproval = await this.store.query('submission', {
-      filter: { submission: `submitter.id==${userId};submissionStatus==APPROVAL_REQUESTED` },
+      filter: { submission: `submitter.id==${userId};submissionStatus==${SubmissionStatus.APPROVAL_REQUESTED}` },
     });
 
     const awaitingChanges = await this.store.query('submission', {
-      filter: { submission: `preparers.id==${userId};submissionStatus==CHANGES_REQUESTED` },
+      filter: { submission: `preparers.id==${userId};submissionStatus==${SubmissionStatus.CHANGES_REQUESTED}` },
     });
 
     return {
