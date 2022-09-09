@@ -66,7 +66,7 @@ module.exports = function (environment) {
     elasticsearch: 'http://localhost:9200/pass/_search',
   };
   ENV.userService = {
-    url: 'https://pass.local:8080/pass-user-service/whoami',
+    url: '/pass-user-service/whoami',
   };
 
   ENV.doiService = {
