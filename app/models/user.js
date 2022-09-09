@@ -29,3 +29,8 @@ export default class UserModel extends Model {
     return this.roles ? this.roles.includes('admin') || this.roles.includes('ADMIN') : false;
   }
 }
+
+export const Role = {
+  SUBMITTER: 'SUBMITTER',
+  ADMIN: 'ADMIN',
+};

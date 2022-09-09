@@ -10,3 +10,16 @@ export default class SubmissionEventModel extends Model {
   @belongsTo('submission') submission;
   @belongsTo('user') performedBy;
 }
+
+export const Type = {
+  APPROVAL_REQUESTED_NEWUSER: 'APPROVAL_REQUESTED_NEWUSER',
+  APPROVAL_REQUESTED: 'APPROVAL_REQUESTED',
+  CHANGES_REQUESTED: 'CHANGES_REQUESTED',
+  CANCELLED: 'CANCELLED',
+  SUBMITTED: 'SUBMITTED',
+};
+
+export const Performer = {
+  PREPARER: 'PREPARER',
+  SUBMITTER: 'SUBMITTER',
+};

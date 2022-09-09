@@ -13,3 +13,10 @@ export default class FileModel extends Model {
   // not represented on backend
   @attr('string') _file;
 }
+
+export const Role = {
+  MANUSCRIPT: 'MANUSCRIPT',
+  SUPPLEMENTAL: 'SUPPLEMENTAL',
+  FIGURE: 'FIGURE',
+  TABLE: 'TABLE',
+};

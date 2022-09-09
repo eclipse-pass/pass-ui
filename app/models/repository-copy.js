@@ -8,3 +8,11 @@ export default class RepositoryCopyModel extends Model {
   @belongsTo('publication') publication;
   @belongsTo('repository') repository;
 }
+
+export const CopyStatus = {
+  ACCEPTED: 'ACCEPTED',
+  IN_PROGRESS: 'IN_PROGRESS',
+  STALLED: 'STALLED',
+  COMPLETE: 'COMPLETE',
+  REJECTED: 'REJECTED',
+};

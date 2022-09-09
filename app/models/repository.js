@@ -15,6 +15,21 @@ export default class RepositoryModel extends Model {
 
   @computed('integrationType')
   get _isWebLink() {
-    return this.integrationType === 'web-link';
+    return this.integrationType === IntegrationType.WEB_LINK;
   }
 }
+
+export const IntegrationType = {
+  FULL: 'FULL',
+  ONE_WAY: 'ONE_WAY',
+  WEB_LINK: 'WEB_LINK',
+};
+
+// String field, not enum
+export const KnownKeys = {
+  PMC: 'pmc',
+  JSCHOLARSHIP: 'jscholarship',
+  ERIC: 'eric',
+  DEC: 'dec',
+  DASH: 'dash',
+};

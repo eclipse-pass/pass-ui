@@ -5,11 +5,11 @@ import { computed, get } from '@ember/object';
 export default class SubmissionModel extends Model {
   /** Possible values: not-started, in-progress, accepted */
   @attr('string', {
-    defaultValue: 'NOT_STARTED',
+    defaultValue: SubmissionStatus.NOT_STARTED,
   })
   aggregatedDepositStatus;
   @attr('date') submittedDate;
-  @attr('string', { defaultValue: 'PASS' }) source;
+  @attr('string', { defaultValue: Source.PASS }) source;
   @attr('string') metadata;
   @attr('boolean', { defaultValue: false }) submitted;
   @attr('string') submissionStatus;
@@ -94,7 +94,7 @@ export default class SubmissionModel extends Model {
 
   @computed('source', 'submitted')
   get isStub() {
-    return this.source === 'other' && !this.submitted;
+    return this.source === Source.OTHER && !this.submitted;
   }
 
   /**
@@ -102,7 +102,7 @@ export default class SubmissionModel extends Model {
    */
   @computed('submitted', 'submissionStatus')
   get isDraft() {
-    return this.submissionStatus === 'draft';
+    return this.submissionStatus === SubmissionStatus.DRAFT;
   }
 
   /**
@@ -121,3 +121,27 @@ export default class SubmissionModel extends Model {
     return false;
   }
 }
+
+export const SubmissionStatus = {
+  DRAFT: 'DRAFT',
+  MANUSCRIPT_REQUIRED: 'MANUSCRIPT_REQUIRED',
+  APPROVAL_REQUESTED: 'APPROVAL_REQUESTED',
+  CHANGES_REQUESTED: 'CHANGES_REQUESTED',
+  CANCELLED: 'CANCELLED',
+  SUBMITTED: 'SUBMITTED',
+  NEEDS_ATTENTION: 'NEEDS_ATTENTION',
+  COMPLETE: 'COMPLETE',
+};
+
+export const AggregatedDepositStatus = {
+  NOT_STARTED: 'NOT_STARTED',
+  IN_PROGRESS: 'IN_PROGRESS',
+  FAILED: 'FAILED',
+  ACCEPTED: 'ACCEPTED',
+  REJECTED: 'REJECTED',
+};
+
+export const Source = {
+  PASS: 'PASS',
+  OTHER: 'OTHER',
+};

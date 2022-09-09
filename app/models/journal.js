@@ -1,6 +1,7 @@
 /* eslint-disable ember/no-computed-properties-in-native-classes */
 import Model, { attr, belongsTo } from '@ember-data/model';
 import { computed } from '@ember/object';
+import { PMCParticipation as PublisherPMCParticipation } from './publisher';
 
 export default class JournalModel extends Model {
   /**
@@ -15,11 +16,14 @@ export default class JournalModel extends Model {
 
   @computed('pmcParticipation')
   get isMethodA() {
-    return this.pmcParticipation ? this.pmcParticipation.toLowerCase() === 'a' : false;
+    return this.pmcParticipation ? this.pmcParticipation.toLowerCase() === PMCParticipation.A : false;
   }
 
   @computed('pmcParticipation')
   get isMethodB() {
-    return this.pmcParticipation ? this.pmcParticipation.toLowerCase() === 'b' : false;
+    return this.pmcParticipation ? this.pmcParticipation.toLowerCase() === PMCParticipation.B : false;
   }
 }
+
+/** Re-export from Publisher model, since they use th same codes */
+export const PMCParticipation = PublisherPMCParticipation;
