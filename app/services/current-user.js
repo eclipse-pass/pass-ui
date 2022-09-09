@@ -33,6 +33,6 @@ export default class CurrentUserService extends Service {
       this.user = user;
     }
 
-    return user;
+    return this.user;
   };
 }

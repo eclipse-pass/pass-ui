@@ -13,7 +13,7 @@ export default class CheckSessionRouteRoute extends Route {
   errorHandler;
 
   async beforeModel() {
-    await this._loadCurrentUser(null);
+    await this._loadCurrentUser();
 
     if (!this.session.isAuthenticated) {
       this.session.set('attemptedTransition', transition);
@@ -21,8 +21,8 @@ export default class CheckSessionRouteRoute extends Route {
     }
   }
 
-  _loadCurrentUser(userToken) {
-    return this.currentUser.load.perform(userToken);
+  _loadCurrentUser() {
+    return this.currentUser.load.perform();
   }
 
   @action

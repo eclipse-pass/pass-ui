@@ -1,11 +1,12 @@
 import JSONAPIAdapter from '@ember-data/adapter/json-api';
 import { camelize } from '@ember/string';
+import ENV from 'pass-ui/config/environment';
 
 /**
  * PASS specific extensions for Ember Data's JSON:API adapter
  */
 export default class ApplicationAdapter extends JSONAPIAdapter {
-  host = 'http://localhost:8080';
+  host = ENV.host;
   namespace = 'api/v1';
 
   headers = {
