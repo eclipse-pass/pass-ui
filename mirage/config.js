@@ -23,7 +23,7 @@ export default function (config) {
 
       /** Policy Service */
       this.get('/policyservice/policies', () => [
-        { id: '33', typje: 'funder' },
+        { id: '33', type: 'funder' },
         { id: '26', type: 'institution' },
       ]);
       // Return NIH (required) and J10p (optional, selected)
