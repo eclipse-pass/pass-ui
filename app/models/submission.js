@@ -4,15 +4,15 @@ import { computed, get } from '@ember/object';
 
 export default class SubmissionModel extends Model {
   /** Possible values: not-started, in-progress, accepted */
-  @attr('string', {
-    defaultValue: () => SubmissionStatus.NOT_STARTED,
+  @attr('enum', {
+    defaultValue: 'not-started',
   })
   aggregatedDepositStatus;
   @attr('date') submittedDate;
-  @attr('string', { defaultValue: () => Source.PASS }) source;
+  @attr('enum', { defaultValue: 'pass' }) source;
   @attr('string') metadata;
   @attr('boolean', { defaultValue: false }) submitted;
-  @attr('string') submissionStatus;
+  @attr('enum') submissionStatus;
   @attr('string') submitterName;
   @attr('string', {
     defaultValue: null,
@@ -94,7 +94,7 @@ export default class SubmissionModel extends Model {
 
   @computed('source', 'submitted')
   get isStub() {
-    return this.source === Source.OTHER && !this.submitted;
+    return this.source === 'other' && !this.submitted;
   }
 
   /**
@@ -102,7 +102,7 @@ export default class SubmissionModel extends Model {
    */
   @computed('submitted', 'submissionStatus')
   get isDraft() {
-    return this.submissionStatus === SubmissionStatus.DRAFT;
+    return this.submissionStatus === 'draft';
   }
 
   /**

@@ -1,9 +1,9 @@
 import Model, { attr, belongsTo } from '@ember-data/model';
 
 export default class SubmissionEventModel extends Model {
-  @attr('string') eventType;
+  @attr('enum') eventType;
   @attr('date') performedDate;
-  @attr('string') performerRole;
+  @attr('enum') performerRole;
   @attr('string') comment;
   @attr('string') link;
 
