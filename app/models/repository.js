@@ -15,7 +15,7 @@ export default class RepositoryModel extends Model {
 
   @computed('integrationType')
   get _isWebLink() {
-    return this.integrationType === IntegrationType.WEB_LINK;
+    return this.integrationType === 'web-link';
   }
 }
 
