@@ -88,15 +88,15 @@ export default function (config) {
       // this.post('/submissionEvent/:id', 'submissionEvent');
 
       // // Files
-      // this.post(
-      //   '/file',
-      //   () =>
-      //     new Response(201, {
-      //       Location: 'https://pass.local/file/123456',
-      //       'Content-Type': 'text/plain; charset=utf-8',
-      //     })
-      // );
-      // this.patch('/file/:id', () => new Response(204));
+      this.post(
+        '/file',
+        () =>
+          new Response(201, {
+            Location: 'https://pass.local/api/v1/file/123456',
+            'Content-Type': 'text/plain; charset=utf-8',
+          })
+      );
+      this.patch('/file/:id', () => new Response(204));
 
       // // Grants
       // this.get('/grant/:id');
