@@ -16,12 +16,12 @@ export default class JournalModel extends Model {
 
   @computed('pmcParticipation')
   get isMethodA() {
-    return this.pmcParticipation ? this.pmcParticipation.toLowerCase() === PMCParticipation.A : false;
+    return this.pmcParticipation ? this.pmcParticipation === PMCParticipation.A : false;
   }
 
   @computed('pmcParticipation')
   get isMethodB() {
-    return this.pmcParticipation ? this.pmcParticipation.toLowerCase() === PMCParticipation.B : false;
+    return this.pmcParticipation ? this.pmcParticipation === PMCParticipation.B : false;
   }
 }
 

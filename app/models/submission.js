@@ -5,11 +5,11 @@ import { computed, get } from '@ember/object';
 export default class SubmissionModel extends Model {
   /** Possible values: not-started, in-progress, accepted */
   @attr('string', {
-    defaultValue: SubmissionStatus.NOT_STARTED,
+    defaultValue: () => SubmissionStatus.NOT_STARTED,
   })
   aggregatedDepositStatus;
   @attr('date') submittedDate;
-  @attr('string', { defaultValue: Source.PASS }) source;
+  @attr('string', { defaultValue: () => Source.PASS }) source;
   @attr('string') metadata;
   @attr('boolean', { defaultValue: false }) submitted;
   @attr('string') submissionStatus;
