@@ -1,12 +1,14 @@
-import { applyEmberDataSerializers, discoverEmberDataModels } from 'ember-cli-mirage';
-import { createServer } from 'miragejs';
+import { discoverEmberDataModels } from 'ember-cli-mirage';
+import { createServer, JSONAPISerializer } from 'miragejs';
 import schemas from './routes/schemas';
 
 export default function (config) {
   let finalConfig = {
     ...config,
     models: { ...discoverEmberDataModels(), ...config.models },
-    serializers: applyEmberDataSerializers(config.serializers),
+    serializers: {
+      application: JSONAPISerializer,
+    },
     routes() {
       /** Schema Service */
       schemas(this);
