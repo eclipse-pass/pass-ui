@@ -1,4 +1,5 @@
 /* eslint-disable ember/no-get */
+/* eslint-disable no-debugger */
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action, get } from '@ember/object';
@@ -12,6 +13,7 @@ import { task } from 'ember-concurrency-decorators';
 export default class NavBar extends Component {
   @service currentUser;
   @service appStaticConfig;
+  @service session;
 
   @tracked aboutUrl = null;
   @tracked contactUrl = null;
@@ -40,6 +42,11 @@ export default class NavBar extends Component {
     if (window.location.search.indexOf('anchor=') == -1) {
       window.scrollTo(0, 0);
     }
+  }
+
+  @action
+  async logOut() {
+    await this.session.invalidate();
   }
 
   @task

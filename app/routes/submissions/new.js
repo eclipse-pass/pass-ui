@@ -26,7 +26,12 @@ export default class NewRoute extends CheckSessionRoute {
 
   // Return a promise to load count objects starting at offset from of given type.
   loadObjects(type, offset, count) {
-    return this.store.query(type, { query: { match_all: {} }, from: offset, size: count });
+    // TODO: Elide JSON:API filters do not support both page size and page offset
+    return this.store.query(type, {
+      page: {
+        size: count,
+      },
+    });
   }
 
   async model(params) {
@@ -52,18 +57,16 @@ export default class NewRoute extends CheckSessionRoute {
       journal = publication.get('journal');
 
       submissionEvents = this.store.query('submissionEvent', {
-        sort: [{ performedDate: 'asc' }],
-        query: {
-          term: {
-            submission: newSubmission.get('id'),
-          },
+        filter: {
+          submissionEvent: `submission.id==${newSubmission.get('id')}`,
         },
+        sort: '+performedDate',
       });
 
       files = this.store
         .query('file', {
-          term: {
-            submission: newSubmission.get('id'),
+          filter: {
+            file: `submission.id==${newSubmission.get('id')}`,
           },
         })
         .then((files) => [...files.toArray()]);
@@ -79,7 +82,7 @@ export default class NewRoute extends CheckSessionRoute {
       publication = this.store.createRecord('publication');
 
       newSubmission = this.store.createRecord('submission', {
-        submissionStatus: 'draft',
+        submissionStatus: 'DRAFT',
       });
 
       if (params.covid) {

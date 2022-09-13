@@ -10,6 +10,10 @@ export default class IndexRoute extends CheckSessionRoute {
   currentUser;
 
   /**
+   * TODO: Should be able to streamline this.
+   * Can we use the 'include' parameter: search for submissions, as below
+   * and sideload the grants data with it?
+   *
    * Returns model:
    *  [
    *    {
@@ -25,23 +29,15 @@ export default class IndexRoute extends CheckSessionRoute {
       return;
     }
 
+    const userId = user.get('id');
+
     let promise = defer();
-    const querySize = 500;
+    //   // TODO: ignoring the endDate > 2011-01-01 query part for now
     const grantQuery = {
-      sort: ['awardStatus', { endDate: 'desc' }],
-      query: {
-        bool: {
-          must: [
-            { range: { endDate: { gte: '2011-01-01' } } },
-            {
-              bool: {
-                should: [{ term: { pi: user.get('id') } }, { term: { coPis: user.get('id') } }],
-              },
-            },
-          ],
-        },
+      filter: {
+        grant: `pi.id==${userId},coPis.id==${userId}`,
       },
-      size: querySize,
+      sort: '+awardStatus,-endDate',
     };
 
     // First search for all Grants associated with the current user
@@ -58,17 +54,13 @@ export default class IndexRoute extends CheckSessionRoute {
         });
       });
 
-      // Then search for all Submissions associated with the returned Grants
-      const query = {
-        query: {
-          bool: {
-            must: { terms: { grants: grantIds } },
-            must_not: { term: { submissionStatus: 'cancelled' } },
-          },
+      const submissionQuery = {
+        filter: {
+          submission: `submissionStatus=out=CANCELLED;grants.pi.id==${userId},grants.coPis.id==${userId}`,
         },
-        size: querySize,
       };
-      this.store.query('submission', query).then((subs) => {
+
+      this.store.query('submission', submissionQuery).then((subs) => {
         subs.forEach((submission) => {
           submission.get('grants').forEach((grant) => {
             let match = results.find((res) => res.grant.get('id') === grant.get('id'));

@@ -1,13 +1,16 @@
 import { A } from '@ember/array';
 import EmberObject from '@ember/object';
-import { module, test } from 'qunit';
+import { module, skip } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import { run } from '@ember/runloop';
 
+/**
+ * These tests checking for the ignore list are no longer relevant after
+ * switching to the JSON:API implementation
+ */
 module('Unit | Route | submissions/index', (hooks) => {
   setupTest(hooks);
 
-  test('Make sure ignore list is included in ES query for a submitter', async function (assert) {
+  skip('Make sure ignore list is included in ES query for a submitter', async function (assert) {
     assert.expect(2);
     const route = this.owner.lookup('route:submissions/index');
 
@@ -43,7 +46,7 @@ module('Unit | Route | submissions/index', (hooks) => {
     await route.model();
   });
 
-  test('Make sure ignore list is included in ES query for a admin', async function (assert) {
+  skip('Make sure ignore list is included in ES query for a admin', async function (assert) {
     assert.expect(2);
     const route = this.owner.lookup('route:submissions/index');
 

@@ -1,4 +1,4 @@
-import Model, { attr, belongsTo } from '@ember-data/model';
+import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
 
 export default class GrantModel extends Model {
   /** Award number from a funder (REQUIRED) */
@@ -13,7 +13,7 @@ export default class GrantModel extends Model {
   @attr('date') endDate;
 
   @belongsTo('user') pi;
-  @belongsTo('user') coPis;
+  @hasMany('user') coPis;
   @belongsTo('funder') primaryFunder;
   @belongsTo('funder') directFunder;
 }

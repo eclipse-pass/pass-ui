@@ -7,7 +7,7 @@ module.exports = function (environment) {
     modulePrefix: 'pass-ui',
     environment,
     // rootURL: '/fcrepo/rest',
-    rootURL: '/',
+    rootURL: '/app/',
     host: 'http://localhost:8080',
     locationType: 'auto',
     'ember-load': {
@@ -30,9 +30,9 @@ module.exports = function (environment) {
       staticConfigUri: process.env.STATIC_CONFIG_URL || '/app/config.json',
     },
   };
-  // Disable mirage entirely.
+
   ENV['ember-cli-mirage'] = {
-    enabled: false,
+    enabled: true,
   };
 
   if (environment === 'development') {
@@ -66,19 +66,19 @@ module.exports = function (environment) {
     elasticsearch: 'http://localhost:9200/pass/_search',
   };
   ENV.userService = {
-    url: 'https://pass.local:8080/pass-user-service/whoami',
+    url: '/pass-user-service/whoami',
   };
 
   ENV.doiService = {
-    url: 'https://pass.local/doiservice/journal',
+    url: '/doiservice/journal',
   };
 
   ENV.schemaService = {
-    url: 'https://pass.local/schemaservice',
+    url: '/schemaservice',
   };
 
   ENV.policyService = {
-    url: 'https://pass.local/policyservice',
+    url: '/policyservice',
     policySuffix: '/policies',
     repoSuffix: '/repositories',
     // policyEndpoint: 'https://pass.local/policyservice/policies',
@@ -86,11 +86,11 @@ module.exports = function (environment) {
   };
 
   ENV.oaManuscriptService = {
-    lookupUrl: 'https://pass.local/downloadservice/lookup',
-    downloadUrl: 'https://pass.local/downloadservice/download',
+    lookupUrl: '/downloadservice/lookup',
+    downloadUrl: '/downloadservice/download',
   };
 
-  ENV.metadataSchemaUri = 'https://oa-pass.github.io/metadata-schemas/jhu/global.json';
+  ENV.metadataSchemaUri = 'https://eclipse-pass.github.io/metadata-schemas/jhu/global.json';
 
   if (process.env.EMBER_ROOT_URL) {
     ENV.rootURL = process.env.EMBER_ROOT_URL;

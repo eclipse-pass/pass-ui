@@ -1,26 +1,37 @@
 /* eslint-disable ember/no-jquery */
+/* eslint-disable no-debugger */
 import { inject as service } from '@ember/service';
-import $ from 'jquery';
 import Route from '@ember/routing/route';
-import ENV from '../config/environment';
+import { action, get } from '@ember/object';
 
 export default class CheckSessionRouteRoute extends Route {
-  @service('toast')
-  toast;
+  @service toast;
+  @service session;
+  @service currentUser;
 
   @service('error-handler')
   errorHandler;
 
-  beforeModel(transition) {
-    let url = 'Make sure you set your ENV.userService.url value in ~config/environment.js or your .env file';
-    if (ENV.userService.url) {
-      url = ENV.userService.url;
+  async beforeModel() {
+    await this._loadCurrentUser();
+
+    if (!this.session.isAuthenticated) {
+      this.session.set('attemptedTransition', transition);
+      await this.session.invalidate();
     }
-    $.get(url, (data) => {
-      if (!data.username) {
-        transition.abort();
-        this.errorHandler.handleError(new Error('shib302'));
-      }
-    });
+  }
+
+  _loadCurrentUser() {
+    return this.currentUser.load.perform();
+  }
+
+  @action
+  async error(error, transition) {
+    const errorObject = error?.errors?.firstObject || {};
+
+    if ([401, 403].includes(Number(errorObject.status))) {
+      this.session.set('attemptedTransition', transition);
+      await this.session.invalidate();
+    }
   }
 }

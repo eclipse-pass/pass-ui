@@ -8,18 +8,24 @@ export default class DetailRoute extends CheckSessionRoute {
       return;
     }
 
-    const querySize = 500;
     const sub = this.store.findRecord('submission', params.submission_id);
-    const files = this.store.query('file', { term: { submission: params.submission_id }, size: querySize });
-    const deposits = this.store.query('deposit', { term: { submission: params.submission_id }, size: querySize });
+    // const querySize = 500; // TODO: Ignore querysize of 500 for now
+    const files = this.store.query('file', {
+      filter: { file: `submission.id==${params.submission_id}` },
+    });
+    const deposits = this.store.query('deposit', {
+      filter: { deposit: `submission.id==${params.submission_id}` },
+    });
     const submissionEvents = this.store.query('submissionEvent', {
-      sort: [{ performedDate: 'asc' }],
-      query: {
-        term: { submission: params.submission_id },
+      filter: {
+        submissionEvent: `submission.id==${params.submission_id}`,
       },
+      // sort: '+performedDate',
     });
     const repoCopies = sub.then((s) =>
-      this.store.query('repositoryCopy', { term: { publication: s.get('publication.id') }, size: querySize })
+      this.store.query('repositoryCopy', {
+        filter: { repositoryCopy: `publication.id==${s.get('publication.id')}` },
+      })
     );
     const repos = sub.then((s) => s.get('repositories'));
 

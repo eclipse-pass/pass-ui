@@ -13,3 +13,10 @@ export default class ContributorModel extends Model {
   @belongsTo('user') user;
   @belongsTo('publication') publication;
 }
+
+export const Role = {
+  AUTHOR: 'AUTHOR',
+  FIRST_AUTHOR: 'FIRST_AUTHOR',
+  LAST_AUTHOR: 'LAST_AUTHOR',
+  CORRESPONDING_AUTHOR: 'CORRESPONDING_AUTHOR',
+};

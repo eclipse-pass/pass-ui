@@ -20,15 +20,14 @@ export default class SubmissionsRepoidCell extends Component {
       set(this, 'repoCopies', A());
       return;
     }
-    this.store
-      .query('repositoryCopy', {
-        query: {
-          term: { publication: publicationId },
-        },
-        from: 0,
-        size: 100,
-      })
-      .then((rc) => set(this, 'repoCopies', rc));
+
+    const query = {
+      filter: {
+        repositoryCopy: `publication.id==${publicationId}`,
+      },
+    };
+
+    this.store.query('repositoryCopy', query).then((rc) => set(this, 'repoCopies', rc));
   }
 
   setToolTip() {

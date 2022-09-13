@@ -61,10 +61,10 @@ module('Integration | Component | workflow files', (hooks) => {
 
     // Inline configure mirage to respond to File saves
     this.server.post(
-      'http://localhost:8080/fcrepo/rest/files',
+      '/api/v1/file',
       () =>
         new Response(201, {
-          Location: 'https://pass.local/fcrepo/rest/files/6a/e3/c0/91/6ae3c091-e87e-4249-a744-72cb93415a95',
+          Location: 'https://pass.local/api/v1/file/123456',
           'Content-Type': 'text/plain; charset=UTF-8',
         })
     );
