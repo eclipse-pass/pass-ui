@@ -30,9 +30,9 @@ module.exports = function (environment) {
       staticConfigUri: process.env.STATIC_CONFIG_URL || '/app/config.json',
     },
   };
-  // Disable mirage entirely.
+
   ENV['ember-cli-mirage'] = {
-    enabled: false,
+    enabled: true,
   };
 
   if (environment === 'development') {
