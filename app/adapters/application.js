@@ -6,8 +6,8 @@ import ENV from 'pass-ui/config/environment';
  * PASS specific extensions for Ember Data's JSON:API adapter
  */
 export default class ApplicationAdapter extends JSONAPIAdapter {
-  host = ENV.host;
-  namespace = 'api/v1';
+  host = ENV.host; // Defaults to 'http://localhost:8080'
+  namespace = ENV.apiNamespace; // Defaults to 'api/v1'
 
   headers = {
     withCredentials: true,
