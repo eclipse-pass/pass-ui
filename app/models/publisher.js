@@ -14,3 +14,10 @@ export default class PublisherModel extends Model {
    */
   @attr('string') pmcParticipation;
 }
+
+export const PMCParticipation = {
+  A: 'A',
+  B: 'B',
+  C: 'C',
+  D: 'D',
+};

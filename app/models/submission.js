@@ -4,15 +4,15 @@ import { computed, get } from '@ember/object';
 
 export default class SubmissionModel extends Model {
   /** Possible values: not-started, in-progress, accepted */
-  @attr('string', {
-    defaultValue: 'NOT_STARTED',
+  @attr('enum', {
+    defaultValue: 'not-started',
   })
   aggregatedDepositStatus;
   @attr('date') submittedDate;
-  @attr('string', { defaultValue: 'PASS' }) source;
+  @attr('enum', { defaultValue: 'pass' }) source;
   @attr('string') metadata;
   @attr('boolean', { defaultValue: false }) submitted;
-  @attr('string') submissionStatus;
+  @attr('enum') submissionStatus;
   @attr('string') submitterName;
   @attr('string', {
     defaultValue: null,
@@ -121,3 +121,27 @@ export default class SubmissionModel extends Model {
     return false;
   }
 }
+
+export const SubmissionStatus = {
+  DRAFT: 'DRAFT',
+  MANUSCRIPT_REQUIRED: 'MANUSCRIPT_REQUIRED',
+  APPROVAL_REQUESTED: 'APPROVAL_REQUESTED',
+  CHANGES_REQUESTED: 'CHANGES_REQUESTED',
+  CANCELLED: 'CANCELLED',
+  SUBMITTED: 'SUBMITTED',
+  NEEDS_ATTENTION: 'NEEDS_ATTENTION',
+  COMPLETE: 'COMPLETE',
+};
+
+export const AggregatedDepositStatus = {
+  NOT_STARTED: 'NOT_STARTED',
+  IN_PROGRESS: 'IN_PROGRESS',
+  FAILED: 'FAILED',
+  ACCEPTED: 'ACCEPTED',
+  REJECTED: 'REJECTED',
+};
+
+export const Source = {
+  PASS: 'PASS',
+  OTHER: 'OTHER',
+};
