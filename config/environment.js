@@ -8,7 +8,11 @@ module.exports = function (environment) {
     environment,
     rootURL: process.env.EMBER_APP_ROOT || '/app/',
     host: process.env.EMBER_HOST || 'http://localhost:8080',
-    apiNamespace: process.env.EMBER_API_NAMESPACE || 'api/v1',
+    // Config for ember-data backend calls
+    passApi: {
+      namespace: process.env.ELIDE_API_NAMESPACE || 'api/v1',
+      host: process.env.ELIDE_API_URL || 'http://localhost:8080',
+    },
     locationType: 'auto',
     'ember-load': {
       // This is the default value, if you don't set this opton
