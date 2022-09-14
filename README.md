@@ -91,6 +91,26 @@ The application also gets "branding" configuration from a `config.json` file, wi
 }
 ```
 
+### Environment Variables
+
+| Name | Description | Default value |
+| --- | --- | --- |
+| EMBER_APP_ROOT | URL path of the application | `/app/` |
+| EMBER_HOST | URL host of the application | `http://localhost:8080` |
+| PASS_API_URL | URL host (plus port) of backend API | `http://localhost:8080` |
+| PASS_API_NAMESPACE | URL path prefix for backend API | `/api/v1` |
+| STATIC_CONFIG_URL | URL to find the UI's branding configuration (config.json). There is a default config bundled with the application, which can be loaded at this variable's default value | `/app/config.json` |
+| USER_SERVICE_URL | URL of the pass user service | `/pass-user-service/whoami` |
+| SCHEMA_SERVICE_URL | URL of the pass metadata schema service | `/schemaservice` |
+| DOI_SERVICE_URL | URL of the pass DOI service | `/doiservice/journal` |
+| DOI_METADATA_SCHEMA_URI | URL of the DOI metadata schema | `https://eclipse-pass.github.io/metadata-schemas/jhu/global.json` |
+| POLICY_SERVICE_URL | URL of the pass policy service (no longer supported) | `/policyservice` |
+| POLICY_SERVICE_POLICY_ENDPOINT | URL of the pass policy service policies function | `/policyservice/policies` |
+| POLICY_SERVICE_REPOSITORY_ENDPOINT | URL of the pass policy service repositories function | `/policyservice/repositories` |
+| MANUSCRIPT_SERVICE_LOOKUP_URL | URL of the pass 'download' service's lookup function. This will lookup available open access manuscripts for a given DOI | `/downloadservice/lookup` |
+| MANUSCRIPT_SERVICE_DOWNLOAD_URL | URL of the pass 'download' service's download function. Currently unused? | `/downloadservice/download` |
+
+
 ### Using ember in the container.
 
 Login to the ember container with `docker exec -it ember /bin/sh`.

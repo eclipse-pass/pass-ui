@@ -6,9 +6,13 @@ module.exports = function (environment) {
   let ENV = {
     modulePrefix: 'pass-ui',
     environment,
-    // rootURL: '/fcrepo/rest',
-    rootURL: '/app/',
-    host: 'http://localhost:8080',
+    rootURL: process.env.EMBER_APP_ROOT || '/app/',
+    host: process.env.EMBER_HOST || 'http://localhost:8080',
+    // Config for ember-data backend calls
+    passApi: {
+      namespace: process.env.PASS_API_NAMESPACE || 'api/v1',
+      host: process.env.PASS_API_URL || 'http://localhost:8080',
+    },
     locationType: 'auto',
     'ember-load': {
       // This is the default value, if you don't set this opton
@@ -59,12 +63,6 @@ module.exports = function (environment) {
     };
   }
 
-  ENV.fedora = {
-    base: 'http://localhost:8080/fcrepo/rest/',
-    context: 'https://oa-pass.github.io/pass-data-model/src/main/resources/context-3.4.jsonld',
-    data: 'http://oapass.org/ns/pass#',
-    elasticsearch: 'http://localhost:9200/pass/_search',
-  };
   ENV.userService = {
     url: '/pass-user-service/whoami',
   };
@@ -78,11 +76,8 @@ module.exports = function (environment) {
   };
 
   ENV.policyService = {
-    url: '/policyservice',
-    policySuffix: '/policies',
-    repoSuffix: '/repositories',
-    // policyEndpoint: 'https://pass.local/policyservice/policies',
-    // repositoryEndpoint: 'https://pass.local/policyservice/repositories'
+    policyEndpoint: '/policyservice/policies',
+    repositoryEndpoint: '/policyservice/repositories',
   };
 
   ENV.oaManuscriptService = {
@@ -90,10 +85,14 @@ module.exports = function (environment) {
     downloadUrl: '/downloadservice/download',
   };
 
-  ENV.metadataSchemaUri = 'https://eclipse-pass.github.io/metadata-schemas/jhu/global.json';
+  ENV.doiMetadataSchemaUri = 'https://eclipse-pass.github.io/metadata-schemas/jhu/global.json';
 
   if (process.env.EMBER_ROOT_URL) {
     ENV.rootURL = process.env.EMBER_ROOT_URL;
+  }
+
+  if (process.env.EMBER_MIRAGE_ENABLED) {
+    ENV['ember-cli-mirage'].enabled = !!process.env.EMBER_MIRAGE_ENABLED;
   }
 
   if (process.env.USER_SERVICE_URL) {
@@ -108,28 +107,8 @@ module.exports = function (environment) {
     ENV.doiService.url = process.env.DOI_SERVICE_URL;
   }
 
-  if (process.env.FEDORA_ADAPTER_BASE) {
-    ENV.fedora.base = process.env.FEDORA_ADAPTER_BASE;
-  }
-
-  if (process.env.FEDORA_ADAPTER_CONTEXT) {
-    ENV.fedora.context = process.env.FEDORA_ADAPTER_CONTEXT;
-  }
-
-  if (process.env.FEDORA_ADAPTER_DATA) {
-    ENV.fedora.data = process.env.FEDORA_ADAPTER_DATA;
-  }
-
-  if (process.env.FEDORA_ADAPTER_ES) {
-    ENV.fedora.elasticsearch = process.env.FEDORA_ADAPTER_ES;
-  }
-
   if (process.env.METADATA_SCHEMA_URI) {
-    ENV.metadataSchemaUri = process.env.METADATA_SCHEMA_URI;
-  }
-
-  if (process.env.POLICY_SERVICE_URL) {
-    ENV.policyService.url = process.env.POLICY_SERVICE_URL;
+    ENV.doiMetadataSchemaUri = process.env.DOI_METADATA_SCHEMA_URI;
   }
 
   if (process.env.POLICY_SERVICE_POLICY_ENDPOINT) {
@@ -146,18 +125,6 @@ module.exports = function (environment) {
 
   if ('MANUSCRIPT_SERVICE_DOWNLOAD_URL' in process.env) {
     ENV.oaManuscriptService.downloadUrl = process.env.MANUSCRIPT_SERVICE_DOWNLOAD_URL;
-  }
-
-  if ('FEDORA_ADAPTER_USER_NAME' in process.env) {
-    ENV.fedora.username = process.env.FEDORA_ADAPTER_USER_NAME;
-  } else {
-    ENV.fedora.username = 'admin';
-  }
-
-  if ('FEDORA_ADAPTER_PASSWORD' in process.env) {
-    ENV.fedora.password = process.env.FEDORA_ADAPTER_PASSWORD;
-  } else {
-    ENV.fedora.password = 'moo';
   }
 
   return ENV;

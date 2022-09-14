@@ -21,7 +21,7 @@ export default class DoiService extends Service {
   ajax;
 
   doiServiceUrl = ENV.doiService.url;
-  metadataSchemaUri = ENV.metadataSchemaUri;
+  metadataSchemaUri = ENV.doiMetadataSchemaUri;
 
   /**
    * resolveDOI - Lookup information about a DOI using the PASS doi service. Return that information along
