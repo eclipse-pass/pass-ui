@@ -10,8 +10,8 @@ module.exports = function (environment) {
     host: process.env.EMBER_HOST || 'http://localhost:8080',
     // Config for ember-data backend calls
     passApi: {
-      namespace: process.env.ELIDE_API_NAMESPACE || 'api/v1',
-      host: process.env.ELIDE_API_URL || 'http://localhost:8080',
+      namespace: process.env.PASS_API_NAMESPACE || 'api/v1',
+      host: process.env.PASS_API_URL || 'http://localhost:8080',
     },
     locationType: 'auto',
     'ember-load': {
@@ -76,11 +76,8 @@ module.exports = function (environment) {
   };
 
   ENV.policyService = {
-    url: '/policyservice',
-    policySuffix: '/policies',
-    repoSuffix: '/repositories',
-    // policyEndpoint: 'https://pass.local/policyservice/policies',
-    // repositoryEndpoint: 'https://pass.local/policyservice/repositories'
+    policyEndpoint: '/policyservice/policies',
+    repositoryEndpoint: '/policyservice/repositories',
   };
 
   ENV.oaManuscriptService = {
@@ -88,7 +85,7 @@ module.exports = function (environment) {
     downloadUrl: '/downloadservice/download',
   };
 
-  ENV.metadataSchemaUri = 'https://eclipse-pass.github.io/metadata-schemas/jhu/global.json';
+  ENV.doiMetadataSchemaUri = 'https://eclipse-pass.github.io/metadata-schemas/jhu/global.json';
 
   if (process.env.EMBER_ROOT_URL) {
     ENV.rootURL = process.env.EMBER_ROOT_URL;
@@ -111,11 +108,7 @@ module.exports = function (environment) {
   }
 
   if (process.env.METADATA_SCHEMA_URI) {
-    ENV.metadataSchemaUri = process.env.METADATA_SCHEMA_URI;
-  }
-
-  if (process.env.POLICY_SERVICE_URL) {
-    ENV.policyService.url = process.env.POLICY_SERVICE_URL;
+    ENV.doiMetadataSchemaUri = process.env.DOI_METADATA_SCHEMA_URI;
   }
 
   if (process.env.POLICY_SERVICE_POLICY_ENDPOINT) {

@@ -19,24 +19,10 @@ export default class PoliciesService extends Service {
   constructor() {
     super(...arguments);
 
-    // this.set('base', ENV.policyService.url);
     const policyConf = ENV.policyService;
 
-    let policyUrl;
-    if (policyConf.policyEndpoint) {
-      policyUrl = policyConf.policyEndpoint;
-    } else {
-      policyUrl = `${policyConf.url}${policyConf.policySuffix}`;
-    }
-    this.set('policyUrl', policyUrl);
-
-    let repoUrl;
-    if (policyConf.repositoryEndpoint) {
-      repoUrl = policyConf.repositoryEndpoint;
-    } else {
-      repoUrl = `${policyConf.url}${policyConf.repoSuffix}`;
-    }
-    this.set('repoUrl', repoUrl);
+    this.set('policyUrl', policyConf.policyEndpoint);
+    this.set('repoUrl', policyConf.repositoryEndpoint);
   }
 
   /**
