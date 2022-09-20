@@ -17,9 +17,9 @@ import { dasherize, underscore } from '@ember/string';
  */
 export default class EnumTransform extends Transform {
   serialize(deserialized, options) {
-    return underscore(deserialized).toUpperCase();
+    return deserialized ? underscore(deserialized).toUpperCase() : null;
   }
   deserialize(serialized, options) {
-    return dasherize(serialized).toLowerCase();
+    return serialized ? dasherize(serialized).toLowerCase() : null;
   }
 }
