@@ -48,9 +48,6 @@ export default function (config) {
         return schema.users.find(userId);
       });
 
-      this.passthrough('http://localhost*');
-      this.passthrough('https://localhost*');
-      this.passthrough();
       // this.namespace = '/api/v1';
       /**
        * TODO: will I need to do something weird with the pluralization junk
@@ -104,6 +101,10 @@ export default function (config) {
 
       // // Grants
       // this.get('/grant/:id');
+
+      this.passthrough('http://localhost*');
+      this.passthrough('https://localhost*');
+      this.passthrough();
     },
   };
 
