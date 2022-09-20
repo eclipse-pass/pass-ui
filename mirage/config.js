@@ -9,6 +9,7 @@ export default function (config) {
     serializers: {
       application: JSONAPISerializer,
     },
+    logging: true,
     routes() {
       /** Schema Service */
       schemas(this);
@@ -47,7 +48,8 @@ export default function (config) {
         return schema.users.find(userId);
       });
 
-      this.passthrough('http://localhost:8080/*');
+      this.passthrough('http://localhost*');
+      this.passthrough('https://localhost*');
       this.passthrough();
       // this.namespace = '/api/v1';
       /**
