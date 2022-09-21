@@ -98,7 +98,7 @@ The application also gets "branding" configuration from a `config.json` file, wi
 | EMBER_APP_ROOT | URL path of the application | `/app/` |
 | EMBER_HOST | URL host of the application | `http://localhost:8080` |
 | PASS_API_URL | URL host (plus port) of backend API | `http://localhost:8080` |
-| PASS_API_NAMESPACE | URL path prefix for backend API | `/api/v1` |
+| PASS_API_NAMESPACE | URL path prefix for backend API | `api/v1` |
 | STATIC_CONFIG_URL | URL to find the UI's branding configuration (config.json). There is a default config bundled with the application, which can be loaded at this variable's default value | `/app/config.json` |
 | USER_SERVICE_URL | URL of the pass user service | `/pass-user-service/whoami` |
 | SCHEMA_SERVICE_URL | URL of the pass metadata schema service | `/schemaservice` |

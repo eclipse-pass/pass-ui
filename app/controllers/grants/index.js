@@ -144,6 +144,7 @@ export default class GrantsIndexController extends Controller {
     } else if (this.user.isSubmitter) {
       return this.piColumns;
     }
+    console.warn(`[Route:Grants/index] User has no known role (${this.user.id}::${this.user.roles})`);
     return [];
   }
 }
