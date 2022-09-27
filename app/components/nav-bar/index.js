@@ -33,11 +33,6 @@ export default class NavBar extends Component {
   }
 
   @action
-  invalidateSession() {
-    // get(this, 'session').invalidate();
-  }
-
-  @action
   scrollToAnchor() {
     if (window.location.search.indexOf('anchor=') == -1) {
       window.scrollTo(0, 0);

@@ -11,7 +11,6 @@ module.exports = function (environment) {
     // Config for ember-data backend calls
     passApi: {
       namespace: process.env.PASS_API_NAMESPACE || 'api/v1',
-      host: process.env.PASS_API_URL || 'http://localhost:8080',
     },
     locationType: 'auto',
     'ember-load': {

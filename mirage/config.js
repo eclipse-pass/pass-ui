@@ -102,8 +102,8 @@ export default function (config) {
       // // Grants
       // this.get('/grant/:id');
 
-      this.passthrough('http://localhost*');
-      this.passthrough('https://localhost*');
+      this.passthrough('http://localhost/**');
+      this.passthrough('https://localhost/**');
       this.passthrough();
     },
   };
