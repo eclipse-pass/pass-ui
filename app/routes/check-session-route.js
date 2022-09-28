@@ -1,8 +1,7 @@
 /* eslint-disable ember/no-jquery */
-/* eslint-disable no-debugger */
 import { inject as service } from '@ember/service';
 import Route from '@ember/routing/route';
-import { action, get } from '@ember/object';
+import { action } from '@ember/object';
 
 export default class CheckSessionRouteRoute extends Route {
   @service toast;
@@ -13,7 +12,9 @@ export default class CheckSessionRouteRoute extends Route {
   errorHandler;
 
   async beforeModel() {
-    await this._loadCurrentUser();
+    if (!this.currentUser.user) {
+      await this._loadCurrentUser();
+    }
 
     if (!this.session.isAuthenticated) {
       this.session.set('attemptedTransition', transition);
