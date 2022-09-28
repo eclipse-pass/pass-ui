@@ -19,7 +19,7 @@ export default class HttpOnly extends Base {
   restore(data) {
     return new RSVP.Promise((resolve, reject) => {
       if (!this._validateData(data)) {
-        return reject('Could not restore session - "access_token" missing.');
+        return reject('Could not restore session - "user" missing.');
       }
 
       return resolve(data);
@@ -59,6 +59,6 @@ export default class HttpOnly extends Base {
   _validateData(data) {
     // see https://tools.ietf.org/html/rfc6749#section-4.2.2
 
-    return !isEmpty(data) && !isEmpty(data.access_token);
+    return !isEmpty(data) && !isEmpty(data.user.id);
   }
 }
