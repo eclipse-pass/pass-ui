@@ -6,7 +6,7 @@ module.exports = function (environment) {
   let ENV = {
     modulePrefix: 'pass-ui',
     environment,
-    rootURL: process.env.EMBER_APP_ROOT || '/app/',
+    rootURL: process.env.PASS_UI_ROOT_URL || '/app/',
     host: process.env.EMBER_HOST || 'http://localhost:8080',
     // Config for ember-data backend calls
     passApi: {
@@ -86,8 +86,8 @@ module.exports = function (environment) {
 
   ENV.doiMetadataSchemaUri = 'https://eclipse-pass.github.io/metadata-schemas/jhu/global.json';
 
-  if (process.env.EMBER_ROOT_URL) {
-    ENV.rootURL = process.env.EMBER_ROOT_URL;
+  if (process.env.PASS_UI_ROOT_URL) {
+    ENV.rootURL = process.env.PASS_UI_ROOT_URL;
   }
 
   if (process.env.EMBER_MIRAGE_ENABLED) {
