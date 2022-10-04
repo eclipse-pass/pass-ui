@@ -7,9 +7,9 @@ export default class RepositoryModel extends Model {
   @attr('string') description;
   @attr('string') url;
   @attr('string') formSchema;
-  @attr('enum') integrationType;
+  @attr('string') integrationType;
   @attr('string', { defaultValue: false }) agreementText;
-  @attr('enum') repositoryKey;
+  @attr('string') repositoryKey;
 
   @attr('boolean') _selected;
 

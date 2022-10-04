@@ -4,15 +4,15 @@ import { computed, get } from '@ember/object';
 
 export default class SubmissionModel extends Model {
   /** Possible values: not-started, in-progress, accepted */
-  @attr('enum', {
+  @attr('string', {
     defaultValue: 'not-started',
   })
   aggregatedDepositStatus;
   @attr('date') submittedDate;
-  @attr('enum', { defaultValue: 'pass' }) source;
+  @attr('string', { defaultValue: 'pass' }) source;
   @attr('string') metadata;
   @attr('boolean', { defaultValue: false }) submitted;
-  @attr('enum') submissionStatus;
+  @attr('string') submissionStatus;
   @attr('string') submitterName;
   @attr('string', {
     defaultValue: null,
