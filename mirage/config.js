@@ -48,46 +48,6 @@ export default function (config) {
         return schema.users.find(userId);
       });
 
-      // this.namespace = '/api/v1';
-      /**
-       * TODO: will I need to do something weird with the pluralization junk
-       * that Mirage likes to do? Since our endpoints are not plural, but
-       * just the model name
-       *
-       * TODO: need to mock searching?
-       */
-
-      // // Users
-      // this.get('/*', (schema) => schema.users.find(id));
-
-      // // Journals
-      // this.get('/journal/:id', (schema) => schema.journals.find(id));
-
-      // // Policies
-      // this.get('/policy/:id', (schema) => schema.policies.find(id));
-
-      // // Funders
-      // this.get('/funder/:id', (schema) => schema.funders.find(id));
-
-      // // Repositories
-      // this.get('/repository/:id', (schema) => schema.repositories.find(id));
-
-      // // Publications
-      // this.get('/publication/:id', (schema) => schema.publications.find(id));
-      // this.post('/publication', (schema, request) => {
-
-      // });
-      // this.patch('/publication/:id', 'publication');
-
-      // // Submissions
-      // this.get('/submission/:id');
-      // this.post('/submission/:id', 'submission');
-      // this.patch('/submission/:id', 'submission');
-
-      // // Submission Events
-      // this.get('/submissionEvent/:id');
-      // this.post('/submissionEvent/:id', 'submissionEvent');
-
       // // Files
       this.post(
         '/file',
@@ -99,9 +59,65 @@ export default function (config) {
       );
       this.patch('/file/:id', () => new Response(204));
 
-      // // Grants
-      // this.get('/grant/:id');
+      /**
+       * ################################################################
+       * ##### Only capture data requests using /mirage/test path #######
+       * ################################################################
+       */
+      this.namespace = '/mirage/test';
+      /**
+       * Note we're explicitly NOT using MirageJS shorthands for our route handling
+       * because of the mismatch between the pluralized Mirage DB tables and
+       * the non-plural routes
+       *
+       * TODO: will I need to do something weird with the pluralization junk
+       * that Mirage likes to do? Since our endpoints are not plural, but
+       * just the model name
+       *
+       * TODO: need to mock searching?
+       */
 
+      // Users
+      this.get('/user/:id', (schema) => schema.users.find(request.params.id));
+
+      // Journals
+      this.get('/journal/:id', (schema) => schema.journals.find(request.params.id));
+
+      // Policies
+      this.get('/policy/:id', (schema) => schema.policies.find(request.params.id));
+
+      // Funders
+      this.get('/funder/:id', (schema) => schema.funders.find(request.params.id));
+
+      // Repositories
+      this.get('/repository/:id', (schema) => schema.repositories.find(request.params.id));
+
+      // Publications
+      this.get('/publication/:id', (schema) => schema.publications.find(request.params.id));
+      this.post('/publication', (schema, request) => schema.publications.create(this.normalizedRequestAttrs()));
+      this.patch('/publication/:id', (schema, request) =>
+        schema.publications.find(request.params.id).update(this.normalizedRequestAttrs())
+      );
+
+      // Submissions
+      this.get('/submission/:id', (schema) => schema.submissions.find(request.params.id));
+      this.post('/submission/:id', (schema) => schema.submissions.create(this.normalizedRequestAttrs()));
+      this.patch('/submission/:id', (schema, req) =>
+        schema.submissions.find(req.params.id).update(this.normalizedRequestAttrs())
+      );
+
+      // Submission Events
+      this.get('/submissionEvent/:id', (schema) => schema.submissionEvents.find(request.params.id));
+      this.post('/submissionEvent/:id', (schema) => schema.submissionEvents.create(this.normalizedRequestAttrs()));
+
+      // Grants
+      this.get('/grant/:id', (schema) => schema.grants.find(request.params.id));
+
+      /**
+       * ################################################################
+       * ##### Pass through everything else #############################
+       * ################################################################
+       */
       this.passthrough('http://localhost/**');
       this.passthrough('https://localhost/**');
       this.passthrough();
