@@ -1,5 +1,7 @@
+import { camelize } from '@ember/string';
 import { discoverEmberDataModels } from 'ember-cli-mirage';
 import { createServer, JSONAPISerializer } from 'miragejs';
+import doiJournals from './custom-fixtures/nih-submission/doi-journals';
 import schemas from './routes/schemas';
 
 export default function (config) {
@@ -7,7 +9,10 @@ export default function (config) {
     ...config,
     models: { ...discoverEmberDataModels(), ...config.models },
     serializers: {
-      application: JSONAPISerializer,
+      application: JSONAPISerializer.extend({
+        keyForAttribute: (attr) => (attr ? camelize(attr) : null),
+        keyForRelationship: (key) => (key ? camelize(key) : null),
+      }),
     },
     logging: true,
     routes() {
@@ -17,10 +22,10 @@ export default function (config) {
       /** DOI Service */
       this.get('/doiservice/journal', (schema, request) => {
         console.log(`[MirageJS] GET /doiservice/journal | query: ${JSON.stringify(request.queryParams)}`);
-        const journal = schema.journal.findBy({ crossref: { message: { doi: request.queryParams.doi } } });
+        // const journal = schema.journal.findBy({ crossref: { message: { doi: request.queryParams.doi } } });
         return {
-          'journal-id': journal['journal-id'],
-          crossref: journal.crossref,
+          'journal-id': doiJournals['journal-id'],
+          crossref: doiJournals.crossref,
         };
       });
 
@@ -147,6 +152,10 @@ export default function (config) {
 
       // Grants
       this.get('/grant/:id', 'grant');
+      this.get('/grant', (schema, request) => {
+        console.log(`[MirageJS] GET /grant | query: ${JSON.stringify(request.queryParams)}`);
+        return schema.grant.all();
+      });
 
       /**
        * ################################################################

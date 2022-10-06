@@ -8,7 +8,7 @@
 import doiJournals from '../custom-fixtures/nih-submission/doi-journals';
 
 export default function (server) {
-  server.create('journal', doiJournals);
+  // server.create('journal', doiJournals);
 
   server.create('journal', {
     id: '10',
