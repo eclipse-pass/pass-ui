@@ -2,7 +2,8 @@
 import Service from '@ember/service';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
-import { find, click, visit, currentURL, fillIn, waitFor, triggerKeyEvent, triggerEvent } from '@ember/test-helpers';
+import { click, currentURL, fillIn, find, triggerKeyEvent, triggerEvent, visit, waitFor } from '@ember/test-helpers';
+import { authenticateSession } from 'ember-simple-auth/test-support';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 import sharedScenario from '../../mirage/scenarios/shared';
 
@@ -10,7 +11,7 @@ module('Acceptance | submission', function (hooks) {
   setupApplicationTest(hooks);
   setupMirage(hooks);
 
-  hooks.beforeEach(function () {
+  hooks.beforeEach(async function () {
     const mockStaticConfig = Service.extend({
       getStaticConfig: () =>
         Promise.resolve({
@@ -49,16 +50,16 @@ module('Acceptance | submission', function (hooks) {
     }));
 
     this.owner.register('service:app-static-config', mockStaticConfig);
+
+    await authenticateSession({
+      user: { id: '0' },
+    });
   });
 
   test('can walk through an nih submission workflow and make a submission - base case', async function (assert) {
     sharedScenario(this.server);
 
-    await visit('/?userToken=https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95');
-    assert.equal(
-      currentURL(),
-      '/?userToken=https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95'
-    );
+    await visit('/app');
 
     assert.dom('[data-test-start-new-submission]').exists();
     await click(find('[data-test-start-new-submission]'));
