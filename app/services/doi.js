@@ -57,7 +57,7 @@ export default class DoiService extends Service {
       creationDate: doiInfo.created,
       issue: doiInfo.issue,
       volume: doiInfo.volume,
-      abstract: doiInfo.abstract,
+      publicationAbstract: doiInfo.abstract,
     });
 
     return {
