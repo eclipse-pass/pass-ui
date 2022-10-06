@@ -16,8 +16,8 @@ export default function (config) {
 
       /** DOI Service */
       this.get('/doiservice/journal', (schema, request) => {
-        let journals = schema.journals.all();
-        let journal = journals.models.find((journal) => journal.attrs.crossref.message.DOI === request.queryParams.doi);
+        console.log(`[MirageJS] GET /doiservice/journal | query: ${JSON.stringify(request.queryParams)}`);
+        const journal = schema.journal.findBy({ crossref: { message: { doi: request.queryParams.doi } } });
         return {
           'journal-id': journal['journal-id'],
           crossref: journal.crossref,
