@@ -41,7 +41,7 @@ export default [
       'https://oa-pass.github.io/metadata-schemas/jhu/nihms.json',
       'https://oa-pass.github.io/metadata-schemas/jhu/common.json',
     ],
-    name: 'PubMed Central',
+    name: 'PubMed Central - NATIONAL INSTITUTE OF HEALTH',
     url: 'https://www.ncbi.nlm.nih.gov/pmc/',
     repositoryKey: 'pmc',
   },

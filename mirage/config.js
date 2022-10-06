@@ -13,8 +13,11 @@ export default function (config) {
         keyForAttribute: (attr) => (attr ? camelize(attr) : null),
         keyForRelationship: (key) => (key ? camelize(key) : null),
       }),
+      policy: JSONAPISerializer.extend({
+        // include: ['repositories']
+        alwaysIncludeLinkageData: true,
+      }),
     },
-    logging: true,
     routes() {
       /** Schema Service */
       schemas(this);
@@ -22,7 +25,6 @@ export default function (config) {
       /** DOI Service */
       this.get('/doiservice/journal', (schema, request) => {
         console.log(`[MirageJS] GET /doiservice/journal | query: ${JSON.stringify(request.queryParams)}`);
-        // const journal = schema.journal.findBy({ crossref: { message: { doi: request.queryParams.doi } } });
         return {
           'journal-id': doiJournals['journal-id'],
           crossref: doiJournals.crossref,
@@ -30,21 +32,35 @@ export default function (config) {
       });
 
       /** Policy Service */
-      this.get('/policyservice/policies', () => [
-        { id: '33', type: 'funder' },
-        { id: '26', type: 'institution' },
-      ]);
+      this.get('/policyservice/policies', (schema, request) => {
+        const institutionPolicy = schema.policy.findBy({
+          title: 'Johns Hopkins University (JHU) Open Access Policy',
+        });
+        const nihPolicy = schema.policy.findBy({
+          title: 'National Institutes of Health Public Access Policy',
+        });
+
+        return [
+          { id: nihPolicy.id, type: 'funder' },
+          { id: institutionPolicy.id, type: 'institution' },
+        ];
+      });
       // Return NIH (required) and J10p (optional, selected)
-      this.get('/policyservice/repositories', () => ({
-        required: [{ 'repository-id': '19', selected: false }],
-        'one-of': [
-          [
-            { 'repository-id': '19', selected: false },
-            { 'repository-id': '18', selected: true },
+      this.get('/policyservice/repositories', (schema, request) => {
+        const j10p = schema.repository.findBy({ repositoryKey: 'jscholarship' });
+        const pmc = schema.repository.findBy({ repositoryKey: 'pmc' });
+
+        return {
+          required: [{ 'repository-id': pmc.id, selected: false }],
+          'one-of': [
+            [
+              { 'repository-id': pmc.id, selected: false },
+              { 'repository-id': j10p.id, selected: true },
+            ],
           ],
-        ],
-        optional: [{ 'repository-id': '18', selected: true }],
-      }));
+          optional: [{ 'repository-id': j10p.id, selected: true }],
+        };
+      });
 
       /** User Service */
       this.get('/pass-user-service/whoami', (schema, request) => {

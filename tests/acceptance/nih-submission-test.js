@@ -58,6 +58,7 @@ module('Acceptance | submission', function (hooks) {
 
   test('can walk through an nih submission workflow and make a submission - base case', async function (assert) {
     sharedScenario(this.server);
+    this.server.logging = true;
 
     await visit('/app');
 
