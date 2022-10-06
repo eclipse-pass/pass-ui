@@ -78,40 +78,75 @@ export default function (config) {
        */
 
       // Users
-      this.get('/user/:id', (schema) => schema.users.find(request.params.id));
+      this.get('/user/:id', 'user');
 
       // Journals
-      this.get('/journal/:id', (schema) => schema.journals.find(request.params.id));
+      this.get('/journal/:id', 'journal');
 
       // Policies
-      this.get('/policy/:id', (schema) => schema.policies.find(request.params.id));
+      this.get('/policy', (schema, request) => {
+        console.log(`[MirageJS] GET /policy | query: ${JSON.stringify(request.queryParams)}`);
+        return schema.policy.all();
+      });
+      // this.get('/policy', 'policy');
+      this.get('/policy/:id', 'policy');
 
       // Funders
-      this.get('/funder/:id', (schema) => schema.funders.find(request.params.id));
+      this.get('/funder/:id', 'funder');
 
       // Repositories
-      this.get('/repository/:id', (schema) => schema.repositories.find(request.params.id));
+      this.get('/repository', (schema, request) => {
+        console.log(`[MirageJS] GET /repository | query: ${JSON.stringify(request.queryParams)}`);
+        return schema.repository.all();
+      });
+      this.get('/repository/:id', 'repository');
 
       // Publications
-      this.get('/publication/:id', (schema) => schema.publications.find(request.params.id));
-      this.post('/publication', (schema, request) => schema.publications.create(this.normalizedRequestAttrs()));
-      this.patch('/publication/:id', (schema, request) =>
-        schema.publications.find(request.params.id).update(this.normalizedRequestAttrs())
-      );
+      this.get('/publication/:id', 'publication');
+      this.post('/publication', 'publication');
+      this.patch('/publication/:id', 'publication');
 
       // Submissions
-      this.get('/submission/:id', (schema) => schema.submissions.find(request.params.id));
-      this.post('/submission/:id', (schema) => schema.submissions.create(this.normalizedRequestAttrs()));
-      this.patch('/submission/:id', (schema, req) =>
-        schema.submissions.find(req.params.id).update(this.normalizedRequestAttrs())
-      );
+      this.get('/submission/:id', 'submission');
+      this.post('/submission', 'submission');
+      this.patch('/submission/:id', 'submission');
+      // Submission filtering
+      this.get('/submission', (schema, request) => {
+        /**
+         * JSON object with query parameter as key, value as value.
+         * ex: ?param1=value1&param2=value2
+         * { param1: value1, param2: value2 }
+         */
+        // const query = request.queryParams;
+
+        // if (!query) {
+        //   return schema.submission.all();
+        // }
+
+        // // Find the 'filter[...]' parameter
+        // let submissionFilter = Object.keys(query)
+        //   .filter(key => key.includes('filter[submission]'))
+        //   .map(key => query[key]);
+        // if (!Array.isArray(submissionFilter) || submissionFilter.length !== 1) {
+        //   return schema.submission.none();
+        // }
+        // // Once we know query params includes a submission filter, get its value
+        // submissionFilter = submissionFilter[0];
+        // console.log(`[MirageJS] /submission filter: '${submissionFilter}'`);
+        console.log(`[MirageJS] GET /submission | query: ${JSON.stringify(request.queryParams)}`);
+        return schema.submission.none();
+      });
 
       // Submission Events
-      this.get('/submissionEvent/:id', (schema) => schema.submissionEvents.find(request.params.id));
-      this.post('/submissionEvent/:id', (schema) => schema.submissionEvents.create(this.normalizedRequestAttrs()));
+      this.post('/submissionEvent', 'submissionEvent');
+      this.get('/submissionEvent/:id', 'submissionEvent');
+      this.get('/submissionEvent', (schema, request) => {
+        console.log(`[MirageJS] GET /submissionEvent | query: ${JSON.stringify(request.queryParams)}`);
+        return schema.submissionEvent.none();
+      });
 
       // Grants
-      this.get('/grant/:id', (schema) => schema.grants.find(request.params.id));
+      this.get('/grant/:id', 'grant');
 
       /**
        * ################################################################

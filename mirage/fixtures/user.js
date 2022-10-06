@@ -11,7 +11,7 @@ export default [
       'johnshopkins.edu:employeeid:12345',
       'johnshopkins.edu:jhed:12345',
     ],
-    roles: ['submitter'],
+    roles: ['SUBMITTER'],
     username: 'nih-user@johnshopkins.edu',
   },
   {
