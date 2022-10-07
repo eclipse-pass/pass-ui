@@ -12,6 +12,8 @@ module('Acceptance | submission', function (hooks) {
   setupMirage(hooks);
 
   hooks.beforeEach(async function () {
+    this.server.logging = true;
+
     const mockStaticConfig = Service.extend({
       getStaticConfig: () =>
         Promise.resolve({
@@ -23,32 +25,6 @@ module('Acceptance | submission', function (hooks) {
       addCss: () => {},
     });
 
-    this.server.get('https://pass.local/downloadservice/lookup', () => ({
-      manuscripts: [
-        {
-          url: 'https://dash.harvard.edu/bitstream/1/12285462/1/Nanometer-Scale%20Thermometry.pdf',
-          repositoryLabel: 'Harvard University - Digital Access to Scholarship at Harvard (DASH)',
-          type: 'application/pdf',
-          source: 'Unpaywall',
-          name: 'Nanometer-Scale Thermometry.pdf',
-        },
-        {
-          url: 'http://europepmc.org/articles/pmc4221854?pdf=render',
-          repositoryLabel: 'pubmedcentral.nih.gov',
-          type: 'application/pdf',
-          source: 'Unpaywall',
-          name: 'pmc4221854?pdf=render',
-        },
-        {
-          url: 'http://arxiv.org/pdf/1304.1068',
-          repositoryLabel: 'arXiv.org',
-          type: 'application/pdf',
-          source: 'Unpaywall',
-          name: '1304.1068',
-        },
-      ],
-    }));
-
     this.owner.register('service:app-static-config', mockStaticConfig);
 
     await authenticateSession({
@@ -58,7 +34,6 @@ module('Acceptance | submission', function (hooks) {
 
   test('can walk through an nih submission workflow and make a submission - base case', async function (assert) {
     sharedScenario(this.server);
-    this.server.logging = true;
 
     await visit('/app');
 
