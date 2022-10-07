@@ -12,11 +12,11 @@ export default class DashboardRoute extends CheckSessionRoute {
     const userId = get(this, 'currentUser.user.id');
 
     const awaitingApproval = await this.store.query('submission', {
-      filter: { submission: `submitter.id==${userId};submissionStatus==APPROVAL_REQUESTED` },
+      filter: { submission: `submitter.id==${userId};submissionStatus==approval-requested` },
     });
 
     const awaitingChanges = await this.store.query('submission', {
-      filter: { submission: `preparers.id==${userId};submissionStatus==CHANGES_REQUESTED` },
+      filter: { submission: `preparers.id==${userId};submissionStatus==changes-requested` },
     });
 
     return {

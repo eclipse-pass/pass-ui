@@ -15,11 +15,11 @@ export default class IndexRoute extends CheckSessionRoute {
 
     if (user.get('isAdmin')) {
       query = {
-        filter: { submission: 'submissionStatus=out=CANCELLED' },
+        filter: { submission: 'submissionStatus=out=cancelled' },
       };
     } else if (user.get('isSubmitter')) {
       query = {
-        filter: { submission: `submitter.id==${user.get('id')};submissionStatus=out=CANCELLED` },
+        filter: { submission: `submitter.id==${user.get('id')};submissionStatus=out=cancelled` },
         sort: '-submittedDate',
       };
     }
