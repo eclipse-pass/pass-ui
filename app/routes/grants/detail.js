@@ -21,7 +21,7 @@ export default class DetailRoute extends CheckSessionRoute {
 
     const query = {
       filter: {
-        submission: `grants.id==${params.grant_id};submissionStatus=out=CANCELLED`,
+        submission: `grants.id==${params.grant_id};submissionStatus=out=cancelled`,
       },
     };
     let submissions = this.store.query('submission', query);

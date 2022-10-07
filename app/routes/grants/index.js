@@ -56,7 +56,7 @@ export default class IndexRoute extends CheckSessionRoute {
 
       const submissionQuery = {
         filter: {
-          submission: `submissionStatus=out=CANCELLED;grants.pi.id==${userId},grants.coPis.id==${userId}`,
+          submission: `submissionStatus=out=cancelled;grants.pi.id==${userId},grants.coPis.id==${userId}`,
         },
       };
 
