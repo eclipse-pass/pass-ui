@@ -111,56 +111,27 @@ export default class SubmissionHandlerService extends Service {
    *  are read and uploaded to the Submission container. The modified File object
    *  is persisted.
    *
+   * TODO: Now that we're switching to Elide + PostgreSQL backend instead of Fedora
+   * we need to decide on a way to handle file uploads. The previous implementation
+   * relies on entity IDs being fully qualified URLs and dumps the file bytes into
+   * the submission ID (URL) container in Fedora
+   *
    * @param  {Submission} sub
    * @param  {File} file   Local file uploaded.
    * @returns {Promise}    Promise resolves to the File object.
    */
   uploadFile(sub, file) {
     return new Promise((resolve, reject) => {
-      let reader = new FileReader();
+      file.submission = sub.id;
+      file.uri = `/file/${file.id}/data`;
 
-      reader.onload = (evt) => {
-        let data = evt.target.result;
-
-        let xhr = new XMLHttpRequest();
-        xhr.open('POST', `${sub.get('id')}`, true);
-        xhr.setRequestHeader('Content-Disposition', `attachment; filename="${encodeURI(file.get('name'))}"`);
-        let contentType = file.get('_file.type') ? file.get('_file.type') : 'application/octet-stream';
-        xhr.setRequestHeader('Content-Type', contentType);
-
-        // Hacks to handle different environments
-        if (ENV.environment === 'development') xhr.withCredentials = true;
-        if (ENV.environment === 'development') xhr.setRequestHeader('Authorization', 'Basic YWRtaW46bW9v');
-
-        xhr.onload = (results) => {
-          file.set('submission', sub);
-          file.set('uri', results.target.response);
-
-          file
-            .save()
-            .then((f) => {
-              resolve(f);
-            })
-            .catch((error) => {
-              console.log(error);
-              reject(new Error(`Error creating file object: ${error.message}`));
-            });
-        };
-
-        xhr.onerror = (error) => {
-          console.log(error);
-          reject(new Error(`Error uploading file: ${error.message}`));
-        };
-
-        xhr.send(data);
-      };
-
-      reader.onerror = (error) => {
-        console.log(error);
-        reject(new Error(`Error reading file: ${error.message}`));
-      };
-
-      reader.readAsArrayBuffer(file.get('_file'));
+      file
+        .save()
+        .then((data) => resolve(data))
+        .catch((e) => {
+          console.error(e);
+          reject(new Error(`Error creating file object ${e.message}`));
+        });
     });
   }
 

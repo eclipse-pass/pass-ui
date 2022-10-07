@@ -69,16 +69,32 @@ export default function (config) {
         return schema.users.find(userId);
       });
 
-      // // Files
-      this.post(
-        '/file',
-        () =>
-          new Response(201, {
-            Location: 'https://pass.local/api/v1/file/123456',
-            'Content-Type': 'text/plain; charset=utf-8',
-          })
-      );
-      this.patch('/file/:id', () => new Response(204));
+      /** Download service */
+      this.get('/downloadservice/lookup', (schema, request) => ({
+        manuscripts: [
+          {
+            url: 'https://dash.harvard.edu/bitstream/1/12285462/1/Nanometer-Scale%20Thermometry.pdf',
+            repositoryLabel: 'Harvard University - Digital Access to Scholarship at Harvard (DASH)',
+            type: 'application/pdf',
+            source: 'Unpaywall',
+            name: 'Nanometer-Scale Thermometry.pdf',
+          },
+          {
+            url: 'http://europepmc.org/articles/pmc4221854?pdf=render',
+            repositoryLabel: 'pubmedcentral.nih.gov',
+            type: 'application/pdf',
+            source: 'Unpaywall',
+            name: 'pmc4221854?pdf=render',
+          },
+          {
+            url: 'http://arxiv.org/pdf/1304.1068',
+            repositoryLabel: 'arXiv.org',
+            type: 'application/pdf',
+            source: 'Unpaywall',
+            name: '1304.1068',
+          },
+        ],
+      }));
 
       /**
        * ################################################################
@@ -86,17 +102,17 @@ export default function (config) {
        * ################################################################
        */
       this.namespace = '/mirage/test';
-      /**
-       * Note we're explicitly NOT using MirageJS shorthands for our route handling
-       * because of the mismatch between the pluralized Mirage DB tables and
-       * the non-plural routes
-       *
-       * TODO: will I need to do something weird with the pluralization junk
-       * that Mirage likes to do? Since our endpoints are not plural, but
-       * just the model name
-       *
-       * TODO: need to mock searching?
-       */
+
+      // Files
+      this.get('/file/:id', 'file');
+      this.get('/file/:id/data', (schema, request) => {
+        console.log(`[MirageJS] GET /file/${request.params.id}/data`);
+        return new Response(200, {
+          'Content-Type': 'application/octet-stream',
+        });
+      });
+      this.post('/file', 'file');
+      this.patch('/file/:id', () => new Response(204));
 
       // Users
       this.get('/user/:id', 'user');
@@ -133,28 +149,32 @@ export default function (config) {
       this.patch('/submission/:id', 'submission');
       // Submission filtering
       this.get('/submission', (schema, request) => {
+        console.log(`[MirageJS] GET /submission | query: ${JSON.stringify(request.queryParams)}`);
         /**
          * JSON object with query parameter as key, value as value.
          * ex: ?param1=value1&param2=value2
          * { param1: value1, param2: value2 }
          */
-        // const query = request.queryParams;
+        const query = request.queryParams;
 
-        // if (!query) {
-        //   return schema.submission.all();
-        // }
+        if (!query) {
+          return schema.submission.all();
+        }
 
-        // // Find the 'filter[...]' parameter
-        // let submissionFilter = Object.keys(query)
-        //   .filter(key => key.includes('filter[submission]'))
-        //   .map(key => query[key]);
-        // if (!Array.isArray(submissionFilter) || submissionFilter.length !== 1) {
-        //   return schema.submission.none();
-        // }
-        // // Once we know query params includes a submission filter, get its value
-        // submissionFilter = submissionFilter[0];
-        // console.log(`[MirageJS] /submission filter: '${submissionFilter}'`);
-        console.log(`[MirageJS] GET /submission | query: ${JSON.stringify(request.queryParams)}`);
+        // Find the 'filter[...]' parameter
+        let submissionFilter = Object.keys(query)
+          .filter((key) => key.includes('filter[submission]'))
+          .map((key) => query[key]);
+        if (!Array.isArray(submissionFilter) || submissionFilter.length !== 1) {
+          return schema.submission.none();
+        }
+        // Once we know query params includes a submission filter, get its value
+        submissionFilter = submissionFilter[0];
+
+        if (submissionFilter.includes('cancelled')) {
+          return schema.submission.all();
+        }
+
         return schema.submission.none();
       });
 
