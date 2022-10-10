@@ -31,7 +31,7 @@ export default [
     // 'publication' : 'https://pass.local/fcrepo/rest/publications/0c/b4/9e/63/0cb49e63-831b-4071-a5e3-c09c6caa87fb',
     id: '1',
     grantIds: ['6'],
-    submitter: '3',
+    submitterId: '3',
     repositoryIds: ['3'],
     publicationId: '0',
     submitted: true,
