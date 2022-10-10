@@ -4,7 +4,7 @@ export default class FileModel extends Model {
   @attr('string') name;
   @attr('string') description;
   /** Possible values: manuscript, supplemental, table, figure */
-  @attr('enum') fileRole;
+  @attr('string') fileRole;
   @attr('string') uri;
   @attr('string') mimeType;
 

@@ -2,7 +2,7 @@ import Model, { attr, belongsTo } from '@ember-data/model';
 
 export default class DepositModel extends Model {
   @attr('string') depositStatusRef;
-  @attr('enum') depositStatus;
+  @attr('string') depositStatus;
 
   @belongsTo('repositoryCopy') repositoryCopy;
   @belongsTo('submission') submission;
