@@ -119,6 +119,10 @@ module('Acceptance | submission', function (hooks) {
 
     await waitFor('input[type=file]');
 
+    /**
+     * At start of Files step, immediately click Next to make sure it won't
+     * proceed without a file
+     */
     await click('[data-test-workflow-files-next]');
 
     await waitFor(document.querySelector('.toast-message'));
@@ -180,7 +184,9 @@ module('Acceptance | submission', function (hooks) {
 
     await waitFor('[data-test-submissions-index-submissions-table]');
     await click('table > tbody > tr > td > a');
-    assert.ok(currentURL().includes('/submissions/https:'));
+    console.log(currentURL());
+
+    assert.ok(currentURL().includes('/submissions/2'));
     assert.dom('[data-test-submission-detail-status]').includesText('submitted');
     assert.dom('[data-test-submission-detail-submitter]').includesText('Nihu Ser');
     assert.dom('[data-test-submission-detail-submitter]').includesText('(nihuser@jhu.edu)');

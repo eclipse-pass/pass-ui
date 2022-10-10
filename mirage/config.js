@@ -179,11 +179,27 @@ export default function (config) {
       });
 
       // Submission Events
-      this.post('/submissionEvent', 'submissionEvent');
-      this.get('/submissionEvent/:id', 'submissionEvent');
+      this.post('/submissionEvent', function (schema, request) {
+        const attrs = this.normalizedRequestAttrs();
+        const se = schema.submissionEvents.create(attrs);
+
+        try {
+          const submission = schema.submission.find(attrs.submissionId);
+          submission.submissionStatus =
+            attrs.eventType === 'approval-requested-newuser' ? 'approval-requested' : attrs.eventType;
+          submission.submissionStatus =
+            attrs.eventType === 'approval-requested-newuser' ? 'approval-requested' : attrs.eventType;
+          submission.save();
+        } catch (e) {
+          console.log(e);
+        }
+
+        return se;
+      });
+      this.get('/submissionEvent/:id', (schema, request) => schema.submissionEvents.find(request.params.id));
       this.get('/submissionEvent', (schema, request) => {
         console.log(`[MirageJS] GET /submissionEvent | query: ${JSON.stringify(request.queryParams)}`);
-        return schema.submissionEvent.none();
+        return schema.submissionEvents.none();
       });
 
       // Grants
@@ -191,6 +207,11 @@ export default function (config) {
       this.get('/grant', (schema, request) => {
         console.log(`[MirageJS] GET /grant | query: ${JSON.stringify(request.queryParams)}`);
         return schema.grant.all();
+      });
+
+      this.get('/repositoryCopy/:id', 'repositoryCopy');
+      this.get('/repositoryCopy', (schema, request) => {
+        return schema.repositoryCopies.none();
       });
 
       /**
