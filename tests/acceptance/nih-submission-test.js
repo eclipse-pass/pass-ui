@@ -177,16 +177,19 @@ module('Acceptance | submission', function (hooks) {
 
     await waitFor('[data-test-workflow-thanks-thank-you]');
     assert.dom('[data-test-workflow-thanks-thank-you]').includesText('Thank you!');
-    assert.ok(currentURL().includes('/thanks'));
+    assert.ok(currentURL().includes('/thanks'), `Unexpected URL encountered: ${currentURL()} :: expected /thanks`);
 
     await click('[data-test-workflow-thanks-link-to-submissions]');
     assert.equal(currentURL(), '/submissions');
 
+    const submissionHref = '/submissions/2';
     await waitFor('[data-test-submissions-index-submissions-table]');
-    await click('table > tbody > tr > td > a');
-    console.log(currentURL());
+    await click(`table a[href="/app${submissionHref}"]`);
 
-    assert.ok(currentURL().includes('/submissions/2'));
+    assert.ok(
+      currentURL().includes(submissionHref),
+      `Unexpected URL encountered: ${currentURL()} :: expected ${submissionHref}`
+    );
     assert.dom('[data-test-submission-detail-status]').includesText('submitted');
     assert.dom('[data-test-submission-detail-submitter]').includesText('Nihu Ser');
     assert.dom('[data-test-submission-detail-submitter]').includesText('(nihuser@jhu.edu)');
@@ -197,7 +200,7 @@ module('Acceptance | submission', function (hooks) {
     assert.dom('td.projectname-column').includesText('Regulation of Synaptic Plasticity in Visual Cortex');
     assert.dom('td.funder-column').includesText('NATIONAL INSTITUTE OF HEALTH');
     assert.dom('td.awardnum-column').includesText('R01EY012124');
-    assert.dom(document.querySelector('tr > td:nth-child(5)')).includesText('1');
+    assert.dom(document.querySelector('tr > td:nth-child(5)')).includesText('2');
     assert.dom(document.querySelector('tr > td:nth-child(6)')).includesText('active');
     assert.dom(document.querySelector('tr > td:nth-child(7)')).includesText('no issues detected');
 
@@ -207,11 +210,13 @@ module('Acceptance | submission', function (hooks) {
     assert.dom('[data-test-grants-detail-name]').includesText('Regulation of Synaptic Plasticity in Visual Cortex');
     assert.dom('[data-test-grants-detail-award-number]').includesText('R01EY012124');
     assert.dom('[data-test-grants-detail-funder]').includesText('NATIONAL INSTITUTE OF HEALTH');
-    assert.dom(document.querySelector('tr > td:nth-child(1)')).includesText('Quantitative profiling of carbonyl');
-    assert.dom(document.querySelector('tr > td:nth-child(2)')).includesText('R01EY012124');
-    assert.dom(document.querySelector('tr > td:nth-child(3)')).includesText('PubMed Central');
-    assert.dom(document.querySelector('tr > td:nth-child(5)')).includesText('submitted');
-    assert.dom(document.querySelector('tr > td:nth-child(6)')).includesText('Not available');
+    assert
+      .dom(document.querySelector('tr:nth-child(3) > td:nth-child(1)'))
+      .includesText('Quantitative profiling of carbonyl');
+    assert.dom(document.querySelector('tr:nth-child(3) > td:nth-child(2)')).includesText('R01EY012124');
+    assert.dom(document.querySelector('tr:nth-child(3) > td:nth-child(3)')).includesText('PubMed Central');
+    assert.dom(document.querySelector('tr:nth-child(3) > td:nth-child(5)')).includesText('submitted');
+    assert.dom(document.querySelector('tr:nth-child(3) > td:nth-child(6)')).includesText('Not available');
   });
 
   test('can walk through an nih submission workflow and make a submission - covid case', async function (assert) {

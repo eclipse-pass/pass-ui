@@ -12,6 +12,7 @@ export default function (config) {
       application: JSONAPISerializer.extend({
         keyForAttribute: (attr) => (attr ? camelize(attr) : null),
         keyForRelationship: (key) => (key ? camelize(key) : null),
+        alwaysIncludeLinkageData: true,
       }),
       policy: JSONAPISerializer.extend({
         // include: ['repositories']
@@ -111,6 +112,10 @@ export default function (config) {
           'Content-Type': 'application/octet-stream',
         });
       });
+      this.get('/file', (schema, request) => {
+        console.log(`[MirageJS] GET /file | query ${JSON.stringify(request.queryParams)}`);
+        return schema.file.none();
+      });
       this.post('/file', 'file');
       this.patch('/file/:id', () => new Response(204));
 
@@ -130,6 +135,9 @@ export default function (config) {
 
       // Funders
       this.get('/funder/:id', 'funder');
+      // this.get('/funder/:id', (schema, request) => {
+      //   debugger;
+      // });
 
       // Repositories
       this.get('/repository', (schema, request) => {
@@ -187,8 +195,6 @@ export default function (config) {
           const submission = schema.submission.find(attrs.submissionId);
           submission.submissionStatus =
             attrs.eventType === 'approval-requested-newuser' ? 'approval-requested' : attrs.eventType;
-          submission.submissionStatus =
-            attrs.eventType === 'approval-requested-newuser' ? 'approval-requested' : attrs.eventType;
           submission.save();
         } catch (e) {
           console.log(e);
@@ -196,7 +202,10 @@ export default function (config) {
 
         return se;
       });
-      this.get('/submissionEvent/:id', (schema, request) => schema.submissionEvents.find(request.params.id));
+      this.get('/submissionEvent/:id', (schema, request) => {
+        console.log(`[MirageJS] GET /submissionEvent/${request.params.id}`);
+        return schema.submissionEvents.find(request.params.id);
+      });
       this.get('/submissionEvent', (schema, request) => {
         console.log(`[MirageJS] GET /submissionEvent | query: ${JSON.stringify(request.queryParams)}`);
         return schema.submissionEvents.none();
@@ -211,7 +220,14 @@ export default function (config) {
 
       this.get('/repositoryCopy/:id', 'repositoryCopy');
       this.get('/repositoryCopy', (schema, request) => {
+        console.log(`[MirageJS] GET /repositoryCopy | query ${JSON.stringify(request.queryParams)}`);
         return schema.repositoryCopies.none();
+      });
+
+      this.get('/deposit/:id', 'deposit');
+      this.get('/deposit', (schema, request) => {
+        console.log(`[MirageJS] GET /deposit | query ${JSON.stringify(request.queryParams)}`);
+        return schema.deposit.none();
       });
 
       /**
