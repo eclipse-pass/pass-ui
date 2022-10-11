@@ -222,13 +222,7 @@ module('Acceptance | submission', function (hooks) {
   test('can walk through an nih submission workflow and make a submission - covid case', async function (assert) {
     sharedScenario(this.server);
 
-    await visit(
-      '/?userToken=https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95&covid=true'
-    );
-    assert.equal(
-      currentURL(),
-      '/?userToken=https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95&covid=true'
-    );
+    await visit('/app');
 
     await waitFor('[data-test-covid-notice-banner]');
     assert.dom('[data-test-covid-notice-banner]').exists();
@@ -372,8 +366,12 @@ module('Acceptance | submission', function (hooks) {
     assert.equal(currentURL(), '/submissions');
 
     await waitFor('[data-test-submissions-index-submissions-table]');
-    await click('table > tbody > tr > td > a');
-    assert.ok(currentURL().includes('/submissions/https:'));
+
+    const rowSelector = document.querySelector('table tbody tr:nth-child(3) a');
+    assert.dom(rowSelector).includesText('Quantitative profiling of carbonyl');
+    await click(rowSelector);
+
+    assert.ok(currentURL().includes('/submissions/2'));
     assert.dom('[data-test-submission-detail-status]').includesText('submitted');
     assert
       .dom('[data-test-submission-detail-covid]')
