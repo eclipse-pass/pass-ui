@@ -14,4 +14,8 @@ export default class PublicationModel extends Model {
   get abstract() {
     return this.publicationAbstract;
   }
+  // TODO: may be removed if `publicationAbstract` is renamed to `abstract`
+  set abstract(value) {
+    this.publicationAbstract = value;
+  }
 }

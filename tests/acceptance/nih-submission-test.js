@@ -2,7 +2,7 @@
 import Service from '@ember/service';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
-import { click, currentURL, fillIn, find, triggerKeyEvent, triggerEvent, visit, waitFor } from '@ember/test-helpers';
+import { click, currentURL, fillIn, find, triggerEvent, triggerKeyEvent, visit, waitFor } from '@ember/test-helpers';
 import { authenticateSession } from 'ember-simple-auth/test-support';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 import sharedScenario from '../../mirage/scenarios/shared';
@@ -565,11 +565,7 @@ module('Acceptance | submission', function (hooks) {
   test('reset DOI part way through submission', async function (assert) {
     sharedScenario(this.server);
 
-    await visit('/?userToken=https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95');
-    assert.equal(
-      currentURL(),
-      '/?userToken=https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95'
-    );
+    await visit('/app');
 
     assert.dom('[data-test-start-new-submission]').exists();
     await click(find('[data-test-start-new-submission]'));
@@ -590,6 +586,7 @@ module('Acceptance | submission', function (hooks) {
       );
     assert.dom('[data-test-journal-name-input]').hasValue('The Analyst');
 
+    // Make sure inputs for title and journal are not accepted
     await focus('[data-test-article-title-text-area]');
     await triggerKeyEvent('[data-test-article-title-text-area]', 'keydown', 77 /* m */);
     await triggerKeyEvent('[data-test-article-title-text-area]', 'keydown', 79 /* o */);
@@ -674,9 +671,17 @@ module('Acceptance | submission', function (hooks) {
 
     await waitFor(document.querySelector('#swal2-content'));
     assert.dom(document.querySelector('#swal2-content')).includesText("should have required property 'authors'");
-    await click(document.querySelector('.swal2-confirm'));
 
-    await click(document.querySelectorAll('.alpaca-array-toolbar-action')[1]);
+    // Some reason, setting the document query to a variable before clicking works,
+    // but calling the query selector in the click does not work
+    const confirmBtn = document.querySelector('.swal2-confirm');
+    assert.ok(confirmBtn);
+    await waitFor(confirmBtn);
+    await click(confirmBtn);
+
+    const addAuthorBtn = document.querySelectorAll('.alpaca-array-toolbar-action').item(1);
+    assert.ok(addAuthorBtn);
+    await click(addAuthorBtn);
 
     await waitFor('input[name=authors_0_author]');
     await fillIn('input[name=authors_0_author]', 'John Moo');
@@ -729,11 +734,7 @@ module('Acceptance | submission', function (hooks) {
   test('opt out of PMC policy', async function (assert) {
     sharedScenario(this.server);
 
-    await visit('/?userToken=https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95');
-    assert.equal(
-      currentURL(),
-      '/?userToken=https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95'
-    );
+    await visit('/app');
 
     assert.dom('[data-test-start-new-submission]').exists();
     await click(find('[data-test-start-new-submission]'));
@@ -776,14 +777,15 @@ module('Acceptance | submission', function (hooks) {
 
     /**
      * Mock the response from the policy service for getting repositories
+     * Reset the Mirage namespace here will only apply to this mock
      */
-    this.server.get('https://pass.local/policyservice/repositories', () => ({
+    this.server.namespace = '';
+    this.server.get('/policyservice/repositories', () => ({
       required: [],
       'one-of': [],
       optional: [
         {
-          'repository-id':
-            'https://pass.local/fcrepo/rest/repositories/41/96/0a/92/41960a92-d3f8-4616-86a6-9e9cadc1a269',
+          'repository-id': '1',
           selected: true,
         },
       ],
@@ -814,9 +816,15 @@ module('Acceptance | submission', function (hooks) {
 
     await waitFor(document.querySelector('#swal2-content'));
     assert.dom(document.querySelector('#swal2-content')).includesText("should have required property 'authors'");
-    await click(document.querySelector('.swal2-confirm'));
 
-    await click(document.querySelectorAll('.alpaca-array-toolbar-action')[1]);
+    const confirmBtn = document.querySelector('.swal2-confirm');
+    assert.ok(confirmBtn, 'No SweetAlert OK button found');
+    await waitFor(confirmBtn);
+    await click(confirmBtn);
+
+    const addAuthorBtn = document.querySelectorAll('.alpaca-array-toolbar-action').item(1);
+    assert.ok(addAuthorBtn, "Couldn't find the Add Author button");
+    await click(addAuthorBtn);
 
     await waitFor('input[name=authors_0_author]');
     await fillIn('input[name=authors_0_author]', 'John Moo');
