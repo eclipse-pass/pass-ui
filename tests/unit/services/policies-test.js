@@ -77,7 +77,7 @@ module('Unit | Service | policies', (hooks) => {
   test('policy endpoint should throw error on non-200 response', function (assert) {
     assert.expect(2);
 
-    server.get('http://localhost:8080/api/v1/policy/*', () => new Response(404));
+    this.server.get('/policy/:id', () => new Response(404));
 
     const service = this.owner.lookup('service:policies');
     assert.ok(service, 'service not found');
@@ -99,7 +99,7 @@ module('Unit | Service | policies', (hooks) => {
   test('repo endpoint should throw error on non-200 response', function (assert) {
     assert.expect(2);
 
-    server.get('http://localhost:8080/api/v1/repository/*', () => new Response(404));
+    this.server.get('/repository/:id', () => new Response(404));
 
     const service = this.owner.lookup('service:policies');
     assert.ok(service, 'service not found');
