@@ -12,8 +12,6 @@ module('Acceptance | submission', function (hooks) {
   setupMirage(hooks);
 
   hooks.beforeEach(async function () {
-    this.server.logging = true;
-
     const mockStaticConfig = Service.extend({
       getStaticConfig: () =>
         Promise.resolve({
