@@ -121,6 +121,7 @@ export default function (config) {
 
       // Users
       this.get('/user/:id', 'user');
+      this.get('/user', (schema, request) => schema.user.where({ displayName: 'Staff Hasgrants' }));
 
       // Journals
       this.get('/journal/:id', 'journal');

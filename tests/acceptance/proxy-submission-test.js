@@ -5,13 +5,13 @@ import { setupApplicationTest } from 'ember-qunit';
 import { find, click, visit, currentURL, fillIn, waitFor, triggerKeyEvent, triggerEvent } from '@ember/test-helpers';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 import sharedScenario from '../../mirage/scenarios/shared';
-import { pluralize } from 'ember-inflector';
+import { authenticateSession } from 'ember-simple-auth/test-support';
 
 module('Acceptance | proxy submission', function (hooks) {
   setupApplicationTest(hooks);
   setupMirage(hooks);
 
-  hooks.beforeEach(function () {
+  hooks.beforeEach(async function () {
     const mockStaticConfig = Service.extend({
       getStaticConfig: () =>
         Promise.resolve({
@@ -23,40 +23,13 @@ module('Acceptance | proxy submission', function (hooks) {
       addCss: () => {},
     });
 
-    this.server.get('https://pass.local/downloadservice/lookup', () => ({
-      manuscripts: [
-        {
-          url: 'https://dash.harvard.edu/bitstream/1/12285462/1/Nanometer-Scale%20Thermometry.pdf',
-          repositoryLabel: 'Harvard University - Digital Access to Scholarship at Harvard (DASH)',
-          type: 'application/pdf',
-          source: 'Unpaywall',
-          name: 'Nanometer-Scale Thermometry.pdf',
-        },
-        {
-          url: 'http://europepmc.org/articles/pmc4221854?pdf=render',
-          repositoryLabel: 'pubmedcentral.nih.gov',
-          type: 'application/pdf',
-          source: 'Unpaywall',
-          name: 'pmc4221854?pdf=render',
-        },
-        {
-          url: 'http://arxiv.org/pdf/1304.1068',
-          repositoryLabel: 'arXiv.org',
-          type: 'application/pdf',
-          source: 'Unpaywall',
-          name: '1304.1068',
-        },
-      ],
-    }));
+    this.server.logging = true;
 
     /**
      * Create the user in the database with both top level attrs and
      * attrs inside _source for the adapter to process elastic response
      */
     let attrs = {
-      '@id': 'https://pass.local/fcrepo/rest/users/21/36/86/ff/213686ff-da91-455b-977d-b1bae238d9b6',
-      '@type': 'User',
-      '@context': 'https://oa-pass.github.io/pass-data-model/src/main/resources/context-3.4.jsonld',
       displayName: 'Staff Hasgrants',
       email: 'staffWithGrants@jhu.edu',
       firstName: 'Staff',
@@ -71,44 +44,19 @@ module('Acceptance | proxy submission', function (hooks) {
       username: 'staff1@johnshopkins.edu',
     };
 
-    this.server.create('user', { ...attrs, _source: attrs });
-
-    /**
-     * Mock the responses from elastic search
-     */
-    this.server.post('http://localhost:9200/pass/**', (schema, request) => {
-      let models;
-      let type = JSON.parse(request.requestBody).query.bool.filter.term['@type'].toLowerCase();
-      type = pluralize(type);
-
-      if (type === 'users') {
-        models = schema.users.where({ firstName: 'Staff' }).models.map((model) => model.attrs);
-      } else {
-        models = schema[type].all().models.map((model) => model.attrs);
-      }
-
-      let elasticReponse = {
-        hits: {
-          max_score: 1,
-          hits: models,
-          total: models.length,
-        },
-      };
-
-      return elasticReponse;
-    });
+    this.server.create('user', attrs);
 
     this.owner.register('service:app-static-config', mockStaticConfig);
+
+    await authenticateSession({
+      user: { id: '0' },
+    });
   });
 
   test('can walk through a proxy submission workflow and make a submission – with pass account', async function (assert) {
     sharedScenario(this.server);
 
-    await visit('/?userToken=https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95');
-    assert.equal(
-      currentURL(),
-      '/?userToken=https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95'
-    );
+    await visit('/app');
 
     await waitFor('[data-test-start-new-submission]');
     await click(find('[data-test-start-new-submission]'));
@@ -291,8 +239,9 @@ module('Acceptance | proxy submission', function (hooks) {
     assert.equal(currentURL(), '/submissions');
 
     await waitFor('[data-test-submissions-index-submissions-table]');
-    await click('table > tbody > tr > td > a');
-    assert.ok(currentURL().includes('/submissions/https:'));
+    await click('table > tbody > tr:nth-child(3) > td > a');
+
+    assert.ok(currentURL().includes('/submissions/2'));
     assert.dom('[data-test-submission-detail-status]').includesText('approval requested');
   }
 });
