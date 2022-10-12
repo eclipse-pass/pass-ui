@@ -26,4 +26,5 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
       - run: yarn install --frozen-lockfile
-      - run: ./node_modules/ember-cli/bin/ember test --test-port=4200
+      # - run: ./node_modules/ember-cli/bin/ember test --test-port=4200
+      -run: yarn test
