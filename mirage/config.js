@@ -124,20 +124,23 @@ export default function (config) {
 
       // Journals
       this.get('/journal/:id', 'journal');
+      this.get('/journal', (schema, request) => {
+        console.log(`[MirageJS] GET /journal | query ${JSON.stringify(request.queryParams)}`);
+        // /test/journal?filter[journal]=journalName=ini=*The Analyst*
+        // We could make it generic for the autocomplete service, but not much
+        // reason just for tests
+        return schema.journal.where({ journalName: 'The Analyst' });
+      });
 
       // Policies
       this.get('/policy', (schema, request) => {
         console.log(`[MirageJS] GET /policy | query: ${JSON.stringify(request.queryParams)}`);
         return schema.policy.all();
       });
-      // this.get('/policy', 'policy');
       this.get('/policy/:id', 'policy');
 
       // Funders
       this.get('/funder/:id', 'funder');
-      // this.get('/funder/:id', (schema, request) => {
-      //   debugger;
-      // });
 
       // Repositories
       this.get('/repository', (schema, request) => {
