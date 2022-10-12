@@ -106,12 +106,13 @@ export default function (config) {
 
       // Files
       this.get('/file/:id', 'file');
-      this.get('/file/:id/data', (schema, request) => {
-        console.log(`[MirageJS] GET /file/${request.params.id}/data`);
-        return new Response(200, {
-          'Content-Type': 'application/octet-stream',
-        });
-      });
+      this.get(
+        '/file/:id/data',
+        (schema, request) =>
+          new Response(200, {
+            'Content-Type': 'application/octet-stream',
+          })
+      );
       this.get('/file', (schema, request) => {
         console.log(`[MirageJS] GET /file | query ${JSON.stringify(request.queryParams)}`);
         return schema.file.none();
@@ -125,29 +126,19 @@ export default function (config) {
 
       // Journals
       this.get('/journal/:id', 'journal');
-      this.get('/journal', (schema, request) => {
-        console.log(`[MirageJS] GET /journal | query ${JSON.stringify(request.queryParams)}`);
-        // /test/journal?filter[journal]=journalName=ini=*The Analyst*
-        // We could make it generic for the autocomplete service, but not much
-        // reason just for tests
-        return schema.journal.where({ journalName: 'The Analyst' });
-      });
+      // We could make it generic for the autocomplete service, but not much
+      // reason just for tests
+      this.get('/journal', (schema, request) => schema.journal.where({ journalName: 'The Analyst' }));
 
       // Policies
-      this.get('/policy', (schema, request) => {
-        console.log(`[MirageJS] GET /policy | query: ${JSON.stringify(request.queryParams)}`);
-        return schema.policy.all();
-      });
+      this.get('/policy', (schema, request) => schema.policy.all());
       this.get('/policy/:id', 'policy');
 
       // Funders
       this.get('/funder/:id', 'funder');
 
       // Repositories
-      this.get('/repository', (schema, request) => {
-        console.log(`[MirageJS] GET /repository | query: ${JSON.stringify(request.queryParams)}`);
-        return schema.repository.all();
-      });
+      this.get('/repository', (schema, request) => schema.repository.all());
       this.get('/repository/:id', 'repository');
 
       // Publications
@@ -161,7 +152,6 @@ export default function (config) {
       this.patch('/submission/:id', 'submission');
       // Submission filtering
       this.get('/submission', (schema, request) => {
-        console.log(`[MirageJS] GET /submission | query: ${JSON.stringify(request.queryParams)}`);
         /**
          * JSON object with query parameter as key, value as value.
          * ex: ?param1=value1&param2=value2
@@ -206,33 +196,18 @@ export default function (config) {
 
         return se;
       });
-      this.get('/submissionEvent/:id', (schema, request) => {
-        console.log(`[MirageJS] GET /submissionEvent/${request.params.id}`);
-        return schema.submissionEvents.find(request.params.id);
-      });
-      this.get('/submissionEvent', (schema, request) => {
-        console.log(`[MirageJS] GET /submissionEvent | query: ${JSON.stringify(request.queryParams)}`);
-        return schema.submissionEvents.none();
-      });
+      this.get('/submissionEvent/:id', (schema, request) => schema.submissionEvents.find(request.params.id));
+      this.get('/submissionEvent', (schema, request) => schema.submissionEvents.none());
 
       // Grants
       this.get('/grant/:id', 'grant');
-      this.get('/grant', (schema, request) => {
-        console.log(`[MirageJS] GET /grant | query: ${JSON.stringify(request.queryParams)}`);
-        return schema.grant.all();
-      });
+      this.get('/grant', (schema, request) => schema.grant.all());
 
       this.get('/repositoryCopy/:id', 'repositoryCopy');
-      this.get('/repositoryCopy', (schema, request) => {
-        console.log(`[MirageJS] GET /repositoryCopy | query ${JSON.stringify(request.queryParams)}`);
-        return schema.repositoryCopies.none();
-      });
+      this.get('/repositoryCopy', (schema, request) => schema.repositoryCopies.none());
 
       this.get('/deposit/:id', 'deposit');
-      this.get('/deposit', (schema, request) => {
-        console.log(`[MirageJS] GET /deposit | query ${JSON.stringify(request.queryParams)}`);
-        return schema.deposit.none();
-      });
+      this.get('/deposit', (schema, request) => schema.deposit.none());
 
       /**
        * ################################################################

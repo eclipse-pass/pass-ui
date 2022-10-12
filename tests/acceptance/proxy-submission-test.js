@@ -22,9 +22,6 @@ module('Acceptance | proxy submission', function (hooks) {
         }),
       addCss: () => {},
     });
-
-    this.server.logging = true;
-
     /**
      * Create the user in the database with both top level attrs and
      * attrs inside _source for the adapter to process elastic response
@@ -80,11 +77,7 @@ module('Acceptance | proxy submission', function (hooks) {
   test('can walk through a proxy submission workflow and make a submission – without pass account', async function (assert) {
     sharedScenario(this.server);
 
-    await visit('/?userToken=https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95');
-    assert.equal(
-      currentURL(),
-      '/?userToken=https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95'
-    );
+    await visit('/app');
 
     await waitFor('[data-test-start-new-submission]');
     await click(find('[data-test-start-new-submission]'));
@@ -156,7 +149,6 @@ module('Acceptance | proxy submission', function (hooks) {
         .includesText(
           'Because the person you are submitting on behalf of is not yet in our system, PASS does not have information about his/her grant(s) and cannot associate this submission with a grant. Please click Next to continue.'
         );
-      await click('[data-test-workflow-grants-next]');
     }
 
     await click('[data-test-workflow-grants-next]');
