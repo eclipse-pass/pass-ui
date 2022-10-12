@@ -383,11 +383,7 @@ module('Acceptance | submission', function (hooks) {
   test('stop submission midway and confirm some details are saved then finish submission', async function (assert) {
     sharedScenario(this.server);
 
-    await visit('/?userToken=https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95');
-    assert.equal(
-      currentURL(),
-      '/?userToken=https://pass.local/fcrepo/rest/users/0f/46/19/45/0f461945-d381-460e-9cc1-be4b246faa95'
-    );
+    await visit('/app');
 
     assert.dom('[data-test-start-new-submission]').exists();
     await click(find('[data-test-start-new-submission]'));
@@ -447,15 +443,21 @@ module('Acceptance | submission', function (hooks) {
     assert.equal(currentURL(), '/submissions');
 
     await waitFor('[data-test-submissions-index-submissions-table]');
-    await click('table > tbody > tr > td > a');
-    assert.ok(currentURL().includes('/submissions/https:'));
+
+    const rowForSubmission = 'table tbody tr:nth-child(3)';
+    assert.dom(`${rowForSubmission} td:nth-child(5)`).includesText('draft');
+    await click(`${rowForSubmission} td a`);
+
+    assert.ok(currentURL().includes('/submissions/2'));
     assert.dom('[data-test-submission-detail-status]').includesText('draft');
     assert.dom('[data-test-submission-detail-funder]').includesText('NATIONAL INSTITUTE OF HEALTH');
     assert.dom('[data-test-submission-detail-grant]').includesText('R01EY012124');
 
     await click('[data-test-submission-detail-edit-submission]');
 
-    assert.ok(currentURL().includes('/submissions/new/basics?submission=https'));
+    const fragment = 'submission=2';
+
+    assert.ok(currentURL().includes(`/submissions/new/basics?${fragment}`));
     assert
       .dom('[data-test-article-title-text-area]')
       .hasValue(
@@ -468,7 +470,7 @@ module('Acceptance | submission', function (hooks) {
     await click('[data-test-workflow-basics-next]');
 
     await waitFor('[data-test-submission-funding-table] tbody tr td.projectname-date-column');
-    assert.ok(currentURL().includes('/submissions/new/grants?submission=https'));
+    assert.ok(currentURL().includes(`/submissions/new/grants?${fragment}`));
     assert
       .dom('[data-test-submission-funding-table] tbody tr td.projectname-date-column')
       .includesText('Regulation of Synaptic Plasticity in Visual Cortex');
@@ -476,14 +478,14 @@ module('Acceptance | submission', function (hooks) {
     await click('[data-test-workflow-grants-next]');
 
     await waitFor('[data-test-workflow-policies-next]');
-    assert.ok(currentURL().includes('/submissions/new/policies?submission=https'));
+    assert.ok(currentURL().includes(`/submissions/new/policies?${fragment}`));
     await waitFor('input[type=radio]:checked');
     assert.dom('[data-test-workflow-policies-radio-no-direct-deposit:checked');
 
     await click('[data-test-workflow-policies-next]');
 
     await waitFor('[data-test-workflow-repositories-next]');
-    assert.ok(currentURL().includes('/submissions/new/repositories?submission=https'));
+    assert.ok(currentURL().includes(`/submissions/new/repositories?${fragment}`));
     assert
       .dom('[data-test-workflow-repositories-required-list] li')
       .includesText('PubMed Central - NATIONAL INSTITUTE OF HEALTH');
@@ -493,7 +495,7 @@ module('Acceptance | submission', function (hooks) {
     await click('[data-test-workflow-repositories-next]');
 
     await waitFor('[data-test-metadata-form] textarea[name=title]');
-    assert.ok(currentURL().includes('/submissions/new/metadata?submission=https'));
+    assert.ok(currentURL().includes(`/submissions/new/metadata?${fragment}`));
     assert
       .dom('[data-test-metadata-form] textarea[name=title]')
       .hasValue(
@@ -505,7 +507,7 @@ module('Acceptance | submission', function (hooks) {
 
     await waitFor('input[type=file]');
 
-    assert.ok(currentURL().includes('/submissions/new/files?submission=https'));
+    assert.ok(currentURL().includes(`/submissions/new/files?${fragment}`));
     const submissionFile = new Blob(['moo'], { type: 'application/pdf' });
     submissionFile.name = 'my-submission.pdf';
     await triggerEvent('input[type=file]', 'change', { files: [submissionFile] });
@@ -514,7 +516,7 @@ module('Acceptance | submission', function (hooks) {
     await click('[data-test-workflow-files-next]');
 
     await waitFor('[data-test-workflow-review-submit]');
-    assert.ok(currentURL().includes('/submissions/new/review?submission=https'));
+    assert.ok(currentURL().includes(`/submissions/new/review?${fragment}`));
     assert
       .dom('[data-test-workflow-review-title]')
       .includesText(
@@ -553,8 +555,8 @@ module('Acceptance | submission', function (hooks) {
     assert.equal(currentURL(), '/submissions');
 
     await waitFor('[data-test-submissions-index-submissions-table]');
-    await click('table > tbody > tr > td > a');
-    assert.ok(currentURL().includes('/submissions/https:'));
+    await click(`${rowForSubmission} td a`);
+    assert.ok(currentURL().includes('/submissions/2'));
     assert.dom('[data-test-submission-detail-status]').includesText('submitted');
     assert.dom('[data-test-submission-detail-submitter]').includesText('Nihu Ser');
     assert.dom('[data-test-submission-detail-submitter]').includesText('(nihuser@jhu.edu)');
