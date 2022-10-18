@@ -19,6 +19,9 @@ fi
 
 cat $ENV_FILE
 
+yarn
+# yarn build
 ember build
 
-docker build --no-cache -t eclipse-pass/ui:local .
+# docker build --no-cache -t eclipse-pass/ui:local .
+docker build --no-cache -t ghcr.io/eclipse-pass/pass-ui:0.2.0 .
