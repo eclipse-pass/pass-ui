@@ -216,6 +216,10 @@ export default function (config) {
        */
       this.passthrough('http://localhost/**');
       this.passthrough('https://localhost/**');
+
+      this.passthrough('http://pass.local/**');
+      this.passthrough('https://pass.local/**');
+
       this.passthrough();
     },
   };
