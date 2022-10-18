@@ -34,10 +34,10 @@ export default function (config) {
 
       /** Policy Service */
       this.get('/policyservice/policies', (schema, request) => {
-        const institutionPolicy = schema.policy.findBy({
+        const institutionPolicy = schema.findBy('policy', {
           title: 'Johns Hopkins University (JHU) Open Access Policy',
         });
-        const nihPolicy = schema.policy.findBy({
+        const nihPolicy = schema.findBy('policy', {
           title: 'National Institutes of Health Public Access Policy',
         });
 
@@ -48,8 +48,8 @@ export default function (config) {
       });
       // Return NIH (required) and J10p (optional, selected)
       this.get('/policyservice/repositories', (schema, request) => {
-        const j10p = schema.repository.findBy({ repositoryKey: 'jscholarship' });
-        const pmc = schema.repository.findBy({ repositoryKey: 'pmc' });
+        const j10p = schema.findBy('repository', { repositoryKey: 'jscholarship' });
+        const pmc = schema.findBy('repository', { repositoryKey: 'pmc' });
 
         return {
           required: [{ 'repository-id': pmc.id, selected: false }],
@@ -66,8 +66,7 @@ export default function (config) {
       /** User Service */
       this.get('/pass-user-service/whoami', (schema, request) => {
         const userId = request.queryParams.userToken;
-        // const users = schema.user.all();
-        return schema.users.find(userId);
+        return schema.find('user', userId);
       });
 
       /** Download service */
@@ -97,15 +96,8 @@ export default function (config) {
         ],
       }));
 
-      /**
-       * ################################################################
-       * ##### Only capture data requests using /mirage/test path #######
-       * ################################################################
-       */
-      this.namespace = '/mirage/test';
-
       // Files
-      this.get('/file/:id', 'file');
+      this.get('/file/:id', (schema, request) => schema.find('file', request.params.id));
       this.get(
         '/file/:id/data',
         (schema, request) =>
@@ -115,41 +107,85 @@ export default function (config) {
       );
       this.get('/file', (schema, request) => {
         console.log(`[MirageJS] GET /file | query ${JSON.stringify(request.queryParams)}`);
-        return schema.file.none();
+        return schema.none('file');
       });
-      this.post('/file', 'file');
+      this.post('/file', function (schema, request) {
+        const attrs = this.normalizedRequestAttrs('file');
+        return schema.create('file', attrs);
+      });
+      this.patch('/file/:id', () => new Response(204));
+
+      /**
+       * ################################################################
+       * ##### Only capture data requests using /mirage/test path #######
+       * ################################################################
+       */
+      this.namespace = '/mirage/test';
+
+      /**
+       * Copy 'file' mocks in order to have the proper mocks using the `/mirage/test` namespace
+       */
+      // Files
+      this.get('/file/:id', (schema, request) => schema.find('file', request.params.id));
+      this.get(
+        '/file/:id/data',
+        (schema, request) =>
+          new Response(200, {
+            'Content-Type': 'application/octet-stream',
+          })
+      );
+      this.get('/file', (schema, request) => {
+        console.log(`[MirageJS] GET /file | query ${JSON.stringify(request.queryParams)}`);
+        return schema.none('file');
+      });
+      this.post('/file', function (schema, request) {
+        const attrs = this.normalizedRequestAttrs('file');
+        return schema.create('file', attrs);
+      });
       this.patch('/file/:id', () => new Response(204));
 
       // Users
-      this.get('/user/:id', 'user');
-      this.get('/user', (schema, request) => schema.user.where({ displayName: 'Staff Hasgrants' }));
+      this.get('/user/:id', (schema, request) => schema.find('user', request.params.id));
+      this.get('/user', (schema, request) => schema.where('user', { displayName: 'Staff Hasgrants' }));
 
       // Journals
-      this.get('/journal/:id', 'journal');
+      this.get('/journal/:id', (schema, request) => schema.find('journal', request.params.id));
       // We could make it generic for the autocomplete service, but not much
       // reason just for tests
-      this.get('/journal', (schema, request) => schema.journal.where({ journalName: 'The Analyst' }));
+      this.get('/journal', (schema, request) => schema.where('journal', { journalName: 'The Analyst' }));
 
       // Policies
-      this.get('/policy', (schema, request) => schema.policy.all());
-      this.get('/policy/:id', 'policy');
+      this.get('/policy', (schema, request) => schema.all('policy'));
+      this.get('/policy/:id', (schema, request) => schema.find('policy', request.params.id));
 
       // Funders
-      this.get('/funder/:id', 'funder');
+      this.get('/funder/:id', (schema, request) => schema.find('funder', request.params.id));
 
       // Repositories
-      this.get('/repository', (schema, request) => schema.repository.all());
-      this.get('/repository/:id', 'repository');
+      this.get('/repository', (schema, request) => schema.all('repository'));
+      this.get('/repository/:id', (schema, request) => schema.find('repository', request.params.id));
 
       // Publications
-      this.get('/publication/:id', 'publication');
-      this.post('/publication', 'publication');
-      this.patch('/publication/:id', 'publication');
+      this.get('/publication/:id', (schema, request) => schema.find('publication', request.params.id));
+      this.post('/publication', function (schema, request) {
+        const attrs = this.normalizedRequestAttrs();
+        return schema.create('publication', attrs);
+      });
+      this.patch('/publication/:id', function (schema, request) {
+        const attrs = this.normalizedRequestAttrs('publication');
+        return schema.find('publication', request.params.id).update(attrs);
+      });
 
       // Submissions
-      this.get('/submission/:id', 'submission');
-      this.post('/submission', 'submission');
-      this.patch('/submission/:id', 'submission');
+      this.get('/submission/:id', (schema, request) => schema.find('submission', request.params.id));
+      this.post('/submission', function (schema, request) {
+        const attrs = this.normalizedRequestAttrs('submission');
+        return schema.create('submission', attrs);
+      });
+      this.patch('/submission/:id', function (schema, request) {
+        const attrs = this.normalizedRequestAttrs('submission');
+        return schema.find('submission', request.params.id).update(attrs);
+      });
       // Submission filtering
       this.get('/submission', (schema, request) => {
         /**
@@ -160,7 +196,7 @@ export default function (config) {
         const query = request.queryParams;
 
         if (!query) {
-          return schema.submission.all();
+          return schema.all('submission');
         }
 
         // Find the 'filter[...]' parameter
@@ -168,25 +204,25 @@ export default function (config) {
           .filter((key) => key.includes('filter[submission]'))
           .map((key) => query[key]);
         if (!Array.isArray(submissionFilter) || submissionFilter.length !== 1) {
-          return schema.submission.none();
+          return schema.none('submission');
         }
         // Once we know query params includes a submission filter, get its value
         submissionFilter = submissionFilter[0];
 
         if (submissionFilter.includes('cancelled')) {
-          return schema.submission.all();
+          return schema.all('submission');
         }
 
-        return schema.submission.none();
+        return schema.none('submission');
       });
 
       // Submission Events
       this.post('/submissionEvent', function (schema, request) {
-        const attrs = this.normalizedRequestAttrs();
-        const se = schema.submissionEvents.create(attrs);
+        const attrs = this.normalizedRequestAttrs('submission-event');
+        const se = schema.create('submission-event', attrs);
 
         try {
-          const submission = schema.submission.find(attrs.submissionId);
+          const submission = schema.find('submission', attrs.submissionId);
           submission.submissionStatus =
             attrs.eventType === 'approval-requested-newuser' ? 'approval-requested' : attrs.eventType;
           submission.save();
@@ -196,18 +232,18 @@ export default function (config) {
 
         return se;
       });
-      this.get('/submissionEvent/:id', (schema, request) => schema.submissionEvents.find(request.params.id));
-      this.get('/submissionEvent', (schema, request) => schema.submissionEvents.none());
+      this.get('/submissionEvent/:id', (schema, request) => schema.find('submission-event', request.params.id));
+      this.get('/submissionEvent', (schema, request) => schema.none('submission-event'));
 
       // Grants
-      this.get('/grant/:id', 'grant');
-      this.get('/grant', (schema, request) => schema.grant.all());
+      this.get('/grant/:id', (schema, request) => schema.find('grant', request.params.id));
+      this.get('/grant', (schema, request) => schema.all('grant'));
 
-      this.get('/repositoryCopy/:id', 'repositoryCopy');
-      this.get('/repositoryCopy', (schema, request) => schema.repositoryCopies.none());
+      this.get('/repositoryCopy/:id', (schema, request) => schema.find('repositoryCopy', request.params.id));
+      this.get('/repositoryCopy', (schema, request) => schema.none('repositoryCopy'));
 
-      this.get('/deposit/:id', 'deposit');
-      this.get('/deposit', (schema, request) => schema.deposit.none());
+      this.get('/deposit/:id', (schema, request) => schema.find('deposit', request.params.id));
+      this.get('/deposit', (schema, request) => schema.none('deposit'));
 
       /**
        * ################################################################
