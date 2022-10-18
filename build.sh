@@ -21,4 +21,4 @@ cat $ENV_FILE
 
 ember build
 
-docker build -t eclipse-pass/ui:local .
+docker build --no-cache -t eclipse-pass/ui:local .
