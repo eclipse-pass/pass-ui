@@ -1,4 +1,5 @@
 import { camelize, dasherize } from '@ember/string';
+import { singularize } from 'ember-inflector';
 import JSONAPISerializer from '@ember-data/serializer/json-api';
 
 export default class ApplicationSerializer extends JSONAPISerializer {
@@ -11,10 +12,10 @@ export default class ApplicationSerializer extends JSONAPISerializer {
   }
 
   payloadKeyFromModelName(model) {
-    return model ? camelize(model) : null;
+    return model ? singularize(camelize(model)) : null;
   }
 
   modelNameFromPayloadKey(key) {
-    return key ? dasherize(key) : null;
+    return key ? singularize(dasherize(key)) : null;
   }
 }
