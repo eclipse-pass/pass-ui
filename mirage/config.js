@@ -37,11 +37,11 @@ export default function (config) {
       });
 
       /** Policy Service */
-      this.get('/policyservice/policies', (schema, request) => {
-        const institutionPolicy = dataFinder.findBy(schema, 'policy', {
+      this.get('/policyservice/policies', async (schema, request) => {
+        const institutionPolicy = await dataFinder.findBy(schema, 'policy', {
           title: 'Johns Hopkins University (JHU) Open Access Policy',
         });
-        const nihPolicy = dataFinder.findBy(schema, 'policy', {
+        const nihPolicy = await dataFinder.findBy(schema, 'policy', {
           title: 'National Institutes of Health Public Access Policy',
         });
 
@@ -51,9 +51,9 @@ export default function (config) {
         ];
       });
       // Return NIH (required) and J10p (optional, selected)
-      this.get('/policyservice/repositories', (schema, request) => {
-        const j10p = dataFinder.findBy(schema, 'repository', { repositoryKey: 'jscholarship' });
-        const pmc = dataFinder.findBy(schema, 'repository', { repositoryKey: 'pmc' });
+      this.get('/policyservice/repositories', async (schema, request) => {
+        const j10p = await dataFinder.findBy(schema, 'repository', { repositoryKey: 'jscholarship' });
+        const pmc = await dataFinder.findBy(schema, 'repository', { repositoryKey: 'pmc' });
 
         return {
           required: [{ 'repository-id': pmc.id, selected: false }],
