@@ -3,6 +3,8 @@ import { discoverEmberDataModels } from 'ember-cli-mirage';
 import { createServer, JSONAPISerializer } from 'miragejs';
 import doiJournals from './custom-fixtures/nih-submission/doi-journals';
 import schemas from './routes/schemas';
+import ENV from '../config/environment';
+import { passthroughPolicies } from './service-handler';
 
 export default function (config) {
   let finalConfig = {
@@ -34,6 +36,10 @@ export default function (config) {
 
       /** Policy Service */
       this.get('/policyservice/policies', (schema, request) => {
+        if (ENV.environment !== 'test') {
+          return passthroughPolicies();
+        }
+
         const institutionPolicy = schema.findBy('policy', {
           title: 'Johns Hopkins University (JHU) Open Access Policy',
         });
