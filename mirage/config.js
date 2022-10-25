@@ -3,8 +3,12 @@ import { discoverEmberDataModels } from 'ember-cli-mirage';
 import { createServer, JSONAPISerializer } from 'miragejs';
 import doiJournals from './custom-fixtures/nih-submission/doi-journals';
 import schemas from './routes/schemas';
+import ENV from '../config/environment';
+import MockDataFinder from './service-handler';
 
 export default function (config) {
+  const dataFinder = new MockDataFinder(ENV.environment);
+
   let finalConfig = {
     ...config,
     models: { ...discoverEmberDataModels(), ...config.models },
@@ -33,11 +37,11 @@ export default function (config) {
       });
 
       /** Policy Service */
-      this.get('/policyservice/policies', (schema, request) => {
-        const institutionPolicy = schema.findBy('policy', {
+      this.get('/policyservice/policies', async (schema, request) => {
+        const institutionPolicy = await dataFinder.findBy(schema, 'policy', {
           title: 'Johns Hopkins University (JHU) Open Access Policy',
         });
-        const nihPolicy = schema.findBy('policy', {
+        const nihPolicy = await dataFinder.findBy(schema, 'policy', {
           title: 'National Institutes of Health Public Access Policy',
         });
 
@@ -47,9 +51,9 @@ export default function (config) {
         ];
       });
       // Return NIH (required) and J10p (optional, selected)
-      this.get('/policyservice/repositories', (schema, request) => {
-        const j10p = schema.findBy('repository', { repositoryKey: 'jscholarship' });
-        const pmc = schema.findBy('repository', { repositoryKey: 'pmc' });
+      this.get('/policyservice/repositories', async (schema, request) => {
+        const j10p = await dataFinder.findBy(schema, 'repository', { repositoryKey: 'jscholarship' });
+        const pmc = await dataFinder.findBy(schema, 'repository', { repositoryKey: 'pmc' });
 
         return {
           required: [{ 'repository-id': pmc.id, selected: false }],

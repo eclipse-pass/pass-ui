@@ -94,16 +94,16 @@ module.exports = function (environment) {
     ENV['ember-cli-mirage'].enabled = !!process.env.EMBER_MIRAGE_ENABLED;
   }
 
-  if (process.env.USER_SERVICE_URL) {
-    ENV.userService.url = process.env.USER_SERVICE_URL;
+  if (process.env.USER_SERVICE_PUBLIC_URL) {
+    ENV.userService.url = process.env.USER_SERVICE_PUBLIC_URL;
   }
 
-  if (process.env.SCHEMA_SERVICE_URL) {
-    ENV.schemaService.url = process.env.SCHEMA_SERVICE_URL;
+  if (process.env.SCHEMA_SERVICE_PUBLIC_URL) {
+    ENV.schemaService.url = process.env.SCHEMA_SERVICE_PUBLIC_URL;
   }
 
-  if (process.env.DOI_SERVICE_URL) {
-    ENV.doiService.url = process.env.DOI_SERVICE_URL;
+  if (process.env.DOI_SERVICE_PUBLIC_URL) {
+    ENV.doiService.url = process.env.DOI_SERVICE_PUBLIC_URL;
   }
 
   if (process.env.METADATA_SCHEMA_URI) {
@@ -118,12 +118,12 @@ module.exports = function (environment) {
     ENV.policyService.repositoryEndpoint = process.env.POLICY_SERVICE_REPOSITORY_ENDPOINT;
   }
 
-  if ('MANUSCRIPT_SERVICE_LOOKUP_URL' in process.env) {
-    ENV.oaManuscriptService.lookupUrl = process.env.MANUSCRIPT_SERVICE_LOOKUP_URL;
+  if ('MANUSCRIPT_SERVICE_LOOKUP_PUBLIC_URL' in process.env) {
+    ENV.oaManuscriptService.lookupUrl = process.env.MANUSCRIPT_SERVICE_LOOKUP_PUBLIC_URL;
   }
 
-  if ('MANUSCRIPT_SERVICE_DOWNLOAD_URL' in process.env) {
-    ENV.oaManuscriptService.downloadUrl = process.env.MANUSCRIPT_SERVICE_DOWNLOAD_URL;
+  if ('MANUSCRIPT_SERVICE_DOWNLOAD_PUBLIC_URL' in process.env) {
+    ENV.oaManuscriptService.downloadUrl = process.env.MANUSCRIPT_SERVICE_DOWNLOAD_PUBLIC_URL;
   }
 
   return ENV;
