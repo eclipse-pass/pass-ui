@@ -1,154 +1,108 @@
+/* Import Roboto fonts from Google */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
 :root {
-  --jhu-bg-primary: white;
-  --pass-blue-primary: #418fde;
-  --pass-blue-header: #005eb8;
+  --primary-50: #FEEDDD;
+  --primary-100: #FDE2C9;
+  --primary-200: #FCCDA1;
+  --primary-300: #FBB77A;
+  --primary-400: #F9A252;
+  --primary-500: #F88D2B;
+  --primary-600: #E37108;
+  --primary-700: #AD5606;
+  --primary-800: #773B04;
+  --primary-900: #402002;
 
-  /* JHU Primary Colors */
-  --jhu-blue-spirit: #68ace5;
-  --jhu-blue-heritage: #002d72;
-  --jhu-black: #31261d;
+  --secondary-50: #9C958D;
+  --secondary-100: #938B82;
+  --secondary-200: #7E766E;
+  --secondary-300: #69625B;
+  --secondary-400: #534D48;
+  --secondary-500: #3D3935;
+  --secondary-600: #1F1D1B;
+  --secondary-700: #010101;
+  --secondary-800: #000000;
+  --secondary-900: #000000;
 
-  /* JHU Secondary Colors */
-  --jhu-secondary-1: #cf4520;
-  --jhu-secondary-2: #76232f;
-  --jhu-secondary-3: #a15a95;
-  --jhu-secondary-4: #009b77;
-  --jhu-secondary-5: #0072ce;
-  --jhu-secondary-6: #f1c400;
+  --grey-light: #e5e2e0;
+  --grey-medium: #b4b2ad;
+  --grey-dark: #7e7e7c;
 
-  /* JHU Accent Colors */
-  --jhu-accent-1: #cba052;
-  --jhu-accent-2: #ff9e1b;
-  --jhu-accent-3: #ff6900;
-  --jhu-accent-4: #9e5330;
-  --jhu-accent-5: #4f2c1d;
-  --jhu-accent-6: #e8927c;
-  --jhu-accent-7: #a6192e;
-  --jhu-accent-8: #51284f;
-  --jhu-accent-9: #a192b2;
-  --jhu-accent-10: #418fde;
-  --jhu-accent-11: #86c8bc;
-  --jhu-accent-12: #286140;
-  --jhu-accent-13: #179949;
+  --bg-primary: white;
 
-  /* Fonts */
-  --font-headline: serif;
-  --font-subhead: serif;
-  --font-bodycopy-accent: serif;
-  --font-bodycopy: tahoma, sans-serif;
+  --btn-active-color: #C9C9C9;
+  --danger: #CF4520;
+  --danger-dark: #A6192E;
+  --warning: #F1C400;
+  --aqua: #86C8BC;
 
-  /* Other colors */
-  --btn-active-color: #c9c9c9;
-  --header-color: #4a484c;
+  --font-headline: 'Roboto', san serif;
+  --font-subhead: 'Roboto', san serif;
+  --font-bodycopy-accent: 'Roboto', san serif;
+  --font-bodycopy: 'Roboto', san serif;
 }
-
-/* ---------------- */
-/* .bg-main {
-  background-color: white;
-}
-.bg1 {
-  background-color: var(--jhu-blue-heritage);
-}
-.bg2 {
-  background-color: var(--jhu-blue-spirit);
-}
-.bg-primary {
-  background-color: var(--jhu-accent-10);
-}
-
-.color-secondary {
-  color: var(--jhu-blue-heritage);
-}
-.color-accent {
-  color: var(--jhu-accent-10);
-}
-
-.white {
-  color: white;
-}
-.black {
-  color: var(--jhu-black);
-}
-.text-link {
-  color: var(--jhu-secondary-5);
-}
-.text-link:hover {
-  color: var(--jhu-accent-10);
-}
-
-.header {
-  font-family: var(--font-headline);
-} */
-/* ---------------- */
 
 body {
   font-family: var(--font-bodycopy);
-  color: var(--jhu-black);
+  color: var(--secondary-500);
 }
-h1,
-h2,
-h3,
-h4,
-h5 {
+h1, h2, h3, h4, h5 {
   font-family: var(--font-headline);
 }
-h1,
-h2 {
-  color: var(--header-color);
+h1, h2 {
+  color: var(--secondary-500);
 }
-a,
-.btn-link {
-  color: var(--jhu-secondary-5);
+a, .btn-link {
+  color: var(--primary-500);
 }
-a:hover,
-.btn-link:hover {
-  color: var(--jhu-accent-10);
+a:hover, .btn-link:hover {
+ color: var(--primary-600);
 }
 
 /* Buttons */
 .btn-primary {
-  background-color: var(--pass-blue-primary) !important;
-  border-color: var(--pass-blue-primary) !important;
-  color: white;
+  background-color: var(--primary-500);
+  border-color: var(--primary-500);
+  color:white;
 }
 .btn-primary:hover {
-  background-color: var(--pass-blue-primary);
-  border-color: var(--pass-blue-primary);
+  background-color: var(--primary-600);
+  border-color: var(--primary-600);
 }
 /*
  * This mess must be done in order to properly override Bootstrap styles for a clicked button
  */
 .btn-primary:not(:disabled):not(.disabled):active {
-  background-color: var(--pass-blue-primary);
-  border-color: var(--pass-blue-primary);
+  background-color: var(--primary-500);
+  border-color: var(--primary-500);
 }
 
 .btn-outline-primary {
-  border-color: var(--pass-blue-primary);
-  color: var(--pass-blue-primary);
+  border-color: var(--primary-500);
+  color: var(--primary-500);
 }
 .btn-outline-primary:hover {
-  background-color: var(--pass-blue-primary);
-  border-color: var(--pass-blue-primary);
+  background-color: var(--primary-500);
+  border-color: var(--primary-500);
   color: white;
 }
 .btn-outline-primary:not(:disabled):not(.disabled):active {
-  background-color: var(--pass-blue-primary);
-  border-color: var(--pass-blue-primary);
+  background-color: var(--primary-500);
+  border-color: var(--primary-500);
   color: white;
 }
 
-.btn-danger {
+.btn-danger	{
   color: white;
-  background-color: var(--jhu-secondary-1);
+  background-color: var(--danger);
 }
 .btn-danger:hover {
-  background-color: var(--jhu-accent-7);
-  border-color: var(--jhu-accent-7);
+  background-color: var(--danger-dark);
+  border-color: var(--danger-dark);
 }
 .btn-danger:not(:disabled):not(.disabled):active {
-  background-color: var(--jhu-accent-7);
-  border-color: var(--jhu-accent-7);
+  background-color: var(--danger-dark);
+  border-color: var(--danger-dark);
 }
 
 .btn {
@@ -157,30 +111,30 @@ a:hover,
 
 /* Header */
 #brand-site-container {
-  background-color: var(--jhu-bg-primary);
+  background-color: var(--bg-primary);
 }
 #brand-header {
-  background-color: var(--pass-blue-header);
-  color: var(--jhu-blue-spirit);
+  background-color: var(--secondary-500);
+  color: white;
 }
 #brand-header-title {
   color: white;
 }
 #header-navbar {
   font-family: var(--font-bodycopy);
-  background-color: var(--jhu-bg-primary);
+  background-color: var(--bg-primary);
 }
 #header-navbar .nav-item .active {
   font-weight: bold;
 }
 #header-navbar .nav-link {
-  color: var(--jhu-black);
+  color: var(--secondary-500);
 }
 #user-menu {
-  color: var(--jhu-black);
+  color: var(--secondary-500);
 }
 #user-menu-title {
-  background-color: var(--jhu-secondary-5);
+  background-color: var(--primary-500);
   color: white;
 }
 #user-menu .dropdown-item:active {
@@ -194,56 +148,43 @@ a:hover,
 }
 
 /* Status icons */
-.manuscript-required > .fa-circle,
-.manuscript-required .fa-info-circle,
-.approval-requested > .fa-circle,
-.approval-requested .fa-info-circle,
-.changes-requested > .fa-circle,
-.changes-requested .fa-info-circle,
-.needs-attention > .fa-circle,
-.needs-attention .fa-info-circle,
-.stalled > .fa-circle,
-.stalled .fa-info-circle,
-.failed > .fa-circle,
-.failed .fa-info-circle,
-.rejected > .fa-circle,
-.rejected .fa-info-circle {
-  color: var(--jhu-secondary-6);
+.manuscript-required>.fa-circle, .manuscript-required .fa-info-circle,
+.approval-requested>.fa-circle, .approval-requested .fa-info-circle,
+.changes-requested>.fa-circle, .changes-requested .fa-info-circle,
+.needs-attention>.fa-circle, .needs-attention .fa-info-circle,
+.stalled>.fa-circle, .stalled .fa-info-circle,
+.failed>.fa-circle, .failed .fa-info-circle,
+.rejected>.fa-circle, .rejected .fa-info-circle {
+  color: var(--warning);
 }
-.cancelled > .fa-circle,
-.cancelled .fa-info-circle,
-.not-submitted > .fa-circle,
-.not-submitted .fa-info-circle {
-  color: var(--jhu-accent-10);
+.cancelled>.fa-circle, .cancelled .fa-info-circle,
+.not-submitted>.fa-circle, .not-submitted .fa-info-circle {
+  color: var(--warning);
 }
-.submitted > .fa-circle,
-.submitted .fa-info-circle,
-.complete > .fa-circle,
-.complete .fa-info-circle {
-  color: var(--jhu-accent-11);
+.submitted>.fa-circle, .submitted .fa-info-circle,
+.complete>.fa-circle, .complete .fa-info-circle {
+  color: var(--aqua);
 }
-.draft > .fa-circle,
-.draft .fa-info-circle {
+.draft>.fa-circle, .draft .fa-info-circle {
   color: gray;
 }
 
 /* Submission workflow */
 #proxy-input-block {
-  background-color: var(--jhu-blue-spirit);
-  color: var(--jhu-black);
+  background-color: var(--secondary-500);
+  color: white;
 }
 #on-behalf-of-block {
-  background-color: var(--jhu-blue-spirit);
-  color: var(--jhu-black);
+  background-color: var(--secondary-500);
+  color: white;
 }
 
 th.table-header > i {
-  color: var(--jhu-black);
+  color: var(--secondary-500);
   opacity: 0.8;
 }
-#grant-details-title .back-arrow,
-#submission-details-title .back-arrow {
-  color: var(--jhu-black);
+#grant-details-title .back-arrow, #submission-details-title .back-arrow {
+  color: var(--secondary-500);
   opacity: 0.7;
 }
 #grant-details-title .back-arrow:hover,
