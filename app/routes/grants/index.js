@@ -54,9 +54,10 @@ export default class IndexRoute extends CheckSessionRoute {
         });
       });
 
+      const userMatch = `grants.pi.id==${userId},grants.coPis.id==${userId}`;
       const submissionQuery = {
         filter: {
-          submission: `submissionStatus=out=cancelled;grants.pi.id==${userId},grants.coPis.id==${userId}`,
+          submission: `submissionStatus=out=cancelled;(${userMatch})`,
         },
       };
 

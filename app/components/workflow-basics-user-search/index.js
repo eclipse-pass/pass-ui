@@ -44,7 +44,7 @@ export default class WorkflowBasicsUserSearch extends Component {
   }
 
   userFilter(input) {
-    const match = `=ini=*${input}*`;
+    const match = `=ini="*${input}*"`;
     return [`firstName${match}`, `middleName${match}`, `lastName${match}`, `email${match}`, `displayName${match}`].join(
       ','
     );
@@ -63,7 +63,7 @@ export default class WorkflowBasicsUserSearch extends Component {
     // TODO: sanitize input before building filter!!
     const userQuery = {
       filter: {
-        user: `email=isnull=false;${this.userFilter(input)}`,
+        user: `email=isnull=false;(${this.userFilter(input)})`,
       },
       page: {
         offset: (page - 1) * size,
