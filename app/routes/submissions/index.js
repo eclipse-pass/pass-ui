@@ -19,7 +19,11 @@ export default class IndexRoute extends CheckSessionRoute {
       };
     } else if (user.get('isSubmitter')) {
       query = {
-        filter: { submission: `submitter.id==${user.get('id')};submissionStatus=out=cancelled` },
+        filter: {
+          submission: `submitter.id==${user.get('id')},preparers.id=in=${user.get(
+            'id'
+          )};submissionStatus=out=cancelled`,
+        },
         sort: '-submittedDate',
       };
     }

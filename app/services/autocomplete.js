@@ -48,7 +48,7 @@ export default class AutocompleteService extends Service {
 
     const query = Object.assign({ filter: {} }, context);
 
-    const suggestFilterPart = fieldName.map((field) => `${field}=ini=*${suggestPrefix}*`).join(',');
+    const suggestFilterPart = fieldName.map((field) => `${field}=ini="*${suggestPrefix}*"`).join(',');
 
     // Append the suggest filter piece to the existing type filter, if it exists
     query.filter[type] = query.filter[type] ? `${query.filter[type]};${suggestFilterPart}` : suggestFilterPart;
