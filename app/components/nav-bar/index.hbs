@@ -38,17 +38,21 @@
               </LinkTo>
             </li>
           {{/if}}
-          {{#if this.isJhuPass}}
+          {{#if this.aboutUrl}}
             <li class="nav-item">
               <a class="nav-link" href="{{this.assetsUri}}about.html">
                 About
               </a>
             </li>
+          {{/if}}
+          {{#if this.contactUrl}}
             <li class="nav-item">
               <a class="nav-link" href="{{this.assetsUri}}contact.html">
                 Contact
               </a>
             </li>
+          {{/if}}
+          {{#if this.faqUrl}}
             <li class="nav-item">
               <a class="nav-link" href="{{this.assetsUri}}faq.html">
                 FAQ
@@ -79,17 +83,6 @@
               </span>
               {{this.currentUser.user.displayName}}
             </a>
-            {{! <a
-              class="nav-link dropdown-toggle"
-              href="#"
-              id="navbarDropdown"
-              role="button"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              Dropdown
-            </a> }}
             <div id="user-menu" class="dropdown-menu dropdown-menu-right">
               <div id="user-menu-title" class="dropdown-header text-center">
                 <strong>
