@@ -260,9 +260,18 @@ export default function (config) {
       this.passthrough('http://pass.local/**');
       this.passthrough('https://pass.local/**');
 
+      this.passthrough('http://demo.eclipse-pass.org/**');
+      this.passthrough('https://demo.eclipse-pass.org/**');
+
+      this.passthrough('http://nightly.eclipse-pass.org/**');
+      this.passthrough('https://nightly.eclipse-pass.org/**');
+
       this.passthrough();
     },
   };
 
-  return createServer(finalConfig);
+  const server = createServer(finalConfig);
+  server.logging = true;
+
+  return server;
 }
