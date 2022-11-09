@@ -27,15 +27,6 @@ export default function (config) {
       /** Schema Service */
       schemas(this);
 
-      /** DOI Service */
-      this.get('/doiservice/journal', (schema, request) => {
-        console.log(`[MirageJS] GET /doiservice/journal | query: ${JSON.stringify(request.queryParams)}`);
-        return {
-          'journal-id': doiJournals['journal-id'],
-          crossref: doiJournals.crossref,
-        };
-      });
-
       /** Policy Service */
       this.get('/policyservice/policies', async (schema, request) => {
         const institutionPolicy = await dataFinder.findBy(schema, 'policy', {
@@ -248,6 +239,15 @@ export default function (config) {
 
       this.get('/deposit/:id', (schema, request) => schema.find('deposit', request.params.id));
       this.get('/deposit', (schema, request) => schema.none('deposit'));
+
+      /** DOI Service */
+      this.get('/doiservice/journal', (schema, request) => {
+        console.log(`[MirageJS] GET /journal | query: ${JSON.stringify(request.queryParams)}`);
+        return {
+          'journal-id': doiJournals['journal-id'],
+          crossref: doiJournals.crossref,
+        };
+      });
 
       /**
        * ################################################################

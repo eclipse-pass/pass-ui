@@ -38,6 +38,28 @@ module.exports = function (environment) {
     enabled: true,
   };
 
+  ENV.userService = {
+    url: '/pass-user-service/whoami',
+  };
+
+  ENV.doiService = {
+    url: '/doiservice/journal',
+  };
+
+  ENV.schemaService = {
+    url: '/schemaservice',
+  };
+
+  ENV.policyService = {
+    policyEndpoint: '/policyservice/policies',
+    repositoryEndpoint: '/policyservice/repositories',
+  };
+
+  ENV.oaManuscriptService = {
+    lookupUrl: '/downloadservice/lookup',
+    downloadUrl: '/downloadservice/download',
+  };
+
   if (environment === 'development') {
     // ENV.APP.LOG_RESOLVER = true;
     // ENV.APP.LOG_ACTIVE_GENERATION = true;
@@ -60,29 +82,10 @@ module.exports = function (environment) {
     ENV['ember-cli-mirage'] = {
       enabled: true,
     };
+
+    // Mocked journal endpoint
+    ENV.doiService = { url: '/mirage/test/doiservice/journal' };
   }
-
-  ENV.userService = {
-    url: '/pass-user-service/whoami',
-  };
-
-  ENV.doiService = {
-    url: '/doiservice/journal',
-  };
-
-  ENV.schemaService = {
-    url: '/schemaservice',
-  };
-
-  ENV.policyService = {
-    policyEndpoint: '/policyservice/policies',
-    repositoryEndpoint: '/policyservice/repositories',
-  };
-
-  ENV.oaManuscriptService = {
-    lookupUrl: '/downloadservice/lookup',
-    downloadUrl: '/downloadservice/download',
-  };
 
   ENV.doiMetadataSchemaUri = 'https://eclipse-pass.github.io/metadata-schemas/jhu/global.json';
 
