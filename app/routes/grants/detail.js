@@ -1,3 +1,4 @@
+import { inject as service } from '@ember/service';
 import CheckSessionRoute from '../check-session-route';
 import { hash } from 'rsvp';
 
@@ -11,17 +12,23 @@ import { hash } from 'rsvp';
  */
 
 export default class DetailRoute extends CheckSessionRoute {
+  @service('current-user')
+  currentUser;
+
   model(params, transition) {
     if (!params || !params.grant_id) {
       this.errorHandler.handleError(new Error('didNotLoadData'));
       return;
     }
 
+    const user = get(this, 'currentUser.user');
+
     let grant = this.store.findRecord('grant', params.grant_id);
 
+    const userMatch = `submitter.id==${user.get('id')},preparers.id=in=${user.get('id')}`;
     const query = {
       filter: {
-        submission: `grants.id==${params.grant_id};submissionStatus=out=cancelled`,
+        submission: `grants.id==${params.grant_id};submissionStatus=out=cancelled;(${userMatch})`,
       },
     };
     let submissions = this.store.query('submission', query);
