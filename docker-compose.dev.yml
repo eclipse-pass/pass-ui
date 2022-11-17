@@ -2,8 +2,7 @@ version: '3.8'
 
 services:
   pass-ui:
-    # image: danlynn/ember-cli:3.20.0-node_14.6
-    image: eclipse-pass/pass-ui-dev
+    image: ghcr.io/eclipse-pass/pass-ui-dev
     container_name: pass-ui
     env_file: .demo_env
     build:
@@ -14,7 +13,6 @@ services:
     tmpfs:
       - /passapp/tmp
     ports:
-      - "4200:4200"
       - "7020:7020"
       - "7357:7357"
 

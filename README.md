@@ -28,11 +28,14 @@ The `hosts` (`C:\Windows\System32\Drivers\etc\hosts` for windows, `/etc/hosts` f
 A docker environement which relies on a Shibboleth proxy is in .docker/. All services should
 be available at https://pass.local/.
 
-- In .docker/ run `docker-compose pull`
-  - To start PASS with JHU assets, run `docker-compose up -d`.
-  - To run the Harvard development stack, do `docker-compose -f harvard.yml up -d`
-  - To start PASS with only a few test assets, run `docker-compose -f docker-compose.yml -f docker-compose.public.yml up -d`
-- Wait for the containers to finish coming up, this could take 5-10 minutes. There will be a long pause while the `ember` container builds. When you see the "Build successful" message from `ember` and a small table listing the "Slowest Nodes" that indicates the application is ready to use. It will look similar to:
+Currently, you must have [`pass-docker`](https://github.com/eclipse-pass/pass-docker) along side this repository on your system in order to have the docker setup functional. This is because the UI development setup will use the `pass-docker` environment as its base and override select settings to insert its own development container.
+
+``` sh
+yarn run build:dev  # Build the dev container, if you haven't already done so
+yarn run dev        # Runs the development docker environment
+```
+
+Wait for the containers to finish coming up, this could take 5-10 minutes. There will be a long pause while the `ember` container builds. When you see the "Build successful" message from `ember` and a small table listing the "Slowest Nodes" that indicates the application is ready to use. It will look similar to:
 
 ```
 ember            | Slowest Nodes (totalTime => 5% )              | Total (avg)
@@ -43,18 +46,12 @@ ember            | Babel: ember-lodash (1)                       | 5960ms
 ember            | Babel: ember-data (2)                         | 5386ms (2693 ms)
 ```
 
-- The local code runs in the `ember` container, and changes in the local code will be reflected there.
+- The local code runs in the `pass-ui` container, and changes in the local code will be reflected there.
   - The app directory is bind mounted into the container.
 - Visit your app at https://pass.local/. You will have to login as a test user.
 - Run your tests at https://pass.local/app/tests
-- Fedora repository is at https://pass.local/fcrepo/
-- Elasticsearch index search endpoint is at https://pass.local/es/
 - In order to remove persisted data, stop all the containers and `docker volume prune`
 - Your web browser may complain about unsigned certificates, but the complaints can be ignored.
-
-### Test users
-
-See [https://github.com/eclipse-pass/pass-docker/blob/master/README.md#shibboleth-users] for a list of test users. Each has a password of `moo`.
 
 ### Configuration
 
@@ -113,8 +110,8 @@ The application also gets "branding" configuration from a `config.json` file, wi
 
 ### Using ember in the container.
 
-Login to the ember container with `docker exec -it ember /bin/sh`.
-Then run ember with `./node_modules/ember-cli/bin/ember`.
+Login to the ember container with `docker exec -it pass-ui /bin/sh`.
+Then run ember directly with the `ember` command.
 This can be useful for adding and updating dependencies.
 You can run also run tests, but you may have to install other dependencies such as google-chrome.
 
