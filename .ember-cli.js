@@ -11,7 +11,7 @@ module.exports = {
 
     Setting `disableAnalytics` to true will prevent any data from being sent.
   */
-  liveReload: false,
+  liveReload: true,
   yarn: true,
   watcher: process.env.WATCHER || 'polling',
   disableAnalytics: false,
