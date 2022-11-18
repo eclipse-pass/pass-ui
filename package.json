@@ -11,8 +11,8 @@
   },
   "repository": "",
   "scripts": {
-    "dev": "./dev.sh pull && ./dev.sh up -d",
-    "build:dev": "./dev.sh build pass-ui",
+    "dev": ".docker/dev.sh pull && .docker/dev.sh up -d",
+    "build:dev": ".docker/dev.sh build pass-ui",
     "build": "ember build --environment=production",
     "start": "ember server",
     "test": "PASS_API_NAMESPACE=/mirage/test ember test",

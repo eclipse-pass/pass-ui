@@ -31,7 +31,6 @@ be available at https://pass.local/.
 Currently, you must have [`pass-docker`](https://github.com/eclipse-pass/pass-docker) along side this repository on your system in order to have the docker setup functional. This is because the UI development setup will use the `pass-docker` environment as its base and override select settings to insert its own development container.
 
 ``` sh
-yarn run build:dev  # Build the dev container, if you haven't already done so
 yarn run dev        # Runs the development docker environment
 ```
 
@@ -52,6 +51,13 @@ ember            | Babel: ember-data (2)                         | 5386ms (2693 
 - Run your tests at https://pass.local/app/tests
 - In order to remove persisted data, stop all the containers and `docker volume prune`
 - Your web browser may complain about unsigned certificates, but the complaints can be ignored.
+
+You can run Docker compose commands against the dev instance by using the convenience script at `.docker/dev.sh` which will prefix the correct compose and env files. For example:
+
+``` sh
+.docker/dev.sh logs -f pass-ui # Tail the pass-ui container logs
+.docker/dev.sh down -v # Bring the environment down and clear volumes
+```
 
 ### Configuration
 

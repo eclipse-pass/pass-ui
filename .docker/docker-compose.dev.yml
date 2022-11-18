@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   pass-ui:
-    image: ghcr.io/eclipse-pass/pass-ui-dev
+    image: ghcr.io/eclipse-pass/pass-ui-dev@sha256:d0fc5474b2f747f1bba52f0b3d411926df1e767386107e2a6a9af49643c43bc7
     container_name: pass-ui
     env_file: .demo_env
     build:
