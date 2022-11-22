@@ -6,7 +6,7 @@ services:
     container_name: pass-ui
     env_file: .demo_env
     build:
-      context: ./.docker/ember-dev
+      context: .docker
     volumes:
       - "${PASS_UI_DIR}:/passapp:Z"
       - "${PASS_UI_DIR}/node_modules:/passapp/node_modules:Z"
