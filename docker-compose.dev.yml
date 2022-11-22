@@ -8,8 +8,8 @@ services:
     build:
       context: ./.docker/ember-dev
     volumes:
-      - ../pass-ui/:/passapp
-      - ../pass-ui/node_modules:/passapp/node_modules
+      - "${PASS_UI_DIR}:/passapp:Z"
+      - "${PASS_UI_DIR}/node_modules:/passapp/node_modules:Z"
     tmpfs:
       - /passapp/tmp
     ports:
