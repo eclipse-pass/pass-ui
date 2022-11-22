@@ -52,11 +52,25 @@ ember            | Babel: ember-data (2)                         | 5386ms (2693 
 - In order to remove persisted data, stop all the containers and `docker volume prune`
 - Your web browser may complain about unsigned certificates, but the complaints can be ignored.
 
+Other useful commands:
+* `yarn run dev:logs <container_name>` : follow the Docker logs. Optionally specify the container name you want to see (e.g. `yarn run dev:logs pass-ui`)
+* `yarn run dev:stop` : brings the docker stack down and cleans the volumes
+
 You can run Docker compose commands against the dev instance by using the convenience script at `.docker/dev.sh` which will prefix the correct compose and env files. For example:
 
 ``` sh
 .docker/dev.sh logs -f pass-ui # Tail the pass-ui container logs
 .docker/dev.sh down -v # Bring the environment down and clear volumes
+```
+
+**Specify custom `pass-docker` location**: If you have `pass-docker` locally in a different location (not next to `pass-ui`), the you can specify the `PASS_DOCKER_DIR` environment variable when using these yarn commands:
+
+``` sh
+PASS_DOCKER_DIR=/home/myuser/pass-docker yarn run dev
+
+# Or you can export the environment variable
+export PASS_DOCKER_DIR=/home/myuser/pass-docker
+yarn run dev
 ```
 
 ### Configuration
