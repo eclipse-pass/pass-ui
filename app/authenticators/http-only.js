@@ -19,7 +19,7 @@ export default class HttpOnly extends Base {
   restore(data) {
     return new RSVP.Promise((resolve, reject) => {
       if (!this._validateData(data)) {
-        return reject('Could not restore session - "user" missing.');
+        return reject('Could not restore session.');
       }
 
       return resolve(data);
@@ -56,9 +56,20 @@ export default class HttpOnly extends Base {
     });
   }
 
-  _validateData(data) {
+  async _validateData(data) {
     // see https://tools.ietf.org/html/rfc6749#section-4.2.2
+    if (isEmpty(data) || isEmpty(data.user.id)) return false;
 
-    return !isEmpty(data) && !isEmpty(data.user.id);
+    const url = `${window.location.origin}/authenticated`;
+
+    let response = await fetch(url);
+
+    if (response.ok) {
+      const refreshedData = await response.json();
+
+      return data.user.id === refreshedData.user.id;
+    } else {
+      return false;
+    }
   }
 }
