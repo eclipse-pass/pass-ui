@@ -11,8 +11,9 @@ export default class AuthCallbackRoute extends Route {
         const url = `${window.location.origin}/authenticated`;
 
         let response = await fetch(url);
+        const data = await response.json();
 
-        if (response.ok) {
+        if (response.ok && data.user.id === this.session.data.authenticated.user.id) {
           this.transitionTo('dashboard');
         } else {
           await this.session.invalidate();
