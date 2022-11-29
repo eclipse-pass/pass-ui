@@ -10,7 +10,7 @@ module.exports = function (environment) {
     host: process.env.EMBER_HOST || 'http://localhost:8080',
     // Config for ember-data backend calls
     passApi: {
-      namespace: process.env.PASS_API_NAMESPACE || 'api/v1',
+      namespace: process.env.PASS_API_NAMESPACE || 'data',
     },
     locationType: 'auto',
     'ember-load': {
@@ -43,7 +43,7 @@ module.exports = function (environment) {
   };
 
   ENV.doiService = {
-    url: '/doiservice/journal',
+    url: '/journal',
   };
 
   ENV.schemaService = {
