@@ -18,6 +18,9 @@ export default class HttpOnly extends Base {
    */
   restore(data) {
     return new RSVP.Promise((resolve, reject) => {
+      if (window.location.pathname === '/app/auth-callback') {
+        return reject('Could not restore session.');
+      }
       if (!this._validateData(data)) {
         return reject('Could not restore session.');
       }
