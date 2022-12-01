@@ -6,31 +6,43 @@
 </p>
 
 {{#if @submission.grants}}
-  <h5>Grants added to submission</h5>
+  <h5>
+    Grants added to submission
+  </h5>
   <SubmissionFundingTable @grants={{@submission.grants}} @remove={{action this.removeGrant}} />
-  <button class="btn btn-outline-primary" {{action @back}}>Back</button>
-  <button class="btn btn-primary next pull-right" {{action @next}} data-test-workflow-grants-next>Next</button>
+  <button class="btn btn-outline-primary" {{action @back}}>
+    Back
+  </button>
+  <button class="btn btn-primary next pull-right" data-test-workflow-grants-next {{action @next}}>
+    Next
+  </button>
   <br />
   <br />
 {{/if}}
 
 {{#if @submission.submitter.id}}
-
-  <h5>Available grants</h5>
+  <h5>
+    Available grants
+  </h5>
 
   <p>
     PASS receives information about grants from the University grant database.&nbsp;
     {{#if this.contactUrl}}
       If your grant is not listed,
-      <a href="{{this.contactUrl}}" target="_blank">please contact us</a>.
+      <a href="{{this.contactUrl}}" target="_blank">
+        please contact us
+      </a>
+      .
     {{/if}}
   </p>
 
   {{#if (gt this.pageCount "1")}}
-    <p class="font-italic">Showing
+    <p class="font-italic">
+      Showing
       {{this.pageFirstMatchNumber}}-{{this.pageLastMatchNumber}}
       of total
-      {{this.totalGrants}}</p>
+      {{this.totalGrants}}
+    </p>
   {{/if}}
   <ModelsTable
     @id="grants-selection-table"
@@ -53,25 +65,34 @@
     <nav id="grants-selection-nav" aria-label="...">
       <ul class="pagination justify-content-center">
         <li class="page-item active">
-          <a {{action "prevPage"}} class="fa fa-angle-left"></a>
+          <a class="fa fa-angle-left" {{action "prevPage"}}></a>
         </li>
         <li class="page-item">
-          <a class="page-link">Page {{this.pageNumber}} of {{this.pageCount}}</a>
+          <a class="page-link">
+            Page {{this.pageNumber}} of {{this.pageCount}}
+          </a>
         </li>
         <li class="page-item active">
-          <a {{action "nextPage"}} class="fa fa-angle-right"></a>
+          <a class="fa fa-angle-right" {{action "nextPage"}}></a>
         </li>
       </ul>
     </nav>
   {{/if}}
-
 {{else}}
-  <p data-test-workflow-grants-no-account-message>Because the person you are submitting on behalf of is not yet in our
+  <p data-test-workflow-grants-no-account-message>
+    Because the person you are submitting on behalf of is not yet in our
     system, PASS does not have information about his/her grant(s) and cannot associate this submission with a grant.
-    Please click Next to continue.</p>
+    Please click Next to continue.
+  </p>
 {{/if}}
 <br />
-<button class="btn btn-outline-primary" {{action @back}} data-test-workflow-grants-back>Back</button>
-<button class="btn btn-outline-danger ml-2" {{action "abortSubmission"}}>Abort</button>
-<button class="btn btn-primary next pull-right" {{action @next}} data-test-workflow-grants-next>Next</button>
+<button class="btn btn-outline-primary" data-test-workflow-grants-back {{action @back}}>
+  Back
+</button>
+<button class="btn btn-outline-danger ml-2" {{action "abortSubmission"}}>
+  Cancel
+</button>
+<button class="btn btn-primary next pull-right" data-test-workflow-grants-next {{action @next}}>
+  Next
+</button>
 {{yield}}
