@@ -303,6 +303,9 @@ export default class SubmissionHandlerService extends Service {
     }
 
     file.set('submission', undefined);
-    return file.save().then(() => file.unloadRecord());
+    // removing the save until we have a functioning file service
+    // this was causing bugs in the demo
+    // return file.save().then(() => file.unloadRecord());
+    return file.unloadRecord();
   }
 }
