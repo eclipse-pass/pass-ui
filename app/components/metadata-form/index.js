@@ -32,7 +32,7 @@ export default Component.extend({
           },
         },
         Abort: {
-          label: 'Abort',
+          label: 'Cancel',
           styles: 'pull-left btn btn-outline-danger ml-2',
           click() {
             that.cancel();

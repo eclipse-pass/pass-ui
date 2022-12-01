@@ -3,7 +3,8 @@
 <div {{did-insert this.setupDoiJournal}} {{did-insert this.setupSubmission}} {{did-update this.setupSubmission}}></div>
 {{#unless (or @submission.id @preLoadedGrant)}}
   <div class="py-0 mt-2 alert alert-secondary" id="on-behalf-of-block">
-    <p class="my-2 lead">I'm creating this submission on behalf of:
+    <p class="my-2 lead">
+      I'm creating this submission on behalf of:
       <label>
         <input type="radio" checked={{not this.isProxySubmission}} onchange={{action "proxyStatusToggled" false}} />
         Myself
@@ -25,7 +26,9 @@
         When a submission is created on someone's behalf, PASS will contact that person to acquire their approval before
         finalizing the submission and sending it to its corresponding repositories.
       </p>
-      <p class="mb-0">Please indicate on behalf of whom this submission is being completed:</p>
+      <p class="mb-0">
+        Please indicate on behalf of whom this submission is being completed:
+      </p>
       <div class="input-group pb-3">
         <Input
           @enter={{action "toggleUserSearchModal"}}
@@ -37,23 +40,37 @@
           <button
             id="search-for-users"
             class="btn btn-primary"
-            {{action "toggleUserSearchModal"}}
             type="button"
             data-test-proxy-user-search-button
-          >Search</button>
+            {{action "toggleUserSearchModal"}}
+          >
+            Search
+          </button>
         </span>
       </div>
       {{#if @submission.submitter.id}}
         <p>
-          Currently selected submitter:<br />{{@submission.submitter.firstName}}
+          Currently selected submitter:
+          <br />{{@submission.submitter.firstName}}
           {{@submission.submitter.lastName}}
-          (<a href="mailto:{{@submission.submitter.email}}">{{@submission.submitter.email}}</a>)<br />(<a
-            href="#"
-            {{action "changeSubmitter" this.isProxySubmission null}}
-          >Remove submitter</a>)
+          (
+          <a href="mailto:{{@submission.submitter.email}}">
+            {{@submission.submitter.email}}
+          </a>
+          )
+          <br />
+          (
+          <a href="#" {{action "changeSubmitter" this.isProxySubmission null}}>
+            Remove submitter
+          </a>
+          )
         </p>
       {{/if}}
-      <p class="mb-0"><strong>If the person you are submitting for does not have an account with PASS</strong>, please
+      <p class="mb-0">
+        <strong>
+          If the person you are submitting for does not have an account with PASS
+        </strong>
+        , please
         provide their email address and name so we may notify them:
       </p>
       <div class="form-inline">
@@ -81,7 +98,9 @@
   now to pre-populate submission forms.
 </p>
 <div class="form-group">
-  <label>DOI</label>
+  <label>
+    DOI
+  </label>
   <p class="help-block">
     <i class="glyphicon glyphicon-info-sign"></i>
     <i>
@@ -97,18 +116,25 @@
     class={{this.doiClass}}
     placeholder="Leave blank if your manuscript or article has not yet been assigned a DOI"
     @value={{@publication.doi}}
-    {{on "input" (perform this.lookupDOI true)}}
     data-test-doi-input={{true}}
+    {{on "input" (perform this.lookupDOI true)}}
   />
   <div class="text-danger">
     {{if (and @publication.doi (not this.isValidDOI)) "Please provide a valid DOI"}}
   </div>
   {{#if this.doiServiceError}}
-    <div class="text-danger">{{{this.doiServiceError}}}</div>
+    <div class="text-danger">
+      {{{this.doiServiceError}}}
+    </div>
   {{/if}}
 </div>
 <div class="form-group">
-  <label>Manuscript/Article Title <span class="text-muted">(required)</span></label>
+  <label>
+    Manuscript/Article Title
+    <span class="text-muted">
+      (required)
+    </span>
+  </label>
   <Textarea
     class={{this.titleClass}}
     placeholder="Manuscript/Article Title"
@@ -124,7 +150,12 @@
 
 <div class="form-group">
   <div>
-    <label>Journal <span class="text-muted">(required)</span></label>
+    <label>
+      Journal
+      <span class="text-muted">
+        (required)
+      </span>
+    </label>
     {{#if this.contactUrl}}
       <a class="btn btn-link pull-right pr-0" href="{{this.contactUrl}}">
         Can't find your journal? Contact us to add it.
@@ -152,12 +183,20 @@
     {{/unless}}
   </div>
 </div>
-<LinkTo @route="submissions.index" class="btn btn-outline-primary">Back</LinkTo>
-<button class="btn btn-outline-danger ml-2" {{action "cancel"}}>Abort</button>
+<LinkTo @route="submissions.index" class="btn btn-outline-primary">
+  Back
+</LinkTo>
+<button class="btn btn-outline-danger ml-2" {{action "cancel"}}>
+  Cancel
+</button>
 {{#if this.inFlight}}
-  <button class="btn btn-primary pull-right next" disabled>Next</button>
+  <button class="btn btn-primary pull-right next" disabled>
+    Next
+  </button>
 {{else}}
-  <button class="btn btn-primary pull-right next" {{action @next}} data-test-workflow-basics-next>Next</button>
+  <button class="btn btn-primary pull-right next" data-test-workflow-basics-next {{action @next}}>
+    Next
+  </button>
 {{/if}}
 {{#if this.isShowingUserSearchModal}}
   <div class="user-search-modal">

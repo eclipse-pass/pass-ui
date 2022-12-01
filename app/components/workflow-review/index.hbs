@@ -4,12 +4,19 @@
     <div class="list-group">
       <div href="#" class="list-group-item flex-column align-items-start">
         <div class="d-flex w-100 justify-content-between">
-          <h5 class="mb-1" data-test-workflow-review-title> {{@publication.title}}</h5>
-          <small class="text-muted">{{@submission.dateSubmitted.date-time}}<br
-            />{{@submission.dateCreated.date-time}}</small>
+          <h5 class="mb-1" data-test-workflow-review-title>
+            {{@publication.title}}
+          </h5>
+          <small class="text-muted">
+            {{@submission.dateSubmitted.date-time}}<br />{{@submission.dateCreated.date-time}}
+          </small>
         </div>
-        <p class="mb-1" data-test-workflow-review-doi>{{@publication.doi}}</p>
-        <div class="text-muted">Please review the information below</div>
+        <p class="mb-1" data-test-workflow-review-doi>
+          {{@publication.doi}}
+        </p>
+        <div class="text-muted">
+          Please review the information below
+        </div>
         <table local-class="review-step-table" class="table table-responsive-sm table-bordered w-100">
           <tbody>
             <tr>
@@ -25,7 +32,9 @@
               <td>
                 <ul data-test-workflow-review-repository-list>
                   {{#each @submission.repositories as |repository|}}
-                    <li>{{repository.name}}</li>
+                    <li>
+                      {{repository.name}}
+                    </li>
                   {{/each}}
                 </ul>
               </td>
@@ -33,7 +42,8 @@
 
             {{#if this.mustVisitWeblink}}
               <tr>
-                <td class="text-nowrap text-center" id="externalSubmission">External Submission Required
+                <td class="text-nowrap text-center" id="externalSubmission">
+                  External Submission Required
                   <br />
                   {{#if this.disableSubmit}}
                     <i class="fa fa-exclamation-triangle fa-2x mt-3 notice-triangle"></i>
@@ -50,8 +60,8 @@
                         <button
                           type="button"
                           class="btn btn-link"
-                          {{action "openWeblinkAlert" repo}}
                           data-test-repo-link-button
+                          {{action "openWeblinkAlert" repo}}
                         >
                           {{get repo "url"}}
                         </button>
@@ -62,12 +72,24 @@
               </tr>
             {{/if}}
             <tr>
-              <td>Grants</td>
+              <td>
+                Grants
+              </td>
               <td>
                 <ul class="list-unstyled" data-test-workflow-review-grant-list>
                   {{#each @submission.grants as |grant|}}
-                    <li><b>{{grant.awardNumber}}</b> : {{grant.projectName}}</li>
-                    <li><b>Funder</b> : {{grant.primaryFunder.name}}</li>
+                    <li>
+                      <b>
+                        {{grant.awardNumber}}
+                      </b>
+                      : {{grant.projectName}}
+                    </li>
+                    <li>
+                      <b>
+                        Funder
+                      </b>
+                      : {{grant.primaryFunder.name}}
+                    </li>
                     {{#if (not-eq grant @submission.grants.lastObject)}}
                       <hr />
                     {{/if}}
@@ -76,22 +98,32 @@
               </td>
             </tr>
             <tr>
-              <td>Details</td>
+              <td>
+                Details
+              </td>
               <td>
                 <DisplayMetadataKeys @submission={{@submission}} />
               </td>
             </tr>
 
             <tr>
-              <td>Files</td>
+              <td>
+                Files
+              </td>
               <td>
                 <table local-class="files-table" class="w-100">
                   <thead>
                     <tr>
                       <th scope="col"></th>
-                      <th scope="col" class="font-weight-light">Name</th>
-                      <th scope="col" class="font-weight-light">Type</th>
-                      <th scope="col" class="font-weight-light">Description</th>
+                      <th scope="col" class="font-weight-light">
+                        Name
+                      </th>
+                      <th scope="col" class="font-weight-light">
+                        Type
+                      </th>
+                      <th scope="col" class="font-weight-light">
+                        Description
+                      </th>
                     </tr>
                   </thead>
                   <tbody class="striped">
@@ -127,16 +159,26 @@
             </tr>
             {{#if @submission.isProxySubmission}}
               <tr>
-                <td>Comments</td>
+                <td>
+                  Comments
+                </td>
                 <td>
                   <p data-test-workflow-review-submitter>
                     This submission is prepared on behalf of
                     {{#if @submission.submitter}}
                       {{@submission.submitter.displayName}}
-                      (<a href="mailto:{{@submission.submitter.email}}">{{@submission.submitter.email}}</a>)
+                      (
+                      <a href="mailto:{{@submission.submitter.email}}">
+                        {{@submission.submitter.email}}
+                      </a>
+                      )
                     {{else}}
                       {{@submission.submitterName}}
-                      (<a href="{{@submission.submitterEmail}}">{{@submission.submitterEmailDisplay}}</a>)
+                      (
+                      <a href="{{@submission.submitterEmail}}">
+                        {{@submission.submitterEmailDisplay}}
+                      </a>
+                      )
                     {{/if}}
                   </p>
                   {{! Show the following if not saved yet. }}
@@ -145,11 +187,20 @@
                       Once "Request approval" is clicked, a notification will be sent to
                       {{#if @submission.submitter.id}}
                         {{@submission.submitter.displayName}}
-                        (<a href="mailto:{{@submission.submitter.email}}">{{@submission.submitter.email}}</a>)
+                        (
+                        <a href="mailto:{{@submission.submitter.email}}">
+                          {{@submission.submitter.email}}
+                        </a>
+                        )
                       {{else}}
                         {{@submission.submitterName}}
-                        (<a href="{{@submission.submitterEmail}}">{{@submission.submitterEmailDisplay}}</a>)
-                      {{/if}}. The submission will be sent to its target repositories upon approval, or be sent back to
+                        (
+                        <a href="{{@submission.submitterEmail}}">
+                          {{@submission.submitterEmailDisplay}}
+                        </a>
+                        )
+                      {{/if}}
+                      . The submission will be sent to its target repositories upon approval, or be sent back to
                       you if additional edits are requested by
                       {{@submission.submitter.displayName}}.
                     </p>
@@ -172,14 +223,22 @@
     </div>
   </div>
 </div>
-<button class="btn btn-outline-primary" {{action "back"}} data-test-workflow-review-back>Back</button>
-<button class="btn btn-outline-danger ml-2" {{action "cancel"}}>Abort</button>
+<button class="btn btn-outline-primary" data-test-workflow-review-back {{action "back"}}>
+  Back
+</button>
+<button class="btn btn-outline-danger ml-2" {{action "cancel"}}>
+  Cancel
+</button>
 {{#if @uploading}}
-  <button class="btn btn-primary pull-right submit" disabled>{{@waitingMessage}}</button>
+  <button class="btn btn-primary pull-right submit" disabled>
+    {{@waitingMessage}}
+  </button>
 {{else}}
   <button
     class="btn btn-primary pull-right submit"
     onclick={{perform this.submitTask}}
     data-test-workflow-review-submit
-  >{{this.submitButtonText}}</button>
+  >
+    {{this.submitButtonText}}
+  </button>
 {{/if}}

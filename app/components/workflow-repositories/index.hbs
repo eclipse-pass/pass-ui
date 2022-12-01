@@ -1,7 +1,9 @@
 {{! template-lint-disable no-action require-button-type }}
 <div {{did-insert this.setupRepos}}></div>
 {{#if @requiredRepositories}}
-  <h4 class="mt-3 font-weight-light" data-test-workflow-repositories-required>Required repositories</h4>
+  <h4 class="mt-3 font-weight-light" data-test-workflow-repositories-required>
+    Required repositories
+  </h4>
   <p class="lead text-muted">
     Based on the grant and journal information provided, you are required to submit your manuscript to the repositories
     below. PASS will help you to create submissions for these in the following steps:
@@ -21,11 +23,12 @@
   {{#each @choiceRepositories as |repoGroup|}}
     <ChoiceRepositoriesCard @choiceGroup={{repoGroup}} @toggleRepository={{action "toggleRepository"}} />
   {{/each}}
-
 {{/if}}
 
 {{#if @optionalRepositories}}
-  <h4 class="mt-3 font-weight-light">Optional repositories</h4>
+  <h4 class="mt-3 font-weight-light">
+    Optional repositories
+  </h4>
   <p class="lead text-muted">
     {{! Text below is from previous version - not sure if we need to keep the text about "institutional" repos }}
     {{!-- A Submission to the following will put you in compliance with your
@@ -51,10 +54,12 @@
 
 {{yield}}
 
-<button class="btn btn-outline-primary mt-3" {{action "back"}}>Back</button>
-<button class="btn btn-outline-danger ml-2 mt-3" {{action "cancel"}}>Abort</button>
-<button
-  class="btn btn-primary next pull-right mt-3"
-  {{action "next"}}
-  data-test-workflow-repositories-next
->Next</button>
+<button class="btn btn-outline-primary mt-3" {{action "back"}}>
+  Back
+</button>
+<button class="btn btn-outline-danger ml-2 mt-3" {{action "cancel"}}>
+  Cancel
+</button>
+<button class="btn btn-primary next pull-right mt-3" data-test-workflow-repositories-next {{action "next"}}>
+  Next
+</button>

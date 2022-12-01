@@ -2,11 +2,16 @@
 {{#each @submission.repositories as |repo|}}
   {{#if (eq repo.name "PubMed Central")}}
     <p class="lead text-muted">
-      <a href="https://www.ncbi.nlm.nih.gov/pmc/about/public-access/" target="_blank">National Institutes of Health
-        (NIH) and other PubMed Central-supported funding agencies</a>
+      <a href="https://www.ncbi.nlm.nih.gov/pmc/about/public-access/" target="_blank">
+        National Institutes of Health
+        (NIH) and other PubMed Central-supported funding agencies
+      </a>
       require funded authors to submit the Author's Accepted Manuscripts. For clarification on the difference between
       Author's Accepted Manuscript and Final Published Article,
-      <a href="https://www.ncbi.nlm.nih.gov/pmc/about/authorms/" target="_blank">please see here</a>.
+      <a href="https://www.ncbi.nlm.nih.gov/pmc/about/authorms/" target="_blank">
+        please see here
+      </a>
+      .
     </p>
     <p class="lead text-muted">
       To ensure successful processing of your submission in NIH Manuscript Submission System, be sure to include all
@@ -21,15 +26,21 @@
       <table class="table table-responsive-sm table-sm">
         <thead>
           <tr class="text-center">
-            <th>File Name</th>
-            <th>File Role</th>
+            <th>
+              File Name
+            </th>
+            <th>
+              File Role
+            </th>
             <th>
               <span tooltip-position="top" tooltip="Brief descriptive label, may be displayed in some repositories.">
                 <i class="fas fa-info-circle d-inline"></i>
                 Description
               </span>
             </th>
-            <th>Action</th>
+            <th>
+              Action
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -37,7 +48,9 @@
             <tr data-test-added-manuscript-row>
               <td class="vertical-align-middle">
                 {{#if manuscript.uri}}
-                  <a href="{{manuscript.uri}}">{{manuscript.name}}</a>
+                  <a href="{{manuscript.uri}}">
+                    {{manuscript.name}}
+                  </a>
                 {{else}}
                   {{manuscript.name}}
                 {{/if}}
@@ -52,8 +65,8 @@
                 <button
                   type="button"
                   class="btn btn-outline-danger"
-                  {{action "deleteExistingFile" manuscript}}
                   data-test-remove-file-button
+                  {{action "deleteExistingFile" manuscript}}
                 >
                   Remove
                 </button>
@@ -64,28 +77,34 @@
             <tr data-test-added-supplemental-row>
               <td class="vertical-align-middle">
                 {{#if file.uri}}
-                  <a href="{{file.uri}}">{{file.name}}</a>
+                  <a href="{{file.uri}}">
+                    {{file.name}}
+                  </a>
                 {{else}}
                   {{file.name}}
                 {{/if}}
               </td>
               <td class="text-center vertical-align-middle">
                 <select onchange={{action (mut file.fileRole) value="target.value"}}>
-                  <option value="supplement" selected={{eq file.fileRole "supplement"}}>Supplement</option>
+                  <option value="supplement" selected={{eq file.fileRole "supplement"}}>
+                    Supplement
+                  </option>
                   {{!-- <option value="manuscript" selected={{eq file.fileRole "manuscript"}}>Manuscript</option> --}}
-                  <option value="table" selected={{eq file.fileRole "table"}}>Table</option>
-                  <option value="figure" selected={{eq file.fileRole "figure"}}>Figure</option>
+                  <option value="table" selected={{eq file.fileRole "table"}}>
+                    Table
+                  </option>
+                  <option value="figure" selected={{eq file.fileRole "figure"}}>
+                    Figure
+                  </option>
                 </select>
               </td>
               <td class="vertical-align-middle">
                 <Input class="form-control file-description-width" @value={{file.description}} />
               </td>
               <td class="text-center vertical-align-middle">
-                <button
-                  type="button"
-                  class="btn btn-outline-danger"
-                  {{action "deleteExistingFile" file}}
-                >Remove</button>
+                <button type="button" class="btn btn-outline-danger" {{action "deleteExistingFile" file}}>
+                  Remove
+                </button>
               </td>
             </tr>
           {{/each}}
@@ -101,7 +120,9 @@
   the web or by uploading files from your computer. Once you've selected the manuscript/article, you will still be able
   to manually add supplemental material to the submission by uploading them from your computer.
 </p>
-<p class="lead">Each individual file must be smaller than 100MB.</p>
+<p class="lead">
+  Each individual file must be smaller than 100MB.
+</p>
 <div class="form-group row">
   <div class="col-md-12">
     <FoundManuscripts
@@ -125,7 +146,18 @@
     />
   </div>
 </div>
-<p><strong>Tip:</strong> Use the Control or the Shift key to select multiple files.</p>
-<button class="btn btn-outline-primary" {{action @back}}>Back</button>
-<button class="btn btn-outline-danger ml-2" {{action "cancel"}}>Abort</button>
-<button class="btn btn-primary pull-right next" {{action @next}} data-test-workflow-files-next>Next</button>
+<p>
+  <strong>
+    Tip:
+  </strong>
+  Use the Control or the Shift key to select multiple files.
+</p>
+<button class="btn btn-outline-primary" {{action @back}}>
+  Back
+</button>
+<button class="btn btn-outline-danger ml-2" {{action "cancel"}}>
+  Cancel
+</button>
+<button class="btn btn-primary pull-right next" data-test-workflow-files-next {{action @next}}>
+  Next
+</button>
