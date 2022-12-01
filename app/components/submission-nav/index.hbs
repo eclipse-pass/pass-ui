@@ -3,55 +3,58 @@
   <div class="pb-2">
     <div class="steps">
       <button
-        {{on "click" (fn @loadTab "submissions.new.basics")}}
-        class="step {{if (eq this.step 1) 'btn-primary'}}"
+        class="step {{if (eq this.step 1) "btn-primary"}}"
         disabled={{if (gt 1 this.maxStep) "disabled"}}
+        type="button"
+        {{on "click" (fn @loadTab "submissions.new.basics")}}
       >
         1. Basics
       </button>
       <button
-        {{on "click" (fn @loadTab "submissions.new.grants")}}
-        class="step {{if (eq this.step 2) 'btn-primary'}}"
+        class="step {{if (eq this.step 2) "btn-primary"}}"
         disabled={{if (gt 2 this.maxStep) "disabled"}}
+        {{on "click" (fn @loadTab "submissions.new.grants")}}
       >
         2. Grants
       </button>
       <button
-        {{on "click" (fn @loadTab "submissions.new.policies")}}
-        class="step {{if (eq this.step 3) 'btn-primary'}}"
+        class="step {{if (eq this.step 3) "btn-primary"}}"
         disabled={{if (gt 3 this.maxStep) "disabled"}}
+        {{on "click" (fn @loadTab "submissions.new.policies")}}
       >
         3. Policies
       </button>
       <button
-        {{on "click" (fn @loadTab "submissions.new.repositories")}}
-        class="step {{if (eq this.step 4) 'btn-primary'}}"
+        class="step {{if (eq this.step 4) "btn-primary"}}"
         disabled={{if (gt 4 this.maxStep) "disabled"}}
+        {{on "click" (fn @loadTab "submissions.new.repositories")}}
       >
         4. Repositories
       </button>
       <button
-        {{on "click" (fn @loadTab "submissions.new.metadata")}}
-        class="step {{if (eq this.step 5) 'btn-primary'}}"
+        class="step {{if (eq this.step 5) "btn-primary"}}"
         disabled={{if (gt 5 this.maxStep) "disabled"}}
+        {{on "click" (fn @loadTab "submissions.new.metadata")}}
       >
         5. Details
       </button>
       <button
-        {{on "click" (fn @loadTab "submissions.new.files")}}
-        class="step {{if (eq this.step 6) 'btn-primary'}}"
+        class="step {{if (eq this.step 6) "btn-primary"}}"
         disabled={{if (gt 6 this.maxStep) "disabled"}}
+        {{on "click" (fn @loadTab "submissions.new.files")}}
       >
         6. Files
       </button>
       <button
-        {{on "click" (fn @loadTab "submissions.new.review")}}
-        class="step {{if (eq this.step 7) 'btn-primary'}}"
+        class="step {{if (eq this.step 7) "btn-primary"}}"
         disabled={{if (gt 7 this.maxStep) "disabled"}}
+        {{on "click" (fn @loadTab "submissions.new.review")}}
       >
         7. Review
       </button>
     </div>
   </div>
-  <CovidSelectionBanner @submission={{@submission}} @updateCovidSubmission={{@updateCovidSubmission}} />
+  {{#if this.covidSelectionBanner}}
+    <CovidSelectionBanner @submission={{@submission}} @updateCovidSubmission={{@updateCovidSubmission}} />
+  {{/if}}
 </div>
