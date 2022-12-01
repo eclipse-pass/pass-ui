@@ -9,7 +9,9 @@
         </h3>
       </a>
       <a href="/" class="navbar-brand custom-color d-xs-block d-sm-none">
-        <h3 class="font-weight-light">P.A.S.S.</h3>
+        <h3 class="font-weight-light">
+          P.A.S.S.
+        </h3>
       </a>
       <a href="{{this.homepage}}">
         <img
@@ -21,13 +23,15 @@
       </a>
     </div>
   </header>
-  <NoticeBanner />
+  {{#if this.showNoticeBanner}}
+    <NoticeBanner />
+  {{/if}}
   <div style="z-index:10;">
     <StickyElement>
       <NavBar @fullWidth={{this.fullWidth}} />
     </StickyElement>
   </div>
-  <div class="{{if this.fullWidth 'container-fluid' 'container'}} site-content">
+  <div class="{{if this.fullWidth "container-fluid" "container"}} site-content">
     {{this.institution}}
     {{outlet}}
   </div>
@@ -36,11 +40,15 @@
       {{#if this.contactUrl}}
         <small>
           Interested in making PASS even better? Want to have PASS for your institution?
-          <a href="{{this.assetsUri}}contact.html">Contact us!</a>
+          <a href="{{this.assetsUri}}contact.html">
+            Contact us!
+          </a>
         </small>
       {{/if}}
       <br />
-      <small>rev. {{app-version hideVersion=true}}</small>
+      <small>
+        rev. {{app-version hideVersion=true}}
+      </small>
     </div>
   </footer>
 </div>
