@@ -47,13 +47,13 @@
           {{#if this.manuscript}}
             <tr data-test-added-manuscript-row>
               <td class="vertical-align-middle">
-                {{#if manuscript.uri}}
-                  <a href="{{manuscript.uri}}">
+                {{!-- {{#if manuscript.uri}} --}}
+                {{!-- <a href="{{manuscript.uri}}">
                     {{manuscript.name}}
                   </a>
-                {{else}}
-                  {{manuscript.name}}
-                {{/if}}
+                {{else}} --}}
+                {{manuscript.name}}
+                {{!-- {{/if}} --}}
               </td>
               <td class="text-center vertical-align-middle">
                 Manuscript
@@ -76,13 +76,13 @@
           {{#each this.supplementalFiles as |file|}}
             <tr data-test-added-supplemental-row>
               <td class="vertical-align-middle">
-                {{#if file.uri}}
+                {{!-- {{#if file.uri}}
                   <a href="{{file.uri}}">
                     {{file.name}}
                   </a>
-                {{else}}
-                  {{file.name}}
-                {{/if}}
+                {{else}} --}}
+                {{file.name}}
+                {{!-- {{/if}} --}}
               </td>
               <td class="text-center vertical-align-middle">
                 <select onchange={{action (mut file.fileRole) value="target.value"}}>
