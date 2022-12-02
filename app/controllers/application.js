@@ -5,6 +5,7 @@ import { get } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { alias } from '@ember/object/computed';
 import config from '../config/environment';
+import ENV from 'pass-ui/config/environment';
 
 export default class ApplicationController extends Controller {
   @service currentUser;
@@ -21,6 +22,14 @@ export default class ApplicationController extends Controller {
   @tracked wideRoutes = ['grants.index', 'grants.detail', 'submissions.index'];
   @tracked brand = get(this, 'staticConfig.branding');
   @tracked currentRouteName = this.router.currentRouteName;
+
+  constructor() {
+    super(...arguments);
+
+    if (ENV.environment === 'test') {
+      this.showNoticeBanner = true;
+    }
+  }
 
   get fullWidth() {
     return this.wideRoutes.includes(this.currentRouteName);
