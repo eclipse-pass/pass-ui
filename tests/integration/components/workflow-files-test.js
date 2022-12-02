@@ -129,7 +129,7 @@ module('Integration | Component | workflow files', (hooks) => {
    * First upload a file, then click the 'Remove' button
    */
   test('Files removed from UI should no longer reference submission', async function (assert) {
-    assert.expect(6);
+    assert.expect(5);
 
     const submission = EmberObject.create({});
     this.set('submission', submission);
@@ -141,11 +141,12 @@ module('Integration | Component | workflow files', (hooks) => {
           name: 'File-for-test',
           fileRole: 'manuscript',
           submission,
-          save() {
-            // Should be called when "deleted" to persist changes
-            assert.ok(true);
-            return Promise.resolve();
-          },
+          // TODO: bring this back when file service is implemented
+          // save() {
+          //   // Should be called when "deleted" to persist changes
+          //   assert.ok(true);
+          //   return Promise.resolve();
+          // },
           unloadRecord() {
             assert.ok(true);
             return Promise.resolve();
