@@ -1,19 +1,26 @@
 {{! template-lint-disable link-rel-noopener no-unused-block-params }}
 <div {{did-insert this.setToolTip}}></div>
+<div {{did-insert this.setUpRepoidCell}}></div>
 {{#each this.displayIds as |idInfo index|}}
   <ul class="repoid-cell">
     {{#if idInfo.url}}
       {{#each idInfo.ids as |id|}}
         <a href="{{idInfo.url}}" target="_blank">
-          <li title="{{id.title}}">{{id.display}}</li>
+          <li title="{{id.title}}">
+            {{id.display}}
+          </li>
         </a>
       {{/each}}
     {{else}}
       {{#each idInfo.ids as |id|}}
-        <li title="{{id.title}}">{{id.display}}</li>
+        <li title="{{id.title}}">
+          {{id.display}}
+        </li>
       {{/each}}
     {{/if}}
   </ul>
 {{else}}
-  <span class="nodata-placeholder">Not available</span>
+  <span class="nodata-placeholder">
+    Not available
+  </span>
 {{/each}}

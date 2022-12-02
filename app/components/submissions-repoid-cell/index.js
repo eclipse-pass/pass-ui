@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-get */
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
-import { get, set } from '@ember/object';
+import { action, get, set } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { A } from '@ember/array';
 
@@ -12,13 +12,14 @@ export default class SubmissionsRepoidCell extends Component {
 
   jscholarshipCheckString = '/handle/';
 
-  constructor() {
-    super(...arguments);
-
+  @action
+  setUpRepoidCell() {
     const publicationId = get(this, 'args.record.publication.id');
     if (!publicationId) {
-      set(this, 'repoCopies', A());
-      return;
+      if (!(get(this, 'isDestroyed') || get(this, 'isDestroying'))) {
+        set(this, 'repoCopies', A());
+        return;
+      }
     }
 
     const query = {
@@ -27,7 +28,11 @@ export default class SubmissionsRepoidCell extends Component {
       },
     };
 
-    this.store.query('repositoryCopy', query).then((rc) => set(this, 'repoCopies', rc));
+    this.store.query('repositoryCopy', query).then((rc) => {
+      if (!(get(this, 'isDestroyed') || get(this, 'isDestroying'))) {
+        set(this, 'repoCopies', rc);
+      }
+    });
   }
 
   setToolTip() {
