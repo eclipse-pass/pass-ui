@@ -197,7 +197,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
     Object.keys(buttons)
       .map((key) => buttons[key].textContent)
       .forEach((btn) => {
-        assert.ok(btn === 'Back' || btn === 'Next' || btn === 'Abort');
+        assert.ok(btn === 'Back' || btn === 'Next' || btn === 'Cancel');
       });
   });
 
