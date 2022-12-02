@@ -21,7 +21,7 @@ export default class IndexRoute extends CheckSessionRoute {
       const userMatch = `submitter.id==${user.get('id')},preparers.id=in=${user.get('id')}`;
       query = {
         filter: {
-          submission: `(${userMatch});submissionStatus=outi=cancelled`,
+          submission: `(${userMatch});submissionStatus=out=cancelled`,
         },
         sort: '-submittedDate',
       };
