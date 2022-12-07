@@ -1,10 +1,17 @@
 {{#if this.displayInfoBanner}}
-  <LinkTo
-    class="info-banner p-1 text-center font-weight-bold"
-    @route="submissions.new.basics"
-    @query={{hash covid="true"}}
-    data-test-covid-notice-banner
-  >
-    Submit COVID-19 related research manuscripts and data here
-  </LinkTo>
+  <div class="info-banner p-1 text-center font-weight-bold">
+    Need help making a submission? Read our submission workflow
+    <a
+      href="https://github.com/eclipse-pass/main/blob/main/docs/user/README.md"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      instructions
+    </a>
+    or
+    <a href={{this.contactUrl}} target="_blank" rel="noopener noreferrer">
+      contact us
+    </a>
+    .
+  </div>
 {{/if}}
