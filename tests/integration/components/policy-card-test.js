@@ -82,7 +82,7 @@ module('Integration | Component | policy card', (hooks) => {
       assert.equal(inputs.length, 2, `Found ${inputs.length} inputs, but was expecting 2`);
 
       // Select option to remove this policy
-      await click(inputs[0]);
+      await click(inputs[1]);
 
       const effectivePolicies = get(this, 'submission.effectivePolicies');
       assert.equal(effectivePolicies.length, 0, 'Should be ZERO effective policies');
