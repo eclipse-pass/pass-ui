@@ -2,13 +2,22 @@
 <div class="card w-100 my-2" {{did-insert this.setup}}>
   <div class="card-body">
     {{#if this.policyIsJHU}}
-      <h4 class="card-title"><a href="#">{{@policy.title}}</a></h4>
-      <h6 class="card-subtitle mb-2">Expects deposit into an open access repository</h6>
+      <h4 class="card-title">
+        <a href="#">
+          {{@policy.title}}
+        </a>
+      </h4>
+      <h6 class="card-subtitle mb-2">
+        Expects deposit into an open access repository
+      </h6>
     {{else}}
       <h4 class="card-title">
-        <a href="#">{{@policy.title}}</a>
+        <a href="#">
+          {{@policy.title}}
+        </a>
       </h4>
-      <h6 class="card-subtitle mb-2">Requires deposit into
+      <h6 class="card-subtitle mb-2">
+        Requires deposit into
         {{#each @policy.repositories as |repo index|}}
           {{if index ", "}}{{repo.name}}
         {{/each}}
@@ -17,43 +26,48 @@
     <p class="card-text mt-2">
       {{{@policy.description}}}
       {{#if @policy.policyUrl}}
-        <br /><br />
+        <br />
+        <br />
         For more information, see their official policy below.
-        <br /><a href={{@policy.policyUrl}} target="_blank">{{@policy.policyUrl}}</a>
+        <br />
+        <a href={{@policy.policyUrl}} target="_blank">
+          {{@policy.policyUrl}}
+        </a>
       {{/if}}
-      <br /><br />
+      <br />
+      <br />
       {{#if this.usesPmcRepository}}
         {{#if this.methodAJournal}}
           <div class="alert alert-success">
             The journal you published in participates in the PMC Method A program, and will submit the published article
             to PMC on your behalf.
-            <em>You do not need to submit a manuscript to NIH Manuscript Submission System (NIHMS) as a part of this
-              process.</em>
+            <em>
+              You do not need to submit a manuscript to NIH Manuscript Submission System (NIHMS) as a part of this
+              process.
+            </em>
           </div>
         {{else}}
           <div class="alert alert-info">
-            <p>Some journals would submit your article to PMC on your behalf, for a fee. Specific arrangements would be
+            <p>
+              Some journals would submit your article to PMC on your behalf, for a fee. Specific arrangements would be
               required. Please indicate below whether or not you have made an arrangement with the publisher to have
               your article deposited by your journal/publisher.
             </p>
-            <input
-              type="radio"
-              checked={{this.pmcPublisherDeposit}}
-              onchange={{action "pmcPublisherDepositToggled" true}}
-              data-test-workflow-policies-radio-direct-deposit
-            />
-            I have made (or intend to make) an arrangement with the publisher to deposit my article directly to PMC.
-            (You will not need to submit your manuscript to NIH Manuscript Submission System (NIHMS) as part of this
-            process.)
-            <br />
             <input
               type="radio"
               checked={{not this.pmcPublisherDeposit}}
               onchange={{action "pmcPublisherDepositToggled" false}}
               data-test-workflow-policies-radio-no-direct-deposit
             />
-            I will not make an arrangement with the publisher to deposit my article directly to PMC. (You will need to
-            submit your manuscript to NIHMS as part of this process.)
+            I would like to submit my manuscript to PMC via the NIH Manuscript System (NIHMS) as part of this process.
+            <br />
+            <input
+              type="radio"
+              checked={{this.pmcPublisherDeposit}}
+              onchange={{action "pmcPublisherDepositToggled" true}}
+              data-test-workflow-policies-radio-direct-deposit
+            />
+            I have made (or intend to make) an arrangement with the publisher to deposit my article directly to PMC and will not submit my article as part of this process.
           </div>
         {{/if}}
       {{/if}}
