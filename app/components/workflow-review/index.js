@@ -122,6 +122,17 @@ export default class WorkflowReview extends Component {
         input: 'checkbox',
         inputPlaceholder: "I agree to the above statement on today's date ",
         confirmButtonText: 'Next &rarr;',
+        onOpen: function () {
+          const checkbox = document.getElementById('swal2-checkbox');
+          swal.disableConfirmButton();
+          checkbox.addEventListener('click', function (e) {
+            if (e.target.checked) {
+              swal.enableConfirmButton();
+            } else {
+              swal.disableConfirmButton();
+            }
+          });
+        },
         progressSteps: reposWithAgreementText.map((repo, index) => index + 1),
       })
       .queue(reposWithAgreementText);
