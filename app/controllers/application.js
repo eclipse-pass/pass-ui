@@ -26,9 +26,7 @@ export default class ApplicationController extends Controller {
   constructor() {
     super(...arguments);
 
-    if (ENV.environment === 'test') {
-      this.showNoticeBanner = true;
-    }
+    this.showNoticeBanner = true;
   }
 
   get fullWidth() {

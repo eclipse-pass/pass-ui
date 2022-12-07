@@ -28,6 +28,10 @@
   color: black;
   border: 0;
   border-radius: 0;
+
+}
+.info-banner a {
+  color: var(--primary-700);
 }
 
 .covid-selection-banner {
