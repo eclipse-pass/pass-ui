@@ -4,7 +4,7 @@ services:
   pass-ui:
     image: ghcr.io/eclipse-pass/pass-ui-dev:latest
     container_name: pass-ui
-    env_file: .demo_env
+    env_file: .eclipse-pass.local_env
     build:
       context: .docker
     volumes:
