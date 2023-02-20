@@ -128,30 +128,29 @@ module('Integration | Component | workflow basics', (hooks) => {
   });
 
   test('lookupDOI should set doiInfo and publication', async function (assert) {
-    this.set('validateTitle', () => assert.ok(true));
+    this.set('validateTitle', () => assert.expect(true));
 
     await render(hbs`
       <WorkflowBasics
-        @submission={{this.submission}}
-        @publication={{this.publication}}
-        @preLoadedGrant={{this.preLoadedGrant}}
-        @doiInfo={{this.doiInfo}}
-        @flaggedFields={{this.flaggedFields}}
-        @validateTitle={{action validateTitle}}
-        @validateJournal={{action validateJournal}}
-        @validateSubmitterEmail={{action validateSubmitterEmail}}
-        @updatePublication={{action this.updatePublication}}
-        @updateDoiInfo={{action this.updateDoiInfo}}
-        @next={{action loadNext}}
-      />
-    `);
+  @submission={{this.submission}}
+  @publication={{this.publication}}
+  @preLoadedGrant={{this.preLoadedGrant}}
+  @doiInfo={{this.doiInfo}}
+  @flaggedFields={{this.flaggedFields}}
+  @validateTitle={{this.validateTitle}}
+  @validateJournal={{this.validateJournal}}
+  @validateSubmitterEmail={{this.validateSubmitterEmail}}
+  @updatePublication={{this.updatePublication}}
+  @updateDoiInfo={{this.updateDoiInfo}}
+  @next={{this.loadNext}}
+/>`);
 
     // Add a DOI to UI
     await fillIn('#doi', '1234/4321');
 
-    assert.equal(get(this, 'doiInfo').DOI, '10.1039/c7an01256j');
-    assert.equal(get(this, 'publication.doi'), '1234/4321');
-    assert.equal(get(this, 'publication.issue'), '1');
+    assert.strictEqual(get(this, 'doiInfo').DOI, '10.1039/c7an01256j');
+    assert.strictEqual(get(this, 'publication.doi'), '1234/4321');
+    assert.strictEqual(get(this, 'publication.issue'), '1');
   });
 
   /**
@@ -177,19 +176,18 @@ module('Integration | Component | workflow basics', (hooks) => {
 
     await render(hbs`
       <WorkflowBasics
-        @submission={{submission}}
-        @publication={{publication}}
-        @preLoadedGrant={{this.preLoadedGrant}}
-        @doiInfo={{this.doiInfo}}
-        @flaggedFields={{this.flaggedFields}}
-        @validateTitle={{action validateTitle}}
-        @validateJournal={{action validateJournal}}
-        @validateSubmitterEmail={{action validateSubmitterEmail}}
-        @updatePublication={{action this.updatePublication}}
-        @updateDoiInfo={{action this.updateDoiInfo}}
-        @next={{action loadNext}}
-      />
-    `);
+  @submission={{this.submission}}
+  @publication={{this.publication}}
+  @preLoadedGrant={{this.preLoadedGrant}}
+  @doiInfo={{this.doiInfo}}
+  @flaggedFields={{this.flaggedFields}}
+  @validateTitle={{this.validateTitle}}
+  @validateJournal={{this.validateJournal}}
+  @validateSubmitterEmail={{this.validateSubmitterEmail}}
+  @updatePublication={{this.updatePublication}}
+  @updateDoiInfo={{this.updateDoiInfo}}
+  @next={{this.loadNext}}
+/>`);
 
     assert.ok(this.element);
 
@@ -197,7 +195,7 @@ module('Integration | Component | workflow basics', (hooks) => {
     const inputs = this.element.querySelectorAll('input');
     const title = this.element.querySelector('textarea');
 
-    assert.equal(inputs.length, 2, 'There should be two input elements');
+    assert.strictEqual(inputs.length, 2, 'There should be two input elements');
     assert.ok(title, 'No "title" textarea element found');
 
     assert.ok(title.textLength > 0, 'No title value found');
@@ -247,35 +245,33 @@ module('Integration | Component | workflow basics', (hooks) => {
       })
     );
 
-    await render(hbs`
-      <WorkflowBasics
-        @submission={{this.submission}}
-        @publication={{this.publication}}
-        @preLoadedGrant={{this.preLoadedGrant}}
-        @doiInfo={{this.doiInfo}}
-        @flaggedFields={{this.flaggedFields}}
-        @validateTitle={{action validateTitle}}
-        @validateJournal={{action validateJournal}}
-        @validateSubmitterEmail={{action validateSubmitterEmail}}
-        @updatePublication={{action this.updatePublication}}
-        @updateDoiInfo={{action this.updateDoiInfo}}
-        @next={{action loadNext}}
-      />
-    `);
+    await render(hbs`<WorkflowBasics
+  @submission={{this.submission}}
+  @publication={{this.publication}}
+  @preLoadedGrant={{this.preLoadedGrant}}
+  @doiInfo={{this.doiInfo}}
+  @flaggedFields={{this.flaggedFields}}
+  @validateTitle={{this.validateTitle}}
+  @validateJournal={{this.validateJournal}}
+  @validateSubmitterEmail={{this.validateSubmitterEmail}}
+  @updatePublication={{this.updatePublication}}
+  @updateDoiInfo={{this.updateDoiInfo}}
+  @next={{this.loadNext}}
+/>`);
 
     assert.ok(this.element);
 
     const doiInfo = get(this, 'doiInfo');
     assert.ok(doiInfo, 'No doiInfo found');
-    assert.equal(doiInfo.title, 'You better use this', 'Unexpected doiInfo.title found');
+    assert.strictEqual(doiInfo.title, 'You better use this', 'Unexpected doiInfo.title found');
 
     const publication = get(this, 'publication');
     assert.ok(publication, 'No publication found');
-    assert.equal(publication.get('title'), 'Moo title', 'Unexpected publication title found');
-    assert.equal(publication.get('journal.journalName'), 'Moo Journal', 'Unexpected journal title found');
+    assert.strictEqual(publication.get('title'), 'Moo title', 'Unexpected publication title found');
+    assert.strictEqual(publication.get('journal.journalName'), 'Moo Journal', 'Unexpected journal title found');
 
     const metadata = get(this, 'submission.metadata');
-    assert.equal(metadata, '{}', 'Metadata should be empty');
+    assert.strictEqual(metadata, '{}', 'Metadata should be empty');
   });
 
   /**
@@ -333,19 +329,18 @@ module('Integration | Component | workflow basics', (hooks) => {
 
     await render(hbs`
       <WorkflowBasics
-        @submission={{this.submission}}
-        @publication={{this.publication}}
-        @preLoadedGrant={{this.preLoadedGrant}}
-        @doiInfo={{this.doiInfo}}
-        @flaggedFields={{this.flaggedFields}}
-        @validateTitle={{action validateTitle}}
-        @validateJournal={{action validateJournal}}
-        @validateSubmitterEmail={{action validateSubmitterEmail}}
-        @updatePublication={{action this.updatePublication}}
-        @updateDoiInfo={{action this.updateDoiInfo}}
-        @next={{action loadNext}}
-      />
-    `);
+  @submission={{this.submission}}
+  @publication={{this.publication}}
+  @preLoadedGrant={{this.preLoadedGrant}}
+  @doiInfo={{this.doiInfo}}
+  @flaggedFields={{this.flaggedFields}}
+  @validateTitle={{this.validateTitle}}
+  @validateJournal={{this.validateJournal}}
+  @validateSubmitterEmail={{this.validateSubmitterEmail}}
+  @updatePublication={{this.updatePublication}}
+  @updateDoiInfo={{this.updateDoiInfo}}
+  @next={{this.loadNext}}
+/>`);
 
     assert.ok(this.element);
 
@@ -358,7 +353,7 @@ module('Integration | Component | workflow basics', (hooks) => {
     );
 
     const inputs = this.element.querySelectorAll('input');
-    assert.equal(inputs.length, 1, 'There should be one text input');
+    assert.strictEqual(inputs.length, 1, 'There should be one text input');
     inputs.forEach((input) => assert.notOk(input.hasAttribute('readonly')));
 
     const titleIn = this.element.querySelector('textarea');

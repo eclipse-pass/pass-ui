@@ -128,3 +128,23 @@ but running tests on the command line can be useful. See documentation at [ember
 This project uses `es-lint`, `ember-template-lint` and `prettier` to enforce style decisions and code formatting. You may consider installing [an integration tool](https://prettier.io/docs/en/editors.html) for your editor of choice.
 
 This project uses (husky)[https://github.com/typicode/husky] to run a command from (lint-staged)[https://github.com/okonet/lint-staged] to run `es-lint --fix` and `prettier --write` over the staged files in a pre-commit hook. If you are unable to make a commit it might be because either one or both of these commands has failed. Check the output in the terminal for what failures have occurred.
+
+There are also scripts defined in the `package.json` you can run to manually lint check the project.
+
+* `yarn lint`
+* `yarn lint:fix`
+* `yarn lintt:hbs`
+* `yarn link:hbs:fix`
+
+### Building
+
+* `ember build` (development)
+* `ember build --environment production` (production)
+
+## Further Reading / Useful Links
+
+* [ember.js](https://emberjs.com/)
+* [ember-cli](https://cli.emberjs.com/release/)
+* Development Browser Extensions
+  * [ember inspector for chrome](https://chrome.google.com/webstore/detail/ember-inspector/bmdblncegkenkacieihfhpjfppoconhi)
+  * [ember inspector for firefox](https://addons.mozilla.org/en-US/firefox/addon/ember-inspector/)
