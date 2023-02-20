@@ -34,7 +34,7 @@ module('Integration | Component | choice repositories card', (hooks) => {
 
     const checkboxes = this.element.querySelectorAll('input[type="checkbox"]');
     assert.ok(checkboxes, 'failed to find checkboxes');
-    assert.equal(checkboxes.length, 2, `expecting 2 checkboxes, but found ${checkboxes.length}`);
+    assert.strictEqual(checkboxes.length, 2, `expecting 2 checkboxes, but found ${checkboxes.length}`);
     assert.ok(checkboxes[0].checked, 'first checkbox should be checked');
     assert.notOk(checkboxes[1].checked, 'second checkbox should not be checked');
   });
@@ -57,10 +57,10 @@ module('Integration | Component | choice repositories card', (hooks) => {
     );
 
     await render(hbs`<ChoiceRepositoriesCard @choiceGroup={{this.choiceGroup}} />`);
-    assert.ok(this.element, 'failed to render');
+    assert.ok(this.element, 'element renders');
 
     const checkbox = this.element.querySelector('input[type="checkbox"]');
-    assert.ok(checkbox, "couldn't find checkbox");
+    assert.ok(checkbox, 'checkbox found');
 
     await click(checkbox);
     assert.ok(checkbox.checked, 'Checkbox should still be checked');
@@ -92,7 +92,7 @@ module('Integration | Component | choice repositories card', (hooks) => {
     assert.ok(this.element, 'failed to render');
 
     const checkboxes = this.element.querySelectorAll('input[type="checkbox"]');
-    assert.equal(checkboxes.length, 2, 'unexpected number of checkboxes found');
+    assert.strictEqual(checkboxes.length, 2, 'unexpected number of checkboxes found');
 
     await click(checkboxes[1]);
     /*

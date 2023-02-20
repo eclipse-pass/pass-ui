@@ -1,8 +1,6 @@
 /* eslint-disable no-debugger */
 import BaseSessionService from 'ember-simple-auth/services/session';
-import classic from 'ember-classic-decorator';
 
-@classic
 export default class SessionService extends BaseSessionService {
   /**
     This is an override of ember-simple-auth's handleInvalidation method

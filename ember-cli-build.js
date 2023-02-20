@@ -13,9 +13,7 @@ module.exports = function (defaults) {
     'ember-composable-helpers': {
       only: ['queue', 'compute', 'invoke'],
     },
-    'ember-cli-babel': {
-      includePolyfill: true,
-    },
+
     cssModules: {
       generateScopedName(className, modulePath) {
         if (!disableCssModules.includes(modulePath)) {

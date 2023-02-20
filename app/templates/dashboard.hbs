@@ -18,7 +18,7 @@
           </ul>
         </p>
         <div class="text-center mt-4">
-          {{#if (get (await this.currentUser.user) "isSubmitter")}}
+          {{#if this.currentUser.user.isSubmitter}}
             <LinkTo @route="submissions.new" class="btn btn-primary mt-1 mr-1" data-test-start-new-submission={{true}}>
               Start new submission
             </LinkTo>

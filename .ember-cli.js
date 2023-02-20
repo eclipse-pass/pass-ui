@@ -1,9 +1,5 @@
 'use strict';
 
-const { setEdition } = require('@ember/edition-utils');
-
-setEdition('octane');
-
 module.exports = {
   /**
     Ember CLI sends analytics information by default. The data is completely
@@ -13,6 +9,11 @@ module.exports = {
   */
   liveReload: false,
   yarn: true,
-  watcher: process.env.WATCHER || 'polling',
+  // watcher: process.env.WATCHER || 'polling',
   disableAnalytics: false,
+  /**
+  Setting `isTypeScriptProject` to true will force the blueprint generators to generate TypeScript
+  rather than JavaScript by default, when a TypeScript version of a given blueprint is available.
+  */
+  isTypeScriptProject: false,
 };

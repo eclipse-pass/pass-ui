@@ -3,7 +3,9 @@ import { action } from '@ember/object';
 
 export default class RepositoryCard extends Component {
   @action
-  toggle() {
+  toggle(event) {
+    event.preventDefault();
+
     const repo = this.args.repository;
     const type = this.type;
     const selected = event.target.checked;
