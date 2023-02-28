@@ -96,7 +96,7 @@ module('Acceptance | proxy submission', function (hooks) {
 
   async function walkThroughSubmissionFlow(assert, hasAccount) {
     await waitFor('[data-test-workflow-basics-next]');
-    assert.equal(currentURL(), '/submissions/new/basics');
+    assert.strictEqual(currentURL(), '/submissions/new/basics');
     assert.dom('[data-test-doi-input]').exists();
     await fillIn('[data-test-doi-input]', '10.1039/c7an01256j');
 
@@ -133,7 +133,7 @@ module('Acceptance | proxy submission', function (hooks) {
 
     if (hasAccount) {
       await waitFor('[data-test-grants-selection-table] tbody tr td.projectname-date-column');
-      assert.equal(currentURL(), '/submissions/new/grants');
+      assert.strictEqual(currentURL(), '/submissions/new/grants');
       assert
         .dom('[data-test-grants-selection-table] tbody tr td.projectname-date-column')
         .includesText('Regulation of Synaptic Plasticity in Visual Cortex');
@@ -154,14 +154,14 @@ module('Acceptance | proxy submission', function (hooks) {
     await click('[data-test-workflow-grants-next]');
 
     await waitFor('[data-test-workflow-policies-next]');
-    assert.equal(currentURL(), '/submissions/new/policies');
+    assert.strictEqual(currentURL(), '/submissions/new/policies');
     await waitFor('input[type=radio]:checked');
     assert.dom('[data-test-workflow-policies-radio-no-direct-deposit:checked');
 
     await click('[data-test-workflow-policies-next]');
 
     await waitFor('[data-test-workflow-repositories-next]');
-    assert.equal(currentURL(), '/submissions/new/repositories');
+    assert.strictEqual(currentURL(), '/submissions/new/repositories');
     if (hasAccount) {
       assert
         .dom('[data-test-workflow-repositories-required-list] li')
@@ -175,7 +175,7 @@ module('Acceptance | proxy submission', function (hooks) {
     await click('[data-test-workflow-repositories-next]');
 
     await waitFor('[data-test-metadata-form] textarea[name=title]');
-    assert.equal(currentURL(), '/submissions/new/metadata');
+    assert.strictEqual(currentURL(), '/submissions/new/metadata');
     assert
       .dom('[data-test-metadata-form] textarea[name=title]')
       .hasValue(
@@ -195,13 +195,13 @@ module('Acceptance | proxy submission', function (hooks) {
     assert.dom('#swal2-title').doesNotExist();
 
     await waitFor('[data-test-workflow-review-submit]');
-    assert.equal(currentURL(), '/submissions/new/review');
+    assert.strictEqual(currentURL(), '/submissions/new/review');
 
     await click('[data-test-workflow-review-back]');
 
     await waitFor('input[type=file]');
 
-    assert.equal(currentURL(), '/submissions/new/files');
+    assert.strictEqual(currentURL(), '/submissions/new/files');
     const submissionFile = new Blob(['moo'], { type: 'application/pdf' });
     submissionFile.name = 'my-submission.pdf';
     await triggerEvent('input[type=file]', 'change', { files: [submissionFile] });
@@ -211,7 +211,7 @@ module('Acceptance | proxy submission', function (hooks) {
 
     await waitFor('[data-test-workflow-review-submit]');
 
-    assert.equal(currentURL(), '/submissions/new/review');
+    assert.strictEqual(currentURL(), '/submissions/new/review');
     assert
       .dom('[data-test-workflow-review-title]')
       .includesText(
@@ -228,7 +228,7 @@ module('Acceptance | proxy submission', function (hooks) {
     assert.ok(currentURL().includes('/thanks'));
 
     await click('[data-test-workflow-thanks-link-to-submissions]');
-    assert.equal(currentURL(), '/submissions');
+    assert.strictEqual(currentURL(), '/submissions');
 
     await waitFor('[data-test-submissions-index-submissions-table]');
     await click('table > tbody > tr:nth-child(3) > td > a');

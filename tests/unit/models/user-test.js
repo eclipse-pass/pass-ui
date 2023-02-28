@@ -10,15 +10,15 @@ module('Unit | Model | user', (hooks) => {
     assert.ok(user);
 
     return run(() => {
-      assert.equal(user.get('isAdmin'), false);
-      assert.equal(user.get('isSubmitter'), false);
+      assert.false(user.get('isAdmin'));
+      assert.false(user.get('isSubmitter'));
 
       user.set('roles', ['admin']);
-      assert.equal(user.get('isAdmin'), true);
+      assert.true(user.get('isAdmin'));
 
       user.get('roles').push('submitter');
-      assert.equal(user.get('isSubmitter'), true);
-      assert.equal(user.get('isAdmin'), true);
+      assert.true(user.get('isSubmitter'));
+      assert.true(user.get('isAdmin'));
     });
   });
 });

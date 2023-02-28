@@ -1,12 +1,12 @@
 /* eslint-disable ember/classic-decorator-no-classic-methods */
 import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
-import Bootstrap4Theme from 'ember-models-table/themes/bootstrap4';
 import { inject as service } from '@ember/service';
 
 export default class GrantsIndexController extends Controller {
   @service currentUser;
   @service('app-static-config') configurator;
+  @service('emt-themes/bootstrap4') themeInstance;
 
   constructor() {
     super(...arguments);
@@ -14,7 +14,6 @@ export default class GrantsIndexController extends Controller {
     this.configurator.getStaticConfig().then((config) => this.set('faqUrl', config.branding.pages.faqUrl));
   }
 
-  themeInstance = Bootstrap4Theme.create();
   // TODO Reduce duplication in column definitions
   adminColumns = [
     {

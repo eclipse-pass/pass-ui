@@ -38,7 +38,7 @@ module('Unit | Controller | submissions/index', (hooks) => {
         isAdmin: true,
       })
     );
-    assert.equal(controller.get('columns.length'), 6);
+    assert.strictEqual(controller.get('columns.length'), 6);
   });
 
   test('properly returns submitter roles', function (assert) {
@@ -49,6 +49,6 @@ module('Unit | Controller | submissions/index', (hooks) => {
         isSubmitter: true,
       })
     );
-    assert.equal(controller.get('columns.length'), 7);
+    assert.strictEqual(controller.get('columns.length'), 7);
   });
 });

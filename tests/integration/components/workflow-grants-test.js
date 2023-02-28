@@ -76,7 +76,7 @@ module('Integration | Component | workflow grants', (hooks) => {
     await settled();
 
     const rows = this.element.querySelectorAll('#grants-selection-table table tbody tr');
-    assert.equal(rows.length, 4, 'Should be 4 rows displayed');
+    assert.strictEqual(rows.length, 4, 'Should be 4 rows displayed');
   });
 
   test('Pre-loaded grant is selected on render', async function (assert) {
@@ -97,18 +97,18 @@ module('Integration | Component | workflow grants', (hooks) => {
     await settled();
 
     const selectedRows = this.element.querySelector('h5').nextElementSibling.querySelectorAll('tbody tr');
-    assert.equal(selectedRows.length, 1, 'Should be 1 grant in this table');
+    assert.strictEqual(selectedRows.length, 1, 'Should be 1 grant in this table');
     assert.ok(selectedRows[0].textContent.includes('Remove'), 'Should have a "Remove" button');
     assert.ok(selectedRows[0].textContent.includes('Moo 2'));
 
     const rows = this.element.querySelectorAll('#grants-selection-table table tbody tr');
-    assert.equal(rows.length, 4, 'Should be 4 rows');
+    assert.strictEqual(rows.length, 4, 'Should be 4 rows');
 
     const row2 = rows[1];
     assert.ok(row2.getAttribute('class').includes('selected-row'));
     assert.ok(row2.querySelector('i[class="fa fa-check-square"]'));
 
-    assert.equal(workflow.getAddedGrants().length, 1, 'One grant should have been added');
+    assert.strictEqual(workflow.getAddedGrants().length, 1, 'One grant should have been added');
   });
 
   test('Selecting a grant adds it', async function (assert) {
@@ -146,17 +146,17 @@ module('Integration | Component | workflow grants', (hooks) => {
     await settled();
 
     const rows = this.element.querySelectorAll('#grants-selection-table table tbody tr');
-    assert.equal(rows.length, 4, 'Should be 4 rows');
+    assert.strictEqual(rows.length, 4, 'Should be 4 rows');
 
     await click(rows[0]);
 
     const selectedRows = this.element.querySelector('h5').nextElementSibling.querySelectorAll('tbody tr');
-    assert.equal(selectedRows.length, 1);
+    assert.strictEqual(selectedRows.length, 1);
     assert.ok(selectedRows[0].textContent.includes('Moo 1'), 'Only "Moo 1" should be selected');
 
-    assert.equal(list.length, 1, 'One grant should be added to the list');
+    assert.strictEqual(list.length, 1, 'One grant should be added to the list');
 
-    assert.equal(get(this, 'submission.grants.length'), 1, 'One grant should be attached to submission');
+    assert.strictEqual(get(this, 'submission.grants.length'), 1, 'One grant should be attached to submission');
   });
 
   /**
@@ -202,14 +202,14 @@ module('Integration | Component | workflow grants', (hooks) => {
     assert.ok(selectedRows[0].textContent.includes('Moo 2'));
 
     const grants = get(this, 'submission.grants');
-    assert.equal(grants.get('length'), 1, 'There should be one grant attached to the submission');
+    assert.strictEqual(grants.get('length'), 1, 'There should be one grant attached to the submission');
 
     const grantRows = this.element.querySelectorAll('#grants-selection-table table tbody tr');
-    assert.equal(grantRows.length, 4, 'Should be 4 rows');
+    assert.strictEqual(grantRows.length, 4, 'Should be 4 rows');
 
     await click(grantRows[1]);
 
-    assert.equal(grants.get('length'), 0, 'Grant should have been removed from submission');
+    assert.strictEqual(grants.get('length'), 0, 'Grant should have been removed from submission');
 
     assert.ok(grantRows[1].querySelector('i[class="far fa-square"]'), '"Unselected" icon should be seen now');
   });

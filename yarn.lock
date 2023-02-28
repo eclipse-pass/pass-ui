@@ -1961,7 +1961,7 @@
     ember-cli-babel "^7.10.0"
     ember-modifier-manager-polyfill "^1.1.0"
 
-"@ember/render-modifiers@^2.0.4":
+"@ember/render-modifiers@^2.0.2", "@ember/render-modifiers@^2.0.4":
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/@ember/render-modifiers/-/render-modifiers-2.0.5.tgz#4b1d9496a82ca471aeaa3ecddd94ef089450f415"
   integrity sha512-5cJ1niIdOJC6k6KtIn9HGbr1DATJQp4ZqMv1vbi6LKQWbVCQ3byvKONtUEi3H0wcewlrcaWCqXOgm0nACzCOQA==
@@ -5998,6 +5998,18 @@ ember-cli-deprecation-workflow@^2.1.0:
     broccoli-plugin "^4.0.5"
     ember-cli-htmlbars "^5.3.2"
 
+ember-cli-flash@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/ember-cli-flash/-/ember-cli-flash-4.0.0.tgz#e6886a9a76718c7740942eb812d3f5427f15760d"
+  integrity sha512-FEynX637xuFlmjMptAUBlww+GeYBcalnMYtDtzsBtLvnsBfU2Gd8xZVrCqQaqEAmHobxKLrYdTKu0YSY7ptIuQ==
+  dependencies:
+    "@ember/render-modifiers" "^2.0.2"
+    "@glimmer/component" "^1.1.2"
+    "@glimmer/tracking" "^1.1.2"
+    ember-auto-import "^2.4.1"
+    ember-cli-babel "^7.26.11"
+    ember-cli-htmlbars "^6.0.1"
+
 ember-cli-get-component-path-option@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/ember-cli-get-component-path-option/-/ember-cli-get-component-path-option-1.0.0.tgz#0d7b595559e2f9050abed804f1d8eff1b08bc771"
@@ -6866,17 +6878,6 @@ ember-text-measurer@^0.6.0:
   dependencies:
     ember-cli-babel "^7.19.0"
     ember-cli-htmlbars "^4.3.1"
-
-ember-toastr@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/ember-toastr/-/ember-toastr-3.0.1.tgz#a9ddb421d920e0d81b70cf2bc3aea999d33f55f8"
-  integrity sha512-4H9BuSfWgiBf0nTWbxnWl9zgLp/83RV3FkG4E0ANAEnGYEHs+V/ZiJNolVq5atlUbyl5bSYu+AqSNWu5Q33T5w==
-  dependencies:
-    broccoli-funnel "^3.0.0"
-    broccoli-merge-trees "^4.2.0"
-    broccoli-stew "^3.0.0"
-    ember-cli-babel "^7.22.1"
-    ember-cli-htmlbars "^5.3.1"
 
 ember-tracked-storage-polyfill@^1.0.0:
   version "1.0.0"
@@ -9491,12 +9492,7 @@ jquery-deferred@^0.3.0:
   resolved "https://registry.yarnpkg.com/jquery-deferred/-/jquery-deferred-0.3.1.tgz#596eca1caaff54f61b110962b23cafea74c35355"
   integrity sha512-YTzoTYR/yrjmNh6B6exK7lC1jlDazEzt9ZlZvdRscv+I1AJqN1SmU3ZAn4iMGiVhwAavCrbijDVyTc0lmr9ZCA==
 
-jquery@3.5.1:
-  version "3.5.1"
-  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.5.1.tgz#d7b4d08e1bfdb86ad2f1a3d039ea17304717abb5"
-  integrity sha512-XwIBPqcMn57FxfT+Go5pzySnm4KWkT1Tv7gjrpT1srtf8Weynl6R273VJ5GjkRb51IzMp5nbaPjJXMWeju2MKg==
-
-jquery@>=1.12.0:
+jquery@^3.6.3:
   version "3.6.3"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.6.3.tgz#23ed2ffed8a19e048814f13391a19afcdba160e6"
   integrity sha512-bZ5Sy3YzKo9Fyc8wH2iIQK4JImJ6R0GWI9kL1/k7Z91ZBNgkRXE6U0JfHIizZbort8ZunhSI3jw9I6253ahKfg==
@@ -13668,13 +13664,6 @@ to-regex@^3.0.1, to-regex@^3.0.2:
     extend-shallow "^3.0.2"
     regex-not "^1.0.2"
     safe-regex "^1.1.0"
-
-toastr@^2.1.4:
-  version "2.1.4"
-  resolved "https://registry.yarnpkg.com/toastr/-/toastr-2.1.4.tgz#8b43be64fb9d0c414871446f2db8e8ca4e95f181"
-  integrity sha512-LIy77F5n+sz4tefMmFOntcJ6HL0Fv3k1TDnNmFZ0bU/GcvIIfy6eG2v7zQmMiYgaalAiUv75ttFrPn5s0gyqlA==
-  dependencies:
-    jquery ">=1.12.0"
 
 toidentifier@1.0.0:
   version "1.0.0"

@@ -78,7 +78,6 @@ module.exports = function (environment) {
     ENV.APP.LOG_VIEW_LOOKUPS = false;
 
     ENV.APP.rootElement = '#ember-testing';
-    // Disable mirage entirely.
     ENV['ember-cli-mirage'] = {
       enabled: true,
     };

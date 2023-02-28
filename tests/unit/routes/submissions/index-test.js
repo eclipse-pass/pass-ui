@@ -35,7 +35,7 @@ module('Unit | Route | submissions/index', (hooks) => {
       EmberObject.create({
         query: (type, query) => {
           const filter = query.query.bool.must_not;
-          assert.equal(filter.length, 2, 'Should be two "must_not" terms');
+          assert.strictEqual(filter.length, 2, 'Should be two "must_not" terms');
           assert.deepEqual(filter[1].terms, { '@id': ['ID-3'] });
 
           return Promise.resolve(A());
@@ -71,7 +71,7 @@ module('Unit | Route | submissions/index', (hooks) => {
       EmberObject.create({
         query: (type, query) => {
           const filter = query.query.must_not;
-          assert.equal(filter.length, 2, 'Should be two "must_not" terms');
+          assert.strictEqual(filter.length, 2, 'Should be two "must_not" terms');
           assert.deepEqual(filter[1].terms, { '@id': ['ID-3'] });
 
           return Promise.resolve(A());

@@ -18,6 +18,6 @@ module('Integration | Component | submissions article cell', (hooks) => {
 
     await render(hbs`<SubmissionsArticleCell @record={{this.record}} />`);
 
-    assert.equal(this.element.textContent.trim(), 'Balancing excitation and inhibition.');
+    assert.strictEqual(this.element.textContent.trim(), 'Balancing excitation and inhibition.');
   });
 });

@@ -28,7 +28,7 @@ module('Unit | Controller | submissions/new/metadata', (hooks) => {
     controller.set('model', model);
     controller.transitionToRoute = function (route) {
       assert.ok(subSaved, 'submission was not saved');
-      assert.equal('submissions.new.repositories', route);
+      assert.strictEqual(route, 'submissions.new.repositories');
     };
     controller.send('loadPrevious');
   });
@@ -49,7 +49,7 @@ module('Unit | Controller | submissions/new/metadata', (hooks) => {
     controller.set('model', model);
     controller.transitionToRoute = function (route) {
       assert.ok(subSaved, 'submission was not saved');
-      assert.equal('submissions.new.files', route);
+      assert.strictEqual(route, 'submissions.new.files');
     };
     controller.send('loadNext');
   });

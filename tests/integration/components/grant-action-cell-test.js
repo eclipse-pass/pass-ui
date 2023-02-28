@@ -12,11 +12,11 @@ module('Integration | Component | grant action cell', (hooks) => {
 
     await render(hbs`<GrantActionCell />`);
 
-    assert.equal(this.element.textContent.trim(), 'New submission');
+    assert.strictEqual(this.element.textContent.trim(), 'New submission');
 
     // Template block usage:
     await render(hbs`<GrantActionCell>template block text</GrantActionCell>`);
 
-    assert.equal(this.element.textContent.trim(), 'New submission\ntemplate block text');
+    assert.strictEqual(this.element.textContent.trim(), 'New submission\ntemplate block text');
   });
 });

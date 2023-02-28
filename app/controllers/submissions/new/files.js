@@ -7,6 +7,7 @@ import { inject as service } from '@ember/service';
 
 export default class SubmissionsNewFiles extends Controller {
   @service workflow;
+  @service flashMessages;
 
   @alias('model.newSubmission') submission;
   @alias('model.files') files;
@@ -75,9 +76,11 @@ export default class SubmissionsNewFiles extends Controller {
           this.loadTab(gotoTab);
         }
       } else if (manuscriptFiles.length == 0) {
-        toastr.warning('At least one manuscript file is required');
+        this.flashMessages.warning('At least one manuscript file is required');
       } else if (manuscriptFiles.length > 1) {
-        toastr.warning(`Only one file may be designated as the manuscript.  Instead, found ${manuscriptFiles.length}`);
+        this.flashMessages.warning(
+          `Only one file may be designated as the manuscript.  Instead, found ${manuscriptFiles.length}`
+        );
       } else {
         this.loadTab(gotoTab);
       }

@@ -28,9 +28,9 @@ module('Unit | Service | policies', (hooks) => {
     const policies = await service.get('getPolicies').perform(sub);
 
     assert.ok(Array.isArray(policies), 'Should be an array');
-    assert.equal(policies.length, 2, 'Should be two policies here');
+    assert.strictEqual(policies.length, 2, 'Should be two policies here');
 
-    policies.forEach((policy) => assert.equal(policy.get('text'), 'Moo', "Expecting text:'Moo'"));
+    policies.forEach((policy) => assert.strictEqual(policy.get('text'), 'Moo', "Expecting text:'Moo'"));
   });
 
   test('good response to getRepositories returns object with Repository promises by DSL rules', async function (assert) {
@@ -58,15 +58,15 @@ module('Unit | Service | policies', (hooks) => {
         assert.ok(Array.isArray(rules.optional), 'rules.optional should be an array');
         assert.ok(Array.isArray(rules['one-of']), "rules['one-of'] should be an array");
 
-        assert.equal(rules.required.length, 1, 'Unexpected number of required repos');
-        assert.equal(rules.optional.length, 1, 'Unexpected number of optional repos');
+        assert.strictEqual(rules.required.length, 1, 'Unexpected number of required repos');
+        assert.strictEqual(rules.optional.length, 1, 'Unexpected number of optional repos');
 
-        assert.equal(rules['one-of'].length, 1, 'Unexpected number of choice groups');
-        assert.equal(rules['one-of'][0].length, 2, 'Unexpected number of repos in choice group 1');
+        assert.strictEqual(rules['one-of'].length, 1, 'Unexpected number of choice groups');
+        assert.strictEqual(rules['one-of'][0].length, 2, 'Unexpected number of repos in choice group 1');
 
-        rules.required.forEach((repo) => assert.equal(repo.get('text'), 'Moo'));
-        rules.optional.forEach((repo) => assert.equal(repo.get('text'), 'Moo'));
-        rules['one-of'].forEach((group) => group.forEach((repo) => assert.equal(repo.get('text'), 'Moo')));
+        rules.required.forEach((repo) => assert.strictEqual(repo.get('text'), 'Moo'));
+        rules.optional.forEach((repo) => assert.strictEqual(repo.get('text'), 'Moo'));
+        rules['one-of'].forEach((group) => group.forEach((repo) => assert.strictEqual(repo.get('text'), 'Moo')));
       });
   });
 

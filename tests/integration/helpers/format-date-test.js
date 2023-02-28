@@ -13,6 +13,6 @@ module('Integration | Helper | format date', (hooks) => {
 
     await render(hbs`{{format-date inputValue}}`);
 
-    assert.equal(this.element.textContent.trim(), '08/19/1975');
+    assert.strictEqual(this.element.textContent.trim(), '08/19/1975');
   });
 });

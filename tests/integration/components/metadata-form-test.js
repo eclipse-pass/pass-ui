@@ -35,9 +35,9 @@ module('Integration | Component | metadata-form', (hooks) => {
     const el = this.element.querySelector('#schemaForm');
     assert.ok(el);
 
-    assert.equal(
-      3,
+    assert.strictEqual(
       el.querySelectorAll('button').length,
+      3,
       'There should be three form control buttons (prev, abort, next)'
     );
   });

@@ -47,7 +47,7 @@ module('Unit | Controller | grants/index', (hooks) => {
       })
     );
 
-    assert.equal(controller.get('adminColumns'), controller.get('columns'));
+    assert.strictEqual(controller.get('adminColumns'), controller.get('columns'));
   });
 
   test('properly returns submitter roles', function (assert) {
@@ -59,6 +59,6 @@ module('Unit | Controller | grants/index', (hooks) => {
       })
     );
 
-    assert.equal(controller.get('piColumns'), controller.get('columns'));
+    assert.strictEqual(controller.get('piColumns'), controller.get('columns'));
   });
 });

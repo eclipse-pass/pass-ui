@@ -25,8 +25,8 @@ module('Unit | Controller | dashboard', (hooks) => {
     // assert.ok(controller.get('isSubmitter'));
     //
     // // check the properties before the action is triggered
-    // assert.equal(controller.get('propA'), 'You need to write tests', 'propA initialized');
-    // assert.equal(controller.get('propB'), 'And write one for me too', 'propB initialized');
+    // assert.strictEqual(controller.get('propA'), 'You need to write tests', 'propA initialized');
+    // assert.strictEqual(controller.get('propB'), 'And write one for me too', 'propB initialized');
     //
     // // trigger the action on the controller by using the `send` method,
     // // passing in any params that our action may be expecting
@@ -34,8 +34,8 @@ module('Unit | Controller | dashboard', (hooks) => {
     //
     // // finally we assert that our values have been updated
     // // by triggering our action.
-    // assert.equal(controller.get('propA'), 'Testing is cool', 'propA updated');
-    // assert.equal(controller.get('propB'), 'Testing Rocks!', 'propB updated');
+    // assert.strictEqual(controller.get('propA'), 'Testing is cool', 'propA updated');
+    // assert.strictEqual(controller.get('propB'), 'Testing Rocks!', 'propB updated');
   });
   test("should properly identify someone who isn't a submitter", function (assert) {
     this.owner.register(

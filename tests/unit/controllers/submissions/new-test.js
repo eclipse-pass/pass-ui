@@ -95,28 +95,28 @@ module('Unit | Controller | submissions/new', (hooks) => {
     // After the route transition to thanks, all promises should be resolved handler
     // and tests can be run.
     controller.set('transitionToRoute', (name) => {
-      assert.equal(name, 'thanks');
+      assert.strictEqual(name, 'thanks');
 
-      assert.equal(publicationSaved, true);
-      assert.equal(submissionSaved, true);
-      assert.equal(submissionEventSaved, true);
+      assert.true(publicationSaved);
+      assert.true(submissionSaved);
+      assert.true(submissionEventSaved);
 
-      assert.equal(submission.submitted, true);
-      assert.equal(submission.submissionStatus, 'submitted');
+      assert.true(submission.submitted);
+      assert.strictEqual(submission.submissionStatus, 'submitted');
 
       // check web-linked repo is NOT removed
-      assert.equal(submission.repositories.length, 2);
-      assert.equal(submission.repositories[0].id, 'test:repo1');
+      assert.strictEqual(submission.repositories.length, 2);
+      assert.strictEqual(submission.repositories[0].id, 'test:repo1');
 
-      assert.equal(submissionEvent.submission.submitter.id, 'submitter:test-id');
-      assert.equal(submissionEvent.performedBy.id, 'submitter:test-id');
-      assert.equal(submissionEvent.performerRole, 'submitter');
-      assert.equal(submissionEvent.comment, comment);
-      assert.equal(submissionEvent.eventType, 'submitted');
+      assert.strictEqual(submissionEvent.submission.submitter.id, 'submitter:test-id');
+      assert.strictEqual(submissionEvent.performedBy.id, 'submitter:test-id');
+      assert.strictEqual(submissionEvent.performerRole, 'submitter');
+      assert.strictEqual(submissionEvent.comment, comment);
+      assert.strictEqual(submissionEvent.eventType, 'submitted');
 
       let md = JSON.parse(submission.get('metadata'));
       assert.ok(md.agreements);
-      assert.equal(md.agreements.length, 1);
+      assert.strictEqual(md.agreements.length, 1);
       assert.deepEqual(md.agreements[0], {
         moo: 'Milk cows',
       });
@@ -194,19 +194,19 @@ module('Unit | Controller | submissions/new', (hooks) => {
     // After the route transition to thanks, all promises should be resolved handler
     // and tests can be run.
     controller.set('transitionToRoute', (name) => {
-      assert.equal(name, 'thanks');
+      assert.strictEqual(name, 'thanks');
 
-      assert.equal(publicationSaved, true);
-      assert.equal(submissionSaved, true);
-      assert.equal(submissionEventSaved, true);
+      assert.true(publicationSaved);
+      assert.true(submissionSaved);
+      assert.true(submissionEventSaved);
 
-      assert.equal(submission.submissionStatus, 'approval-requested');
-      assert.equal(submission.repositories.length, 1);
-      assert.equal(submissionEvent.submission.submitter.id, 'submitter:test-id');
-      assert.equal(submissionEvent.performedBy.id, 'submitter:test-proxy-id');
-      assert.equal(submissionEvent.performerRole, 'preparer');
-      assert.equal(submissionEvent.eventType, 'approval-requested');
-      assert.equal(submissionEvent.comment, comment);
+      assert.strictEqual(submission.submissionStatus, 'approval-requested');
+      assert.strictEqual(submission.repositories.length, 1);
+      assert.strictEqual(submissionEvent.submission.submitter.id, 'submitter:test-id');
+      assert.strictEqual(submissionEvent.performedBy.id, 'submitter:test-proxy-id');
+      assert.strictEqual(submissionEvent.performerRole, 'preparer');
+      assert.strictEqual(submissionEvent.eventType, 'approval-requested');
+      assert.strictEqual(submissionEvent.comment, comment);
     });
 
     controller.set('model', model);
@@ -280,21 +280,21 @@ module('Unit | Controller | submissions/new', (hooks) => {
     // After the route transition to thanks, all promises should be resolved handler
     // and tests can be run.
     controller.set('transitionToRoute', (name) => {
-      assert.equal(name, 'thanks');
+      assert.strictEqual(name, 'thanks');
 
-      assert.equal(publicationSaved, true);
-      assert.equal(submissionSaved, true);
-      assert.equal(submissionEventSaved, true);
+      assert.true(publicationSaved);
+      assert.true(submissionSaved);
+      assert.true(submissionEventSaved);
 
-      assert.equal(submission.submitter, null);
-      assert.equal(submission.submitterName, 'test name');
-      assert.equal(submission.submitterEmail, 'mailto:test@email.com');
-      assert.equal(submission.submissionStatus, 'approval-requested');
-      assert.equal(submission.repositories.length, 1);
-      assert.equal(submissionEvent.performedBy.id, 'submitter:test-proxy-id');
-      assert.equal(submissionEvent.performerRole, 'preparer');
-      assert.equal(submissionEvent.eventType, 'approval-requested-newuser');
-      assert.equal(submissionEvent.comment, comment);
+      assert.strictEqual(submission.submitter, null);
+      assert.strictEqual(submission.submitterName, 'test name');
+      assert.strictEqual(submission.submitterEmail, 'mailto:test@email.com');
+      assert.strictEqual(submission.submissionStatus, 'approval-requested');
+      assert.strictEqual(submission.repositories.length, 1);
+      assert.strictEqual(submissionEvent.performedBy.id, 'submitter:test-proxy-id');
+      assert.strictEqual(submissionEvent.performerRole, 'preparer');
+      assert.strictEqual(submissionEvent.eventType, 'approval-requested-newuser');
+      assert.strictEqual(submissionEvent.comment, comment);
     });
 
     controller.set('model', model);
@@ -342,7 +342,7 @@ module('Unit | Controller | submissions/new', (hooks) => {
       })
     );
     controller.set('transitionToRoute', (name) => {
-      assert.equal(name, 'submissions', 'unexpected transition was named');
+      assert.strictEqual(name, 'submissions', 'unexpected transition was named');
     });
 
     controller.send('abort');

@@ -12,7 +12,7 @@ module('Unit | Service | autocomplete', (hooks) => {
 
     class StoreStub extends Service {
       query(type, query) {
-        assert.equal(type, TYPE);
+        assert.strictEqual(type, TYPE);
         assert.ok(query);
         assert.ok('Query object should include the field name somewhere', query.filter[type].includes(FIELD));
         assert.ok('Query object should include the input value', query.filter[type].includes(INPUT));
@@ -35,7 +35,7 @@ module('Unit | Service | autocomplete', (hooks) => {
 
     class StoreStub extends Service {
       query(type, query) {
-        assert.equal(type, TYPE);
+        assert.strictEqual(type, TYPE);
         const filter = query.filter[type];
         assert.ok(filter);
         assert.ok(filter.startsWith('queryFragment'));
@@ -60,7 +60,7 @@ module('Unit | Service | autocomplete', (hooks) => {
 
     class StoreStub extends Service {
       query(type, query) {
-        assert.equal(type, TYPE);
+        assert.strictEqual(type, TYPE);
 
         const filter = query.filter[type];
         assert.ok(filter);

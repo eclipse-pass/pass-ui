@@ -46,6 +46,7 @@
     "ember-cli-dependency-checker": "^3.3.1",
     "ember-cli-dependency-lint": "^1.1.3",
     "ember-cli-deprecation-workflow": "^2.1.0",
+    "ember-cli-flash": "^4.0.0",
     "ember-cli-htmlbars": "^6.1.1",
     "ember-cli-inject-live-reload": "^2.1.0",
     "ember-cli-mirage": "^2.4.0",
@@ -71,7 +72,6 @@
     "ember-template-lint": "^4.16.1",
     "ember-template-lint-plugin-prettier": "^4.0.0",
     "ember-test-selectors": "^6.0.0",
-    "ember-toastr": "^3.0.1",
     "ember-truth-helpers": "^3.1.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.5.0",
@@ -81,7 +81,7 @@
     "eslint-plugin-qunit": "^7.3.1",
     "faker": "^4.1.0",
     "husky": "^8.0.0",
-    "jquery": "3.5.1",
+    "jquery": "^3.6.3",
     "lint-staged": "^10.2.13",
     "lint-to-the-future": "^1.1.0",
     "lint-to-the-future-ember-template": "^1.0.0",
@@ -95,7 +95,6 @@
     "qunit-dom": "^2.0.0",
     "string-hash": "^1.1.3",
     "sweetalert2": "^7.29.0",
-    "toastr": "^2.1.4",
     "webpack": "^5.74.0"
   },
   "husky": {

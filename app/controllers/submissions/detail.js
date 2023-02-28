@@ -10,6 +10,7 @@ export default class SubmissionsDetail extends Controller {
   @service store;
   @service submissionHandler;
   @service searchHelper;
+  @service flashMessages;
 
   constructor() {
     super(...arguments);
@@ -263,7 +264,7 @@ export default class SubmissionsDetail extends Controller {
           $('.fa-exclamation-triangle').css('color', '#b0b0b0');
           $('.fa-exclamation-triangle').css('font-size', '2em');
         }, 4000);
-        toastr.warning(
+        this.flashMessages.warning(
           'Please visit the listed web portal(s) to submit your manuscript directly. Metadata displayed on this page can be used to help in the submission process.'
         );
       }

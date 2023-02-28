@@ -5,6 +5,7 @@ import { get } from '@ember/object';
 
 export default class DashboardRoute extends CheckSessionRoute {
   @service('current-user') currentUser;
+  @service store;
 
   headers = { 'Content-Type': 'application/json; charset=utf-8' };
 

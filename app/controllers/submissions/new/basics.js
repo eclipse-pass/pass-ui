@@ -8,6 +8,7 @@ import { inject as service } from '@ember/service';
 
 export default class SubmissionsNewBasics extends Controller {
   @service workflow;
+  @service flashMessages;
 
   @alias('model.newSubmission') submission;
   @alias('model.publication') publication;
@@ -66,7 +67,6 @@ export default class SubmissionsNewBasics extends Controller {
   @action
   async loadTab(gotoRoute) {
     if (!this.doiInfo.title) set(this, 'doiInfo.title', get(this, 'publication.title'));
-    toastr.remove();
 
     await this.submission.save();
     this.transitionToRoute(gotoRoute);
@@ -80,11 +80,11 @@ export default class SubmissionsNewBasics extends Controller {
 
     if (this.titleIsInvalid) {
       set(this, 'titleError', true);
-      toastr.warning('The title must not be left blank');
+      this.flashMessages.warning('The title must not be left blank');
     }
     if (this.journalIsInvalid) {
       set(this, 'journalError', true);
-      toastr.warning('The journal must not be left blank');
+      this.flashMessages.warning('The journal must not be left blank');
     }
 
     if (this.titleIsInvalid || this.journalIsInvalid) return; // end here
@@ -93,7 +93,7 @@ export default class SubmissionsNewBasics extends Controller {
     if (get(this, 'submission.isProxySubmission')) {
       // If there's no submitter or submitter info and the submission is a new proxy submission:
       if (this.submitterIsInvalid) {
-        toastr.warning(
+        this.flashMessages.warning(
           'You have indicated that you are submitting on behalf of someone, please select the user or enter their name and email address.'
         );
         return;
@@ -102,7 +102,9 @@ export default class SubmissionsNewBasics extends Controller {
         set(this, 'submitterEmailError', this.submitterEmailIsInvalid);
         if (this.submitterEmailIsInvalid) {
           set(this, 'submitterEmailError', true);
-          toastr.warning('The email address you entered is invalid. Please verify the value and try again.');
+          this.flashMessages.warning(
+            'The email address you entered is invalid. Please verify the value and try again.'
+          );
           return;
         }
       }

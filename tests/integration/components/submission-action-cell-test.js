@@ -44,7 +44,7 @@ module('Integration | Component | submission action cell', (hooks) => {
 
     await render(hbs`<SubmissionActionCell @record={{this.record}} />`);
 
-    assert.equal(this.element.textContent.trim(), 'No actions available.');
+    assert.strictEqual(this.element.textContent.trim(), 'No actions available.');
 
     // Template block usage:
     await render(hbs`
@@ -53,7 +53,7 @@ module('Integration | Component | submission action cell', (hooks) => {
       </SubmissionActionCell>
     `);
 
-    assert.equal(this.element.textContent.trim(), 'No actions available.');
+    assert.strictEqual(this.element.textContent.trim(), 'No actions available.');
   });
 
   /**
@@ -88,7 +88,7 @@ module('Integration | Component | submission action cell', (hooks) => {
     await settled();
 
     const status = get(this, 'record.submissionStatus');
-    assert.equal(status, 'cancelled');
+    assert.strictEqual(status, 'cancelled');
   });
 
   test('Draft submissions should display Edit and Delete buttons', async function (assert) {
@@ -107,8 +107,8 @@ module('Integration | Component | submission action cell', (hooks) => {
     const buttons = this.element.querySelectorAll('a');
 
     assert.ok(buttons, 'No buttons were found');
-    assert.equal(buttons.length, 2, `There should be two buttons, instead, ${buttons.length} were found`);
-    assert.equal(buttons[0].textContent.trim(), 'Edit');
-    assert.equal(buttons[1].textContent.trim(), 'Delete');
+    assert.strictEqual(buttons.length, 2, `There should be two buttons, instead, ${buttons.length} were found`);
+    assert.strictEqual(buttons[0].textContent.trim(), 'Edit');
+    assert.strictEqual(buttons[1].textContent.trim(), 'Delete');
   });
 });

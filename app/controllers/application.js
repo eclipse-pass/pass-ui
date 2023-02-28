@@ -10,7 +10,6 @@ import ENV from 'pass-ui/config/environment';
 export default class ApplicationController extends Controller {
   @service currentUser;
   @service router;
-  @service('toast') notifications;
 
   @alias('model.staticConfig')
   staticConfig;

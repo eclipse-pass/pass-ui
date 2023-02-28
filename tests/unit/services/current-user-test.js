@@ -26,8 +26,8 @@ module('Unit | Service | current-user', (hooks) => {
       EmberObject.create({
         findRecord(type, id) {
           assert.ok(true);
-          assert.equal(type, 'user');
-          assert.equal(id, user.get('id'));
+          assert.strictEqual(type, 'user');
+          assert.strictEqual(id, user.get('id'));
 
           return new Promise((resolve) => resolve(user));
         },
@@ -40,7 +40,7 @@ module('Unit | Service | current-user', (hooks) => {
       .get('load')
       .perform()
       .then(() => {
-        assert.equal(service.get('user.id'), user.get('id'));
+        assert.strictEqual(service.get('user.id'), user.get('id'));
       });
   });
 

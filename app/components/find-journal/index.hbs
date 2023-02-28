@@ -5,8 +5,7 @@
   @selected={{@value}}
   @placeholder="Journal"
   data-test-find-journal-select
-  @onchange={{action "onSelect"}}
-  as |journal|
+  @onChange={{action "onSelect"}} as |journal|
 >
-  {{get journal "journalName"}}
+  {{journal.journalName}}
 </PowerSelect>

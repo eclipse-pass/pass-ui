@@ -164,8 +164,8 @@ module('Unit | Service | metadata-schema', (hooks) => {
     assert.notOk(service.validate(get(this, 'mockSchema'), {}), 'Should not validate');
 
     const errors = service.getErrors();
-    assert.equal(1, errors.length, 'Should be 1 error');
-    assert.equal(errors[0].message, "should have required property 'name'");
+    assert.strictEqual(errors.length, 1, 'Should be 1 error');
+    assert.strictEqual(errors[0].message, "should have required property 'name'");
   });
 
   test('Validation should fail when "ranking" value is something not in enum', function (assert) {
@@ -179,7 +179,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
     assert.notOk(service.validate(get(this, 'mockSchema'), data), 'Validation should fail');
 
     const errors = service.getErrors();
-    assert.equal(1, errors.length, 'Should have found 1 error');
+    assert.strictEqual(errors.length, 1, 'Should have found 1 error');
   });
 
   test('Try validating bad ISSN info', function (assert) {
@@ -199,7 +199,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
     assert.notOk(service.validate(get(this, 'mockSchema'), data), 'Validation should fail');
 
     const errors = service.getErrors();
-    assert.equal(1, errors.length, 'Should have found 1 error');
+    assert.strictEqual(errors.length, 1, 'Should have found 1 error');
   });
 
   test("Get fields includes 'allOf' properties", function (assert) {
@@ -224,9 +224,9 @@ module('Unit | Service | metadata-schema', (hooks) => {
     const result = service.getFieldTitleMap([get(this, 'mockSchema')]);
 
     assert.ok(result);
-    assert.equal(result.name, 'Full name');
-    assert.equal(result.feedback, 'Feedback');
-    assert.equal(result.issns, 'ISSNs', 'issns field from "allOf" block should be included');
+    assert.strictEqual(result.name, 'Full name');
+    assert.strictEqual(result.feedback, 'Feedback');
+    assert.strictEqual(result.issns, 'ISSNs', 'issns field from "allOf" block should be included');
   });
 
   test('Should format complex metadata', async function (assert) {

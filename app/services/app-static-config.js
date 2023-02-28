@@ -1,7 +1,10 @@
 import Service from '@ember/service';
+import { service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
 
 export default class AppStaticConfigService extends Service {
+  @service flashMessages;
+
   configUrl = null;
 
   /** Cached static config object */
@@ -20,30 +23,24 @@ export default class AppStaticConfigService extends Service {
    *
    * @returns {Promise}
    */
-  getStaticConfig() {
+  async getStaticConfig() {
     // return Promise.resolve(PassEmber);
     const cached = this._config;
     if (cached) {
-      return Promise.resolve(cached);
+      return await Promise.resolve(cached);
     }
 
-    return fetch(this.configUrl, {
-      headers: { 'Content-Type': 'application/json' },
-    })
-      .then((resp) => resp.json())
-      .then((data) => {
-        // set(this, '_config', data);
-        this._config = data;
-        return data;
-      })
-      .catch((error) => {
-        console.log(`%cFailed to get static 'config.json'. ${error}`, 'color:red;');
-        toastr.error('Unable to load theme. PASS may look different than expected.', null, {
-          timeOut: 0,
-          extendedTimeOut: 0,
-          preventDuplicates: true,
-        });
+    try {
+      const resp = await fetch(this.configUrl, {
+        headers: { 'Content-Type': 'application/json' },
       });
+      const data = await resp.json();
+      this._config = data;
+      return data;
+    } catch (error) {
+      console.log(`%cFailed to get static 'config.json'. ${error}`, 'color:red;');
+      this.flashMessages.error('Unable to load theme. PASS may look different than expected.');
+    }
   }
 
   /**
