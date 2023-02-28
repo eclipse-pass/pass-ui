@@ -1,16 +1,15 @@
 /* eslint-disable ember/classic-decorator-no-classic-methods, ember/no-get */
 import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
-import Bootstrap4Theme from 'ember-models-table/themes/bootstrap4';
 import { get } from '@ember/object';
 import { inject as service } from '@ember/service';
 
 export default class SubmissionsIndex extends Controller {
   @service currentUser;
   @service('app-static-config') configurator;
+  @service('emt-themes/bootstrap4') themeInstance;
 
   @tracked faqUrl = null;
-  @tracked themeInstance = Bootstrap4Theme.create();
   // Bound to message dialog.
   @tracked messageShow = false;
   @tracked messageTo = '';

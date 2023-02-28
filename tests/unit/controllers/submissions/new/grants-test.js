@@ -24,7 +24,7 @@ module('Unit | Controller | submissions/new/grants', (hooks) => {
     controller.set('model', model);
 
     controller.transitionToRoute = function (route) {
-      assert.equal('submissions.new.basics', route);
+      assert.strictEqual(route, 'submissions.new.basics');
     };
     controller.send('loadPrevious');
   });
@@ -42,7 +42,7 @@ module('Unit | Controller | submissions/new/grants', (hooks) => {
     controller.set('model', model);
 
     controller.transitionToRoute = function (route) {
-      assert.equal('submissions.new.policies', route);
+      assert.strictEqual(route, 'submissions.new.policies');
     };
     controller.send('loadNext');
   });

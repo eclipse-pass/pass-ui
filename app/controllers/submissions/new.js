@@ -11,6 +11,7 @@ export default class SubmissionsNew extends Controller {
   @service workflow;
   @service submissionHandler;
   @service searchHelper;
+  @service flashMessages;
 
   @tracked comment = ''; // Holds the comment that will be added to submissionEvent in the review step.
   @tracked uploading = false;
@@ -102,7 +103,7 @@ export default class SubmissionsNew extends Controller {
         .perform(sub, pub, files, comment)
         .catch((error) => {
           this.set('uploading', false);
-          toastr.error(`Submission failed: ${error.message}`);
+          this.flashMessages.error(`Submission failed: ${error.message}`);
         });
 
       set(this, 'uploading', false);

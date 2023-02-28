@@ -1,8 +1,7 @@
 /* eslint-disable ember/no-get */
 import CheckSessionRoute from './check-session-route';
-import RSVP from 'rsvp';
 import { inject as service } from '@ember/service';
-import { action, get } from '@ember/object';
+import { action } from '@ember/object';
 
 export default class ApplicationRoute extends CheckSessionRoute {
   @service('app-static-config') staticConfig;
@@ -58,11 +57,12 @@ export default class ApplicationRoute extends CheckSessionRoute {
     }
   }
 
-  model() {
-    const configurator = this.staticConfig;
-    return RSVP.hash({
-      staticConfig: configurator.getStaticConfig(),
-    });
+  async model() {
+    const config = await this.staticConfig.getStaticConfig();
+
+    return {
+      staticConfig: config,
+    };
   }
 
   /**

@@ -192,7 +192,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
     `);
 
     const buttons = this.element.querySelectorAll('button');
-    assert.equal(3, buttons.length, 'should be two buttons');
+    assert.strictEqual(buttons.length, 3, 'should be two buttons');
 
     Object.keys(buttons)
       .map((key) => buttons[key].textContent)
@@ -386,7 +386,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       await waitFor('input[name="journal-NLMTA-ID"]');
       const nlmtaInput = this.element.querySelector('input[name="journal-NLMTA-ID"]');
       assert.ok(nlmtaInput, 'NLMTA-ID input not found');
-      assert.equal(nlmtaInput.value, 'MOO JOURNAL', 'Unexpected "journal-NLMTA-ID" value found');
+      assert.strictEqual(nlmtaInput.value, 'MOO JOURNAL', 'Unexpected "journal-NLMTA-ID" value found');
 
       await click('button[data-key="Next"]');
       await waitFor('button[data-key="Next"]');
@@ -396,7 +396,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       await waitFor('input[name="mooName"]');
       const mooInput = this.element.querySelector('input[name="mooName"]');
       assert.ok(mooInput, 'mooName input not found');
-      assert.equal(mooInput.value, 'This is a moo', 'Unexpected value for "mooName" found');
+      assert.strictEqual(mooInput.value, 'This is a moo', 'Unexpected value for "mooName" found');
     });
   });
 
@@ -619,7 +619,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
     assert.notOk(this.element.querySelector('legend').textContent.includes('required'));
 
     const reqIndicators = this.element.querySelectorAll('.alpaca-container-item .alpaca-required-indicator');
-    assert.equal(reqIndicators.length, 2, '(required) indicator should appear only twice in rendered form');
+    assert.strictEqual(reqIndicators.length, 2, '(required) indicator should appear only twice in rendered form');
   });
 
   test('Check "required" labels for user added array fields', async function (assert) {
@@ -684,6 +684,6 @@ module('Integration | Component | workflow-metadata', (hooks) => {
     assert.notOk(this.element.querySelector('legend').textContent.includes('required'));
 
     const reqIndicators = this.element.querySelectorAll('.alpaca-container-item .alpaca-required-indicator');
-    assert.equal(reqIndicators.length, 1, '(required) indicator should appear only twice in rendered form');
+    assert.strictEqual(reqIndicators.length, 1, '(required) indicator should appear only twice in rendered form');
   });
 });

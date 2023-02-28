@@ -13,6 +13,6 @@ module('Integration | Helper | format oap compliance', (hooks) => {
 
     await render(hbs`{{format-oap-compliance inputValue}}`);
 
-    assert.equal(this.element.textContent.trim(), 'Yes');
+    assert.strictEqual(this.element.textContent.trim(), 'Yes');
   });
 });

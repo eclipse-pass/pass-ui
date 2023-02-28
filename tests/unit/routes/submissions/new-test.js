@@ -96,7 +96,7 @@ module('Unit | Route | submissions/new', (hooks) => {
     route.set('workflow', {
       setDoiInfo(data) {
         assert.ok(data);
-        assert.equal(data.moo, 'This is a moo');
+        assert.strictEqual(data.moo, 'This is a moo');
       },
     });
 
@@ -104,6 +104,6 @@ module('Unit | Route | submissions/new', (hooks) => {
 
     assert.ok(result, 'no model found');
     assert.ok(result.newSubmission.get('publication'), 'There should be a publication on this submission');
-    assert.equal(result.newSubmission.get('publication.title'), 'Test Publication');
+    assert.strictEqual(result.newSubmission.get('publication.title'), 'Test Publication');
   });
 });

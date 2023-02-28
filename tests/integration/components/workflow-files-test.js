@@ -93,8 +93,8 @@ module('Integration | Component | workflow files', (hooks) => {
           assert.ok(submission);
           assert.ok(file);
 
-          assert.equal(file.get('name'), 'Fake-file-name');
-          assert.equal(file.get('mimeType'), 'plain');
+          assert.strictEqual(file.get('name'), 'Fake-file-name');
+          assert.strictEqual(file.get('mimeType'), 'plain');
           assert.deepEqual(file.get('_file'), { size: 100, name: 'Fake-file-name', type: 'text/plain' });
         },
       })
@@ -179,7 +179,7 @@ module('Integration | Component | workflow files', (hooks) => {
     await click(sweetAlertBtn);
 
     const workflowFiles = this.previouslyUploadedFiles;
-    assert.equal(workflowFiles.length, 0, 'Should have 0 files tracked');
+    assert.strictEqual(workflowFiles.length, 0, 'Should have 0 files tracked');
   });
 
   /**

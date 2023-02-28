@@ -104,10 +104,10 @@ module('Integration | Component | workflow review', (hooks) => {
     // Click on submit
     await click('.submit');
 
-    assert.equal(submitted, true);
+    assert.true(submitted);
 
     // Both repositories present
-    assert.equal(submission.get('repositories.length'), 2);
+    assert.strictEqual(submission.get('repositories.length'), 2);
   });
 
   test('submission success: web-link and agreement', async function (assert) {
@@ -185,11 +185,11 @@ module('Integration | Component | workflow review', (hooks) => {
     // Click on confirm submission
     await click(document.querySelector('.swal2-confirm'));
 
-    assert.equal(submitted, true);
+    assert.true(submitted);
 
     // Submission to full repo and web-link repo
-    assert.equal(submission.get('repositories.length'), 2);
-    assert.equal(submission.get('repositories.firstObject.id'), repo1.id);
+    assert.strictEqual(submission.get('repositories.length'), 2);
+    assert.strictEqual(submission.get('repositories.firstObject.id'), repo1.id);
   });
 
   test('submission failure: no web-link click', async function (assert) {
@@ -251,9 +251,9 @@ module('Integration | Component | workflow review', (hooks) => {
     // Should be toastr warning about web-link click instead of confirm dialog
     await waitUntil(() => !document.querySelector('.swal2-title'), { timeout: 500 });
     await waitFor(document.querySelector('.toast-message'));
-    assert.equal(document.querySelector('.swal2-title'), null);
+    assert.strictEqual(document.querySelector('.swal2-title'), null);
 
-    assert.equal(submitted, false);
+    assert.false(submitted);
   });
 
   test('submission failure: no repository agreement', async function (assert) {
@@ -315,11 +315,11 @@ module('Integration | Component | workflow review', (hooks) => {
     await click(document.querySelector('.swal2-confirm'));
 
     // Should be warning about no deposit agreement
-    assert.equal(document.querySelector('.swal2-title').textContent, 'Your submission cannot be submitted.');
-    assert.equal(document.querySelector('.swal2-content').textContent.includes(repo1.get('name')), true);
+    assert.strictEqual(document.querySelector('.swal2-title').textContent, 'Your submission cannot be submitted.');
+    assert.true(document.querySelector('.swal2-content').textContent.includes(repo1.get('name')));
 
     await click(document.querySelector('.swal2-confirm'));
 
-    assert.equal(submitted, false);
+    assert.false(submitted);
   });
 });

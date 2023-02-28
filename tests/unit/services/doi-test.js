@@ -137,9 +137,9 @@ module('Unit | Service | doi', (hooks) => {
 
     const result = this.owner.lookup('service:doi')._processRawDoi(doiInfo);
     assert.ok(result);
-    assert.equal(typeof result['journal-title'], 'string', '"journal-title" should be a string');
-    assert.equal(typeof result.title, 'string', '"title" should be a string');
-    assert.equal(typeof result['short-container-title'], 'string', '"short-container-title" should be a string');
+    assert.strictEqual(typeof result['journal-title'], 'string', '"journal-title" should be a string');
+    assert.strictEqual(typeof result.title, 'string', '"title" should be a string');
+    assert.strictEqual(typeof result['short-container-title'], 'string', '"short-container-title" should be a string');
     assert.notEqual(typeof result.ISSN, 'string', 'Should not stringify this array value');
   });
 
@@ -171,14 +171,14 @@ module('Unit | Service | doi', (hooks) => {
       EmberObject.create({
         findRecord(type, id) {
           assert.ok(true);
-          assert.equal(type, 'journal');
+          assert.strictEqual(type, 'journal');
 
           let journal = EmberObject.create({ id: 'journal' });
           return new Promise((resolve) => resolve(journal));
         },
 
         createRecord(type, values) {
-          assert.equal(type, 'publication');
+          assert.strictEqual(type, 'publication');
 
           return EmberObject.create(values);
         },
@@ -194,8 +194,8 @@ module('Unit | Service | doi', (hooks) => {
         assert.ok(result.publication);
         assert.ok(result.doiInfo);
 
-        assert.equal(doiInfo.DOI, result.publication.doi);
-        assert.equal(doiInfo.DOI, result.doiInfo.DOI);
+        assert.strictEqual(doiInfo.DOI, result.publication.doi);
+        assert.strictEqual(doiInfo.DOI, result.doiInfo.DOI);
       });
   });
 
@@ -209,7 +209,7 @@ module('Unit | Service | doi', (hooks) => {
     const result = service.doiToMetadata(doiInfo, journal);
 
     assert.ok(result);
-    assert.equal(result.issns.length, 0);
-    assert.equal(result['journal-NLMTA-ID'], 'NLmooTA');
+    assert.strictEqual(result.issns.length, 0);
+    assert.strictEqual(result['journal-NLMTA-ID'], 'NLmooTA');
   });
 });

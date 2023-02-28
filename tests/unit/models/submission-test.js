@@ -13,13 +13,13 @@ module('Unit | Model | submission', (hooks) => {
       })
     );
 
-    assert.equal(submission.get('submitterEmailDisplay'), 'test@test.com');
+    assert.strictEqual(submission.get('submitterEmailDisplay'), 'test@test.com');
   });
 
   test('isProxySubmission is correctly calculated', function (assert) {
     const submission = run(() => this.owner.lookup('service:store').createRecord('submission'));
     // it isn't any kind of submission yet, let alone a proxy submission!
-    assert.equal(submission.get('isProxySubmission'), false);
+    assert.false(submission.get('isProxySubmission'));
 
     const user = run(() =>
       this.owner.lookup('service:store').createRecord('user', {
@@ -29,17 +29,17 @@ module('Unit | Model | submission', (hooks) => {
     );
 
     // there is a submitter, but no preparer, still not a proxy submission
-    assert.equal(submission.get('isProxySubmission'), false);
+    assert.false(submission.get('isProxySubmission'));
 
     run(() => submission.set('submitterName', 'Test Name'));
     run(() => submission.set('submitterEmail', 'mailto:test@test.com'));
     // a submitterEmail and submitterName has been entered, this is going to be a proxy submission.
-    assert.equal(submission.get('isProxySubmission'), true);
+    assert.true(submission.get('isProxySubmission'));
 
     run(() => submission.set('submitterName', null));
     run(() => submission.set('submitterEmail', null));
     run(() => submission.set('preparers', A([user])));
     // if there is one preparer, regardless of other values, it is a proxy submission
-    assert.equal(submission.get('isProxySubmission'), true);
+    assert.true(submission.get('isProxySubmission'));
   });
 });

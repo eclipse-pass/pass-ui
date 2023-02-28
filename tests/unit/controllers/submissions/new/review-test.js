@@ -25,10 +25,10 @@ module('Unit | Controller | submissions/new/review', (hooks) => {
     let loadTabAccessed = false;
     controller.transitionToRoute = function (route) {
       loadTabAccessed = true;
-      assert.equal('submissions.new.files', route);
+      assert.strictEqual(route, 'submissions.new.files');
     };
     controller.send('loadPrevious');
-    assert.equal(loadTabAccessed, true);
+    assert.true(loadTabAccessed);
   });
 
   test('parent properties are retrieved', function (assert) {
@@ -43,10 +43,10 @@ module('Unit | Controller | submissions/new/review', (hooks) => {
       })
     );
 
-    assert.equal(controller.get('uploading'), 'is uploading');
-    assert.equal(controller.get('waitingMessage'), 'test waiting message');
-    assert.equal(controller.get('comment'), 'test comment');
+    assert.strictEqual(controller.get('uploading'), 'is uploading');
+    assert.strictEqual(controller.get('waitingMessage'), 'test waiting message');
+    assert.strictEqual(controller.get('comment'), 'test comment');
     controller.set('comment', 'comment changed');
-    assert.equal(controller.get('comment'), 'comment changed');
+    assert.strictEqual(controller.get('comment'), 'comment changed');
   });
 });

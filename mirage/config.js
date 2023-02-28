@@ -27,6 +27,24 @@ export default function (config) {
       /** Schema Service */
       schemas(this);
 
+      this.get('/app/config.json', (_schema, _request) => {
+        return {
+          branding: {
+            homepage: 'https://www.eclipse.org/org/foundation/',
+            logo: 'ef/eclipse_foundation_logo_wo/EF_WHT-OR_png.png',
+            favicon: 'favicon.ico',
+            stylesheet: '/app/branding.css',
+            pages: {
+              showPagesNavBar: false,
+              contactUrl: 'https://demo.eclipse-pass.org/contact.html',
+            },
+            error: {
+              icon: '/app/error-icon.png',
+            },
+          },
+        };
+      });
+
       /** Policy Service */
       this.get('/policyservice/policies', async (schema, request) => {
         const institutionPolicy = await dataFinder.findBy(schema, 'policy', {

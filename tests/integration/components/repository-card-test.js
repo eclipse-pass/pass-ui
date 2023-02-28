@@ -49,8 +49,8 @@ module('Integration | Component | repository card', (hooks) => {
     this.set('repository', repo);
 
     this.set('toggleRepository', (repository, selected, _type) => {
-      assert.equal(repository, repo, 'Repository matches');
-      assert.equal(selected, true, 'Status is selected');
+      assert.strictEqual(repository, repo, 'Repository matches');
+      assert.true(selected, 'Status is selected');
     });
 
     await render(hbs`

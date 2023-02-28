@@ -22,28 +22,28 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
       newSubmission: submission,
     };
     controller.set('model', model);
-    assert.equal(controller.get('submitterEmailIsInvalid'), true);
+    assert.true(controller.get('submitterEmailIsInvalid'));
 
     controller.set('model.newSubmission.submitterEmailDisplay', 'bademail.com');
-    assert.equal(controller.get('submitterEmailIsInvalid'), true);
+    assert.true(controller.get('submitterEmailIsInvalid'));
 
     controller.set('model.newSubmission.submitterEmailDisplay', 'bad|#$~email.com');
-    assert.equal(controller.get('submitterEmailIsInvalid'), true);
+    assert.true(controller.get('submitterEmailIsInvalid'));
 
     controller.set('model.newSubmission.submitterEmailDisplay', 'mailto:bad@email.com');
-    assert.equal(controller.get('submitterEmailIsInvalid'), true);
+    assert.true(controller.get('submitterEmailIsInvalid'));
 
     controller.set('model.newSubmission.submitterEmailDisplay', 'bad@email+com');
-    assert.equal(controller.get('submitterEmailIsInvalid'), true);
+    assert.true(controller.get('submitterEmailIsInvalid'));
 
     controller.set('model.newSubmission.submitterEmailDisplay', 'good@email.com');
-    assert.equal(controller.get('submitterEmailIsInvalid'), false);
+    assert.false(controller.get('submitterEmailIsInvalid'));
 
     controller.set('model.newSubmission.submitterEmailDisplay', 'good.email@email.co.uk');
-    assert.equal(controller.get('submitterEmailIsInvalid'), false);
+    assert.false(controller.get('submitterEmailIsInvalid'));
 
     controller.set('model.newSubmission.submitterEmailDisplay', 'good_email55@ema-il.co.uk');
-    assert.equal(controller.get('submitterEmailIsInvalid'), false);
+    assert.false(controller.get('submitterEmailIsInvalid'));
   });
 
   test('check submitter validation', function (assert) {
@@ -59,17 +59,17 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
       newSubmission: submission,
     };
     controller.set('model', model);
-    assert.equal(controller.get('submitterEmailIsInvalid'), true);
-    assert.equal(controller.get('submitterIsInvalid'), true);
+    assert.true(controller.get('submitterEmailIsInvalid'));
+    assert.true(controller.get('submitterIsInvalid'));
 
     controller.set('model.newSubmission.submitterName', 'Test Name');
     controller.set('model.newSubmission.submitterEmail', 'mailto:good@email.com');
-    assert.equal(controller.get('submitterIsInvalid'), false);
+    assert.false(controller.get('submitterIsInvalid'));
 
     controller.set('model.newSubmission.submitterName', null);
     controller.set('model.newSubmission.submitterEmailDisplay', null);
     controller.set('model.newSubmission.submitter', submitter);
-    assert.equal(controller.get('submitterIsInvalid'), false);
+    assert.false(controller.get('submitterIsInvalid'));
   });
 
   test('check title and journal validation', function (assert) {
@@ -83,18 +83,18 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
       publication,
     };
     controller.set('model', model);
-    assert.equal(controller.get('journalIsInvalid'), true);
-    assert.equal(controller.get('titleIsInvalid'), true);
+    assert.true(controller.get('journalIsInvalid'));
+    assert.true(controller.get('titleIsInvalid'));
 
     controller.set('model.publication.title', 'Test title');
-    assert.equal(controller.get('titleIsInvalid'), false);
+    assert.false(controller.get('titleIsInvalid'));
 
     controller.set('model.publication.journal.id', 'test:journal_id');
-    assert.equal(controller.get('journalIsInvalid'), false);
+    assert.false(controller.get('journalIsInvalid'));
 
     controller.set('model.publication.journal.id', null);
     controller.set('model.publication.journal.journalName', 'Test journal name');
-    assert.equal(controller.get('journalIsInvalid'), false);
+    assert.false(controller.get('journalIsInvalid'));
   });
 
   test('check validateAndLoadTab rejects empty journal and title', function (assert) {
@@ -108,15 +108,15 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
       publication,
     };
     controller.set('model', model);
-    assert.equal(controller.get('titleError'), false);
-    assert.equal(controller.get('journalError'), false);
-    assert.equal(controller.get('flaggedFields').indexOf('title'), -1);
-    assert.equal(controller.get('flaggedFields').indexOf('journal'), -1);
+    assert.false(controller.get('titleError'));
+    assert.false(controller.get('journalError'));
+    assert.strictEqual(controller.get('flaggedFields').indexOf('title'), -1);
+    assert.strictEqual(controller.get('flaggedFields').indexOf('journal'), -1);
 
     controller.send('validateAndLoadTab', 'submissions.new.basics');
 
-    assert.equal(controller.get('titleError'), true);
-    assert.equal(controller.get('journalError'), true);
+    assert.true(controller.get('titleError'));
+    assert.true(controller.get('journalError'));
     assert.ok(controller.get('flaggedFields').indexOf('title') > -1);
     assert.ok(controller.get('flaggedFields').indexOf('journal') > -1);
   });
@@ -145,18 +145,18 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
     };
 
     // this will error if it proceeds to loadTab.
-    assert.equal(controller.get('model.newSubmission.isProxySubmission'), true);
+    assert.true(controller.get('model.newSubmission.isProxySubmission'));
     controller.send('validateAndLoadTab', 'submissions.new.basics');
 
-    assert.equal(controller.get('submitterIsInvalid'), true);
+    assert.true(controller.get('submitterIsInvalid'));
     // no flagged fields in this instance and loadTab not accessed
-    assert.equal(controller.get('titleError'), false);
-    assert.equal(controller.get('journalError'), false);
-    assert.equal(controller.get('submitterEmailError'), false);
-    assert.equal(controller.get('flaggedFields').indexOf('journal'), -1);
-    assert.equal(controller.get('flaggedFields').indexOf('title'), -1);
-    assert.equal(controller.get('flaggedFields').indexOf('submitterEmail'), -1);
-    assert.equal(loadTabAccessed, false);
+    assert.false(controller.get('titleError'));
+    assert.false(controller.get('journalError'));
+    assert.false(controller.get('submitterEmailError'));
+    assert.strictEqual(controller.get('flaggedFields').indexOf('journal'), -1);
+    assert.strictEqual(controller.get('flaggedFields').indexOf('title'), -1);
+    assert.strictEqual(controller.get('flaggedFields').indexOf('submitterEmail'), -1);
+    assert.false(loadTabAccessed);
   });
 
   test('check validateAndLoadTab accepts complete information', function (assert) {
@@ -194,18 +194,18 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
     controller.set('model', model);
     controller.set('transitionToRoute', (route) => {
       // no errors and loadTab accessed
-      assert.equal(controller.get('submitterIsInvalid'), false);
-      assert.equal(controller.get('titleError'), false);
-      assert.equal(controller.get('journalError'), false);
-      assert.equal(controller.get('submitterEmailError'), false);
-      assert.equal(controller.get('flaggedFields').indexOf('journal'), -1);
-      assert.equal(controller.get('flaggedFields').indexOf('title'), -1);
-      assert.equal(controller.get('flaggedFields').indexOf('submitterEmail'), -1);
+      assert.false(controller.get('submitterIsInvalid'));
+      assert.false(controller.get('titleError'));
+      assert.false(controller.get('journalError'));
+      assert.false(controller.get('submitterEmailError'));
+      assert.strictEqual(controller.get('flaggedFields').indexOf('journal'), -1);
+      assert.strictEqual(controller.get('flaggedFields').indexOf('title'), -1);
+      assert.strictEqual(controller.get('flaggedFields').indexOf('submitterEmail'), -1);
 
       assert.ok(subSaved, 'submission was not saved');
     });
 
-    assert.equal(controller.get('model.newSubmission.isProxySubmission'), true);
+    assert.true(controller.get('model.newSubmission.isProxySubmission'));
     controller.send('validateAndLoadTab', 'submissions.new.basics');
   });
 

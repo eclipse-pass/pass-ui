@@ -4,7 +4,6 @@ import { tracked } from '@glimmer/tracking';
 import { action, get, set } from '@ember/object';
 import { A } from '@ember/array';
 import { inject as service } from '@ember/service';
-import Bootstrap4Theme from 'ember-models-table/themes/bootstrap4';
 import { task } from 'ember-concurrency-decorators';
 
 /**
@@ -18,6 +17,7 @@ export default class WorkflowGrants extends Component {
   @service store;
   @service workflow;
   @service appStaticConfig;
+  @service('emt-themes/bootstrap4') themeInstance;
 
   @tracked contactUrl = null;
   @tracked workflowStep = 2;
@@ -27,7 +27,6 @@ export default class WorkflowGrants extends Component {
   @tracked pageSize = 10;
   @tracked submitterGrants = null;
   @tracked totalGrants = 0;
-  @tracked themeInstance = Bootstrap4Theme.create();
   /** Grants already attached to the submission on component init */
   @tracked _selectedGrants = A();
   @tracked grantColumns = [

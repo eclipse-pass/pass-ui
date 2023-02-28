@@ -57,7 +57,7 @@ module('Integration | Component | workflow repositories', (hooks) => {
     assert.ok(this.element.textContent.includes('Moo-pository 1'), "couldn't find repository name");
 
     const checkboxes = this.element.querySelectorAll('input[type="checkbox"]');
-    assert.equal(checkboxes.length, 0, 'should be zero checkboxes rendered');
+    assert.strictEqual(checkboxes.length, 0, 'should be zero checkboxes rendered');
   });
 
   test('optional/choice repos chould display with checkboxes', async function (assert) {
@@ -90,7 +90,7 @@ module('Integration | Component | workflow repositories', (hooks) => {
     assert.ok(text.includes('Optional repositories'));
 
     const checkboxes = this.element.querySelectorAll('input[type="checkbox"]');
-    assert.equal(checkboxes.length, 3, 'unexpected # of checkboxes found');
+    assert.strictEqual(checkboxes.length, 3, 'unexpected # of checkboxes found');
   });
 
   test('User cannot deselect all choice repos', async function (assert) {
@@ -155,15 +155,15 @@ module('Integration | Component | workflow repositories', (hooks) => {
     `);
 
     const repos = get(this, 'submission.repositories');
-    assert.equal(repos.length, 2, 'unexpected number of repositories attached to the submission');
+    assert.strictEqual(repos.length, 2, 'unexpected number of repositories attached to the submission');
     assert.ok(repos.isAny('name', 'Moo-pository XYZ'));
 
     const checkboxes = this.element.querySelectorAll('input[type="checkbox"]');
-    assert.equal(checkboxes.length, 3, 'Unexpected number of checkboxes found');
+    assert.strictEqual(checkboxes.length, 3, 'Unexpected number of checkboxes found');
 
     await click(checkboxes[2]);
 
-    assert.equal(repos.length, 3, 'unexpected number of repositories attached to submission');
+    assert.strictEqual(repos.length, 3, 'unexpected number of repositories attached to submission');
     assert.ok(repos.isAny('name', 'Moo-pository 00'));
     assert.notOk(repos.includes(undefined), 'there should be no "undefined" entries');
   });
@@ -194,16 +194,16 @@ module('Integration | Component | workflow repositories', (hooks) => {
     `);
 
     const repos = get(this, 'submission.repositories');
-    assert.equal(repos.length, 3, 'unexpected number of repositories attached to submission');
+    assert.strictEqual(repos.length, 3, 'unexpected number of repositories attached to submission');
     assert.notOk(repos.includes(undefined), 'should be no undefined items');
     assert.ok(repos.isAny('name', 'Moo-pository 00'), 'The optional repo should be present');
 
     const checkboxes = this.element.querySelectorAll('input[type="checkbox"]');
-    assert.equal(checkboxes.length, 3, 'unexpected number of checkboxes found');
+    assert.strictEqual(checkboxes.length, 3, 'unexpected number of checkboxes found');
 
     await click(checkboxes[2]);
 
-    assert.equal(repos.length, 2, 'unexpected number of repositories attached to the submission');
+    assert.strictEqual(repos.length, 2, 'unexpected number of repositories attached to the submission');
     assert.notOk(repos.isAny('name', 'Moo-pository 00'));
   });
 
@@ -261,7 +261,7 @@ module('Integration | Component | workflow repositories', (hooks) => {
     const checkboxes = this.element.querySelectorAll(
       '[data-test-workflow-repositories-optional-list] > li > input[type="checkbox"]'
     );
-    assert.equal(checkboxes.length, 3, 'Should be two checkboxes showing');
+    assert.strictEqual(checkboxes.length, 3, 'Should be two checkboxes showing');
     assert.notOk(checkboxes[0].checked, 'First checkbox should NOT be checked');
     assert.ok(checkboxes[1].checked, 'Second checkbox should be checked');
     assert.ok(checkboxes[2].checked, 'Third checkbox should be selected');

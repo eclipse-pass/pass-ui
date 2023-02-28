@@ -6,6 +6,7 @@ import { hash } from 'rsvp';
 export default class NewRoute extends CheckSessionRoute {
   @service('workflow')
   workflow;
+  @service store;
 
   @service('current-user')
   currentUser;

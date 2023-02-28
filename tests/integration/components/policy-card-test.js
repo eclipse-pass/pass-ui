@@ -67,10 +67,10 @@ module('Integration | Component | policy card', (hooks) => {
       assert.ok(true);
 
       const inputs = this.element.querySelectorAll('input');
-      assert.equal(inputs.length, 2, `Found ${inputs.length} inputs, but was expecting 2`);
+      assert.strictEqual(inputs.length, 2, `Found ${inputs.length} inputs, but was expecting 2`);
 
       const effectivePolicies = get(this, 'submission.effectivePolicies');
-      assert.equal(effectivePolicies.length, 1, 'Should be ONE effective policy on submission');
+      assert.strictEqual(effectivePolicies.length, 1, 'Should be ONE effective policy on submission');
       assert.ok(effectivePolicies.isAny('title', 'Moo title'));
     });
 
@@ -79,13 +79,13 @@ module('Integration | Component | policy card', (hooks) => {
       assert.ok(true);
 
       const inputs = this.element.querySelectorAll('input');
-      assert.equal(inputs.length, 2, `Found ${inputs.length} inputs, but was expecting 2`);
+      assert.strictEqual(inputs.length, 2, `Found ${inputs.length} inputs, but was expecting 2`);
 
       // Select option to remove this policy
       await click(inputs[1]);
 
       const effectivePolicies = get(this, 'submission.effectivePolicies');
-      assert.equal(effectivePolicies.length, 0, 'Should be ZERO effective policies');
+      assert.strictEqual(effectivePolicies.length, 0, 'Should be ZERO effective policies');
     });
 
     test('PMC type A journal as no inputs and is not added to submission', async function (assert) {
@@ -95,9 +95,9 @@ module('Integration | Component | policy card', (hooks) => {
       assert.ok(this.element, 'failed to render');
 
       const inputs = this.element.querySelectorAll('input');
-      assert.equal(inputs.length, 0, 'should be ZERO input options rendered');
+      assert.strictEqual(inputs.length, 0, 'should be ZERO input options rendered');
 
-      assert.equal(get(this, 'submission.effectivePolicies').length, 0, 'should be ZERO effective policies set');
+      assert.strictEqual(get(this, 'submission.effectivePolicies').length, 0, 'should be ZERO effective policies set');
     });
   });
 });

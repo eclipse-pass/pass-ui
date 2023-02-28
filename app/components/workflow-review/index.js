@@ -9,6 +9,7 @@ import { task } from 'ember-concurrency-decorators';
 export default class WorkflowReview extends Component {
   @service workflow;
   @service currentUser;
+  @service flashMessages;
 
   @tracked isValidated = A();
   @tracked externalRepoMap = {};
@@ -76,7 +77,7 @@ export default class WorkflowReview extends Component {
           $('.fa-exclamation-triangle').css('color', '#b0b0b0');
           $('.fa-exclamation-triangle').css('font-size', '2em');
         }, 4000);
-        toastr.warning(
+        this.flashMessages.warning(
           'Please visit the following web portal to submit your manuscript directly. Metadata displayed above could be used to aid in your submission progress.'
         );
       }

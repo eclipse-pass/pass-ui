@@ -23,7 +23,7 @@ module('Unit | Controller | submissions/new/policies', (hooks) => {
 
     controller.set('model', model);
     controller.transitionToRoute = function (route) {
-      assert.equal('submissions.new.grants', route);
+      assert.strictEqual(route, 'submissions.new.grants');
     };
     controller.send('loadPrevious');
   });
@@ -40,7 +40,7 @@ module('Unit | Controller | submissions/new/policies', (hooks) => {
 
     controller.set('model', model);
     controller.transitionToRoute = function (route) {
-      assert.equal('submissions.new.repositories', route);
+      assert.strictEqual(route, 'submissions.new.repositories');
     };
     controller.send('loadNext');
   });

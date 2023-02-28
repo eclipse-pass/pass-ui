@@ -68,17 +68,17 @@ module('Unit | Service | submission-handler', (hooks) => {
       .get('submit')
       .perform(submission, publication, files, comment)
       .then(() => {
-        assert.equal(submission.get('submitted'), false);
-        assert.equal(submission.get('submissionStatus'), 'approval-requested');
+        assert.false(submission.get('submitted'));
+        assert.strictEqual(submission.get('submissionStatus'), 'approval-requested');
 
         // web-link repo should not be removed
-        assert.equal(submission.get('repositories.length'), 2);
+        assert.strictEqual(submission.get('repositories.length'), 2);
 
-        assert.equal(submissionEvent.get('eventType'), 'approval-requested');
-        assert.equal(submissionEvent.get('performerRole'), 'preparer');
-        assert.equal(submissionEvent.get('performedBy.id'), 'proxy-user-id');
-        assert.equal(submissionEvent.get('comment'), comment);
-        assert.equal(submissionEvent.get('submission.id'), submission.get('id'));
+        assert.strictEqual(submissionEvent.get('eventType'), 'approval-requested');
+        assert.strictEqual(submissionEvent.get('performerRole'), 'preparer');
+        assert.strictEqual(submissionEvent.get('performedBy.id'), 'proxy-user-id');
+        assert.strictEqual(submissionEvent.get('comment'), comment);
+        assert.strictEqual(submissionEvent.get('submission.id'), submission.get('id'));
         assert.ok(submissionEvent.get('link').includes(submission.get('id')));
       });
   });
@@ -144,17 +144,17 @@ module('Unit | Service | submission-handler', (hooks) => {
       .get('submit')
       .perform(submission, publication, files, comment)
       .then(() => {
-        assert.equal(submission.get('submitted'), true);
-        assert.equal(submission.get('submissionStatus'), 'submitted');
+        assert.true(submission.get('submitted'));
+        assert.strictEqual(submission.get('submissionStatus'), 'submitted');
 
         // web-link repo should NOT be removed
-        assert.equal(submission.get('repositories.length'), 2);
-        assert.equal(submission.get('repositories.firstObject.id'), repo1.id);
+        assert.strictEqual(submission.get('repositories.length'), 2);
+        assert.strictEqual(submission.get('repositories.firstObject.id'), repo1.id);
 
-        assert.equal(submissionEvent.get('eventType'), 'submitted');
-        assert.equal(submissionEvent.get('performerRole'), 'submitter');
-        assert.equal(submissionEvent.get('comment'), comment);
-        assert.equal(submissionEvent.get('submission.id'), submission.get('id'));
+        assert.strictEqual(submissionEvent.get('eventType'), 'submitted');
+        assert.strictEqual(submissionEvent.get('performerRole'), 'submitter');
+        assert.strictEqual(submissionEvent.get('comment'), comment);
+        assert.strictEqual(submissionEvent.get('submission.id'), submission.get('id'));
         assert.ok(submissionEvent.get('link').includes(submission.get('id')));
       });
   });
@@ -201,18 +201,18 @@ module('Unit | Service | submission-handler', (hooks) => {
     assert.expect(12);
 
     return service.approveSubmission(submission, comment).then(() => {
-      assert.equal(submission.get('submitted'), true);
-      assert.equal(submission.get('submissionStatus'), 'submitted');
+      assert.true(submission.get('submitted'));
+      assert.strictEqual(submission.get('submissionStatus'), 'submitted');
 
       // web-link repo should NOT be removed and external-submissions added not on metadata
-      assert.equal(submission.get('repositories.length'), 2);
-      assert.equal(submission.get('repositories.firstObject.id'), repo1.id);
+      assert.strictEqual(submission.get('repositories.length'), 2);
+      assert.strictEqual(submission.get('repositories.firstObject.id'), repo1.id);
       assert.notOk(submission.get('metadata').includes('external-submissions'));
 
-      assert.equal(submissionEvent.get('eventType'), 'submitted');
-      assert.equal(submissionEvent.get('performerRole'), 'submitter');
-      assert.equal(submissionEvent.get('comment'), comment);
-      assert.equal(submissionEvent.get('submission.id'), submission.get('id'));
+      assert.strictEqual(submissionEvent.get('eventType'), 'submitted');
+      assert.strictEqual(submissionEvent.get('performerRole'), 'submitter');
+      assert.strictEqual(submissionEvent.get('comment'), comment);
+      assert.strictEqual(submissionEvent.get('submission.id'), submission.get('id'));
       assert.ok(submissionEvent.get('link').includes(submission.get('id')));
     });
   });
@@ -255,11 +255,11 @@ module('Unit | Service | submission-handler', (hooks) => {
     assert.expect(8);
 
     return service.cancelSubmission(submission, comment).then(() => {
-      assert.equal(submission.get('submissionStatus'), 'cancelled');
-      assert.equal(submissionEvent.get('eventType'), 'cancelled');
-      assert.equal(submissionEvent.get('performerRole'), 'submitter');
-      assert.equal(submissionEvent.get('comment'), comment);
-      assert.equal(submissionEvent.get('submission.id'), submission.get('id'));
+      assert.strictEqual(submission.get('submissionStatus'), 'cancelled');
+      assert.strictEqual(submissionEvent.get('eventType'), 'cancelled');
+      assert.strictEqual(submissionEvent.get('performerRole'), 'submitter');
+      assert.strictEqual(submissionEvent.get('comment'), comment);
+      assert.strictEqual(submissionEvent.get('submission.id'), submission.get('id'));
       assert.ok(submissionEvent.get('link').includes(submission.get('id')));
     });
   });
@@ -302,11 +302,11 @@ module('Unit | Service | submission-handler', (hooks) => {
     assert.expect(8);
 
     return service.requestSubmissionChanges(submission, comment).then(() => {
-      assert.equal(submission.get('submissionStatus'), 'changes-requested');
-      assert.equal(submissionEvent.get('eventType'), 'changes-requested');
-      assert.equal(submissionEvent.get('performerRole'), 'submitter');
-      assert.equal(submissionEvent.get('comment'), comment);
-      assert.equal(submissionEvent.get('submission.id'), submission.get('id'));
+      assert.strictEqual(submission.get('submissionStatus'), 'changes-requested');
+      assert.strictEqual(submissionEvent.get('eventType'), 'changes-requested');
+      assert.strictEqual(submissionEvent.get('performerRole'), 'submitter');
+      assert.strictEqual(submissionEvent.get('comment'), comment);
+      assert.strictEqual(submissionEvent.get('submission.id'), submission.get('id'));
       assert.ok(submissionEvent.get('link').includes(submission.get('id')));
     });
   });
@@ -333,7 +333,7 @@ module('Unit | Service | submission-handler', (hooks) => {
 
     assert.ok(result, 'No result found');
     result.then(() => {
-      assert.equal(submission.get('submissionStatus'), 'cancelled', 'Unexpected status');
+      assert.strictEqual(submission.get('submissionStatus'), 'cancelled', 'Unexpected status');
       assert.ok(submission.get('publication'), 'No publication found');
     });
   });

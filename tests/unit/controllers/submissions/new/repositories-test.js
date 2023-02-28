@@ -37,7 +37,7 @@ module('Unit | Controller | submissions/new/repositories', (hooks) => {
     // override swal so it doesn't pop up
     swal = (result) => new Promise((resolve) => assert.ok(true));
     controller.send('validateAndLoadTab');
-    assert.equal(loadTabAccessed, false);
+    assert.false(loadTabAccessed);
   });
 
   test('transition if there are repositories', function (assert) {
@@ -87,12 +87,12 @@ module('Unit | Controller | submissions/new/repositories', (hooks) => {
   //     newSubmission: submission
   //   });
   //   controller.set('model', model);
-  //   assert.equal(controller.get('submission.metadata'), md);
+  //   assert.strictEqual(controller.get('submission.metadata'), md);
   //   controller.send('updateRelatedData');
   //   // check the metadata that does not match a repo has been removed.
   //   let updatedMetadata = JSON.parse(controller.get('submission.metadata'));
-  //   assert.equal(updatedMetadata[0].id, 'nih');
-  //   assert.equal(updatedMetadata.length, 1);
+  //   assert.strictEqual(updatedMetadata[0].id, 'nih');
+  //   assert.strictEqual(updatedMetadata.length, 1);
   // });
 
   test('should save submission on transition', function (assert) {

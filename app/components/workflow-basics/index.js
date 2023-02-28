@@ -17,6 +17,7 @@ export default class WorkflowBasics extends Component {
   @service('doi') doiService;
   @service metadataSchema;
   @service appStaticConfig;
+  @service flashMessages;
 
   @tracked contactUrl = null;
   @tracked doiServiceError = false;
@@ -191,7 +192,8 @@ export default class WorkflowBasics extends Component {
       if (result.value) {
         set(this, 'submission.grants', A());
         this.updateSubmitterModel(isProxySubmission, submitter);
-        toastr.info('Submitter and related grants removed from submission.');
+
+        this.flashMessages.info('Submitter and related grants removed from submission.');
       }
     } else {
       this.updateSubmitterModel(isProxySubmission, submitter);
@@ -265,12 +267,9 @@ export default class WorkflowBasics extends Component {
 
       set(publication, 'doi', doi);
 
-      toastr.info('Please wait while we look up information about your DOI', '', {
-        timeOut: 0,
-        extendedTimeOut: 0,
-      });
+      this.flashMessages.info('Please wait while we look up information about your DOI');
 
-      const result = yield doiService.get('resolveDOI').perform(doi);
+      const result = yield doiService.resolveDOI.perform(doi);
 
       if (setPublication) {
         this.args.updatePublication(result.publication);
@@ -279,13 +278,13 @@ export default class WorkflowBasics extends Component {
       this.args.updateDoiInfo(result.doiInfo);
       get(this, 'workflow').setFromCrossref(true);
 
-      toastr.remove();
-      toastr.success("We've pre-populated information from the DOI provided!");
+      this.flashMessages.success("We've pre-populated information from the DOI provided!", {
+        sticky: true,
+      });
       this.args.validateTitle();
       this.args.validateJournal();
     } catch (error) {
       console.log(`DOI service request failed: ${error.payload.error}`);
-      toastr.remove();
 
       this.clearDoiData(this.publication.doi);
       set(this, 'doiServiceError', error.payload.error);

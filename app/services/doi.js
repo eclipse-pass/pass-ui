@@ -17,9 +17,6 @@ export default class DoiService extends Service {
   @service('store')
   store;
 
-  @service
-  ajax;
-
   doiServiceUrl = ENV.doiService.url;
   metadataSchemaUri = ENV.doiMetadataSchemaUri;
 
@@ -35,12 +32,14 @@ export default class DoiService extends Service {
   @task(function* (doi) {
     let url = `${get(this, 'doiServiceUrl')}?doi=${encodeURIComponent(doi)}`;
 
-    let response = yield get(this, 'ajax').request(url, 'GET', {
+    let rawResponse = yield fetch(url, {
       headers: {
         Accept: 'application/json; charset=utf-8',
         withCredentials: 'include',
       },
     });
+
+    let response = yield rawResponse.json();
 
     let journal = yield get(this, 'store').findRecord('journal', response['journal-id']);
 

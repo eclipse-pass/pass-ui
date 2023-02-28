@@ -39,10 +39,10 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
     controller.transitionToRoute = function () {
       loadTabAccessed = true;
     };
-    assert.equal(controller.get('workflow').getFilesTemp().length, 0);
+    assert.strictEqual(controller.get('workflow').getFilesTemp().length, 0);
     swal = (result) => new Promise((resolve) => assert.ok(true));
     controller.send('validateAndLoadTab', 'submissions.new.basics');
-    assert.equal(loadTabAccessed, false);
+    assert.false(loadTabAccessed);
   });
 
   test('No manuscript files, user not submitter, warns before transition', function (assert) {
@@ -70,11 +70,11 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
     controller.transitionToRoute = function () {
       loadTabAccessed = true;
     };
-    assert.equal(controller.get('workflow').getFilesTemp().length, 0);
+    assert.strictEqual(controller.get('workflow').getFilesTemp().length, 0);
     // override swal so it doesn't pop up
     swal = (result) => new Promise((resolve) => assert.ok(true));
     controller.send('validateAndLoadTab', 'submissions.new.basics');
-    assert.equal(loadTabAccessed, false);
+    assert.false(loadTabAccessed);
   });
 
   test('Multiple manuscript files stops transition', function (assert) {
@@ -106,10 +106,10 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
     controller.transitionToRoute = function () {
       loadTabAccessed = true;
     };
-    assert.equal(controller.get('workflow').getFilesTemp().length, 1);
-    assert.equal(controller.get('model.files').length, 1);
+    assert.strictEqual(controller.get('workflow').getFilesTemp().length, 1);
+    assert.strictEqual(controller.get('model.files').length, 1);
     controller.send('validateAndLoadTab', 'submissions.new.basics');
-    assert.equal(loadTabAccessed, false);
+    assert.false(loadTabAccessed);
   });
 
   test('Valid files page does transition', function (assert) {
@@ -151,8 +151,8 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
     controller.set('model', model);
     controller.transitionToRoute = function () {
       assert.ok(subSaved, 'Submission was not saved');
-      assert.equal(controller.get('workflow').getFilesTemp().length, 0);
-      assert.equal(controller.get('model.files').length, 1);
+      assert.strictEqual(controller.get('workflow').getFilesTemp().length, 0);
+      assert.strictEqual(controller.get('model.files').length, 1);
     };
 
     controller.send('validateAndLoadTab', 'submissions.new.basics');
