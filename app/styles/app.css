@@ -348,10 +348,31 @@ table td {
   word-break: break-word !important;
 }
 
-#toast-container > div {
-  opacity: 0.9;
-  border-radius: 2px;
+.flash-message-container {
+  position: absolute;
+  top: 0px;
+  right: 0px;
 }
+
+.alert {
+  z-index: 10000;
+  width: 500px;
+  border-radius: 2px;
+  opacity: 0;
+  top: 30px; /* 30px from the bottom */
+  right: 30px;
+  position: relative;
+  transition: all 700ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+.alert.active {
+  opacity: 1;
+  right: 30px;
+}
+.alert.active.exiting {
+  opacity: 0;
+  right: 30px;
+}
+
 .padding-lr-100 {
   padding-left: 140px !important;
   padding-right: 140px !important;
