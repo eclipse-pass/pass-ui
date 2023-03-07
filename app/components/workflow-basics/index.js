@@ -278,9 +278,7 @@ export default class WorkflowBasics extends Component {
       this.args.updateDoiInfo(result.doiInfo);
       get(this, 'workflow').setFromCrossref(true);
 
-      this.flashMessages.success("We've pre-populated information from the DOI provided!", {
-        sticky: true,
-      });
+      this.flashMessages.success("We've pre-populated information from the DOI provided!");
       this.args.validateTitle();
       this.args.validateJournal();
     } catch (error) {

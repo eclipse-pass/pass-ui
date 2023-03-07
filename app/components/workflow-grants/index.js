@@ -4,7 +4,7 @@ import { tracked } from '@glimmer/tracking';
 import { action, get, set } from '@ember/object';
 import { A } from '@ember/array';
 import { inject as service } from '@ember/service';
-import { task } from 'ember-concurrency-decorators';
+import { task } from 'ember-concurrency';
 
 /**
  * This component is responsible for displaying a table of grants that are relevant to
@@ -110,8 +110,7 @@ export default class WorkflowGrants extends Component {
     this._selectedGrants.addObjects(get(this, 'args.submission.grants'));
   };
 
-  @task
-  updateGrants = function* () {
+  updateGrants = task(async () => {
     let info = {};
 
     const userId = get(this, 'args.submission.submitter.id');
@@ -126,13 +125,13 @@ export default class WorkflowGrants extends Component {
         limit: this.pageSize,
       },
     };
-    let results = yield this.store.query('grant', grantQuery);
+    let results = await this.store.query('grant', grantQuery);
 
     set(this, 'submitterGrants', results);
     // TODO: How do we get pagination to work with store.query like this?
     set(this, 'totalGrants', info.total);
     set(this, 'pageCount', Math.ceil(info.total / this.pageSize));
-  };
+  });
 
   /**
    * Only really triggered on #init by a pre-loaded grant...

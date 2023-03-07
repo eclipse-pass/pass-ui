@@ -2,7 +2,17 @@
 import Service from '@ember/service';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
-import { click, currentURL, fillIn, find, triggerEvent, triggerKeyEvent, visit, waitFor } from '@ember/test-helpers';
+import {
+  click,
+  currentURL,
+  fillIn,
+  focus,
+  find,
+  triggerEvent,
+  triggerKeyEvent,
+  visit,
+  waitFor,
+} from '@ember/test-helpers';
 import { authenticateSession } from 'ember-simple-auth/test-support';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 import sharedScenario from '../../mirage/scenarios/shared';
@@ -43,10 +53,10 @@ module('Acceptance | submission', function (hooks) {
     assert.dom('[data-test-doi-input]').exists();
     await fillIn('[data-test-doi-input]', '10.1039/c7an01256j');
 
-    assert.dom('.alert.alert-success').exists({ count: 1 });
-    await waitFor(document.querySelector('.toast-message'));
+    await waitFor('.flash-message.alert.alert-success');
+    assert.dom('.flash-message.alert.alert-success').exists({ count: 1 });
     assert
-      .dom(document.querySelector('.toast-message'))
+      .dom('.flash-message.alert.alert-success')
       .includesText("We've pre-populated information from the DOI provided!");
     assert
       .dom('[data-test-article-title-text-area]')

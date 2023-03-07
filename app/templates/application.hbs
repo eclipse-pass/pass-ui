@@ -32,6 +32,19 @@
     {{! </StickyElement> }}
   </div>
   <div class="container-fluid site-content">
+    <div class="flash-message-container">
+      {{#each this.flashMessages.queue as |flash|}}
+        <FlashMessage @flash={{flash}} as |component flash close|>
+          <div class="d-flex justify-content-between">
+            {{flash.message}}
+            <span role="button" {{on "click" close}}>
+              x
+            </span>
+          </div>
+        </FlashMessage>
+      {{/each}}
+    </div>
+
     {{this.institution}}
     {{outlet}}
   </div>
@@ -52,6 +65,3 @@
     </div>
   </footer>
 </div>
-{{#each this.flashMessages.queue as |flash|}}
-  <FlashMessage @flash={{flash}} />
-{{/each}}

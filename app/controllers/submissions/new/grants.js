@@ -1,6 +1,6 @@
 /* eslint-disable ember/no-computed-properties-in-native-classes */
 import Controller, { inject as controller } from '@ember/controller';
-import { action, get } from '@ember/object';
+import { action } from '@ember/object';
 import { alias } from '@ember/object/computed';
 
 export default class SubmissionsNewGrants extends Controller {

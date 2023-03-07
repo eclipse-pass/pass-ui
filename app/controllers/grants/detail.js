@@ -1,12 +1,12 @@
 /* eslint-disable ember/no-classic-classes */
 import Controller from '@ember/controller';
 import { inject as service } from '@ember/service';
-import Bootstrap4Theme from 'ember-models-table/themes/bootstrap4';
 import { computed } from '@ember/object';
 import { alias } from '@ember/object/computed';
 
 export default Controller.extend({
   currentUser: service('current-user'),
+  themeInstance: service('emt-themes/bootstrap4'),
 
   grant: alias('model.grant'),
 
@@ -61,6 +61,4 @@ export default Controller.extend({
       ];
     },
   }),
-
-  themeInstance: Bootstrap4Theme.create(),
 });
