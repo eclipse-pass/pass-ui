@@ -1,4 +1,4 @@
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import CheckSessionRoute from '../check-session-route';
 import { hash } from 'rsvp';
 
@@ -14,8 +14,9 @@ import { hash } from 'rsvp';
 export default class DetailRoute extends CheckSessionRoute {
   @service('current-user')
   currentUser;
+  @service store;
 
-  model(params, transition) {
+  model(params) {
     if (!params || !params.grant_id) {
       this.errorHandler.handleError(new Error('didNotLoadData'));
       return;
@@ -30,7 +31,7 @@ export default class DetailRoute extends CheckSessionRoute {
      * unless you are the submitter OR preparer
      * Show submissions where `submitted===true`, because they are no longer editable
      */
-    const userMatch = `submitted==true,(submitter.id==${user.get('id')},preparers.id=in=${user.get('id')})`;
+    const userMatch = `submitted==true,(submitter.id==${user.id},preparers.id=in=${user.id})`;
     const query = {
       filter: {
         submission: `grants.id==${params.grant_id};submissionStatus=out=cancelled;(${userMatch})`,

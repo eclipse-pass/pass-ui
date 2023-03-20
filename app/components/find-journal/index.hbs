@@ -1,11 +1,13 @@
 {{! template-lint-disable no-action }}
 <PowerSelect
   @triggerClass={{if (eq @journalClass "is-invalid") (local-class "is-invalid") (local-class "is-valid")}}
-  @search={{action "searchJournals"}}
+  @search={{this.searchJournals}}
+  @searchEnabled={{true}}
   @selected={{@value}}
   @placeholder="Journal"
   data-test-find-journal-select
-  @onChange={{action "onSelect"}} as |journal|
+  @onChange={{this.onSelect}}
+  as |journal|
 >
   {{journal.journalName}}
 </PowerSelect>

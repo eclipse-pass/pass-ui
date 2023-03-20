@@ -52,21 +52,21 @@
                     {{manuscript.name}}
                   </a>
                 {{else}} --}}
-                {{manuscript.name}}
+                {{this.manuscript.name}}
                 {{!-- {{/if}} --}}
               </td>
               <td class="text-center vertical-align-middle">
                 Manuscript
               </td>
               <td class="vertical-align-middle">
-                {{input class="form-control file-description-width" value=manuscript.description}}
+                <input class="form-control file-description-width" value={{this.manuscript.description}} />
               </td>
               <td class="text-center vertical-align-middle">
                 <button
                   type="button"
                   class="btn btn-outline-danger"
                   data-test-remove-file-button
-                  {{action "deleteExistingFile" manuscript}}
+                  {{on "click" (fn this.deleteExistingFile this.manuscript)}}
                 >
                   Remove
                 </button>
@@ -85,7 +85,7 @@
                 {{!-- {{/if}} --}}
               </td>
               <td class="text-center vertical-align-middle">
-                <select onchange={{action (mut file.fileRole) value="target.value"}}>
+                <select {{on "change" (fn (mut file.fileRole) value="target.value")}}>
                   <option value="supplement" selected={{eq file.fileRole "supplement"}}>
                     Supplement
                   </option>
@@ -102,7 +102,7 @@
                 <Input class="form-control file-description-width" @value={{file.description}} />
               </td>
               <td class="text-center vertical-align-middle">
-                <button type="button" class="btn btn-outline-danger" {{action "deleteExistingFile" file}}>
+                <button type="button" class="btn btn-outline-danger" {{on "click" (fn this.deleteExistingFile file)}}>
                   Remove
                 </button>
               </td>
@@ -135,15 +135,19 @@
 </div>
 <div class="form-group row">
   <div class="col-md-12">
-    <input
-      type="file"
-      id="file-multiple-input"
-      multiple
-      size="50"
-      onchange={{action "getFiles"}}
-      class="text-gray-300"
-      style="border-width:2px; cursor:pointer; border-style: dashed; padding:30px; width:100%"
-    />
+    {{#let (file-queue name="files" onFileAdded=this.getFiles) as |queue|}}
+      <input
+        type="file"
+        id="file-multiple-input"
+        multiple
+        size="50"
+        class="text-gray-300"
+        style="border-width:2px; cursor:pointer; border-style: dashed; padding:30px; width:100%"
+        {{queue.selectFile}}
+      />
+      Files in queue:
+      {{queue.files.length}}
+    {{/let}}
   </div>
 </div>
 <p>
@@ -152,12 +156,12 @@
   </strong>
   Use the Control or the Shift key to select multiple files.
 </p>
-<button class="btn btn-outline-primary" {{action @back}}>
+<button class="btn btn-outline-primary" {{on "click" @back}}>
   Back
 </button>
-<button class="btn btn-outline-danger ml-2" {{action "cancel"}}>
+<button class="btn btn-outline-danger ml-2" {{on "click" this.cancel}}>
   Cancel
 </button>
-<button class="btn btn-primary pull-right next" data-test-workflow-files-next {{action @next}}>
+<button class="btn btn-primary pull-right next" data-test-workflow-files-next {{on "click" @next}}>
   Next
 </button>

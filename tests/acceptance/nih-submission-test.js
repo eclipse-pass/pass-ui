@@ -16,25 +16,13 @@ import {
 import { authenticateSession } from 'ember-simple-auth/test-support';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 import sharedScenario from '../../mirage/scenarios/shared';
+import { selectFiles } from 'ember-file-upload/test-support';
 
 module('Acceptance | submission', function (hooks) {
   setupApplicationTest(hooks);
   setupMirage(hooks);
 
   hooks.beforeEach(async function () {
-    // const mockStaticConfig = Service.extend({
-    //   getStaticConfig: () =>
-    //     Promise.resolve({
-    //       branding: {
-    //         stylesheet: '',
-    //         pages: {},
-    //       },
-    //     }),
-    //   addCss: () => {},
-    // });
-
-    // this.owner.register('service:app-static-config', mockStaticConfig);
-
     await authenticateSession({
       user: { id: '0' },
     });
@@ -134,18 +122,20 @@ module('Acceptance | submission', function (hooks) {
      */
     await click('[data-test-workflow-files-next]');
 
-    await waitFor(document.querySelector('.toast-message'));
-    assert.dom(document.querySelector('.toast-message')).includesText('At least one manuscript file is required');
+    await waitFor('.flash-message.alert.alert-warning');
+    assert.dom('.flash-message.alert.alert-warning').exists({ count: 1 });
+    assert.dom('.flash-message.alert.alert-warning').includesText('At least one manuscript file is required');
 
     // TODO (Jared):
     // Resolve identity map problem that occurs in test when removing and adding
     // another file. This passes on the first run, but can be flakey locally in subsequent
     // runs.
-
     assert.strictEqual(currentURL(), '/submissions/new/files');
+
     const submissionFile = new Blob(['moo'], { type: 'application/pdf' });
     submissionFile.name = 'my-submission.pdf';
-    await triggerEvent('input[type=file]', 'change', { files: [submissionFile] });
+    await selectFiles('input[type=file]', submissionFile);
+
     assert.dom('[data-test-added-manuscript-row]').includesText('my-submission.pdf');
 
     await click('[data-test-workflow-files-next]');
@@ -201,7 +191,7 @@ module('Acceptance | submission', function (hooks) {
     );
     assert.dom('[data-test-submission-detail-status]').includesText('submitted');
     assert.dom('[data-test-submission-detail-submitter]').includesText('Nihu Ser');
-    assert.dom('[data-test-submission-detail-submitter]').includesText('(nihuser@jhu.edu)');
+    assert.dom('[data-test-submission-detail-submitter]').includesText('( nihuser@jhu.edu )');
 
     await click('[data-test-navbar-grants-link]');
     await waitFor('td.projectname-column');
@@ -239,12 +229,15 @@ module('Acceptance | submission', function (hooks) {
     await waitFor('[data-test-workflow-basics-next]');
     assert.strictEqual(currentURL(), '/submissions/new/basics');
     assert.dom('[data-test-doi-input]').exists();
+
     await fillIn('[data-test-doi-input]', '10.1039/c7an01256j');
 
-    await waitFor(document.querySelector('.toast-message'));
+    await waitFor('.flash-message.alert.alert-success');
+    assert.dom('.flash-message.alert.alert-success').exists({ count: 1 });
     assert
-      .dom(document.querySelector('.toast-message'))
+      .dom('.flash-message.alert.alert-success')
       .includesText("We've pre-populated information from the DOI provided!");
+
     assert
       .dom('[data-test-article-title-text-area]')
       .hasValue(
@@ -407,7 +400,7 @@ module('Acceptance | submission', function (hooks) {
     assert.ok(currentURL().includes('/submissions/2'));
     assert.dom('[data-test-submission-detail-status]').includesText('submitted');
     assert.dom('[data-test-submission-detail-submitter]').includesText('Nihu Ser');
-    assert.dom('[data-test-submission-detail-submitter]').includesText('(nihuser@jhu.edu)');
+    assert.dom('[data-test-submission-detail-submitter]').includesText('( nihuser@jhu.edu )');
   });
 
   test('reset DOI part way through submission', async function (assert) {
@@ -423,10 +416,12 @@ module('Acceptance | submission', function (hooks) {
     assert.dom('[data-test-doi-input]').exists();
     await fillIn('[data-test-doi-input]', '10.1039/c7an01256j');
 
-    await waitFor(document.querySelector('.toast-message'));
+    await waitFor('.flash-message.alert.alert-success');
+    assert.dom('.flash-message.alert.alert-success').exists({ count: 1 });
     assert
-      .dom(document.querySelector('.toast-message'))
+      .dom('.flash-message.alert.alert-success')
       .includesText("We've pre-populated information from the DOI provided!");
+
     assert
       .dom('[data-test-article-title-text-area]')
       .hasValue(
