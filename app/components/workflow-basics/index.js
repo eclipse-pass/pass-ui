@@ -57,6 +57,8 @@ export default class WorkflowBasics extends Component {
     super(...arguments);
 
     this.setupConfig();
+    this.setupDoiJournal();
+    this.setupSubmission();
   }
 
   async setupConfig() {
@@ -67,8 +69,8 @@ export default class WorkflowBasics extends Component {
   @action
   setupSubmission() {
     if (!this.isProxySubmission) {
-      set(this, 'submission.submitter', get(this, 'currentUser.user'));
-      set(this, 'submission.preparers', A());
+      this.submission.submitter = this.currentUser.user;
+      // this.submission.preparers = [];
     }
   }
 

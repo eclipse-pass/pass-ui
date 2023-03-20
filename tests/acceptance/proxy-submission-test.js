@@ -12,16 +12,6 @@ module('Acceptance | proxy submission', function (hooks) {
   setupMirage(hooks);
 
   hooks.beforeEach(async function () {
-    const mockStaticConfig = Service.extend({
-      getStaticConfig: () =>
-        Promise.resolve({
-          branding: {
-            stylesheet: '',
-            pages: {},
-          },
-        }),
-      addCss: () => {},
-    });
     /**
      * Create the user in the database with both top level attrs and
      * attrs inside _source for the adapter to process elastic response
@@ -42,8 +32,6 @@ module('Acceptance | proxy submission', function (hooks) {
     };
 
     this.server.create('user', attrs);
-
-    this.owner.register('service:app-static-config', mockStaticConfig);
 
     await authenticateSession({
       user: { id: '0' },
@@ -69,9 +57,9 @@ module('Acceptance | proxy submission', function (hooks) {
     await walkThroughSubmissionFlow(assert, true); // eslint-disable-line no-use-before-define
 
     assert.dom('[data-test-submission-detail-submitter]').includesText('Staff Hasgrants');
-    assert.dom('[data-test-submission-detail-submitter]').includesText('(staffWithGrants@jhu.edu)');
+    assert.dom('[data-test-submission-detail-submitter]').includesText('( staffWithGrants@jhu.edu )');
     assert.dom('[data-test-submission-detail-preparer]').includesText('Nihu Ser');
-    assert.dom('[data-test-submission-detail-preparer]').includesText('(nihuser@jhu.edu)');
+    assert.dom('[data-test-submission-detail-preparer]').includesText('( nihuser@jhu.edu )');
   });
 
   test('can walk through a proxy submission workflow and make a submission – without pass account', async function (assert) {
@@ -89,9 +77,9 @@ module('Acceptance | proxy submission', function (hooks) {
     await walkThroughSubmissionFlow(assert, false); // eslint-disable-line no-use-before-define
 
     assert.dom('[data-test-submission-detail-submitter]').includesText('John Moo');
-    assert.dom('[data-test-submission-detail-submitter]').includesText('(nopass@account.com)');
+    assert.dom('[data-test-submission-detail-submitter]').includesText('( nopass@account.com )');
     assert.dom('[data-test-submission-detail-preparer]').includesText('Nihu Ser');
-    assert.dom('[data-test-submission-detail-preparer]').includesText('(nihuser@jhu.edu)');
+    assert.dom('[data-test-submission-detail-preparer]').includesText('( nihuser@jhu.edu )');
   });
 
   async function walkThroughSubmissionFlow(assert, hasAccount) {
@@ -100,10 +88,12 @@ module('Acceptance | proxy submission', function (hooks) {
     assert.dom('[data-test-doi-input]').exists();
     await fillIn('[data-test-doi-input]', '10.1039/c7an01256j');
 
-    await waitFor(document.querySelector('.toast-message'));
+    await waitFor('.flash-message.alert.alert-success');
+    assert.dom('.flash-message.alert.alert-success').exists({ count: 1 });
     assert
-      .dom(document.querySelector('.toast-message'))
+      .dom('.flash-message.alert.alert-success')
       .includesText("We've pre-populated information from the DOI provided!");
+
     assert
       .dom('[data-test-article-title-text-area]')
       .hasValue(

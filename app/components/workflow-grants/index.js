@@ -127,7 +127,7 @@ export default class WorkflowGrants extends Component {
     };
     let results = await this.store.query('grant', grantQuery);
 
-    set(this, 'submitterGrants', results);
+    this.submitterGrants = results;
     // TODO: How do we get pagination to work with store.query like this?
     set(this, 'totalGrants', info.total);
     set(this, 'pageCount', Math.ceil(info.total / this.pageSize));

@@ -1,6 +1,6 @@
 {{! template-lint-disable no-action no-triple-curlies no-unknown-arguments-for-builtin-components require-button-type require-input-label simple-unless }}
 {{yield}}
-<div {{did-insert this.setupDoiJournal}} {{did-insert this.setupSubmission}} {{did-update this.setupSubmission}}></div>
+{{!-- <div {{did-insert this.setupDoiJournal}} {{did-insert this.setupSubmission}} {{did-update this.setupSubmission}}></div> --}}
 {{#unless (or @submission.id @preLoadedGrant)}}
   <div class="py-0 mt-2 alert alert-secondary" id="on-behalf-of-block">
     <p class="my-2 lead">
@@ -70,8 +70,7 @@
         <strong>
           If the person you are submitting for does not have an account with PASS
         </strong>
-        , please
-        provide their email address and name so we may notify them:
+        , please provide their email address and name so we may notify them:
       </p>
       <div class="form-inline">
         <Input
@@ -202,7 +201,7 @@
   <div class="user-search-modal">
     <ModalDialog
       @translucentOverlay={{true}}
-      @tetherTarget="#on-behalf-of-block"
+      {{! @tetherTarget="#on-behalf-of-block" }}
       @attachment="top center"
       @targetAttachment="top center"
       @containerClass="user-search-modal"

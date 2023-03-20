@@ -1,7 +1,10 @@
 import CheckSessionRoute from '../check-session-route';
 import { hash } from 'rsvp';
+import { service } from '@ember/service';
 
 export default class DetailRoute extends CheckSessionRoute {
+  @service store;
+
   model(params) {
     if (!params || !params.submission_id) {
       this.errorHandler.handleError(new Error('didNotLoadData'));

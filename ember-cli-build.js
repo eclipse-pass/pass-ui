@@ -11,7 +11,7 @@ module.exports = function (defaults) {
   let app = new EmberApp(defaults, {
     // Add options here
     'ember-composable-helpers': {
-      only: ['queue', 'compute', 'invoke'],
+      only: ['queue', 'compute', 'invoke', 'includes'],
     },
 
     cssModules: {

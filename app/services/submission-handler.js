@@ -120,19 +120,16 @@ export default class SubmissionHandlerService extends Service {
    * @param  {File} file   Local file uploaded.
    * @returns {Promise}    Promise resolves to the File object.
    */
-  uploadFile(sub, file) {
-    return new Promise((resolve, reject) => {
-      file.submission = sub.id;
-      file.uri = `/file/${file.id}/data`;
+  async uploadFile(sub, file) {
+    file.submission = sub;
+    file.uri = `/file/${file.id}/data`;
 
-      file
-        .save()
-        .then((data) => resolve(data))
-        .catch((e) => {
-          console.error(e);
-          reject(new Error(`Error creating file object ${e.message}`));
-        });
-    });
+    try {
+      await file.save();
+    } catch (e) {
+      console.error(e);
+      reject(new Error(`Error creating file object ${e.message}`));
+    }
   }
 
   /**

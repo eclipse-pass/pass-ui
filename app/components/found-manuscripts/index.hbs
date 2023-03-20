@@ -37,11 +37,11 @@
                 <a
                   href="{{manuscript.url}}"
                   target="_blank"
-                  class="p-2 {{if (contains manuscript.url this.manuscriptsWithErrors) "text-danger"}}"
+                  class="p-2 {{if (includes manuscript.url this.manuscriptsWithErrors) "text-danger"}}"
                   title="Download this manuscript"
                   data-test-add-file-link
                 >
-                  {{#if (contains manuscript.url this.manuscriptsWithErrors)}}
+                  {{#if (includes manuscript.url this.manuscriptsWithErrors)}}
                     <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
                   {{/if}}
                   <span class="pl-2">
@@ -52,7 +52,7 @@
                       - {{manuscript.repositoryLabel}}
                     </span>
                   {{/if}}
-                  {{#if (contains manuscript.url this.manuscriptsWithErrors)}}
+                  {{#if (includes manuscript.url this.manuscriptsWithErrors)}}
                     <small class="d-flex flex text-danger">
                       We weren't able to add the file to your submission, please
                       retry.

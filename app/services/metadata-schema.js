@@ -10,9 +10,6 @@ import { get } from '@ember/object';
  */
 
 export default class MetadataSchemaService extends Service {
-  @service('ajax')
-  ajax;
-
   schemaService = ENV.schemaService;
 
   // JSON schema validator
@@ -53,7 +50,7 @@ export default class MetadataSchemaService extends Service {
    * @param {array} repositories list of repository URIs
    * @returns {array} list of schemas relevant to the given repositories
    */
-  getMetadataSchemas(repositories) {
+  async getMetadataSchemas(repositories) {
     const areObjects = repositories.map((repos) => typeof repos).includes('object');
     if (areObjects) {
       // If we've gotten repository objects, map them to their IDs
@@ -67,25 +64,20 @@ export default class MetadataSchemaService extends Service {
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
       },
-      processData: false,
-      data: repositories,
+      body: JSON.stringify(repositories),
     };
 
-    // TODO: would be nice if this used Fetch API, but current tests are written for AJAX
-    return this.ajax.request(urlWithMerge, options).catch((response, jqXHR, payload) => {
-      /**
-       * error handling with `ember-ajax`: https://github.com/ember-cli/ember-ajax#access-the-response-in-case-of-error
-       * jqXHR info : https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
-       */
-      if (jqXHR.status !== 409) {
-        // Unknown error
-        const msg = `Unknown error fetching merged metadata schema: ${jqXHR.statusText}`;
-        // console.log(`msg \n${response}`, 'color:red;');
-        throw new Error(msg);
-      }
+    try {
+      const response = await fetch(urlWithMerge, options);
+      const data = await response.json();
 
-      return this.ajax.request(url, options);
-    });
+      return data;
+    } catch (e) {
+      // Unknown error
+      const msg = `Unknown error fetching merged metadata schema: ${e}`;
+      // console.log(`msg \n${response}`, 'color:red;');
+      throw new Error(msg);
+    }
   }
 
   /**
@@ -408,20 +400,22 @@ export default class MetadataSchemaService extends Service {
     const metadata = JSON.parse(submission.get('metadata'));
 
     const result = [];
-    whiteList
-      .filter((key) => key in metadata)
-      .forEach((key) => {
-        const value = this._formatMetadata(key, metadata[key]);
-        const isArray = Array.isArray(value);
+    if (metadata) {
+      whiteList
+        .filter((key) => key in metadata)
+        .forEach((key) => {
+          const value = this._formatMetadata(key, metadata[key]);
+          const isArray = Array.isArray(value);
 
-        if (value) {
-          result.push({
-            label: titleMap[key],
-            value,
-            isArray,
-          });
-        }
-      });
+          if (value) {
+            result.push({
+              label: titleMap[key],
+              value,
+              isArray,
+            });
+          }
+        });
+    }
 
     return result;
   }
