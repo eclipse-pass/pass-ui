@@ -11,7 +11,8 @@
   },
   "repository": "",
   "scripts": {
-    "build": "ember build --environment=production",
+    "build:prod": "ember build --environment=production",
+    "build:docker": "docker build --no-cache -t ghcr.io/eclipse-pass/pass-ui:latest .",
     "start": "ember server",
     "test": "PASS_API_NAMESPACE=/mirage/test ember test",
     "test:serve": "PASS_API_NAMESPACE=/mirage/test ember test -s",
