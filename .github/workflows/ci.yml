@@ -1,0 +1,76 @@
+# This workflow will do a clean install of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Node.js CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [ 14 ]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Run tests
+        run: yarn test
+
+  # Run for pushes to `main`, but not for forked repositories
+  build:
+    needs: test
+    if:  github.repository == 'eclipse-pass/pass-ui' && github.event_name == 'push' &&  github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    env:
+      ENV_FILE: https://raw.githubusercontent.com/eclipse-pass/pass-docker/main/.env
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js 14
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      # The Ember build needs the .env file now, as it bakes the values in at build time
+      - name: Grab pass-docker's .env file and export to environment
+        run: |
+          wget $ENV_FILE
+          export $(grep -v '^[#|SIGNING]' .env | xargs -d '\n')
+
+      - name: Build the app and Docker image
+        run: |
+          yarn run build:prod
+          yarn run build:docker
+
+      - name: Login to GHCR
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 'Push :latest Docker image'
+        run: docker push ghcr.io/eclipse-pass/pass-ui:latest
