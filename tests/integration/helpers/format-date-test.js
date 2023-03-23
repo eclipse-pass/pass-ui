@@ -11,7 +11,7 @@ module('Integration | Helper | format date', (hooks) => {
     // eslint-disable-line
     this.set('inputValue', 'August 19, 1975 23:15:30');
 
-    await render(hbs`{{format-date inputValue}}`);
+    await render(hbs`{{format-date this.inputValue}}`);
 
     assert.strictEqual(this.element.textContent.trim(), '08/19/1975');
   });

@@ -24,19 +24,14 @@ module('Integration | Component | policy card', (hooks) => {
       effectivePolicies: A(),
     });
 
-    // this.set('workflow', workflow);
     this.set('policy', policy);
     this.set('journal', journal);
     this.set('submission', submission);
 
-    await render(hbs`{{policy-card policy=policy journal=journal submission=submission}}`);
-    assert.ok(true);
+    await render(hbs`<PolicyCard @policy={{this.policy}} @journal={{this.journal}} @submission={{this.submission}} />`);
 
-    const text = this.element.textContent;
-
-    assert.ok(text, 'no text content found');
-    assert.ok(text.includes('Requires deposit into'), 'Start of repo list not found');
-    assert.ok(text.includes('moo-scription'), 'Description fragment not found');
+    assert.dom(this.element).includesText('Requires deposit into');
+    assert.dom(this.element).includesText('moo-scription');
   });
 
   module('PMC tests', (hooks) => {
@@ -63,8 +58,9 @@ module('Integration | Component | policy card', (hooks) => {
     });
 
     test('PMC journal displays user input', async function (assert) {
-      await render(hbs`{{policy-card policy=policy journal=journal submission=submission}}`);
-      assert.ok(true);
+      await render(
+        hbs`<PolicyCard @policy={{this.policy}} @journal={{this.journal}} @submission={{this.submission}} />`
+      );
 
       const inputs = this.element.querySelectorAll('input');
       assert.strictEqual(inputs.length, 2, `Found ${inputs.length} inputs, but was expecting 2`);
@@ -75,8 +71,9 @@ module('Integration | Component | policy card', (hooks) => {
     });
 
     test('PMC non-type A can be removed', async function (assert) {
-      await render(hbs`{{policy-card policy=policy journal=journal submission=submission}}`);
-      assert.ok(true);
+      await render(
+        hbs`<PolicyCard @policy={{this.policy}} @journal={{this.journal}} @submission={{this.submission}} />`
+      );
 
       const inputs = this.element.querySelectorAll('input');
       assert.strictEqual(inputs.length, 2, `Found ${inputs.length} inputs, but was expecting 2`);
@@ -91,7 +88,9 @@ module('Integration | Component | policy card', (hooks) => {
     test('PMC type A journal as no inputs and is not added to submission', async function (assert) {
       this.set('journal', EmberObject.create({ isMethodA: true }));
 
-      await render(hbs`policy-card policy=policy journal=journal submission=submission`);
+      await render(
+        hbs`<PolicyCard @policy={{this.policy}} @journal={{this.journal}} @submission={{this.submission}} />`
+      );
       assert.ok(this.element, 'failed to render');
 
       const inputs = this.element.querySelectorAll('input');

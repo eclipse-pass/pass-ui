@@ -7,9 +7,9 @@
   {{#if this.currentSchema}}
     <MetadataForm
       @schema={{this.currentSchema}}
-      @nextForm={{action this.nextForm}}
-      @previousForm={{action this.previousForm}}
-      @cancel={{action this.cancel}}
+      @nextForm={{this.nextForm}}
+      @previousForm={{this.previousForm}}
+      @cancel={{this.cancel}}
     />
   {{/if}}
 </div>

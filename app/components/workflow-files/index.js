@@ -4,7 +4,6 @@ import { action, get, set, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { A } from '@ember/array';
 import { task } from 'ember-concurrency-decorators';
-import { run } from '@ember/runloop';
 
 export default class WorkflowFiles extends Component {
   @service store;
@@ -89,49 +88,47 @@ export default class WorkflowFiles extends Component {
 
   @action
   async getFiles() {
-    run(() => {
-      const uploads = this._getFilesElement();
-      if ('files' in uploads) {
-        if (uploads.files.length !== 0) {
-          for (let i = 0; i < uploads.files.length; i++) {
-            const file = uploads.files[i];
-            if (file) {
-              if (file.size > 1024 * 1024 * 100) {
-                this.flashMessages.error(
-                  `Your file '${file.name}' is ${Number.parseFloat(file.size / 1024 / 1024).toPrecision(
-                    3
-                  )}MB. This exceeds the maximum upload size of 100MB and the file was not added to the submission.`
-                );
-                continue; // eslint-disable-line
-              }
-              const newFile = this.store.createRecord('file', {
-                name: file.name,
-                mimeType: file.type.substring(file.type.indexOf('/') + 1),
-                description: file.description,
-                fileRole: 'supplemental',
-                _file: file,
-              });
-              if (!get(this, 'hasManuscript')) {
-                newFile.set('fileRole', 'manuscript');
-              }
-              get(this, 'args.newFiles').pushObject(newFile);
-
-              // Immediately upload file
-              this.submissionHandler.uploadFile(this.args.submission, newFile);
-              // try {
-              //   newFile.submission = this.args.submission.id;
-              //   file.uri = `/file/${newFile.id}/data`;
-              //   const response = await file.upload('/api/images/upload');
-
-              //   return true;
-              // } catch (error) {
-              //   file.state = 'aborted';
-              // }
+    const uploads = this._getFilesElement();
+    if ('files' in uploads) {
+      if (uploads.files.length !== 0) {
+        for (let i = 0; i < uploads.files.length; i++) {
+          const file = uploads.files[i];
+          if (file) {
+            if (file.size > 1024 * 1024 * 100) {
+              this.flashMessages.error(
+                `Your file '${file.name}' is ${Number.parseFloat(file.size / 1024 / 1024).toPrecision(
+                  3
+                )}MB. This exceeds the maximum upload size of 100MB and the file was not added to the submission.`
+              );
+              continue; // eslint-disable-line
             }
+            const newFile = await this.store.createRecord('file', {
+              name: file.name,
+              mimeType: file.type.substring(file.type.indexOf('/') + 1),
+              description: file.description,
+              fileRole: 'supplemental',
+              _file: file,
+            });
+            if (!this.hasManuscript) {
+              newFile.fileRole = 'manuscript';
+            }
+            this.args.newFiles.pushObject(newFile);
+
+            // Immediately upload file
+            this.submissionHandler.uploadFile(this.args.submission, newFile);
+            // try {
+            //   newFile.submission = this.args.submission.id;
+            //   file.uri = `/file/${newFile.id}/data`;
+            //   const response = await file.upload('/api/images/upload');
+
+            //   return true;
+            // } catch (error) {
+            //   file.state = 'aborted';
+            // }
           }
         }
       }
-    });
+    }
   }
 
   // uploadFile(sub, file) {

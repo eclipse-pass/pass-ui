@@ -286,7 +286,7 @@ module('Unit | Controller | submissions/new', (hooks) => {
       assert.true(submissionSaved);
       assert.true(submissionEventSaved);
 
-      assert.strictEqual(submission.submitter, null);
+      assert.strictEqual(submission.submitter, undefined);
       assert.strictEqual(submission.submitterName, 'test name');
       assert.strictEqual(submission.submitterEmail, 'mailto:test@email.com');
       assert.strictEqual(submission.submissionStatus, 'approval-requested');

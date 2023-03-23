@@ -5,6 +5,7 @@ import { action, get, set } from '@ember/object';
 import { A } from '@ember/array';
 import { inject as service } from '@ember/service';
 import { task } from 'ember-concurrency-decorators';
+import { later } from '@ember/runloop';
 
 export default class WorkflowReview extends Component {
   @service workflow;
@@ -73,7 +74,7 @@ export default class WorkflowReview extends Component {
       if (!this.hasVisitedWeblink) {
         $('.fa-exclamation-triangle').css('color', '#f86c6b');
         $('.fa-exclamation-triangle').css('font-size', '2.2em');
-        setTimeout(() => {
+        later(() => {
           $('.fa-exclamation-triangle').css('color', '#b0b0b0');
           $('.fa-exclamation-triangle').css('font-size', '2em');
         }, 4000);

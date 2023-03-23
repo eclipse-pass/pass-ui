@@ -4,6 +4,7 @@ import ENV from 'pass-ui/config/environment';
 import { task, all, hash } from 'ember-concurrency';
 import { get } from '@ember/object';
 import fetch from 'fetch';
+import { run } from '@ember/runloop';
 
 /**
  * Service that can get policies and associated repositories for a submission
@@ -37,10 +38,11 @@ export default class PoliciesService extends Service {
    *    {Policy}, ...
    * ]
    */
-  @task(function* (submission) {
+
+  getPolicies = task(async (submission) => {
     const url = `${get(this, 'policyUrl')}?submission=${submission.get('id')}`;
 
-    const result = yield fetch(url, {
+    const result = await fetch(url, {
       method: 'GET',
       headers: {
         // 'Content-Type': 'application/json'
@@ -49,7 +51,9 @@ export default class PoliciesService extends Service {
     });
 
     if (!result.ok) {
-      throw new Error(`Recieved response ${result.status} : ${result.statusText}`);
+      run(() => {
+        throw new Error(`Recieved response ${result.status} : ${result.statusText}`);
+      });
     }
 
     /**
@@ -57,9 +61,9 @@ export default class PoliciesService extends Service {
      * NOTE: Promise.all() will consolidate all of the store.findRecord
      * Promises and will ultimately return an array of Policy objects
      */
-    const data = yield result.json();
+    const data = await result.json();
 
-    return yield all(
+    return await all(
       data.map((policyInfo) =>
         get(this, 'store')
           .findRecord('policy', policyInfo.id)
@@ -69,8 +73,7 @@ export default class PoliciesService extends Service {
           })
       )
     );
-  })
-  getPolicies;
+  });
 
   /**
    * Get a set of repositories based on effective policies applied to the submission.

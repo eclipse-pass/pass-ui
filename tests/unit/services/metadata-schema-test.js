@@ -1,15 +1,18 @@
 /* eslint-disable ember/no-classic-classes, ember/no-get */
 import EmberObject, { get } from '@ember/object';
-import Service from '@ember/service';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import { run } from '@ember/runloop';
+import { setupMirage } from 'ember-cli-mirage/test-support';
+import sinon from 'sinon';
+import { Response } from 'miragejs';
+import { settled } from '@ember/test-helpers';
 
 module('Unit | Service | metadata-schema', (hooks) => {
   setupTest(hooks);
+  setupMirage(hooks);
 
   hooks.beforeEach(function () {
-    const mockSchema = {
+    this.mockSchema = {
       definitions: {
         form: {
           options: {
@@ -51,17 +54,9 @@ module('Unit | Service | metadata-schema', (hooks) => {
         },
       ],
     };
-    this.set('mockSchema', mockSchema);
 
-    const mockAjax = Service.extend({
-      request() {
-        return Promise.resolve([mockSchema]);
-      },
-    });
-
-    run(() => {
-      this.owner.unregister('service:ajax');
-      this.owner.register('service:ajax', mockAjax);
+    this.server.post('/schemaservice', (_schema, _request) => {
+      return [this.mockSchema];
     });
   });
 
@@ -69,7 +64,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
    * Simple test showing that #getMetadataSchema uses the AJAX service to retrieve a
    * set of schema
    */
-  test('Test against mocked AJAX', function (assert) {
+  test('Test against mocked getMetadataSchemas endpoint', function (assert) {
     this.owner
       .lookup('service:metadata-schema')
       .getMetadataSchemas(['moo', 'too'])
@@ -79,34 +74,23 @@ module('Unit | Service | metadata-schema', (hooks) => {
       });
   });
 
-  test('Should retry request without merge query param on failure', function (assert) {
+  test('Should retry request without merge query param on failure', async function (assert) {
+    this.server.post('/schemaservice', (_schema, request) => {
+      if (request.queryParams.merge) {
+        return Response(500);
+      }
+      return [this.mockSchema];
+    });
+
     const service = this.owner.lookup('service:metadata-schema');
 
-    let triedWithMerge = false;
-    let triedWithoutMerge = false;
+    const _fetchSchemasSpy = sinon.spy(service, '_fetchSchemas');
 
-    service.set(
-      'ajax',
-      EmberObject.create({
-        request: (url, options) => {
-          if (url.includes('merge')) {
-            triedWithMerge = true;
-          } else {
-            triedWithoutMerge = true;
-          }
-          assert.ok(true);
-          return $.Deferred().reject({}, { status: 409 });
-        },
-      })
-    );
+    service.getMetadataSchemas(['moo', 'too']);
 
-    service.getMetadataSchemas(['moo', 'too']).then(
-      (result) => assert.ok(false),
-      (failure) => {
-        assert.ok(triedWithMerge, 'Request did not try with the "merge" query param');
-        assert.ok(triedWithoutMerge, 'Request did not try without the "merge" query param');
-      }
-    );
+    await settled();
+
+    assert.ok(_fetchSchemasSpy.calledTwice, 'fetch schema was called twice');
   });
 
   test('Alpacafication works as expected', function (assert) {

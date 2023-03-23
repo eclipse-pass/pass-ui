@@ -81,20 +81,14 @@ module('Integration | Component | workflow files', (hooks) => {
     assert.expect(6);
 
     this.owner.register(
-      'service:store',
-      Service.extend({
-        createRecord: () => Promise.resolve(),
-      })
-    );
-    this.owner.register(
       'service:submission-handler',
       Service.extend({
         uploadFile: (submission, file) => {
           assert.ok(submission);
           assert.ok(file);
 
-          assert.strictEqual(file.get('name'), 'Fake-file-name');
-          assert.strictEqual(file.get('mimeType'), 'plain');
+          assert.strictEqual(file.name, 'Fake-file-name');
+          assert.strictEqual(file.mimeType, 'plain');
           assert.deepEqual(file.get('_file'), { size: 100, name: 'Fake-file-name', type: 'text/plain' });
         },
       })

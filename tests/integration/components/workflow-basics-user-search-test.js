@@ -14,8 +14,8 @@ module('Integration | Component | workflow basics user search', (hooks) => {
 
     await render(hbs`
       <WorkflowBasicsUserSearch
-        @toggleUserSearchModal={{action toggleUserSearchModal}}
-        @pickSubmitter={{action pickSubmitter}}
+        @toggleUserSearchModal={{this.toggleUserSearchModal}}
+        @pickSubmitter={{this.pickSubmitter}}
         @searchInput={{this.userSearchTerm}}
       />
     `);

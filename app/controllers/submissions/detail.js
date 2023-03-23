@@ -4,6 +4,7 @@ import { tracked } from '@glimmer/tracking';
 import { action, get, computed } from '@ember/object';
 import ENV from 'pass-ui/config/environment';
 import { inject as service } from '@ember/service';
+import { later } from '@ember/runloop';
 
 export default class SubmissionsDetail extends Controller {
   @service currentUser;
@@ -260,7 +261,7 @@ export default class SubmissionsDetail extends Controller {
       if (!this.hasVisitedWeblink) {
         $('.fa-exclamation-triangle').css('color', '#f86c6b');
         $('.fa-exclamation-triangle').css('font-size', '2.2em');
-        setTimeout(() => {
+        later(() => {
           $('.fa-exclamation-triangle').css('color', '#b0b0b0');
           $('.fa-exclamation-triangle').css('font-size', '2em');
         }, 4000);

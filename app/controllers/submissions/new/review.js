@@ -2,6 +2,7 @@
 import Controller, { inject as controller } from '@ember/controller';
 import { action, computed, get } from '@ember/object';
 import { alias } from '@ember/object/computed';
+import { tracked } from '@glimmer/tracking';
 
 export default class SubmissionsNewReview extends Controller {
   @alias('model.newSubmission') submission;
@@ -21,10 +22,7 @@ export default class SubmissionsNewReview extends Controller {
     return get(this, 'parent.uploading');
   }
 
-  @computed('parent.comment')
-  get comment() {
-    return get(this, 'parent.comment');
-  }
+  @tracked comment = this.parent.comment;
 
   @action
   loadPrevious() {
