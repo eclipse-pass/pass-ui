@@ -15,6 +15,8 @@
     "lint:fix": "npm-run-all --print-name --aggregate-output --continue-on-error --parallel \"lint:*:fix\"",
     "lint:hbs:fix": "ember-template-lint . --fix",
     "lint:js:fix": "eslint . --fix",
+    "lint:hbs": "ember-template-lint .",
+    "lint:js": "eslint . --cache",
     "start": "ember server",
     "test": "npm-run-all --print-name \"lint\" \"test:*\"",
     "test:serve": "PASS_API_NAMESPACE=/mirage/test ember test -s",
