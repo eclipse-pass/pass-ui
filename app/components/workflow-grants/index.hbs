@@ -69,7 +69,10 @@
         </li>
         <li class="page-item">
           <a class="page-link">
-            Page {{this.pageNumber}} of {{this.pageCount}}
+            Page
+            {{this.pageNumber}}
+            of
+            {{this.pageCount}}
           </a>
         </li>
         <li class="page-item active">
@@ -80,9 +83,8 @@
   {{/if}}
 {{else}}
   <p data-test-workflow-grants-no-account-message>
-    Because the person you are submitting on behalf of is not yet in our
-    system, PASS does not have information about his/her grant(s) and cannot associate this submission with a grant.
-    Please click Next to continue.
+    Because the person you are submitting on behalf of is not yet in our system, PASS does not have information about
+    his/her grant(s) and cannot associate this submission with a grant. Please click Next to continue.
   </p>
 {{/if}}
 <br />

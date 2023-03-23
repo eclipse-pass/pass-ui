@@ -5,7 +5,7 @@ import EmberObject, { get } from '@ember/object';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
-import { render, settled, click } from '@ember/test-helpers';
+import { render, settled, click, findAll } from '@ember/test-helpers';
 import { run } from '@ember/runloop';
 
 module('Integration | Component | workflow grants', (hooks) => {
@@ -67,15 +67,15 @@ module('Integration | Component | workflow grants', (hooks) => {
       <WorkflowGrants
         @submission={{this.submission}}
         @preLoadedGrant={{this.preLoadedGrant}}
-        @next={{action loadNext}}
-        @back={{action loadPrevious}}
+        @next={{this.loadNext}}
+        @back={{this.loadPrevious}}
       />
     `);
     // Settled is required to let the call to store.query return before
     // checking the rendered component
     await settled();
 
-    const rows = this.element.querySelectorAll('#grants-selection-table table tbody tr');
+    const rows = findAll('#grants-selection-table table tbody tr');
     assert.strictEqual(rows.length, 4, 'Should be 4 rows displayed');
   });
 
@@ -89,8 +89,8 @@ module('Integration | Component | workflow grants', (hooks) => {
       <WorkflowGrants
         @submission={{this.submission}}
         @preLoadedGrant={{this.preLoadedGrant}}
-        @next={{action loadNext}}
-        @back={{action loadPrevious}}
+        @next={{this.loadNext}}
+        @back={{this.loadPrevious}}
       />
     `);
 
@@ -101,12 +101,13 @@ module('Integration | Component | workflow grants', (hooks) => {
     assert.ok(selectedRows[0].textContent.includes('Remove'), 'Should have a "Remove" button');
     assert.ok(selectedRows[0].textContent.includes('Moo 2'));
 
-    const rows = this.element.querySelectorAll('#grants-selection-table table tbody tr');
+    const rows = findAll('#grants-selection-table table tbody tr');
     assert.strictEqual(rows.length, 4, 'Should be 4 rows');
 
-    const row2 = rows[1];
-    assert.ok(row2.getAttribute('class').includes('selected-row'));
-    assert.ok(row2.querySelector('i[class="fa fa-check-square"]'));
+    const row3 = rows[2];
+    await click(row3);
+    assert.ok(row3.getAttribute('class').includes('selected-row'));
+    assert.ok(row3.querySelector('i[class="fa fa-check-square"]'));
 
     assert.strictEqual(workflow.getAddedGrants().length, 1, 'One grant should have been added');
   });
@@ -138,14 +139,14 @@ module('Integration | Component | workflow grants', (hooks) => {
       <WorkflowGrants
         @submission={{this.submission}}
         @preLoadedGrant={{this.preLoadedGrant}}
-        @next={{action loadNext}}
-        @back={{action loadPrevious}}
+        @next={{this.loadNext}}
+        @back={{this.loadPrevious}}
       />
     `);
 
     await settled();
 
-    const rows = this.element.querySelectorAll('#grants-selection-table table tbody tr');
+    const rows = findAll('#grants-selection-table table tbody tr');
     assert.strictEqual(rows.length, 4, 'Should be 4 rows');
 
     await click(rows[0]);
@@ -186,13 +187,15 @@ module('Integration | Component | workflow grants', (hooks) => {
     );
 
     this.set('preLoadedGrant', knownGrant);
+    this.set('selectedItems', [knownGrant]);
 
     await render(hbs`
       <WorkflowGrants
         @submission={{this.submission}}
         @preLoadedGrant={{this.preLoadedGrant}}
-        @next={{action loadNext}}
-        @back={{action loadPrevious}}
+        @next={{this.loadNext}}
+        @back={{this.loadPrevious}}
+        @selectedItems={{this.selectedItems}}
       />
     `);
 
@@ -204,13 +207,13 @@ module('Integration | Component | workflow grants', (hooks) => {
     const grants = get(this, 'submission.grants');
     assert.strictEqual(grants.get('length'), 1, 'There should be one grant attached to the submission');
 
-    const grantRows = this.element.querySelectorAll('#grants-selection-table table tbody tr');
+    const grantRows = findAll('#grants-selection-table table tbody tr');
     assert.strictEqual(grantRows.length, 4, 'Should be 4 rows');
 
     await click(grantRows[1]);
 
     assert.strictEqual(grants.get('length'), 0, 'Grant should have been removed from submission');
 
-    assert.ok(grantRows[1].querySelector('i[class="far fa-square"]'), '"Unselected" icon should be seen now');
+    assert.ok(grantRows[1].querySelector('i[class="fa fa-square"]'), '"Unselected" icon should be seen now');
   });
 });
