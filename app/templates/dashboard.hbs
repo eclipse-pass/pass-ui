@@ -64,14 +64,16 @@
         <br />
         {{#if this.model.numberAwaitingApproval}}
           <LinkTo @route="submissions.index">
-            {{this.model.numberAwaitingApproval}} submission(s)
+            {{this.model.numberAwaitingApproval}}
+            submission(s)
           </LinkTo>
           awaiting your approval.
           <br />
         {{/if}}
         {{#if this.model.numberAwaitingEdits}}
           <LinkTo @route="submissions.index">
-            {{this.model.numberAwaitingEdits}} submission(s)
+            {{this.model.numberAwaitingEdits}}
+            submission(s)
           </LinkTo>
           with a submitter waiting for you to edit them.
         {{/if}}

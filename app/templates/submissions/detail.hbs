@@ -98,13 +98,15 @@
                       <b>
                         {{grant.awardNumber}}
                       </b>
-                      : {{grant.projectName}}
+                      :
+                      {{grant.projectName}}
                     </li>
                     <li data-test-submission-detail-funder>
                       <b>
                         Funder
                       </b>
-                      : {{grant.primaryFunder.name}}
+                      :
+                      {{grant.primaryFunder.name}}
                     </li>
                     {{#if (not-eq grant this.model.sub.grants.lastObject)}}
                       <hr />
@@ -273,8 +275,8 @@
                           <td data-label="icon">
                             {{#if (eq file.mimeType "png")}}
                               <i local-class="line-height-35 text-gray fa-30" class="fas fa-file-image"></i>
-                            {{else if
-                              (eq file.mimeType "vnd.openxmlformats-officedocument.presentationml.presentation")}}
+                            {{else if (eq file.mimeType "vnd.openxmlformats-officedocument.presentationml.presentation")
+                            }}
                               <i local-class="line-height-35 text-gray fa-30" class="fas fa-file-powerpoint"></i>
                             {{else if (eq file.mimeType "msword")}}
                               <i local-class="line-height-35 text-gray fa-30" class="fas fa-file-word"></i>
@@ -344,8 +346,7 @@
         Request More Changes
       </button>
       <LinkTo @route="submissions.new" @query={{hash submission=this.model.sub.id}} class="btn btn-outline-primary">
-        Edit
-        Submission
+        Edit Submission
       </LinkTo>
       <button class="btn btn-danger" onclick={{action "cancelSubmission"}}>
         Cancel Submission
@@ -357,8 +358,7 @@
   <div class="row">
     <div class="col-12 text-right">
       <LinkTo @route="submissions.new" @query={{hash submission=this.model.sub.id}} class="btn btn-primary">
-        Edit this
-        submission
+        Edit this submission
       </LinkTo>
     </div>
   </div>
