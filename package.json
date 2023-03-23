@@ -19,7 +19,8 @@
     "lint:hbs": "ember-template-lint .",
     "lint:js": "eslint . --cache",
     "start": "ember server",
-    "test": "concurrently \"npm:lint\" \"npm:test:*\" --names \"lint,test:\"",
+    "test": "concurrently \"npm:lint\" \"npm:test:no-serve\" --names \"lint,test:\"",
+    "test:no-serve": "PASS_API_NAMESPACE=/mirage/test ember test",
     "test:serve": "PASS_API_NAMESPACE=/mirage/test ember test -s",
     "prepare": "husky install"
   },
@@ -94,7 +95,6 @@
     "lint-to-the-future-eslint": "^0.4.0",
     "loader.js": "^4.7.0",
     "merge": ">=1.2.1",
-    "npm-run-all": "^4.1.5",
     "popper.js": "^1.14.5",
     "prettier": "^2.7.1",
     "qunit": "^2.19.2",
