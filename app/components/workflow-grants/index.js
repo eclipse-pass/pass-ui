@@ -84,23 +84,6 @@ export default class WorkflowGrants extends Component {
   constructor() {
     super(...arguments);
 
-    // if (this.args.preLoadedGrant) {
-    //   this.addGrant(this.args.preLoadedGrant);
-    //   // this.initialAddGrant.perform(this.args.preLoadedGrant);
-    // }
-
-    // if (this.args.preLoadedGrant) {
-    //   if (!get(this.args.submission, 'grants').includes(this.args.preLoadedGrant)) {
-    //     get(this.args.submission, 'grants').pushObject(this.args.preLoadedGrant);
-    //   }
-    //   // if (!workflow.getAddedGrants().includes(this.args.preLoadedGrant)) {
-    //   //   workflow.addGrant(this.args.preLoadedGrant);
-    //   // }
-    //   if (!this._selectedGrants.includes(this.args.preLoadedGrant)) {
-    //     this._selectedGrants.addObjects(this.args.preLoadedGrant);
-    //   }
-    // }
-
     if (this.args.preLoadedGrant) {
       this.args.submission.grants.pushObject(this.args.preLoadedGrant);
     }
