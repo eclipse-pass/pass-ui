@@ -7,6 +7,7 @@ import { inject as service } from '@ember/service';
 import { A } from '@ember/array';
 import { dropTask } from 'ember-concurrency-decorators';
 import { timeout } from 'ember-concurrency';
+import { run, scheduleOnce } from '@ember/runloop';
 
 const DEBOUNCE_MS = 250;
 
@@ -66,11 +67,15 @@ export default class WorkflowBasics extends Component {
     this.contactUrl = config.branding.pages.contactUrl;
   }
 
+  setPreparers() {
+    set(this.submission, 'preparers', []);
+  }
+
   @action
   setupSubmission() {
     if (!this.isProxySubmission) {
       this.submission.submitter = this.currentUser.user;
-      // this.submission.preparers = [];
+      // set(this.submission, 'preparers', []);
     }
   }
 

@@ -6,6 +6,7 @@ import { A } from '@ember/array';
 import { inject as service } from '@ember/service';
 import { task } from 'ember-concurrency-decorators';
 import { later } from '@ember/runloop';
+import ENV from 'pass-ui/config/environment';
 
 export default class WorkflowReview extends Component {
   @service workflow;
@@ -63,6 +64,10 @@ export default class WorkflowReview extends Component {
 
   get submitButtonText() {
     return this.userIsPreparer ? 'Request approval' : 'Submit';
+  }
+
+  get isTest() {
+    return ENV.environment === 'test';
   }
 
   @task
