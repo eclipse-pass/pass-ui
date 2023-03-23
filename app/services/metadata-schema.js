@@ -4,6 +4,7 @@ import ENV from 'pass-ui/config/environment';
 import Ajv from 'ajv'; // https://github.com/epoberezkin/ajv
 import _ from 'lodash';
 import { get } from '@ember/object';
+import fetch from 'fetch';
 
 /**
  * Service to manipulate Alpaca schemas
@@ -68,7 +69,10 @@ export default class MetadataSchemaService extends Service {
     };
 
     try {
-      const response = await fetch(urlWithMerge, options);
+      let response = await this._fetchSchemas(urlWithMerge, options);
+      if (response.status >= 400) {
+        response = await this._fetchSchemas(url, options);
+      }
       const data = await response.json();
 
       return data;
@@ -78,6 +82,10 @@ export default class MetadataSchemaService extends Service {
       // console.log(`msg \n${response}`, 'color:red;');
       throw new Error(msg);
     }
+  }
+
+  _fetchSchemas(url, options) {
+    return fetch(url, options);
   }
 
   /**

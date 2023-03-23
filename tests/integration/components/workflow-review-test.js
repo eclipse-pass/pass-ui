@@ -13,6 +13,9 @@ module('Integration | Component | workflow review', (hooks) => {
 
   hooks.beforeEach(async function () {
     this.server.post('https://pass.local/schemaservice?merge=true', (_schema, _request) => true);
+
+    const typesUsed = ['info'];
+    this.owner.lookup('service:flash-messages').registerTypes(typesUsed);
   });
 
   test('it renders', async function (assert) {
@@ -248,9 +251,15 @@ module('Integration | Component | workflow review', (hooks) => {
     // Click on submit
     await click('.submit');
 
-    // Should be toastr warning about web-link click instead of confirm dialog
     await waitUntil(() => !document.querySelector('.swal2-title'), { timeout: 500 });
-    await waitFor(document.querySelector('.toast-message'));
+
+    await waitFor('.flash-message.alert.alert-warning');
+    assert
+      .dom('.flash-message.alert.alert-warning')
+      .includesText(
+        'Please visit the following web portal to submit your manuscript directly. Metadata displayed above could be used to aid in your submission progress.'
+      );
+
     assert.strictEqual(document.querySelector('.swal2-title'), null);
 
     assert.false(submitted);

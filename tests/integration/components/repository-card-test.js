@@ -51,6 +51,8 @@ module('Integration | Component | repository card', (hooks) => {
     this.set('toggleRepository', (repository, selected, _type) => {
       assert.strictEqual(repository, repo, 'Repository matches');
       assert.true(selected, 'Status is selected');
+
+      assert.dom('input[type="checkbox"]').isChecked();
     });
 
     await render(hbs`
@@ -63,7 +65,5 @@ module('Integration | Component | repository card', (hooks) => {
 
     await waitFor('input[type="checkbox"]');
     await click('input[type="checkbox"]');
-
-    assert.dom('input[type="checkbox"]').isChecked();
   });
 });

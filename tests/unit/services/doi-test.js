@@ -2,9 +2,11 @@
 import EmberObject, { get } from '@ember/object';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
+import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 
 module('Unit | Service | doi', (hooks) => {
   setupTest(hooks);
+  setupMirage(hooks);
 
   hooks.beforeEach(function () {
     this.set('mockDoiInfo', {
@@ -148,23 +150,14 @@ module('Unit | Service | doi', (hooks) => {
     const doiInfo = get(this, 'mockDoiInfo2');
     const journalId = 'blah';
 
-    service.set(
-      'ajax',
-      EmberObject.create({
-        request(url, method, options) {
-          assert.ok(true);
+    this.get('/journal', (schema, request) => {
+      let result = {
+        crossref: { message: doiInfo },
+        'journal-id': journalId,
+      };
 
-          let journal = EmberObject.create({ id: 'journal' });
-
-          let result = {
-            crossref: { message: doiInfo },
-            'journal-id': journalId,
-          };
-
-          return new Promise((resolve) => resolve(result));
-        },
-      })
-    );
+      return result;
+    });
 
     service.set(
       'store',
@@ -185,7 +178,7 @@ module('Unit | Service | doi', (hooks) => {
       })
     );
 
-    assert.expect(8);
+    assert.expect(7);
 
     return service
       .get('resolveDOI')

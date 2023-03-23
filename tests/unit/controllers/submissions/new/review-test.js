@@ -2,6 +2,7 @@
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
+import { run } from '@ember/runloop';
 
 module('Unit | Controller | submissions/new/review', (hooks) => {
   setupTest(hooks);
@@ -33,15 +34,16 @@ module('Unit | Controller | submissions/new/review', (hooks) => {
 
   test('parent properties are retrieved', function (assert) {
     let controller = this.owner.lookup('controller:submissions/new/review');
-    let submitTriggered = false;
-    this.owner.register(
-      'controller:submissions/new',
-      EmberObject.extend({
-        uploading: 'is uploading',
-        comment: 'test comment',
-        waitingMessage: 'test waiting message',
-      })
-    );
+    run(() => {
+      this.owner.register(
+        'controller:submissions/new',
+        EmberObject.extend({
+          uploading: 'is uploading',
+          comment: 'test comment',
+          waitingMessage: 'test waiting message',
+        })
+      );
+    });
 
     assert.strictEqual(controller.get('uploading'), 'is uploading');
     assert.strictEqual(controller.get('waitingMessage'), 'test waiting message');

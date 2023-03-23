@@ -11,7 +11,7 @@ module('Integration | Helper | format oap compliance', (hooks) => {
     // eslint-disable-line
     this.set('inputValue', 'Yes');
 
-    await render(hbs`{{format-oap-compliance inputValue}}`);
+    await render(hbs`{{format-oap-compliance this.inputValue}}`);
 
     assert.strictEqual(this.element.textContent.trim(), 'Yes');
   });

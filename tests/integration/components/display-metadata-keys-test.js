@@ -112,10 +112,11 @@ module('Integration | Component | display-metadata-keys', (hooks) => {
 
   test('Check the "display" blob', async function (assert) {
     await render(hbs`<DisplayMetadataKeys @submission={{this.submission}} />`);
+
     const allText = this.element.textContent;
 
-    assert.ok(allText.includes('Journal nlmta-id: MOO-ID'), 'Should include "Journal nlmta-id"');
-    assert.ok(allText.includes('Authors'), 'Should include "Authors" label');
-    assert.ok(allText.includes('name: Moo Jones'), 'Should include author name "Moo Jones"');
+    assert.dom(this.element).includesText('Journal nlmta-id : MOO-ID');
+    assert.dom(this.element).includesText('Authors');
+    assert.dom(this.element).includesText('name : Moo Jones');
   });
 });

@@ -128,7 +128,7 @@ module('Integration | Component | workflow basics', (hooks) => {
   });
 
   test('lookupDOI should set doiInfo and publication', async function (assert) {
-    this.set('validateTitle', () => assert.expect(true));
+    this.set('validateTitle', () => true);
 
     await render(hbs`
       <WorkflowBasics
@@ -150,7 +150,7 @@ module('Integration | Component | workflow basics', (hooks) => {
 
     assert.strictEqual(get(this, 'doiInfo').DOI, '10.1039/c7an01256j');
     assert.strictEqual(get(this, 'publication.doi'), '1234/4321');
-    assert.strictEqual(get(this, 'publication.issue'), '1');
+    assert.strictEqual(get(this, 'publication.issue'), 1);
   });
 
   /**

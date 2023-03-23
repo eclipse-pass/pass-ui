@@ -285,6 +285,7 @@ export default function (config) {
       this.passthrough('https://nightly.eclipse-pass.org/**');
 
       this.passthrough();
+      this.namespace = '';
     },
   };
 

@@ -21,24 +21,21 @@ module('Unit | Model | submission', (hooks) => {
     // it isn't any kind of submission yet, let alone a proxy submission!
     assert.false(submission.get('isProxySubmission'));
 
-    const user = run(() =>
-      this.owner.lookup('service:store').createRecord('user', {
-        id: 'test:user',
-        submitter: user,
-      })
-    );
+    const user = this.owner.lookup('service:store').createRecord('user', {
+      id: 'test:user',
+    });
 
     // there is a submitter, but no preparer, still not a proxy submission
     assert.false(submission.get('isProxySubmission'));
 
-    run(() => submission.set('submitterName', 'Test Name'));
-    run(() => submission.set('submitterEmail', 'mailto:test@test.com'));
+    submission.set('submitterName', 'Test Name');
+    submission.set('submitterEmail', 'mailto:test@test.com');
     // a submitterEmail and submitterName has been entered, this is going to be a proxy submission.
     assert.true(submission.get('isProxySubmission'));
 
-    run(() => submission.set('submitterName', null));
-    run(() => submission.set('submitterEmail', null));
-    run(() => submission.set('preparers', A([user])));
+    submission.set('submitterName', null);
+    submission.set('submitterEmail', null);
+    submission.set('preparers', [user]);
     // if there is one preparer, regardless of other values, it is a proxy submission
     assert.true(submission.get('isProxySubmission'));
   });

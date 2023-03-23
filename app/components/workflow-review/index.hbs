@@ -1,5 +1,15 @@
 {{! template-lint-disable no-action no-inline-styles no-unknown-arguments-for-builtin-components require-button-type require-input-label }}
 <div class="form-group row" {{did-insert this.initializeTooltip}}>
+  {{#each this.flashMessages.queue as |flash|}}
+    <FlashMessage @flash={{flash}} as |component flash close|>
+      <div class="d-flex justify-content-between">
+        {{flash.message}}
+        <span role="button" {{on "click" close}}>
+          x
+        </span>
+      </div>
+    </FlashMessage>
+  {{/each}}
   <div class="col-md-12">
     <div class="list-group">
       <div href="#" class="list-group-item flex-column align-items-start">
@@ -82,13 +92,15 @@
                       <b>
                         {{grant.awardNumber}}
                       </b>
-                      : {{grant.projectName}}
+                      :
+                      {{grant.projectName}}
                     </li>
                     <li>
                       <b>
                         Funder
                       </b>
-                      : {{grant.primaryFunder.name}}
+                      :
+                      {{grant.primaryFunder.name}}
                     </li>
                     {{#if (not-eq grant @submission.grants.lastObject)}}
                       <hr />
@@ -200,8 +212,8 @@
                         </a>
                         )
                       {{/if}}
-                      . The submission will be sent to its target repositories upon approval, or be sent back to
-                      you if additional edits are requested by
+                      . The submission will be sent to its target repositories upon approval, or be sent back to you if
+                      additional edits are requested by
                       {{@submission.submitter.displayName}}.
                     </p>
                   {{/unless}}

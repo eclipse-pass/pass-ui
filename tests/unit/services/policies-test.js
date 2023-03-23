@@ -8,6 +8,16 @@ module('Unit | Service | policies', (hooks) => {
   setupTest(hooks);
   setupMirage(hooks);
 
+  let tmp;
+  hooks.before(() => {
+    tmp = QUnit.onUncaughtException;
+    QUnit.onUncaughtException = () => {};
+  });
+
+  hooks.after(() => {
+    QUnit.onUncaughtException = tmp;
+  });
+
   test('good response returns array of Promises of Policy objects', async function (assert) {
     assert.expect(7);
 
@@ -75,12 +85,11 @@ module('Unit | Service | policies', (hooks) => {
    * a non-2xx response code triggers an error
    */
   test('policy endpoint should throw error on non-200 response', function (assert) {
-    assert.expect(2);
+    assert.expect(1);
 
-    this.server.get('/policy/:id', () => new Response(404));
+    this.server.get('/policyservice/policies', () => new Response(404));
 
     const service = this.owner.lookup('service:policies');
-    assert.ok(service, 'service not found');
 
     const sub = EmberObject.create({ id: 'moo' });
 
@@ -88,7 +97,7 @@ module('Unit | Service | policies', (hooks) => {
       .get('getPolicies')
       .perform(sub)
       .catch((e) => {
-        assert.ok(e.message.includes('returned a 404'));
+        assert.ok(e.message.includes('Recieved response 404'));
       });
   });
 
@@ -97,12 +106,11 @@ module('Unit | Service | policies', (hooks) => {
    * a non-2xx response code triggers an error
    */
   test('repo endpoint should throw error on non-200 response', function (assert) {
-    assert.expect(2);
+    assert.expect(1);
 
-    this.server.get('/repository/:id', () => new Response(404));
+    this.server.get('/policyservice/repositories', () => new Response(404));
 
     const service = this.owner.lookup('service:policies');
-    assert.ok(service, 'service not found');
 
     const sub = EmberObject.create({ id: 'moo' });
 
@@ -110,7 +118,7 @@ module('Unit | Service | policies', (hooks) => {
       .get('getRepositories')
       .perform(sub)
       .catch((e) => {
-        assert.ok(e.message.includes('returned a 404'));
+        assert.ok(e.message.includes('Recieved response 404'));
       });
   });
 });

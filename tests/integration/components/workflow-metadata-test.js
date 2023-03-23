@@ -6,12 +6,14 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { run } from '@ember/runloop';
-import { getContext, click, render, fillIn, waitFor, waitUntil } from '@ember/test-helpers';
+import { getContext, click, render, fillIn, waitFor, waitUntil, find } from '@ember/test-helpers';
+import { setupMirage } from 'ember-cli-mirage/test-support';
 
 let submission;
 
 module('Integration | Component | workflow-metadata', (hooks) => {
   setupRenderingTest(hooks);
+  setupMirage(hooks);
 
   hooks.beforeEach(function () {
     const repositories = A();
@@ -40,108 +42,6 @@ module('Integration | Component | workflow-metadata', (hooks) => {
 
     Object.defineProperty(window.navigator, 'userAgent', { value: 'Chrome', configurable: true });
 
-    const mockAjax = Service.extend({
-      request() {
-        return Promise.resolve([
-          {
-            id: 'common',
-            definitions: {
-              form: {
-                title: 'Common schema title moo',
-                type: 'object',
-                properties: {
-                  'journal-NLMTA-ID': { type: 'string' },
-                  ISSN: { type: 'string' },
-                },
-                options: {
-                  fields: {
-                    'journal-NLMTA-ID': { type: 'text', label: 'Journal NLMTA ID', placeholder: '' },
-                    ISSN: { type: 'text', label: 'ISSN', placeholder: '' },
-                  },
-                },
-              },
-            },
-          }, // Fake "global" schema that is returned by the service
-          {
-            id: 'nih',
-            definitions: {
-              form: {
-                title:
-                  'NIH Manuscript Submission System (NIHMS) <br><p class="lead text-muted">The following metadata fields will be part of the NIHMS submission.</p>',
-                type: 'object',
-                properties: {
-                  'journal-NLMTA-ID': { type: 'string' },
-                  ISSN: { type: 'string' },
-                },
-                // required: ['ISSN']
-              },
-              options: {
-                fields: {
-                  'journal-NLMTA-ID': { type: 'text', label: 'Journal NLMTA ID', placeholder: '' },
-                  ISSN: { type: 'text', label: 'ISSN', placeholder: '' },
-                },
-              },
-            },
-            allOf: [
-              {
-                properties: {
-                  ISSN: { type: 'string' },
-                  hints: {
-                    additionalProperties: false,
-                    description:
-                      'Hints have semantics shared by the UI and the backend that are intended to influence the backend processing of the submission.',
-                    properties: {
-                      'collection-tags': {
-                        items: {
-                          type: 'string',
-                        },
-                        title: 'Tags impacting the collection used by Deposit Services for deposit',
-                        type: 'array',
-                        uniqueItems: true,
-                      },
-                    },
-                    title: 'Hints provided by the UI to backend services',
-                    type: 'object',
-                  },
-                },
-                required: ['ISSN'],
-              },
-            ],
-          },
-          {
-            id: 'jscholarship',
-            definitions: {
-              form: {
-                title: 'JScholarship Moo',
-                type: 'object',
-                properties: {
-                  mooName: { type: 'string' },
-                  ISSN: { type: 'string' },
-                  issns: {
-                    type: 'array',
-                    items: {
-                      properties: {
-                        issn: { type: 'string' },
-                        pubType: { type: 'string', enum: ['Print', 'Online'] },
-                      },
-                      type: 'object',
-                    },
-                  },
-                },
-                required: ['issns'],
-              },
-              options: {
-                fields: {
-                  mooName: { type: 'text', label: 'MOO Name', placeholder: '' },
-                  ISSN: { type: 'text', label: 'ISSN', placeholder: '' },
-                },
-              },
-            },
-          },
-        ]);
-      },
-    });
-
     const workflowService = this.owner.lookup('service:workflow');
 
     workflowService.set('doiInfo', {
@@ -152,7 +52,105 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       'journal-NLMTA-ID': 'triumph',
     });
 
-    this.owner.register('service:ajax', mockAjax);
+    this.server.post('/schemaservice', (_schema, _request) => {
+      return [
+        {
+          id: 'common',
+          definitions: {
+            form: {
+              title: 'Common schema title moo',
+              type: 'object',
+              properties: {
+                'journal-NLMTA-ID': { type: 'string' },
+                ISSN: { type: 'string' },
+              },
+              options: {
+                fields: {
+                  'journal-NLMTA-ID': { type: 'text', label: 'Journal NLMTA ID', placeholder: '' },
+                  ISSN: { type: 'text', label: 'ISSN', placeholder: '' },
+                },
+              },
+            },
+          },
+        }, // Fake "global" schema that is returned by the service
+        {
+          id: 'nih',
+          definitions: {
+            form: {
+              title:
+                'NIH Manuscript Submission System (NIHMS) <br><p class="lead text-muted">The following metadata fields will be part of the NIHMS submission.</p>',
+              type: 'object',
+              properties: {
+                'journal-NLMTA-ID': { type: 'string' },
+                ISSN: { type: 'string' },
+              },
+              // required: ['ISSN']
+            },
+            options: {
+              fields: {
+                'journal-NLMTA-ID': { type: 'text', label: 'Journal NLMTA ID', placeholder: '' },
+                ISSN: { type: 'text', label: 'ISSN', placeholder: '' },
+              },
+            },
+          },
+          allOf: [
+            {
+              properties: {
+                ISSN: { type: 'string' },
+                hints: {
+                  additionalProperties: false,
+                  description:
+                    'Hints have semantics shared by the UI and the backend that are intended to influence the backend processing of the submission.',
+                  properties: {
+                    'collection-tags': {
+                      items: {
+                        type: 'string',
+                      },
+                      title: 'Tags impacting the collection used by Deposit Services for deposit',
+                      type: 'array',
+                      uniqueItems: true,
+                    },
+                  },
+                  title: 'Hints provided by the UI to backend services',
+                  type: 'object',
+                },
+              },
+              required: ['ISSN'],
+            },
+          ],
+        },
+        {
+          id: 'jscholarship',
+          definitions: {
+            form: {
+              title: 'JScholarship Moo',
+              type: 'object',
+              properties: {
+                mooName: { type: 'string' },
+                ISSN: { type: 'string' },
+                issns: {
+                  type: 'array',
+                  items: {
+                    properties: {
+                      issn: { type: 'string' },
+                      pubType: { type: 'string', enum: ['Print', 'Online'] },
+                    },
+                    type: 'object',
+                  },
+                },
+              },
+              required: ['issns'],
+            },
+            options: {
+              fields: {
+                mooName: { type: 'text', label: 'MOO Name', placeholder: '' },
+                ISSN: { type: 'text', label: 'ISSN', placeholder: '' },
+              },
+            },
+          },
+        },
+      ];
+    });
   });
 
   test('should render common schema', async function (assert) {
@@ -178,9 +176,11 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       />
     `);
 
-    const header = this.element.querySelector('h4');
-    assert.ok(header);
-    assert.ok(header.textContent.includes(expected));
+    const header = find('h4');
+    await waitUntil(() => {
+      return header.textContent.includes(expected);
+    });
+    assert.dom(header).includesText(expected);
   });
 
   test('must show form nav buttons', async function (assert) {
@@ -191,9 +191,12 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       />
     `);
 
-    const buttons = this.element.querySelectorAll('button');
-    assert.strictEqual(buttons.length, 3, 'should be two buttons');
+    await waitFor('[data-key="Next"]');
+    await waitFor('[data-key="Back"]');
+    await waitFor('[data-key="Abort"]');
 
+    const buttons = this.element.querySelectorAll('button');
+    assert.strictEqual(buttons.length, 3, 'should be three buttons');
     Object.keys(buttons)
       .map((key) => buttons[key].textContent)
       .forEach((btn) => {
@@ -209,11 +212,15 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       />
     `);
 
-    await waitFor('button[data-key="Next"]');
-    await click('button[data-key="Next"]');
+    await waitFor('[data-key="Next"]');
+    await waitFor('[data-key="Back"]');
+    await waitFor('[data-key="Abort"]');
+    assert.dom(this.element).includesText('Common schema title moo');
+    await click('[data-key="Next"]');
     await waitFor('input[name="journal-NLMTA-ID"]');
-    assert.ok(this.element.textContent.includes('NIH Manuscript Submission System'), 'NIHMS header not found');
-    assert.ok(this.element.querySelector('input[name="journal-NLMTA-ID"]'), 'journal-NLMTA-ID input field not found');
+    assert.dom(this.element).doesNotIncludeText('Common schema title moo');
+    assert.dom(this.element).includesText('NIH Manuscript Submission System');
+    assert.dom('input[name="journal-NLMTA-ID"]').exists();
   });
 
   test('third form should be J10P', async function (assert) {
@@ -224,17 +231,22 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       />
     `);
 
-    await waitFor('button[data-key="Next"]');
-    await click('button[data-key="Next"]');
+    await waitFor('[data-key="Next"]');
+    await waitFor('[data-key="Back"]');
+    await waitFor('[data-key="Abort"]');
+    await click('[data-key="Next"]');
 
     // Need to fill out ISSN field
     await waitFor('input[name="ISSN"]');
-    this.element.querySelector('input[name="ISSN"]').value = '1234';
+    await fillIn('[name="ISSN"]', '1234');
 
-    await click('button[data-key="Next"]');
+    await waitFor('[data-key="Next"]');
+    await waitFor('[data-key="Back"]');
+    await waitFor('[data-key="Abort"]');
     await waitFor('input[name="ISSN"]');
+    await click('[data-key="Next"]');
 
-    assert.ok(this.element.textContent.includes('JScholarship Moo'), 'text in component should include "JScholarship"');
+    assert.dom(this.element).includesText('JScholarship Moo');
   });
 
   test('improperly formatted hint will fail validation', async function (assert) {
@@ -248,18 +260,29 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       },
     };
 
-    submission.metadata = JSON.stringify(badHintMetadata);
+    this.submission.metadata = JSON.stringify(badHintMetadata);
 
-    await render(hbs`{{workflow-metadata submission=submission publication=publication}}`);
-    await waitFor('button[data-key="Next"]');
-    await click('button[data-key="Next"]');
+    await render(hbs`
+    <WorkflowMetadata
+      @submission={{this.submission}}
+      @publication={{this.publication}}
+    />
+  `);
+
+    await waitFor('[data-key="Next"]');
+    await waitFor('[data-key="Back"]');
+    await waitFor('[data-key="Abort"]');
+    await click('[data-key="Next"]');
 
     // Need to fill out ISSN field
-    await waitFor('input[name="ISSN"]');
-    this.element.querySelector('input[name="ISSN"]').value = '1234';
+    await waitFor('[name="ISSN"]');
+    await fillIn('[name="ISSN"]', '1234');
 
     await click('button[data-key="Next"]');
+    await waitFor('[data-key="Back"]');
+    await waitFor('[data-key="Abort"]');
     await waitFor('input[name="ISSN"]');
+    await click('[data-key="Next"]');
 
     await waitFor(document.querySelector('.swal2-confirm'));
 
@@ -276,22 +299,23 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       />
     `);
 
-    await waitFor('button[data-key="Next"]');
-    await click('button[data-key="Next"]');
+    await waitFor('[data-key="Next"]');
+    await waitFor('[data-key="Back"]');
+    await waitFor('[data-key="Abort"]');
+    await click('[data-key="Next"]');
     // Need to fill out ISSN field
-    await waitFor('input[name="ISSN"]');
-    this.element.querySelector('input[name="ISSN"]').value = '1234';
+    await waitFor('[name="ISSN"]');
+    await fillIn('[name="ISSN"]', '1234');
 
     await click('button[data-key="Next"]');
-    await waitFor('button[data-key="Back"]');
-    await click('button[data-key="Back"]');
+    await waitFor('[data-key="Next"]');
+    await waitFor('[data-key="Back"]');
+    await waitFor('[data-key="Abort"]');
+    await click('[data-key="Back"]');
 
-    await waitFor('input[name="ISSN"]');
+    await waitFor('[name="ISSN"]');
 
-    assert.ok(
-      this.element.textContent.includes('NIH Manuscript Submission System'),
-      "NIHMS header not found, we're supposed to have the NIH form rendered now"
-    );
+    assert.dom(this.element).includesText('NIH Manuscript Submission System');
   });
 
   /**
@@ -340,18 +364,23 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       />
     `);
 
-    await waitFor('button[data-key="Next"]');
-    await click('button[data-key="Next"]');
+    await waitFor('[data-key="Next"]');
+    await waitFor('[data-key="Back"]');
+    await waitFor('[data-key="Abort"]');
+    await click('[data-key="Next"]');
 
-    await waitFor('input[name="ISSN"]');
-    assert.ok(this.element.textContent.includes('NIHMS'), 'We should be on NIH form');
-    this.element.querySelector('input[name="ISSN"]').value = '';
+    await waitFor('[name="ISSN"]');
+    assert.dom(this.element).includesText('NIHMS');
+    await fillIn('input[name="ISSN"]', '');
 
+    await waitFor('[data-key="Next"]');
+    await waitFor('[data-key="Back"]');
+    await waitFor('[data-key="Abort"]');
     await click('button[data-key="Next"]');
     await waitFor(document.querySelector('.swal2-confirm'));
     await click(document.querySelector('.swal2-confirm'));
 
-    assert.ok(this.element.textContent.includes('NIHMS'), 'We should still be on NIH form');
+    assert.dom(this.element).includesText('NIHMS');
   });
 
   module('test with mocked doi service', (hooks) => {
@@ -516,33 +545,29 @@ module('Integration | Component | workflow-metadata', (hooks) => {
   });
 
   test('Single schema displays no title', async function (assert) {
-    const mockAjax = Service.extend({
-      request() {
-        return Promise.resolve([
-          {
-            id: 'common',
-            definitions: {
-              form: {
-                title: 'Common schema title moo',
-                type: 'object',
-                properties: {
-                  'journal-NLMTA-ID': { type: 'string' },
-                  ISSN: { type: 'string' },
-                },
-                options: {
-                  fields: {
-                    'journal-NLMTA-ID': { type: 'text', label: 'Journal NLMTA ID', placeholder: '' },
-                    ISSN: { type: 'text', label: 'ISSN', placeholder: '' },
-                  },
+    this.server.post('/schemaservice', () => {
+      return [
+        {
+          id: 'common',
+          definitions: {
+            form: {
+              title: 'Common schema title moo',
+              type: 'object',
+              properties: {
+                'journal-NLMTA-ID': { type: 'string' },
+                ISSN: { type: 'string' },
+              },
+              options: {
+                fields: {
+                  'journal-NLMTA-ID': { type: 'text', label: 'Journal NLMTA ID', placeholder: '' },
+                  ISSN: { type: 'text', label: 'ISSN', placeholder: '' },
                 },
               },
             },
           },
-        ]);
-      },
+        },
+      ];
     });
-    // Override previously mocked AJAX service
-    this.owner.register('service:ajax', mockAjax);
 
     await render(hbs`
       <WorkflowMetadata
@@ -563,50 +588,47 @@ module('Integration | Component | workflow-metadata', (hooks) => {
         };
       },
     });
-    const mockAjax = Service.extend({
-      request() {
-        return Promise.resolve([
-          {
-            id: 'moo',
-            definitions: {
-              form: {
-                title: 'Test schema',
-                type: 'object',
-                properties: {
-                  moorray: {
-                    type: 'array',
-                    items: {
-                      properties: {
-                        reqField: { type: 'string' },
-                        optField: { type: 'string' },
-                      },
-                      required: ['reqField'],
+    this.server.post('/schemaservice', () => {
+      return [
+        {
+          id: 'moo',
+          definitions: {
+            form: {
+              title: 'Test schema',
+              type: 'object',
+              properties: {
+                moorray: {
+                  type: 'array',
+                  items: {
+                    properties: {
+                      reqField: { type: 'string' },
+                      optField: { type: 'string' },
                     },
+                    required: ['reqField'],
                   },
                 },
-                options: {
-                  fields: {
-                    moorray: {
-                      label: 'Array field',
-                      items: {
-                        fields: {
-                          reqField: { label: 'This should be required' },
-                          optField: { label: 'This is optional' },
-                        },
-                      },
-                    },
-                  },
-                },
-                required: ['moorray'],
               },
+              options: {
+                fields: {
+                  moorray: {
+                    label: 'Array field',
+                    items: {
+                      fields: {
+                        reqField: { label: 'This should be required' },
+                        optField: { label: 'This is optional' },
+                      },
+                    },
+                  },
+                },
+              },
+              required: ['moorray'],
             },
           },
-        ]);
-      },
+        },
+      ];
     });
 
     this.owner.register('service:doi', mockDoiService);
-    this.owner.register('service:ajax', mockAjax);
 
     await render(hbs`
       <WorkflowMetadata
@@ -623,50 +645,46 @@ module('Integration | Component | workflow-metadata', (hooks) => {
   });
 
   test('Check "required" labels for user added array fields', async function (assert) {
-    const mockAjax = Service.extend({
-      request() {
-        return Promise.resolve([
-          {
-            id: 'moo',
-            definitions: {
-              form: {
-                title: 'Test schema',
-                type: 'object',
-                properties: {
-                  moorray: {
-                    type: 'array',
-                    items: {
-                      type: 'object',
-                      properties: {
-                        reqField: { type: 'string' },
-                        optField: { type: 'string' },
-                      },
-                      required: ['reqField'],
+    this.server.post('/schemaservice', () => {
+      return [
+        {
+          id: 'moo',
+          definitions: {
+            form: {
+              title: 'Test schema',
+              type: 'object',
+              properties: {
+                moorray: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      reqField: { type: 'string' },
+                      optField: { type: 'string' },
                     },
+                    required: ['reqField'],
                   },
                 },
-                options: {
-                  fields: {
-                    moorray: {
-                      label: 'Array field',
-                      items: {
-                        fields: {
-                          reqField: { label: 'This should be required' },
-                          optField: { label: 'This is optional' },
-                        },
-                      },
-                    },
-                  },
-                },
-                required: ['moorray'],
               },
+              options: {
+                fields: {
+                  moorray: {
+                    label: 'Array field',
+                    items: {
+                      fields: {
+                        reqField: { label: 'This should be required' },
+                        optField: { label: 'This is optional' },
+                      },
+                    },
+                  },
+                },
+              },
+              required: ['moorray'],
             },
           },
-        ]);
-      },
+        },
+      ];
     });
-
-    this.owner.register('service:ajax', mockAjax);
 
     await render(hbs`
       <WorkflowMetadata
@@ -683,6 +701,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
 
     assert.notOk(this.element.querySelector('legend').textContent.includes('required'));
 
+    await waitFor('.alpaca-container-item .alpaca-required-indicator');
     const reqIndicators = this.element.querySelectorAll('.alpaca-container-item .alpaca-required-indicator');
     assert.strictEqual(reqIndicators.length, 1, '(required) indicator should appear only twice in rendered form');
   });
