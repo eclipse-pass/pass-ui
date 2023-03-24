@@ -122,9 +122,5 @@
   "ember": {
     "edition": "octane"
   },
-  "resolutions": {
-    "@babel/preset-env": "^7.10.2",
-    "ember-cli-htmlbars": "^6.2.0"
-  },
   "dependencies": {}
 }
