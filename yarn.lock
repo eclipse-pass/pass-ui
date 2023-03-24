@@ -7285,10 +7285,10 @@ eslint-config-prettier@^8.5.0:
   resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-8.5.0.tgz#5a81680ec934beca02c7b1a61cf8ca34b66feab1"
   integrity sha512-obmWKLUNCnhtQRKc+tmnYuQl0pFU1ibYJQ5BGhTVB08bHe9wC8qUeG7c08dj9XX+AuPj1YSGSQIHl1pnDHZR0Q==
 
-eslint-plugin-ember@^11.1.0:
-  version "11.4.6"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-ember/-/eslint-plugin-ember-11.4.6.tgz#75d4ba801c9e12c69cb3bbc32c6670f48c152ad0"
-  integrity sha512-ak+gDkZrOQUjpLYiDWJA1D2jWJy0MYTf409Ki6du06+vYNifuMJIFpJhH9oKsD1FPU1sQylzhHcOeiHfbQTWmA==
+eslint-plugin-ember@^11.4.8:
+  version "11.4.8"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-ember/-/eslint-plugin-ember-11.4.8.tgz#96e243746bde961a5620533c79ae7f4c827dadb6"
+  integrity sha512-ytHEMDNkXbkBAfw2loR62pLozOiMp+Y7BJaupSQK25lCsfrhVMsfog2uTvicoCwDDPgcOJrivdUmMbfErOGOdQ==
   dependencies:
     "@ember-data/rfc395-data" "^0.0.4"
     "@glimmer/syntax" "^0.84.2"
@@ -7299,7 +7299,7 @@ eslint-plugin-ember@^11.1.0:
     estraverse "^5.2.0"
     lodash.camelcase "^4.1.1"
     lodash.kebabcase "^4.1.1"
-    magic-string "^0.27.0"
+    magic-string "^0.30.0"
     requireindex "^1.2.0"
     snake-case "^3.0.3"
 
@@ -9621,10 +9621,10 @@ jquery-deferred@^0.3.0:
   resolved "https://registry.yarnpkg.com/jquery-deferred/-/jquery-deferred-0.3.1.tgz#596eca1caaff54f61b110962b23cafea74c35355"
   integrity sha512-YTzoTYR/yrjmNh6B6exK7lC1jlDazEzt9ZlZvdRscv+I1AJqN1SmU3ZAn4iMGiVhwAavCrbijDVyTc0lmr9ZCA==
 
-jquery@^3.6.3:
-  version "3.6.3"
-  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.6.3.tgz#23ed2ffed8a19e048814f13391a19afcdba160e6"
-  integrity sha512-bZ5Sy3YzKo9Fyc8wH2iIQK4JImJ6R0GWI9kL1/k7Z91ZBNgkRXE6U0JfHIizZbort8ZunhSI3jw9I6253ahKfg==
+jquery@^3.6.4:
+  version "3.6.4"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.6.4.tgz#ba065c188142100be4833699852bf7c24dc0252f"
+  integrity sha512-v28EW9DWDFpzcD9O5iyJXg3R3+q+mET5JhnjJzQUZMHOv67bpSIHq81GEYpPNZHG+XXHsfSme3nxp/hndKEcsQ==
 
 js-string-escape@^1.0.1:
   version "1.0.1"
@@ -9920,10 +9920,10 @@ lint-staged@^10.2.13:
     string-argv "0.3.1"
     stringify-object "^3.3.0"
 
-lint-to-the-future-ember-template@^1.0.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/lint-to-the-future-ember-template/-/lint-to-the-future-ember-template-1.1.0.tgz#ff95bcb9d3b2f1abdca01bc2c6b09466c5f365cd"
-  integrity sha512-KsRhGjqMcvF7+TyfDaN+suUcwVbkhbU9FJNYKVYroXnFmO6XZQd91TYMP2RoYlydARmihuHGAm2b+U2QkT3Sfw==
+lint-to-the-future-ember-template@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/lint-to-the-future-ember-template/-/lint-to-the-future-ember-template-1.1.1.tgz#d2a79756f91aa8811631b012ddb4b842309b1f96"
+  integrity sha512-lNgD9NrIp8swG1Ta+UnceKDXf8Vo8VufCXkIG3WHOzhybczW44tdmhJplFdM2Y/1wE0+qSPSPXjo+rwe3XAnXw==
   dependencies:
     esm "^3.2.25"
     import-cwd "^3.0.0"
@@ -10419,10 +10419,10 @@ magic-string@^0.25.7:
   dependencies:
     sourcemap-codec "^1.4.8"
 
-magic-string@^0.27.0:
-  version "0.27.0"
-  resolved "https://registry.yarnpkg.com/magic-string/-/magic-string-0.27.0.tgz#e4a3413b4bab6d98d2becffd48b4a257effdbbf3"
-  integrity sha512-8UnnX2PeRAPZuN12svgR9j7M1uWMovg/CEnIwIG0LFkXSJJe4PdfUGiTGl8V9bsBHFUtfVINcSyYxd7q+kx9fA==
+magic-string@^0.30.0:
+  version "0.30.0"
+  resolved "https://registry.yarnpkg.com/magic-string/-/magic-string-0.30.0.tgz#fd58a4748c5c4547338a424e90fa5dd17f4de529"
+  integrity sha512-LA+31JYDJLs82r2ScLrlz1GjSgu66ZV518eyWT+S8VhyQn/JL0u9MeBOvQMGYiPk1DBiSN9DDMOcXvigJZaViQ==
   dependencies:
     "@jridgewell/sourcemap-codec" "^1.4.13"
 
