@@ -58,7 +58,7 @@
     "ember-cli-mirage": "^2.4.0",
     "ember-cli-sri": "^2.1.1",
     "ember-cli-terser": "^4.0.2",
-    "ember-composable-helpers": "^4.4.1",
+    "ember-composable-helpers": "^5.0.0",
     "ember-concurrency": "^2.3.4",
     "ember-concurrency-decorators": "^1.0.0",
     "ember-css-modules": "^2.0.1",
