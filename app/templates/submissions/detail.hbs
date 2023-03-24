@@ -275,7 +275,8 @@
                           <td data-label="icon">
                             {{#if (eq file.mimeType "png")}}
                               <i local-class="line-height-35 text-gray fa-30" class="fas fa-file-image"></i>
-                            {{else if (eq file.mimeType "vnd.openxmlformats-officedocument.presentationml.presentation")
+                            {{else if
+                              (eq file.mimeType "vnd.openxmlformats-officedocument.presentationml.presentation")
                             }}
                               <i local-class="line-height-35 text-gray fa-30" class="fas fa-file-powerpoint"></i>
                             {{else if (eq file.mimeType "msword")}}
