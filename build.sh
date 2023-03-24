@@ -17,3 +17,9 @@ if [ "$unamestr" = 'Linux' ]; then
 elif [ "$unamestr" = 'FreeBSD' ] || [ "$unamestr" = 'Darwin' ]; then
   export $(grep -v '^[#|SIGNING]' $ENV_FILE | xargs -0)
 fi
+
+rm -rf dist/
+
+yarn install --frozen-lockfile
+yarn build:dev
+yarn build:docker
