@@ -10,6 +10,9 @@ const disableCssModules = ['/pass-ui/styles/app.css'];
 module.exports = function (defaults) {
   let app = new EmberApp(defaults, {
     // Add options here
+    inlineContent: {
+      'initial-state': './initial-state.html',
+    },
     'ember-composable-helpers': {
       only: ['queue', 'compute', 'invoke', 'includes'],
     },

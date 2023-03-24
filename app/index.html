@@ -22,14 +22,12 @@
 
     <link integrity="" rel="stylesheet" href="{{rootURL}}assets/vendor.css" />
     <link integrity="" rel="stylesheet" href="{{rootURL}}assets/pass-ui.css" />
+    <link rel="stylesheet" href="{{rootURL}}coreUI.css" />
 
     {{content-for "head-footer"}}
   </head>
   <body>
-    <div class="text-center app-loader">
-      <div class="lds-dual-ring"></div>
-    </div>
-    {{content-for "body"}}
+    {{content-for "initial-state"}} {{content-for "body"}}
 
     <script src="{{rootURL}}assets/vendor.js"></script>
     <script src="{{rootURL}}assets/pass-ui.js"></script>
