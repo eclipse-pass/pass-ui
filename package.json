@@ -74,7 +74,7 @@
     "ember-qunit": "^6.2.0",
     "ember-radio-buttons": "^5.0.0",
     "ember-resolver": "^10.0.0",
-    "ember-simple-auth": "^4.2.2",
+    "ember-simple-auth": "^5.0.0",
     "ember-sinon-qunit": "^7.1.4",
     "ember-source": "~4.8.0",
     "ember-template-lint": "^4.16.1",
