@@ -69,6 +69,11 @@ export default class ApplicationRoute extends CheckSessionRoute {
    * Add styling from static branding. TODO: Should this be moved to an initializer or something?
    */
   afterModel(model, transition) {
+    const loader = document.getElementById('initial-loader');
+    if (loader) {
+      loader.style.display = 'none';
+    }
+
     if (model.staticConfig) {
       if (model.staticConfig.branding.stylesheet) {
         const stylesheet = `${model.staticConfig.branding.stylesheet}`;
