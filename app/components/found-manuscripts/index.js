@@ -2,8 +2,7 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import { A } from '@ember/array';
-import { task } from 'ember-concurrency-decorators';
-import { action, get, set } from '@ember/object';
+import { task } from 'ember-concurrency';
 
 export default class FoundManuscriptsComponent extends Component {
   @service oaManuscriptService;
@@ -32,19 +31,17 @@ export default class FoundManuscriptsComponent extends Component {
     return this.foundManuscripts.filter((foundMs) => !allFileNames.includes(foundMs.name));
   }
 
-  @task
-  getAppConfig = function* () {
-    let config = yield this.appStaticConfig.getStaticConfig();
+  getAppConfig = task(async () => {
+    let config = await this.appStaticConfig.getStaticConfig();
     this.contactUrl = config.branding.pages.contactUrl;
-  };
+  });
 
-  @task
-  setupManuscripts = function* () {
+  setupManuscripts = task(async () => {
     const doi = this.workflow.getDoiInfo().DOI;
-    const foundOAMss = yield this.oaManuscriptService.lookup(doi);
+    const foundOAMss = await this.oaManuscriptService.lookup(doi);
 
     if (foundOAMss) {
       this.foundManuscripts.pushObjects(foundOAMss);
     }
-  };
+  });
 }

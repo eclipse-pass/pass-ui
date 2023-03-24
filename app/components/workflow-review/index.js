@@ -4,7 +4,7 @@ import { tracked } from '@glimmer/tracking';
 import { action, get, set } from '@ember/object';
 import { A } from '@ember/array';
 import { inject as service } from '@ember/service';
-import { task } from 'ember-concurrency-decorators';
+import { task } from 'ember-concurrency';
 import { later } from '@ember/runloop';
 import ENV from 'pass-ui/config/environment';
 
@@ -70,8 +70,7 @@ export default class WorkflowReview extends Component {
     return ENV.environment === 'test';
   }
 
-  @task
-  submitTask = function* () {
+  submitTask = task(async () => {
     $('.block-user-input').css('display', 'block');
     let disableSubmit = true;
     // In case a crafty user edits the page HTML, don't submit when not allowed
@@ -124,7 +123,7 @@ export default class WorkflowReview extends Component {
         id: repo.get('name'),
       }));
 
-    const result = yield swal
+    const result = await swal
       .mixin({
         input: 'checkbox',
         inputPlaceholder: "I agree to the above statement on today's date ",
@@ -162,7 +161,7 @@ export default class WorkflowReview extends Component {
             ).replace(/[\[\]']/g, '')}</code></pre>`;
           }
 
-          const result = yield swal({
+          const result = await swal({
             title: 'Confirm submission',
             html: swalMsg, // eslint-disable-line
             confirmButtonText: 'Confirm',
@@ -237,7 +236,7 @@ export default class WorkflowReview extends Component {
         el.style.display = 'none';
       });
     }
-  };
+  });
 
   @action
   initializeTooltip() {

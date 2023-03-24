@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-get, ember/classic-decorator-no-classic-methods */
 /* eslint-disable no-debugger */
 import Service, { inject as service } from '@ember/service';
-import { task } from 'ember-concurrency-decorators';
+import { task } from 'ember-concurrency';
 
 /**
  * Service which returns information about the logged in user.
@@ -19,15 +19,14 @@ export default class CurrentUserService extends Service {
    *
    * @returns {Promise}        Promise which resolves to the User.
    */
-  @task
-  load = function* () {
+  load = task(async () => {
     let userId = this.session.data.authenticated.user.id;
 
     if (userId) {
-      let user = yield this.store.findRecord('user', userId);
+      let user = await this.store.findRecord('user', userId);
       this.user = user;
     }
 
     return this.user;
-  };
+  });
 }

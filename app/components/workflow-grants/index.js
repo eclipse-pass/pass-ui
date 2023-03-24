@@ -96,20 +96,19 @@ export default class WorkflowGrants extends Component {
     this.workflow.setMaxStep(this.workflowStep);
   }
 
-  @task
-  setup = function* () {
-    let config = yield this.appStaticConfig.getStaticConfig();
+  setup = task(async () => {
+    let config = await this.appStaticConfig.getStaticConfig();
     this.contactUrl = config.branding.pages.contactUrl;
 
     if (get(this, 'args.submission.submitter.id')) {
-      yield this.updateGrants.perform();
+      await this.updateGrants.perform();
     }
 
     // Init selected grants to grants already attached to submission
 
     this._selectedGrants.clear();
     this._selectedGrants.addObjects(get(this, 'args.submission.grants'));
-  };
+  });
 
   updateGrants = task(async () => {
     let info = {};
@@ -140,18 +139,17 @@ export default class WorkflowGrants extends Component {
    * @param {Grant} grant
    * @param {object} event ?
    */
-  @task
-  initialAddGrant = function* (grant, event) {
+  initialAddGrant = task(async (grant, event) => {
     if (grant) {
       this.addGrant(grant);
     } else if (event && event.target.value) {
-      let grant = yield this.store.findRecord('grant', event.target.value);
+      let grant = await this.store.findRecord('grant', event.target.value);
 
       grant.get('primaryFunder.policy'); // Make sure policy is loaded in memory
       this.addGrant(grant);
       document.querySelectorAll('select')[0].selectedIndex = 0;
     }
-  };
+  });
 
   @action
   prevPage() {

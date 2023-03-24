@@ -3,7 +3,7 @@ import Component from '@glimmer/component';
 import { action, get, set, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { A } from '@ember/array';
-import { task } from 'ember-concurrency-decorators';
+import { task } from 'ember-concurrency';
 
 export default class WorkflowFiles extends Component {
   @service store;
@@ -40,8 +40,7 @@ export default class WorkflowFiles extends Component {
     return document.getElementById('file-multiple-input');
   }
 
-  @task
-  handleExternalMs = function* (file) {
+  handleExternalMs = task(async (file) => {
     const newFiles = get(this, 'args.newFiles');
 
     file.set('submission', get(this, 'args.submission'));
@@ -52,8 +51,8 @@ export default class WorkflowFiles extends Component {
     }
 
     newFiles.pushObject(file);
-    yield file.save();
-  };
+    await file.save();
+  });
 
   @action
   deleteExistingFile(file) {

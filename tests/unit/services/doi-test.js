@@ -180,16 +180,13 @@ module('Unit | Service | doi', (hooks) => {
 
     assert.expect(7);
 
-    return service
-      .get('resolveDOI')
-      .perform(doiInfo.DOI)
-      .then((result) => {
-        assert.ok(result.publication);
-        assert.ok(result.doiInfo);
+    return service.resolveDOI.perform(doiInfo.DOI).then((result) => {
+      assert.ok(result.publication);
+      assert.ok(result.doiInfo);
 
-        assert.strictEqual(doiInfo.DOI, result.publication.doi);
-        assert.strictEqual(doiInfo.DOI, result.doiInfo.DOI);
-      });
+      assert.strictEqual(doiInfo.DOI, result.publication.doi);
+      assert.strictEqual(doiInfo.DOI, result.doiInfo.DOI);
+    });
   });
 
   test("Make sure we don't choke on journal with no ISSNs", function (assert) {

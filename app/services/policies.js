@@ -95,10 +95,10 @@ export default class PoliciesService extends Service {
    *    'optional': []
    * }
    */
-  @task(function* (submission) {
+  getRepositories = task(async (submission) => {
     const url = `${get(this, 'repoUrl')}?submission=${submission.get('id')}`;
 
-    const response = yield fetch(url, {
+    const response = await fetch(url, {
       method: 'GET',
       headers: {
         credentials: 'include',
@@ -113,12 +113,12 @@ export default class PoliciesService extends Service {
      * For each DSL field (required, one-of, optional), transform each repository info object
      * to a Promise for a Repository object from the Store
      */
-    const dsl = yield response.json();
+    const dsl = await response.json();
 
     let result = {};
 
     if (dsl.hasOwnProperty('required')) {
-      result.required = yield get(this, '_resolveRepos').perform(dsl.required);
+      result.required = await get(this, '_resolveRepos').perform(dsl.required);
     }
 
     if (dsl.hasOwnProperty('one-of')) {
@@ -126,16 +126,15 @@ export default class PoliciesService extends Service {
       dsl['one-of'].forEach((choiceGroup) => {
         choices.push(get(this, '_resolveRepos').perform(choiceGroup));
       });
-      result['one-of'] = yield all(choices);
+      result['one-of'] = await all(choices);
     }
 
     if (dsl.hasOwnProperty('optional')) {
-      result.optional = yield get(this, '_resolveRepos').perform(dsl.optional);
+      result.optional = await get(this, '_resolveRepos').perform(dsl.optional);
     }
 
-    return yield hash(result);
-  })
-  getRepositories;
+    return await hash(result);
+  });
 
   /**
    * Transform a list of repository information objects to Repository model objects
@@ -146,8 +145,8 @@ export default class PoliciesService extends Service {
    * }
    * @returns {array} list of Promises of Repository objects
    */
-  @task(function* (repos) {
-    return yield all(
+  _resolveRepos = task(async (repos) => {
+    return await all(
       repos.map((repoInfo) =>
         get(this, 'store')
           .findRecord('repository', repoInfo['repository-id'])
@@ -157,6 +156,5 @@ export default class PoliciesService extends Service {
           })
       )
     );
-  })
-  _resolveRepos;
+  });
 }

@@ -3,7 +3,7 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { get } from '@ember/object';
 import { inject as service } from '@ember/service';
-import { task } from 'ember-concurrency-decorators';
+import { task } from 'ember-concurrency';
 
 export default class WorkflowBasicsUserSearch extends Component {
   @service store;
@@ -50,8 +50,7 @@ export default class WorkflowBasicsUserSearch extends Component {
     );
   }
 
-  @task
-  searchForUsers = function* (page) {
+  searchForUsers = task(async (page) => {
     if (page === 0 || page === null || page === undefined || !page) {
       page = 1;
     }
@@ -70,9 +69,9 @@ export default class WorkflowBasicsUserSearch extends Component {
       },
     };
 
-    let users = yield this.store.query('user', userQuery);
+    let users = await this.store.query('user', userQuery);
 
     this.matchingUsers = users;
     if (info.total !== null) this.numberOfMatches = info.total;
-  };
+  });
 }

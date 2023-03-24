@@ -4,7 +4,7 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action, get } from '@ember/object';
 import { inject as service } from '@ember/service';
-import { task } from 'ember-concurrency-decorators';
+import { task } from 'ember-concurrency';
 
 /**
  * Some links in the navbar point to static pages hosted outside of Ember.
@@ -44,13 +44,12 @@ export default class NavBar extends Component {
     await this.session.invalidate();
   }
 
-  @task
-  _setupAppStaticConfig = function* () {
-    let config = yield this.appStaticConfig.getStaticConfig();
+  _setupAppStaticConfig = task(async () => {
+    let config = await this.appStaticConfig.getStaticConfig();
     if (config.branding.showPagesNavBar) {
       this.aboutUrl = config.branding.pages.aboutUrl;
       this.contactUrl = config.branding.pages.contactUrl;
       this.faqUrl = config.branding.pages.faqUrl;
     }
-  };
+  });
 }

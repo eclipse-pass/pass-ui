@@ -7,7 +7,7 @@ import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
 import { fillIn, render, settled, triggerKeyEvent } from '@ember/test-helpers';
 import { run } from '@ember/runloop';
-import { task } from 'ember-concurrency';
+import sinon from 'sinon';
 
 module('Integration | Component | workflow basics', (hooks) => {
   setupRenderingTest(hooks);
@@ -39,45 +39,47 @@ module('Integration | Component | workflow basics', (hooks) => {
     this.set('updateDoiInfo', (doiInfo) => this.set('doiInfo', doiInfo));
 
     const mockDoiService = Service.extend({
-      resolveDOI: task(function* (doi) {
-        return yield Promise.resolve({
-          doiInfo: {
-            publisher: 'Royal Society of Chemistry (RSC)',
-            issue: 1,
-            'short-container-title': 'Analyst',
-            abstract:
-              '<p>The investigators report a dramatically improved chemoselective analysis for carbonyls in crude biological extracts by turning to a catalyst and freezing conditions for derivatization.</p>',
-            DOI: '10.1039/c7an01256j',
-            type: 'journal-article',
-            page: '311-322',
-            'update-policy': 'http://dx.doi.org/10.1039/rsc_crossmark_policy',
-            source: 'Crossref',
-            'is-referenced-by-count': 5,
-            title:
-              'Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS',
-            prefix: '10.1039',
-            volume: '143',
-            'container-title': 'The Analyst',
-            'original-title': '',
-            language: 'en',
-            ISSN: ['0003-2654', '1364-5528'],
-            'issn-type': [
-              { value: '0003-2654', type: 'print' },
-              { value: '1364-5528', type: 'electronic' },
-            ],
-          },
-          publication: EmberObject.create({
-            abstract:
-              '<p>The investigators report a dramatically improved chemoselective analysis for carbonyls in crude biological extracts by turning to a catalyst and freezing conditions for derivatization.</p>',
-            doi: '1234/4321',
-            issue: 1,
-            title:
-              'Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS',
-            volume: '143',
-            journal: EmberObject.create({ journalName: 'moo-title' }),
-          }),
-        });
-      }),
+      resolveDOI: {
+        perform: sinon.stub().returns(
+          Promise.resolve({
+            doiInfo: {
+              publisher: 'Royal Society of Chemistry (RSC)',
+              issue: 1,
+              'short-container-title': 'Analyst',
+              abstract:
+                '<p>The investigators report a dramatically improved chemoselective analysis for carbonyls in crude biological extracts by turning to a catalyst and freezing conditions for derivatization.</p>',
+              DOI: '10.1039/c7an01256j',
+              type: 'journal-article',
+              page: '311-322',
+              'update-policy': 'http://dx.doi.org/10.1039/rsc_crossmark_policy',
+              source: 'Crossref',
+              'is-referenced-by-count': 5,
+              title:
+                'Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS',
+              prefix: '10.1039',
+              volume: '143',
+              'container-title': 'The Analyst',
+              'original-title': '',
+              language: 'en',
+              ISSN: ['0003-2654', '1364-5528'],
+              'issn-type': [
+                { value: '0003-2654', type: 'print' },
+                { value: '1364-5528', type: 'electronic' },
+              ],
+            },
+            publication: EmberObject.create({
+              abstract:
+                '<p>The investigators report a dramatically improved chemoselective analysis for carbonyls in crude biological extracts by turning to a catalyst and freezing conditions for derivatization.</p>',
+              doi: '1234/4321',
+              issue: 1,
+              title:
+                'Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS',
+              volume: '143',
+              journal: EmberObject.create({ journalName: 'moo-title' }),
+            }),
+          })
+        ),
+      },
       formatDOI(doi) {
         return 'moo';
       },
@@ -88,6 +90,11 @@ module('Integration | Component | workflow basics', (hooks) => {
         return 'moo-title';
       },
     });
+
+    // const doiService = this.owner.lookup('service:doi');
+    // sinon.stub(doiService, 'resolveDOI').returns(
+
+    // )
 
     const mockStore = Service.extend({
       query(type, query) {
@@ -214,7 +221,7 @@ module('Integration | Component | workflow basics', (hooks) => {
    * We should call the DOI service to get the metadata, but should NOT replace the
    * publication on the submission.
    */
-  test('Draft submission with empty metadata looksup DOI', async function (assert) {
+  test('Draft submission with empty metadata looks up DOI', async function (assert) {
     const pub = EmberObject.create({
       doi: 'ThisIsADOI',
       title: 'Moo title',
@@ -232,14 +239,16 @@ module('Integration | Component | workflow basics', (hooks) => {
     this.owner.register(
       'service:doi',
       Service.extend({
-        resolveDOI: task(function* () {
-          return yield Promise.resolve({
-            publication: EmberObject.create({
-              title: 'Do not want',
-            }), // This publication should not be used
-            doiInfo: { title: 'You better use this' },
-          });
-        }),
+        resolveDOI: {
+          perform: sinon.stub().returns(
+            Promise.resolve({
+              publication: EmberObject.create({
+                title: 'Do not want',
+              }), // This publication should not be used
+              doiInfo: { title: 'You better use this' },
+            })
+          ),
+        },
         formatDOI: () => 'Formatted-Moo',
         isValidDOI: () => true,
       })
@@ -312,14 +321,16 @@ module('Integration | Component | workflow basics', (hooks) => {
     this.set('submission', submission);
 
     const mockDoiService = Service.extend({
-      resolveDOI: task(function* () {
-        return yield Promise.resolve({
-          doiInfo: {
-            title: "Don't use",
-          },
-          publication,
-        });
-      }),
+      resolveDOI: {
+        perform: sinon.stub().returns(
+          Promise.resolve({
+            doiInfo: {
+              title: "Don't use",
+            },
+            publication,
+          })
+        ),
+      },
       isValidDOI: (doi) => !!doi,
       formatDOI: (doi) => doi,
     });

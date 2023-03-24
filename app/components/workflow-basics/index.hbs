@@ -115,7 +115,7 @@
     placeholder="Leave blank if your manuscript or article has not yet been assigned a DOI"
     @value={{@publication.doi}}
     data-test-doi-input={{true}}
-    {{on "input" (perform this.lookupDOI true)}}
+    {{on "keyup" (perform this.lookupDOI true)}}
   />
   <div class="text-danger">
     {{if (and @publication.doi (not this.isValidDOI)) "Please provide a valid DOI"}}

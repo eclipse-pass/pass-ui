@@ -2,7 +2,7 @@
 import { A, isArray } from '@ember/array';
 import Service, { inject as service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
-import { task } from 'ember-concurrency-decorators';
+import { task } from 'ember-concurrency';
 import { get } from '@ember/object';
 
 /**
@@ -59,9 +59,8 @@ export default class SubmissionHandlerService extends Service {
    * @param  {string} comment    Added to SubmissionEvent
    * @returns {Promise}          Promise resolves to the updated submission.
    */
-  @task
-  _finishSubmission = function* (submission, comment) {
-    let subEvent = yield get(this, 'store').createRecord('submissionEvent');
+  _finishSubmission = task(async (submission, comment) => {
+    let subEvent = await get(this, 'store').createRecord('submissionEvent');
 
     subEvent.set('performedBy', get(this, 'currentUser.user'));
     subEvent.set('comment', comment);
@@ -101,9 +100,9 @@ export default class SubmissionHandlerService extends Service {
     }
 
     // Save the updated submission, then save the submissionEvent
-    yield subEvent.save();
-    yield submission.save();
-  };
+    await subEvent.save();
+    await submission.save();
+  });
 
   /**
    * _uploadFile - method which adds a file to a submission in the
@@ -147,24 +146,23 @@ export default class SubmissionHandlerService extends Service {
    * @param  {String} comment          Comment added as to SubmissionEvent.
    * @returns {Promise}                Promise to perform the operation.
    */
-  @task
-  submit = function* (submission, publication, files, comment) {
-    const p = yield publication.save();
+  submit = task(async (submission, publication, files, comment) => {
+    const p = await publication.save();
 
     submission.set('submitted', false);
     submission.set('source', 'pass');
     submission.set('aggregatedDepositStatus', 'not-started');
     submission.set('publication', p);
 
-    const s = yield submission.save();
-    yield get(this, '_finishSubmission')
+    const s = await submission.save();
+    await get(this, '_finishSubmission')
       .perform(s, comment)
       .catch((e) => {
         if (!didCancel(e)) {
           throw e;
         }
       });
-  };
+  });
 
   /**
    * approveSubmission - Submitter approves submission. Metadata is added to

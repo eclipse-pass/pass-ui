@@ -5,9 +5,7 @@ import { action, get, set } from '@ember/object';
 import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import { A } from '@ember/array';
-import { dropTask } from 'ember-concurrency-decorators';
-import { timeout } from 'ember-concurrency';
-import { run, scheduleOnce } from '@ember/runloop';
+import { task, timeout } from 'ember-concurrency';
 
 const DEBOUNCE_MS = 250;
 
@@ -249,9 +247,8 @@ export default class WorkflowBasics extends Component {
    *
    * @param {boolean} setPublication DOI lookup should set the Publication object on the submission
    */
-  @dropTask
-  lookupDOI = function* (setPublication) {
-    yield timeout(DEBOUNCE_MS);
+  lookupDOI = task({ drop: true }, async (setPublication) => {
+    await timeout(DEBOUNCE_MS);
 
     try {
       this.doiServiceError = false;
@@ -276,7 +273,7 @@ export default class WorkflowBasics extends Component {
 
       this.flashMessages.info('Please wait while we look up information about your DOI');
 
-      const result = yield doiService.resolveDOI.perform(doi);
+      const result = await doiService.resolveDOI.perform(doi);
 
       if (setPublication) {
         this.args.updatePublication(result.publication);
@@ -295,5 +292,5 @@ export default class WorkflowBasics extends Component {
       set(this, 'doiServiceError', error.payload.error);
       // eslint-disable-next-line newline-per-chained-call
     }
-  };
+  });
 }

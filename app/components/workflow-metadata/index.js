@@ -5,7 +5,7 @@ import { action, get, set } from '@ember/object';
 import _ from 'lodash';
 import { inject as service } from '@ember/service';
 import swal from 'sweetalert2';
-import { task } from 'ember-concurrency-decorators';
+import { task } from 'ember-concurrency';
 
 /**
  * The schema service is invoked to retrieve appropriate metadata forms.
@@ -71,8 +71,7 @@ export default class WorkflowMetadata extends Component {
     }
   }
 
-  @task
-  setupSchemas = function* () {
+  setupSchemas = task(async () => {
     // doi:10.1002/0470841559.ch1
     // 10.4137/CMC.S38446
     // 10.1039/c7an01256j
@@ -81,10 +80,10 @@ export default class WorkflowMetadata extends Component {
 
       // Load schemas by calling the Schema service
       try {
-        const schemas = yield this.metadataSchema.getMetadataSchemas(repos);
+        const schemas = await this.metadataSchema.getMetadataSchemas(repos);
 
         const doiInfo = this.doiInfo;
-        const journal = yield get(this, 'args.publication.journal');
+        const journal = await get(this, 'args.publication.journal');
 
         // Add relevant fields from DOI data to submission metadata
         const metadataFromDoi = this.doi.doiToMetadata(doiInfo, journal, this.metadataSchema.getFields(schemas));
@@ -102,7 +101,7 @@ export default class WorkflowMetadata extends Component {
         console.log(e);
       }
     }
-  };
+  });
 
   /**
    * Set the object keys as read-only metadata fields. This assumes that incoming metadata captured
