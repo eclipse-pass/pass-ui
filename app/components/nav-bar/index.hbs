@@ -59,7 +59,7 @@
               </a>
             </li>
           {{/if}}
-          <li class="nav-item dropdown ml-auto">
+          <div class="nav-item dropdown ml-auto">
             <a
               id="user-menu-name"
               class="nav-link accountInfo pr-1"
@@ -71,19 +71,15 @@
             >
               {{this.currentUser.user.displayName}}
             </a>
-            <div id="user-menu" class="dropdown-menu dropdown-menu-right">
-              <div id="user-menu-title" class="dropdown-header text-center">
-                <strong>
-                  Account
-                </strong>
+            <div id="user-menu" class="dropdown">
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="#" {{on "click" this.logOut}}>
+                  <i class="fa fa-lock"></i>
+                  Logout
+                </a>
               </div>
-              <div class="divider"></div>
-              <a class="dropdown-item" href="#" {{on "click" this.logOut}}>
-                <i class="fa fa-lock"></i>
-                Logout
-              </a>
             </div>
-          </li>
+          </div>
         </ul>
       </div>
     </div>
