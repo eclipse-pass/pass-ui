@@ -2,14 +2,16 @@
 <div class="form-group row" {{did-insert this.initializeTooltip}}>
   {{#if this.isTest}}
     {{#each this.flashMessages.queue as |flash|}}
-      <FlashMessage @flash={{flash}} as |component flash close|>
-        <div class="d-flex justify-content-between">
-          {{flash.message}}
-          <span role="button" {{on "click" close}}>
-            x
-          </span>
-        </div>
-      </FlashMessage>
+      <div class="flash-message-container">
+        <FlashMessage @flash={{flash}} as |component flash close|>
+          <div class="d-flex justify-content-between">
+            {{flash.message}}
+            <span role="button" {{on "click" close}}>
+              x
+            </span>
+          </div>
+        </FlashMessage>
+      </div>
     {{/each}}
   {{/if}}
   <div class="col-md-12">

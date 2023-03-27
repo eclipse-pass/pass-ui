@@ -354,7 +354,7 @@ table td {
   right: 0px;
 }
 
-.alert {
+.flash-message-container .alert {
   z-index: 10000;
   width: 500px;
   border-radius: 2px;
@@ -364,11 +364,11 @@ table td {
   position: relative;
   transition: all 700ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
-.alert.active {
+.flash-message-container .alert.active {
   opacity: 1;
   right: 30px;
 }
-.alert.active.exiting {
+.flash-message-container .alert.active.exiting {
   opacity: 0;
   right: 30px;
 }
