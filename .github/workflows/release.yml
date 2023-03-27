@@ -60,7 +60,7 @@ jobs:
 
       - name: Install and build
         run: |
-          yarn
+          yarn install --frozen-lockfile
           yarn run build
           yarn run build:docker
 
