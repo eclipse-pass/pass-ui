@@ -53,22 +53,8 @@ module('Acceptance | submission', function (hooks) {
       );
     assert.dom('[data-test-journal-name-input]').hasValue('The Analyst');
 
-    await focus('[data-test-article-title-text-area]');
-    await triggerKeyEvent('[data-test-article-title-text-area]', 'keydown', 77 /* m */);
-    await triggerKeyEvent('[data-test-article-title-text-area]', 'keydown', 79 /* o */);
-    await triggerKeyEvent('[data-test-article-title-text-area]', 'keydown', 79 /* o */);
-
-    await focus('[data-test-journal-name-input]');
-    await triggerKeyEvent('[data-test-journal-name-input]', 'keydown', 77 /* m */);
-    await triggerKeyEvent('[data-test-journal-name-input]', 'keydown', 79 /* o */);
-    await triggerKeyEvent('[data-test-journal-name-input]', 'keydown', 79 /* o */);
-
-    assert
-      .dom('[data-test-article-title-text-area]')
-      .hasValue(
-        'Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS'
-      );
-    assert.dom('[data-test-journal-name-input]').hasValue('The Analyst');
+    assert.dom('[data-test-journal-name-input]').isDisabled();
+    assert.dom('[data-test-article-title-text-area]').isDisabled();
 
     await waitFor('[data-test-workflow-basics-next]');
     await click('[data-test-workflow-basics-next]');
@@ -245,22 +231,8 @@ module('Acceptance | submission', function (hooks) {
       );
     assert.dom('[data-test-journal-name-input]').hasValue('The Analyst');
 
-    await focus('[data-test-article-title-text-area]');
-    await triggerKeyEvent('[data-test-article-title-text-area]', 'keydown', 77 /* m */);
-    await triggerKeyEvent('[data-test-article-title-text-area]', 'keydown', 79 /* o */);
-    await triggerKeyEvent('[data-test-article-title-text-area]', 'keydown', 79 /* o */);
-
-    await focus('[data-test-journal-name-input]');
-    await triggerKeyEvent('[data-test-journal-name-input]', 'keydown', 77 /* m */);
-    await triggerKeyEvent('[data-test-journal-name-input]', 'keydown', 79 /* o */);
-    await triggerKeyEvent('[data-test-journal-name-input]', 'keydown', 79 /* o */);
-
-    assert
-      .dom('[data-test-article-title-text-area]')
-      .hasValue(
-        'Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS'
-      );
-    assert.dom('[data-test-journal-name-input]').hasValue('The Analyst');
+    assert.dom('[data-test-journal-name-input]').isDisabled();
+    assert.dom('[data-test-article-title-text-area]').isDisabled();
 
     await waitFor('[data-test-workflow-basics-next]');
     await click('[data-test-workflow-basics-next]');
@@ -430,22 +402,8 @@ module('Acceptance | submission', function (hooks) {
     assert.dom('[data-test-journal-name-input]').hasValue('The Analyst');
 
     // Make sure inputs for title and journal are not accepted
-    await focus('[data-test-article-title-text-area]');
-    await triggerKeyEvent('[data-test-article-title-text-area]', 'keydown', 77 /* m */);
-    await triggerKeyEvent('[data-test-article-title-text-area]', 'keydown', 79 /* o */);
-    await triggerKeyEvent('[data-test-article-title-text-area]', 'keydown', 79 /* o */);
-
-    await focus('[data-test-journal-name-input]');
-    await triggerKeyEvent('[data-test-journal-name-input]', 'keydown', 77 /* m */);
-    await triggerKeyEvent('[data-test-journal-name-input]', 'keydown', 79 /* o */);
-    await triggerKeyEvent('[data-test-journal-name-input]', 'keydown', 79 /* o */);
-
-    assert
-      .dom('[data-test-article-title-text-area]')
-      .hasValue(
-        'Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS'
-      );
-    assert.dom('[data-test-journal-name-input]').hasValue('The Analyst');
+    assert.dom('[data-test-journal-name-input]').isDisabled();
+    assert.dom('[data-test-article-title-text-area]').isDisabled();
 
     await waitFor('[data-test-workflow-basics-next]');
     await click('[data-test-workflow-basics-next]');
