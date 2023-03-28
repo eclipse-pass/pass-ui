@@ -137,11 +137,11 @@
     class={{this.titleClass}}
     placeholder="Manuscript/Article Title"
     @value={{@publication.title}}
-    @cols="100%"
-    @rows="2"
-    @keyUp={{action @validateTitle}}
-    @id="title"
-    @readonly={{this.isValidDOI}}
+    cols="100%"
+    rows="2"
+    {{on "keyup" @validateTitle}}
+    id="title"
+    disabled={{this.isValidDOI}}
     data-test-article-title-text-area={{true}}
   />
 </div>
@@ -175,7 +175,7 @@
         type="text"
         class="form-control"
         value={{@publication.journal.journalName}}
-        readonly
+        disabled
         data-test-journal-name-input
       />
     {{/unless}}

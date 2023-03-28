@@ -4,7 +4,7 @@ import { tracked } from '@glimmer/tracking';
 import { action, get, computed } from '@ember/object';
 import ENV from 'pass-ui/config/environment';
 import { inject as service } from '@ember/service';
-import { later } from '@ember/runloop';
+import { later, scheduleOnce } from '@ember/runloop';
 
 export default class SubmissionsDetail extends Controller {
   @service currentUser;
@@ -50,10 +50,17 @@ export default class SubmissionsDetail extends Controller {
   }
 
   get externalSubmission() {
-    if (!this.submitted) {
-      return [];
+    let result = [];
+
+    const processExternalSubmissionsMetadata = () => {
+      result = this.externalSubmissionsMetadata;
+    };
+
+    if (this.submitted) {
+      scheduleOnce('afterRender', this, processExternalSubmissionsMetadata);
     }
-    return this.externalSubmissionsMetadata || [];
+
+    return result;
   }
 
   /**
@@ -98,13 +105,16 @@ export default class SubmissionsDetail extends Controller {
   }
 
   get weblinkRepos() {
-    let md = this.externalSubmissionsMetadata;
-
-    if (Array.isArray(md) && md.length > 0) {
-      md.forEach((repo) => {
+    const setRepoMap = () => {
+      this.md = this.externalSubmissionsMetadata;
+      this.md.forEach((repo) => {
         this.externalRepoMap[repo.name] = false;
       });
-      return md;
+    };
+
+    if (Array.isArray(this.md) && this.md.length > 0) {
+      scheduleOnce('afterRender', this, setRepoMap);
+      return this.md;
     }
 
     return [];

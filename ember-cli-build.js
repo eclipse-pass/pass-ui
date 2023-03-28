@@ -17,6 +17,14 @@ module.exports = function (defaults) {
       only: ['queue', 'compute', 'invoke', 'includes'],
     },
 
+    '@embroider/macros': {
+      setConfig: {
+        '@ember-data/store': {
+          polyfillUUID: true,
+        },
+      },
+    },
+
     cssModules: {
       generateScopedName(className, modulePath) {
         if (!disableCssModules.includes(modulePath)) {

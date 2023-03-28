@@ -113,8 +113,6 @@ module('Integration | Component | display-metadata-keys', (hooks) => {
   test('Check the "display" blob', async function (assert) {
     await render(hbs`<DisplayMetadataKeys @submission={{this.submission}} />`);
 
-    const allText = this.element.textContent;
-
     assert.dom(this.element).includesText('Journal nlmta-id : MOO-ID');
     assert.dom(this.element).includesText('Authors');
     assert.dom(this.element).includesText('name : Moo Jones');
