@@ -10,18 +10,16 @@ if [ ! -e $ENV_FILE ]; then
 fi
 
 # Export all properties from the .env file
+# Ignore any SIGNING_CERT* variables
 unamestr=$(uname)
 if [ "$unamestr" = 'Linux' ]; then
-  export $(grep -v '^#' $ENV_FILE | xargs -d '\n')
+  export $(grep -v '^[#|SIGNING]' $ENV_FILE | xargs -d '\n')
 elif [ "$unamestr" = 'FreeBSD' ] || [ "$unamestr" = 'Darwin' ]; then
-  export $(grep -v '^#' $ENV_FILE | xargs -0)
+  export $(grep -v '^[#|SIGNING]' $ENV_FILE | xargs -0)
 fi
 
-cat $ENV_FILE
+rm -rf dist/
 
-yarn
-# yarn build
-ember build
-
-# docker build --no-cache -t eclipse-pass/ui:local .
-docker build --no-cache -t ghcr.io/eclipse-pass/pass-ui:0.2.0 .
+yarn install --frozen-lockfile
+yarn build:dev
+yarn build:docker

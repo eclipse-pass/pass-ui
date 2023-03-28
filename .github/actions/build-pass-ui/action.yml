@@ -1,0 +1,26 @@
+name: Build pass-ui project
+description: 'Builds the pass-ui project including creating a new :latest Docker image'
+
+inputs:
+  env-file:
+    description: 'URL location of .env file. Default is the .env file in "eclipse-pass/main"'
+    default: 'https://raw.githubusercontent.com/eclipse-pass/pass-docker/main/.env'
+
+runs:
+  using: composite
+  steps:
+    - name: Grab pass-docker's .env file and export to environment
+      run: |
+        wget ${{ inputs.env-file }}
+        export $(grep -v '^[#|SIGNING]' .env | xargs -d '\n')
+      shell: bash
+
+    - run: yarn install --frozen-lockfile
+      shell: bash
+
+    - run: yarn run build
+      shell: bash
+
+    - run: yarn run build:docker
+      shell: bash
+

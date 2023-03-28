@@ -138,8 +138,13 @@ There are also scripts defined in the `package.json` you can run to manually lin
 
 ### Building
 
-* `ember build` (development)
-* `ember build --environment production` (production)
+We have GitHub automations in place to produce production builds at during a release. If you want to development build for local testing, you can use the `build.sh` script, specifying a `.env` file:
+
+``` sh
+./build.sh ../pass-docker/.env
+```
+
+This script will remove any existing files in `dist/`, do an Ember dev build, and create a new pass-ui Docker image with the `:latest` tag
 
 ## Further Reading / Useful Links
 
