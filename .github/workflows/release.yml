@@ -38,11 +38,8 @@ jobs:
           yarn install --frozen-lockfile
           yarn version --new-version ${{ inputs.releaseversion }}
 
-      - name: Tag and push release version, updating 'main' with new version
-        run: |
-          git tag ${{ inputs.releaseversion }}
-          git push origin main
-          git push origin ${{ inputs.releaseversion }}
+      - name: Tag release
+        run: git tag ${{ inputs.releaseversion }}
 
       - name: Build pass-ui
         uses: ./.github/actions/build-pass-ui
@@ -63,8 +60,14 @@ jobs:
       - name: Update project version
         run: yarn version --new-version ${{ inputs.nextversion }}
 
-      - name: Tag and push release version, updating 'main' with new version
-        run: git push origin main
+      # Commits made to branch specified in workflow_dispatch, push that branch if possible
+      - name: Push release commits to GH
+        if: github.ref_type == 'branch' && github.ref_protected == false
+        run: git push origin ${{ github.ref_name }}
+
+      # Push the release tag we made above
+      - name: Push release tag to GH
+        run: git push origin ${{ inputs.releaseversion }}
 
       - name: Push next dev version image
         run: |
