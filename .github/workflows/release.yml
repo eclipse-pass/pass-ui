@@ -22,6 +22,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Config git user
+        run: |
+          git config user.name ${{ github.actor }}
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+
       - name: Setup Node & Yarn
         uses: actions/setup-node@v3
         with:
