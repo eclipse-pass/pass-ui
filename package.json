@@ -1,6 +1,6 @@
 {
   "name": "pass-ui",
-  "version": "0.5.0-RC0",
+  "version": "0.4.0-SNAPSHOT",
   "private": true,
   "description": "The user interface for the eclipse-pass project",
   "license": "MIT",
