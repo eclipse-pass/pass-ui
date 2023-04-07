@@ -87,66 +87,37 @@ export default class WorkflowFiles extends Component {
   }
 
   @action
-  async getFiles() {
-    const uploads = this._getFilesElement();
-    if ('files' in uploads) {
-      if (uploads.files.length !== 0) {
-        for (let i = 0; i < uploads.files.length; i++) {
-          const file = uploads.files[i];
-          if (file) {
-            if (file.size > 1024 * 1024 * 100) {
-              this.flashMessages.error(
-                `Your file '${file.name}' is ${Number.parseFloat(file.size / 1024 / 1024).toPrecision(
-                  3
-                )}MB. This exceeds the maximum upload size of 100MB and the file was not added to the submission.`
-              );
-              continue; // eslint-disable-line
-            }
-            const newFile = await this.store.createRecord('file', {
-              name: file.name,
-              mimeType: file.type.substring(file.type.indexOf('/') + 1),
-              description: file.description,
-              fileRole: 'supplemental',
-              _file: file,
-            });
-            if (!this.hasManuscript) {
-              newFile.fileRole = 'manuscript';
-            }
-            this.args.newFiles.pushObject(newFile);
+  async uploadFile(FileUpload) {
+    try {
+      const response = await FileUpload.upload('/file');
 
-            // Immediately upload file
-            this.submissionHandler.uploadFile(this.args.submission, newFile);
-            // try {
-            //   newFile.submission = this.args.submission.id;
-            //   file.uri = `/file/${newFile.id}/data`;
-            //   const response = await file.upload('/api/images/upload');
+      // const thing = {
+      //   id: '7a000934-6f21-49b7-9ca3-cbef6bc966e9/Nanometer-Scale Thermometry.pdf',
+      //   uuid: '7a000934-6f21-49b7-9ca3-cbef6bc966e9',
+      //   fileName: 'Nanometer-Scale Thermometry.pdf',
+      //   mimeType: 'application/pdf',
+      //   storageType: 'FILE_SYSTEM',
+      //   size: 1031677,
+      //   extension: 'pdf',
+      // };
 
-            //   return true;
-            // } catch (error) {
-            //   file.state = 'aborted';
-            // }
-          }
-        }
+      const newFile = await this.store.createRecord('file', {
+        name: FileUpload.file.name,
+        mimeType: FileUpload.file.type.substring(file.type.indexOf('/') + 1),
+        description: FileUpload.file.description,
+        fileRole: 'supplemental',
+        _file: FileUpload.file,
+      });
+      if (!this.hasManuscript) {
+        newFile.fileRole = 'manuscript';
       }
+      this.args.newFiles.pushObject(newFile);
+    } catch (error) {
+      FileUpload.file.state = 'aborted';
     }
+
+    return true;
   }
-
-  // uploadFile(sub, file) {
-  //   return new Promise((resolve, reject) => {
-  //     file.submission = sub.id;
-  //     file.uri = `/file/${file.id}/data`;
-
-  //     file
-  //       .save()
-  //       .then((data) => resolve(data))
-  //       .catch((e) => {
-  //         console.error(e);
-  //         reject(new Error(`Error creating file object ${e.message}`));
-  //       });
-  //   });
-  // }
-
-  // file.uri = `/file/${file.id}/data`;
 
   @action
   removeFile(file) {
