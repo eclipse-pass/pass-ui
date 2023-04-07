@@ -9,14 +9,22 @@ module.exports = function (environment) {
     rootURL: process.env.PASS_UI_ROOT_URL || '/app/',
     host: process.env.EMBER_HOST || 'http://localhost:8080',
     // Config for ember-data backend calls
+    schemaServicePath: process.env.SCHEMA_SERVICE_PATH || '/schemaservice',
+    doiService: {
+      journalPath: process.env.DOI_SERVICE_PATH || '/doi/journal',
+      manuscriptLookUpPath: process.env.MANUSCRIPT_SERVICE_LOOKUP_PUBLIC_PATH || '/doi/manuscript',
+    },
+    doiMetadataSchemaUri:
+      process.env.DOI_METADATA_SCHEMA_URI || 'https://eclipse-pass.github.io/metadata-schemas/jhu/global.json',
+    policyService: {
+      policyPath: process.env.POLICY_SERVICE_POLICY_PATH || '/policyservice/policies',
+      repositoryPath: process.env.POLICY_SERVICE_REPOSITORY_PATH || '/policyservice/repositories',
+    },
+
     passApi: {
       namespace: process.env.PASS_API_NAMESPACE || 'data',
     },
     locationType: 'auto',
-    'ember-load': {
-      // This is the default value, if you don't set this opton
-      loadingIndicatorClass: 'app-loader',
-    },
     EmberENV: {
       FEATURES: {
         // Here you can enable experimental features on an ember canary build
@@ -34,30 +42,9 @@ module.exports = function (environment) {
     },
   };
 
+  // TODO: move this to test only env once mocks are removed
   ENV['ember-cli-mirage'] = {
     enabled: true,
-  };
-
-  ENV.userService = {
-    url: '/pass-user-service/whoami',
-  };
-
-  ENV.doiService = {
-    url: '/journal',
-  };
-
-  ENV.schemaService = {
-    url: '/schemaservice',
-  };
-
-  ENV.policyService = {
-    policyEndpoint: '/policyservice/policies',
-    repositoryEndpoint: '/policyservice/repositories',
-  };
-
-  ENV.oaManuscriptService = {
-    lookupUrl: '/downloadservice/lookup',
-    downloadUrl: '/downloadservice/download',
   };
 
   if (environment === 'development') {
@@ -83,49 +70,7 @@ module.exports = function (environment) {
     };
 
     // Mocked journal endpoint
-    ENV.doiService = { url: '/mirage/test/doiservice/journal' };
-  }
-
-  ENV.doiMetadataSchemaUri = 'https://eclipse-pass.github.io/metadata-schemas/jhu/global.json';
-
-  if (process.env.PASS_UI_ROOT_URL) {
-    ENV.rootURL = process.env.PASS_UI_ROOT_URL;
-  }
-
-  if (process.env.EMBER_MIRAGE_ENABLED) {
-    ENV['ember-cli-mirage'].enabled = !!process.env.EMBER_MIRAGE_ENABLED;
-  }
-
-  if (process.env.USER_SERVICE_PUBLIC_URL) {
-    ENV.userService.url = process.env.USER_SERVICE_PUBLIC_URL;
-  }
-
-  if (process.env.SCHEMA_SERVICE_PUBLIC_URL) {
-    ENV.schemaService.url = process.env.SCHEMA_SERVICE_PUBLIC_URL;
-  }
-
-  if (process.env.DOI_SERVICE_PUBLIC_URL) {
-    ENV.doiService.url = process.env.DOI_SERVICE_PUBLIC_URL;
-  }
-
-  if (process.env.METADATA_SCHEMA_URI) {
-    ENV.doiMetadataSchemaUri = process.env.DOI_METADATA_SCHEMA_URI;
-  }
-
-  if (process.env.POLICY_SERVICE_POLICY_ENDPOINT) {
-    ENV.policyService.policyEndpoint = process.env.POLICY_SERVICE_POLICY_ENDPOINT;
-  }
-
-  if (process.env.POLICY_SERVICE_REPOSITORY_ENDPOINT) {
-    ENV.policyService.repositoryEndpoint = process.env.POLICY_SERVICE_REPOSITORY_ENDPOINT;
-  }
-
-  if ('MANUSCRIPT_SERVICE_LOOKUP_PUBLIC_URL' in process.env) {
-    ENV.oaManuscriptService.lookupUrl = process.env.MANUSCRIPT_SERVICE_LOOKUP_PUBLIC_URL;
-  }
-
-  if ('MANUSCRIPT_SERVICE_DOWNLOAD_PUBLIC_URL' in process.env) {
-    ENV.oaManuscriptService.downloadUrl = process.env.MANUSCRIPT_SERVICE_DOWNLOAD_PUBLIC_URL;
+    ENV.doiServicePath = '/mirage/test/doiservice/journal';
   }
 
   return ENV;

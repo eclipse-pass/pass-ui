@@ -14,11 +14,7 @@ import { get } from '@ember/object';
  */
 
 export default class DoiService extends Service {
-  @service('store')
-  store;
-
-  doiServiceUrl = ENV.doiService.url;
-  metadataSchemaUri = ENV.doiMetadataSchemaUri;
+  @service store;
 
   /**
    * resolveDOI - Lookup information about a DOI using the PASS doi service. Return that information along
@@ -30,7 +26,7 @@ export default class DoiService extends Service {
    * @returns {object}    Object with doiInfo and publication
    */
   @task(function* (doi) {
-    let url = `${get(this, 'doiServiceUrl')}?doi=${encodeURIComponent(doi)}`;
+    let url = `${ENV.doiServicePath}?doi=${encodeURIComponent(doi)}`;
 
     let rawResponse = yield fetch(url, {
       headers: {
@@ -162,7 +158,7 @@ export default class DoiService extends Service {
         .forEach((key) => delete doiCopy[key]);
     }
 
-    doiCopy.$schema = this.metadataSchemaUri;
+    doiCopy.$schema = ENV.doiMetadataSchemaUri;
 
     return doiCopy;
   }
