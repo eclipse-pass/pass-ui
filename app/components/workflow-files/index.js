@@ -37,10 +37,6 @@ export default class WorkflowFiles extends Component {
     return [...prevFiles.toArray(), ...newFiles.toArray()].filter((file) => file.fileRole !== 'manuscript');
   }
 
-  _getFilesElement() {
-    return document.getElementById('file-multiple-input');
-  }
-
   @task
   handleExternalMs = function* (file) {
     const newFiles = get(this, 'args.newFiles');
@@ -80,7 +76,7 @@ export default class WorkflowFiles extends Component {
           newFiles.removeObject(file);
         }
 
-        this.submissionHandler.deleteFile(file);
+        this.deleteFile(file);
 
         document.querySelector('#file-multiple-input').value = null;
       }
@@ -125,12 +121,23 @@ export default class WorkflowFiles extends Component {
   }
 
   @action
-  removeFile(file) {
-    let files = this.args.newFiles;
+  async deleteFile(file) {
+    let files = [...this.args.previouslyUploadedFiles, ...this.args.newFiles];
     files.removeObject(file);
-    set(this, 'files', files);
 
-    this.submissionHandler.deleteFile(file);
+    if (!file) {
+      return;
+    }
+
+    // curl -X DELETE "http://localhost:8080/file/{fileId}/{origFileName}" -H "accept: application/json"
+    // TODO: once we resolve whether we should delete file binaries and file objects
+    // either remove or uncommment this
+    // await fetch(file.uri, { method: 'DELETE' });
+    // file.deleteRecord();
+
+    file.set('submission', undefined);
+    await file.save();
+    file.unloadRecord();
   }
 
   @action

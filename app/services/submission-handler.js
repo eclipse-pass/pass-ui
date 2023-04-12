@@ -230,16 +230,6 @@ export default class SubmissionHandlerService extends Service {
   }
 
   /**
-   * @param {string} submissionId
-   * @returns {array} query result set of all files linked to the given submission ID
-   */
-  _getFiles(submissionId) {
-    return this.store.query('file', {
-      term: { submission: submissionId },
-    });
-  }
-
-  /**
    * Simply set submission.submissionStatus to 'cancelled'. This operation is
    * distinct from `#cancelSubmission` because this does not create a
    * SubmissionEvent
@@ -255,27 +245,5 @@ export default class SubmissionHandlerService extends Service {
     return submission.save().then(() => {
       submission.unloadRecord();
     });
-  }
-
-  /**
-   * Remove a file from a submission.
-   *
-   * Note this does NOT delete the file from Fedora! It merely strips the
-   * File object's reference to the submission. This is to (for now) avoid
-   * some nasty permissions issues that might crop up during DELETE operations
-   *
-   * @param {File} file
-   * @returns {Promise}
-   */
-  deleteFile(file) {
-    if (!file) {
-      return;
-    }
-
-    file.set('submission', undefined);
-    // removing the save until we have a functioning file service
-    // this was causing bugs in the demo
-    // return file.save().then(() => file.unloadRecord());
-    return file.unloadRecord();
   }
 }
