@@ -22,8 +22,8 @@
     "lint:js": "eslint . --cache",
     "start": "ember server",
     "test": "concurrently \"npm:lint\" \"npm:test:no-serve\" --names \"lint,test:\"",
-    "test:no-serve": "PASS_API_NAMESPACE=/mirage/test ember test",
-    "test:serve": "PASS_API_NAMESPACE=/mirage/test ember test -s",
+    "test:no-serve": "ember test",
+    "test:serve": "ember test -s",
     "prepare": "husky install"
   },
   "devDependencies": {
