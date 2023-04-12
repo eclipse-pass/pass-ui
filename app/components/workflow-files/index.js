@@ -88,8 +88,13 @@ export default class WorkflowFiles extends Component {
   }
 
   @action
-  updateDescription(event) {
-    this.manuscript.description = event.target.value;
+  updateFileDescription(file, event) {
+    file.description = event.target.value;
+  }
+
+  @action
+  updateFileRole(file, event) {
+    file.fileRole = event.target.value;
   }
 
   @action

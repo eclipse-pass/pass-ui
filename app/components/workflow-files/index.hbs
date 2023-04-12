@@ -61,7 +61,7 @@
                 <input
                   class="form-control file-description-width"
                   value={{this.manuscript.description}}
-                  {{on "change" this.updateDescription}}
+                  {{on "change" (fn this.updateFileDescription this.manuscript)}}
                 />
               </td>
               <td class="text-center vertical-align-middle">
@@ -88,7 +88,7 @@
                 {{!-- {{/if}} --}}
               </td>
               <td class="text-center vertical-align-middle">
-                <select {{on "change" (fn (mut file.fileRole) value="target.value")}}>
+                <select {{on "change" (fn this.updateFileRole file)}}>
                   <option value="supplement" selected={{eq file.fileRole "supplement"}}>
                     Supplement
                   </option>
@@ -102,7 +102,11 @@
                 </select>
               </td>
               <td class="vertical-align-middle">
-                <Input class="form-control file-description-width" @value={{file.description}} />
+                <input
+                  class="form-control file-description-width"
+                  value={{file.description}}
+                  {{on "change" (fn this.updateFileDescription file)}}
+                />
               </td>
               <td class="text-center vertical-align-middle">
                 <button type="button" class="btn btn-outline-danger" {{on "click" (fn this.deleteExistingFile file)}}>
