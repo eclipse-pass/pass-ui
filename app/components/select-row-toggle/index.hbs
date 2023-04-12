@@ -1,2 +1,5 @@
 {{! template-lint-disable no-action no-invalid-interactive }}
-<i class={{if @isSelected "fa fa-check-square" "fa fa-square"}} {{on "click" (fn this.clickOnRow @index @record)}}></i>
+<i
+  class={{if @isSelected "fa-regular fa-square-check" "fa-regular fa-square"}}
+  {{on "click" (fn this.clickOnRow @index @record)}}
+></i>

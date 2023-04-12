@@ -4,6 +4,7 @@ import { action, get, set, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { A } from '@ember/array';
 import { task } from 'ember-concurrency-decorators';
+import ENV from 'pass-ui/config/environment';
 
 export default class WorkflowFiles extends Component {
   @service store;
@@ -34,10 +35,6 @@ export default class WorkflowFiles extends Component {
     const prevFiles = get(this, 'args.previouslyUploadedFiles') || A([]);
 
     return [...prevFiles.toArray(), ...newFiles.toArray()].filter((file) => file.fileRole !== 'manuscript');
-  }
-
-  _getFilesElement() {
-    return document.getElementById('file-multiple-input');
   }
 
   @task
@@ -79,7 +76,7 @@ export default class WorkflowFiles extends Component {
           newFiles.removeObject(file);
         }
 
-        this.submissionHandler.deleteFile(file);
+        this.deleteFile(file);
 
         document.querySelector('#file-multiple-input').value = null;
       }
@@ -87,74 +84,60 @@ export default class WorkflowFiles extends Component {
   }
 
   @action
-  async getFiles() {
-    const uploads = this._getFilesElement();
-    if ('files' in uploads) {
-      if (uploads.files.length !== 0) {
-        for (let i = 0; i < uploads.files.length; i++) {
-          const file = uploads.files[i];
-          if (file) {
-            if (file.size > 1024 * 1024 * 100) {
-              this.flashMessages.error(
-                `Your file '${file.name}' is ${Number.parseFloat(file.size / 1024 / 1024).toPrecision(
-                  3
-                )}MB. This exceeds the maximum upload size of 100MB and the file was not added to the submission.`
-              );
-              continue; // eslint-disable-line
-            }
-            const newFile = await this.store.createRecord('file', {
-              name: file.name,
-              mimeType: file.type.substring(file.type.indexOf('/') + 1),
-              description: file.description,
-              fileRole: 'supplemental',
-              _file: file,
-            });
-            if (!this.hasManuscript) {
-              newFile.fileRole = 'manuscript';
-            }
-            this.args.newFiles.pushObject(newFile);
-
-            // Immediately upload file
-            this.submissionHandler.uploadFile(this.args.submission, newFile);
-            // try {
-            //   newFile.submission = this.args.submission.id;
-            //   file.uri = `/file/${newFile.id}/data`;
-            //   const response = await file.upload('/api/images/upload');
-
-            //   return true;
-            // } catch (error) {
-            //   file.state = 'aborted';
-            // }
-          }
-        }
-      }
-    }
+  updateFileDescription(file, event) {
+    file.description = event.target.value;
   }
 
-  // uploadFile(sub, file) {
-  //   return new Promise((resolve, reject) => {
-  //     file.submission = sub.id;
-  //     file.uri = `/file/${file.id}/data`;
-
-  //     file
-  //       .save()
-  //       .then((data) => resolve(data))
-  //       .catch((e) => {
-  //         console.error(e);
-  //         reject(new Error(`Error creating file object ${e.message}`));
-  //       });
-  //   });
-  // }
-
-  // file.uri = `/file/${file.id}/data`;
+  @action
+  updateFileRole(file, event) {
+    file.fileRole = event.target.value;
+  }
 
   @action
-  removeFile(file) {
-    let files = this.args.newFiles;
-    files.removeObject(file);
-    set(this, 'files', files);
+  async uploadFile(FileUpload) {
+    try {
+      const response = await FileUpload.upload(ENV.fileServicePath);
 
-    this.submissionHandler.deleteFile(file);
+      const file = await response.json();
+
+      const newFile = await this.store.createRecord('file', {
+        name: file.fileName,
+        mimeType: file.mimeType,
+        description: '',
+        fileRole: 'supplemental',
+        uri: `https://pass.local/file/${file.uuid}/${encodeURIComponent(file.fileName)}`,
+        submission: this.args.submission,
+      });
+      if (!this.hasManuscript) {
+        newFile.fileRole = 'manuscript';
+      }
+      await newFile.save();
+      this.args.newFiles.pushObject(newFile);
+    } catch (error) {
+      FileUpload.file.state = 'aborted';
+    }
+
+    return true;
+  }
+
+  @action
+  async deleteFile(file) {
+    let files = [...this.args.previouslyUploadedFiles, ...this.args.newFiles];
+    files.removeObject(file);
+
+    if (!file) {
+      return;
+    }
+
+    // curl -X DELETE "http://localhost:8080/file/{fileId}/{origFileName}" -H "accept: application/json"
+    // TODO: once we resolve whether we should delete file binaries and file objects
+    // either remove or uncommment this
+    // await fetch(file.uri, { method: 'DELETE' });
+    // file.deleteRecord();
+
+    file.set('submission', undefined);
+    await file.save();
+    file.unloadRecord();
   }
 
   @action

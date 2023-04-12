@@ -11,20 +11,7 @@ import { run } from '@ember/runloop';
  */
 
 export default class PoliciesService extends Service {
-  policyUrl = '';
-  repoUrl = '';
-
-  @service('store')
-  store;
-
-  constructor() {
-    super(...arguments);
-
-    const policyConf = ENV.policyService;
-
-    this.set('policyUrl', policyConf.policyEndpoint);
-    this.set('repoUrl', policyConf.repositoryEndpoint);
-  }
+  @service store;
 
   /**
    * Get a list of applicable policies for a given submission.
@@ -40,7 +27,7 @@ export default class PoliciesService extends Service {
    */
 
   getPolicies = task(async (submission) => {
-    const url = `${get(this, 'policyUrl')}?submission=${submission.get('id')}`;
+    const url = `${ENV.policyService.policyPath}?submission=${submission.get('id')}`;
 
     const result = await fetch(url, {
       method: 'GET',
@@ -96,7 +83,7 @@ export default class PoliciesService extends Service {
    * }
    */
   @task(function* (submission) {
-    const url = `${get(this, 'repoUrl')}?submission=${submission.get('id')}`;
+    const url = `${ENV.policyService.repositoryPath}?submission=${submission.get('id')}`;
 
     const response = yield fetch(url, {
       method: 'GET',

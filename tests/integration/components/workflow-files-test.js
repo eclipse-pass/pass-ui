@@ -1,4 +1,5 @@
 /* eslint-disable ember/no-classic-classes */
+import { selectFiles } from 'ember-file-upload/test-support';
 import Service from '@ember/service';
 import { A } from '@ember/array';
 import EmberObject, { set } from '@ember/object';
@@ -71,59 +72,10 @@ module('Integration | Component | workflow files', (hooks) => {
   });
 
   /**
-   * Intent is to fake the file input element to make it look like a file is present,
-   * then test the behavior of #getFiles().
-   *
-   * In this case, submission-handler#uploadFiles() should be called once for each
-   * mock file
-   */
-  test('Files should upload immediately', async function (assert) {
-    assert.expect(6);
-
-    this.owner.register(
-      'service:submission-handler',
-      Service.extend({
-        uploadFile: (submission, file) => {
-          assert.ok(submission);
-          assert.ok(file);
-
-          assert.strictEqual(file.name, 'Fake-file-name');
-          assert.strictEqual(file.mimeType, 'plain');
-          assert.deepEqual(file.get('_file'), { size: 100, name: 'Fake-file-name', type: 'text/plain' });
-        },
-      })
-    );
-
-    let { owner } = getContext();
-    let componentManager = owner.lookup('component-manager:glimmer');
-    let { class: componentClass } = owner.factoryFor('component:workflow-files');
-    let component = componentManager.createComponent(componentClass, { named: {} });
-
-    // Crappily mock this function on the component so we don't have to mess with
-    // the 'document' object...
-    set(component, '_getFilesElement', () => {
-      assert.ok(true);
-      return {
-        files: [
-          {
-            size: 100,
-            name: 'Fake-file-name',
-            type: 'text/plain',
-          },
-        ],
-      };
-    });
-    set(component, 'args.newFiles', A());
-    set(component, 'args.submission', EmberObject.create());
-
-    component.getFiles();
-  });
-
-  /**
    * First upload a file, then click the 'Remove' button
    */
   test('Files removed from UI should no longer reference submission', async function (assert) {
-    assert.expect(5);
+    assert.expect(6);
 
     const submission = EmberObject.create({});
     this.set('submission', submission);
@@ -136,11 +88,11 @@ module('Integration | Component | workflow files', (hooks) => {
           fileRole: 'manuscript',
           submission,
           // TODO: bring this back when file service is implemented
-          // save() {
-          //   // Should be called when "deleted" to persist changes
-          //   assert.ok(true);
-          //   return Promise.resolve();
-          // },
+          save() {
+            // Should be called when "deleted" to persist changes
+            assert.ok(true);
+            return Promise.resolve();
+          },
           unloadRecord() {
             assert.ok(true);
             return Promise.resolve();
@@ -149,6 +101,8 @@ module('Integration | Component | workflow files', (hooks) => {
       ])
     );
 
+    this.set('newFiles', []);
+
     // Bogus action so component actions don't complain
     this.set('moo', () => {});
 
@@ -156,6 +110,7 @@ module('Integration | Component | workflow files', (hooks) => {
       <WorkflowFiles
         @submission={{this.submission}}
         @previouslyUploadedFiles={{this.previouslyUploadedFiles}}
+        @newFiles={{this.newFiles}}
         @next={{action this.moo}}
         @back={{action this.moo}}
         @abort={{action this.moo}}
@@ -183,7 +138,8 @@ module('Integration | Component | workflow files', (hooks) => {
    * User should still be able to manually upload supplemental files
    */
   test("Can't select oa mss when manuscript already attached to submission", async function (assert) {
-    const submission = EmberObject.create({});
+    this.store = this.owner.lookup('service:store');
+    const submission = this.store.createRecord('submission');
 
     const ms = EmberObject.create({
       name: 'This is the first moo',
@@ -217,19 +173,20 @@ module('Integration | Component | workflow files', (hooks) => {
     assert.dom('[data-test-added-supplemental-row]').doesNotExist();
     assert.dom('#file-multiple-input').exists();
 
-    const files2Add = {
-      files: [new File([new Blob(['Moo!'])], 'Added_file.moo', { type: 'application/moo' })],
-    };
-
-    await triggerEvent('#file-multiple-input', 'change', files2Add);
+    const submissionFile = new Blob(['moo'], { type: 'application/pdf' });
+    submissionFile.name = 'my-submission.pdf';
+    await selectFiles('input[type=file]', submissionFile);
 
     assert.dom('[data-test-added-supplemental-row]').exists();
-    assert.dom('[data-test-added-supplemental-row]').includesText('Added_file.moo');
+    assert.dom('[data-test-added-supplemental-row]').includesText('my-submission.pdf');
   });
 
   test('Manually uploading a MS should hide FoundManuscript component', async function (assert) {
+    this.store = this.owner.lookup('service:store');
+    const submission = this.store.createRecord('submission');
+
     set(this, 'moo', () => {});
-    set(this, 'submission', EmberObject.create({}));
+    set(this, 'submission', submission);
     set(this, 'previouslyUploadedFiles', A([]));
 
     this.owner.register(
@@ -254,13 +211,11 @@ module('Integration | Component | workflow files', (hooks) => {
     assert.dom('[data-test-added-manuscript-row]').doesNotExist();
     assert.dom('#file-multiple-input').exists();
 
-    const files2Add = {
-      files: [new File([new Blob(['Moo!'])], 'Added_file.moo', { type: 'application/moo' })],
-    };
-
-    await triggerEvent('#file-multiple-input', 'change', files2Add);
+    const submissionFile = new Blob(['moo'], { type: 'application/pdf' });
+    submissionFile.name = 'my-submission.pdf';
+    await selectFiles('input[type=file]', submissionFile);
 
     assert.dom('[data-test-added-manuscript-row]').exists();
-    assert.dom('[data-test-added-manuscript-row]').includesText('Added_file.moo');
+    assert.dom('[data-test-added-manuscript-row]').includesText('my-submission.pdf');
   });
 });

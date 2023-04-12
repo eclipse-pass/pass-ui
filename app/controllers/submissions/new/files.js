@@ -91,14 +91,10 @@ export default class SubmissionsNewFiles extends Controller {
 
   @action
   updateRelatedData() {
-    let files = this.files;
-    // Update any *existing* files that have had their details modified
-    if (files) {
-      files.forEach((file) => {
-        if (get(file, 'hasDirtyAttributes')) {
-          // Asynchronously save the updated file metadata.
-          file.save();
-        }
+    const allFiles = [...this.model.files, ...this.newFiles];
+    if (allFiles.length > 0) {
+      allFiles.forEach((file) => {
+        file.save();
       });
     }
   }

@@ -2,22 +2,7 @@ import Service from '@ember/service';
 import ENV from 'pass-ui/config/environment';
 
 export default class OAManuscriptService extends Service {
-  lookupUrl = ENV.oaManuscriptService.lookupUrl;
-
-  constructor() {
-    super(...arguments);
-
-    console.assert(
-      'lookupUrl' in ENV.oaManuscriptService,
-      '%cOpen Access Manuscript service lookup URL not found',
-      'color: red;'
-    );
-    console.assert(
-      'downloadUrl' in ENV.oaManuscriptService,
-      '%cOpen Access Manuscript service download URL not found',
-      'color: red;'
-    );
-  }
+  lookUpPath = ENV.doiService.manuscriptLookUpPath;
 
   /**
    * Get a list of open access copies for the given DOI
@@ -34,14 +19,14 @@ export default class OAManuscriptService extends Service {
    *  ]
    */
   lookup(doi) {
-    console.assert(!!this.lookupUrl, '%cOA Manuscript service lookup for DOIs not found.', 'color: red;');
+    console.assert(!!this.lookUpPath, '%cOA Manuscript service lookup for DOIs not found.', 'color: red;');
     console.assert(!!doi, '%cNo DOI was provided to the manuscript service lookup.', 'color: red;');
 
-    if (!this.lookupUrl || !doi) {
+    if (!this.lookUpPath || !doi) {
       return;
     }
 
-    const url = `${this.lookupUrl}?doi=${doi}`;
+    const url = `${this.lookUpPath}?doi=${doi}`;
 
     return fetch(url, { method: 'GET' })
       .then((resp) => {

@@ -19,8 +19,7 @@ import Service, { inject as service } from '@ember/service';
  */
 
 export default class SearchHelperService extends Service {
-  @service('store')
-  store;
+  @service store;
 
   /** List of object IDs to ignore */
   ignoreList = [];

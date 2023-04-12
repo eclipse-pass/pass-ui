@@ -29,15 +29,15 @@
         {{#each this.foundManuscriptsToDisplay as |manuscript index|}}
           <div
             class="d-flex flex-row
-            {{if (eq index 0) "border-top "}}
-             border-bottom m-auto p-2 align-items-center justify-content-between"
+              {{if (eq index 0) 'border-top '}}
+              border-bottom m-auto p-2 align-items-center justify-content-between"
           >
             <div class="d-flex flex-row flex-shrink-1 align-items-center pr-4">
               {{#unless this.addFileTaskInstance.isRunning}}
                 <a
                   href="{{manuscript.url}}"
                   target="_blank"
-                  class="p-2 {{if (includes manuscript.url this.manuscriptsWithErrors) "text-danger"}}"
+                  class="p-2 {{if (includes manuscript.url this.manuscriptsWithErrors) 'text-danger'}}"
                   title="Download this manuscript"
                   data-test-add-file-link
                 >
@@ -49,13 +49,13 @@
                   </span>
                   {{#if manuscript.repositoryLabel}}
                     <span class="font-italic">
-                      - {{manuscript.repositoryLabel}}
+                      -
+                      {{manuscript.repositoryLabel}}
                     </span>
                   {{/if}}
                   {{#if (includes manuscript.url this.manuscriptsWithErrors)}}
                     <small class="d-flex flex text-danger">
-                      We weren't able to add the file to your submission, please
-                      retry.
+                      We weren't able to add the file to your submission, please retry.
                     </small>
                   {{/if}}
                 </a>
@@ -77,7 +77,8 @@
                     </span>
                     {{#if manuscript.repositoryLabel}}
                       <span class="font-italic">
-                        - {{manuscript.repositoryLabel}}
+                        -
+                        {{manuscript.repositoryLabel}}
                       </span>
                     {{/if}}
                   </a>
@@ -86,7 +87,7 @@
             </div>
             <div class="d-flex flex flex-grow-1 ml-sm-4 border-left">
               <a href="{{manuscript.url}}" target="_blank" class="px-4 py-2" title="Download this manuscript">
-                <i class="fa fa-lg fa-cloud-download" aria-hidden="true"></i>
+                <i class="fa-solid fa-cloud-arrow-down fa-lg"></i>
               </a>
             </div>
           </div>

@@ -58,7 +58,11 @@
                 Manuscript
               </td>
               <td class="vertical-align-middle">
-                <input class="form-control file-description-width" value={{this.manuscript.description}} />
+                <input
+                  class="form-control file-description-width"
+                  value={{this.manuscript.description}}
+                  {{on "change" (fn this.updateFileDescription this.manuscript)}}
+                />
               </td>
               <td class="text-center vertical-align-middle">
                 <button
@@ -84,7 +88,7 @@
                 {{!-- {{/if}} --}}
               </td>
               <td class="text-center vertical-align-middle">
-                <select {{on "change" (fn (mut file.fileRole) value="target.value")}}>
+                <select {{on "change" (fn this.updateFileRole file)}}>
                   <option value="supplement" selected={{eq file.fileRole "supplement"}}>
                     Supplement
                   </option>
@@ -98,7 +102,11 @@
                 </select>
               </td>
               <td class="vertical-align-middle">
-                <Input class="form-control file-description-width" @value={{file.description}} />
+                <input
+                  class="form-control file-description-width"
+                  value={{file.description}}
+                  {{on "change" (fn this.updateFileDescription file)}}
+                />
               </td>
               <td class="text-center vertical-align-middle">
                 <button type="button" class="btn btn-outline-danger" {{on "click" (fn this.deleteExistingFile file)}}>
@@ -134,7 +142,7 @@
 </div>
 <div class="form-group row">
   <div class="col-md-12">
-    {{#let (file-queue name="files" onFileAdded=this.getFiles) as |queue|}}
+    {{#let (file-queue name="files" onFileAdded=this.uploadFile) as |queue|}}
       <input
         type="file"
         id="file-multiple-input"
@@ -144,8 +152,6 @@
         style="border-width:2px; cursor:pointer; border-style: dashed; padding:30px; width:100%"
         {{queue.selectFile}}
       />
-      Files in queue:
-      {{queue.files.length}}
     {{/let}}
   </div>
 </div>

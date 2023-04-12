@@ -11,8 +11,6 @@ import fetch from 'fetch';
  */
 
 export default class MetadataSchemaService extends Service {
-  schemaService = ENV.schemaService;
-
   // JSON schema validator
   validator = undefined;
 
@@ -57,7 +55,7 @@ export default class MetadataSchemaService extends Service {
       // If we've gotten repository objects, map them to their IDs
       repositories = repositories.map((repo) => repo.get('id'));
     }
-    const url = get(this, 'schemaService.url');
+    const url = ENV.schemaServicePath;
     const urlWithMerge = `${url}?merge=true`;
 
     const options = {

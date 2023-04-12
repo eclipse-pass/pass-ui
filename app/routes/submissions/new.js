@@ -86,6 +86,8 @@ export default class NewRoute extends CheckSessionRoute {
         submissionStatus: 'draft',
       });
 
+      files = [];
+
       if (params.covid) {
         let covidHint = {
           hints: {

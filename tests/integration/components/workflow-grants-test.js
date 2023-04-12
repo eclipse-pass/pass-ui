@@ -107,7 +107,7 @@ module('Integration | Component | workflow grants', (hooks) => {
     const row3 = rows[2];
     await click(row3);
     assert.ok(row3.getAttribute('class').includes('selected-row'));
-    assert.ok(row3.querySelector('i[class="fa fa-check-square"]'));
+    assert.ok(row3.querySelector('i[class="fa-regular fa-square-check"]'));
 
     assert.strictEqual(workflow.getAddedGrants().length, 1, 'One grant should have been added');
   });
@@ -214,6 +214,6 @@ module('Integration | Component | workflow grants', (hooks) => {
 
     assert.strictEqual(grants.get('length'), 0, 'Grant should have been removed from submission');
 
-    assert.ok(grantRows[1].querySelector('i[class="fa fa-square"]'), '"Unselected" icon should be seen now');
+    assert.ok(grantRows[1].querySelector('i[class="fa-regular fa-square"]'), '"Unselected" icon should be seen now');
   });
 });

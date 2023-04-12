@@ -5,8 +5,7 @@ import { setProperties } from '@ember/object';
 import Helper, { helper } from '@ember/component/helper';
 
 export default class SearchAssociated extends Helper {
-  @service('store')
-  store;
+  @service store;
 
   type = null;
   propertyName = null;
