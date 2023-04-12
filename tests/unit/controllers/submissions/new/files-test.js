@@ -137,6 +137,9 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
 
     let file = EmberObject.create({
       fileRole: 'manuscript',
+      save: () => {
+        return Promise.resolve();
+      },
     });
 
     let model = {

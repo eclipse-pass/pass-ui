@@ -95,7 +95,7 @@ export default class SubmissionHandlerService extends Service {
       if (submission.get('submitter.id')) {
         subEvent.set('eventType', 'approval-requested');
       } else if (submission.get('submitterName') && submission.get('submitterEmail')) {
-        // If not specified but a name and email are present, create a mailto link.
+        // If not specified but a name and email are prsent, create a mailto link.
         subEvent.set('eventType', 'approval-requested-newuser');
       }
     }
@@ -104,33 +104,6 @@ export default class SubmissionHandlerService extends Service {
     yield subEvent.save();
     yield submission.save();
   };
-
-  /**
-   * _uploadFile - method which adds a file to a submission in the
-   *  repository. The bytes of the local file corresponding to the File object
-   *  are read and uploaded to the Submission container. The modified File object
-   *  is persisted.
-   *
-   * TODO: Now that we're switching to Elide + PostgreSQL backend instead of Fedora
-   * we need to decide on a way to handle file uploads. The previous implementation
-   * relies on entity IDs being fully qualified URLs and dumps the file bytes into
-   * the submission ID (URL) container in Fedora
-   *
-   * @param  {Submission} sub
-   * @param  {File} file   Local file uploaded.
-   * @returns {Promise}    Promise resolves to the File object.
-   */
-  async uploadFile(sub, file) {
-    file.submission = sub;
-    file.uri = `/file/${file.id}/data`;
-
-    try {
-      await file.save();
-    } catch (e) {
-      console.error(e);
-      reject(new Error(`Error creating file object ${e.message}`));
-    }
-  }
 
   /**
    * submit - Perform or prepares a submission. Persists the publication, associate

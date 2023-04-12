@@ -1,5 +1,4 @@
 /* eslint-disable ember/no-classic-classes, ember/prefer-ember-test-helpers, ember/require-valid-css-selector-in-test-helpers */
-import Service from '@ember/service';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
 import {
@@ -162,7 +161,7 @@ module('Acceptance | submission', function (hooks) {
 
     await waitFor('[data-test-workflow-thanks-thank-you]');
     assert.dom('[data-test-workflow-thanks-thank-you]').includesText('Thank you!');
-    assert.ok(currentURL().includes('/thanks'), `Unexpected URL encountered: ${currentURL()} :: expected /thanks`);
+    assert.ok(currentURL().includes('/thanks'));
 
     await click('[data-test-workflow-thanks-link-to-submissions]');
     assert.strictEqual(currentURL(), '/submissions');
@@ -171,10 +170,7 @@ module('Acceptance | submission', function (hooks) {
     await waitFor('[data-test-submissions-index-submissions-table]');
     await click(`table a[href="/app${submissionHref}"]`);
 
-    assert.ok(
-      currentURL().includes(submissionHref),
-      `Unexpected URL encountered: ${currentURL()} :: expected ${submissionHref}`
-    );
+    assert.ok(currentURL().includes(submissionHref));
     assert.dom('[data-test-submission-detail-status]').includesText('submitted');
     assert.dom('[data-test-submission-detail-submitter]').includesText('Nihu Ser');
     assert.dom('[data-test-submission-detail-submitter]').includesText('( nihuser@jhu.edu )');

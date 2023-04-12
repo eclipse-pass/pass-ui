@@ -26,7 +26,7 @@ export default class DoiService extends Service {
    * @returns {object}    Object with doiInfo and publication
    */
   @task(function* (doi) {
-    let url = `${ENV.doiServicePath}?doi=${encodeURIComponent(doi)}`;
+    let url = `${ENV.doiService.journalPath}?doi=${encodeURIComponent(doi)}`;
 
     let rawResponse = yield fetch(url, {
       headers: {

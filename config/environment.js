@@ -20,6 +20,7 @@ module.exports = function (environment) {
       policyPath: process.env.POLICY_SERVICE_POLICY_PATH || '/policyservice/policies',
       repositoryPath: process.env.POLICY_SERVICE_REPOSITORY_PATH || '/policyservice/repositories',
     },
+    fileServicePath: '/file',
 
     passApi: {
       namespace: process.env.PASS_API_NAMESPACE || 'data',
@@ -68,9 +69,6 @@ module.exports = function (environment) {
     ENV['ember-cli-mirage'] = {
       enabled: true,
     };
-
-    // Mocked journal endpoint
-    ENV.doiServicePath = '/mirage/test/doiservice/journal';
   }
 
   return ENV;

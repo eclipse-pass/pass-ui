@@ -11,7 +11,7 @@ export default class FileModel extends Model {
   @belongsTo('submission') submission;
 
   // not represented on backend
-  @attr('string') _file;
+  // @attr('string') _file;
 }
 
 export const Role = {

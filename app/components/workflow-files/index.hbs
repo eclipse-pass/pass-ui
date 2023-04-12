@@ -58,7 +58,11 @@
                 Manuscript
               </td>
               <td class="vertical-align-middle">
-                <input class="form-control file-description-width" value={{this.manuscript.description}} />
+                <input
+                  class="form-control file-description-width"
+                  value={{this.manuscript.description}}
+                  {{on "change" this.updateDescription}}
+                />
               </td>
               <td class="text-center vertical-align-middle">
                 <button

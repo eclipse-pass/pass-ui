@@ -4,6 +4,7 @@ import { action, get, set, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { A } from '@ember/array';
 import { task } from 'ember-concurrency-decorators';
+import ENV from 'pass-ui/config/environment';
 
 export default class WorkflowFiles extends Component {
   @service store;
@@ -87,30 +88,29 @@ export default class WorkflowFiles extends Component {
   }
 
   @action
+  updateDescription(event) {
+    this.manuscript.description = event.target.value;
+  }
+
+  @action
   async uploadFile(FileUpload) {
     try {
-      const response = await FileUpload.upload('/file');
+      const response = await FileUpload.upload(ENV.fileServicePath);
 
-      // const thing = {
-      //   id: '7a000934-6f21-49b7-9ca3-cbef6bc966e9/Nanometer-Scale Thermometry.pdf',
-      //   uuid: '7a000934-6f21-49b7-9ca3-cbef6bc966e9',
-      //   fileName: 'Nanometer-Scale Thermometry.pdf',
-      //   mimeType: 'application/pdf',
-      //   storageType: 'FILE_SYSTEM',
-      //   size: 1031677,
-      //   extension: 'pdf',
-      // };
+      const file = await response.json();
 
       const newFile = await this.store.createRecord('file', {
-        name: FileUpload.file.name,
-        mimeType: FileUpload.file.type.substring(file.type.indexOf('/') + 1),
-        description: FileUpload.file.description,
+        name: file.fileName,
+        mimeType: file.mimeType,
+        description: '',
         fileRole: 'supplemental',
-        _file: FileUpload.file,
+        uri: `https://pass.local/file/${file.uuid}/${encodeURIComponent(file.fileName)}`,
+        submission: this.args.submission,
       });
       if (!this.hasManuscript) {
         newFile.fileRole = 'manuscript';
       }
+      await newFile.save();
       this.args.newFiles.pushObject(newFile);
     } catch (error) {
       FileUpload.file.state = 'aborted';
