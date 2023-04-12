@@ -214,6 +214,6 @@ module('Integration | Component | workflow grants', (hooks) => {
 
     assert.strictEqual(grants.get('length'), 0, 'Grant should have been removed from submission');
 
-    assert.ok(grantRows[1].querySelector('i[class="fa fa-square"]'), '"Unselected" icon should be seen now');
+    assert.ok(grantRows[1].querySelector('i[class="fa-regular fa-square"]'), '"Unselected" icon should be seen now');
   });
 });
