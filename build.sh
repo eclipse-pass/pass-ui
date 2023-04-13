@@ -21,5 +21,5 @@ fi
 rm -rf dist/
 
 yarn install --frozen-lockfile
-yarn build:dev
-yarn build:docker
+yarn run build:dev
+yarn run build:latest
