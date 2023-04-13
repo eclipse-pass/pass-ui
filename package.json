@@ -13,7 +13,8 @@
   "scripts": {
     "build": "ember build --environment=production",
     "build:dev": "ember build",
-    "build:docker": "docker build --no-cache -t ghcr.io/eclipse-pass/pass-ui:latest .",
+    "build:docker": "docker build --no-cache -t ghcr.io/eclipse-pass/pass-ui:$npm_package_version .",
+    "build:latest": "docker build --no-cache -t ghcr.io/eclipse-pass/pass-ui:latest .",
     "lint": "concurrently \"npm:lint:*(!fix)\" --names \"lint:\"",
     "lint:fix": "concurrently \"npm:lint:*:fix\" --names \"fix:\"",
     "lint:hbs:fix": "ember-template-lint . --fix",
