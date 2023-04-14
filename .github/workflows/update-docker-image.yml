@@ -25,7 +25,7 @@ jobs:
 
       - name: Get current project version
         id: project-version
-        run: echo "VERSION=`npx -c echo $npm_package_version`" >> $GITHUB_OUTPUT
+        run: echo "VERSION=`npx -c 'echo $npm_package_version'`" >> $GITHUB_OUTPUT
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
@@ -43,4 +43,4 @@ jobs:
       - name: 'Push new Docker images'
         run: |
           docker push ghcr.io/eclipse-pass/pass-ui:latest
-          docker push ghcr.io/eclipse-pass/pass-ui:${{ steps.project_version.outputs.version }}
+          docker push ghcr.io/eclipse-pass/pass-ui:${{ steps.project-version.outputs.version }}
