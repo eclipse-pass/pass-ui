@@ -1,6 +1,7 @@
 name: Update UI Docker image
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - 'main'
