@@ -23,3 +23,7 @@ rm -rf dist/
 yarn install --frozen-lockfile
 yarn run build:dev
 yarn run build:latest
+
+# For unambiguous naming to be used in local dev docker-compose env
+# Do not push this tag
+docker tag ghcr.io/eclipse-pass/pass-ui:latest ui-local
