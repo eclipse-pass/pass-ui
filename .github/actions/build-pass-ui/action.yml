@@ -7,6 +7,10 @@ inputs:
   env-file:
     description: 'URL location of .env file. Default is the .env file in "eclipse-pass/main"'
     default: 'https://raw.githubusercontent.com/eclipse-pass/pass-docker/main/.env'
+  is-prod:
+    description: Will this target production?
+    required: false
+    default: 'false'
 
 runs:
   using: composite
@@ -20,7 +24,14 @@ runs:
     - run: yarn install --frozen-lockfile
       shell: bash
 
-    - run: yarn run build
+    - name: Production build
+      run: yarn run build
+      if: ${{ inputs.is-prod }}
+      shell: bash
+
+    - name: Dev build
+      if: ${{ !inputs.is-prod}}
+      run: yarn run build:dev
       shell: bash
 
     - run: yarn run build:docker
