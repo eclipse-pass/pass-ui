@@ -9,7 +9,7 @@ module.exports = function (environment) {
     rootURL: process.env.PASS_UI_ROOT_URL || '/app/',
     host: process.env.EMBER_HOST || 'http://localhost:8080',
     // Config for ember-data backend calls
-    schemaServicePath: process.env.SCHEMA_SERVICE_PATH || '/schemaservice',
+    schemaServicePath: process.env.SCHEMA_SERVICE_PATH || '/schema',
     doiService: {
       journalPath: process.env.DOI_SERVICE_PATH || '/doi/journal',
       manuscriptLookUpPath: process.env.MANUSCRIPT_SERVICE_LOOKUP_PUBLIC_PATH || '/doi/manuscript',
