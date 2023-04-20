@@ -24,9 +24,6 @@ export default function (config) {
       }),
     },
     routes() {
-      /** Schema Service */
-      schemas(this);
-
       this.get('/app/config.json', (_schema, _request) => {
         return {
           branding: {
@@ -135,6 +132,9 @@ export default function (config) {
 
           return schema.create('file', attrs);
         });
+
+        /** Schema Service */
+        schemas(this);
 
         // Users
         this.get('/data/user/:id', (schema, request) => schema.find('user', request.params.id));

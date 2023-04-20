@@ -40,6 +40,15 @@ export default class MetadataSchemaService extends Service {
   }
 
   /**
+   * Get the service URL with query parameters
+   * @param ids {Array} list of IDs
+   * @param merge {boolean} should the schemas be merged?
+   */
+  url(ids, merge) {
+    return `${ENV.schemaServicePath}?entityIds=${ids.join(',')}&merge=${merge}`;
+  }
+
+  /**
    * First try to get a single merged schema that combines all repository schema.
    * If that request fails, retry the request, but without trying to merge the schema.
    *
@@ -55,21 +64,18 @@ export default class MetadataSchemaService extends Service {
       // If we've gotten repository objects, map them to their IDs
       repositories = repositories.map((repo) => repo.get('id'));
     }
-    const url = ENV.schemaServicePath;
-    const urlWithMerge = `${url}?merge=true`;
 
     const options = {
-      method: 'POST',
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
       },
-      body: JSON.stringify(repositories),
     };
 
     try {
-      let response = await this._fetchSchemas(urlWithMerge, options);
+      let response = await this._fetchSchemas(this.url(repositories, true), options);
       if (response.status >= 400) {
-        response = await this._fetchSchemas(url, options);
+        response = await this._fetchSchemas(this.url(repositories, false), options);
       }
       const data = await response.json();
 
