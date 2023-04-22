@@ -55,7 +55,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
       ],
     };
 
-    this.server.post('/schemaservice', (_schema, _request) => {
+    this.server.get('/schema', (_schema, _request) => {
       return [this.mockSchema];
     });
   });
@@ -75,7 +75,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
   });
 
   test('Should retry request without merge query param on failure', async function (assert) {
-    this.server.post('/schemaservice', (_schema, request) => {
+    this.server.get('/schema', (_schema, request) => {
       if (request.queryParams.merge) {
         return Response(500);
       }
