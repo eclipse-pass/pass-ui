@@ -52,7 +52,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       'journal-NLMTA-ID': 'triumph',
     });
 
-    this.server.post('/schemaservice', (_schema, _request) => {
+    this.server.get('/schema', (_schema, _request) => {
       return [
         {
           id: 'common',
@@ -545,7 +545,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
   });
 
   test('Single schema displays no title', async function (assert) {
-    this.server.post('/schemaservice', () => {
+    this.server.get('/schema', () => {
       return [
         {
           id: 'common',
@@ -588,7 +588,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
         };
       },
     });
-    this.server.post('/schemaservice', () => {
+    this.server.get('/schema', () => {
       return [
         {
           id: 'moo',
@@ -645,7 +645,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
   });
 
   test('Check "required" labels for user added array fields', async function (assert) {
-    this.server.post('/schemaservice', () => {
+    this.server.get('/schema', () => {
       return [
         {
           id: 'moo',

@@ -3,7 +3,6 @@ import Service, { inject as service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
 import Ajv from 'ajv'; // https://github.com/epoberezkin/ajv
 import _ from 'lodash';
-import { get } from '@ember/object';
 import fetch from 'fetch';
 
 /**
@@ -62,7 +61,7 @@ export default class MetadataSchemaService extends Service {
     const areObjects = repositories.map((repos) => typeof repos).includes('object');
     if (areObjects) {
       // If we've gotten repository objects, map them to their IDs
-      repositories = repositories.map((repo) => repo.get('id'));
+      repositories = repositories.map((repo) => repo.id);
     }
 
     const options = {
@@ -324,10 +323,10 @@ export default class MetadataSchemaService extends Service {
     const result = [];
 
     repositories
-      .filter((repo) => repo.get('agreementText'))
+      .filter((repo) => repo.agreementText)
       .forEach((repo) =>
         result.push({
-          [repo.get('name')]: repo.get('agreementText'),
+          [repo.name]: repo.agreementText,
         })
       );
 
@@ -407,9 +406,9 @@ export default class MetadataSchemaService extends Service {
       'volume',
     ];
 
-    const schemas = await this.getMetadataSchemas(submission.get('repositories'));
+    const schemas = await this.getMetadataSchemas(await submission.repositories);
     const titleMap = this.getFieldTitleMap(schemas);
-    const metadata = JSON.parse(submission.get('metadata'));
+    const metadata = JSON.parse(submission.metadata);
 
     const result = [];
     if (metadata) {
