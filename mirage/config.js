@@ -42,37 +42,6 @@ export default function (config) {
         };
       });
 
-      /** Policy Service */
-      this.get('/policyservice/policies', async (schema, request) => {
-        const institutionPolicy = await dataFinder.findBy(schema, 'policy', {
-          title: 'Johns Hopkins University (JHU) Open Access Policy',
-        });
-        const nihPolicy = await dataFinder.findBy(schema, 'policy', {
-          title: 'National Institutes of Health Public Access Policy',
-        });
-
-        return [
-          { id: nihPolicy.id, type: 'funder' },
-          { id: institutionPolicy.id, type: 'institution' },
-        ];
-      });
-      // Return NIH (required) and J10p (optional, selected)
-      this.get('/policyservice/repositories', async (schema, request) => {
-        const j10p = await dataFinder.findBy(schema, 'repository', { repositoryKey: 'jscholarship' });
-        const pmc = await dataFinder.findBy(schema, 'repository', { repositoryKey: 'pmc' });
-
-        return {
-          required: [{ 'repository-id': pmc.id, selected: false }],
-          'one-of': [
-            [
-              { 'repository-id': pmc.id, selected: false },
-              { 'repository-id': j10p.id, selected: true },
-            ],
-          ],
-          optional: [{ 'repository-id': j10p.id, selected: true }],
-        };
-      });
-
       /** User Service */
       this.get('/pass-user-service/whoami', (schema, request) => {
         const userId = request.queryParams.userToken;
@@ -243,6 +212,37 @@ export default function (config) {
           return {
             'journal-id': doiJournals['journal-id'],
             crossref: doiJournals.crossref,
+          };
+        });
+
+        /** Policy Service */
+        this.get('/policy/policies', async (schema, request) => {
+          const institutionPolicy = await dataFinder.findBy(schema, 'policy', {
+            title: 'Johns Hopkins University (JHU) Open Access Policy',
+          });
+          const nihPolicy = await dataFinder.findBy(schema, 'policy', {
+            title: 'National Institutes of Health Public Access Policy',
+          });
+
+          return [
+            { id: nihPolicy.id, type: 'funder' },
+            { id: institutionPolicy.id, type: 'institution' },
+          ];
+        });
+        // Return NIH (required) and J10p (optional, selected)
+        this.get('/policy/repositories', async (schema, request) => {
+          const j10p = await dataFinder.findBy(schema, 'repository', { repositoryKey: 'jscholarship' });
+          const pmc = await dataFinder.findBy(schema, 'repository', { repositoryKey: 'pmc' });
+
+          return {
+            required: [{ 'repository-id': pmc.id, selected: false }],
+            'one-of': [
+              [
+                { 'repository-id': pmc.id, selected: false },
+                { 'repository-id': j10p.id, selected: true },
+              ],
+            ],
+            optional: [{ 'repository-id': j10p.id, selected: true }],
           };
         });
       }
