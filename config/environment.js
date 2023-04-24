@@ -17,8 +17,8 @@ module.exports = function (environment) {
     doiMetadataSchemaUri:
       process.env.DOI_METADATA_SCHEMA_URI || 'https://eclipse-pass.github.io/metadata-schemas/jhu/global.json',
     policyService: {
-      policyPath: process.env.POLICY_SERVICE_POLICY_PATH || '/policyservice/policies',
-      repositoryPath: process.env.POLICY_SERVICE_REPOSITORY_PATH || '/policyservice/repositories',
+      policyPath: process.env.POLICY_SERVICE_POLICY_PATH || '/policy/policies',
+      repositoryPath: process.env.POLICY_SERVICE_REPOSITORY_PATH || '/policy/repositories',
     },
     fileServicePath: '/file',
 

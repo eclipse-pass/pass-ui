@@ -128,7 +128,7 @@ export default class PoliciesService extends Service {
    * Transform a list of repository information objects to Repository model objects
    *
    * @param {array} repoInfo {
-   *    'repository-id': '',
+   *    url: '',
    *    selected: true|false
    * }
    * @returns {array} list of Promises of Repository objects
@@ -137,7 +137,7 @@ export default class PoliciesService extends Service {
     return yield all(
       repos.map((repoInfo) =>
         get(this, 'store')
-          .findRecord('repository', repoInfo['repository-id'])
+          .findRecord('repository', repoInfo.url)
           .then((repo) => {
             repo.set('_selected', repoInfo.selected);
             return repo;
