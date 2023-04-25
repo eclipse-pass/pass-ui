@@ -10,7 +10,7 @@ inputs:
   is-prod:
     description: Will this target production?
     required: false
-    default: 'false'
+    default: false
 
 runs:
   using: composite
@@ -26,11 +26,11 @@ runs:
 
     - name: Production build
       run: yarn run build
-      if: ${{ inputs.is-prod }}
+      if: ${{ inputs.is-prod == true }}
       shell: bash
 
     - name: Dev build
-      if: ${{ !inputs.is-prod}}
+      if: ${{ inputs.is-prod == false }}
       run: yarn run build:dev
       shell: bash
 
