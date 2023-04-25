@@ -15,33 +15,27 @@ inputs:
 runs:
   using: composite
   steps:
-    - shell: bash
+    - name: Grab pass-docker's .env file and export to environment
       run: |
-        echo ${{ inputs.is-prod }}
-        echo ${{ inputs.is-prod == 'true' }}
-        echo ${{ inputs.is-prod == 'false' }}
-    # - name: Grab pass-docker's .env file and export to environment
-    #   run: |
-    #     wget ${{ inputs.env-file }}
-    #     export $(grep -v '^[#|SIGNING]' .env | xargs -d '\n')
-    #   shell: bash
+        wget ${{ inputs.env-file }}
+        export $(grep -v '^[#|SIGNING]' .env | xargs -d '\n')
+      shell: bash
 
-    # - run: yarn install --frozen-lockfile
-    #   shell: bash
+    - run: yarn install --frozen-lockfile
+      shell: bash
 
-    # - name: Production build
-    #   run: yarn run build
-    #   if: ${{ inputs.is-prod }}
-    #   shell: bash
+    - name: Production build
+      run: yarn run build
+      if: ${{ inputs.is-prod == 'true' }}
+      shell: bash
 
-    # - name: Dev build
-    #   if: ${{ !inputs.is-prod }}
-    #   run: yarn run build:dev
-    #   shell: bash
+    - name: Dev build
+      if: ${{ inputs.is-prod == 'false' }}
+      run: yarn run build:dev
+      shell: bash
 
-    # - run: yarn run build:docker
-    #   shell: bash
+    - run: yarn run build:docker
+      shell: bash
 
-    # - run: yarn run build:latest
-    #   shell: bash
-
+    - run: yarn run build:latest
+      shell: bash
