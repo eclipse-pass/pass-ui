@@ -66,7 +66,7 @@ export default class SubmissionsDetail extends Controller {
   /**
    * Ugly way to generate data for the template to use.
    * {
-   *    'repository-id': {
+   *    'url': {
    *      repo: { }, // repository obj
    *      deposit: {}, // related deposit, if exists
    *      repositoryCopy: {} // related repoCopy if exists
