@@ -577,12 +577,12 @@ module('Acceptance | submission', function (hooks) {
      * Reset the Mirage namespace here will only apply to this mock
      */
     this.server.namespace = '';
-    this.server.get('/policyservice/repositories', () => ({
+    this.server.get('/policy/repositories', () => ({
       required: [],
       'one-of': [],
       optional: [
         {
-          'repository-id': '1',
+          url: '1',
           selected: true,
         },
       ],

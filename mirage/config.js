@@ -235,14 +235,14 @@ export default function (config) {
           const pmc = await dataFinder.findBy(schema, 'repository', { repositoryKey: 'pmc' });
 
           return {
-            required: [{ 'repository-id': pmc.id, selected: false }],
+            required: [{ url: pmc.id, selected: false }],
             'one-of': [
               [
-                { 'repository-id': pmc.id, selected: false },
-                { 'repository-id': j10p.id, selected: true },
+                { url: pmc.id, selected: false },
+                { url: j10p.id, selected: true },
               ],
             ],
-            optional: [{ 'repository-id': j10p.id, selected: true }],
+            optional: [{ url: j10p.id, selected: true }],
           };
         });
       }
