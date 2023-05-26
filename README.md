@@ -93,7 +93,7 @@ The application also gets "branding" configuration from a `config.json` file, wi
 }
 ```
 
-The base theme styles can be found in `branding.css`. There are default fallback styles which can be overridden to customize the appearance of the UI. It is recommended to override these styles through a `branding-overrides.css` file. An example of these overrides to the base styles can be found in `./public/branding-overrides.css`.
+The base theme styles can be found in `branding.css`. There are default fallback styles which can be overridden to customize the appearance of the UI. It is recommended to override these styles through a `branding-overrides.css` file. An example of these overrides to the base styles can be found [here](https://github.com/eclipse-pass/pass-ui/blob/main/public/branding-overrides.css).
 
 ### Environment Variables
 
