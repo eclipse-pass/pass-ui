@@ -51,6 +51,8 @@ ember            | Babel: ember-data (2)                         | 5386ms (2693 
 - In order to remove persisted data, stop all the containers and `docker volume prune`
 - Your web browser may complain about unsigned certificates, but the complaints can be ignored.
 
+As an alternative to running the Ember application inside of Docker, one can run the ember test server with an environment variable to turn on the API mocking library `ember-cli-mirage` via `MIRAGE='true' ember s`.
+
 ### Test users
 
 See [https://github.com/eclipse-pass/pass-docker/blob/master/README.md#shibboleth-users] for a list of test users. Each has a password of `moo`.
