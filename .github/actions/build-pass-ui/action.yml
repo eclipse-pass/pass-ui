@@ -18,7 +18,7 @@ runs:
     - name: Grab pass-docker's .env file and export to environment
       run: |
         wget ${{ inputs.env-file }}
-        export $(grep -v '^[#|SIGNING]' .env | xargs -d '\n')
+        export $(grep -v '^[#|SIGNING|PASS_CORE_POLICY]' .env | xargs -d '\n')
       shell: bash
 
     - run: yarn install --frozen-lockfile
