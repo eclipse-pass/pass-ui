@@ -13,9 +13,9 @@ fi
 # Ignore any SIGNING_CERT* variables
 unamestr=$(uname)
 if [ "$unamestr" = 'Linux' ]; then
-  export $(grep -v '^[#|SIGNING]' $ENV_FILE | xargs -d '\n')
+  export $(grep -v '^[#|SIGNING|PASS_CORE_POLICY]' $ENV_FILE | xargs -d '\n')
 elif [ "$unamestr" = 'FreeBSD' ] || [ "$unamestr" = 'Darwin' ]; then
-  export $(grep -v '^[#|SIGNING]' $ENV_FILE | xargs -0)
+  export $(grep -v '^[#|SIGNING|PASS_CORE_POLICY]' $ENV_FILE | xargs -0)
 fi
 
 rm -rf dist/
