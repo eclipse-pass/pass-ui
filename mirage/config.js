@@ -28,12 +28,12 @@ export default function (config) {
         return {
           branding: {
             homepage: 'https://www.eclipse.org/org/foundation/',
-            logo: 'ef/eclipse_foundation_logo_wo/EF_WHT-OR_png.png',
+            logo: '/app/ef/eclipse_foundation_logo_wo/EF_WHT-OR_png.png',
             favicon: 'favicon.ico',
             stylesheet: '/app/branding.css',
+            overrides: '/app/branding-overrides.css',
             pages: {
               showPagesNavBar: false,
-              contactUrl: 'https://demo.eclipse-pass.org/contact.html',
             },
             error: {
               icon: '/app/error-icon.png',

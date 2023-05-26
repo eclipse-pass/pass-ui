@@ -14,18 +14,20 @@
           P.A.S.S.
         </h3>
       </a>
-      <a href="{{this.homepage}}">
-        <img
-          id="brand-logo"
-          src="{{this.logoUri}}"
-          alt="Logo"
-          class="nav-item d-sm-down-none pull-right brand-logo pr-0"
-        />
-      </a>
+      {{#if this.logoUri}}
+        <a href="{{this.homepage}}">
+          <img
+            id="brand-logo"
+            src="{{this.logoUri}}"
+            alt="Logo"
+            class="nav-item d-sm-down-none pull-right brand-logo pr-0"
+          />
+        </a>
+      {{/if}}
     </div>
   </header>
   {{#if this.showNoticeBanner}}
-    <NoticeBanner />
+    <NoticeBanner contactUrl={{this.contactUrl}} />
   {{/if}}
   <div style="z-index:10;">
     <NavBar @fullWidth={{this.fullWidth}} />

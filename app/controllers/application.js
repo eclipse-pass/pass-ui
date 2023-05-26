@@ -40,4 +40,8 @@ export default class ApplicationController extends Controller {
   get homepage() {
     return get(this, 'brand.homepage');
   }
+
+  get contactUrl() {
+    return get(this, 'brand.pages.contactUrl');
+  }
 }

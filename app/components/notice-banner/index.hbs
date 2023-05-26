@@ -8,10 +8,12 @@
     >
       instructions
     </a>
-    or
-    <a href={{this.contactUrl}} target="_blank" rel="noopener noreferrer">
-      contact us
-    </a>
+    {{#if this.contactUrl}}
+      or
+      <a href={{this.contactUrl}} target="_blank" rel="noopener noreferrer">
+        contact us
+      </a>
+    {{/if}}
     .
   </div>
 {{/if}}
