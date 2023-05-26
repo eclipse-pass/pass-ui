@@ -1,73 +1,63 @@
-/* Import Roboto fonts from Google */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
-
 :root {
-  --primary-50: #FEEDDD;
-  --primary-100: #FDE2C9;
-  --primary-200: #FCCDA1;
-  --primary-300: #FBB77A;
-  --primary-400: #F9A252;
-  --primary-500: #F88D2B;
-  --primary-600: #E37108;
-  --primary-700: #AD5606;
-  --primary-800: #773B04;
-  --primary-900: #402002;
+  --primary-500: #2563eb;
+  --primary-600: #1e40af;
 
-  --secondary-50: #9C958D;
-  --secondary-100: #938B82;
-  --secondary-200: #7E766E;
-  --secondary-300: #69625B;
-  --secondary-400: #534D48;
-  --secondary-500: #3D3935;
-  --secondary-600: #1F1D1B;
-  --secondary-700: #010101;
-  --secondary-800: #000000;
-  --secondary-900: #000000;
+  --secondary-500: #374151;
+
+  --bg-primary: white;
+  --text-primary: black;
 
   --grey-light: #e5e2e0;
   --grey-medium: #b4b2ad;
   --grey-dark: #7e7e7c;
 
-  --bg-primary: white;
+  --btn-active-color: #c9c9c9;
+  --danger: #cf4520;
+  --danger-dark: #a6192e;
+  --warning: #f1c400;
+  --aqua: #86c8bc;
 
-  --btn-active-color: #C9C9C9;
-  --danger: #CF4520;
-  --danger-dark: #A6192E;
-  --warning: #F1C400;
-  --aqua: #86C8BC;
-
-  --font-headline: 'Roboto', san serif;
-  --font-subhead: 'Roboto', san serif;
-  --font-bodycopy-accent: 'Roboto', san serif;
-  --font-bodycopy: 'Roboto', san serif;
+  --font-headline: 'Arial', 'Helvetica', sans-serif;
+  --font-subhead: 'Arial', 'Helvetica', sans-serif;
+  --font-bodycopy-accent: 'Arial', 'Helvetica', sans-serif;
+  --font-bodycopy: 'Arial', 'Helvetica', sans-serif;
 }
 
 body {
   font-family: var(--font-bodycopy);
-  color: var(--secondary-500);
+  font-weight: var(--font-bodyweight);
+  color: var(--text-primary);
 }
-h1, h2, h3, h4, h5 {
+h1,
+h2,
+h3,
+h4,
+h5 {
   font-family: var(--font-headline);
 }
-h1, h2 {
+h1,
+h2 {
   color: var(--secondary-500);
 }
-a, .btn-link {
+a,
+.btn-link {
   color: var(--primary-500);
 }
-a:hover, .btn-link:hover {
- color: var(--primary-600);
+a:hover,
+.btn-link:hover {
+  color: var(--primary-600);
+  text-decoration: underline;
 }
 
 /* Buttons */
 .btn-primary {
-  background-color: var(--primary-500);
-  border-color: var(--primary-500);
-  color:white;
+  background-color: var(--primary-500) !important;
+  border-color: var(--primary-500) !important;
+  color: white !important;
 }
 .btn-primary:hover {
-  background-color: var(--primary-600);
-  border-color: var(--primary-600);
+  background-color: var(--primary-600) !important;
+  border-color: var(--primary-600) !important;
 }
 /*
  * This mess must be done in order to properly override Bootstrap styles for a clicked button
@@ -92,7 +82,7 @@ a:hover, .btn-link:hover {
   color: white;
 }
 
-.btn-danger	{
+.btn-danger {
   color: white;
   background-color: var(--danger);
 }
@@ -128,7 +118,7 @@ a:hover, .btn-link:hover {
   font-weight: bold;
 }
 #header-navbar .nav-link {
-  color: var(--secondary-500);
+  color: var(--text-primary);
 }
 #user-menu {
   color: var(--secondary-500);
@@ -148,24 +138,36 @@ a:hover, .btn-link:hover {
 }
 
 /* Status icons */
-.manuscript-required>.fa-circle, .manuscript-required .fa-info-circle,
-.approval-requested>.fa-circle, .approval-requested .fa-info-circle,
-.changes-requested>.fa-circle, .changes-requested .fa-info-circle,
-.needs-attention>.fa-circle, .needs-attention .fa-info-circle,
-.stalled>.fa-circle, .stalled .fa-info-circle,
-.failed>.fa-circle, .failed .fa-info-circle,
-.rejected>.fa-circle, .rejected .fa-info-circle {
+.manuscript-required > .fa-circle,
+.manuscript-required .fa-info-circle,
+.approval-requested > .fa-circle,
+.approval-requested .fa-info-circle,
+.changes-requested > .fa-circle,
+.changes-requested .fa-info-circle,
+.needs-attention > .fa-circle,
+.needs-attention .fa-info-circle,
+.stalled > .fa-circle,
+.stalled .fa-info-circle,
+.failed > .fa-circle,
+.failed .fa-info-circle,
+.rejected > .fa-circle,
+.rejected .fa-info-circle {
   color: var(--warning);
 }
-.cancelled>.fa-circle, .cancelled .fa-info-circle,
-.not-submitted>.fa-circle, .not-submitted .fa-info-circle {
+.cancelled > .fa-circle,
+.cancelled .fa-info-circle,
+.not-submitted > .fa-circle,
+.not-submitted .fa-info-circle {
   color: var(--warning);
 }
-.submitted>.fa-circle, .submitted .fa-info-circle,
-.complete>.fa-circle, .complete .fa-info-circle {
+.submitted > .fa-circle,
+.submitted .fa-info-circle,
+.complete > .fa-circle,
+.complete .fa-info-circle {
   color: var(--aqua);
 }
-.draft>.fa-circle, .draft .fa-info-circle {
+.draft > .fa-circle,
+.draft .fa-info-circle {
   color: gray;
 }
 
@@ -183,7 +185,8 @@ th.table-header > i {
   color: var(--secondary-500);
   opacity: 0.8;
 }
-#grant-details-title .back-arrow, #submission-details-title .back-arrow {
+#grant-details-title .back-arrow,
+#submission-details-title .back-arrow {
   color: var(--secondary-500);
   opacity: 0.7;
 }

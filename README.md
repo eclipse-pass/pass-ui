@@ -30,7 +30,6 @@ be available at https://pass.local/.
 
 - In .docker/ run `docker-compose pull`
   - To start PASS with JHU assets, run `docker-compose up -d`.
-  - To run the Harvard development stack, do `docker-compose -f harvard.yml up -d`
   - To start PASS with only a few test assets, run `docker-compose -f docker-compose.yml -f docker-compose.public.yml up -d`
 - Wait for the containers to finish coming up, this could take 5-10 minutes. There will be a long pause while the `ember` container builds. When you see the "Build successful" message from `ember` and a small table listing the "Slowest Nodes" that indicates the application is ready to use. It will look similar to:
 
@@ -51,6 +50,8 @@ ember            | Babel: ember-data (2)                         | 5386ms (2693 
 - Elasticsearch index search endpoint is at https://pass.local/es/
 - In order to remove persisted data, stop all the containers and `docker volume prune`
 - Your web browser may complain about unsigned certificates, but the complaints can be ignored.
+
+As an alternative to running the Ember application inside of Docker, one can run the ember test server with an environment variable to turn on the API mocking library `ember-cli-mirage` via `MIRAGE='true' ember s`.
 
 ### Test users
 
@@ -78,7 +79,8 @@ The application also gets "branding" configuration from a `config.json` file, wi
     "homepage": "https://example.com",
     "logo": "/app/fullSizeLogo.png", // Default asset found in public/ dir
     "favicon": "/app/favicon.png", // Default asset found in public/ dir
-    "stylesheet": "/app/branding.css", // Default asset found in public/ dir
+    "stylesheet": "/app/branding.css", // Default asset found in public/ dir which provides base styles
+    "overrides": "/app/branding-overrides.css", // Overrides to the default base styles
     "pages": {
       "contactUrl": "", // If you provide a branded page with contact info
       "aboutUrl": "", // If you provide a branded About page for PASS
@@ -91,25 +93,26 @@ The application also gets "branding" configuration from a `config.json` file, wi
 }
 ```
 
+The base theme styles can be found in `branding.css`. There are default fallback styles which can be overridden to customize the appearance of the UI. It is recommended to override these styles through a `branding-overrides.css` file. An example of these overrides to the base styles can be found [here](https://github.com/eclipse-pass/pass-ui/blob/main/public/branding-overrides.css).
+
 ### Environment Variables
 
-| Name | Description | Default value |
-| --- | --- | --- |
-| EMBER_APP_ROOT | URL path of the application | `/app/` |
-| EMBER_HOST | URL host of the application | `http://localhost:8080` |
-| PASS_API_URL | URL host (plus port) of backend API | `http://localhost:8080` |
-| PASS_API_NAMESPACE | URL path prefix for backend API | `api/v1` |
-| STATIC_CONFIG_URL | URL to find the UI's branding configuration (config.json). There is a default config bundled with the application, which can be loaded at this variable's default value | `/app/config.json` |
-| USER_SERVICE_URL | URL of the pass user service | `/pass-user-service/whoami` |
-| SCHEMA_SERVICE_URL | URL of the pass metadata schema service | `/schemaservice` |
-| DOI_SERVICE_URL | URL of the pass DOI service | `/doiservice/journal` |
-| DOI_METADATA_SCHEMA_URI | URL of the DOI metadata schema | `https://eclipse-pass.github.io/metadata-schemas/jhu/global.json` |
-| POLICY_SERVICE_URL | URL of the pass policy service (no longer supported) | `/policyservice` |
-| POLICY_SERVICE_POLICY_ENDPOINT | URL of the pass policy service policies function | `/policyservice/policies` |
-| POLICY_SERVICE_REPOSITORY_ENDPOINT | URL of the pass policy service repositories function | `/policyservice/repositories` |
-| MANUSCRIPT_SERVICE_LOOKUP_URL | URL of the pass 'download' service's lookup function. This will lookup available open access manuscripts for a given DOI | `/downloadservice/lookup` |
-| MANUSCRIPT_SERVICE_DOWNLOAD_URL | URL of the pass 'download' service's download function. Currently unused? | `/downloadservice/download` |
-
+| Name                               | Description                                                                                                                                                             | Default value                                                     |
+| ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| EMBER_APP_ROOT                     | URL path of the application                                                                                                                                             | `/app/`                                                           |
+| EMBER_HOST                         | URL host of the application                                                                                                                                             | `http://localhost:8080`                                           |
+| PASS_API_URL                       | URL host (plus port) of backend API                                                                                                                                     | `http://localhost:8080`                                           |
+| PASS_API_NAMESPACE                 | URL path prefix for backend API                                                                                                                                         | `api/v1`                                                          |
+| STATIC_CONFIG_URL                  | URL to find the UI's branding configuration (config.json). There is a default config bundled with the application, which can be loaded at this variable's default value | `/app/config.json`                                                |
+| USER_SERVICE_URL                   | URL of the pass user service                                                                                                                                            | `/pass-user-service/whoami`                                       |
+| SCHEMA_SERVICE_URL                 | URL of the pass metadata schema service                                                                                                                                 | `/schemaservice`                                                  |
+| DOI_SERVICE_URL                    | URL of the pass DOI service                                                                                                                                             | `/doiservice/journal`                                             |
+| DOI_METADATA_SCHEMA_URI            | URL of the DOI metadata schema                                                                                                                                          | `https://eclipse-pass.github.io/metadata-schemas/jhu/global.json` |
+| POLICY_SERVICE_URL                 | URL of the pass policy service (no longer supported)                                                                                                                    | `/policyservice`                                                  |
+| POLICY_SERVICE_POLICY_ENDPOINT     | URL of the pass policy service policies function                                                                                                                        | `/policyservice/policies`                                         |
+| POLICY_SERVICE_REPOSITORY_ENDPOINT | URL of the pass policy service repositories function                                                                                                                    | `/policyservice/repositories`                                     |
+| MANUSCRIPT_SERVICE_LOOKUP_URL      | URL of the pass 'download' service's lookup function. This will lookup available open access manuscripts for a given DOI                                                | `/downloadservice/lookup`                                         |
+| MANUSCRIPT_SERVICE_DOWNLOAD_URL    | URL of the pass 'download' service's download function. Currently unused?                                                                                               | `/downloadservice/download`                                       |
 
 ### Using ember in the container.
 
@@ -131,16 +134,16 @@ This project uses (husky)[https://github.com/typicode/husky] to run a command fr
 
 There are also scripts defined in the `package.json` you can run to manually lint check the project.
 
-* `yarn lint`
-* `yarn lint:fix`
-* `yarn lintt:hbs`
-* `yarn link:hbs:fix`
+- `yarn lint`
+- `yarn lint:fix`
+- `yarn lintt:hbs`
+- `yarn link:hbs:fix`
 
 ### Building
 
 We have GitHub automations in place to produce production builds at during a release. If you want to development build for local testing, you can use the `build.sh` script, specifying a `.env` file:
 
-``` sh
+```sh
 ./build.sh ../pass-docker/.env
 ```
 
@@ -148,8 +151,8 @@ This script will remove any existing files in `dist/`, do an Ember dev build, an
 
 ## Further Reading / Useful Links
 
-* [ember.js](https://emberjs.com/)
-* [ember-cli](https://cli.emberjs.com/release/)
-* Development Browser Extensions
-  * [ember inspector for chrome](https://chrome.google.com/webstore/detail/ember-inspector/bmdblncegkenkacieihfhpjfppoconhi)
-  * [ember inspector for firefox](https://addons.mozilla.org/en-US/firefox/addon/ember-inspector/)
+- [ember.js](https://emberjs.com/)
+- [ember-cli](https://cli.emberjs.com/release/)
+- Development Browser Extensions
+  - [ember inspector for chrome](https://chrome.google.com/webstore/detail/ember-inspector/bmdblncegkenkacieihfhpjfppoconhi)
+  - [ember inspector for firefox](https://addons.mozilla.org/en-US/firefox/addon/ember-inspector/)

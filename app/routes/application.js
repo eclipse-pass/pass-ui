@@ -81,6 +81,10 @@ export default class ApplicationRoute extends CheckSessionRoute {
       } else {
         console.log('%cNo branding stylesheet was configured', 'color:red');
       }
+      if (model.staticConfig.branding.overrides) {
+        const overrides = `${model.staticConfig.branding.overrides}`;
+        this.staticConfig.addCSS(overrides);
+      }
       if (model.staticConfig.branding.favicon) {
         const favicon = `${model.staticConfig.branding.favicon}`;
         this.staticConfig.addFavicon(favicon);
