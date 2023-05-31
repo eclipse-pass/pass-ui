@@ -43,9 +43,8 @@ module.exports = function (environment) {
     },
   };
 
-  // TODO: move this to test only env once mocks are removed
   ENV['ember-cli-mirage'] = {
-    enabled: true,
+    enabled: false,
   };
 
   if (environment === 'development') {
