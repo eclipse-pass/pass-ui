@@ -101,15 +101,22 @@ export default class SubmissionsNew extends Controller {
 
       await get(this, 'submissionHandler.submit')
         .perform(sub, pub, files, comment)
+        .then(() => {
+          set(this, 'uploading', false);
+          set(this, 'comment', '');
+          set(this, 'workflow.filesTemp', A());
+          this.transitionToRoute('thanks', { queryParams: { submission: get(sub, 'id') } });
+        })
         .catch((error) => {
           this.set('uploading', false);
-          this.flashMessages.error(`Submission failed: ${error.message}`);
-        });
 
-      set(this, 'uploading', false);
-      set(this, 'comment', '');
-      set(this, 'workflow.filesTemp', A());
-      this.transitionToRoute('thanks', { queryParams: { submission: get(sub, 'id') } });
+          this.flashMessages.danger(`Submission failed: ${error.message}`);
+
+          const elements = document.querySelectorAll('.block-user-input');
+          elements.forEach((el) => {
+            el.style.display = 'none';
+          });
+        });
     }
   }
 
