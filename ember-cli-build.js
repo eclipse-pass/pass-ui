@@ -38,7 +38,10 @@ module.exports = function (defaults) {
       },
     },
     fingerprint: {
-      exclude: ['branding.css', 'error-icon.png', 'fullSizeLogo.png'],
+      enabled: false,
+    },
+    'ember-test-selectors': {
+      strip: false,
     },
   });
 
