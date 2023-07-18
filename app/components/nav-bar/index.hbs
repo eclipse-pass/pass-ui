@@ -5,8 +5,7 @@
   {{did-update this.scrollToAnchor}}
 >
   <div class={{if @fullWidth "container-fluid" "container"}}>
-    {{! template-lint-disable no-inline-styles }}
-    <div class="col-xs-12" style="width:100%;">
+    <div class="col-xs-12 w-100">
       <button
         class="navbar-toggler text-center border-none"
         type="button"
@@ -19,8 +18,7 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        {{! template-lint-disable no-inline-styles }}
-        <ul class="navbar-nav" style="width:100%">
+        <ul class="navbar-nav w-100">
           <li class="nav-item">
             <LinkTo @route="dashboard" class="nav-link pl-0 ml-0">
               Dashboard

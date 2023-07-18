@@ -17,6 +17,10 @@ module.exports = function (defaults) {
       only: ['queue', 'compute', 'invoke', 'includes'],
     },
 
+    autoImport: {
+      forbidEval: true,
+    },
+
     '@embroider/macros': {
       setConfig: {
         '@ember-data/store': {

@@ -1,5 +1,4 @@
 {{! template-lint-disable no-action no-invalid-interactive }}
-<i
-  class={{if @isSelected "fa-regular fa-square-check" "fa-regular fa-square"}}
-  {{on "click" (fn this.clickOnRow @index @record)}}
-></i>
+<div {{on "click" (fn this.clickOnRow @index @record)}}>
+  <FaIcon @icon="{{if @isSelected 'square-check' 'square'}}" @prefix="far" />
+</div>

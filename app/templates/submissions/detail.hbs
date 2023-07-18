@@ -1,4 +1,4 @@
-{{! template-lint-disable link-rel-noopener no-action no-inline-styles no-unknown-arguments-for-builtin-components no-unused-block-params require-button-type require-input-label }}
+{{! template-lint-disable link-rel-noopener no-action no-unknown-arguments-for-builtin-components no-unused-block-params require-button-type require-input-label }}
 <div class="block-user-input text-center">
   <div class="lds-dual-ring mx-auto"></div>
 </div>
@@ -287,7 +287,7 @@
                               <i local-class="line-height-35 text-gray fa-30" class="far fa-file"></i>
                             {{/if}}
                           </td>
-                          <td data-label="name" style="min-width:200px;">
+                          <td id="submissions-detail-file-cell" data-label="name">
                             <a href={{file.uri}}>
                               {{file.name}}
                             </a>
@@ -323,9 +323,8 @@
                     <Textarea
                       placeholder="Add comment"
                       @value={{this.message}}
-                      class="form-control custom-control p-2"
+                      class="form-control custom-control p-2 submissions-detail-comment-textarea"
                       @rows="2"
-                      @style="resize:none; min-height: 38px!important;"
                     />
                   {{/if}}
                 </td>

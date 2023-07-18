@@ -156,7 +156,7 @@
                             <i local-class="line-height-35 text-gray fa-30" class="far fa-file"></i>
                           {{/if}}
                         </td>
-                        <td data-label="name" style="min-width:200px;" data-test-workflow-review-file-name>
+                        <td class="workflow-review-file-name" data-label="name" data-test-workflow-review-file-name>
                           {{file.name}}
                         </td>
                         <td data-label="type" class="text-nowrap">
@@ -224,9 +224,8 @@
                   <Textarea
                     placeholder="Add comment"
                     @value={{@comment}}
-                    class="form-control custom-control p-2"
+                    class="form-control custom-control p-2 comment-text-area"
                     @rows="2"
-                    @style="resize:none; min-height: 38px!important;"
                   />
                 </td>
               </tr>

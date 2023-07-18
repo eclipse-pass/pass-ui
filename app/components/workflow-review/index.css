@@ -28,3 +28,12 @@ table td {
 .files-table tbody.striped tr {
   background: #fdfdfd;
 }
+
+.-workflow-review-file-name {
+  min-width: 200px;
+}
+
+.comment-text-area {
+  resize: none;
+  min-height: 38px!important;
+}

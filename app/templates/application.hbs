@@ -1,7 +1,7 @@
-{{! template-lint-disable no-inline-styles require-valid-alt-text }}
+{{! template-lint-disable require-valid-alt-text }}
 {{! template-lint-disable no-curly-component-invocation }}
 {{! template-lint-disable no-implicit-this }}
-<div id="brand-site-container" class="site" style="z-index:0;">
+<div id="brand-site-container" class="site">
   <header id="brand-header" class="navbar navbar-expand-xs justify-content-center mb-0">
     <div class={{if this.fullWidth "container-fluid" "container"}}>
       <a href="/" class="navbar-brand d-none d-sm-block">
@@ -29,7 +29,7 @@
   {{#if this.showNoticeBanner}}
     <NoticeBanner contactUrl={{this.contactUrl}} />
   {{/if}}
-  <div style="z-index:10;">
+  <div id="navbar-container">
     <NavBar @fullWidth={{this.fullWidth}} />
   </div>
   <div class="container-fluid site-content">
