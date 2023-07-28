@@ -12,7 +12,6 @@ module.exports = function (environment) {
       'connect-src': [
         "'self'",
         "'nonce-abcdefg'",
-        "'zing'",
         "'unsafe-inline'",
         'http://code.jquery.com/jquery-1.11.1.min.js',
         'https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js',
