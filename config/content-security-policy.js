@@ -3,7 +3,7 @@ module.exports = function (environment) {
     delivery: ['meta'],
     policy: {
       'default-src': ["'none'"],
-      'script-src': ["'self'"],
+      'script-src': ["'self'", "'unsafe-eval'"],
       'font-src': [
         "'self'",
         'http://fonts.gstatic.com',
@@ -27,8 +27,9 @@ module.exports = function (environment) {
       ],
       'img-src': ["'self'", 'https: data:'],
       'style-src': ["'self'", 'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap'],
+      'style-src-elem': ["'self'", 'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap'],
       'media-src': null,
     },
-    reportOnly: false,
+    reportOnly: true,
   };
 };
