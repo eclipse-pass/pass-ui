@@ -1,7 +1,7 @@
 {{! template-lint-disable no-action no-inline-styles no-unknown-arguments-for-builtin-components require-button-type }}
 {{#if this.show}}
   <ModalDialog @onClose="toggleModal" @translucentOverlay={{false}}>
-    <form style="width: 600px;">
+    <form class="dialog-form-width">
       <div class="form-group row">
         <label class="col-sm-3 col-form-label" for="msg-to">Recipient:</label>
         <div class="col-sm-9">

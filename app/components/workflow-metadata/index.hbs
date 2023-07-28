@@ -1,7 +1,7 @@
-{{! template-lint-disable no-action no-inline-styles }}
+{{! template-lint-disable no-action }}
 {{! takes in a schema and the model to save the schema to}}
 <div {{did-insert (perform this.setupSchemas)}}>
-  <h4 class="font-weight-light pull-right" style="margin-top:6.5px;">
+  <h4 class="font-weight-light pull-right form-step-header">
     {{concat "Form" " " this.displayFormStep " " "of" " " this.schemas.length}}
   </h4>
   {{#if this.currentSchema}}

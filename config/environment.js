@@ -25,6 +25,7 @@ module.exports = function (environment) {
     passApi: {
       namespace: process.env.PASS_API_NAMESPACE || 'data',
     },
+
     locationType: 'auto',
     EmberENV: {
       FEATURES: {

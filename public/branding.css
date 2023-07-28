@@ -102,6 +102,10 @@ a:hover,
 /* Header */
 #brand-site-container {
   background-color: var(--bg-primary);
+  z-index: 0;
+}
+#navbar-container {
+  z-index: 10;
 }
 #brand-header {
   background-color: var(--secondary-500);
@@ -136,6 +140,17 @@ a:hover,
   margin-right: -35px;
   margin-bottom: -10px;
 }
+#submissions-detail-file-cell {
+  min-width: 200px;
+}
+.submissions-detail-comment-textarea {
+  resize: none;
+  min-height: 38px!important;
+}
+.table-container {
+  overflow-x: auto;
+}
+
 
 /* Status icons */
 .manuscript-required > .fa-circle,

@@ -1,0 +1,7 @@
+.file-input {
+  border-width: 2px;
+  cursor: pointer;
+  border-style: dashed;
+  padding: 30px;
+  width: 100%;
+}
