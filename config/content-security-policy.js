@@ -1,14 +1,10 @@
 module.exports = function (environment) {
   return {
-    delivery: ['meta'],
+    delivery: ['header'],
     policy: {
       'default-src': ["'none'"],
       'script-src': ["'self'", "'unsafe-eval'"],
-      'font-src': [
-        "'self'",
-        'http://fonts.gstatic.com',
-        'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap',
-      ],
+      'font-src': ["'self'", 'http://fonts.gstatic.com', 'https://fonts.googleapis.com/css2'],
       'connect-src': [
         "'self'",
         "'nonce-abcdefg'",
@@ -30,11 +26,7 @@ module.exports = function (environment) {
         'https://cdn.jsdelivr.net/npm/sweetalert2@7.26.10/dist/sweetalert2.all.min.js',
       ],
       'img-src': ["'self'", 'https: data:'],
-      'style-src': [
-        "'self'",
-        "'unsafe-inline'",
-        'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap',
-      ],
+      'style-src': ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com/css2'],
       'media-src': null,
     },
     reportOnly: false,
