@@ -55,6 +55,8 @@ export default class AppStaticConfigService extends Service {
 
     const newLink = window.document.createElement('link');
     newLink.setAttribute('rel', 'stylesheet');
+    newLink.setAttribute('crossorigin', 'anonymous');
+    newLink.setAttribute('referrerpolicy', 'origin');
     newLink.setAttribute('href', uri);
 
     window.document.head.appendChild(newLink);
