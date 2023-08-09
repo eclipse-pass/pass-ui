@@ -3,15 +3,11 @@
     Submissions
   </h1>
   {{#if this.currentUser.user.isSubmitter}}
-  <div>
-    <LinkTo
-      @route="submissions.new"
-      @query={{hash grant=null submission=null}}
-      class="btn btn-primary"
-    >
-      Create new submission
-    </LinkTo>
-  </div>
+    <div>
+      <LinkTo @route="submissions.new" @query={{hash grant=null submission=null}} class="btn btn-primary">
+        Create new submission
+      </LinkTo>
+    </div>
   {{/if}}
 </div>
 <p>
