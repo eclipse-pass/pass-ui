@@ -161,11 +161,14 @@ module('Integration | Component | workflow repositories', (hooks) => {
     const checkboxes = this.element.querySelectorAll('input[type="checkbox"]');
     assert.strictEqual(checkboxes.length, 3, 'Unexpected number of checkboxes found');
 
+    assert.dom(checkboxes[2]).isNotChecked();
+
     await click(checkboxes[2]);
 
     assert.strictEqual(repos.length, 3, 'unexpected number of repositories attached to submission');
     assert.ok(repos.isAny('name', 'Moo-pository 00'));
     assert.notOk(repos.includes(undefined), 'there should be no "undefined" entries');
+    assert.dom(checkboxes[2]).isChecked();
   });
 
   test('Unselecting optional repo removes it from submission', async function (assert) {
@@ -201,10 +204,13 @@ module('Integration | Component | workflow repositories', (hooks) => {
     const checkboxes = this.element.querySelectorAll('input[type="checkbox"]');
     assert.strictEqual(checkboxes.length, 3, 'unexpected number of checkboxes found');
 
+    assert.dom(checkboxes[2]).isChecked();
+
     await click(checkboxes[2]);
 
     assert.strictEqual(repos.length, 2, 'unexpected number of repositories attached to the submission');
     assert.notOk(repos.isAny('name', 'Moo-pository 00'));
+    assert.dom(checkboxes[2]).isNotChecked();
   });
 
   /**
