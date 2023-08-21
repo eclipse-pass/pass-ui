@@ -15,6 +15,7 @@ export default class IndexRoute extends CheckSessionRoute {
     if (user.isAdmin) {
       query = {
         filter: { submission: 'submissionStatus=out=cancelled' },
+        include: 'publication',
       };
     } else if (user.isSubmitter) {
       const userMatch = `submitter.id==${user.id},preparers.id=in=${user.id}`;
@@ -23,6 +24,7 @@ export default class IndexRoute extends CheckSessionRoute {
           submission: `(${userMatch});submissionStatus=out=cancelled`,
         },
         sort: '-submittedDate',
+        include: 'publication',
       };
     }
 
