@@ -5,7 +5,7 @@
 const EmberApp = require('ember-cli/lib/broccoli/ember-app');
 const stringHash = require('string-hash');
 
-const disableCssModules = ['/pass-ui/styles/app.css'];
+const disableCssModules = ['/pass-ui/styles/app.css', '/pass-ui/styles/font-awesome-5-0-13.css'];
 
 module.exports = function (defaults) {
   let app = new EmberApp(defaults, {
