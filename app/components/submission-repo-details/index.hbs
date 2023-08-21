@@ -20,13 +20,13 @@
                   {{#if (eq this.status "not-submitted")}}
                     n&#47;a
                   {{else}}
-                    {{status}}
+                    {{this.status}}
                   {{/if}}
                 </span>
               {{else}}
                 <span class="{{this.status}}">
                   <i local-class="deposit-status-icon" class="fas fa-circle"></i>
-                  {{status}}
+                  {{this.status}}
                 </span>
               {{/if}}
             </div>
