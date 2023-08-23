@@ -106,7 +106,7 @@ export default class WorkflowBasics extends Component {
      * Only do this if there is no publication DOI, as the DOI lookup will cover this case.
      */
     if (!get(this, 'publication.doi') && this.journal) {
-      this.selectJournal(this.journal);
+      scheduleOnce('afterRender', this, 'selectJournal', this.journal);
     }
   }
 
