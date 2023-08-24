@@ -229,6 +229,16 @@ td {
   color: white;
 }
 
+/* Submission workflow */
+#proxy-input-block {
+  background-color: #f0f3f5;
+  color: black;
+}
+#on-behalf-of-block {
+  background-color: #f0f3f5;
+  color: black;
+}
+
 .back-arrow {
   margin: 0px;
   padding: 1px !important;
