@@ -145,12 +145,11 @@ a:hover,
 }
 .submissions-detail-comment-textarea {
   resize: none;
-  min-height: 38px!important;
+  min-height: 38px !important;
 }
 .table-container {
   overflow-x: auto;
 }
-
 
 /* Status icons */
 .manuscript-required > .fa-circle,
@@ -184,16 +183,6 @@ a:hover,
 .draft > .fa-circle,
 .draft .fa-info-circle {
   color: gray;
-}
-
-/* Submission workflow */
-#proxy-input-block {
-  background-color: var(--secondary-500);
-  color: white;
-}
-#on-behalf-of-block {
-  background-color: var(--secondary-500);
-  color: white;
 }
 
 th.table-header > i {
