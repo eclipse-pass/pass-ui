@@ -81,16 +81,6 @@ export default class WorkflowGrants extends Component {
     );
   }
 
-  constructor() {
-    super(...arguments);
-
-    if (this.args.preLoadedGrant) {
-      this.args.submission.grants.pushObject(this.args.preLoadedGrant);
-    }
-
-    this.setup.perform();
-  }
-
   @action
   setWorkflowStepHere() {
     this.workflow.setMaxStep(this.workflowStep);
@@ -108,6 +98,9 @@ export default class WorkflowGrants extends Component {
     // Init selected grants to grants already attached to submission
 
     this._selectedGrants.clear();
+    if (this.args.preLoadedGrant) {
+      this.args.submission.grants.pushObject(this.args.preLoadedGrant);
+    }
     this._selectedGrants.addObjects(get(this, 'args.submission.grants'));
   };
 
