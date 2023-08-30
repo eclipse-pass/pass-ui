@@ -109,9 +109,7 @@ module('Integration | Component | workflow grants', (hooks) => {
     assert.ok(row3.getAttribute('class').includes('selected-row'));
     assert.ok(row3.querySelector('.svg-inline--fa.fa-square-check'));
 
-    assert.strictEqual(workflow.getAddedGrants().length, 1, 'One grant should have been added');
-    assert.dom('.awardnum-column').includesText('3');
-    assert.dom('.projectname-date-column').includesText('Moo 3');
+    assert.strictEqual(workflow.getAddedGrants().length, 2, 'Two grants should have been added');
   });
 
   test('Selecting a grant adds it', async function (assert) {

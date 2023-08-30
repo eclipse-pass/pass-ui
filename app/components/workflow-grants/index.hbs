@@ -14,7 +14,7 @@
   <h5>
     Grants added to submission
   </h5>
-  <SubmissionFundingTable @grants={{this._selectedGrants}} @remove={{action this.removeGrant}} />
+  <SubmissionFundingTable @grants={{this._selectedGrants}} @remove={{this.removeGrant}} @setup={{this.setup}} />
   <button class="btn btn-outline-primary" {{action @back}}>
     Back
   </button>

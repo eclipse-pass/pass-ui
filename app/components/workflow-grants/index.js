@@ -29,6 +29,7 @@ export default class WorkflowGrants extends Component {
   @tracked totalGrants = 0;
   /** Grants already attached to the submission on component init */
   @tracked _selectedGrants = A();
+  @tracked preLoadedGrant = this.args.preLoadedGrant;
   @tracked grantColumns = [
     {
       propertyName: 'awardNumber',
@@ -98,9 +99,9 @@ export default class WorkflowGrants extends Component {
     // Init selected grants to grants already attached to submission
 
     this._selectedGrants.clear();
-    if (this.args.preLoadedGrant) {
-      this.args.submission.grants.pushObject(this.args.preLoadedGrant);
-      this.workflow.addGrant(this.args.preLoadedGrant);
+    if (this.preLoadedGrant) {
+      this.args.submission.grants.pushObject(this.preLoadedGrant);
+      this.workflow.addGrant(this.preLoadedGrant);
     }
     this._selectedGrants.addObjects(get(this, 'args.submission.grants'));
   };
@@ -205,7 +206,7 @@ export default class WorkflowGrants extends Component {
 
     // if grant is grant passed in from grant detail page remove query parms
     if (grant === this.preLoadedGrant) {
-      set(this, 'preLoadedGrant', null);
+      this.preLoadedGrant = null;
     }
     const submission = this.args.submission;
     get(submission, 'grants').removeObject(grant);
