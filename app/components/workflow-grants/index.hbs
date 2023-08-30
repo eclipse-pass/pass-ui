@@ -1,15 +1,20 @@
 {{! template-lint-disable link-href-attributes link-rel-noopener no-action no-invalid-interactive no-invalid-link-text require-button-type }}
-<p class="lead text-muted" data-test-workflow-grants-lead-text>
+<p
+  class="lead text-muted"
+  data-test-workflow-grants-lead-text
+  {{did-insert (perform this.setup)}}
+  {{did-update (perform this.setup)}}
+>
   Please select the grant(s)/award(s) that funded this work. This information will help determine which public access
   policies are applicable to your work. If the work you’re about to submit was not supported by a grant, leave this page
   blank and go to the next step.
 </p>
 
-{{#if @submission.grants}}
+{{#if this._selectedGrants}}
   <h5>
     Grants added to submission
   </h5>
-  <SubmissionFundingTable @grants={{@submission.grants}} @remove={{action this.removeGrant}} />
+  <SubmissionFundingTable @grants={{this._selectedGrants}} @remove={{this.removeGrant}} @setup={{this.setup}} />
   <button class="btn btn-outline-primary" {{action @back}}>
     Back
   </button>
@@ -43,23 +48,29 @@
       {{this.totalGrants}}
     </p>
   {{/if}}
-  <div id="grants-selection-table" data-test-grants-selection-table>
-    <ModelsTable
-      @data={{this.submitterGrants}}
-      @columns={{this.grantColumns}}
-      @themeInstance={{this.themeInstance}}
-      @showColumnsDropdown={{false}}
-      @useFilteringByColumns={{false}}
-      @multipleColumnsSorting={{false}}
-      @showComponentFooter={{false}}
-      @showGlobalFilter={{false}}
-      @pageSize={{this.pageSize}}
-      @multipleSelect={{true}}
-      @selectedItems={{@submission.grants}}
-      @onDisplayDataChanged={{this.dataChange}}
-      ...attributes
-    />
-  </div>
+  {{#if this.setup.isIdle}}
+    <div id="grants-selection-table" data-test-grants-selection-table>
+      <ModelsTable
+        @data={{this.submitterGrants}}
+        @columns={{this.grantColumns}}
+        @themeInstance={{this.themeInstance}}
+        @showColumnsDropdown={{false}}
+        @useFilteringByColumns={{false}}
+        @multipleColumnsSorting={{false}}
+        @showComponentFooter={{false}}
+        @showGlobalFilter={{false}}
+        @pageSize={{this.pageSize}}
+        @multipleSelect={{true}}
+        @selectedItems={{this._selectedGrants}}
+        @onDisplayDataChanged={{this.dataChange}}
+        ...attributes
+      />
+    </div>
+  {{else}}
+    <div class="d-flex flex-row align-items justify-content-center my-3">
+      <div class="lds-dual-ring mt-0"></div>
+    </div>
+  {{/if}}
 
   {{#if (gt this.pageCount "1")}}
     <nav id="grants-selection-nav" aria-label="...">

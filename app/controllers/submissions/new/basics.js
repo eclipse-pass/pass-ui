@@ -12,7 +12,6 @@ export default class SubmissionsNewBasics extends Controller {
 
   @alias('model.newSubmission') submission;
   @alias('model.publication') publication;
-  @alias('model.preLoadedGrant') preLoadedGrant;
   @alias('model.submissionEvents') submissionEvents;
   @alias('model.journal') journal;
   @alias('workflow.doiInfo') doiInfo;

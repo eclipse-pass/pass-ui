@@ -5,7 +5,6 @@ import { alias } from '@ember/object/computed';
 
 export default class SubmissionsNewGrants extends Controller {
   @alias('model.newSubmission') submission;
-  @alias('model.preLoadedGrant') preLoadedGrant;
   @alias('model.publication') publication;
   @alias('model.submissionEvents') submissionEvents;
 

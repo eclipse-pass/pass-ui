@@ -110,4 +110,11 @@ export default class NewRoute extends CheckSessionRoute {
       journal,
     });
   }
+
+  setupController(controller, model) {
+    super.setupController(controller, model);
+
+    this.controller.preLoadedGrant = model.preLoadedGrant;
+    this.controllerFor('submissions.new.grants').preLoadedGrant = model.preLoadedGrant;
+  }
 }

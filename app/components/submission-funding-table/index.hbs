@@ -24,7 +24,10 @@
           {{format-date grant.endDate}})</td>
         <td class="pr-0 mr-0">
           {{#if @remove}}
-            <span class="btn btn-outline-danger pull-right" onclick={{action @remove grant}}>Remove</span>
+            <span
+              class="btn btn-outline-danger pull-right"
+              {{on "click" (queue (fn @remove grant) (perform @setup))}}
+            >Remove</span>
           {{/if}}
         </td>
       </tr>
