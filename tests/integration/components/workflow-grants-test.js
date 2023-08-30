@@ -110,6 +110,8 @@ module('Integration | Component | workflow grants', (hooks) => {
     assert.ok(row3.querySelector('.svg-inline--fa.fa-square-check'));
 
     assert.strictEqual(workflow.getAddedGrants().length, 1, 'One grant should have been added');
+    assert.dom('.awardnum-column').includesText('3');
+    assert.dom('.projectname-date-column').includesText('Moo 3');
   });
 
   test('Selecting a grant adds it', async function (assert) {
@@ -187,32 +189,28 @@ module('Integration | Component | workflow grants', (hooks) => {
     );
 
     this.set('preLoadedGrant', knownGrant);
-    this.set('selectedItems', [knownGrant]);
+    this.set('selectedItems', A([knownGrant]));
 
     await render(hbs`
       <WorkflowGrants
         @submission={{this.submission}}
-        @preLoadedGrant={{this.preLoadedGrant}}
         @next={{this.loadNext}}
         @back={{this.loadPrevious}}
-        @selectedItems={{this.selectedItems}}
       />
     `);
-
-    await settled();
-
-    const selectedRows = this.element.querySelector('h5').nextElementSibling.querySelectorAll('tbody tr');
-    assert.ok(selectedRows[0].textContent.includes('Moo 2'));
-
-    const grants = get(this, 'submission.grants');
-    assert.strictEqual(grants.get('length'), 1, 'There should be one grant attached to the submission');
 
     const grantRows = findAll('#grants-selection-table table tbody tr');
     assert.strictEqual(grantRows.length, 4, 'Should be 4 rows');
 
-    await click(grantRows[1]);
+    await click('#grants-selection-table table tbody tr:nth-child(2)');
 
-    assert.strictEqual(grants.get('length'), 0, 'Grant should have been removed from submission');
+    const selectedRows = this.element.querySelector('h5').nextElementSibling.querySelectorAll('tbody tr');
+    assert.ok(selectedRows[0].textContent.includes('Moo 2'));
+
+    assert.strictEqual(this.submission.grants.length, 1, 'There should be one grant attached to the submission');
+    await click('#grants-selection-table table tbody tr:nth-child(2)');
+
+    assert.strictEqual(this.submission.grants.length, 0, 'Grant should have been removed from submission');
 
     assert.ok(grantRows[1].querySelector('.svg-inline--fa.fa-square'), '"Unselected" icon should be seen now');
   });

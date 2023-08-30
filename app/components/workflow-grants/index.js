@@ -100,6 +100,7 @@ export default class WorkflowGrants extends Component {
     this._selectedGrants.clear();
     if (this.args.preLoadedGrant) {
       this.args.submission.grants.pushObject(this.args.preLoadedGrant);
+      this.workflow.addGrant(this.args.preLoadedGrant);
     }
     this._selectedGrants.addObjects(get(this, 'args.submission.grants'));
   };
@@ -258,9 +259,13 @@ export default class WorkflowGrants extends Component {
        * appropriate.
        */
       previousSelection.filter((grant) => !selectedItems.includes(grant)).forEach((grant) => this.removeGrant(grant));
-    }
+    } else if (curLen === 1 && prevLen === 1) {
+      this.addGrant(selectedItems[0]);
 
-    set(this, '_selectedGrants', selectedItems);
+      return;
+    } else if (curLen === 0 && prevLen === 1) {
+      this.removeGrant(selectedItems[0]);
+    }
   }
 
   @action
