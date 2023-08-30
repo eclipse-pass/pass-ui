@@ -66,6 +66,10 @@
         ...attributes
       />
     </div>
+  {{else}}
+    <div class="d-flex flex-row align-items justify-content-center my-3">
+      <div class="lds-dual-ring mt-0"></div>
+    </div>
   {{/if}}
 
   {{#if (gt this.pageCount "1")}}
