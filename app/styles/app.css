@@ -282,16 +282,16 @@ td {
   font-style: normal;
 }
 .glyphicon-plus-sign:before {
-  content: '\f067';
+  content: '+';
 }
 .glyphicon-minus-sign:before {
-  content: '\f068';
+  content: '–';
 }
 .glyphicon-chevron-up:before {
-  content: '\f077';
+  content: '\22c0';
 }
 .glyphicon-chevron-down:before {
-  content: '\f078';
+  content: '\22c1';
 }
 .glyphicon-info-sign:before {
   content: '\f05a';
