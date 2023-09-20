@@ -1,6 +1,10 @@
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 import Component from '@glimmer/component';
+import { dropTask } from 'ember-concurrency-decorators';
+import { timeout } from 'ember-concurrency';
+
+const DEBOUNCE_MS = 250;
 
 export default class FindJournal extends Component {
   @service store;
@@ -9,15 +13,15 @@ export default class FindJournal extends Component {
   autocomplete;
 
   /**
-   * Search for journals by autocompleting based on the term prefix.
+   * lookupDOI - Set publication, publication journal, and doiInfo based on DOI.
    *
-   * @param {string} term  The search term
-   * @returns {array} array of Journals
+   * @param {boolean} setPublication DOI lookup should set the Publication object on the submission
    */
-  @action
-  searchJournals(term) {
+  @dropTask
+  searchJournals = function* (term) {
+    yield timeout(DEBOUNCE_MS);
     return this.autocomplete.suggest('journal', 'journalName', term);
-  }
+  };
 
   @action
   onSelect(selected) {
