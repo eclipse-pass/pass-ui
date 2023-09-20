@@ -17,13 +17,6 @@ export default Component.extend({
     // form ctrls
     newForm.options.form = {
       buttons: {
-        Next: {
-          label: 'Next',
-          styles: 'pull-right btn btn-primary next',
-          click() {
-            that.nextForm(that.stripEmptyArrays(this.getValue()));
-          },
-        },
         Back: {
           title: 'Back',
           styles: 'pull-left btn btn-outline-primary',
@@ -36,6 +29,13 @@ export default Component.extend({
           styles: 'pull-left btn btn-outline-danger ml-2',
           click() {
             that.cancel();
+          },
+        },
+        Next: {
+          label: 'Next',
+          styles: 'pull-right btn btn-primary next',
+          click() {
+            that.nextForm(that.stripEmptyArrays(this.getValue()));
           },
         },
       },
