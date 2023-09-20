@@ -43,6 +43,10 @@ a,
 .btn-link {
   color: var(--primary-500);
 }
+.btn-link-underlined {
+  color: var(--primary-500);
+  text-decoration: underline;
+}
 a:hover,
 .btn-link:hover {
   color: var(--primary-600);
