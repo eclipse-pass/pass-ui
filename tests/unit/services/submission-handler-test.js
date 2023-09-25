@@ -40,6 +40,7 @@ module('Unit | Service | submission-handler', (hooks) => {
 
     let submission = EmberObject.create({
       id: '0',
+      version: 3,
       submitter: {
         id: 'submitter:test-id',
       },
@@ -62,7 +63,7 @@ module('Unit | Service | submission-handler', (hooks) => {
     let files = A();
     let comment = 'blarg';
 
-    assert.expect(13);
+    assert.expect(14);
 
     return service
       .get('submit')
@@ -70,6 +71,7 @@ module('Unit | Service | submission-handler', (hooks) => {
       .then(() => {
         assert.false(submission.get('submitted'));
         assert.strictEqual(submission.get('submissionStatus'), 'approval-requested');
+        assert.strictEqual(submission.get('version'), 3);
 
         // web-link repo should not be removed
         assert.strictEqual(submission.get('repositories.length'), 2);

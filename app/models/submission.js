@@ -18,6 +18,7 @@ export default class SubmissionModel extends Model {
     defaultValue: null,
   })
   submitterEmail;
+  @attr('number') version;
 
   @belongsTo('user') submitter;
   @belongsTo('publication') publication;
