@@ -10,7 +10,6 @@ export function initialize() {
 
   // Tell the inflector to not pluralize our model names
   // by saying the plural is the same word
-  inflector.uncountable('contributor');
   inflector.uncountable('deposit');
   inflector.uncountable('file');
   inflector.uncountable('funder');
@@ -19,7 +18,6 @@ export function initialize() {
   inflector.uncountable('person');
   inflector.uncountable('policy');
   inflector.uncountable('publication');
-  inflector.uncountable('publisher');
   inflector.uncountable('repositoryCopy');
   inflector.uncountable('repository');
   inflector.uncountable('submissionEvent');
