@@ -29,7 +29,11 @@ export default class FoundManuscriptsComponent extends Component {
 
     const allFileNames = [...newFiles.toArray(), ...prevFiles.toArray()].map((file) => file.name);
 
-    return this.foundManuscripts.filter((foundMs) => !allFileNames.includes(foundMs.name));
+    return this.foundManuscripts
+      .filter((manuscript) => !allFileNames.includes(manuscript.name))
+      .filter((manuscript) => {
+        return !!manuscript.name && !!manuscript.url;
+      });
   }
 
   @task
