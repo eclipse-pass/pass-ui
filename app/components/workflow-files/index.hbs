@@ -46,13 +46,13 @@
           {{#if this.manuscript}}
             <tr data-test-added-manuscript-row>
               <td class="vertical-align-middle">
-                {{!-- {{#if manuscript.uri}} --}}
-                {{!-- <a href="{{manuscript.uri}}">
-                    {{manuscript.name}}
+                {{#if this.manuscript.uri}}
+                  <a href={{concat "https://pass.local" this.manuscript.uri}}>
+                    {{this.manuscript.name}}
                   </a>
-                {{else}} --}}
-                {{this.manuscript.name}}
-                {{!-- {{/if}} --}}
+                {{else}}
+                  {{this.manuscript.name}}
+                {{/if}}
               </td>
               <td class="text-center vertical-align-middle">
                 Manuscript
@@ -79,20 +79,19 @@
           {{#each this.supplementalFiles as |file|}}
             <tr data-test-added-supplemental-row>
               <td class="vertical-align-middle">
-                {{!-- {{#if file.uri}}
-                  <a href="{{file.uri}}">
+                {{#if file.uri}}
+                  <a href="{{concat 'https://pass.local' file.uri}}">
                     {{file.name}}
                   </a>
-                {{else}} --}}
-                {{file.name}}
-                {{!-- {{/if}} --}}
+                {{else}}
+                  {{file.name}}
+                {{/if}}
               </td>
               <td class="text-center vertical-align-middle">
                 <select {{on "change" (fn this.updateFileRole file)}}>
                   <option value="supplement" selected={{eq file.fileRole "supplement"}}>
                     Supplement
                   </option>
-                  {{!-- <option value="manuscript" selected={{eq file.fileRole "manuscript"}}>Manuscript</option> --}}
                   <option value="table" selected={{eq file.fileRole "table"}}>
                     Table
                   </option>
