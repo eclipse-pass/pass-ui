@@ -4,7 +4,7 @@ import Component from '@glimmer/component';
 import { dropTask } from 'ember-concurrency-decorators';
 import { timeout } from 'ember-concurrency';
 
-const DEBOUNCE_MS = 250;
+const DEBOUNCE_MS = 750;
 
 export default class FindJournal extends Component {
   @service store;
