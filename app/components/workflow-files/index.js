@@ -105,7 +105,7 @@ export default class WorkflowFiles extends Component {
         mimeType: file.mimeType,
         description: '',
         fileRole: 'supplemental',
-        uri: `https://pass.local/file/${file.uuid}/${encodeURIComponent(file.fileName)}`,
+        uri: `/file/${file.uuid}/${encodeURIComponent(file.fileName)}`,
         submission: this.args.submission,
       });
       if (!this.hasManuscript) {
@@ -128,12 +128,6 @@ export default class WorkflowFiles extends Component {
     if (!file) {
       return;
     }
-
-    // curl -X DELETE "http://localhost:8080/file/{fileId}/{origFileName}" -H "accept: application/json"
-    // TODO: once we resolve whether we should delete file binaries and file objects
-    // either remove or uncommment this
-    // await fetch(file.uri, { method: 'DELETE' });
-    // file.deleteRecord();
 
     file.set('submission', undefined);
     await file.save();
