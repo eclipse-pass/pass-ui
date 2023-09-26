@@ -1,6 +1,10 @@
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 import Component from '@glimmer/component';
+import { dropTask } from 'ember-concurrency-decorators';
+import { timeout } from 'ember-concurrency';
+
+const DEBOUNCE_MS = 750;
 
 export default class FindJournal extends Component {
   @service store;
@@ -14,10 +18,11 @@ export default class FindJournal extends Component {
    * @param {string} term  The search term
    * @returns {array} array of Journals
    */
-  @action
-  searchJournals(term) {
+  @dropTask
+  searchJournals = function* (term) {
+    yield timeout(DEBOUNCE_MS);
     return this.autocomplete.suggest('journal', 'journalName', term);
-  }
+  };
 
   @action
   onSelect(selected) {
