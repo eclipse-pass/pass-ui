@@ -41,6 +41,11 @@ export default Component.extend({
       },
     };
 
+    if (!newForm?.data?.authors) {
+      newForm.data = {};
+      newForm.data.authors = [{}];
+    }
+
     $('#schemaForm').empty();
     $('#schemaForm').alpaca(newForm);
   },
