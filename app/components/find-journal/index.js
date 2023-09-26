@@ -13,9 +13,10 @@ export default class FindJournal extends Component {
   autocomplete;
 
   /**
-   * lookupDOI - Set publication, publication journal, and doiInfo based on DOI.
+   * Search for journals by autocompleting based on the term prefix.
    *
-   * @param {boolean} setPublication DOI lookup should set the Publication object on the submission
+   * @param {string} term  The search term
+   * @returns {array} array of Journals
    */
   @dropTask
   searchJournals = function* (term) {
