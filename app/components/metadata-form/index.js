@@ -1,5 +1,4 @@
 /* eslint-disable ember/no-classic-components, ember/no-classic-classes, ember/require-tagless-components, ember/no-component-lifecycle-hooks, ember/no-get */
-// import Component from '@ember/component';
 import Component from '@ember/component';
 import _ from 'lodash';
 import { get } from '@ember/object';
@@ -40,6 +39,8 @@ export default Component.extend({
         },
       },
     };
+
+    newForm.options.hideInitValidationError = true;
 
     $('#schemaForm').empty();
     $('#schemaForm').alpaca(newForm);

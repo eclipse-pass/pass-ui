@@ -268,10 +268,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       @publication={{this.publication}}
     />
   `);
-
     await waitFor('[data-key="Next"]');
-    await waitFor('[data-key="Back"]');
-    await waitFor('[data-key="Abort"]');
     await click('[data-key="Next"]');
 
     // Need to fill out ISSN field
@@ -279,10 +276,6 @@ module('Integration | Component | workflow-metadata', (hooks) => {
     await fillIn('[name="ISSN"]', '1234');
 
     await click('button[data-key="Next"]');
-    await waitFor('[data-key="Back"]');
-    await waitFor('[data-key="Abort"]');
-    await waitFor('input[name="ISSN"]');
-    await click('[data-key="Next"]');
 
     await waitFor(document.querySelector('.swal2-confirm'));
 

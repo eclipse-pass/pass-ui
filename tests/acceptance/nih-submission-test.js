@@ -467,7 +467,7 @@ module('Acceptance | submission', function (hooks) {
     await click('.alpaca-form-button-Next');
 
     await waitFor(document.querySelector('#swal2-content'));
-    assert.dom(document.querySelector('#swal2-content')).includesText("should have required property 'authors'");
+    assert.dom(document.querySelector('#swal2-content')).includesText("should have required property 'author'");
 
     // Some reason, setting the document query to a variable before clicking works,
     // but calling the query selector in the click does not work
@@ -612,7 +612,7 @@ module('Acceptance | submission', function (hooks) {
     await click('.alpaca-form-button-Next');
 
     await waitFor(document.querySelector('#swal2-content'));
-    assert.dom(document.querySelector('#swal2-content')).includesText("should have required property 'authors'");
+    assert.dom(document.querySelector('#swal2-content')).includesText("should have required property 'author'");
 
     const confirmBtn = document.querySelector('.swal2-confirm');
     assert.ok(confirmBtn, 'No SweetAlert OK button found');
