@@ -47,7 +47,7 @@
             <tr data-test-added-manuscript-row>
               <td class="vertical-align-middle">
                 {{#if this.manuscript.uri}}
-                  <a href={{concat "https://pass.local" this.manuscript.uri}}>
+                  <a href={{this.manuscript.uri}}>
                     {{this.manuscript.name}}
                   </a>
                 {{else}}
@@ -80,7 +80,7 @@
             <tr data-test-added-supplemental-row>
               <td class="vertical-align-middle">
                 {{#if file.uri}}
-                  <a href="{{concat 'https://pass.local' file.uri}}">
+                  <a href="{{file.uri}}">
                     {{file.name}}
                   </a>
                 {{else}}
