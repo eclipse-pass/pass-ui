@@ -103,6 +103,7 @@ export default class MetadataSchemaService extends Service {
   addDisplayData(schema, data, readonly) {
     if (!schema.data) {
       schema.data = {};
+      schema.data.authors = [{}];
     }
     // Will merge 'data' onto 'schema.data'. 'schema.data' values may be overwritten by values from 'data'
     schema.data = Object.assign(schema.data, data);
