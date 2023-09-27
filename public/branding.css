@@ -39,9 +39,14 @@ h1,
 h2 {
   color: var(--secondary-500);
 }
+a {
+  font-weight: 500 !important;
+  text-decoration: underline;
+}
 a,
 .btn-link {
   color: var(--primary-500);
+  text-decoration: none;
 }
 .btn-link-underlined {
   color: var(--primary-500);
@@ -51,6 +56,13 @@ a:hover,
 .btn-link:hover {
   color: var(--primary-600);
   text-decoration: underline;
+}
+
+a.text-danger:hover {
+  color: white !important;
+}
+.models-table-wrapper tbody tr {
+  background-color: white !important;
 }
 
 /* Buttons */

@@ -264,7 +264,7 @@ td {
 .alpaca-invalid > input,
 .alpaca-invalid > textarea,
 .alpaca-invalid > select {
-  border-color: #f86c6b;
+  border-color: #dc3545;
 }
 
 .alpaca-message-notOptional {
