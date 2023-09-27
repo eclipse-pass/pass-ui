@@ -30,6 +30,7 @@
       </p>
       <div class="input-group pb-3">
         <Input
+          aria-label="Proxy search input"
           @enter={{action "toggleUserSearchModal"}}
           @value={{this.userSearchTerm}}
           class="form-control"
@@ -73,6 +74,7 @@
       </p>
       <div class="form-inline">
         <Input
+          aria-label="Proxy submitter email input"
           class={{concat "mt-1 mb-3 form-control w-50 " this.submitterEmailClass}}
           @key-up={{action @validateSubmitterEmail}}
           @disabled={{@submission.submitter.id}}
@@ -81,6 +83,7 @@
           data-test-proxy-submitter-email-input
         />
         <Input
+          aria-label="Proxy submitter name input"
           class="mt-1 mb-3 form-control w-50"
           @disabled={{@submission.submitter.id}}
           @value={{@submission.submitterName}}

@@ -57,12 +57,14 @@ a:hover,
   color: var(--primary-600);
   text-decoration: underline;
 }
-
 a.text-danger:hover {
   color: white !important;
 }
 .models-table-wrapper tbody tr {
   background-color: white !important;
+}
+.ember-power-select-placeholder {
+  color: #536c79;
 }
 
 /* Buttons */
