@@ -51,6 +51,7 @@ export default class WorkflowGrants extends Component {
       disableSorting: true,
     },
     {
+      title: 'Select',
       component: 'select-row-toggle',
       mayBeHidden: false,
     },

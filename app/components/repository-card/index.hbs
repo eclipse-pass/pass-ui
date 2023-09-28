@@ -15,7 +15,13 @@
 }}
 <li class="list-group-item d-flex align-items-center my-1">
   {{#if @choice}}
-    <input type="checkbox" name={{@repository.name}} checked={{@repository._selected}} {{on "click" this.toggle}} />
+    <input
+      aria-label="Optional repositories checkbox"
+      type="checkbox"
+      name={{@repository.name}}
+      checked={{@repository._selected}}
+      {{on "click" this.toggle}}
+    />
     <label for="{{@repoInfo.repository.name}}" class="mb-0 ml-2">
       {{@repository.name}}{{#if @funders}}
         -

@@ -18,7 +18,7 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav w-100">
+        <ul class="navbar-nav w-75">
           <li class="nav-item">
             <LinkTo @route="dashboard" class="nav-link pl-0 ml-0">
               Dashboard
@@ -57,28 +57,28 @@
               </a>
             </li>
           {{/if}}
-          <div class="nav-item dropdown ml-auto">
-            <a
-              id="user-menu-name"
-              class="nav-link accountInfo pr-1"
-              data-toggle="dropdown"
-              href="#"
-              role="button"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              {{this.currentUser.user.displayName}}
-            </a>
-            <div id="user-menu" class="dropdown">
-              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="#" {{on "click" this.logOut}}>
-                  <i class="fa fa-lock"></i>
-                  Logout
-                </a>
-              </div>
+        </ul>
+        <div class="nav-item dropdown ml-auto w-25">
+          <a
+            id="user-menu-name"
+            class="nav-link accountInfo pr-1"
+            data-toggle="dropdown"
+            href="#"
+            role="button"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            {{this.currentUser.user.displayName}}
+          </a>
+          <div id="user-menu" class="dropdown">
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <a class="dropdown-item" href="#" {{on "click" this.logOut}}>
+                <i class="fa fa-lock"></i>
+                Logout
+              </a>
             </div>
           </div>
-        </ul>
+        </div>
       </div>
     </div>
   </div>

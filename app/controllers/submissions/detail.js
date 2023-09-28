@@ -269,7 +269,7 @@ export default class SubmissionsDetail extends Controller {
     // First, check if user has visited all required weblinks.
     if (this.disableSubmit) {
       if (!this.hasVisitedWeblink) {
-        $('.fa-exclamation-triangle').css('color', '#f86c6b');
+        $('.fa-exclamation-triangle').css('color', '#DC3545');
         $('.fa-exclamation-triangle').css('font-size', '2.2em');
         later(() => {
           $('.fa-exclamation-triangle').css('color', '#b0b0b0');
@@ -450,7 +450,7 @@ export default class SubmissionsDetail extends Controller {
       title: 'Are you sure?',
       text: 'If you cancel this submission, it will not be able to be resumed.',
       confirmButtonText: 'Yes, cancel this submission',
-      confirmButtonColor: '#f86c6b',
+      confirmButtonColor: '#DC3545',
       cancelButtonText: 'Never mind',
       showCancelButton: true,
     });
@@ -467,7 +467,7 @@ export default class SubmissionsDetail extends Controller {
     let result = await swal({
       text: 'Are you sure you want to delete this draft submission? This cannot be undone.',
       confirmButtonText: 'Delete',
-      confirmButtonColor: '#f86c6b',
+      confirmButtonColor: '#DC3545',
       showCancelButton: true,
     });
 

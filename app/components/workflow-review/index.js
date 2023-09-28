@@ -77,7 +77,7 @@ export default class WorkflowReview extends Component {
     // In case a crafty user edits the page HTML, don't submit when not allowed
     if (this.disableSubmit) {
       if (!this.hasVisitedWeblink) {
-        $('.fa-exclamation-triangle').css('color', '#f86c6b');
+        $('.fa-exclamation-triangle').css('color', '#DC3545');
         $('.fa-exclamation-triangle').css('font-size', '2.2em');
         later(() => {
           $('.fa-exclamation-triangle').css('color', '#b0b0b0');

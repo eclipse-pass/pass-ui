@@ -59,6 +59,7 @@
               </td>
               <td class="vertical-align-middle">
                 <input
+                  aria-label="Manuscript description input"
                   class="form-control file-description-width"
                   value={{this.manuscript.description}}
                   {{on "change" (fn this.updateFileDescription this.manuscript)}}
@@ -102,6 +103,7 @@
               </td>
               <td class="vertical-align-middle">
                 <input
+                  aria-label="File description input"
                   class="form-control file-description-width"
                   value={{file.description}}
                   {{on "change" (fn this.updateFileDescription file)}}
@@ -143,11 +145,12 @@
   <div class="col-md-12">
     {{#let (file-queue name="files" onFileAdded=this.uploadFile) as |queue|}}
       <input
+        aria-label="File upload input"
         type="file"
         id="file-multiple-input"
         multiple
         size="50"
-        class="file-input text-gray-300"
+        class="file-input"
         {{queue.selectFile}}
       />
     {{/let}}
