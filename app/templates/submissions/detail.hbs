@@ -4,7 +4,7 @@
 </div>
 <div id="submission-details-title" class="row mb-2">
   <div class="col-6">
-    <LinkTo @route="submissions" class="btn btn-small back-arrow">
+    <LinkTo @route="submissions" class="btn btn-small back-arrow" aria-label="Go back to the previous page">
       <i class="fa fa-arrow-left fa-lg"></i>
     </LinkTo>
     <h2 class="font-weight-light d-inline-block">
@@ -269,7 +269,7 @@
                         </th>
                       </tr>
                     </thead>
-                    <tbody class="striped">
+                    <tbody>
                       {{#each (get this.model "files") as |file|}}
                         <tr>
                           <td data-label="icon">

@@ -129,7 +129,7 @@ export default class SubmissionsNew extends Controller {
       title: 'Discard Draft',
       text: "This will abort the current submission and discard progress you've made. This cannot be undone.",
       confirmButtonText: 'Abort',
-      confirmButtonColor: '#f86c6b',
+      confirmButtonColor: '#DC3545',
       showCancelButton: true,
     });
 

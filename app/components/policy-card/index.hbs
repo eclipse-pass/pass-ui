@@ -54,6 +54,7 @@
               your article deposited by your journal/publisher.
             </p>
             <input
+              aria-label="Workflow policies radio indicating no direct deposit"
               type="radio"
               checked={{not this.pmcPublisherDeposit}}
               onchange={{action "pmcPublisherDepositToggled" false}}
@@ -62,6 +63,7 @@
             I would like to submit my manuscript to PMC via the NIH Manuscript System (NIHMS) as part of this process.
             <br />
             <input
+              aria-label="Workflow policies radio indicating a direct deposit"
               type="radio"
               checked={{this.pmcPublisherDeposit}}
               onchange={{action "pmcPublisherDepositToggled" true}}

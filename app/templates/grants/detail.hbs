@@ -1,7 +1,12 @@
 <div id="grant-details-title" class="d-flex justify-content-between row my-3 mx-auto">
-  <h1 class="font-weight-light pt-1">
-    Grant Details
-  </h1>
+  <div class="d-flex align-items-center">
+    <LinkTo @route="grants" class="btn btn-small back-arrow mr-1" aria-label="Go back to the previous page">
+      <i class="fa fa-arrow-left fa-lg"></i>
+    </LinkTo>
+    <h1 class="font-weight-light pt-1">
+      Grant Details
+    </h1>
+  </div>
   {{#if this.currentUser.user.isSubmitter}}
     <div>
       <LinkTo @route="submissions.new" @query={{hash grant=this.grant.id}} class="btn btn-primary btn-small pull-right">

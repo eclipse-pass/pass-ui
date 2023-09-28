@@ -37,7 +37,7 @@ export default class SubmissionActionCell extends Component {
       // title: 'Are you sure?',
       text: 'Are you sure you want to delete this draft submission? This cannot be undone.',
       confirmButtonText: 'Delete',
-      confirmButtonColor: '#f86c6b',
+      confirmButtonColor: '#DC3545',
       showCancelButton: true,
       // buttonsStyling: false,
       // confirmButtonClass: 'btn btn-danger',
