@@ -1,16 +1,12 @@
 {{#if this.displayInfoBanner}}
   <div class="info-banner p-1 text-center font-weight-bold">
     Need help making a submission? Read our submission workflow
-    <a
-      href="https://github.com/eclipse-pass/main/blob/main/docs/user/README.md"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
+    <a class="instructions-url" href={{this.instructionsUrl}} target="_blank" rel="noopener noreferrer">
       instructions
     </a>
     {{#if this.contactUrl}}
       or
-      <a href={{this.contactUrl}} target="_blank" rel="noopener noreferrer">
+      <a class="contact-us-url" href={{this.contactUrl}} target="_blank" rel="noopener noreferrer">
         contact us
       </a>
     {{/if}}
