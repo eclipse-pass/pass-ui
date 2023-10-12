@@ -287,5 +287,7 @@ export default function (config) {
     nlmta: 'Analyst',
   });
 
+  server.loadFixtures();
+
   return server;
 }

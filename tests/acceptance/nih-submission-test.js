@@ -90,6 +90,7 @@ module('Acceptance | submission', function (hooks) {
 
     await waitFor('[data-test-metadata-form] textarea[name=title]');
     assert.strictEqual(currentURL(), '/submissions/new/metadata');
+
     assert
       .dom('[data-test-metadata-form] textarea[name=title]')
       .hasValue(

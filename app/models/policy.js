@@ -7,7 +7,6 @@ export default class PolicyModel extends Model {
 
   @hasMany('repository') repositories;
   @attr('string') institution;
-  // funder: DS.hasMany('funder'),
 
   @attr('string') _type;
 }
