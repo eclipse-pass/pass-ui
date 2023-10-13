@@ -12,11 +12,7 @@ export default class WorkflowBasicsUserSearch extends Component {
   @tracked matchingUsers = [];
   @tracked currentPage = 1;
   @tracked usersPerPage = 30;
-  @tracked numberOfMatches = 0;
-
-  get numberOfPages() {
-    return Math.ceil(this.numberOfMatches / this.usersPerPage);
-  }
+  @tracked numberOfPages = 1;
 
   get pageNumbers() {
     let arr = [];
@@ -52,27 +48,38 @@ export default class WorkflowBasicsUserSearch extends Component {
 
   @task
   searchForUsers = function* (page) {
+    // Strip out non-alphanumberic characters to ensure filter is valid
+    let input = this.args.searchInput.replace(/\W/g, '');
+
+    if (input.length == 0) {
+      return;
+    }
+
     if (page === 0 || page === null || page === undefined || !page) {
       page = 1;
     }
-    this.currentPage = page;
-    const size = this.usersPerPage;
-    let info = {};
-    let input = this.args.searchInput;
 
-    // TODO: sanitize input before building filter!!
-    const userQuery = {
+    this.currentPage = page;
+
+    const size = this.usersPerPage;
+
+    const query = {
       filter: {
         user: `email=isnull=false;(${this.userFilter(input)})`,
       },
       page: {
-        offset: (page - 1) * size,
+        number: page,
+        size: size,
+        totals: null,
       },
     };
 
-    let users = yield this.store.query('user', userQuery);
+    let users = yield this.store.query('user', query);
+
+    if (users.meta) {
+      this.numberOfPages = users.meta.page.totalPages;
+    }
 
     this.matchingUsers = users;
-    if (info.total !== null) this.numberOfMatches = info.total;
   };
 }
