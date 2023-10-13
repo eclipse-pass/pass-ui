@@ -1,36 +1,31 @@
 {{! template-lint-disable link-rel-noopener no-action no-triple-curlies require-input-label }}
 <div class="card w-100 my-2" {{did-insert this.setup}}>
   <div class="card-body">
+    <h4 class="card-title" data-test-policy-title>
+      <a href="#">
+        {{@policy.title}}
+      </a>
+    </h4>
     {{#if this.policyIsJHU}}
-      <h4 class="card-title">
-        <a href="#">
-          {{@policy.title}}
-        </a>
-      </h4>
-      <h6 class="card-subtitle mb-2">
+      <h6 class="card-subtitle mb-2" data-test-jhu-policy-deposit-expectation>
         Expects deposit into an open access repository
       </h6>
     {{else}}
-      <h4 class="card-title">
-        <a href="#">
-          {{@policy.title}}
-        </a>
-      </h4>
-      <h6 class="card-subtitle mb-2">
+      <h6 class="card-subtitle mb-2" data-test-policy-deposit-expectation>
         Requires deposit into
         {{#each @policy.repositories as |repo index|}}
           {{if index ", "}}{{repo.name}}
         {{/each}}
       </h6>
     {{/if}}
-    <p class="card-text mt-2">
+    <p class="card-text mt-2" data-test-policy-description>
       {{{@policy.description}}}
       {{#if @policy.policyUrl}}
         <br />
         <br />
         For more information, see their official policy below.
         <br />
-        <a href={{@policy.policyUrl}} target="_blank">
+        <a href={{@policy.policyUrl}} target="_blank" data-test-policy-url>
           {{@policy.policyUrl}}
         </a>
       {{/if}}
@@ -38,7 +33,7 @@
       <br />
       {{#if this.usesPmcRepository}}
         {{#if this.methodAJournal}}
-          <div class="alert alert-success">
+          <div class="alert alert-success" data-test-method-a-journal-pmc-intro>
             The journal you published in participates in the PMC Method A program, and will submit the published article
             to PMC on your behalf.
             <em>
@@ -47,7 +42,7 @@
             </em>
           </div>
         {{else}}
-          <div class="alert alert-info">
+          <div class="alert alert-info" data-test-non-method-a-journal-pmc-intro>
             <p>
               Some journals would submit your article to PMC on your behalf, for a fee. Specific arrangements would be
               required. Please indicate below whether or not you have made an arrangement with the publisher to have

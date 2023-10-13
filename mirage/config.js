@@ -285,7 +285,10 @@ export default function (config) {
     issns: ['Print:0003-2654', 'Online:1364-5528'],
     journalName: 'The Analyst',
     nlmta: 'Analyst',
+    pmcParticipation: 'B',
   });
+
+  server.loadFixtures();
 
   return server;
 }
