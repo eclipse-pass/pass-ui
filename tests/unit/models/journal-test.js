@@ -1,12 +1,22 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import { run } from '@ember/runloop';
 
 module('Unit | Model | journal', (hooks) => {
   setupTest(hooks);
 
   test('it exists', function (assert) {
-    const journal = run(() => this.owner.lookup('service:store').createRecord('journal'));
+    const store = this.owner.lookup('service:store');
+    const journal = store.createRecord('journal');
     assert.ok(journal);
+  });
+
+  test('it computes pmcParticipation correctly', function (assert) {
+    const store = this.owner.lookup('service:store');
+    const methodAJournal = store.createRecord('journal', { pmcParticipation: 'A' });
+    const methodBJournal = store.createRecord('journal', { pmcParticipation: 'B' });
+
+    assert.ok(methodAJournal.isMethodA);
+    assert.ok(methodBJournal.isMethodB);
+    assert.notOk(methodBJournal.isMethodA);
   });
 });
