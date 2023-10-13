@@ -15,10 +15,8 @@ export default class ApplicationController extends Controller {
   @alias('model.staticConfig')
   staticConfig;
 
-  params = ['userToken'];
   rootURL = config.rootURL;
 
-  @tracked userToken = null;
   @tracked wideRoutes = ['grants.index', 'grants.detail', 'submissions.index'];
   @tracked brand = get(this, 'staticConfig.branding');
   @tracked currentRouteName = this.router.currentRouteName;
