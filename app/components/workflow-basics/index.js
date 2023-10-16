@@ -46,12 +46,18 @@ export default class WorkflowBasics extends Component {
 
   /**
    * Publication should be set/overwritten if there is no current publication, if the current
-   * publication has no DOI or Title, or it the current publication has no journal with a
-   * journalName
+   * publication has no DOI or Title, or it the current publication has no journal or no journal
+   * with a journalName
    */
   shouldSetPublication() {
     const publication = this.publication;
-    return !publication || !publication.doi || !publication.title || !get(publication, 'journal.journalName');
+    return (
+      !publication ||
+      !publication.doi ||
+      !publication.title ||
+      !publication.journal ||
+      !get(publication, 'journal.journalName')
+    );
   }
 
   constructor() {
