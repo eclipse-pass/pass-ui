@@ -4,13 +4,22 @@
   <h4 class="font-weight-light pull-right form-step-header">
     {{concat "Form" " " this.displayFormStep " " "of" " " this.schemas.length}}
   </h4>
-  {{#if this.currentSchema}}
-    <MetadataForm
-      @schema={{this.currentSchema}}
-      @nextForm={{this.nextForm}}
-      @previousForm={{this.previousForm}}
-      @cancel={{this.cancel}}
-    />
+
+  {{#if this.missingRequiredJournal}}
+   <h2>Missing required journal</h2>
+   <p>
+   A repository requires information about the journal associated with the submission.
+   Please <LinkTo @route="submissions.new.basics">go back and enter a journal</LinkTo>.
+   </p>
+  {{else}}
+    {{#if this.currentSchema}}
+      <MetadataForm
+        @schema={{this.currentSchema}}
+        @nextForm={{this.nextForm}}
+        @previousForm={{this.previousForm}}
+        @cancel={{this.cancel}}
+        />
+    {{/if}}
   {{/if}}
 </div>
 {{yield}}
