@@ -97,29 +97,32 @@ export default class DoiService extends Service {
 
     // Add issns key in expected format by parsing journal issns.
     doiCopy.issns = [];
-    if (isArray(journal.get('issns'))) {
-      journal.get('issns').forEach((s) => {
-        let i = s.indexOf(':');
-        let value = {};
 
-        if (i == -1) {
-          value.issn = s;
-        } else {
-          let prefix = s.substring(0, i);
+    if (journal) {
+      if (isArray(journal.get('issns'))) {
+        journal.get('issns').forEach((s) => {
+          let i = s.indexOf(':');
+          let value = {};
 
-          if (prefix === 'Print') {
-            value.pubType = 'Print';
-          } else if (prefix === 'Online') {
-            value.pubType = 'Online';
+          if (i == -1) {
+            value.issn = s;
+          } else {
+            let prefix = s.substring(0, i);
+
+            if (prefix === 'Print') {
+              value.pubType = 'Print';
+            } else if (prefix === 'Online') {
+              value.pubType = 'Online';
+            }
+
+            value.issn = s.substring(i + 1);
           }
 
-          value.issn = s.substring(i + 1);
-        }
-
-        if (value.issn.length > 0) {
-          doiCopy.issns.push(value);
-        }
-      });
+          if (value.issn.length > 0) {
+            doiCopy.issns.push(value);
+          }
+        });
+      }
     }
 
     // Massage 'authors' information
@@ -138,7 +141,7 @@ export default class DoiService extends Service {
     // Misc manual translation
     if (doiCopy.nlmta) {
       doiCopy['journal-NLMTA-ID'] = doiCopy.nlmta;
-    } else if (journal.get('nlmta')) {
+    } else if (journal && journal.get('nlmta')) {
       doiCopy['journal-NLMTA-ID'] = journal.get('nlmta');
     }
     if (doiCopy['container-title-short']) {
