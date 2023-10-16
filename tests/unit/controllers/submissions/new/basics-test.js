@@ -97,7 +97,7 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
     assert.false(controller.get('journalIsInvalid'));
   });
 
-  test('check validateAndLoadTab rejects empty journal and title', function (assert) {
+  test('check validateAndLoadTab rejects empty publication title but not journal title', function (assert) {
     let controller = this.owner.lookup('controller:submissions/new/basics');
     let submission = EmberObject.create({});
     let publication = EmberObject.create({
@@ -116,9 +116,9 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
     controller.send('validateAndLoadTab', 'submissions.new.basics');
 
     assert.true(controller.get('titleError'));
-    assert.true(controller.get('journalError'));
+    assert.false(controller.get('journalError'));
     assert.ok(controller.get('flaggedFields').indexOf('title') > -1);
-    assert.ok(controller.get('flaggedFields').indexOf('journal') > -1);
+    assert.strictEqual(controller.get('flaggedFields').indexOf('journal'), -1);
   });
 
   test('check validateAndLoadTab rejects incomplete submitter', function (assert) {
