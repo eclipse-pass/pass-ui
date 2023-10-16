@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-get */
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
-import { action, get, set } from '@ember/object';
+import { action } from '@ember/object';
 import _ from 'lodash';
 import { inject as service } from '@ember/service';
 import swal from 'sweetalert2';
@@ -62,12 +62,12 @@ export default class WorkflowMetadata extends Component {
 
     let md;
     try {
-      md = JSON.parse(get(this, 'args.submission.metadata'));
+      md = JSON.parse(this.args.submission.metadata);
     } catch (e) {
       // console.log(e);
       // Do nothing
     } finally {
-      set(this, 'metadata', md || {});
+      this.metadata = md || {};
       this.setReadOnly({});
     }
   }
@@ -78,7 +78,7 @@ export default class WorkflowMetadata extends Component {
     // 10.4137/CMC.S38446
     // 10.1039/c7an01256j
     if (!this.schemas) {
-      const repos = get(this, 'args.submission.repositories').map((repo) => repo.id);
+      const repos = this.args.submission.repositories.map((repo) => repo.id);
 
       // Load schemas by calling the Schema service
       try {
@@ -87,7 +87,7 @@ export default class WorkflowMetadata extends Component {
         const requiresJournal =
           schemas.findIndex((schema) => 'required' in schema && schema.required.includes('journal-title')) != -1;
         const doiInfo = this.doiInfo;
-        const journal = yield get(this, 'args.publication.journal');
+        const journal = yield this.args.publication.journal;
 
         this.missingRequiredJournal = requiresJournal && !journal;
 
@@ -100,8 +100,8 @@ export default class WorkflowMetadata extends Component {
 
         this.updateMetadata(metadataFromDoi);
 
-        set(this, 'schemas', schemas);
-        set(this, 'currentFormStep', 0);
+        this.schemas = schemas;
+        this.currentFormStep = 0;
       } catch (e) {
         console.log('%cFailed to get schemas', 'color:red;');
         console.log(e);
@@ -117,7 +117,7 @@ export default class WorkflowMetadata extends Component {
    * @param {object} metadata
    */
   setReadOnly(metadata) {
-    set(this, 'readOnlyProperties', Object.keys(metadata));
+    this.readOnlyProperties = Object.keys(metadata);
   }
 
   @action
@@ -223,7 +223,7 @@ export default class WorkflowMetadata extends Component {
 
     mergedBlob = this.metadataSchema.mergeBlobs(this.metadata, newMetadata, deletableFields);
 
-    set(this, 'metadata', mergedBlob);
+    this.metadata = mergedBlob;
   }
 
   /**
@@ -244,7 +244,7 @@ export default class WorkflowMetadata extends Component {
     });
 
     const finalMetadata = this.metadata;
-    set(this, 'args.submission.metadata', JSON.stringify(finalMetadata));
+    this.args.submission.metadata = JSON.stringify(finalMetadata);
   }
 
   /**
@@ -252,8 +252,8 @@ export default class WorkflowMetadata extends Component {
    * model metadata field which is mutated by the covid selection box
    */
   hintsCleanup() {
-    let submission = get(this, 'args.submission');
-    let metadata = get(this, 'metadata');
+    let submission = this.args.submission;
+    let metadata = this.metadata;
     let tags = [];
     let mdHasCovid = false;
 
