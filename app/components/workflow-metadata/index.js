@@ -89,7 +89,7 @@ export default class WorkflowMetadata extends Component {
         const doiInfo = this.doiInfo;
         const journal = yield get(this, 'args.publication.journal');
 
-        set(this, 'missingRequiredJournal', requiresJournal && !journal);
+        this.missingRequiredJournal = requiresJournal && !journal;
 
         // Add relevant fields from DOI data to submission metadata
         const metadataFromDoi = this.doi.doiToMetadata(doiInfo, journal, this.metadataSchema.getFields(schemas));
