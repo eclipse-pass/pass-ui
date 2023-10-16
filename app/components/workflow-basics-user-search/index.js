@@ -49,7 +49,8 @@ export default class WorkflowBasicsUserSearch extends Component {
   @task
   searchForUsers = function* (page) {
     // Strip out non-alphanumberic characters to ensure filter is valid
-    let input = this.args.searchInput.replace(/\W/g, '');
+    // Such characters in the middle of the string become a space
+    let input = this.args.searchInput.replace(/\W+/g, ' ').trim();
 
     if (input.length == 0) {
       return;
