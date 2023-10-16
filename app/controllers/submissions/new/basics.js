@@ -81,12 +81,8 @@ export default class SubmissionsNewBasics extends Controller {
       set(this, 'titleError', true);
       this.flashMessages.warning('The title must not be left blank');
     }
-    if (this.journalIsInvalid) {
-      set(this, 'journalError', true);
-      this.flashMessages.warning('The journal must not be left blank');
-    }
 
-    if (this.titleIsInvalid || this.journalIsInvalid) return; // end here
+    if (this.titleIsInvalid) return; // end here
 
     // non proxy submission will always have current user as submitter, so only need to validate this for proxy submission
     if (get(this, 'submission.isProxySubmission')) {
