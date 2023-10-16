@@ -33,6 +33,7 @@ export default class WorkflowMetadata extends Component {
   @tracked readOnlyProperties = [];
   @tracked schemas = undefined;
   @tracked metadata = {};
+  @tracked missingRequiredJournal = false;
   @tracked currentFormStep = 0; // Current step #
 
   /**
@@ -83,8 +84,12 @@ export default class WorkflowMetadata extends Component {
       try {
         const schemas = yield this.metadataSchema.getMetadataSchemas(repos);
 
+        const requiresJournal =
+          schemas.findIndex((schema) => 'required' in schema && schema.required.includes('journal-title')) != -1;
         const doiInfo = this.doiInfo;
         const journal = yield get(this, 'args.publication.journal');
+
+        set(this, 'missingRequiredJournal', requiresJournal && !journal);
 
         // Add relevant fields from DOI data to submission metadata
         const metadataFromDoi = this.doi.doiToMetadata(doiInfo, journal, this.metadataSchema.getFields(schemas));
