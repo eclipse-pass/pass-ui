@@ -6,11 +6,11 @@
   </h4>
 
   {{#if this.missingRequiredJournal}}
-   <h2>Missing required journal</h2>
-   <p>
-   A repository requires information about the journal associated with the submission.
-   Please <LinkTo @route="submissions.new.basics">go back and enter a journal</LinkTo>.
-   </p>
+    <h2>Missing required journal</h2>
+    <p>
+      A repository requires information about the journal associated with the submission. Please
+      <LinkTo @route="submissions.new.basics">go back and enter a journal</LinkTo>.
+    </p>
   {{else}}
     {{#if this.currentSchema}}
       <MetadataForm
@@ -18,7 +18,7 @@
         @nextForm={{this.nextForm}}
         @previousForm={{this.previousForm}}
         @cancel={{this.cancel}}
-        />
+      />
     {{/if}}
   {{/if}}
 </div>
