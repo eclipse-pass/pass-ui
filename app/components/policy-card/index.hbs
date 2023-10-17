@@ -2,9 +2,7 @@
 <div class="card w-100 my-2" {{did-insert this.setup}}>
   <div class="card-body">
     <h4 class="card-title" data-test-policy-title>
-      <a href="#">
-        {{@policy.title}}
-      </a>
+      {{@policy.title}}
     </h4>
     {{#if this.policyIsJHU}}
       <h6 class="card-subtitle mb-2" data-test-jhu-policy-deposit-expectation>
