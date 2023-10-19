@@ -127,7 +127,8 @@ export default class WorkflowReview extends Component {
     const result = yield swal
       .mixin({
         input: 'checkbox',
-        inputPlaceholder: "I agree to the above statement on today's date ",
+        inputPlaceholder:
+          "I agree to the above statement on today's date. I understand that if I proceed and do not check this box, my submission will not be deposited to above repository.",
         confirmButtonText: 'Next &rarr;',
         progressSteps: reposWithAgreementText.map((repo, index) => index + 1),
       })
