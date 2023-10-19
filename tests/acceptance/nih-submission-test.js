@@ -153,7 +153,8 @@ module('Acceptance | submission', function (hooks) {
 
     await waitFor(document.querySelector('#swal2-title'));
     assert.dom(document.querySelector('#swal2-title')).includesText('Deposit requirements for JScholarship');
-    await click(document.querySelector('#swal2-checkbox'));
+    await waitFor(document.querySelector('.swal2-radio label:nth-child(1) input[type="radio"]'));
+    await click(document.querySelector('.swal2-radio label:nth-child(1) input[type="radio"]'));
     await click(document.querySelector('.swal2-confirm'));
 
     await waitFor(document.querySelector('#swal2-title'));
@@ -350,7 +351,8 @@ module('Acceptance | submission', function (hooks) {
 
     await waitFor(document.querySelector('#swal2-title'));
     assert.dom(document.querySelector('#swal2-title')).includesText('Deposit requirements for JScholarship');
-    await click(document.querySelector('#swal2-checkbox'));
+    await waitFor(document.querySelector('.swal2-radio label:nth-child(1) input[type="radio"]'));
+    await click(document.querySelector('.swal2-radio label:nth-child(1) input[type="radio"]'));
     await click(document.querySelector('.swal2-confirm'));
 
     await waitFor(document.querySelector('#swal2-title'));
@@ -517,7 +519,8 @@ module('Acceptance | submission', function (hooks) {
 
     await waitFor(document.querySelector('#swal2-title'));
     assert.dom(document.querySelector('#swal2-title')).includesText('Deposit requirements for JScholarship');
-    await click(document.querySelector('#swal2-checkbox'));
+    await waitFor(document.querySelector('.swal2-radio label:nth-child(1) input[type="radio"]'));
+    await click(document.querySelector('.swal2-radio label:nth-child(1) input[type="radio"]'));
     await click(document.querySelector('.swal2-confirm'));
 
     await waitFor(document.querySelector('#swal2-title'));
@@ -662,7 +665,8 @@ module('Acceptance | submission', function (hooks) {
 
     await waitFor(document.querySelector('#swal2-title'));
     assert.dom(document.querySelector('#swal2-title')).includesText('Deposit requirements for JScholarship');
-    await click(document.querySelector('#swal2-checkbox'));
+    await waitFor(document.querySelector('.swal2-radio label:nth-child(1) input[type="radio"]'));
+    await click(document.querySelector('.swal2-radio label:nth-child(1) input[type="radio"]'));
     await click(document.querySelector('.swal2-confirm'));
 
     await waitFor(document.querySelector('#swal2-title'));

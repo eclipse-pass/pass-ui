@@ -328,6 +328,18 @@ input[type='date']::-webkit-outer-spin-button {
   z-index: 99999 !important;
 }
 
+.swal2-radio {
+  display: block !important;
+}
+
+.swal2-radio label .swal2-label {
+  font-size: 1rem !important;
+}
+
+.swal2-radio label:not(:last-child) {
+  margin-bottom: 4px !important;
+}
+
 /*
 * End Alpaca
 */

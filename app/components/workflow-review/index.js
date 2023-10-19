@@ -126,16 +126,25 @@ export default class WorkflowReview extends Component {
 
     const result = yield swal
       .mixin({
-        input: 'checkbox',
-        inputPlaceholder: "I agree to the above statement on today's date ",
         confirmButtonText: 'Next &rarr;',
+        input: 'radio',
+        inputOptions: {
+          agree: `I agree to the above statement on today's date.`,
+          noAgree:
+            'I do not agree to the above statement and I understand that if I proceed and do not check this box, my submission will not be deposited to above repository.',
+        },
+        inputValidator: (value) => {
+          if (!value) {
+            return 'You need to choose something!';
+          }
+        },
         progressSteps: reposWithAgreementText.map((repo, index) => index + 1),
       })
       .queue(reposWithAgreementText);
     if (result.value) {
       let reposThatUserAgreedToDeposit = reposWithAgreementText.filter((repo, index) => {
         // if the user agreed to depost to this repo === 1
-        if (result.value[index] === 1) {
+        if (result.value[index] === 'agree') {
           return repo;
         }
       });
