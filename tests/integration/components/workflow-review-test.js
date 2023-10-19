@@ -113,6 +113,73 @@ module('Integration | Component | workflow review', (hooks) => {
     assert.strictEqual(submission.get('repositories.length'), 2);
   });
 
+  test('cannot proceed without agreeing or disagreeing to repo agreement', async function (assert) {
+    let controller = this.owner.lookup('controller:submissions/new/review');
+    assert.ok(controller);
+
+    let repo1 = EmberObject.create({
+      id: 'test:repo1',
+      integrationType: 'full',
+      agreementText: 'Cows are the best',
+      name: 'repo1',
+      _isWebLink: false,
+    });
+
+    let submitted = false;
+
+    this.owner.register(
+      'service:current-user',
+      EmberObject.extend({
+        user: { id: 'pi' },
+      })
+    );
+
+    let submission = EmberObject.create({
+      submitter: {
+        id: 'pi',
+      },
+      preparers: A([get(this, 'currentUser.user')]),
+      repositories: A([repo1]),
+      metadata: '[]',
+    });
+
+    let publication = EmberObject.create({});
+    let files = [EmberObject.create({})];
+
+    this.set('submission', submission);
+    this.set('publication', publication);
+    this.set('submit', (actual) => {
+      submitted = true;
+    });
+    this.set('files', files);
+    this.set('comment', '');
+    this.set('uploading', '');
+    this.set('waitingMessage', '');
+
+    await render(hbs`
+      <WorkflowReview
+        @submission={{this.submission}}
+        @publication={{this.publication}}
+        @previouslyUploadedFiles={{this.files}}
+        @comment={{this.comment}}
+        @submit={{action this.submit}}
+        @uploading={{this.uploading}}
+        @waitingMessage={{this.waitingMessage}}
+      />
+    `);
+
+    // Click on submit
+    await click('.submit');
+
+    await click(document.querySelector('.swal2-confirm'));
+
+    await waitFor(document.querySelector('.swal2-validationerror'));
+    assert.dom(document.querySelector('.swal2-validationerror')).containsText('You need to choose something!');
+
+    await waitFor(document.querySelector('.swal2-container'));
+    await click(document.querySelector('.swal2-container'));
+  });
+
   test('submission success: web-link and agreement', async function (assert) {
     let controller = this.owner.lookup('controller:submissions/new/review');
     assert.ok(controller);
