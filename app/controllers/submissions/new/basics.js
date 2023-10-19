@@ -65,7 +65,7 @@ export default class SubmissionsNewBasics extends Controller {
 
   @action
   async loadTab(gotoRoute) {
-    if (!this.doiInfo.title) set(this, 'doiInfo.title', get(this, 'publication.title'));
+    this.doiInfo.title = this.publication.title;
 
     await this.submission.save();
     this.transitionToRoute(gotoRoute);
