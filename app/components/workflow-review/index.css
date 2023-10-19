@@ -35,5 +35,9 @@ table td {
 
 .comment-text-area {
   resize: none;
-  min-height: 38px!important;
+  min-height: 38px !important;
+}
+
+.swal2-radio {
+  flex-direction: column !important;
 }
