@@ -182,7 +182,8 @@ module('Integration | Component | workflow review', (hooks) => {
     await click('.submit');
 
     // Click on deposit agreement checkbox and then next
-    await click(document.querySelector('.swal2-checkbox'));
+    await waitFor(document.querySelector('.swal2-radio label:nth-child(1) input[type="radio"]'));
+    await click(document.querySelector('.swal2-radio label:nth-child(1) input[type="radio"]'));
     await click(document.querySelector('.swal2-confirm'));
 
     // Click on confirm submission
@@ -319,6 +320,10 @@ module('Integration | Component | workflow review', (hooks) => {
     `);
 
     await click('.submit');
+
+    // Click the second radio indicating submit without agreeing to deposit agreement
+    await waitFor(document.querySelector('.swal2-radio label:nth-child(2) input[type="radio"]'));
+    await click(document.querySelector('.swal2-radio label:nth-child(2) input[type="radio"]'));
 
     // Click Next without agreeing
     await click(document.querySelector('.swal2-confirm'));
