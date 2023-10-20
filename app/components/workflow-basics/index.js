@@ -295,10 +295,10 @@ export default class WorkflowBasics extends Component {
       this.args.validateTitle();
       this.args.validateJournal();
     } catch (error) {
-      console.log(`DOI service request failed: ${error.payload.error}`);
+      console.log(`DOI service request failed: ${error}`);
 
       this.clearDoiData(this.publication.doi);
-      set(this, 'doiServiceError', error.payload.error);
+      set(this, 'doiServiceError', error);
       // eslint-disable-next-line newline-per-chained-call
     }
   };
