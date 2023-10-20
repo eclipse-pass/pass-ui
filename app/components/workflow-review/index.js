@@ -131,7 +131,7 @@ export default class WorkflowReview extends Component {
         inputOptions: {
           agree: `I agree to the above statement on today's date.`,
           noAgree:
-            'I do not agree to the above statement and I understand that if I proceed and do not check this box, my submission will not be deposited to above repository.',
+            'I do not agree to the above statement and I understand that if I proceed and do not check this box, my submission will not be deposited to the above repository.',
         },
         inputValidator: (value) => {
           if (!value) {
