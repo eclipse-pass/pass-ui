@@ -1,17 +1,7 @@
 /* eslint-disable ember/no-classic-classes, ember/prefer-ember-test-helpers, ember/require-valid-css-selector-in-test-helpers */
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
-import {
-  click,
-  currentURL,
-  fillIn,
-  focus,
-  find,
-  triggerEvent,
-  triggerKeyEvent,
-  visit,
-  waitFor,
-} from '@ember/test-helpers';
+import { click, currentURL, fillIn, find, triggerEvent, visit, waitFor } from '@ember/test-helpers';
 import { authenticateSession } from 'ember-simple-auth/test-support';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 import sharedScenario from '../../mirage/scenarios/shared';
@@ -676,5 +666,69 @@ module('Acceptance | submission', function (hooks) {
     await waitFor('[data-test-workflow-thanks-thank-you]');
     assert.dom('[data-test-workflow-thanks-thank-you]').includesText('Thank you!');
     assert.ok(currentURL().includes('/thanks'));
+  });
+
+  test('can update a publication title after visiting details and the metadata is updated', async function (assert) {
+    sharedScenario(this.server);
+
+    await visit('/app');
+
+    assert.dom('[data-test-start-new-submission]').exists();
+    await click(find('[data-test-start-new-submission]'));
+
+    await waitFor('[data-test-workflow-basics-next]');
+    assert.strictEqual(currentURL(), '/submissions/new/basics');
+    assert.dom('[data-test-doi-input]').exists();
+    await fillIn('[data-test-article-title-text-area]', 'a pub title');
+
+    await waitFor('[data-test-workflow-basics-next]');
+    await click('[data-test-workflow-basics-next]');
+
+    await waitFor('[data-test-grants-selection-table] tbody tr td.projectname-date-column');
+    assert.strictEqual(currentURL(), '/submissions/new/grants');
+    assert
+      .dom('[data-test-grants-selection-table] tbody tr td.projectname-date-column')
+      .includesText('Regulation of Synaptic Plasticity in Visual Cortex');
+    await click('[data-test-grants-selection-table] tbody tr td.projectname-date-column');
+    await waitFor('[data-test-submission-funding-table] tbody tr td.projectname-date-column');
+    assert
+      .dom('[data-test-submission-funding-table] tbody tr td.projectname-date-column')
+      .includesText('Regulation of Synaptic Plasticity in Visual Cortex');
+
+    await click('[data-test-workflow-grants-next]');
+
+    await waitFor('[data-test-workflow-policies-next]');
+    assert.strictEqual(currentURL(), '/submissions/new/policies');
+    await waitFor('input[type=radio]:checked');
+    assert.dom('[data-test-workflow-policies-radio-no-direct-deposit:checked');
+
+    await click('[data-test-workflow-policies-next]');
+
+    await waitFor('[data-test-workflow-repositories-next]');
+    assert.strictEqual(currentURL(), '/submissions/new/repositories');
+    assert
+      .dom('[data-test-workflow-repositories-required-list] li')
+      .includesText('PubMed Central - NATIONAL INSTITUTE OF HEALTH');
+    assert.dom('[data-test-workflow-repositories-optional-list] li').includesText('JScholarship');
+    assert.dom('[data-test-workflow-repositories-optional-list] li input:checked').hasValue('on');
+
+    await click('[data-test-workflow-repositories-next]');
+
+    await waitFor('[data-test-metadata-form] textarea[name="title"]');
+    assert.strictEqual(currentURL(), '/submissions/new/metadata');
+
+    await waitFor('[data-test-metadata-form] textarea[name="title"]');
+
+    assert.dom('[data-test-metadata-form] textarea[name="title"]').hasValue('a pub title');
+
+    await click('[data-test-workflow-basics-nav-button]');
+
+    await fillIn('[data-test-article-title-text-area]', 'a new pub title');
+
+    await click('[data-test-workflow-details-nav-button]');
+
+    await waitFor('[data-test-metadata-form] textarea[name="title"]');
+
+    assert.dom('[data-test-metadata-form] textarea[name="title"]').hasValue('a new pub title');
   });
 });

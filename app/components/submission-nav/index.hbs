@@ -7,6 +7,7 @@
         disabled={{if (gt 1 this.maxStep) "disabled"}}
         type="button"
         {{on "click" (fn @loadTab "submissions.new.basics")}}
+        data-test-workflow-basics-nav-button
       >
         1. Basics
       </button>
@@ -35,6 +36,7 @@
         class="step {{if (eq this.step 5) 'btn-primary'}}"
         disabled={{if (gt 5 this.maxStep) "disabled"}}
         {{on "click" (fn @loadTab "submissions.new.metadata")}}
+        data-test-workflow-details-nav-button
       >
         5. Details
       </button>
