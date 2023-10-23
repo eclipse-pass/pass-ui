@@ -32,7 +32,7 @@
   <div id="navbar-container">
     <NavBar @fullWidth={{this.fullWidth}} />
   </div>
-  <div class="container-fluid site-content">
+  <main class="container-fluid site-content">
     <div class="flash-message-container">
       {{#each this.flashMessages.queue as |flash|}}
         <FlashMessage @flash={{flash}} as |component flash close|>
@@ -48,7 +48,7 @@
 
     {{this.institution}}
     {{outlet}}
-  </div>
+  </main>
   <footer class="app-footer justify-content-center mt-3">
     <div class="text-center p-1">
       {{#if this.contactUrl}}

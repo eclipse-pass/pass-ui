@@ -1,13 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://use.typekit.net/ftn5sdd.css');
 
 :root {
-  --primary-500: #f88d2b;
-  --primary-600: #e37108;
+  --primary-500: #002d72;
+  --primary-600: #002d72;
 
-  --secondary-500: #3d3935;
+  --secondary-500: #002d72;
 
-  --font-headline: 'Roboto', san serif;
-  --font-subhead: 'Roboto', san serif;
-  --font-bodycopy-accent: 'Roboto', san serif;
-  --font-bodycopy: 'Roboto', san serif;
+  --font-headline: 'proxima-nova,', Sans-Serif;
+  --font-subhead: 'proxima-nova,', Sans-Serif;
+  --font-bodycopy-accent: 'proxima-nova,', Sans-Serif;
+  --font-bodycopy: 'proxima-nova,', Sans-Serif;
+  --font-family-sans-serif: 'proxima-nova,', Sans-Serif;
 }
