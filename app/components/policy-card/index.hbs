@@ -1,9 +1,9 @@
 {{! template-lint-disable link-rel-noopener no-action no-triple-curlies require-input-label }}
 <div class="card w-100 my-2" {{did-insert this.setup}}>
   <div class="card-body">
-    <h4 class="card-title" data-test-policy-title>
+    <h3 class="card-title" data-test-policy-title>
       {{@policy.title}}
-    </h4>
+    </h3>
     {{#if this.policyIsJHU}}
       <h6 class="card-subtitle mb-2" data-test-jhu-policy-deposit-expectation>
         Expects deposit into an open access repository
