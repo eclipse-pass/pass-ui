@@ -16,9 +16,9 @@
     <div class="list-group">
       <div href="#" class="list-group-item flex-column align-items-start">
         <div class="d-flex w-100 justify-content-between">
-          <h5 class="mb-1" data-test-workflow-review-title>
+          <h4 class="mb-1" data-test-workflow-review-title>
             {{@publication.title}}
-          </h5>
+          </h4>
           <small class="text-muted">
             {{@submission.dateSubmitted.date-time}}<br />{{@submission.dateCreated.date-time}}
           </small>
@@ -128,12 +128,12 @@
                 <table local-class="files-table" class="w-100">
                   <thead>
                     <tr>
-                      <th scope="col"></th>
+                      <th scope="col">File Type</th>
                       <th scope="col" class="font-weight-light">
                         Name
                       </th>
                       <th scope="col" class="font-weight-light">
-                        Type
+                        Manuscript/Supplement
                       </th>
                       <th scope="col" class="font-weight-light">
                         Description

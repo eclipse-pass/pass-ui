@@ -176,7 +176,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       />
     `);
 
-    const header = find('h4');
+    const header = find('h3');
     await waitUntil(() => {
       return header.textContent.includes(expected);
     });
