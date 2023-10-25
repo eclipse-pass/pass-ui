@@ -67,13 +67,6 @@ export default class GrantsIndexController extends Controller {
       disableFiltering: true,
       component: 'grant-link-cell',
     },
-    {
-      propertyName: 'grant.oapCompliance',
-      title: 'OAP Compliance',
-      component: 'oap-compliance-cell',
-      filterWithSelect: true,
-      predefinedFilterOptions: ['No', 'Yes'],
-    },
   ];
 
   piColumns = [
@@ -114,11 +107,6 @@ export default class GrantsIndexController extends Controller {
       propertyName: 'grant.awardStatus',
       title: 'Status',
       filterWithSelect: true,
-    },
-    {
-      propertyName: 'grant.oapCompliance',
-      title: 'Policy Compliance',
-      component: 'oap-compliance-cell',
     },
     {
       title: 'Actions',
