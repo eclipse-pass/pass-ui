@@ -136,6 +136,6 @@ export default class WorkflowFiles extends Component {
 
   @action
   cancel() {
-    this.abort();
+    this.args.abort();
   }
 }
