@@ -242,8 +242,6 @@ export default class SubmissionHandlerService extends Service {
    */
   async deleteSubmission(submission) {
     submission.set('submissionStatus', 'cancelled');
-    return submission.save().then(() => {
-      submission.unloadRecord();
-    });
+    return submission.save();
   }
 }

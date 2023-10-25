@@ -12,6 +12,7 @@ export default class SubmissionsNew extends Controller {
   @service submissionHandler;
   @service searchHelper;
   @service flashMessages;
+  @service router;
 
   @tracked comment = ''; // Holds the comment that will be added to submissionEvent in the review step.
   @tracked uploading = false;
@@ -138,7 +139,7 @@ export default class SubmissionsNew extends Controller {
       // Clear the shared ignore list, then add the 'deleted' submission ID
       ignoreList.clearIgnore();
       ignoreList.ignore(get(submission, 'id'));
-      this.transitionToRoute('submissions');
+      this.router.transitionTo('submissions');
     }
   }
 }
