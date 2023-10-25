@@ -272,6 +272,6 @@ export default class WorkflowGrants extends Component {
 
   @action
   abortSubmission() {
-    this.abort();
+    this.args.abort();
   }
 }
