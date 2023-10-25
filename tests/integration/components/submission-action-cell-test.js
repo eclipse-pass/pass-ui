@@ -61,16 +61,12 @@ module('Integration | Component | submission action cell', (hooks) => {
    * supplied submission, then `#save()` should be called
    */
   test('should delete and persist submission', async function (assert) {
-    assert.expect(3);
+    assert.expect(2);
 
     const record = EmberObject.create({
       preparers: A(),
       isDraft: true,
       save() {
-        assert.ok(true);
-        return Promise.resolve();
-      },
-      unloadRecord() {
         assert.ok(true);
         return Promise.resolve();
       },

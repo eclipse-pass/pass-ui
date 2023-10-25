@@ -341,9 +341,13 @@ module('Unit | Controller | submissions/new', (hooks) => {
         },
       })
     );
-    controller.set('transitionToRoute', (name) => {
-      assert.strictEqual(name, 'submissions', 'unexpected transition was named');
+    controller.set('router', {
+      transitionTo: (name) => {
+        assert.strictEqual(name, 'submissions', 'unexpected transition was named');
+      },
     });
+    // controller.set('transitionTo', (name) => {
+    // });
 
     controller.send('abort');
   });
