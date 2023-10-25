@@ -47,13 +47,9 @@ export default class WorkflowReview extends Component {
   }
 
   get mustVisitWeblink() {
-    if (!(get(this, 'isDestroyed') || get(this, 'isDestroying'))) {
-      const weblinkExists = get(this, 'weblinktRepos.length') > 0;
-      const isSubmitter = get(this, 'currentUser.user.id') === get(this, 'args.submission.submitter.id');
-      return weblinkExists && isSubmitter;
-    } else {
-      return false;
-    }
+    const weblinkExists = get(this, 'weblinkRepos.length') > 0;
+    const isSubmitter = get(this, 'currentUser.user.id') === get(this, 'args.submission.submitter.id');
+    return weblinkExists && isSubmitter;
   }
 
   get disableSubmit() {
