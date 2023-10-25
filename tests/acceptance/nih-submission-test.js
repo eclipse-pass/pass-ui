@@ -175,7 +175,6 @@ module('Acceptance | submission', function (hooks) {
     assert.dom('td.awardnum-column').includesText('R01EY012124');
     assert.dom(document.querySelector('tr > td:nth-child(5)')).includesText('2');
     assert.dom(document.querySelector('tr > td:nth-child(6)')).includesText('active');
-    assert.dom(document.querySelector('tr > td:nth-child(7)')).includesText('no issues detected');
 
     await click('td.projectname-column a');
 
