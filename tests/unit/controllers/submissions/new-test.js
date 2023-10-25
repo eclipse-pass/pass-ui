@@ -346,8 +346,6 @@ module('Unit | Controller | submissions/new', (hooks) => {
         assert.strictEqual(name, 'submissions', 'unexpected transition was named');
       },
     });
-    // controller.set('transitionTo', (name) => {
-    // });
 
     controller.send('abort');
   });
