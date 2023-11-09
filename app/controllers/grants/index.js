@@ -1,5 +1,6 @@
 /* eslint-disable ember/classic-decorator-no-classic-methods */
 import Controller from '@ember/controller';
+import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 
@@ -7,6 +8,7 @@ export default class GrantsIndexController extends Controller {
   @service currentUser;
   @service('app-static-config') configurator;
   @service('emt-themes/bootstrap4') themeInstance;
+  @service router;
 
   constructor() {
     super(...arguments);
@@ -120,9 +122,19 @@ export default class GrantsIndexController extends Controller {
   @tracked messageTo = '';
   @tracked messageSubject = '';
   @tracked messageText = '';
-  @tracked tablePageSize = 50;
-  @tracked tablePageSizeValues = [10, 25, 50];
   @tracked user = this.currentUser.user;
+
+  queryParams = ['page', 'pageSize', 'globalSearch'];
+
+  @tracked page;
+  @tracked pageSize;
+  tablePageSizeValues = [10, 25, 50]; // TODO: Make configurable?
+
+  filterQueryParameters = {
+    pageSize: 'pageSize',
+    page: 'page',
+    globalFilter: 'globalSearch',
+  };
 
   // Columns displayed depend on the user role
   get columns() {
@@ -133,5 +145,25 @@ export default class GrantsIndexController extends Controller {
     }
     console.warn(`[Route:Grants/index] User has no known role (${this.user.id}::${this.user.roles})`);
     return [];
+  }
+
+  get itemsCount() {
+    return this.model?.meta?.page?.totalRecords;
+  }
+
+  get pagesCount() {
+    return this.model?.meta?.page?.totalPages;
+  }
+
+  @action
+  displayAction(display) {
+    this.page = display.currentPageNumber;
+    this.pageSize = display.pageSize;
+    this.globalSearch = display.filterString;
+  }
+
+  @action
+  doQuery(query) {
+    return this.router.transitionTo({ queryParams: { ...query } });
   }
 }

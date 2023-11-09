@@ -1,12 +1,16 @@
 import { service } from '@ember/service';
 import { A } from '@ember/array';
 import CheckSessionRoute from '../check-session-route';
-import { defer } from 'rsvp';
 
 export default class IndexRoute extends CheckSessionRoute {
-  @service('current-user')
-  currentUser;
+  @service('current-user') currentUser;
   @service store;
+
+  queryParams = {
+    page: { refreshModel: true },
+    pageSize: { refreshModel: true },
+    globalSearch: {},
+  };
 
   /**
    * TODO: Should be able to streamline this.
@@ -22,32 +26,39 @@ export default class IndexRoute extends CheckSessionRoute {
    *    ...
    *  ]
    */
-  async model() {
+  async model(params) {
     const user = this.currentUser.user;
     if (!user) {
       return;
     }
 
     const userId = user.id;
+    // default values provided to force these params in the request to the backend
+    // TODO: make default pageSize configurable
+    const { page = 1, pageSize = 10 } = params;
 
-    let promise = defer();
-    //   // TODO: ignoring the endDate > 2011-01-01 query part for now
+    // TODO: ignoring the endDate > 2011-01-01 query part for now
     const grantQuery = {
       filter: {
         grant: `pi.id==${userId},coPis.id==${userId}`,
       },
       sort: '+awardStatus,-endDate',
+      page: {
+        number: page,
+        size: pageSize,
+        totals: true,
+      },
     };
 
     // First search for all Grants associated with the current user
     const grants = await this.store.query('grant', grantQuery);
-    let results = [];
-    let grantIds = [];
+    let results = {
+      grantMap: [],
+      meta: grants.meta,
+    };
 
     grants.forEach((grant) => {
-      grantIds.push(grant.id);
-
-      results.push({
+      results.grantMap.push({
         grant,
         submissions: A(),
       });
@@ -63,7 +74,7 @@ export default class IndexRoute extends CheckSessionRoute {
     const subs = await this.store.query('submission', submissionQuery);
     subs.forEach((submission) => {
       submission.grants.forEach((grant) => {
-        let match = results.find((res) => res.grant.id === grant.id);
+        let match = results.grantMap.find((res) => res.grant.id === grant.id);
         if (match) {
           match.submissions.pushObject(submission);
         }
