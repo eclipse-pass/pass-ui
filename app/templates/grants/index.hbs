@@ -17,17 +17,22 @@
 <div class="row justify-content-center grant-table">
   <div class="col-12 table-container">
     <div class="grant-table">
-      <ModelsTable
-        @data={{this.model}}
+      <ModelsTableServerPaginated
+        @data={{this.model.grantMap}}
         @columns={{this.columns}}
         @themeInstance={{this.themeInstance}}
         @showColumnsDropdown={{false}}
         @useFilteringByColumns={{false}}
         @filteringIgnoreCase={{true}}
         @multipleColumnsSorting={{false}}
-        @piSelected="piclick"
-        @pageSize={{this.tablePageSize}}
+        @currentPageNumber={{this.page}}
+        @pageSize={{this.model.meta.page.limit}}
         @pageSizeValues={{this.tablePageSizeValues}}
+        @itemsCount={{this.itemsCount}}
+        @pagesCount={{this.pagesCount}}
+        @filterQueryParameters={{this.filterQueryParameters}}
+        @doQuery={{this.doQuery}}
+        @onDisplayDataChanged={{this.displayAction}}
       />
     </div>
   </div>
