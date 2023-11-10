@@ -1,14 +1,28 @@
 import { service } from '@ember/service';
 import CheckSessionRoute from '../check-session-route';
 import RSVP from 'rsvp';
+import { restartableTask, timeout } from 'ember-concurrency';
 
+const DEBOUNCE_MS = 500;
 export default class IndexRoute extends CheckSessionRoute {
-  @service('current-user')
-  currentUser;
+  @service('current-user') currentUser;
   @service store;
 
-  async model() {
-    const user = this.currentUser.user;
+  queryParams = {
+    page: { refreshModel: true },
+    pageSize: { refreshModel: true },
+    filter: { refreshModel: true },
+  };
+
+  async model(params) {
+    return RSVP.hash({
+      submissions: this.getSubmissions.perform(this.currentUser.user, params),
+    });
+  }
+
+  @restartableTask
+  getSubmissions = function* (user, params) {
+    yield timeout(DEBOUNCE_MS);
 
     let query;
 
@@ -28,11 +42,17 @@ export default class IndexRoute extends CheckSessionRoute {
       };
     }
 
-    // TODO: do we need to do anything to limit or not-limit results set size?
-    const submissions = this.store.query('submission', query);
+    const { page = 1, pageSize = 10 } = params;
+    query.page = {
+      number: page,
+      size: pageSize,
+      totals: true,
+    };
 
-    return RSVP.hash({
-      submissions,
-    });
-  }
+    if (params.filter) {
+      query.filter.submission = `(${query.filter.submission});publication.title=ini=*${params.filter}*`;
+    }
+
+    return this.store.query('submission', query);
+  };
 }
