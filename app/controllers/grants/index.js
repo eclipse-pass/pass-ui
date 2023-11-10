@@ -124,16 +124,17 @@ export default class GrantsIndexController extends Controller {
   @tracked messageText = '';
   @tracked user = this.currentUser.user;
 
-  queryParams = ['page', 'pageSize', 'globalSearch'];
+  queryParams = ['page', 'pageSize', 'filter'];
 
   @tracked page;
   @tracked pageSize;
   tablePageSizeValues = [10, 25, 50]; // TODO: Make configurable?
+  @tracked filter;
 
   filterQueryParameters = {
     pageSize: 'pageSize',
     page: 'page',
-    globalFilter: 'globalSearch',
+    globalFilter: 'filter',
   };
 
   // Columns displayed depend on the user role
@@ -159,7 +160,7 @@ export default class GrantsIndexController extends Controller {
   displayAction(display) {
     this.page = display.currentPageNumber;
     this.pageSize = display.pageSize;
-    this.globalSearch = display.filterString;
+    this.filter = display.filterString;
   }
 
   @action

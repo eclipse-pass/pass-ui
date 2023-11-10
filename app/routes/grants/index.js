@@ -1,6 +1,9 @@
 import { service } from '@ember/service';
 import { A } from '@ember/array';
 import CheckSessionRoute from '../check-session-route';
+import { restartableTask, timeout } from 'ember-concurrency';
+
+const DEBOUNCE_MS = 500;
 
 export default class IndexRoute extends CheckSessionRoute {
   @service('current-user') currentUser;
@@ -9,7 +12,7 @@ export default class IndexRoute extends CheckSessionRoute {
   queryParams = {
     page: { refreshModel: true },
     pageSize: { refreshModel: true },
-    globalSearch: {},
+    filter: { refreshModel: true },
   };
 
   /**
@@ -32,12 +35,16 @@ export default class IndexRoute extends CheckSessionRoute {
       return;
     }
 
-    const userId = user.id;
+    return this.getModel.perform(user.id, params);
+  }
+
+  @restartableTask
+  getModel = function* (userId, params) {
+    yield timeout(DEBOUNCE_MS);
+
     // default values provided to force these params in the request to the backend
     // TODO: make default pageSize configurable
     const { page = 1, pageSize = 10 } = params;
-
-    // TODO: ignoring the endDate > 2011-01-01 query part for now
     const grantQuery = {
       filter: {
         grant: `pi.id==${userId},coPis.id==${userId}`,
@@ -50,8 +57,12 @@ export default class IndexRoute extends CheckSessionRoute {
       },
     };
 
+    if (params.filter) {
+      grantQuery.filter.grant = `(${grantQuery.filter.grant});projectName=ini=*${params.filter}*`;
+    }
+
     // First search for all Grants associated with the current user
-    const grants = await this.store.query('grant', grantQuery);
+    const grants = yield this.store.query('grant', grantQuery);
     let results = {
       grantMap: [],
       meta: grants.meta,
@@ -71,7 +82,7 @@ export default class IndexRoute extends CheckSessionRoute {
       },
     };
 
-    const subs = await this.store.query('submission', submissionQuery);
+    const subs = yield this.store.query('submission', submissionQuery);
     subs.forEach((submission) => {
       submission.grants.forEach((grant) => {
         let match = results.grantMap.find((res) => res.grant.id === grant.id);
@@ -82,5 +93,5 @@ export default class IndexRoute extends CheckSessionRoute {
     });
 
     return results;
-  }
+  };
 }
