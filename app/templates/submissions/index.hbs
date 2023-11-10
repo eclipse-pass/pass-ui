@@ -24,7 +24,7 @@
 <div class="row">
   <div class="col-12 table-container">
     <div class="submission-table" data-test-submissions-index-submissions-table>
-      <ModelsTable
+      <ModelsTableServerPaginated
         @data={{this.model.submissions}}
         @columns={{this.columns}}
         @themeInstance={{this.themeInstance}}
@@ -33,8 +33,15 @@
         @filteringIgnoreCase={{true}}
         @multipleColumnsSorting={{false}}
         @authorSelected="authorclick"
-        @pageSize={{this.tablePageSize}}
+        @pageSize={{this.model.submissions.meta.page.limit}}
         @pageSizeValues={{this.tablePageSizeValues}}
+        @currentPageNumber={{this.page}}
+        @itemsCount={{this.itemsCount}}
+        @pagesCount={{this.pagesCount}}
+        @filterString={{this.filter}}
+        @filterQueryParameters={{this.filterQueryParameters}}
+        @doQuery={{this.doQuery}}
+        @onDisplayDataChanged={{this.displayAction}}
       />
     </div>
   </div>
