@@ -156,7 +156,7 @@ module('Acceptance | submission', function (hooks) {
     assert.ok(currentURL().includes('/thanks'));
 
     await click('[data-test-workflow-thanks-link-to-submissions]');
-    assert.strictEqual(currentURL(), '/submissions');
+    assert.ok(currentURL().startsWith('/submissions'));
 
     const submissionHref = '/submissions/2';
     await waitFor('[data-test-submissions-index-submissions-table]');
@@ -240,7 +240,8 @@ module('Acceptance | submission', function (hooks) {
     await click('[data-test-navbar-submissions-link]');
     await click('[data-test-navbar-submissions-link]');
 
-    assert.strictEqual(currentURL(), '/submissions');
+    // URL will probably have some paging params e.g. /submissions?page=1&pageSize=25
+    assert.ok(currentURL().startsWith('/submissions'));
 
     await waitFor('[data-test-submissions-index-submissions-table]');
 
@@ -353,7 +354,7 @@ module('Acceptance | submission', function (hooks) {
     assert.ok(currentURL().includes('/thanks'));
 
     await click('[data-test-workflow-thanks-link-to-submissions]');
-    assert.strictEqual(currentURL(), '/submissions');
+    assert.ok(currentURL().startsWith('/submissions'));
 
     await waitFor('[data-test-submissions-index-submissions-table]');
     await click(`${rowForSubmission} td a`);
