@@ -84,8 +84,8 @@
       Submissions for grant
     </h3>
     <div class="submission-table">
-      <ModelsTable
-        @data={{this.model.submissions}}
+      <ModelsTableServerPaginated
+        @data={{this.queuedModel.submissions.data}}
         @columns={{this.columns}}
         @themeInstance={{this.themeInstance}}
         @showColumnsDropdown={{false}}
@@ -93,6 +93,15 @@
         @multipleColumnsSorting={{false}}
         @useFilteringByColumns={{false}}
         @showGlobalFilter={{false}}
+        @pageSize={{this.pageSize}}
+        @pageSizeValues={{this.tablePageSizeValues}}
+        @currentPageNumber={{this.page}}
+        @itemsCount={{this.itemsCount}}
+        @pagesCount={{this.pagesCount}}
+        @filterString={{this.filter}}
+        @filterQueryParameters={{this.filterQueryParameters}}
+        @doQuery={{this.doQuery}}
+        @onDisplayDataChanged={{this.displayAction}}
       />
     </div>
   </div>
