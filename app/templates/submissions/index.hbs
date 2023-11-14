@@ -25,7 +25,7 @@
   <div class="col-12 table-container">
     <div class="submission-table" data-test-submissions-index-submissions-table>
       <ModelsTableServerPaginated
-        @data={{this.model.submissions}}
+        @data={{this.queuedModel.submissions}}
         @columns={{this.columns}}
         @themeInstance={{this.themeInstance}}
         @showColumnsDropdown={{false}}
@@ -33,7 +33,7 @@
         @filteringIgnoreCase={{true}}
         @multipleColumnsSorting={{false}}
         @authorSelected="authorclick"
-        @pageSize={{this.model.submissions.meta.page.limit}}
+        @pageSize={{this.pageSize}}
         @pageSizeValues={{this.tablePageSizeValues}}
         @currentPageNumber={{this.page}}
         @itemsCount={{this.itemsCount}}

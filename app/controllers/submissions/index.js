@@ -9,6 +9,7 @@ export default class SubmissionsIndex extends Controller {
   @service('app-static-config') configurator;
   @service('emt-themes/bootstrap4') themeInstance;
   @service router;
+  @service store;
 
   @tracked faqUrl = null;
   // Bound to message dialog.
@@ -18,11 +19,13 @@ export default class SubmissionsIndex extends Controller {
   @tracked messageText = '';
   @tracked tablePageSize = 50;
 
+  @tracked queuedModel;
+
   queryParams = ['page', 'pageSize', 'filter'];
 
   @tracked page;
   @tracked pageSize;
-  tablePageSizeValues = [10, 25, 50]; // TODO: Make configurable?
+  tablePageSizeValues = [1, 5, 10, 25, 50]; // TODO: Make configurable?
   @tracked filter;
 
   filterQueryParameters = {
@@ -133,11 +136,11 @@ export default class SubmissionsIndex extends Controller {
   }
 
   get itemsCount() {
-    return this.model.submissions?.meta?.page?.totalRecords;
+    return this.queuedModel.meta?.page?.totalRecords;
   }
 
   get pagesCount() {
-    return this.model.submissions?.meta?.page?.totalPages;
+    return this.queuedModel.meta?.page?.totalPages;
   }
 
   @action
@@ -148,8 +151,47 @@ export default class SubmissionsIndex extends Controller {
   }
 
   @action
-  doQuery(query) {
-    console.log(`[Controller:Submissions/index] doQuery :: ${JSON.stringify(query)}`);
-    return this.router.transitionTo({ queryParams: { ...query } });
+  doQuery(params) {
+    let query;
+    const user = this.currentUser.user;
+
+    if (user.isAdmin) {
+      query = {
+        filter: { submission: 'submissionStatus=out=cancelled' },
+        include: 'publication',
+      };
+    } else if (user.isSubmitter) {
+      const userMatch = `submitter.id==${user.id},preparers.id=in=${user.id}`;
+      query = {
+        filter: {
+          submission: `(${userMatch});submissionStatus=out=cancelled`,
+        },
+        sort: '-submittedDate',
+        include: 'publication',
+      };
+    }
+
+    const { page = 1, pageSize = 10 } = params;
+    query.page = {
+      number: page,
+      size: pageSize,
+      totals: true,
+    };
+
+    if (params.filter) {
+      query.filter.submission = `(${query.filter.submission});publication.title=ini=*${params.filter}*`;
+    }
+
+    return this.store
+      .query('submission', query)
+      .then((data) => {
+        this.queuedModel = {
+          submissions: data,
+          meta: data.meta,
+        };
+      })
+      .catch((e) => {
+        console.error(e);
+      });
   }
 }
