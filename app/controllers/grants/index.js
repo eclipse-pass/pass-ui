@@ -130,7 +130,7 @@ export default class GrantsIndexController extends Controller {
 
   @tracked page = 1;
   @tracked pageSize = 10;
-  tablePageSizeValues = [2, 5, 10, 25, 50]; // TODO: Make configurable?
+  tablePageSizeValues = [10, 25, 50]; // TODO: Make configurable?
   @tracked filter;
 
   filterQueryParameters = {
