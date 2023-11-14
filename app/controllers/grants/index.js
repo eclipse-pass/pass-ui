@@ -1,4 +1,5 @@
 /* eslint-disable ember/classic-decorator-no-classic-methods */
+import { A } from '@ember/array';
 import Controller from '@ember/controller';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
@@ -9,6 +10,7 @@ export default class GrantsIndexController extends Controller {
   @service('app-static-config') configurator;
   @service('emt-themes/bootstrap4') themeInstance;
   @service router;
+  @service store;
 
   constructor() {
     super(...arguments);
@@ -126,9 +128,9 @@ export default class GrantsIndexController extends Controller {
 
   queryParams = ['page', 'pageSize', 'filter'];
 
-  @tracked page;
-  @tracked pageSize;
-  tablePageSizeValues = [10, 25, 50]; // TODO: Make configurable?
+  @tracked page = 1;
+  @tracked pageSize = 10;
+  tablePageSizeValues = [2, 5, 10, 25, 50]; // TODO: Make configurable?
   @tracked filter;
 
   filterQueryParameters = {
@@ -136,6 +138,8 @@ export default class GrantsIndexController extends Controller {
     page: 'page',
     globalFilter: 'filter',
   };
+
+  @tracked queuedModel;
 
   // Columns displayed depend on the user role
   get columns() {
@@ -149,11 +153,11 @@ export default class GrantsIndexController extends Controller {
   }
 
   get itemsCount() {
-    return this.model?.meta?.page?.totalRecords;
+    return this.queuedModel.meta?.page?.totalRecords;
   }
 
   get pagesCount() {
-    return this.model?.meta?.page?.totalPages;
+    return this.queuedModel.meta?.page?.totalPages;
   }
 
   @action
@@ -164,7 +168,68 @@ export default class GrantsIndexController extends Controller {
   }
 
   @action
-  doQuery(query) {
-    return this.router.transitionTo({ queryParams: { ...query } });
+  doQuery(params) {
+    const user = this.currentUser.user;
+    if (!user) {
+      return;
+    }
+    const userId = user.id;
+
+    // default values provided to force these params in the request to the backend
+    // TODO: make default pageSize configurable
+    const { page = 1, pageSize = 10 } = params;
+    const grantQuery = {
+      filter: {
+        grant: `pi.id==${userId},coPis.id==${userId}`,
+      },
+      sort: '+awardStatus,-endDate',
+      page: {
+        number: page,
+        size: pageSize,
+        totals: true,
+      },
+    };
+
+    if (params.filter) {
+      grantQuery.filter.grant = `(${grantQuery.filter.grant});projectName=ini=*${params.filter}*`;
+    }
+
+    const userMatch = `grants.pi.id==${userId},grants.coPis.id==${userId}`;
+    const submissionQuery = {
+      filter: {
+        submission: `submissionStatus=out=cancelled;(${userMatch})`,
+      },
+    };
+
+    return this.store
+      .query('grant', grantQuery)
+      .then((data) => {
+        const meta = data.meta;
+        let results = data.map((grant) => ({
+          grant,
+          submissions: A(),
+        }));
+
+        return {
+          grantMap: results,
+          meta,
+        };
+      })
+      .then(async (results) => {
+        const subs = await this.store.query('submission', submissionQuery);
+        subs.forEach((submission) => {
+          submission.grants.forEach((grant) => {
+            let match = results.grantMap.find((res) => res.grant.id === grant.id);
+            if (match) {
+              match.submissions.pushObject(submission);
+            }
+          });
+        });
+        return results;
+      })
+      .then((results) => {
+        this.queuedModel = results;
+      })
+      .catch((e) => console.error(e));
   }
 }

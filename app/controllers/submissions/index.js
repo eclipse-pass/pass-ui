@@ -25,7 +25,7 @@ export default class SubmissionsIndex extends Controller {
 
   @tracked page;
   @tracked pageSize;
-  tablePageSizeValues = [1, 5, 10, 25, 50]; // TODO: Make configurable?
+  tablePageSizeValues = [10, 25, 50]; // TODO: Make configurable?
   @tracked filter;
 
   filterQueryParameters = {
