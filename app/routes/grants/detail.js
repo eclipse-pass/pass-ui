@@ -12,9 +12,14 @@ import { hash } from 'rsvp';
  */
 
 export default class DetailRoute extends CheckSessionRoute {
-  @service('current-user')
-  currentUser;
+  @service('current-user') currentUser;
   @service store;
+
+  queryParams = {
+    page: {},
+    pageSize: {},
+    filter: {},
+  };
 
   model(params) {
     if (!params || !params.grant_id) {
@@ -23,7 +28,7 @@ export default class DetailRoute extends CheckSessionRoute {
     }
 
     const user = this.currentUser.user;
-    let grant = this.store.findRecord('grant', params.grant_id);
+    const grant = this.store.findRecord('grant', params.grant_id);
 
     /**
      * TODO:
@@ -37,11 +42,28 @@ export default class DetailRoute extends CheckSessionRoute {
         submission: `grants.id==${params.grant_id};submissionStatus=out=cancelled;(${userMatch})`,
       },
     };
-    let submissions = this.store.query('submission', query);
+
+    const { page = 1, pageSize = 10 } = params;
+    query.page = {
+      number: page,
+      size: pageSize,
+      totals: true,
+    };
+
+    if (params.filter) {
+      query.filter.submission = `(${query.filter.submission});publication.title=ini=*${params.filter}*`;
+    }
+
+    const submissions = this.store.query('submission', query).then((data) => ({ data, meta: data.meta }));
 
     return hash({
       grant,
       submissions,
     });
+  }
+
+  setupController(controller, model) {
+    super.setupController(...arguments);
+    controller.queuedModel = model;
   }
 }
