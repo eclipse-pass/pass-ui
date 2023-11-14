@@ -229,7 +229,6 @@ export default class GrantsIndexController extends Controller {
       })
       .then((results) => {
         this.queuedModel = results;
-      })
-      .catch((e) => console.error(e));
+      });
   }
 }

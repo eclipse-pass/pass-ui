@@ -182,16 +182,11 @@ export default class SubmissionsIndex extends Controller {
       query.filter.submission = `(${query.filter.submission});publication.title=ini=*${params.filter}*`;
     }
 
-    return this.store
-      .query('submission', query)
-      .then((data) => {
-        this.queuedModel = {
-          submissions: data,
-          meta: data.meta,
-        };
-      })
-      .catch((e) => {
-        console.error(e);
-      });
+    return this.store.query('submission', query).then((data) => {
+      this.queuedModel = {
+        submissions: data,
+        meta: data.meta,
+      };
+    });
   }
 }
