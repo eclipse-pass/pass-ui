@@ -1,18 +1,15 @@
 import { service } from '@ember/service';
 import { A } from '@ember/array';
 import CheckSessionRoute from '../check-session-route';
-import { restartableTask, timeout } from 'ember-concurrency';
-
-const DEBOUNCE_MS = 500;
 
 export default class IndexRoute extends CheckSessionRoute {
   @service('current-user') currentUser;
   @service store;
 
   queryParams = {
-    page: { refreshModel: true },
-    pageSize: { refreshModel: true },
-    filter: { refreshModel: true },
+    page: {},
+    pageSize: {},
+    filter: {},
   };
 
   /**
@@ -34,13 +31,7 @@ export default class IndexRoute extends CheckSessionRoute {
     if (!user) {
       return;
     }
-
-    return this.getModel.perform(user.id, params);
-  }
-
-  @restartableTask
-  getModel = function* (userId, params) {
-    yield timeout(DEBOUNCE_MS);
+    const userId = user.id;
 
     // default values provided to force these params in the request to the backend
     // TODO: make default pageSize configurable
@@ -62,7 +53,7 @@ export default class IndexRoute extends CheckSessionRoute {
     }
 
     // First search for all Grants associated with the current user
-    const grants = yield this.store.query('grant', grantQuery);
+    const grants = await this.store.query('grant', grantQuery);
     let results = {
       grantMap: [],
       meta: grants.meta,
@@ -82,7 +73,7 @@ export default class IndexRoute extends CheckSessionRoute {
       },
     };
 
-    const subs = yield this.store.query('submission', submissionQuery);
+    const subs = await this.store.query('submission', submissionQuery);
     subs.forEach((submission) => {
       submission.grants.forEach((grant) => {
         let match = results.grantMap.find((res) => res.grant.id === grant.id);
@@ -93,5 +84,10 @@ export default class IndexRoute extends CheckSessionRoute {
     });
 
     return results;
-  };
+  }
+
+  setupController(controller, model) {
+    super.setupController(...arguments);
+    controller.queuedModel = model;
+  }
 }

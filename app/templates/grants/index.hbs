@@ -18,7 +18,7 @@
   <div class="col-12 table-container">
     <div class="grant-table">
       <ModelsTableServerPaginated
-        @data={{this.model.grantMap}}
+        @data={{this.queuedModel.grantMap}}
         @columns={{this.columns}}
         @themeInstance={{this.themeInstance}}
         @showColumnsDropdown={{false}}
@@ -26,7 +26,7 @@
         @filteringIgnoreCase={{true}}
         @multipleColumnsSorting={{false}}
         @currentPageNumber={{this.page}}
-        @pageSize={{this.model.meta.page.limit}}
+        @pageSize={{this.pageSize}}
         @pageSizeValues={{this.tablePageSizeValues}}
         @itemsCount={{this.itemsCount}}
         @pagesCount={{this.pagesCount}}
