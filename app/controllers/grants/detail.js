@@ -3,7 +3,7 @@ import Controller from '@ember/controller';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
-import { hash } from 'rsvp';
+import { grantDetailsQuery } from '../../util/paginated-query';
 
 export default class GrantDetailsController extends Controller {
   @service('emt-themes/bootstrap4') themeInstance;
@@ -66,7 +66,7 @@ export default class GrantDetailsController extends Controller {
 
   queryParams = ['page', 'pageSize', 'filter'];
 
-  @tracked page;
+  @tracked page = 1;
   @tracked pageSize = 10;
   @tracked filter;
 
@@ -85,22 +85,6 @@ export default class GrantDetailsController extends Controller {
     return this.queuedModel.submissions.meta?.page?.totalPages;
   }
 
-  get submissionsQuery() {
-    /**
-     * TODO:
-     * TMP restriction - don't show submissions that are in DRAFT status
-     * unless you are the submitter OR preparer
-     * Show submissions where `submitted===true`, because they are no longer editable
-     */
-    const userId = this.currentUser.user.id;
-    const userMatch = `submitted==true,(submitter.id==${userId},preparers.id=in=${userId})`;
-    return {
-      filter: {
-        submission: `grants.id==${this.grant.id};submissionStatus=out=cancelled;(${userMatch})`,
-      },
-    };
-  }
-
   @action
   displayAction(display) {
     this.page = display.currentPageNumber;
@@ -110,19 +94,9 @@ export default class GrantDetailsController extends Controller {
 
   @action
   doQuery(params) {
-    const { page = 1, pageSize = 10 } = params;
-    let query = this.submissionsQuery;
-    query.page = {
-      number: page,
-      size: pageSize,
-      totals: true,
-    };
-
-    if (params.filter) {
-      query.filter.submission = `(${query.filter.submission});publication.title=ini=*${params.filter}*`;
-    }
-
-    let submissions = this.store.query('submission', query).then((data) => {
+    const query = grantDetailsQuery(params, this.grant.id, this.currentUser.user);
+    // Don't need to re-load the grant
+    return this.store.query('submission', query).then((data) => {
       this.queuedModel = {
         submissions: {
           data,
@@ -130,8 +104,5 @@ export default class GrantDetailsController extends Controller {
         },
       };
     });
-
-    // Don't need to re-load the grant
-    return submissions;
   }
 }

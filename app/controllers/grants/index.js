@@ -4,6 +4,7 @@ import Controller from '@ember/controller';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
+import { grantsIndexGrantQuery, grantsIndexSubmissionQuery } from '../../util/paginated-query';
 
 export default class GrantsIndexController extends Controller {
   @service currentUser;
@@ -173,33 +174,10 @@ export default class GrantsIndexController extends Controller {
     if (!user) {
       return;
     }
-    const userId = user.id;
-
     // default values provided to force these params in the request to the backend
     // TODO: make default pageSize configurable
-    const { page = 1, pageSize = 10 } = params;
-    const grantQuery = {
-      filter: {
-        grant: `pi.id==${userId},coPis.id==${userId}`,
-      },
-      sort: '+awardStatus,-endDate',
-      page: {
-        number: page,
-        size: pageSize,
-        totals: true,
-      },
-    };
-
-    if (params.filter) {
-      grantQuery.filter.grant = `(${grantQuery.filter.grant});projectName=ini=*${params.filter}*`;
-    }
-
-    const userMatch = `grants.pi.id==${userId},grants.coPis.id==${userId}`;
-    const submissionQuery = {
-      filter: {
-        submission: `submissionStatus=out=cancelled;(${userMatch})`,
-      },
-    };
+    const grantQuery = grantsIndexGrantQuery(params, user);
+    const submissionQuery = grantsIndexSubmissionQuery(user);
 
     return this.store
       .query('grant', grantQuery)
@@ -216,6 +194,9 @@ export default class GrantsIndexController extends Controller {
         };
       })
       .then(async (results) => {
+        // TODO: (see todo in the route)
+        // Refactor to not reload submissions each refresh
+        // Only need to update the mapping (counts)
         const subs = await this.store.query('submission', submissionQuery);
         subs.forEach((submission) => {
           submission.grants.forEach((grant) => {
