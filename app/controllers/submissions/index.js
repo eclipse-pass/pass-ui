@@ -3,6 +3,7 @@ import Controller from '@ember/controller';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
+import { submissionsIndexQuery } from '../../util/paginated-query';
 
 export default class SubmissionsIndex extends Controller {
   @service currentUser;
@@ -23,8 +24,8 @@ export default class SubmissionsIndex extends Controller {
 
   queryParams = ['page', 'pageSize', 'filter'];
 
-  @tracked page;
-  @tracked pageSize;
+  @tracked page = 1;
+  @tracked pageSize = 10;
   tablePageSizeValues = [10, 25, 50]; // TODO: Make configurable?
   @tracked filter;
 
@@ -152,36 +153,7 @@ export default class SubmissionsIndex extends Controller {
 
   @action
   doQuery(params) {
-    let query;
-    const user = this.currentUser.user;
-
-    if (user.isAdmin) {
-      query = {
-        filter: { submission: 'submissionStatus=out=cancelled' },
-        include: 'publication',
-      };
-    } else if (user.isSubmitter) {
-      const userMatch = `submitter.id==${user.id},preparers.id=in=${user.id}`;
-      query = {
-        filter: {
-          submission: `(${userMatch});submissionStatus=out=cancelled`,
-        },
-        sort: '-submittedDate',
-        include: 'publication',
-      };
-    }
-
-    const { page = 1, pageSize = 10 } = params;
-    query.page = {
-      number: page,
-      size: pageSize,
-      totals: true,
-    };
-
-    if (params.filter) {
-      query.filter.submission = `(${query.filter.submission});publication.title=ini=*${params.filter}*`;
-    }
-
+    const query = submissionsIndexQuery(params, this.currentUser.user);
     return this.store.query('submission', query).then((data) => {
       this.queuedModel = {
         submissions: data,

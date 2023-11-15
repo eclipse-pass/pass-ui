@@ -1,6 +1,7 @@
 import { service } from '@ember/service';
 import CheckSessionRoute from '../check-session-route';
 import { hash } from 'rsvp';
+import { grantDetailsQuery } from '../../util/paginated-query';
 
 /**
  * Grant details route: `grant/:id`
@@ -27,34 +28,10 @@ export default class DetailRoute extends CheckSessionRoute {
       return;
     }
 
-    const user = this.currentUser.user;
     const grant = this.store.findRecord('grant', params.grant_id);
 
-    /**
-     * TODO:
-     * TMP restriction - don't show submissions that are in DRAFT status
-     * unless you are the submitter OR preparer
-     * Show submissions where `submitted===true`, because they are no longer editable
-     */
-    const userMatch = `submitted==true,(submitter.id==${user.id},preparers.id=in=${user.id})`;
-    const query = {
-      filter: {
-        submission: `grants.id==${params.grant_id};submissionStatus=out=cancelled;(${userMatch})`,
-      },
-    };
-
-    const { page = 1, pageSize = 10 } = params;
-    query.page = {
-      number: page,
-      size: pageSize,
-      totals: true,
-    };
-
-    if (params.filter) {
-      query.filter.submission = `(${query.filter.submission});publication.title=ini=*${params.filter}*`;
-    }
-
-    const submissions = this.store.query('submission', query).then((data) => ({ data, meta: data.meta }));
+    const submissionQuery = grantDetailsQuery(params, params.grant_id, this.currentUser.user);
+    const submissions = this.store.query('submission', submissionQuery).then((data) => ({ data, meta: data.meta }));
 
     return hash({
       grant,

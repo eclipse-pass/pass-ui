@@ -1,6 +1,7 @@
 import { service } from '@ember/service';
 import { A } from '@ember/array';
 import CheckSessionRoute from '../check-session-route';
+import { grantsIndexGrantQuery, grantsIndexSubmissionQuery } from '../../util/paginated-query';
 
 export default class IndexRoute extends CheckSessionRoute {
   @service('current-user') currentUser;
@@ -31,27 +32,8 @@ export default class IndexRoute extends CheckSessionRoute {
     if (!user) {
       return;
     }
-    const userId = user.id;
 
-    // default values provided to force these params in the request to the backend
-    // TODO: make default pageSize configurable
-    const { page = 1, pageSize = 10 } = params;
-    const grantQuery = {
-      filter: {
-        grant: `pi.id==${userId},coPis.id==${userId}`,
-      },
-      sort: '+awardStatus,-endDate',
-      page: {
-        number: page,
-        size: pageSize,
-        totals: true,
-      },
-    };
-
-    if (params.filter) {
-      grantQuery.filter.grant = `(${grantQuery.filter.grant});projectName=ini=*${params.filter}*`;
-    }
-
+    const grantQuery = grantsIndexGrantQuery(params, user);
     // First search for all Grants associated with the current user
     const grants = await this.store.query('grant', grantQuery);
     let results = {
@@ -66,13 +48,10 @@ export default class IndexRoute extends CheckSessionRoute {
       });
     });
 
-    const userMatch = `grants.pi.id==${userId},grants.coPis.id==${userId}`;
-    const submissionQuery = {
-      filter: {
-        submission: `submissionStatus=out=cancelled;(${userMatch})`,
-      },
-    };
-
+    // TODO: submissions should be fetched separately from grants
+    // We can redo the mapping of submissions onto grants (to get the count)
+    // On demand without reloading the list of submissions
+    const submissionQuery = grantsIndexSubmissionQuery(user);
     const subs = await this.store.query('submission', submissionQuery);
     subs.forEach((submission) => {
       submission.grants.forEach((grant) => {
