@@ -31,7 +31,7 @@ export function submissionsIndexQuery(params, user) {
   };
 
   if (params.filter) {
-    query.filter.submission = `(${query.filter.submission});publication.title=ini=*${params.filter}*`;
+    query.filter.submission = `${query.filter.submission};${filter(params.filter, 'publication.title')}`;
   }
 
   return query;
@@ -58,16 +58,16 @@ export function grantDetailsQuery(params, grantId, user) {
     },
   };
 
+  if (params.filter) {
+    query.filter.submission = `(${query.filter.submission});${filter(params.filter, 'publication.title')}`;
+  }
+
   const { page = 1, pageSize = 10 } = params;
   query.page = {
     number: page,
     size: pageSize,
     totals: true,
   };
-
-  if (params.filter) {
-    query.filter.submission = `(${query.filter.submission});publication.title=ini=*${params.filter}*`;
-  }
 
   return query;
 }
@@ -90,7 +90,7 @@ export function grantsIndexGrantQuery(params, user) {
   };
 
   if (params.filter) {
-    grantQuery.filter.grant = `(${grantQuery.filter.grant});projectName=ini=*${params.filter}*`;
+    grantQuery.filter.grant = `(${grantQuery.filter.grant});${filter(params.filter, 'projectName')}`;
   }
 
   return grantQuery;
@@ -103,4 +103,23 @@ export function grantsIndexSubmissionQuery(user) {
       submission: `submissionStatus=out=cancelled;(${userMatch})`,
     },
   };
+}
+
+function filter(value, ...props) {
+  if (!value) {
+    return '';
+  }
+  return `(${props.map((prop) => `${prop}=ini=${filterValue(value)}`).join(',')})`;
+}
+
+/**
+ * @param {string} value
+ * @returns value surrounded by quotes if necessary
+ */
+function filterValue(value) {
+  value = value.trim();
+  if (value.search(/\s+/) >= 0) {
+    return `"*${value}*"`;
+  }
+  return `*${value}*`;
 }
