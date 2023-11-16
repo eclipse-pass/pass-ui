@@ -1,84 +1,93 @@
-import { A } from '@ember/array';
 import EmberObject from '@ember/object';
-import { module, skip } from 'qunit';
+import { module, skip, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 
 /**
- * These tests checking for the ignore list are no longer relevant after
- * switching to the JSON:API implementation
+ * This ends up mostly checking the query generation util
  */
 module('Unit | Route | submissions/index', (hooks) => {
   setupTest(hooks);
 
-  skip('Make sure ignore list is included in ES query for a submitter', async function (assert) {
-    assert.expect(2);
-    const route = this.owner.lookup('route:submissions/index');
+  hooks.beforeEach(function () {
+    this.route = this.owner.lookup('route:submissions/index');
+    const user = EmberObject.create({
+      id: 0,
+      isSubmitter: true,
+      isAdmin: false,
+    });
 
-    route.set(
-      'currentUser',
-      EmberObject.create({
-        user: EmberObject.create({
-          id: 'Moo',
-          isSubmitter: true,
-        }),
-      })
-    );
-    route.set(
-      'searchHelper',
-      EmberObject.create({
-        getIgnoreList: () => ['ID-3'],
-        clearIgnore: () => {},
-      })
-    );
-    route.set(
-      'store',
-      EmberObject.create({
-        query: (type, query) => {
-          const filter = query.query.bool.must_not;
-          assert.strictEqual(filter.length, 2, 'Should be two "must_not" terms');
-          assert.deepEqual(filter[1].terms, { '@id': ['ID-3'] });
-
-          return Promise.resolve(A());
-        },
-      })
-    );
-
-    await route.model();
+    this.route.currentUser = EmberObject.create({ user });
   });
 
-  skip('Make sure ignore list is included in ES query for a admin', async function (assert) {
-    assert.expect(2);
-    const route = this.owner.lookup('route:submissions/index');
+  test('No params on route still includes pagination in query', async function (assert) {
+    this.route.store = {
+      query: (model, query) => {
+        assert.equal(model, 'submission', 'Query is requesting "submission" model');
+        assert.ok(query.filter.submission, 'Query has a filter[submission] part');
+        assert.ok(query.filter.submission.includes(`submitter.id==0`), 'Filter includes non-admin user selection');
+        assert.ok(query.page, 'Query has pagination object');
+        assert.deepEqual(
+          query.page,
+          { number: 1, size: 10, totals: true },
+          'Pagination in query should have default values'
+        );
+        return Promise.resolve({});
+      },
+    };
 
-    route.set(
-      'currentUser',
-      EmberObject.create({
-        user: EmberObject.create({
-          id: 'Moo',
-          isAdmin: true,
-        }),
-      })
-    );
-    route.set(
-      'searchHelper',
-      EmberObject.create({
-        getIgnoreList: () => ['ID-3'],
-        clearIgnore: () => {},
-      })
-    );
-    route.set(
-      'store',
-      EmberObject.create({
-        query: (type, query) => {
-          const filter = query.query.must_not;
-          assert.strictEqual(filter.length, 2, 'Should be two "must_not" terms');
-          assert.deepEqual(filter[1].terms, { '@id': ['ID-3'] });
+    await this.route.model({});
+  });
 
-          return Promise.resolve(A());
-        },
-      })
-    );
+  test('Make sure input params are passed to store query', async function (assert) {
+    this.route.store = {
+      query: (model, query) => {
+        assert.equal(model, 'submission', 'Query is requesting "submission" model');
+        assert.ok(query.page, 'Query has pagination object');
+        assert.deepEqual(
+          query.page,
+          { number: 2, size: 5, totals: true },
+          'Pagination in query should match input params'
+        );
+        assert.ok(
+          query.filter.submission.includes('=ini="*Hello moo!*"'),
+          'Query filter should include input param filter string'
+        );
+        return Promise.resolve({});
+      },
+    };
 
-    await route.model();
+    await this.route.model({
+      page: 2,
+      pageSize: 5,
+      filter: 'Hello moo!',
+    });
+  });
+
+  test("Single word input filter isn't surrounded by double quotes", async function (assert) {
+    this.route.store = {
+      query: (model, query) => {
+        assert.ok(query.filter.submission.includes('=ini=*Moo*'));
+        return Promise.resolve({});
+      },
+    };
+
+    await this.route.model({ filter: 'Moo' });
+  });
+
+  test("Admin user doesn't get restricted results", async function (assert) {
+    this.route.currentUser = {
+      user: { id: 0, isAdmin: true, isSubmitter: true },
+    };
+    this.route.store = {
+      query: (model, query) => {
+        assert.notOk(
+          query.filter.submission.includes(`submitter.id==0`),
+          'Filter does not include non-admin user selection'
+        );
+        return Promise.resolve({});
+      },
+    };
+
+    await this.route.model({});
   });
 });
