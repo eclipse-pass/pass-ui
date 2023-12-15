@@ -24,7 +24,8 @@
     "start": "ember server",
     "test": "concurrently \"npm:lint\" \"npm:test:no-serve\" --names \"lint,test:\"",
     "test:no-serve": "ember test",
-    "test:serve": "ember test -s"
+    "test:serve": "ember test -s",
+    "prepare": "husky install"
   },
   "devDependencies": {
     "@babel/core": "^7.21.3",
