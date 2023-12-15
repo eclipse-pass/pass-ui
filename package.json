@@ -24,8 +24,7 @@
     "start": "ember server",
     "test": "concurrently \"npm:lint\" \"npm:test:no-serve\" --names \"lint,test:\"",
     "test:no-serve": "ember test",
-    "test:serve": "ember test -s",
-    "prepare": "husky install"
+    "test:serve": "ember test -s"
   },
   "devDependencies": {
     "@babel/core": "^7.21.3",
@@ -118,7 +117,6 @@
   },
   "lint-staged": {
     "*.{js,ts}": [
-      "eslint --fix",
       "prettier --write"
     ]
   },

@@ -153,4 +153,17 @@ export default [
     startDate: '2008-12-01T00:00:00.000Z',
     localKey: `johnshopkins.edu:grant:12345`,
   },
+  {
+    id: '9',
+    awardDate: '2023-02-28T00:00:00.000Z',
+    awardNumber: '90105531',
+    awardStatus: 'active',
+    endDate: '2024-02-28T00:00:00.000Z',
+    localKey: 'johnshopkins.edu:grant:143857',
+    projectName:
+      'Pre-Study of wild-type Enterotoxigenic E. coli (ETEC) strain E24377A for verification of a planned challenge dose',
+    startDate: '2023-03-01T00:00:00.000Z',
+    directFunderId: '4',
+    primaryFunderId: '4',
+  },
 ];

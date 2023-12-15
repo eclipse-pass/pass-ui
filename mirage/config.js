@@ -227,17 +227,17 @@ export default function (config) {
 
       /** Policy Service */
       this.get('/policy/policies', async (schema, request) => {
-        const institutionPolicy = await dataFinder.findBy(schema, 'policy', {
-          title: 'Johns Hopkins University (JHU) Open Access Policy',
-        });
-        const nihPolicy = await dataFinder.findBy(schema, 'policy', {
-          title: 'National Institutes of Health Public Access Policy',
-        });
+        const policiesAndFunders = schema.submission
+          .all()
+          .models.find((sub) => sub.id === request.queryParams.submission)
+          .grants.models.map((grant) => {
+            const funder = schema.funder.all().models.find((funder) => funder.id === grant.primaryFunder.id);
+            const policy = schema.policy.all().models.find((policy) => policy.id === funder.policyId);
 
-        return [
-          { id: nihPolicy.id, type: 'funder' },
-          { id: institutionPolicy.id, type: 'institution' },
-        ];
+            return { id: policy.id, type: funder.type };
+          });
+
+        return policiesAndFunders;
       });
       // Return NIH (required) and J10p (optional, selected)
       this.get('/policy/repositories', async (schema, request) => {

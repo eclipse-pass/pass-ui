@@ -40,8 +40,21 @@ export default class ApplicationRoute extends CheckSessionRoute {
       loader.style.display = 'none';
     }
 
-    if (!this.staticConfig.config) {
-      await this.staticConfig.setupStaticConfig();
+    if (model.staticConfig) {
+      if (model.staticConfig.branding.stylesheet) {
+        const stylesheet = `${model.staticConfig.branding.stylesheet}`;
+        this.staticConfig.addCSS(stylesheet);
+      } else {
+        console.log('%cNo branding stylesheet was configured', 'color:red');
+      }
+      if (model.staticConfig.branding.overrides) {
+        const overrides = `${model.staticConfig.branding.overrides}`;
+        this.staticConfig.addCSS(overrides);
+      }
+      if (model.staticConfig.branding.favicon) {
+        const favicon = `${model.staticConfig.branding.favicon}`;
+        // this.staticConfig.addFavicon(favicon);
+      }
     }
   }
 }
