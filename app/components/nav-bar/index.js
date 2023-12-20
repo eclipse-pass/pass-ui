@@ -46,8 +46,8 @@ export default class NavBar extends Component {
 
   @task
   _setupAppStaticConfig = function* () {
-    let config = yield this.appStaticConfig.getStaticConfig();
-    if (config.branding.showPagesNavBar) {
+    let config = yield this.appStaticConfig.config;
+    if (config && config.branding.showPagesNavBar) {
       this.aboutUrl = config.branding.pages.aboutUrl;
       this.contactUrl = config.branding.pages.contactUrl;
       this.faqUrl = config.branding.pages.faqUrl;

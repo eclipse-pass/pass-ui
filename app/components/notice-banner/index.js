@@ -21,8 +21,10 @@ export default class NoticeBanner extends Component {
 
   @task
   _setupAppStaticConfig = function* () {
-    let config = yield this.appStaticConfig.getStaticConfig();
-    this.contactUrl = config.branding.pages.contactUrl;
-    this.instructionsUrl = config.branding.pages.instructionsUrl;
+    let config = yield this.appStaticConfig.config;
+    if (config) {
+      this.contactUrl = config.branding.pages.contactUrl;
+      this.instructionsUrl = config.branding.pages.instructionsUrl;
+    }
   };
 }

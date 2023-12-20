@@ -5,8 +5,8 @@ import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 
 class MockConfigService extends Service {
-  getStaticConfig() {
-    return Promise.resolve({ branding: { stylesheet: '', pages: { faqUrl: '' } } });
+  get config() {
+    return { branding: { stylesheet: '', pages: { faqUrl: '' } } };
   }
   addCss() {}
 }

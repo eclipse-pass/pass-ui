@@ -38,8 +38,7 @@ export default class FoundManuscriptsComponent extends Component {
 
   @task
   getAppConfig = function* () {
-    let config = yield this.appStaticConfig.getStaticConfig();
-    this.contactUrl = config.branding.pages.contactUrl;
+    this.contactUrl = yield this.appStaticConfig.config?.branding?.pages?.contactUrl;
   };
 
   @task

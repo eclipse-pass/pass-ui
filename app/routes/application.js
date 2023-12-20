@@ -31,38 +31,17 @@ export default class ApplicationRoute extends CheckSessionRoute {
     }
   }
 
-  async model() {
-    const config = await this.staticConfig.getStaticConfig();
-
-    return {
-      staticConfig: config,
-    };
-  }
-
   /**
    * Add styling from static branding. TODO: Should this be moved to an initializer or something?
    */
-  afterModel(model, transition) {
+  async afterModel(model, transition) {
     const loader = document.getElementById('initial-loader');
     if (loader) {
       loader.style.display = 'none';
     }
 
-    if (model.staticConfig) {
-      if (model.staticConfig.branding.stylesheet) {
-        const stylesheet = `${model.staticConfig.branding.stylesheet}`;
-        this.staticConfig.addCSS(stylesheet);
-      } else {
-        console.log('%cNo branding stylesheet was configured', 'color:red');
-      }
-      if (model.staticConfig.branding.overrides) {
-        const overrides = `${model.staticConfig.branding.overrides}`;
-        this.staticConfig.addCSS(overrides);
-      }
-      if (model.staticConfig.branding.favicon) {
-        const favicon = `${model.staticConfig.branding.favicon}`;
-        this.staticConfig.addFavicon(favicon);
-      }
+    if (!this.staticConfig.config) {
+      await this.staticConfig.setupStaticConfig();
     }
   }
 }
