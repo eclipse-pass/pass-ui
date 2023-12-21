@@ -34,7 +34,7 @@
             {{#if this.mustVisitWeblink}}
               <tr>
                 <td class="text-nowrap text-center" id="externalSubmission">
-                  <p class="{{if this.disableSubmit "text-danger"}}">
+                  <p class="{{if this.disableSubmit 'text-danger'}}">
                     External Submission Required
                   </p>
                   {{#if this.disableSubmit}}
@@ -43,21 +43,21 @@
                 </td>
                 <td>
                   <label class="">
-                    You are required to make a submission to these repositories directly because PASS cannot
-                    integrate with these systems.
+                    You are required to make a submission to these repositories directly because PASS cannot integrate
+                    with these systems.
                   </label>
                   <ul class="m-0 list-unstyled">
                     {{#each this.weblinkRepos as |repo|}}
                       <li>
-                        <label class="pl-3">
-                          {{ repo.name }}
+                        <label class="pl-3 m-0">
+                          {{repo.name}}
                           <button
                             type="button"
-                            class="btn btn-link {{if this.disableSubmit "font-weight-bold"}}"
+                            class="btn btn-link {{if this.disableSubmit 'font-weight-bold'}} py-0"
                             data-test-repo-link-button
                             {{action "openWeblinkAlert" repo}}
                           >
-                            {{ repo.url }}
+                            {{repo.url}}
                           </button>
                         </label>
 
@@ -250,11 +250,7 @@
     {{@waitingMessage}}
   </button>
 {{else if this.disableSubmit}}
-  <button
-    class="btn btn-primary pull-right submit"
-    data-test-workflow-review-submit
-    disabled
-  >
+  <button class="btn btn-primary pull-right submit" data-test-workflow-review-submit disabled>
     {{this.submitButtonText}}
   </button>
 {{else}}
