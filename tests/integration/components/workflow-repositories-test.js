@@ -27,6 +27,9 @@ module('Integration | Component | workflow repositories', (hooks) => {
     `);
 
     assert.ok(true);
+    assert
+      .dom('[data-test-workflow-repositories-required-weblink-list]')
+      .doesNotExist('Separate weblink repos list should not be rendered');
   });
 
   test('required repositories should display with no checkboxes', async function (assert) {
