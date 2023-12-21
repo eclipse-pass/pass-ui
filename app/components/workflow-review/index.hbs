@@ -31,20 +31,54 @@
         </div>
         <table local-class="review-step-table" class="table table-responsive-sm table-bordered w-100">
           <tbody>
+            {{#if this.mustVisitWeblink}}
+              <tr>
+                <td class="text-nowrap text-center" id="externalSubmission">
+                  <p class="{{if this.disableSubmit "text-danger"}}">
+                    External Submission Required
+                  </p>
+                  {{#if this.disableSubmit}}
+                    <i class="fa fa-exclamation-triangle fa-2x notice-triangle text-danger"></i>
+                  {{/if}}
+                </td>
+                <td>
+                  <label class="">
+                    You are required to make a submission to these repositories directly because PASS cannot
+                    integrate with these systems.
+                  </label>
+                  <ul class="m-0 list-unstyled">
+                    {{#each this.weblinkRepos as |repo|}}
+                      <li>
+                        <label class="pl-3">
+                          {{ repo.name }}
+                          <button
+                            type="button"
+                            class="btn btn-link {{if this.disableSubmit "font-weight-bold"}}"
+                            data-test-repo-link-button
+                            {{action "openWeblinkAlert" repo}}
+                          >
+                            {{ repo.url }}
+                          </button>
+                        </label>
+
+                      </li>
+                    {{/each}}
+                  </ul>
+                </td>
+              </tr>
+            {{/if}}
+
             <tr>
               <td local-class="max-width">
                 Repositories
-                <span
-                  tooltip-position="right"
-                  tooltip="Submission into these repositories is required according to the respective policies."
-                >
-                  <i class="fas fa-info-circle"></i>
-                </span>
               </td>
               <td>
-                <ul data-test-workflow-review-repository-list>
+                <p>
+                  Submission into these repositories is required according to the respective policies.
+                </p>
+                <ul class="m-0 list-unstyled" data-test-workflow-review-repository-list>
                   {{#each @submission.repositories as |repository|}}
-                    <li>
+                    <li class="pl-3">
                       {{repository.name}}
                     </li>
                   {{/each}}
@@ -52,37 +86,6 @@
               </td>
             </tr>
 
-            {{#if this.mustVisitWeblink}}
-              <tr>
-                <td class="text-nowrap text-center" id="externalSubmission">
-                  External Submission Required
-                  <br />
-                  {{#if this.disableSubmit}}
-                    <i class="fa fa-exclamation-triangle fa-2x mt-3 notice-triangle"></i>
-                  {{/if}}
-                </td>
-                <td>
-                  <label class="">
-                    Please visit the following web portal to submit your manuscript directly. Metadata displayed above
-                    could be used to aid in your submission progress.
-                  </label>
-                  <ul class="m-0">
-                    {{#each this.weblinkRepos as |repo|}}
-                      <li>
-                        <button
-                          type="button"
-                          class="btn btn-link"
-                          data-test-repo-link-button
-                          {{action "openWeblinkAlert" repo}}
-                        >
-                          {{get repo "url"}}
-                        </button>
-                      </li>
-                    {{/each}}
-                  </ul>
-                </td>
-              </tr>
-            {{/if}}
             <tr>
               <td>
                 Grants
@@ -245,6 +248,14 @@
 {{#if @uploading}}
   <button class="btn btn-primary pull-right submit" disabled>
     {{@waitingMessage}}
+  </button>
+{{else if this.disableSubmit}}
+  <button
+    class="btn btn-primary pull-right submit"
+    data-test-workflow-review-submit
+    disabled
+  >
+    {{this.submitButtonText}}
   </button>
 {{else}}
   <button

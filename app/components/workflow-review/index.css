@@ -41,3 +41,7 @@ table td {
 .swal2-radio {
   flex-direction: column !important;
 }
+
+button[disabled] {
+  cursor: default;
+}
