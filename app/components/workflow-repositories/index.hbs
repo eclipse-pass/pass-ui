@@ -9,7 +9,17 @@
     below. PASS will help you to create submissions for these in the following steps:
   </p>
   <ul class="list-group" data-test-workflow-repositories-required-list>
-    {{#each @requiredRepositories as |repoInfo|}}
+    {{#each this.requiredIntegratedRepos as |repoInfo|}}
+      <RepositoryCard @repository={{repoInfo.repository}} @funders={{repoInfo.funders}} @type="required" />
+    {{/each}}
+  </ul>
+  <p class="lead text-muted mt-3">
+    You are required to submit to the following repositories, but PASS cannot make them for you. PASS can provide links to
+    these repositories with a summary of the information you've entered for your PASS submission before finalizing the
+    submission. You will need to follow those links in order to make a submission in those separate repository systems.
+  </p>
+  <ul class="list-group" data-test-workflow-repositories-required-weblink-list>
+    {{#each this.requiredWeblinkRepos as |repoInfo|}}
       <RepositoryCard @repository={{repoInfo.repository}} @funders={{repoInfo.funders}} @type="required" />
     {{/each}}
   </ul>
@@ -30,10 +40,6 @@
     Optional repositories
   </h4>
   <p class="lead text-muted">
-    {{! Text below is from previous version - not sure if we need to keep the text about "institutional" repos }}
-    {{!-- A Submission to the following will put you in compliance with your
-    {{#link-to "faq" (query-params anchor='#institution-policy')}}institution's open access policy{{/link-to}}.
-    If you are already making your publication openly available elsewhere (e.g. PubMed Central), this may be optional. --}}
     Choose whether you want to submit to zero or more of the following repositories. Selecting the repositories below is
     optional.
   </p>
