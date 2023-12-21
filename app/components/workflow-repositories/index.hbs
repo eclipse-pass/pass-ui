@@ -15,16 +15,17 @@
   </ul>
 
   {{#if this.requiredWeblinkRepos.length}}
-  <p class="lead text-muted mt-3">
-    You are required to submit to the following repositories, but PASS cannot make them for you. PASS can provide links to
-    these repositories with a summary of the information you've entered for your PASS submission before finalizing the
-    submission. You will need to follow those links in order to make a submission in those separate repository systems.
-  </p>
-  <ul class="list-group" data-test-workflow-repositories-required-weblink-list>
-    {{#each this.requiredWeblinkRepos as |repoInfo|}}
-      <RepositoryCard @repository={{repoInfo.repository}} @funders={{repoInfo.funders}} @type="required" />
-    {{/each}}
-  </ul>
+    <p class="lead text-muted mt-3">
+      You are required to submit to the following repositories, but PASS cannot make them for you. PASS can provide
+      links to these repositories with a summary of the information you've entered for your PASS submission before
+      finalizing the submission. You will need to follow those links in order to make a submission in those separate
+      repository systems.
+    </p>
+    <ul class="list-group" data-test-workflow-repositories-required-weblink-list>
+      {{#each this.requiredWeblinkRepos as |repoInfo|}}
+        <RepositoryCard @repository={{repoInfo.repository}} @funders={{repoInfo.funders}} @type="required" />
+      {{/each}}
+    </ul>
   {{/if}}
 {{/if}}
 
