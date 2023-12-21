@@ -39,6 +39,20 @@ export default class WorkflowRepositories extends Component {
 
   @tracked addedRepos = A([]);
 
+  // Separate out repositories that PASS has some level of integration
+  get requiredIntegratedRepos() {
+    return this.args.requiredRepositories.filter((repoInfo) => !repoInfo.repository._isWebLink);
+  }
+
+  // Separate out repositories that PASS has no integration
+  get requiredWeblinkRepos() {
+    return this.args.requiredRepositories.filter((repoInfo) => repoInfo.repository._isWebLink);
+  }
+
+  /**
+   * On component `did-insert`, make sure repositories in submission object
+   * are valid
+   */
   @action
   setupRepos() {
     set(this, 'addedRepos', this.getAddedRepositories());
