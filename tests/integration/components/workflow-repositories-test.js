@@ -1,25 +1,19 @@
 /* eslint-disable ember/no-get, ember/no-classic-classes */
-import Service from '@ember/service';
-import { A } from '@ember/array';
-import EmberObject, { get } from '@ember/object';
+import EmberObject from '@ember/object';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
 import { render, click } from '@ember/test-helpers';
+import sinon from 'sinon';
 
 module('Integration | Component | workflow repositories', (hooks) => {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    const submission = EmberObject.create({ repositories: A() });
-    const req = A();
-    const opt = A();
-    const choice = A();
-
-    this.set('submission', submission);
-    this.set('requiredRepositories', req);
-    this.set('optionalRepositories', opt);
-    this.set('choiceRepositories', choice);
+    this.submission = { id: '0', repositories: [] };
+    this.requiredRepositories = [];
+    this.optionalRepositories = [];
+    this.choiceRepositories = [];
   });
 
   test('it renders', async (assert) => {
@@ -36,14 +30,7 @@ module('Integration | Component | workflow repositories', (hooks) => {
   });
 
   test('required repositories should display with no checkboxes', async function (assert) {
-    this.set(
-      'requiredRepositories',
-      A([
-        {
-          repository: EmberObject.create({ name: 'Moo-pository 1' }),
-        },
-      ])
-    );
+    this.requiredRepositories = [{ repository: { name: 'Moo-pository 1' } }];
 
     await render(hbs`
       <WorkflowRepositories
@@ -61,19 +48,13 @@ module('Integration | Component | workflow repositories', (hooks) => {
   });
 
   test('optional/choice repos chould display with checkboxes', async function (assert) {
-    this.set(
-      'choiceRepositories',
-      A([
-        A([
-          { selected: true, repository: EmberObject.create({ name: 'Moo-pository 1' }) },
-          { selected: false, repository: EmberObject.create({ name: 'Moo-pository 2' }) },
-        ]),
-      ])
-    );
-    this.set(
-      'optionalRepositories',
-      A([{ selected: false, repository: EmberObject.create({ name: 'Moo-pository 00' }) }])
-    );
+    this.choiceRepositories = [
+      [
+        { selected: true, repository: { name: 'Moo-pository 1' } },
+        { selected: false, repository: { name: 'Moo-pository 2' } },
+      ],
+    ];
+    this.optionalRepositories = [{ selected: false, repository: { name: 'Moo-pository 00' } }];
 
     await render(hbs`
       <WorkflowRepositories
@@ -94,15 +75,12 @@ module('Integration | Component | workflow repositories', (hooks) => {
   });
 
   test('User cannot deselect all choice repos', async function (assert) {
-    this.set(
-      'choiceRepositories',
-      A([
-        A([
-          { repository: EmberObject.create({ name: 'Moo-pository 1', _selected: true }) },
-          { repository: EmberObject.create({ name: 'Moo-pository 2', _selected: false }) },
-        ]),
-      ])
-    );
+    this.choiceRepositories = [
+      [
+        { repository: EmberObject.create({ name: 'Moo-pository 1', _selected: true }) },
+        { repository: EmberObject.create({ name: 'Moo-pository 2', _selected: false }) },
+      ],
+    ];
 
     await render(hbs`
       <WorkflowRepositories
@@ -130,20 +108,14 @@ module('Integration | Component | workflow repositories', (hooks) => {
   });
 
   test('Selecting an optional repo adds it to submission', async function (assert) {
-    this.set('requiredRepositories', A([{ repository: EmberObject.create({ name: 'Moo-pository XYZ' }) }]));
-    this.set(
-      'choiceRepositories',
-      A([
-        A([
-          { repository: EmberObject.create({ name: 'Moo-pository 1', _selected: true }) },
-          { repository: EmberObject.create({ name: 'Moo-pository 2', _selected: false }) },
-        ]),
-      ])
-    );
-    this.set(
-      'optionalRepositories',
-      A([{ selected: false, repository: EmberObject.create({ name: 'Moo-pository 00' }) }])
-    );
+    this.requiredRepositories = [{ repository: { name: 'Moo-pository XYZ' } }];
+    this.optionalRepositories = [{ selected: false, repository: { name: 'Moo-pository 00' } }];
+    this.choiceRepositories = [
+      [
+        { repository: EmberObject.create({ name: 'Moo-pository 1', _selected: true }) },
+        { repository: EmberObject.create({ name: 'Moo-pository 2', _selected: false }) },
+      ],
+    ];
 
     await render(hbs`
       <WorkflowRepositories
@@ -154,7 +126,7 @@ module('Integration | Component | workflow repositories', (hooks) => {
       />
     `);
 
-    const repos = get(this, 'submission.repositories');
+    const repos = this.submission.repositories;
     assert.strictEqual(repos.length, 2, 'unexpected number of repositories attached to the submission');
     assert.ok(repos.isAny('name', 'Moo-pository XYZ'));
 
@@ -172,20 +144,14 @@ module('Integration | Component | workflow repositories', (hooks) => {
   });
 
   test('Unselecting optional repo removes it from submission', async function (assert) {
-    this.set('requiredRepositories', A([{ repository: EmberObject.create({ name: 'Moo-pository XYZ' }) }]));
-    this.set(
-      'choiceRepositories',
-      A([
-        A([
-          { repository: EmberObject.create({ name: 'Moo-pository 1', _selected: true }) },
-          { repository: EmberObject.create({ name: 'Moo-pository 2', _selected: false }) },
-        ]),
-      ])
-    );
-    this.set(
-      'optionalRepositories',
-      A([{ repository: EmberObject.create({ name: 'Moo-pository 00', _selected: true }) }])
-    );
+    this.requiredRepositories = [{ repository: { name: 'Moo-pository XYZ' } }];
+    this.optionalRepositories = [{ repository: { name: 'Moo-pository 00', _selected: true } }];
+    this.choiceRepositories = [
+      [
+        { repository: { name: 'Moo-pository 1', _selected: true } },
+        { repository: { name: 'Moo-pository 2', _selected: false } },
+      ],
+    ];
 
     await render(hbs`
       <WorkflowRepositories
@@ -196,7 +162,7 @@ module('Integration | Component | workflow repositories', (hooks) => {
       />
     `);
 
-    const repos = get(this, 'submission.repositories');
+    const repos = this.submission.repositories;
     assert.strictEqual(repos.length, 3, 'unexpected number of repositories attached to submission');
     assert.notOk(repos.includes(undefined), 'should be no undefined items');
     assert.ok(repos.isAny('name', 'Moo-pository 00'), 'The optional repo should be present');
@@ -224,36 +190,22 @@ module('Integration | Component | workflow repositories', (hooks) => {
    * This could happen when editing a draft submission.
    */
   test('Repos on submission are selected initially', async function (assert) {
-    this.set(
-      'submission',
-      EmberObject.create({
-        repositories: A([EmberObject.create({ id: 1, name: 'Test Repo 1' })]),
-      })
-    );
+    const addedRepo = { id: 3, name: 'Test Repo 3', _selected: true };
 
-    const addedRepo = EmberObject.create({ id: 3, name: 'Test Repo 3', _selected: true });
-    this.set(
-      'optionalRepositories',
-      A([
-        { repository: EmberObject.create({ id: 1, name: 'Test Repo 1', _selected: false }) },
-        { repository: EmberObject.create({ id: 2, name: 'Test Repo 2', _selected: true }) },
-        { repository: addedRepo },
-      ])
-    );
-    this.owner.register(
-      'service:workflow',
-      Service.extend({
-        setMaxStep: () => {},
-        getAddedGrants: () =>
-          A([
-            EmberObject.create({
-              primaryFunder: EmberObject.create({
-                policy: EmberObject.create({ repositories: A([addedRepo]) }),
-              }),
-            }),
-          ]),
-      })
-    );
+    this.submission = { repositories: [{ id: 1, name: 'Test Repo 1' }] };
+    this.optionalRepositories = [
+      { repository: { id: 1, name: 'Test Repo 1', _selected: false } },
+      { repository: { id: 2, name: 'Test Repo 2', _selected: true } },
+      { repository: addedRepo },
+    ];
+
+    const workflowService = this.owner.lookup('service:workflow');
+    const workflowServiceStub = sinon.stub(workflowService, 'getAddedGrants');
+    workflowServiceStub.returns([{ primaryFunder: { policy: { repositories: [addedRepo] } } }]);
+
+    const submissionHandler = this.owner.lookup('service:submission-handler');
+    const subHandlerStub = sinon.stub(submissionHandler, 'getRepositoriesFromGrants');
+    subHandlerStub.returns([addedRepo]);
 
     await render(hbs`
       <WorkflowRepositories
@@ -271,5 +223,30 @@ module('Integration | Component | workflow repositories', (hooks) => {
     assert.notOk(checkboxes[0].checked, 'First checkbox should NOT be checked');
     assert.ok(checkboxes[1].checked, 'Second checkbox should be checked');
     assert.ok(checkboxes[2].checked, 'Third checkbox should be selected');
+  });
+
+  test('Weblink repos are broken out into separate section', async function (assert) {
+    this.requiredRepositories = [
+      { repository: { id: 0, name: 'Required repo 1', type: 'full', _isWebLink: false } },
+      { repository: { id: 1, name: 'Required repo 2', type: 'full', _isWebLink: false } },
+      { repository: { id: 2, name: 'Required web-link repo 3', type: 'web-link', _isWebLink: true } },
+    ];
+
+    await render(hbs`
+      <WorkflowRepositories
+        @submission={{this.submission}}
+        @requiredRepositories={{this.requiredRepositories}}
+        @optionalRepositories={{this.optionalRepositories}}
+        @choiceRepositories={{this.choiceRepositories}}
+      />
+    `);
+    // await this.pauseTest();
+    const requiredList = this.element.querySelector('[data-test-workflow-repositories-required-list]');
+    assert.dom(requiredList).exists('Required repositories list should exist');
+    assert.strictEqual(requiredList.childElementCount, 2, 'Should show 2 required repos with integration');
+
+    const weblinkList = this.element.querySelector('[data-test-workflow-repositories-required-weblink-list]');
+    assert.dom(weblinkList).exists('Weblink repositories list should exist');
+    assert.strictEqual(weblinkList.childElementCount, 1, 'Should show only 1 weblink repo');
   });
 });
