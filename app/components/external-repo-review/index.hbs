@@ -1,0 +1,33 @@
+<tr>
+  <td class="text-nowrap text-center" id="externalSubmission">
+    <p class="{{if this.hasUnvisited 'text-danger'}}">
+      External Submission Required
+    </p>
+    {{#if this.hasUnvisited}}
+      <i class="fa fa-exclamation-triangle fa-2x notice-triangle text-danger"></i>
+    {{/if}}
+  </td>
+  <td>
+    <label class="">
+      You are required to make a submission to these repositories directly because PASS cannot integrate
+      with these systems.
+    </label>
+    <ul class="m-0 list-unstyled">
+      {{#each this.repoList as |entry|}}
+        <li>
+          <label class="pl-3 m-0 {{if entry.visited "" "font-weight-bold"}}">
+            {{entry.repo.name}}
+            <button
+              type="button"
+              class="btn btn-link py-0 {{if entry.visited "" "font-weight-bold"}}"
+              data-test-repo-link-button
+              {{on "click" (fn this.openWeblinkAlert entry.repo)}}
+            >
+              {{entry.repo.url}}
+            </button>
+          </label>
+        </li>
+      {{/each}}
+    </ul>
+  </td>
+</tr>
