@@ -5,7 +5,7 @@ import { action, computed, get, set } from '@ember/object';
 import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 
-export default class SubmissionsNewPolicies extends Controller {
+export default class SubmissionsNewRepositories extends Controller {
   @service workflow;
 
   @alias('model.newSubmission') submission;
