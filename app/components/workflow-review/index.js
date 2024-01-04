@@ -7,15 +7,25 @@ import { inject as service } from '@ember/service';
 import { task } from 'ember-concurrency-decorators';
 import { later } from '@ember/runloop';
 
+/**
+ * Present the user with a summary of all information known about the current in-progress
+ * submission. Do not allow finalize & submit until web-link repositories have been visited.
+ * On submit, the user is presented with all relevant repository agreements.
+ *
+ * TODO:
+ * Note, in the current implementation, if a user were to back out of the workflow during
+ * this step, then open it back up, they may have to interact with the web-link repositories
+ * unnecesarily. We'd need proper state management to mark this to prevent the redundant
+ * interaction
+ */
 export default class WorkflowReview extends Component {
   @service workflow;
   @service currentUser;
   @service flashMessages;
 
   @tracked isValidated = A();
-  @tracked externalRepoMap = {};
   @tracked filesTemp = this.workflow.filesTemp;
-  @tracked _hasVisitedWeblink = null;
+  @tracked hasVisitedWeblink = false;
 
   get parsedFiles() {
     let newArr = A();
@@ -28,20 +38,8 @@ export default class WorkflowReview extends Component {
     return newArr;
   }
 
-  get hasVisitedWeblink() {
-    if (this._hasVisitedWeblink) {
-      return this._hasVisitedWeblink;
-    }
-    return Object.values(this.externalRepoMap).every((val) => val === true);
-  }
-
-  set hasVisitedWeblink(value) {
-    this._hasVisitedWeblink = value;
-  }
-
   get weblinkRepos() {
     const repos = get(this, 'args.submission.repositories').filter((repo) => repo.get('_isWebLink'));
-    repos.forEach((repo) => (this.externalRepoMap[repo.get('id')] = false)); // eslint-disable-line
     return repos;
   }
 
@@ -63,6 +61,11 @@ export default class WorkflowReview extends Component {
 
   get submitButtonText() {
     return this.userIsPreparer ? 'Request approval' : 'Submit';
+  }
+
+  @action
+  onAllExternalReposClicked() {
+    this.hasVisitedWeblink = true;
   }
 
   @task
