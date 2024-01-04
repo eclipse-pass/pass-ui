@@ -9,17 +9,17 @@
   </td>
   <td>
     <label class="">
-      You are required to make a submission to these repositories directly because PASS cannot integrate
-      with these systems.
+      You are required to make a submission to these repositories directly because PASS cannot integrate with these
+      systems.
     </label>
     <ul class="m-0 list-unstyled">
       {{#each this.repoList as |entry|}}
         <li>
-          <label class="pl-3 m-0 {{if entry.visited "" "font-weight-bold"}}">
+          <label class="pl-3 m-0 {{if entry.visited '' 'font-weight-bold'}}">
             {{entry.repo.name}}
             <button
               type="button"
-              class="btn btn-link py-0 {{if entry.visited "" "font-weight-bold"}}"
+              class="btn btn-link py-0 {{if entry.visited '' 'font-weight-bold'}}"
               data-test-repo-link-button
               {{on "click" (fn this.openWeblinkAlert entry.repo)}}
             >
