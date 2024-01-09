@@ -24,6 +24,8 @@ export default function (config) {
       }),
     },
     routes() {
+      const isTestEnv = ENV.environment === 'test';
+
       this.get('/app/config.json', (_schema, _request) => {
         return {
           branding: {
@@ -225,36 +227,40 @@ export default function (config) {
         };
       });
 
-      /** Policy Service */
-      this.get('/policy/policies', async (schema, request) => {
-        const institutionPolicy = await dataFinder.findBy(schema, 'policy', {
-          title: 'Johns Hopkins University (JHU) Open Access Policy',
-        });
-        const nihPolicy = await dataFinder.findBy(schema, 'policy', {
-          title: 'National Institutes of Health Public Access Policy',
+      /**
+       * Policy Service
+       * Use Mirage for test env, passthrough otherwise
+       * TODO: is the passthrough still necessary?
+       */
+      if (isTestEnv) {
+        this.get('/policy/policies', async (schema, request) => {
+          const institutionPolicy = await dataFinder.findBy(schema, 'policy', {
+            title: 'Johns Hopkins University (JHU) Open Access Policy',
+          });
+          const policies = submission2Policies(request.queryParams.submission, schema);
+
+          return policies.map((pol) => ({
+            id: pol.id,
+            type: pol.id === institutionPolicy.id ? 'institutional' : 'funder',
+          }));
         });
 
-        return [
-          { id: nihPolicy.id, type: 'funder' },
-          { id: institutionPolicy.id, type: 'institution' },
-        ];
-      });
-      // Return NIH (required) and J10p (optional, selected)
-      this.get('/policy/repositories', async (schema, request) => {
-        const j10p = await dataFinder.findBy(schema, 'repository', { repositoryKey: 'jscholarship' });
-        const pmc = await dataFinder.findBy(schema, 'repository', { repositoryKey: 'pmc' });
+        this.get('/policy/repositories', async (schema, request) => {
+          function repoToReturn(repo) {
+            return { url: repo.id, selected: true };
+          }
 
-        return {
-          required: [{ url: pmc.id, selected: false }],
-          'one-of': [
-            [
-              { url: pmc.id, selected: false },
-              { url: j10p.id, selected: true },
-            ],
-          ],
-          optional: [{ url: j10p.id, selected: true }],
-        };
-      });
+          const institutionalKey = 'jscholarship';
+          const policies = submission2Policies(request.queryParams.submission, schema);
+          const repos = dedupe(policies.map((policy) => policy.repositories.models).flat());
+
+          return {
+            required: repos.filter((repo) => repo.repositoryKey !== institutionalKey).map(repoToReturn),
+            'one-of': [repos.filter((repo) => repo.integrationType !== 'web-link').map(repoToReturn)],
+            optional: repos.filter((repo) => repo.repositoryKey === institutionalKey).map(repoToReturn),
+          };
+        });
+      }
 
       /**
        * ################################################################
@@ -266,12 +272,6 @@ export default function (config) {
 
       this.passthrough('http://pass.local/**');
       this.passthrough('https://pass.local/**');
-
-      this.passthrough('http://demo.eclipse-pass.org/**');
-      this.passthrough('https://demo.eclipse-pass.org/**');
-
-      this.passthrough('http://nightly.eclipse-pass.org/**');
-      this.passthrough('https://nightly.eclipse-pass.org/**');
 
       this.passthrough();
     },
@@ -291,4 +291,34 @@ export default function (config) {
   server.loadFixtures();
 
   return server;
+}
+
+// Can't simply use a set with objects, since it does naive equality checking
+// where objects will have the same property values, but be distinct instances
+// that will naivly evaluate as not equal
+function dedupe(arr) {
+  return [...new Map(arr.map((el) => [el.id, el])).values()];
+}
+
+// Resolve all policies associated with a submission by crawling the graph
+function submission2Policies(submissionId, schema) {
+  const institutionPolicy = schema.policy.findBy({
+    title: 'Johns Hopkins University (JHU) Open Access Policy',
+  });
+  const policies = schema
+    .find('submission', submissionId)
+    ?.grants.models.flat()
+    .map((grant) => [grant.directFunder, grant.primaryFunder])
+    .flat()
+    .map((funder) => funder.policy);
+
+  if (!policies) {
+    return [];
+  }
+
+  if (!policies.some((policy) => policy.type === 'institution')) {
+    policies.push(institutionPolicy);
+  }
+
+  return dedupe(policies);
 }

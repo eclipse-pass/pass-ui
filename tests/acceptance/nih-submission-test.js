@@ -169,7 +169,7 @@ module('Acceptance | submission', function (hooks) {
 
     await click('[data-test-navbar-grants-link]');
     await waitFor('td.projectname-column');
-    assert.dom('td.projectname-column').exists({ count: 9 });
+    assert.dom('td.projectname-column').exists({ count: 10 });
     assert.dom('td.projectname-column').includesText('Regulation of Synaptic Plasticity in Visual Cortex');
     assert.dom('td.funder-column').includesText('NATIONAL INSTITUTE OF HEALTH');
     assert.dom('td.awardnum-column').includesText('R01EY012124');

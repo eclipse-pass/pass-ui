@@ -1,12 +1,12 @@
-/* eslint-disable ember/no-classic-classes, ember/prefer-ember-test-helpers */
+/* eslint-disable ember/no-classic-classes, ember/prefer-ember-test-helpers, ember/require-valid-css-selector-in-test-helpers */
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
-import { find, click, visit, currentURL, fillIn, waitFor, triggerEvent, pauseTest } from '@ember/test-helpers';
+import { click, currentURL, fillIn, find, triggerEvent, visit, waitFor } from '@ember/test-helpers';
+import { authenticateSession } from 'ember-simple-auth/test-support';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 import sharedScenario from '../../mirage/scenarios/shared';
-import { authenticateSession } from 'ember-simple-auth/test-support';
 
-module('Acceptance | proxy submission', function (hooks) {
+module('Acceptance | submission-details | Review ', function (hooks) {
   setupApplicationTest(hooks);
   setupMirage(hooks);
 
@@ -32,12 +32,33 @@ module('Acceptance | proxy submission', function (hooks) {
 
     this.server.create('user', attrs);
 
+    this.server.create('funder', {
+      id: '4',
+      localKey: 'moo.edu:funder:12341234',
+      name: 'US Department of Education',
+      policyId: '2',
+    });
+
+    this.server.create('grant', {
+      id: '9',
+      piId: '0',
+      directFunderId: '4',
+      primaryFunderId: '4',
+      endDate: '2013-07-31T00:00:00.000Z',
+      awardDate: '2008-11-24T00:00:00.000Z',
+      startDate: '2008-12-01T00:00:00.000Z',
+      awardStatus: 'active',
+      awardNumber: 'MOO234',
+      projectName: 'This is a moo, used by the Department of Education',
+      localKey: `johnshopkins.edu:grant:12345`,
+    });
+
     await authenticateSession({
       user: { id: '0' },
     });
   });
 
-  test('can walk through a proxy submission workflow and make a submission – with pass account', async function (assert) {
+  test('Proxy submission review on submission details with web-link repos', async function (assert) {
     sharedScenario(this.server);
 
     await visit('/app');
@@ -53,35 +74,8 @@ module('Acceptance | proxy submission', function (hooks) {
     await waitFor(document.querySelector('[data-test-found-proxy-user]'));
     await click(document.querySelector('[data-test-found-proxy-user]'));
 
-    await walkThroughSubmissionFlow(assert, true); // eslint-disable-line no-use-before-define
+    // ================================================================================================
 
-    assert.dom('[data-test-submission-detail-submitter]').includesText('Staff Hasgrants');
-    assert.dom('[data-test-submission-detail-submitter]').includesText('( staffWithGrants@jhu.edu )');
-    assert.dom('[data-test-submission-detail-preparer]').includesText('Nihu Ser');
-    assert.dom('[data-test-submission-detail-preparer]').includesText('( nihuser@jhu.edu )');
-  });
-
-  test('can walk through a proxy submission workflow and make a submission – without pass account', async function (assert) {
-    sharedScenario(this.server);
-
-    await visit('/app');
-
-    await waitFor('[data-test-start-new-submission]');
-    await click(find('[data-test-start-new-submission]'));
-
-    await click('[data-test-proxy-radio-button]');
-    await fillIn('[data-test-proxy-submitter-email-input]', 'nopass@account.com');
-    await fillIn('[data-test-proxy-submitter-name-input]', 'John Moo');
-
-    await walkThroughSubmissionFlow(assert, false); // eslint-disable-line no-use-before-define
-
-    assert.dom('[data-test-submission-detail-submitter]').includesText('John Moo');
-    assert.dom('[data-test-submission-detail-submitter]').includesText('( nopass@account.com )');
-    assert.dom('[data-test-submission-detail-preparer]').includesText('Nihu Ser');
-    assert.dom('[data-test-submission-detail-preparer]').includesText('( nihuser@jhu.edu )');
-  });
-
-  async function walkThroughSubmissionFlow(assert, hasAccount) {
     await waitFor('[data-test-workflow-basics-next]');
     assert.strictEqual(currentURL(), '/submissions/new/basics');
     assert.dom('[data-test-doi-input]').exists();
@@ -106,31 +100,22 @@ module('Acceptance | proxy submission', function (hooks) {
     await waitFor('[data-test-workflow-basics-next]');
     await click('[data-test-workflow-basics-next]');
 
-    if (hasAccount) {
-      await waitFor('[data-test-grants-selection-table] tbody tr td.projectname-date-column');
-      assert.strictEqual(currentURL(), '/submissions/new/grants');
-      assert
-        .dom('[data-test-grants-selection-table] tbody tr td.projectname-date-column')
-        .includesText('Regulation of Synaptic Plasticity in Visual Cortex');
-      await click('[data-test-grants-selection-table] tbody tr td.projectname-date-column');
-      await waitFor('[data-test-submission-funding-table] tbody tr td.projectname-date-column');
-      assert
-        .dom('[data-test-submission-funding-table] tbody tr td.projectname-date-column')
-        .includesText('Regulation of Synaptic Plasticity in Visual Cortex');
-    } else {
-      await waitFor('[data-test-workflow-grants-next]');
-      assert
-        .dom('[data-test-workflow-grants-no-account-message]')
-        .includesText(
-          'Because the person you are submitting on behalf of is not yet in our system, PASS does not have information about his/her grant(s) and cannot associate this submission with a grant. Please click Next to continue.'
-        );
-    }
+    await waitFor('[data-test-grants-selection-table] tbody tr td.projectname-date-column');
+    assert.strictEqual(currentURL(), '/submissions/new/grants');
+    assert
+      .dom('[data-test-grants-selection-table] tbody tr td.projectname-date-column')
+      .includesText('Regulation of Synaptic Plasticity in Visual Cortex');
+
+    await click('[data-test-grants-selection-table] tbody tr td.projectname-date-column');
+    await waitFor('[data-test-submission-funding-table] tbody tr td.projectname-date-column');
+    assert
+      .dom('[data-test-submission-funding-table] tbody tr td.projectname-date-column')
+      .includesText('Regulation of Synaptic Plasticity in Visual Cortex');
 
     await click('[data-test-workflow-grants-next]');
 
     await waitFor('[data-test-workflow-policies-next]');
     assert.strictEqual(currentURL(), '/submissions/new/policies');
-
     await waitFor('input[type=radio]:checked');
     assert.dom('[data-test-workflow-policies-radio-no-direct-deposit:checked');
 
@@ -138,13 +123,9 @@ module('Acceptance | proxy submission', function (hooks) {
 
     await waitFor('[data-test-workflow-repositories-next]');
     assert.strictEqual(currentURL(), '/submissions/new/repositories');
-    if (hasAccount) {
-      assert
-        .dom('[data-test-workflow-repositories-required-list] li')
-        .includesText('PubMed Central - NATIONAL INSTITUTE OF HEALTH');
-    } else {
-      assert.dom('[data-test-workflow-repositories-required-list] li').includesText('PubMed Central');
-    }
+    assert
+      .dom('[data-test-workflow-repositories-required-list] li')
+      .includesText('PubMed Central - NATIONAL INSTITUTE OF HEALTH');
     assert.dom('[data-test-workflow-repositories-optional-list] li').includesText('JScholarship');
     assert.dom('[data-test-workflow-repositories-optional-list] li input:checked').hasValue('on');
 
@@ -211,5 +192,10 @@ module('Acceptance | proxy submission', function (hooks) {
 
     assert.ok(currentURL().includes('/submissions/2'));
     assert.dom('[data-test-submission-detail-status]').includesText('approval requested');
-  }
+
+    assert.dom('[data-test-submission-detail-submitter]').includesText('Staff Hasgrants');
+    assert.dom('[data-test-submission-detail-submitter]').includesText('( staffWithGrants@jhu.edu )');
+    assert.dom('[data-test-submission-detail-preparer]').includesText('Nihu Ser');
+    assert.dom('[data-test-submission-detail-preparer]').includesText('( nihuser@jhu.edu )');
+  });
 });

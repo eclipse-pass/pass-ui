@@ -12,6 +12,23 @@ module('Unit | Service | policies', (hooks) => {
   hooks.before(() => {
     tmp = QUnit.onUncaughtException;
     QUnit.onUncaughtException = () => {};
+
+    // Return NIH (required) and J10p (optional, selected)
+    this.server.get('/policy/repositories', async (schema, request) => {
+      const j10pId = 0;
+      const pmcId = 5;
+
+      return {
+        required: [{ url: pmcId, selected: false }],
+        'one-of': [
+          [
+            { url: pmcId, selected: false },
+            { url: j10pId, selected: true },
+          ],
+        ],
+        optional: [{ url: j10pId, selected: true }],
+      };
+    });
   });
 
   hooks.after(() => {
