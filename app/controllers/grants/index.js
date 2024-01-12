@@ -8,7 +8,7 @@ import { grantsIndexGrantQuery, grantsIndexSubmissionQuery } from '../../util/pa
 
 export default class GrantsIndexController extends Controller {
   @service currentUser;
-  @service('app-static-config') configurator;
+  @service('app-static-config') staticConfig;
   @service('emt-themes/bootstrap4') themeInstance;
   @service router;
   @service store;
@@ -16,7 +16,7 @@ export default class GrantsIndexController extends Controller {
   constructor() {
     super(...arguments);
 
-    this.configurator.getStaticConfig().then((config) => this.set('faqUrl', config.branding.pages.faqUrl));
+    this.faqUrl = this.staticConfig.config.branding.pages.faqUrl;
   }
 
   // TODO Reduce duplication in column definitions

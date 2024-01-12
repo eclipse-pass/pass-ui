@@ -15,6 +15,30 @@ export default class AppStaticConfigService extends Service {
     this.configUrl = ENV.APP.staticConfigUri;
   }
 
+  get config() {
+    return this._config;
+  }
+
+  async setupStaticConfig() {
+    await this.getStaticConfig();
+    if (this._config) {
+      if (this._config.branding.stylesheet) {
+        const stylesheet = `${this._config.branding.stylesheet}`;
+        this.addCSS(stylesheet);
+      } else {
+        console.log('%cNo branding stylesheet was configured', 'color:red');
+      }
+      if (this._config.branding.overrides) {
+        const overrides = `${this._config.branding.overrides}`;
+        this.addCSS(overrides);
+      }
+      if (this._config.branding.favicon) {
+        const favicon = `${this._config.branding.favicon}`;
+        this.addFavicon(favicon);
+      }
+    }
+  }
+
   /**
    * Get the static configuration for PASS -- from ENV vars
    *

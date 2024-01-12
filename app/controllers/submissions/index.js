@@ -7,7 +7,7 @@ import { submissionsIndexQuery } from '../../util/paginated-query';
 
 export default class SubmissionsIndex extends Controller {
   @service currentUser;
-  @service('app-static-config') configurator;
+  @service('app-static-config') staticConfig;
   @service('emt-themes/bootstrap4') themeInstance;
   @service router;
   @service store;
@@ -38,7 +38,7 @@ export default class SubmissionsIndex extends Controller {
   constructor() {
     super(...arguments);
 
-    this.configurator.getStaticConfig().then((config) => this.set('faqUrl', config.branding.pages.faqUrl));
+    this.faqUrl = this.staticConfig.config.branding.pages.faqUrl;
   }
 
   // Columns displayed depend on the user role

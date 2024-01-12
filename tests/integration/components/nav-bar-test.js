@@ -1,3 +1,4 @@
+/* eslint-disable ember/avoid-leaking-state-in-ember-objects */
 /* eslint-disable ember/no-classic-classes */
 import Service from '@ember/service';
 import { setupRenderingTest } from 'ember-qunit';
@@ -10,17 +11,16 @@ module('Integration | Component | nav bar', (hooks) => {
 
   test('it renders', async function (assert) {
     const mockStaticConfig = Service.extend({
-      getStaticConfig: () =>
-        Promise.resolve({
-          branding: {
-            stylesheet: '',
-            pages: {
-              aboutUrl: '',
-              contactUrl: '',
-              faqUrl: '',
-            },
+      config: {
+        branding: {
+          stylesheet: '',
+          pages: {
+            aboutUrl: '',
+            contactUrl: '',
+            faqUrl: '',
           },
-        }),
+        },
+      },
       addCss: () => {},
     });
 

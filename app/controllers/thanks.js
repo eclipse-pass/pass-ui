@@ -6,14 +6,14 @@ import { inject as service } from '@ember/service';
 export default class ThanksController extends Controller {
   queryParams = ['submission'];
 
-  @service('app-static-config')
-  configurator;
+  @service('app-static-config') staticConfig;
 
   @tracked submission = null;
   @tracked faqUrl = null;
 
   constructor() {
     super(...arguments);
-    this.configurator.getStaticConfig().then((config) => this.set('faqUrl', config.branding.pages.faqUrl));
+
+    this.faqUrl = this.staticConfig.config.branding.pages.faqUrl;
   }
 }
