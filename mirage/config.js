@@ -1,6 +1,6 @@
 import { camelize } from '@ember/string';
 import { discoverEmberDataModels } from 'ember-cli-mirage';
-import { createServer, JSONAPISerializer } from 'miragejs';
+import { createServer, JSONAPISerializer, Response } from 'miragejs';
 import doiJournals from './custom-fixtures/nih-submission/doi-journals';
 import schemas from './routes/schemas';
 import ENV from 'pass-ui/config/environment';
@@ -110,6 +110,9 @@ export default function (config) {
         const attrs = this.normalizedRequestAttrs();
 
         return schema.create('file', attrs);
+      });
+      this.delete('/data/file/:id/:name', (_schema, _request) => {
+        return new Response(200);
       });
 
       /** Schema Service */
