@@ -6,9 +6,9 @@ import EmberObject, { set } from '@ember/object';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
-import { run } from '@ember/runloop';
-import { click, render, triggerEvent, waitFor, getContext } from '@ember/test-helpers';
+import { click, render } from '@ember/test-helpers';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
+import sinon from 'sinon';
 
 module('Integration | Component | workflow files', (hooks) => {
   setupRenderingTest(hooks);
@@ -75,31 +75,18 @@ module('Integration | Component | workflow files', (hooks) => {
    * First upload a file, then click the 'Remove' button
    */
   test('Files removed from UI should no longer reference submission', async function (assert) {
-    assert.expect(6);
-
     const submission = EmberObject.create({});
     this.set('submission', submission);
 
-    this.set(
-      'previouslyUploadedFiles',
-      A([
-        EmberObject.create({
-          name: 'File-for-test',
-          fileRole: 'manuscript',
-          submission,
-          // TODO: bring this back when file service is implemented
-          save() {
-            // Should be called when "deleted" to persist changes
-            assert.ok(true);
-            return Promise.resolve();
-          },
-          unloadRecord() {
-            assert.ok(true);
-            return Promise.resolve();
-          },
-        }),
-      ])
-    );
+    const deleteStub = sinon.stub().returns(() => Promise.resolve());
+    const file = {
+      name: 'File-for-test',
+      fileRole: 'manuscript',
+      submission,
+      destroyRecord: deleteStub,
+    };
+
+    this.set('previouslyUploadedFiles', A([file]));
 
     this.set('newFiles', []);
 
@@ -129,6 +116,8 @@ module('Integration | Component | workflow files', (hooks) => {
 
     const workflowFiles = this.previouslyUploadedFiles;
     assert.strictEqual(workflowFiles.length, 0, 'Should have 0 files tracked');
+
+    assert.ok(deleteStub.calledOnce, 'File destroyRecord() should be called');
   });
 
   /**
