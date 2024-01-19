@@ -115,6 +115,7 @@ export default class WorkflowFiles extends Component {
       this.args.newFiles.pushObject(newFile);
     } catch (error) {
       FileUpload.file.state = 'aborted';
+      console.error(error);
     }
 
     return true;
