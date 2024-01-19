@@ -6,59 +6,49 @@ import EmberObject, { set } from '@ember/object';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
-import { run } from '@ember/runloop';
-import { click, render, triggerEvent, waitFor, getContext } from '@ember/test-helpers';
+import { click, render } from '@ember/test-helpers';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
+import sinon from 'sinon';
 
 module('Integration | Component | workflow files', (hooks) => {
   setupRenderingTest(hooks);
   setupMirage(hooks);
 
   hooks.beforeEach(function () {
-    let submission = EmberObject.create({
-      repositories: [],
+    const store = this.owner.lookup('service:store');
+    this.submission = store.createRecord('submission', {
+      repositoriers: [],
       grants: [],
     });
-    let files = [EmberObject.create({})];
-    let newFiles = A([]);
-    set(this, 'submission', submission);
-    set(this, 'files', files);
-    set(this, 'newFiles', newFiles);
-    set(this, 'loadPrevious', (actual) => {});
-    set(this, 'loadNext', (actual) => {});
+    this.files = [{}];
+    this.newFiles = [];
 
-    const mockStaticConfig = Service.extend({
-      getStaticConfig: () =>
-        Promise.resolve({
-          branding: {
-            stylesheet: '',
-            pages: {},
-          },
-        }),
-      addCss: () => {},
-    });
+    this.loadPrevious = sinon.fake();
+    this.loadNext = sinon.fake();
 
-    this.owner.register('service:app-static-config', mockStaticConfig);
+    // Bogus action so component actions don't complain
+    this.fakeAction = sinon.fake();
+
+    const staticConfig = this.owner.lookup('service:app-static-config');
+    sinon.replace(
+      staticConfig,
+      'getStaticConfig',
+      sinon.fake.returns(Promise.resolve({ branding: { stylesheet: '', returns: {} } }))
+    );
+
+    this.owner.register('service:app-static-config', staticConfig);
 
     this.owner.register(
       'service:workflow',
-      Service.extend({
-        getDoiInfo: () => ({ DOI: 'moo-doi' }),
-      })
+      sinon.stub(this.owner.lookup('service:workflow'), 'getDoiInfo').returns({ DOI: 'moo-doi' })
     );
 
-    this.owner.register(
-      'service:oa-manuscript-service',
-      Service.extend({
-        lookup: () =>
-          Promise.resolve([
-            {
-              name: 'This is a moo',
-              url: 'http://example.com/moo.pdf',
-            },
-          ]),
-      })
+    this.msServiceFake = sinon.replace(
+      this.owner.lookup('service:oa-manuscript-service'),
+      'lookup',
+      sinon.fake.returns(Promise.resolve([{ name: 'This is a moo', url: 'http://example.com/moo.pdf' }]))
     );
+    this.owner.register('service:oa-manuscript-service', this.msServiceFake);
 
     // Inline configure mirage to respond to File saves
     this.server.post(
@@ -75,45 +65,28 @@ module('Integration | Component | workflow files', (hooks) => {
    * First upload a file, then click the 'Remove' button
    */
   test('Files removed from UI should no longer reference submission', async function (assert) {
-    assert.expect(6);
-
     const submission = EmberObject.create({});
     this.set('submission', submission);
 
-    this.set(
-      'previouslyUploadedFiles',
-      A([
-        EmberObject.create({
-          name: 'File-for-test',
-          fileRole: 'manuscript',
-          submission,
-          // TODO: bring this back when file service is implemented
-          save() {
-            // Should be called when "deleted" to persist changes
-            assert.ok(true);
-            return Promise.resolve();
-          },
-          unloadRecord() {
-            assert.ok(true);
-            return Promise.resolve();
-          },
-        }),
-      ])
-    );
+    const deleteStub = sinon.stub().returns(() => Promise.resolve());
+    const file = {
+      name: 'File-for-test',
+      fileRole: 'manuscript',
+      submission,
+      destroyRecord: deleteStub,
+    };
 
-    this.set('newFiles', []);
-
-    // Bogus action so component actions don't complain
-    this.set('moo', () => {});
+    this.previouslyUploadedFiles = [file];
+    this.newFiles = [];
 
     await render(hbs`
       <WorkflowFiles
         @submission={{this.submission}}
         @previouslyUploadedFiles={{this.previouslyUploadedFiles}}
         @newFiles={{this.newFiles}}
-        @next={{action this.moo}}
-        @back={{action this.moo}}
-        @abort={{action this.moo}}
+        @next={{action this.fakeAction}}
+        @back={{action this.fakeAction}}
+        @abort={{action this.fakeAction}}
       />
     `);
 
@@ -129,6 +102,8 @@ module('Integration | Component | workflow files', (hooks) => {
 
     const workflowFiles = this.previouslyUploadedFiles;
     assert.strictEqual(workflowFiles.length, 0, 'Should have 0 files tracked');
+
+    assert.ok(deleteStub.calledOnce, 'File destroyRecord() should be called');
   });
 
   /**
@@ -139,34 +114,22 @@ module('Integration | Component | workflow files', (hooks) => {
    */
   test("Can't select oa mss when manuscript already attached to submission", async function (assert) {
     this.store = this.owner.lookup('service:store');
-    const submission = this.store.createRecord('submission');
+    this.submission = this.store.createRecord('submission');
 
-    const ms = EmberObject.create({
+    const ms = {
       name: 'This is the first moo',
       fileRole: 'manuscript',
-    });
+    };
 
-    set(this, 'submission', submission);
-    set(this, 'previouslyUploadedFiles', A([ms]));
-    set(this, 'moo', () => {});
-
-    this.owner.register(
-      'service:submission-handler',
-      Service.extend({
-        uploadFile(submission, file) {
-          assert.ok(submission, 'No submission found');
-          assert.ok(file, 'No file specified for upload');
-        },
-      })
-    );
+    this.previouslyUploadedFiles = [ms];
 
     await render(hbs`<WorkflowFiles
       @submission={{this.submission}}
       @previouslyUploadedFiles={{this.previouslyUploadedFiles}}
       @newFiles={{this.newFiles}}
-      @next={{this.moo}}
-      @back={{this.moo}}
-      @abort={{this.moo}}
+      @next={{this.fakeAction}}
+      @back={{this.fakeAction}}
+      @abort={{this.fakeAction}}
     />`);
 
     assert.dom('[data-test-foundmss-component]').doesNotExist();
@@ -182,32 +145,18 @@ module('Integration | Component | workflow files', (hooks) => {
   });
 
   test('Manually uploading a MS should hide FoundManuscript component', async function (assert) {
-    this.store = this.owner.lookup('service:store');
-    const submission = this.store.createRecord('submission');
-
-    set(this, 'moo', () => {});
-    set(this, 'submission', submission);
-    set(this, 'previouslyUploadedFiles', A([]));
-
-    this.owner.register(
-      'service:submission-handler',
-      Service.extend({
-        uploadFile(submission, file) {
-          assert.ok(submission, 'No submission found');
-          assert.ok(file, 'No file specified for upload');
-        },
-      })
-    );
+    this.previouslyUploadedFiles = [];
 
     await render(hbs`<WorkflowFiles
       @submission={{this.submission}}
       @previouslyUploadedFiles={{this.previouslyUploadedFiles}}
       @newFiles={{this.newFiles}}
-      @next={{this.moo}}
-      @back={{this.moo}}
-      @abort={{this.moo}}
+      @next={{this.fakeAction}}
+      @back={{this.fakeAction}}
+      @abort={{this.fakeAction}}
     />`);
 
+    assert.ok(this.msServiceFake.calledOnce, 'Manuscript Service should be called once');
     assert.dom('[data-test-added-manuscript-row]').doesNotExist();
     assert.dom('#file-multiple-input').exists();
 
@@ -215,7 +164,7 @@ module('Integration | Component | workflow files', (hooks) => {
     submissionFile.name = 'my-submission.pdf';
     await selectFiles('input[type=file]', submissionFile);
 
-    assert.dom('[data-test-added-manuscript-row]').exists();
+    assert.dom('[data-test-added-manuscript-row]').exists({ count: 1 });
     assert.dom('[data-test-added-manuscript-row]').includesText('my-submission.pdf');
   });
 });

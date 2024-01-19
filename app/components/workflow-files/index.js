@@ -115,6 +115,7 @@ export default class WorkflowFiles extends Component {
       this.args.newFiles.pushObject(newFile);
     } catch (error) {
       FileUpload.file.state = 'aborted';
+      console.error(error);
     }
 
     return true;
@@ -129,9 +130,10 @@ export default class WorkflowFiles extends Component {
       return;
     }
 
-    file.set('submission', undefined);
-    await file.save();
-    file.unloadRecord();
+    // Delete record without a chance to roll back
+    // This will automatically remove the uploaded bytes of the original file
+    // then delete the File model record
+    await file.destroyRecord();
   }
 
   @action
