@@ -169,7 +169,7 @@ module('Acceptance | submission', function (hooks) {
 
     await click('[data-test-navbar-grants-link]');
     await waitFor('td.projectname-column');
-    assert.dom('td.projectname-column').exists({ count: 9 });
+    assert.dom('td.projectname-column').exists({ count: 10 });
     assert.dom('td.projectname-column').includesText('Regulation of Synaptic Plasticity in Visual Cortex');
     assert.dom('td.funder-column').includesText('NATIONAL INSTITUTE OF HEALTH');
     assert.dom('td.awardnum-column').includesText('R01EY012124');
@@ -465,13 +465,9 @@ module('Acceptance | submission', function (hooks) {
     // Some reason, setting the document query to a variable before clicking works,
     // but calling the query selector in the click does not work
     const confirmBtn = document.querySelector('.swal2-confirm');
-    assert.ok(confirmBtn);
     await waitFor(confirmBtn);
+    assert.ok(confirmBtn);
     await click(confirmBtn);
-
-    const addAuthorBtn = document.querySelectorAll('.alpaca-array-toolbar-action').item(1);
-    assert.ok(addAuthorBtn);
-    await click(addAuthorBtn);
 
     await waitFor('input[name=authors_0_author]');
     await fillIn('input[name=authors_0_author]', 'John Moo');
@@ -706,9 +702,6 @@ module('Acceptance | submission', function (hooks) {
 
     await waitFor('[data-test-workflow-repositories-next]');
     assert.strictEqual(currentURL(), '/submissions/new/repositories');
-    assert
-      .dom('[data-test-workflow-repositories-required-list] li')
-      .includesText('PubMed Central - NATIONAL INSTITUTE OF HEALTH');
     assert.dom('[data-test-workflow-repositories-optional-list] li').includesText('JScholarship');
     assert.dom('[data-test-workflow-repositories-optional-list] li input:checked').hasValue('on');
 
@@ -730,5 +723,111 @@ module('Acceptance | submission', function (hooks) {
     await waitFor('[data-test-metadata-form] textarea[name="title"]');
 
     assert.dom('[data-test-metadata-form] textarea[name="title"]').hasValue('a new pub title');
+  });
+
+  test('can make a submission without specifying a journal', async function (assert) {
+    sharedScenario(this.server);
+
+    await visit('/app');
+
+    assert.dom('[data-test-start-new-submission]').exists();
+    await click(find('[data-test-start-new-submission]'));
+
+    await waitFor('[data-test-workflow-basics-next]');
+    assert.strictEqual(currentURL(), '/submissions/new/basics');
+    assert.dom('[data-test-doi-input]').exists();
+    await fillIn('[data-test-article-title-text-area]', 'a pub title');
+
+    await waitFor('[data-test-workflow-basics-next]');
+    await click('[data-test-workflow-basics-next]');
+
+    await waitFor('[data-test-grants-selection-table] tbody tr td.projectname-date-column');
+    assert.strictEqual(currentURL(), '/submissions/new/grants');
+    assert
+      .dom('[data-test-grants-selection-table] tbody tr:nth-child(10) td.projectname-date-column')
+      .includesText('Pre-Study of wild-type');
+    await click('[data-test-grants-selection-table] tbody tr:nth-child(10) td.projectname-date-column');
+    await waitFor('[data-test-submission-funding-table] tbody tr td.projectname-date-column');
+    assert
+      .dom('[data-test-submission-funding-table] tbody tr td.projectname-date-column')
+      .includesText('Pre-Study of wild-type');
+
+    await click('[data-test-workflow-grants-next]');
+
+    await waitFor('[data-test-workflow-policies-next]');
+    assert.strictEqual(currentURL(), '/submissions/new/policies');
+    await waitFor('[data-test-policy-title]');
+    assert.dom('[data-test-policy-title]').includesText('Johns Hopkins University (JHU) Open Access Policy');
+
+    await click('[data-test-workflow-policies-next]');
+
+    await waitFor('[data-test-workflow-repositories-next]');
+    assert.strictEqual(currentURL(), '/submissions/new/repositories');
+    assert.dom('[data-test-workflow-repositories-required-list]').doesNotExist();
+    assert.dom('[data-test-workflow-repositories-optional-list] li').includesText('JScholarship');
+    assert.dom('[data-test-workflow-repositories-optional-list] li input:checked').hasValue('on');
+
+    await click('[data-test-workflow-repositories-next]');
+
+    await waitFor('[data-test-metadata-form] textarea[name="title"]');
+    assert.strictEqual(currentURL(), '/submissions/new/metadata');
+
+    await waitFor('[data-test-metadata-form] textarea[name="title"]');
+
+    assert.dom('[data-test-metadata-form] textarea[name="title"]').hasValue('a pub title');
+
+    await click('.alpaca-form-button-Next');
+
+    await waitFor('input[name=authors_0_author]');
+    await fillIn('input[name=authors_0_author]', 'John Moo');
+    assert.dom('input[name=authors_0_author]').hasValue('John Moo');
+
+    await waitFor('.alpaca-form-button-Next');
+    await click('.alpaca-form-button-Next');
+
+    assert.strictEqual(currentURL(), '/submissions/new/files');
+    const submissionFile = new Blob(['moo'], { type: 'application/pdf' });
+    submissionFile.name = 'my-submission.pdf';
+    await triggerEvent('input[type=file]', 'change', { files: [submissionFile] });
+    assert.dom('[data-test-added-manuscript-row]').includesText('my-submission.pdf');
+
+    await click('[data-test-workflow-files-next]');
+
+    await waitFor('[data-test-workflow-review-submit]');
+    assert.strictEqual(currentURL(), '/submissions/new/review');
+
+    assert.dom('[data-test-workflow-review-repository-list]').doesNotIncludeText('PubMed Central');
+    assert.dom('[data-test-workflow-review-repository-list]').includesText('JScholarship');
+    assert.dom('[data-test-workflow-review-title]').includesText('a pub title');
+    assert
+      .dom('[data-test-workflow-review-grant-list] li')
+      .includesText(
+        '90105531 : Pre-Study of wild-type Enterotoxigenic E. coli (ETEC) strain E24377A for verification of a planned challenge dose'
+      );
+    assert.dom('[data-test-workflow-review-file-name]').includesText('my-submission.pdf');
+
+    await click('[data-test-workflow-review-submit]');
+
+    await waitFor(document.querySelector('#swal2-title'));
+    assert.dom(document.querySelector('#swal2-title')).includesText('Deposit requirements for JScholarship');
+
+    await click(document.querySelector('.swal2-modal').parentElement);
+    assert.dom('#swal2-title').doesNotExist();
+
+    await click('[data-test-workflow-review-submit]');
+
+    await waitFor(document.querySelector('#swal2-title'));
+    assert.dom(document.querySelector('#swal2-title')).includesText('Deposit requirements for JScholarship');
+    await waitFor(document.querySelector('.swal2-radio label:nth-child(1) input[type="radio"]'));
+    await click(document.querySelector('.swal2-radio label:nth-child(1) input[type="radio"]'));
+    await click(document.querySelector('.swal2-confirm'));
+
+    await waitFor(document.querySelector('#swal2-title'));
+    assert.dom(document.querySelector('#swal2-title')).includesText('Confirm submission');
+    await click(document.querySelector('.swal2-confirm'));
+
+    await waitFor('[data-test-workflow-thanks-thank-you]');
+    assert.dom('[data-test-workflow-thanks-thank-you]').includesText('Thank you!');
+    assert.ok(currentURL().includes('/thanks'));
   });
 });

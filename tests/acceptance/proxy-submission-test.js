@@ -2,7 +2,7 @@
 import Service from '@ember/service';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
-import { find, click, visit, currentURL, fillIn, waitFor, triggerKeyEvent, triggerEvent } from '@ember/test-helpers';
+import { find, click, visit, currentURL, fillIn, waitFor, triggerEvent } from '@ember/test-helpers';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 import sharedScenario from '../../mirage/scenarios/shared';
 import { authenticateSession } from 'ember-simple-auth/test-support';
@@ -131,8 +131,6 @@ module('Acceptance | proxy submission', function (hooks) {
 
     await waitFor('[data-test-workflow-policies-next]');
     assert.strictEqual(currentURL(), '/submissions/new/policies');
-    await waitFor('input[type=radio]:checked');
-    assert.dom('[data-test-workflow-policies-radio-no-direct-deposit:checked');
 
     await click('[data-test-workflow-policies-next]');
 

@@ -227,33 +227,36 @@ export default function (config) {
 
       /** Policy Service */
       this.get('/policy/policies', async (schema, request) => {
-        const institutionPolicy = await dataFinder.findBy(schema, 'policy', {
-          title: 'Johns Hopkins University (JHU) Open Access Policy',
-        });
-        const nihPolicy = await dataFinder.findBy(schema, 'policy', {
-          title: 'National Institutes of Health Public Access Policy',
+        const policiesAndFunders = schema.submission.find(request.queryParams.submission).grants.models.map((grant) => {
+          const funder = schema.funder.find(grant.primaryFunder.id);
+          const policy = schema.policy.find(funder.policyId);
+
+          return { id: policy.id, type: funder.type };
         });
 
-        return [
-          { id: nihPolicy.id, type: 'funder' },
-          { id: institutionPolicy.id, type: 'institution' },
-        ];
+        return policiesAndFunders;
       });
       // Return NIH (required) and J10p (optional, selected)
       this.get('/policy/repositories', async (schema, request) => {
+        const submissionId = request.queryParams.submission;
+        const publicationId = schema.submission.find(submissionId).attrs.publicationId;
+        const publication = schema.publication.find(publicationId);
+
         const j10p = await dataFinder.findBy(schema, 'repository', { repositoryKey: 'jscholarship' });
         const pmc = await dataFinder.findBy(schema, 'repository', { repositoryKey: 'pmc' });
 
-        return {
-          required: [{ url: pmc.id, selected: false }],
-          'one-of': [
-            [
-              { url: pmc.id, selected: false },
-              { url: j10p.id, selected: true },
-            ],
-          ],
+        const payload = {
+          required: [],
+          'one-of': [[{ url: j10p.id, selected: true }]],
           optional: [{ url: j10p.id, selected: true }],
         };
+
+        if (publication.journalId) {
+          payload.required.push({ url: pmc.id, selected: false });
+          payload['one-of'][0].push({ url: pmc.id, selected: false });
+        }
+
+        return payload;
       });
 
       /**
