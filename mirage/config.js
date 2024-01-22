@@ -227,14 +227,17 @@ export default function (config) {
 
       /** Policy Service */
       this.get('/policy/policies', async (schema, request) => {
-        const policiesAndFunders = schema.submission.find(request.queryParams.submission).grants.models.map((grant) => {
-          const funder = schema.funder.find(grant.primaryFunder.id);
-          const policy = schema.policy.find(funder.policyId);
+        const { id } = schema.policy.findBy({ title: 'Johns Hopkins University (JHU) Open Access Policy' });
+        const policies = [{ id, type: 'institution' }];
 
-          return { id: policy.id, type: funder.type };
+        schema.submission.find(request.queryParams.submission).grants.models.forEach((grant) => {
+          const { policyId } = schema.funder.find(grant.primaryFunder.id);
+          const { id } = schema.policy.find(policyId);
+
+          if (id) policies.push({ id, type: 'funder' });
         });
 
-        return policiesAndFunders;
+        return policies;
       });
       // Return NIH (required) and J10p (optional, selected)
       this.get('/policy/repositories', async (schema, request) => {

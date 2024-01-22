@@ -243,7 +243,7 @@ module('Integration | Component | workflow repositories', (hooks) => {
         @choiceRepositories={{this.choiceRepositories}}
       />
     `);
-    // await this.pauseTest();
+
     const requiredList = this.element.querySelector('[data-test-workflow-repositories-required-list]');
     assert.dom(requiredList).exists('Required repositories list should exist');
     assert.strictEqual(requiredList.childElementCount, 2, 'Should show 2 required repos with integration');

@@ -43,6 +43,4 @@ module('Unit | Service | current-user', (hooks) => {
         assert.strictEqual(service.get('user.id'), user.get('id'));
       });
   });
-
-  skip('No auth user exists', function (assert) {});
 });

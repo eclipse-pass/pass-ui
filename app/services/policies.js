@@ -27,7 +27,7 @@ export default class PoliciesService extends Service {
    */
 
   getPolicies = task(async (submission) => {
-    const url = `${ENV.policyService.policyPath}?submission=${submission.get('id')}`;
+    const url = `${ENV.policyService.policyPath}?submission=${submission.id}`;
 
     const result = await fetch(url, {
       method: 'GET',
@@ -52,12 +52,10 @@ export default class PoliciesService extends Service {
 
     return await all(
       data.map((policyInfo) =>
-        get(this, 'store')
-          .findRecord('policy', policyInfo.id)
-          .then((pol) => {
-            pol.set('_type', policyInfo.type);
-            return pol;
-          })
+        this.store.findRecord('policy', policyInfo.id).then((pol) => {
+          pol.set('_type', policyInfo.type);
+          return pol;
+        })
       )
     );
   });
@@ -83,7 +81,7 @@ export default class PoliciesService extends Service {
    * }
    */
   @task(function* (submission) {
-    const url = `${ENV.policyService.repositoryPath}?submission=${submission.get('id')}`;
+    const url = `${ENV.policyService.repositoryPath}?submission=${submission.id}`;
 
     const response = yield fetch(url, {
       method: 'GET',
