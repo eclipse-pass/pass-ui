@@ -27,4 +27,10 @@ export default [
     name: 'WILLIAM AND ELLA OWENS MEDICAL RESE',
     policyId: null,
   },
+  {
+    id: '4',
+    localKey: 'johnshopkins.edu:funder:316235',
+    name: 'SCANDINAVIAN BIOPHARMA',
+    policyId: '0',
+  },
 ];

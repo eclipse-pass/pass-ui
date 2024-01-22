@@ -19,46 +19,29 @@ module('Unit | Service | policies', (hooks) => {
   });
 
   test('good response returns array of Promises of Policy objects', async function (assert) {
-    assert.expect(7);
+    assert.expect(5);
 
     const service = this.owner.lookup('service:policies');
-    assert.ok(service, 'service not found');
+    assert.ok(service, 'service exists');
 
-    const store = EmberObject.create({
-      findRecord(type, id) {
-        assert.ok(true);
-        return Promise.resolve(EmberObject.create({ text: 'Moo' }));
-      },
-    });
-
-    service.set('store', store);
-
-    const sub = EmberObject.create({ id: 'moo_id' });
+    const sub = { id: '0' };
 
     const policies = await service.get('getPolicies').perform(sub);
 
     assert.ok(Array.isArray(policies), 'Should be an array');
     assert.strictEqual(policies.length, 2, 'Should be two policies here');
 
-    policies.forEach((policy) => assert.strictEqual(policy.get('text'), 'Moo', "Expecting text:'Moo'"));
+    assert.strictEqual(policies[0].id, '0', "Expecting text:'Moo'");
+    assert.strictEqual(policies[1].id, '5', "Expecting text:'Moo'");
   });
 
   test('good response to getRepositories returns object with Repository promises by DSL rules', async function (assert) {
-    assert.expect(16);
+    assert.expect(11);
 
     const service = this.owner.lookup('service:policies');
-    assert.ok(service, 'service not found');
+    assert.ok(service, 'service found');
 
-    const store = EmberObject.create({
-      findRecord(type, id) {
-        assert.ok(true);
-        return Promise.resolve(EmberObject.create({ text: 'Moo' }));
-      },
-    });
-
-    service.set('store', store);
-
-    const sub = EmberObject.create({ id: 'moo_id' });
+    const sub = { id: '0' };
 
     service
       .get('getRepositories')
@@ -74,9 +57,15 @@ module('Unit | Service | policies', (hooks) => {
         assert.strictEqual(rules['one-of'].length, 1, 'Unexpected number of choice groups');
         assert.strictEqual(rules['one-of'][0].length, 2, 'Unexpected number of repos in choice group 1');
 
-        rules.required.forEach((repo) => assert.strictEqual(repo.get('text'), 'Moo'));
-        rules.optional.forEach((repo) => assert.strictEqual(repo.get('text'), 'Moo'));
-        rules['one-of'].forEach((group) => group.forEach((repo) => assert.strictEqual(repo.get('text'), 'Moo')));
+        rules.required.forEach((repo) =>
+          assert.strictEqual(repo.name, 'PubMed Central - NATIONAL INSTITUTE OF HEALTH')
+        );
+        rules.optional.forEach((repo) => assert.strictEqual(repo.name, 'JScholarship'));
+        assert.ok(
+          rules['one-of'][0].some((repo) => {
+            return repo.name === 'JScholarship' || repo.name === 'PubMed Central - NATIONAL INSTITUTE OF HEALTH';
+          })
+        );
       });
   });
 

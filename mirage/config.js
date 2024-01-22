@@ -227,33 +227,39 @@ export default function (config) {
 
       /** Policy Service */
       this.get('/policy/policies', async (schema, request) => {
-        const institutionPolicy = await dataFinder.findBy(schema, 'policy', {
-          title: 'Johns Hopkins University (JHU) Open Access Policy',
-        });
-        const nihPolicy = await dataFinder.findBy(schema, 'policy', {
-          title: 'National Institutes of Health Public Access Policy',
+        const { id } = schema.policy.findBy({ title: 'Johns Hopkins University (JHU) Open Access Policy' });
+        const policies = [{ id, type: 'institution' }];
+
+        schema.submission.find(request.queryParams.submission).grants.models.forEach((grant) => {
+          const { policyId } = schema.funder.find(grant.primaryFunder.id);
+          const { id } = schema.policy.find(policyId);
+
+          if (id) policies.push({ id, type: 'funder' });
         });
 
-        return [
-          { id: nihPolicy.id, type: 'funder' },
-          { id: institutionPolicy.id, type: 'institution' },
-        ];
+        return policies;
       });
       // Return NIH (required) and J10p (optional, selected)
       this.get('/policy/repositories', async (schema, request) => {
+        const submissionId = request.queryParams.submission;
+        const publicationId = schema.submission.find(submissionId).attrs.publicationId;
+        const publication = schema.publication.find(publicationId);
+
         const j10p = await dataFinder.findBy(schema, 'repository', { repositoryKey: 'jscholarship' });
         const pmc = await dataFinder.findBy(schema, 'repository', { repositoryKey: 'pmc' });
 
-        return {
-          required: [{ url: pmc.id, selected: false }],
-          'one-of': [
-            [
-              { url: pmc.id, selected: false },
-              { url: j10p.id, selected: true },
-            ],
-          ],
+        const payload = {
+          required: [],
+          'one-of': [[{ url: j10p.id, selected: true }]],
           optional: [{ url: j10p.id, selected: true }],
         };
+
+        if (publication.journalId) {
+          payload.required.push({ url: pmc.id, selected: false });
+          payload['one-of'][0].push({ url: pmc.id, selected: false });
+        }
+
+        return payload;
       });
 
       /**
