@@ -65,20 +65,21 @@ export default class WorkflowFiles extends Component {
       cancelButtonText: 'Never mind',
     }).then((result) => {
       if (result.value) {
-        const mFiles = get(this, 'args.previouslyUploadedFiles');
-        // Remove the file from the model
-        if (mFiles) {
-          mFiles.removeObject(file);
+        const deleted = this.deleteFile(file);
+
+        if (deleted) {
+          const mFiles = get(this, 'args.previouslyUploadedFiles');
+          // Remove the file from the model
+          if (mFiles) {
+            mFiles.removeObject(file);
+          }
+
+          const newFiles = get(this, 'args.newFiles');
+          if (newFiles) {
+            newFiles.removeObject(file);
+          }
+          document.querySelector('#file-multiple-input').value = null;
         }
-
-        const newFiles = get(this, 'args.newFiles');
-        if (newFiles) {
-          newFiles.removeObject(file);
-        }
-
-        this.deleteFile(file);
-
-        document.querySelector('#file-multiple-input').value = null;
       }
     });
   }
@@ -124,8 +125,6 @@ export default class WorkflowFiles extends Component {
   @action
   async deleteFile(file) {
     let files = [...this.args.previouslyUploadedFiles, ...this.args.newFiles];
-    files.removeObject(file);
-
     if (!file) {
       return;
     }
@@ -133,7 +132,18 @@ export default class WorkflowFiles extends Component {
     // Delete record without a chance to roll back
     // This will automatically remove the uploaded bytes of the original file
     // then delete the File model record
-    await file.destroyRecord();
+    return await file
+      .destroyRecord()
+      .then(() => {
+        files.removeObject(file);
+        return true;
+      })
+      .catch((error) => {
+        console.error('[Workflow Files] Failed to delete file');
+        console.error(error);
+        this.flashMessages.danger('We encountered an error when removing this file');
+        return false;
+      });
   }
 
   @action

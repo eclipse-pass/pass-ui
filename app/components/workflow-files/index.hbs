@@ -110,7 +110,12 @@
                 />
               </td>
               <td class="text-center vertical-align-middle">
-                <button type="button" class="btn btn-outline-danger" {{on "click" (fn this.deleteExistingFile file)}}>
+                <button
+                  type="button"
+                  class="btn btn-outline-danger"
+                  data-test-remove-file-button
+                  {{on "click" (fn this.deleteExistingFile file)}}
+                >
                   Remove
                 </button>
               </td>
