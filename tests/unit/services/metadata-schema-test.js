@@ -216,7 +216,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
   test('Should format complex metadata', async function (assert) {
     const service = this.owner.lookup('service:metadata-schema');
     const submission = EmberObject.create({
-      repositories: [],
+      repositories: [{ id: 0 }],
       metadata: JSON.stringify({
         issns: [{ issn: '123-moo' }, { issn: 'moo-321', pubType: 'Print' }],
       }),
@@ -269,5 +269,14 @@ module('Unit | Service | metadata-schema', (hooks) => {
     const expected = { two: 'moo too' };
 
     assert.deepEqual(service.mergeBlobs(b1, b2, list), expected);
+  });
+
+  test('No backend request if no repositories are passed', async function (assert) {
+    const service = this.owner.lookup('service:metadata-schema');
+    const serviceFetchFake = sinon.replace(service, '_fetchSchemas', sinon.fake());
+
+    service.getMetadataSchemas([]);
+
+    assert.ok(serviceFetchFake.notCalled, '_fetchSchemas should have been called');
   });
 });

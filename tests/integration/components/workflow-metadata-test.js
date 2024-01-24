@@ -16,7 +16,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
   setupMirage(hooks);
 
   hooks.beforeEach(function () {
-    const repositories = A();
+    const repositories = A([{ id: 0 }]);
     const journal = EmberObject.create({
       issns: [],
     });
