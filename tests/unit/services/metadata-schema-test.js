@@ -277,6 +277,6 @@ module('Unit | Service | metadata-schema', (hooks) => {
 
     service.getMetadataSchemas([]);
 
-    assert.ok(serviceFetchFake.notCalled, '_fetchSchemas should have been called');
+    assert.ok(serviceFetchFake.notCalled, '_fetchSchemas should not have been called');
   });
 });
