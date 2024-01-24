@@ -58,6 +58,10 @@ export default class MetadataSchemaService extends Service {
    * @returns {array} list of schemas relevant to the given repositories
    */
   async getMetadataSchemas(repositories) {
+    if (!repositories) {
+      return [];
+    }
+
     const areObjects = repositories.map((repos) => typeof repos).includes('object');
     if (areObjects) {
       // If we've gotten repository objects, map them to their IDs
@@ -70,6 +74,10 @@ export default class MetadataSchemaService extends Service {
         'Content-Type': 'application/json; charset=utf-8',
       },
     };
+
+    if (!Array.isArray(repositories) || repositories.length === 0) {
+      return [];
+    }
 
     try {
       let response = await this._fetchSchemas(this.url(repositories, true), options);
@@ -407,7 +415,8 @@ export default class MetadataSchemaService extends Service {
       'volume',
     ];
 
-    const schemas = await this.getMetadataSchemas(await submission.repositories);
+    const repos = await submission.repositories.toArray();
+    const schemas = await this.getMetadataSchemas(repos);
     const titleMap = this.getFieldTitleMap(schemas);
     const metadata = JSON.parse(submission.metadata);
 
