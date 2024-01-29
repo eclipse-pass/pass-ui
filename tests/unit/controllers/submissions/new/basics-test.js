@@ -208,32 +208,4 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
     assert.true(controller.get('model.newSubmission.isProxySubmission'));
     controller.send('validateAndLoadTab', 'submissions.new.basics');
   });
-
-  /**
-   * Mock the submission model object with a custom `#save()` function. This test makes
-   * sure that the custom save function is called exactly once when the 'loadNext'
-   * action is sent to the controller.
-   */
-  test('make sure submission is saved', function (assert) {
-    assert.expect(2);
-
-    const controller = this.owner.lookup('controller:submissions/new/basics');
-    const model = {
-      publication: EmberObject.create({
-        title: 'This is the moo-iest',
-        journal: EmberObject.create({
-          id: 'journal:id',
-        }),
-        save: () => Promise.resolve(assert.ok(true)),
-      }),
-      newSubmission: EmberObject.create({
-        save: () => Promise.resolve(assert.ok(true)),
-      }),
-    };
-
-    controller.set('transitionToRoute', (route) => {});
-
-    controller.set('model', model);
-    controller.send('loadNext');
-  });
 });

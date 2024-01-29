@@ -5,9 +5,9 @@ import { action, get, set } from '@ember/object';
 import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import { A } from '@ember/array';
+import { task, timeout } from 'ember-concurrency';
+import { scheduleOnce } from '@ember/runloop';
 import { dropTask } from 'ember-concurrency-decorators';
-import { timeout } from 'ember-concurrency';
-import { run, scheduleOnce } from '@ember/runloop';
 
 const DEBOUNCE_MS = 250;
 
@@ -75,6 +75,11 @@ export default class WorkflowBasics extends Component {
   setPreparers() {
     set(this.submission, 'preparers', []);
   }
+
+  loadNext = task({ drop: true }, async () => {
+    await timeout(100);
+    await this.args.validateAndLoadTab('submissions.new.grants');
+  });
 
   @action
   setupSubmission() {

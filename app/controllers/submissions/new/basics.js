@@ -5,6 +5,7 @@ import { action, computed, get, set } from '@ember/object';
 import { A } from '@ember/array';
 import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
+import { task } from 'ember-concurrency-decorators';
 
 export default class SubmissionsNewBasics extends Controller {
   @service workflow;
@@ -56,11 +57,6 @@ export default class SubmissionsNewBasics extends Controller {
     let email = get(this, 'submission.submitterEmailDisplay');
 
     return !get(this, 'submission.submitter.id') && (!email || !emailPattern.test(email));
-  }
-
-  @action
-  loadNext() {
-    this.validateAndLoadTab('submissions.new.grants');
   }
 
   @action
