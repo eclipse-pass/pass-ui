@@ -1,8 +1,6 @@
 /* eslint-disable ember/no-classic-classes */
 import { selectFiles } from 'ember-file-upload/test-support';
-import Service from '@ember/service';
-import { A } from '@ember/array';
-import EmberObject, { set } from '@ember/object';
+import EmberObject from '@ember/object';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
@@ -64,11 +62,10 @@ module('Integration | Component | workflow files', (hooks) => {
   /**
    * First upload a file, then click the 'Remove' button
    */
-  test('Files removed from UI should no longer reference submission', async function (assert) {
+  test("Files removed from UI should call the file's `destroyRecord`", async function (assert) {
     const submission = EmberObject.create({});
-    this.set('submission', submission);
 
-    const deleteStub = sinon.stub().returns(() => Promise.resolve());
+    const deleteStub = sinon.stub().returns(Promise.resolve());
     const file = {
       name: 'File-for-test',
       fileRole: 'manuscript',
@@ -166,5 +163,49 @@ module('Integration | Component | workflow files', (hooks) => {
 
     assert.dom('[data-test-added-manuscript-row]').exists({ count: 1 });
     assert.dom('[data-test-added-manuscript-row]').includesText('my-submission.pdf');
+  });
+
+  test('Destroy record error displays error message', async function (assert) {
+    const store = this.owner.lookup('service:store');
+
+    const file = store.createRecord('file', {
+      name: 'File-for-test',
+      fileRole: 'manuscript',
+    });
+    file.destroyRecord = () => Promise.reject();
+    // Note: using Sinon to fake `deleteRecord` would result in an undefined error
+    // const deleteStub = sinon.replace(file, 'destroyRecord', sinon.fake.returns(Promise.reject()));
+
+    this.previouslyUploadedFiles = [file];
+
+    const flashMessages = this.owner.lookup('service:flash-messages');
+    const flashMessagesFake = sinon.replace(flashMessages, 'danger', sinon.fake());
+    this.flashMessages = flashMessages;
+
+    // this.owner.register('service:flash-messages', sinon.replace(flashMessages, 'danger', sinon.fake()));
+
+    await render(hbs`
+      <WorkflowFiles
+        @submission={{this.submission}}
+        @previouslyUploadedFiles={{this.previouslyUploadedFiles}}
+        @newFiles={{this.newFiles}}
+        @next={{action this.fakeAction}}
+        @back={{action this.fakeAction}}
+        @abort={{action this.fakeAction}}
+      />
+    `);
+
+    const btn = this.element.querySelector('button');
+    assert.ok(btn);
+    assert.ok(btn.textContent.includes('Remove'));
+
+    await click(btn);
+
+    const sweetAlertBtn = document.querySelector('.swal2-container button.swal2-confirm');
+    assert.ok(sweetAlertBtn);
+    await click(sweetAlertBtn);
+
+    // assert.ok(deleteStub.calledOnce, 'File destroyRecord() should be called');
+    assert.ok(flashMessagesFake.calledOnce, 'Flash message error should be called');
   });
 });
