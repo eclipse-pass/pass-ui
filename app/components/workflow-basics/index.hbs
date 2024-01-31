@@ -192,15 +192,14 @@
 <button class="btn btn-outline-danger ml-2" {{action "cancel"}}>
   Cancel
 </button>
-{{#if this.inFlight}}
-  <button class="btn btn-primary pull-right next" disabled>
-    Next
-  </button>
-{{else}}
-  <button class="btn btn-primary pull-right next" data-test-workflow-basics-next {{action @next}}>
-    Next
-  </button>
-{{/if}}
+<button
+  class="btn btn-primary pull-right next"
+  data-test-workflow-basics-next
+  {{on "click" (perform this.loadNext)}}
+  disabled={{this.loadNext.isRunning}}
+>
+  Next
+</button>
 {{#if this.isShowingUserSearchModal}}
   <div class="user-search-modal">
     <ModalDialog

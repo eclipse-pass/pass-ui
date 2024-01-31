@@ -5,9 +5,10 @@ import EmberObject, { get } from '@ember/object';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
-import { fillIn, render, settled, triggerKeyEvent } from '@ember/test-helpers';
+import { doubleClick, fillIn, render, settled, triggerKeyEvent } from '@ember/test-helpers';
 import { run } from '@ember/runloop';
 import { task } from 'ember-concurrency';
+import sinon from 'sinon';
 
 module('Integration | Component | workflow basics', (hooks) => {
   setupRenderingTest(hooks);
@@ -370,5 +371,33 @@ module('Integration | Component | workflow basics', (hooks) => {
     assert.dom('[data-test-find-journal]').doesNotExist();
 
     assert.deepEqual(get(this, 'doiInfo'), {}, 'doiInfo should be empty');
+  });
+
+  test('validateAndLoadTab is called once when next is clicked', async function (assert) {
+    this.publication.title = 'Moo title';
+    this.publication.journal = EmberObject.create({ journalName: 'Moo Journal' });
+
+    this.submission.publication = this.publication;
+
+    this.validateAndLoadTab = sinon.stub();
+
+    await render(hbs`
+      <WorkflowBasics
+        @submission={{this.submission}}
+        @publication={{this.publication}}
+        @preLoadedGrant={{this.preLoadedGrant}}
+        @doiInfo={{this.doiInfo}}
+        @flaggedFields={{this.flaggedFields}}
+        @validateTitle={{this.validateTitle}}
+        @validateJournal={{this.validateJournal}}
+        @validateSubmitterEmail={{this.validateSubmitterEmail}}
+        @updatePublication={{this.updatePublication}}
+        @updateDoiInfo={{this.updateDoiInfo}}
+        @validateAndLoadTab={{this.validateAndLoadTab}}
+      />`);
+
+    await doubleClick('[data-test-workflow-basics-next]');
+
+    assert.ok(this.validateAndLoadTab.calledOnce, 'validateAndLoadTab called once');
   });
 });
