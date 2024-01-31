@@ -2,6 +2,7 @@ import ApplicationAdapter from './application';
 
 export default class FileAdapter extends ApplicationAdapter {
   /**
+   * ### This can't be rolled back ###
    * Overrides an Ember Model's base destroyRecord function.
    *
    * First call our File Service to delete file bytes, then
@@ -14,7 +15,6 @@ export default class FileAdapter extends ApplicationAdapter {
    * requests fail, same as default behavior.
    */
   deleteRecord(store, type, snapshot) {
-    console.warn('File deletion cannot be rolled back');
     // Can't use this.buildURL, as that will append the ember-data File path, which we don't want
     let url = snapshot.attr('uri');
     if (!url.startsWith('/')) {

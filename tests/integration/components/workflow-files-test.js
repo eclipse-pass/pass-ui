@@ -173,16 +173,12 @@ module('Integration | Component | workflow files', (hooks) => {
       fileRole: 'manuscript',
     });
     file.destroyRecord = () => Promise.reject();
-    // Note: using Sinon to fake `deleteRecord` would result in an undefined error
-    // const deleteStub = sinon.replace(file, 'destroyRecord', sinon.fake.returns(Promise.reject()));
 
     this.previouslyUploadedFiles = [file];
 
     const flashMessages = this.owner.lookup('service:flash-messages');
     const flashMessagesFake = sinon.replace(flashMessages, 'danger', sinon.fake());
     this.flashMessages = flashMessages;
-
-    // this.owner.register('service:flash-messages', sinon.replace(flashMessages, 'danger', sinon.fake()));
 
     await render(hbs`
       <WorkflowFiles
@@ -205,7 +201,6 @@ module('Integration | Component | workflow files', (hooks) => {
     assert.ok(sweetAlertBtn);
     await click(sweetAlertBtn);
 
-    // assert.ok(deleteStub.calledOnce, 'File destroyRecord() should be called');
     assert.ok(flashMessagesFake.calledOnce, 'Flash message error should be called');
   });
 });

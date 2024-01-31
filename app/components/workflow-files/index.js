@@ -63,9 +63,9 @@ export default class WorkflowFiles extends Component {
       cancelButtonColor: '#d33',
       confirmButtonText: 'I Agree',
       cancelButtonText: 'Never mind',
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.value) {
-        const deleted = this.deleteFile(file);
+        const deleted = await this.deleteFile(file);
 
         if (deleted) {
           const mFiles = get(this, 'args.previouslyUploadedFiles');
