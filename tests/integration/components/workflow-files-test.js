@@ -4,7 +4,7 @@ import EmberObject from '@ember/object';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
-import { click, render } from '@ember/test-helpers';
+import { click, render, waitFor } from '@ember/test-helpers';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 import sinon from 'sinon';
 
@@ -176,11 +176,22 @@ module('Integration | Component | workflow files', (hooks) => {
 
     this.previouslyUploadedFiles = [file];
 
-    const flashMessages = this.owner.lookup('service:flash-messages');
-    const flashMessagesFake = sinon.replace(flashMessages, 'danger', sinon.fake());
-    this.flashMessages = flashMessages;
+    // Need to make sure the flash message service is initialized
+    this.flashMessages = this.owner.lookup('service:flash-messages');
 
     await render(hbs`
+      {{#each this.flashMessages.queue as |flash|}}
+        <div class="flash-message-container">
+          <FlashMessage @flash={{flash}} as |component flash close|>
+            <div class="d-flex justify-content-between">
+              {{flash.message}}
+              <span role="button" {{on "click" close}}>
+                x
+              </span>
+            </div>
+          </FlashMessage>
+        </div>
+      {{/each}}
       <WorkflowFiles
         @submission={{this.submission}}
         @previouslyUploadedFiles={{this.previouslyUploadedFiles}}
@@ -188,7 +199,7 @@ module('Integration | Component | workflow files', (hooks) => {
         @next={{action this.fakeAction}}
         @back={{action this.fakeAction}}
         @abort={{action this.fakeAction}}
-      />
+      ></WorkflowFiles>
     `);
 
     const btn = this.element.querySelector('button');
@@ -201,6 +212,11 @@ module('Integration | Component | workflow files', (hooks) => {
     assert.ok(sweetAlertBtn);
     await click(sweetAlertBtn);
 
-    assert.ok(flashMessagesFake.calledOnce, 'Flash message error should be called');
+    // Make sure the Flash Message error message appears in the UI
+    await waitFor('.flash-message.alert-danger');
+    assert.dom('.flash-message.alert-danger').includesText('We encountered an error when removing this file');
+    // Make sure the file row hasn't been removed
+    assert.dom('[data-test-added-manuscript-row]').exists();
+    assert.dom('[data-test-added-manuscript-row]').includesText('File-for-test');
   });
 });

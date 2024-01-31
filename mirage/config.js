@@ -100,6 +100,9 @@ export default function (config) {
           uuid: '12abc34xE999',
         };
       });
+      this.delete('/file/:id/:name', function (schema, request) {
+        return new Response(200);
+      });
       // File API
       this.get('/data/file', (schema, request) => {
         console.log(`[MirageJS] GET /file | query ${JSON.stringify(request.queryParams)}`);
@@ -111,8 +114,8 @@ export default function (config) {
 
         return schema.create('file', attrs);
       });
-      this.delete('/data/file/:id/:name', (_schema, _request) => {
-        return new Response(200);
+      this.delete('/data/file/:id', (_schema, _request) => {
+        return new Response(204);
       });
 
       /** Schema Service */
