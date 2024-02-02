@@ -73,6 +73,6 @@ jobs:
         uses: ./.github/actions/build-pass-ui
 
       - name: Run acceptance tests
-        uses: eclipse-pass/pass-acceptance-testing/.github/actions/acceptance-test@print-docker-image-info
+        uses: eclipse-pass/main/.github/actions/acceptance-test@main
         with:
           pullimages: missing
