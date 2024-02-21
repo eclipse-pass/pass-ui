@@ -3,6 +3,7 @@ import { A } from '@ember/array';
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
+import Sinon from 'sinon';
 
 module('Unit | Service | submission-handler', (hooks) => {
   setupTest(hooks);
@@ -313,26 +314,158 @@ module('Unit | Service | submission-handler', (hooks) => {
     });
   });
 
-  /**
-   * #deleteSubmission should set submissionStatus to 'cancelled' while leaving associated
-   * objects alone
-   */
-  test('delete submission', function (assert) {
-    assert.expect(3);
-
-    const submission = EmberObject.create({
-      submissionStatus: 'draft',
-      publication: EmberObject.create({ title: 'Moo title' }),
+  test('cannot delete non-draft submissions', function (assert) {
+    const submission = {
+      submissionStatus: 'not-draft',
+      publication: { title: 'Moo title' },
       save: () => Promise.resolve(),
-    });
+    };
 
     const service = this.owner.lookup('service:submission-handler');
-    const result = service.deleteSubmission(submission);
 
-    assert.ok(result, 'No result found');
-    result.then(() => {
-      assert.strictEqual(submission.get('submissionStatus'), 'cancelled', 'Unexpected status');
-      assert.ok(submission.get('publication'), 'No publication found');
-    });
+    service
+      .deleteSubmission(submission)
+      .then((_) => assert.fail('Deletion should throw an error'))
+      .catch((_e) => assert.ok(true));
+  });
+
+  test('File deletion failure kills the submission deletion process', async function (assert) {
+    const service = this.owner.lookup('service:submission-handler');
+    const store = this.owner.lookup('service:store');
+
+    const submission = {
+      source: 'pass',
+      submissionStatus: 'draft',
+      publication: {
+        title: 'Moo Title',
+        save: Sinon.fake.resolves(),
+        deleteRecord: Sinon.fake.resolves(),
+      },
+      save: Sinon.fake.resolves(),
+      deleteRecord: Sinon.fake.resolves(),
+    };
+
+    const query = (model, _filter) => {
+      switch (model) {
+        case 'file':
+          // Get files for the submission
+          return Promise.resolve([
+            { name: 'file1', submission: 0, destroyRecord: Sinon.fake.rejects() },
+            { name: 'file2', submission: 0, destroyRecord: Sinon.fake.rejects() },
+          ]);
+        case 'submission':
+          return Promise.resolve([submission]); // Get submissions that share the same Publication
+        default:
+          return Promise.reject();
+      }
+    };
+    const storeQueryFake = Sinon.replace(store, 'query', Sinon.spy(query));
+    this.owner.register('service:store', store);
+
+    await service
+      .deleteSubmission(submission)
+      // Fail test on positive return
+      .then(() => assert.ok(false, 'Delete submission is expected to not succeed'))
+      .catch((_e) => assert.ok(true));
+
+    assert.ok(storeQueryFake.calledOnce, 'Store query should be called only once');
+    assert.equal(submission.deleteRecord.callCount, 0, 'Submission delete should not be called');
+    assert.equal(submission.save.callCount, 0, 'Submission should not be saved');
+  });
+
+  test('Publication not deleted if multiple submissions reference it', async function (assert) {
+    const service = this.owner.lookup('service:submission-handler');
+    const store = this.owner.lookup('service:store');
+
+    const publication = {
+      title: 'Moo Title',
+      save: Sinon.fake.resolves(),
+      deleteRecord: Sinon.fake.resolves(),
+    };
+    const submission = {
+      id: 0,
+      source: 'pass',
+      submissionStatus: 'draft',
+      publication,
+      save: Sinon.fake.resolves(),
+      deleteRecord: Sinon.fake.resolves(),
+    };
+
+    const query = (model, _filter) => {
+      switch (model) {
+        case 'file':
+          // Get files for the submission
+          return Promise.resolve([
+            { name: 'file1', submission: 0, destroyRecord: Sinon.fake.resolves() },
+            { name: 'file2', submission: 0, destroyRecord: Sinon.fake.resolves() },
+          ]);
+        case 'submission':
+          // 2 submissions use the same Publication
+          return Promise.resolve([submission, { id: 1, publication }]);
+        default:
+          return Promise.reject();
+      }
+    };
+
+    const storeQueryFake = Sinon.replace(store, 'query', Sinon.fake(query));
+    this.owner.register('service:store', store);
+
+    await service.deleteSubmission(submission);
+
+    assert.equal(storeQueryFake.callCount, 2, 'Store query should be called twice');
+    assert.ok(submission.deleteRecord.calledOnce, 'Submission delete should be called');
+    assert.ok(submission.save.calledOnce, 'Submission should be saved');
+    assert.equal(publication.deleteRecord.callCount, 0, 'Publication should not be deleted');
+    assert.equal(publication.save.callCount, 0, 'Publication should not be re-persisted');
+  });
+
+  test('Submission, publication, and files are deleted', async function (assert) {
+    const service = this.owner.lookup('service:submission-handler');
+    const store = this.owner.lookup('service:store');
+
+    const publication = {
+      title: 'Moo Title',
+      save: Sinon.fake.resolves(),
+      deleteRecord: Sinon.fake.resolves(),
+    };
+    const submission = {
+      id: 0,
+      source: 'pass',
+      submissionStatus: 'draft',
+      publication,
+      save: Sinon.fake.resolves(),
+      deleteRecord: Sinon.fake.resolves(),
+    };
+    const files = [
+      { name: 'file1', submission, destroyRecord: Sinon.fake.resolves() },
+      { name: 'file2', submission, destroyRecord: Sinon.fake.resolves() },
+    ];
+
+    const query = (model, _filter) => {
+      switch (model) {
+        case 'file':
+          // Get files for the submission
+          return Promise.resolve(files);
+        case 'submission':
+          return Promise.resolve([submission]);
+        default:
+          return Promise.reject();
+      }
+    };
+
+    const storeQueryFake = Sinon.replace(store, 'query', Sinon.fake(query));
+    this.owner.register('service:store', store);
+
+    await service.deleteSubmission(submission);
+
+    assert.equal(storeQueryFake.callCount, 2, 'Store query should be called twice');
+    assert.ok(submission.deleteRecord.calledOnce, 'Submission delete should be called');
+    assert.ok(submission.save.calledOnce, 'Submission should be saved');
+    assert.ok(publication.deleteRecord.calledOnce, 'Publication should be deleted');
+    assert.ok(publication.save.calledOnce, 'Publication deletion should be persisted');
+    assert.ok(
+      files.map((f) => f.destroyRecord).every((func) => func.calledOnce),
+      'All files should be destroyed'
+    );
   });
 });
