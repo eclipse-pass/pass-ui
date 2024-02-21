@@ -4,6 +4,7 @@ import Service, { inject as service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
 import { task } from 'ember-concurrency-decorators';
 import { get } from '@ember/object';
+import SubmissionModel from '../models/submission';
 
 /**
  * Service to manage submissions.
@@ -230,18 +231,43 @@ export default class SubmissionHandlerService extends Service {
   }
 
   /**
-   * Simply set submission.submissionStatus to 'cancelled'. This operation is
-   * distinct from `#cancelSubmission` because this does not create a
-   * SubmissionEvent
+   * Delete a draft submission. Any attached files will be deleted and the attached
+   * Publication will be deleted if it is not referenced by any other submissions.
    *
-   * All other objects associated with the submission (Publication, Files, etc)
-   * will remain intact.
+   * - First ensure submission source is pass and submission status is draft
+   * - Delete Files
+   * - Delete linked Publication only if no other submissions reference it
+   * - Delete the Submission only if all of the above succeed
+   *
+   * Will reject operation if the specified submission is NOT in 'draft' status
+   *
+   * Will pass errors from all of the network interactions:
+   *  - File deletions
+   *  - Publication deletion
+   *  - Submission deletion
    *
    * @param {Submission} submission submission to delete
    * @returns {Promise} that returns once the submission deletion is persisted
    */
   async deleteSubmission(submission) {
-    submission.set('submissionStatus', 'cancelled');
+    if (submission.source !== 'pass' || submission.submissionStatus !== 'draft') {
+      return Promise.reject(`Non-DRAFT submissions cannot be deleted`);
+    }
+
+    // Get submissions for this file
+    const files = await this.store.query('file', { filter: { submission: submission.id } });
+    await Promise.all(files.map((file) => file.destroyRecord()));
+
+    const publication = await submission.publication;
+
+    // Search for Submissions that reference this publication
+    const subsWithThisPublication = await this.store.query('submission', { filter: { publication: publication.id } });
+    if (subsWithThisPublication.length === 1) {
+      publication.deleteRecord();
+      await publication.save();
+    }
+
+    submission.deleteRecord();
     return submission.save();
   }
 }
