@@ -1,12 +1,13 @@
 /* eslint-disable ember/no-classic-classes, ember/avoid-leaking-state-in-ember-objects, ember/no-settled-after-test-helper, ember/no-get */
-import EmberObject, { get } from '@ember/object';
+import EmberObject from '@ember/object';
 import { A } from '@ember/array';
 import Service from '@ember/service';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
-import { render, click, settled } from '@ember/test-helpers';
+import { render, click, settled, waitFor } from '@ember/test-helpers';
 import { run } from '@ember/runloop';
+import Sinon from 'sinon';
 
 module('Integration | Component | submission action cell', (hooks) => {
   setupRenderingTest(hooks);
@@ -61,21 +62,18 @@ module('Integration | Component | submission action cell', (hooks) => {
    * supplied submission, then `#save()` should be called
    */
   test('should delete and persist submission', async function (assert) {
-    assert.expect(2);
-
-    const record = EmberObject.create({
-      preparers: A(),
+    const record = {
+      preparers: [],
       isDraft: true,
-      save() {
-        assert.ok(true);
-        return Promise.resolve();
-      },
-      submitter: {
-        id: 1,
-      },
-    });
+      save: Sinon.fake.resolves(),
+      submitter: { id: 1 },
+    };
 
     this.set('record', record);
+
+    const submissionHandler = this.owner.lookup('service:submission-handler');
+    const handlerFake = Sinon.replace(submissionHandler, 'deleteSubmission', Sinon.fake.resolves());
+    this.owner.register('service:submission-handler', submissionHandler);
 
     await render(hbs`<SubmissionActionCell @record={{this.record}}></SubmissionActionCell>`);
     await click('a.delete-button');
@@ -83,8 +81,50 @@ module('Integration | Component | submission action cell', (hooks) => {
 
     await settled();
 
-    const status = get(this, 'record.submissionStatus');
-    assert.strictEqual(status, 'cancelled');
+    assert.ok(handlerFake.calledOnce, 'Submission handler delete should be called');
+  });
+
+  test('Should show error message on submission deletion error', async function (assert) {
+    const record = { preparers: [], isDraft: true, save: Sinon.fake.resolves(), submitter: { id: 1 } };
+    this.record = record;
+
+    const submissionHandler = this.owner.lookup('service:submission-handler');
+    // Make sure submissionHandler#deleteSubmission fails
+    const handlerFake = Sinon.replace(submissionHandler, 'deleteSubmission', Sinon.fake.throws());
+    this.owner.register('service:submission-handler', submissionHandler);
+
+    // Need to make sure the flash message service is initialized
+    this.flashMessages = this.owner.lookup('service:flash-messages');
+    // Need harness for flash messages
+    // In the real app, this is done at the application level and will always be available
+    // but needs to be injected for this isolated render test
+    await render(hbs`
+      {{#each this.flashMessages.queue as |flash|}}
+        <div class="flash-message-container">
+          <FlashMessage @flash={{flash}} as |component flash close|>
+            <div class="d-flex justify-content-between">
+              {{flash.message}}
+              <span role="button" {{on "click" close}}>
+                x
+              </span>
+            </div>
+          </FlashMessage>
+        </div>
+      {{/each}}
+      <SubmissionActionCell @record={{this.record}}></SubmissionActionCell>
+    `);
+
+    assert.dom('a.delete-button').exists();
+    assert.dom('a.btn').containsText('Edit');
+
+    await click('a.delete-button');
+    await click(document.querySelector('.swal2-confirm'));
+    await settled();
+
+    await waitFor('.flash-message.alert-danger');
+    assert.dom('.flash-message.alert-danger').containsText('We encountered an error deleting this draft submission');
+
+    assert.ok(handlerFake.calledOnce, 'Submission handler delete should be called');
   });
 
   test('Draft submissions should display Edit and Delete buttons', async function (assert) {
