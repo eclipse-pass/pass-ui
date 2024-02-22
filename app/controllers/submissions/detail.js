@@ -474,10 +474,17 @@ export default class SubmissionsDetail extends Controller {
     if (result.value) {
       const ignoreList = this.searchHelper;
 
-      await this.submissionHandler.deleteSubmission(submission);
-      ignoreList.clearIgnore();
-      ignoreList.ignore(submission.get('id'));
-      this.transitionToRoute('submissions');
+      try {
+        await this.submissionHandler.deleteSubmission(submission);
+
+        ignoreList.clearIgnore();
+        ignoreList.ignore(submission.get('id'));
+        this.transitionToRoute('submissions');
+      } catch (e) {
+        this.flashMessages.danger(
+          'We encountered an error deleting this draft submission. Please try again later or contact your administrator'
+        );
+      }
     }
   }
 }
