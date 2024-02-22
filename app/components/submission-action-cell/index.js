@@ -7,6 +7,7 @@ import swal from 'sweetalert2';
 export default class SubmissionActionCell extends Component {
   @service currentUser;
   @service submissionHandler;
+  @service flashMessages;
 
   get isPreparer() {
     let userId = this.currentUser.user.id;
@@ -23,32 +24,32 @@ export default class SubmissionActionCell extends Component {
   }
 
   /**
-   * Delete the specified submission record from Fedora.
-   *
-   * Note: `ember-fedora-adapter#deleteRecord` behaves like `ember-data#destroyRecord`
-   * in that the deletion is pushed to the back end automatically, such that a
-   * subsequent 'save()' will fail.
+   * Delete the specified submission record. This is done via #destroyRecord
+   * so is immediately persisted
    *
    * @param {object} submission model object to be removed
    */
   @action
   deleteSubmission(submission) {
     swal({
-      // title: 'Are you sure?',
       text: 'Are you sure you want to delete this draft submission? This cannot be undone.',
       confirmButtonText: 'Delete',
       confirmButtonColor: '#DC3545',
       showCancelButton: true,
-      // buttonsStyling: false,
-      // confirmButtonClass: 'btn btn-danger',
-      // cancelButtonText: 'No',
-      // customClass: {
-      //   confirmButton: 'btn btn-danger'
-      // }
     }).then((result) => {
       if (result.value) {
-        this.submissionHandler.deleteSubmission(submission);
+        this.do_delete(submission);
       }
     });
+  }
+
+  async do_delete(submission) {
+    try {
+      await this.submissionHandler.deleteSubmission(submission);
+    } catch (e) {
+      this.flashMessages.danger(
+        'We encountered an error deleting this draft submission. Please try again later or contact your administrator'
+      );
+    }
   }
 }
