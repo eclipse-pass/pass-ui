@@ -2,6 +2,7 @@ import CheckSessionRoute from '../check-session-route';
 import { inject as service } from '@ember/service';
 import { set } from '@ember/object';
 import { hash } from 'rsvp';
+import { fileForSubmissionQuery } from '../../util/paginated-query';
 
 export default class NewRoute extends CheckSessionRoute {
   @service('workflow')
@@ -64,13 +65,7 @@ export default class NewRoute extends CheckSessionRoute {
         sort: '+performedDate',
       });
 
-      files = this.store
-        .query('file', {
-          filter: {
-            file: `submission.id==${newSubmission.get('id')}`,
-          },
-        })
-        .then((files) => [...files.toArray()]);
+      files = this.store.query('file', fileForSubmissionQuery(newSubmission.id)).then((files) => [...files.toArray()]);
 
       // Also seed workflow.doiInfo with metadata from the Submission
       const metadata = newSubmission.get('metadata');
