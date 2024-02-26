@@ -5,6 +5,7 @@ import ENV from 'pass-ui/config/environment';
 import { task } from 'ember-concurrency-decorators';
 import { get } from '@ember/object';
 import SubmissionModel from '../models/submission';
+import { fileForSubmissionQuery, submissionsWithPublicationQuery } from '../util/paginated-query';
 
 /**
  * Service to manage submissions.
@@ -255,19 +256,20 @@ export default class SubmissionHandlerService extends Service {
     }
 
     // Get submissions for this file
-    const files = await this.store.query('file', { filter: { submission: submission.id } });
+    const files = await this.store.query('file', fileForSubmissionQuery(submission.id));
     await Promise.all(files.map((file) => file.destroyRecord()));
 
     const publication = await submission.publication;
 
     // Search for Submissions that reference this publication
-    const subsWithThisPublication = await this.store.query('submission', { filter: { publication: publication.id } });
-    if (subsWithThisPublication.length === 1) {
+    const submissionId = submission.id;
+    submission.deleteRecord();
+    await submission.save();
+
+    const subsWithThisPublication = await this.store.query('submission', submissionsWithPublicationQuery(publication));
+    if (subsWithThisPublication.length === 0) {
       publication.deleteRecord();
       await publication.save();
     }
-
-    submission.deleteRecord();
-    return submission.save();
   }
 }

@@ -1,4 +1,8 @@
 /**
+ * Centralizing JSON-API queries are formatted using RSQL, which can be a bit awkward to write.
+ */
+
+/**
  * Paginated query for the submissions/index route
  *
  * @param {object} params url query params
@@ -101,6 +105,22 @@ export function grantsIndexSubmissionQuery(user) {
   return {
     filter: {
       submission: `submissionStatus=out=cancelled;(${userMatch})`,
+    },
+  };
+}
+
+export function fileForSubmissionQuery(submissionId) {
+  return {
+    filter: {
+      file: `submission.id==${submissionId}`,
+    },
+  };
+}
+
+export function submissionsWithPublicationQuery(publication) {
+  return {
+    filter: {
+      submission: `publication.id==${publication.id}`,
     },
   };
 }

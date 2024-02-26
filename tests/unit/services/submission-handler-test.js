@@ -447,7 +447,7 @@ module('Unit | Service | submission-handler', (hooks) => {
           // Get files for the submission
           return Promise.resolve(files);
         case 'submission':
-          return Promise.resolve([submission]);
+          return Promise.resolve([]);
         default:
           return Promise.reject();
       }
