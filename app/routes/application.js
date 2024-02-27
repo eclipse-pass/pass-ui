@@ -23,8 +23,12 @@ export default class ApplicationRoute extends CheckSessionRoute {
    * If there is a userToken query parameter call the user service with that parameter
    * to ensure objects are updated in the backend before any queries are done.
    */
-  beforeModel(transition) {
+  async beforeModel(transition) {
     let userToken = transition.to.queryParams.userToken;
+
+    if (!this.staticConfig.config) {
+      await this.staticConfig.setupStaticConfig();
+    }
 
     if (userToken) {
       return fetch(`/user/whoami?userToken=${encodeURIComponent(userToken)}`);
@@ -38,10 +42,6 @@ export default class ApplicationRoute extends CheckSessionRoute {
     const loader = document.getElementById('initial-loader');
     if (loader) {
       loader.style.display = 'none';
-    }
-
-    if (!this.staticConfig.config) {
-      await this.staticConfig.setupStaticConfig();
     }
   }
 }

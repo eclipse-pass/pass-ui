@@ -36,6 +36,7 @@ export default class CheckSessionRouteRoute extends Route {
 
   @action
   async error(error, transition) {
+    console.error(error);
     const errorObject = error?.errors?.firstObject || {};
 
     if ([401, 403].includes(Number(errorObject.status))) {
