@@ -58,7 +58,7 @@ export default class HttpOnly extends Base {
 
   async _validateData(data) {
     // see https://tools.ietf.org/html/rfc6749#section-4.2.2
-    if (isEmpty(data) || isEmpty(data.user.id)) return false;
+    if (isEmpty(data) || isEmpty(data.id)) return false;
 
     const url = `/user/whoami`;
 
