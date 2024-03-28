@@ -18,9 +18,6 @@ export default class HttpOnly extends Base {
    */
   restore(data) {
     return new RSVP.Promise((resolve, reject) => {
-      if (window.location.pathname === '/app/auth-callback') {
-        return reject('Could not restore session.');
-      }
       if (!this._validateData(data)) {
         return reject('Could not restore session.');
       }
@@ -35,7 +32,7 @@ export default class HttpOnly extends Base {
    * @public
    */
   async authenticate() {
-    const url = `${window.location.origin}/authenticated`;
+    const url = `/user/whoami`;
 
     let response = await fetch(url);
 
@@ -61,16 +58,16 @@ export default class HttpOnly extends Base {
 
   async _validateData(data) {
     // see https://tools.ietf.org/html/rfc6749#section-4.2.2
-    if (isEmpty(data) || isEmpty(data.user.id)) return false;
+    if (isEmpty(data) || isEmpty(data.id)) return false;
 
-    const url = `${window.location.origin}/authenticated`;
+    const url = `/user/whoami`;
 
     let response = await fetch(url);
 
     if (response.ok) {
       const refreshedData = await response.json();
 
-      return data.user.id === refreshedData.user.id;
+      return data.id === refreshedData.id;
     } else {
       return false;
     }
