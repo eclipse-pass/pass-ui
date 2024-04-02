@@ -32,10 +32,6 @@ export default class AppStaticConfigService extends Service {
         const overrides = `${this._config.branding.overrides}`;
         this.addCSS(overrides);
       }
-      if (this._config.branding.favicon) {
-        const favicon = `${this._config.branding.favicon}`;
-        this.addFavicon(favicon);
-      }
     }
   }
 
@@ -84,18 +80,5 @@ export default class AppStaticConfigService extends Service {
     newLink.setAttribute('href', uri);
 
     window.document.head.appendChild(newLink);
-  }
-
-  addFavicon(uri) {
-    const fav = document.querySelector('head link[rel="icon"]');
-    if (fav || !uri) {
-      return;
-    }
-
-    const newFav = window.document.createElement('link');
-    newFav.setAttribute('rel', 'icon');
-    newFav.setAttribute('href', uri);
-
-    window.document.head.appendChild(newFav);
   }
 }
