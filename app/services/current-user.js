@@ -21,7 +21,7 @@ export default class CurrentUserService extends Service {
    */
   @task
   load = function* () {
-    let userId = this.session.data.authenticated.user.id;
+    let userId = this.session.data.authenticated.id;
 
     if (userId) {
       let user = yield this.store.findRecord('user', userId);
