@@ -42,17 +42,6 @@ export default function (config) {
         };
       });
 
-      /** Auth Service  */
-      this.get('/authenticated', (schema, request) => {
-        const user = schema.find('user', 0);
-
-        return {
-          user: {
-            id: user.id,
-          },
-        };
-      });
-
       /** User Service */
       this.get('/pass-user-service/whoami', (schema, request) => {
         const userId = request.queryParams.userToken;
