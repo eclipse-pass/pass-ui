@@ -19,7 +19,7 @@ module('Unit | Service | current-user', (hooks) => {
       '@id': user.get('id'),
     };
 
-    service.set('session', { data: { authenticated: { user: { id: '000' } } } });
+    service.set('session', { data: { authenticated: { id: '000' } } });
 
     service.set(
       'store',
