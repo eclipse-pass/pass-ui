@@ -33,9 +33,7 @@ module('Acceptance | proxy submission', function (hooks) {
 
     this.server.create('user', attrs);
 
-    await authenticateSession({
-      user: { id: '0' },
-    });
+    await authenticateSession({ id: '0' });
   });
 
   test('can walk through a proxy submission workflow and make a submission – with pass account', async function (assert) {

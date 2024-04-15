@@ -11,7 +11,7 @@ module('Acceptance | application', function (hooks) {
   setupMirage(hooks);
 
   hooks.beforeEach(async function () {
-    await authenticateSession({ user: { id: '0' } });
+    await authenticateSession({ id: '0' });
   });
 
   test('Make sure app loads outside of root', async function (assert) {

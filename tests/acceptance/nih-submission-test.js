@@ -12,9 +12,7 @@ module('Acceptance | submission', function (hooks) {
   setupMirage(hooks);
 
   hooks.beforeEach(async function () {
-    await authenticateSession({
-      user: { id: '0' },
-    });
+    await authenticateSession({ id: '0' });
   });
 
   test('can walk through an nih submission workflow and make a submission - base case', async function (assert) {
