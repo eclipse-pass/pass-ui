@@ -12,21 +12,12 @@ export default class CheckSessionRouteRoute extends Route {
   errorHandler;
 
   async beforeModel() {
-    // TODO: it is not ideal to have env checks in app code so it would be
-    // great to find another way to authenticate users in the development env
-    // with mirage at play. Note, we could direct people to go to the auth-callback
-    // route which would achieve a similar effect.
-    if (ENV.environment === 'development' && ENV['ember-cli-mirage']) {
+    if (!this.session.isAuthenticated) {
       await this.session.authenticate('authenticator:http-only');
     }
 
     if (!this.currentUser.user) {
       await this._loadCurrentUser();
-    }
-
-    if (!this.session.isAuthenticated) {
-      this.session.set('attemptedTransition', transition);
-      await this.session.invalidate();
     }
   }
 
