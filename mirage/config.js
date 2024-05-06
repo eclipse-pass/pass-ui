@@ -43,9 +43,8 @@ export default function (config) {
       });
 
       /** User Service */
-      this.get('/pass-user-service/whoami', (schema, request) => {
-        const userId = request.queryParams.userToken;
-        return schema.find('user', userId);
+      this.get('/user/whoami', (_schema, _request) => {
+        return { user: { id: '0' } };
       });
 
       /** Download service */
