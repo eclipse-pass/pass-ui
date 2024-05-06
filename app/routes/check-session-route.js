@@ -1,8 +1,6 @@
-/* eslint-disable ember/no-jquery */
 import { inject as service } from '@ember/service';
 import Route from '@ember/routing/route';
 import { action } from '@ember/object';
-import ENV from 'pass-ui/config/environment';
 
 export default class CheckSessionRouteRoute extends Route {
   @service session;
@@ -12,6 +10,8 @@ export default class CheckSessionRouteRoute extends Route {
   errorHandler;
 
   async beforeModel() {
+    await this.session.setup();
+
     if (!this.session.isAuthenticated) {
       await this.session.authenticate('authenticator:http-only');
     }

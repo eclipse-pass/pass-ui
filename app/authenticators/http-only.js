@@ -1,4 +1,3 @@
-/* eslint-disable ember/no-computed-properties-in-native-classes */
 import Base from 'ember-simple-auth/authenticators/base';
 import RSVP from 'rsvp';
 import { inject as service } from '@ember/service';
@@ -16,14 +15,32 @@ export default class HttpOnly extends Base {
    @return {Ember.RSVP.Promise} A promise that when it resolves results in the session becoming or remaining authenticated
    @public
    */
-  restore(data) {
+  async restore(data) {
+    const normalizedData = this.normalizeSessionData(data);
+    const dataIsValid = await this._validateData(normalizedData);
+
     return new RSVP.Promise((resolve, reject) => {
-      if (!this._validateData(data)) {
+      if (dataIsValid) {
+        return resolve(normalizedData);
+      } else {
         return reject('Could not restore session.');
       }
-
-      return resolve(data);
     });
+  }
+
+  /**
+   * Normalizes session data so that we maintain a consistent shape.
+   * @param {*} data
+   * @returns data
+   */
+  normalizeSessionData(data) {
+    if (!data?.id && data?.user?.id) {
+      return {
+        id: data.user.id,
+        ...data,
+      };
+    }
+    return data;
   }
 
   /**
@@ -37,23 +54,16 @@ export default class HttpOnly extends Base {
     let response = await fetch(url);
 
     if (response.ok) {
-      return response.json();
+      const data = await response.json();
+      const normalizedData = this.normalizeSessionData(data);
+
+      return new RSVP.Promise((resolve, _reject) => {
+        return resolve(normalizedData);
+      });
     } else {
       let error = await response.text();
       throw new Error(error);
     }
-  }
-
-  /**
-   This method simply returns a resolving promise.
-   @method invalidate
-   @return {Ember.RSVP.Promise} A promise that when it resolves results in the session being invalidated
-   @public
-   */
-  invalidate() {
-    return new RSVP.Promise((resolve /*, reject*/) => {
-      resolve();
-    });
   }
 
   async _validateData(data) {
@@ -65,7 +75,7 @@ export default class HttpOnly extends Base {
     let response = await fetch(url);
 
     if (response.ok) {
-      const refreshedData = await response.json();
+      const refreshedData = this.normalizeSessionData(await response.json());
 
       return data.id === refreshedData.id;
     } else {
