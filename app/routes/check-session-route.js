@@ -10,9 +10,9 @@ export default class CheckSessionRouteRoute extends Route {
   errorHandler;
 
   async beforeModel() {
-    await this.session.setup();
-
     if (!this.session.isAuthenticated) {
+      await this.session.setup();
+
       await this.session.authenticate('authenticator:http-only');
     }
 
