@@ -2,15 +2,13 @@ name: Update UI Docker image
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - 'main'
-    tags-ignore:
-      - '*'
+  pull_request:
+    types:
+      - closed
 
 jobs:
   build:
-    if:  github.repository == 'eclipse-pass/pass-ui'
+    if:  github.event.pull_request.merged == true && github.repository == 'eclipse-pass/pass-ui'
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
