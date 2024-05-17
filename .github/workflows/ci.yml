@@ -1,13 +1,5 @@
-name: CI
-
-on:
-  workflow_dispatch:
-  push:
-    branches:
-      - 'main'
-    tags-ignore:
-      - '*'
-  pull_request: {}
+name: Continuous Integration
+on: [pull_request, workflow_dispatch]
 
 concurrency:
   group: ci-${{ github.head_ref || github.ref }}
