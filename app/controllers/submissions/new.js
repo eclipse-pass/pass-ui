@@ -135,10 +135,11 @@ export default class SubmissionsNew extends Controller {
     });
 
     if (result.value) {
-      await this.submissionHandler.deleteSubmission(submission);
-      // Clear the shared ignore list, then add the 'deleted' submission ID
       ignoreList.clearIgnore();
-      ignoreList.ignore(get(submission, 'id'));
+      if (submission.id) {
+        await this.submissionHandler.deleteSubmission(submission);
+        ignoreList.ignore(get(submission, 'id'));
+      }
       this.router.transitionTo('submissions');
     }
   }
