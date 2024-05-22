@@ -316,8 +316,12 @@ module('Unit | Controller | submissions/new', (hooks) => {
   test('abort should delete submission and transition', async function (assert) {
     assert.expect(3);
 
+    let submission = EmberObject.create({
+      id: 'sub:0',
+    });
+
     const model = EmberObject.create({
-      newSubmission: EmberObject.create(),
+      newSubmission: submission,
     });
     const controller = this.owner.lookup('controller:submissions/new');
 
@@ -343,6 +347,50 @@ module('Unit | Controller | submissions/new', (hooks) => {
     );
     controller.set('router', {
       transitionTo: (name) => {
+        assert.strictEqual(name, 'submissions', 'unexpected transition was named');
+      },
+    });
+
+    controller.send('abort');
+  });
+
+  test('abort should not delete submission if submission.id is undefined', async function (assert) {
+    assert.expect(3);
+
+    let submission = EmberObject.create({
+      id: undefined,
+    });
+
+    const model = EmberObject.create({
+      newSubmission: submission,
+    });
+    const controller = this.owner.lookup('controller:submissions/new');
+
+    controller.set('model', model);
+
+    // Mock global 'swal' for this test
+    swal = () => {
+      assert.ok(true);
+      return Promise.resolve({
+        value: 'moo',
+      });
+    };
+
+    let deleteSubmissionCalled = false;
+
+    // Having this mocked function run shows that the service will delete the submission
+    controller.set(
+      'submissionHandler',
+      EmberObject.create({
+        deleteSubmission(_sub) {
+          deleteSubmissionCalled = true;
+          return Promise.resolve();
+        },
+      })
+    );
+    controller.set('router', {
+      transitionTo: (name) => {
+        assert.false(deleteSubmissionCalled);
         assert.strictEqual(name, 'submissions', 'unexpected transition was named');
       },
     });
