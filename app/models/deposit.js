@@ -4,9 +4,9 @@ export default class DepositModel extends Model {
   @attr('string') depositStatusRef;
   @attr('string') depositStatus;
 
-  @belongsTo('repositoryCopy') repositoryCopy;
-  @belongsTo('submission') submission;
-  @belongsTo('repository') repository;
+  @belongsTo('repositoryCopy', { async: false, inverse: null }) repositoryCopy;
+  @belongsTo('submission', { async: false, inverse: null }) submission;
+  @belongsTo('repository', { async: false, inverse: null }) repository;
 }
 
 export const DepositStatus = {

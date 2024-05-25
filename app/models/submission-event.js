@@ -7,8 +7,8 @@ export default class SubmissionEventModel extends Model {
   @attr('string') comment;
   @attr('string') link;
 
-  @belongsTo('submission') submission;
-  @belongsTo('user') performedBy;
+  @belongsTo('submission', { async: true, inverse: '_submissionEvents' }) submission;
+  @belongsTo('user', { async: false, inverse: null }) performedBy;
 }
 
 export const Type = {

@@ -12,8 +12,8 @@ export default class GrantModel extends Model {
   /** Date the grant ended */
   @attr('date') endDate;
 
-  @belongsTo('user') pi;
-  @hasMany('user') coPis;
-  @belongsTo('funder') primaryFunder;
-  @belongsTo('funder') directFunder;
+  @belongsTo('user', { async: false, inverse: null }) pi;
+  @hasMany('user', { async: false, inverse: null }) coPis;
+  @belongsTo('funder', { async: true, inverse: null }) primaryFunder;
+  @belongsTo('funder', { async: false, inverse: null }) directFunder;
 }

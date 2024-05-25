@@ -20,15 +20,16 @@ export default class SubmissionModel extends Model {
   submitterEmail;
   @attr('number') version;
 
-  @belongsTo('user') submitter;
-  @belongsTo('publication') publication;
+  @belongsTo('user', { async: false, inverse: null }) submitter;
+  @belongsTo('publication', { async: false, inverse: null }) publication;
 
-  @hasMany('user') preparers;
-  @hasMany('repository') repositories;
-  @hasMany('policy') effectivePolicies;
+  @hasMany('user', { async: false, inverse: null }) preparers;
+  @hasMany('repository', { async: true, inverse: null }) repositories;
+  @hasMany('policy', { async: false, inverse: null }) effectivePolicies;
   // not on this model on API
   @hasMany('submissionEvent', {
     async: true,
+    inverse: 'submission',
   })
   _submissionEvents;
   /**
@@ -38,6 +39,7 @@ export default class SubmissionModel extends Model {
    */
   @hasMany('grant', {
     async: true,
+    inverse: null,
   })
   grants;
 
