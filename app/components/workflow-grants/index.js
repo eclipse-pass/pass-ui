@@ -35,13 +35,13 @@ export default class WorkflowGrants extends Component {
       propertyName: 'awardNumber',
       title: 'Award Number',
       className: 'awardnum-column',
-      component: 'grant-link-newtab-cell',
+      component: 'grantLinkNewtabCell',
       disableSorting: true,
     },
     {
       title: 'Project name (funding period)',
       className: 'projectname-date-column',
-      component: 'grant-title-date-cell',
+      component: 'grantTitleDateCell',
       disableSorting: true,
     },
     {
@@ -52,7 +52,7 @@ export default class WorkflowGrants extends Component {
     },
     {
       title: 'Select',
-      component: 'select-row-toggle',
+      component: 'selectRowToggle',
       mayBeHidden: false,
     },
   ];
