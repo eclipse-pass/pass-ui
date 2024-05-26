@@ -27,6 +27,14 @@
       <ModelsTableServerPaginated
         @data={{this.queuedModel.submissions}}
         @columns={{this.columns}}
+        @columnComponents={{hash
+          submissionsArticleCell=(component "submissions-article-cell")
+          submissionsAwardCell=(component "submissions-award-cell")
+          submissionsRepoCell=(component "submissions-repo-cell")
+          submissionsStatusCell=(component "submissions-status-cell")
+          submissionsRepoidCell=(component "submissions-repoid-cell")
+          submissionActionCell=(component "submission-action-cell")
+        }}
         @themeInstance={{this.themeInstance}}
         @showColumnsDropdown={{false}}
         @useFilteringByColumns={{false}}

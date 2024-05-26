@@ -49,18 +49,18 @@ export default class SubmissionsIndex extends Controller {
           propertyName: 'publication',
           title: 'Article',
           className: 'title-column',
-          component: 'submissions-article-cell',
+          component: 'submissionsArticleCell',
         },
         {
           title: 'Award Number (Funder)',
           className: 'awardnum-funder-column',
-          component: 'submissions-award-cell',
+          component: 'submissionsAwardCell',
         },
         {
           propertyName: 'repositories',
           title: 'Repositories',
           className: 'repositories-column',
-          component: 'submissions-repo-cell',
+          component: 'submissionsRepoCell',
         },
         {
           propertyName: 'submittedDate',
@@ -72,13 +72,13 @@ export default class SubmissionsIndex extends Controller {
           propertyName: 'submissionStatus',
           title: 'Status',
           className: 'status-column',
-          component: 'submissions-status-cell',
+          component: 'submissionsStatusCell',
         },
         {
           // propertyName: 'repoCopies',
           title: 'Manuscript IDs',
           className: 'msid-column',
-          component: 'submissions-repoid-cell',
+          component: 'submissionsRepoidCell',
         },
       ];
     } else if (this.currentUser.user.isSubmitter) {
@@ -87,19 +87,19 @@ export default class SubmissionsIndex extends Controller {
           propertyName: 'publicationTitle',
           className: 'title-column',
           title: 'Article',
-          component: 'submissions-article-cell',
+          component: 'submissionsArticleCell',
         },
         {
           title: 'Award Number (Funder)',
           propertyName: 'grantInfo',
           className: 'awardnum-funder-column',
-          component: 'submissions-award-cell',
+          component: 'submissionsAwardCell',
           disableSorting: true,
         },
         {
           propertyName: 'repositoryNames',
           title: 'Repositories',
-          component: 'submissions-repo-cell',
+          component: 'submissionsRepoCell',
           className: 'repositories-column',
           disableSorting: true,
         },
@@ -113,19 +113,19 @@ export default class SubmissionsIndex extends Controller {
           propertyName: 'submissionStatus',
           title: 'Status',
           className: 'status-column',
-          component: 'submissions-status-cell',
+          component: 'submissionsStatusCell',
         },
         {
           propertyName: 'repoCopies',
           className: 'msid-column',
           title: 'Manuscript IDs',
-          component: 'submissions-repoid-cell',
+          component: 'submissionsRepoidCell',
           disableSorting: true,
         },
         {
           title: 'Actions',
           className: 'actions-column',
-          component: 'submission-action-cell',
+          component: 'submissionActionCell',
         },
       ];
     } else {
