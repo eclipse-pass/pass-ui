@@ -2,7 +2,7 @@ import EmberObject from '@ember/object';
 import { setupTest } from 'ember-qunit';
 import { setupMirage } from 'ember-cli-mirage/test-support';
 import { module, test } from 'qunit';
-import { Response } from 'ember-cli-mirage';
+import { Response } from 'miragejs';
 
 module('Unit | Service | policies', (hooks) => {
   setupTest(hooks);
