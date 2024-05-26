@@ -152,7 +152,8 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
       }),
     };
     controller.set('model', model);
-    controller.transitionToRoute = function () {
+    const routerService = this.owner.lookup('service:router');
+    routerService.transitionTo = () => {
       assert.ok(subSaved, 'Submission was not saved');
       assert.strictEqual(controller.get('workflow').getFilesTemp().length, 0);
       assert.strictEqual(controller.get('model.files').length, 1);

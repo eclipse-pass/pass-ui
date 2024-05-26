@@ -23,7 +23,8 @@ module('Unit | Controller | submissions/new/grants', (hooks) => {
 
     controller.set('model', model);
 
-    controller.transitionToRoute = function (route) {
+    const routerService = this.owner.lookup('service:router');
+    routerService.transitionTo = function (route) {
       assert.strictEqual(route, 'submissions.new.basics');
     };
     controller.send('loadPrevious');
@@ -41,7 +42,8 @@ module('Unit | Controller | submissions/new/grants', (hooks) => {
 
     controller.set('model', model);
 
-    controller.transitionToRoute = function (route) {
+    const routerService = this.owner.lookup('service:router');
+    routerService.transitionTo = function (route) {
       assert.strictEqual(route, 'submissions.new.policies');
     };
     controller.send('loadNext');
@@ -62,7 +64,8 @@ module('Unit | Controller | submissions/new/grants', (hooks) => {
     });
 
     controller.set('model', model);
-    controller.set('transitionToRoute', () => {});
+    const routerService = this.owner.lookup('service:router');
+    routerService.transitionTo = () => {};
 
     controller.send('loadNext');
     controller.send('loadPrevious');

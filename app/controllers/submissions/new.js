@@ -106,7 +106,7 @@ export default class SubmissionsNew extends Controller {
           set(this, 'uploading', false);
           set(this, 'comment', '');
           set(this, 'workflow.filesTemp', A());
-          this.transitionToRoute('thanks', { queryParams: { submission: get(sub, 'id') } });
+          this.router.transitionTo('thanks', { queryParams: { submission: get(sub, 'id') } });
         })
         .catch((error) => {
           this.set('uploading', false);

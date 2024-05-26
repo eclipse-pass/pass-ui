@@ -8,13 +8,14 @@ export default class NewRoute extends CheckSessionRoute {
   @service('workflow')
   workflow;
   @service store;
+  @service router;
 
   @service('current-user')
   currentUser;
 
   beforeModel() {
     if (this.workflow.getCurrentStep() === 0) {
-      this.transitionTo('submissions.new');
+      this.router.transitionTo('submissions.new');
     }
   }
 
