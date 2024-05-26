@@ -31,7 +31,8 @@ module('Unit | Controller | submissions/new/repositories', (hooks) => {
     });
     controller.set('model', model);
     let loadTabAccessed = false;
-    controller.transitionToRoute = function () {
+    const routerService = this.owner.lookup('service:router');
+    routerService.transitionTo = function (route) {
       loadTabAccessed = true;
     };
     // override swal so it doesn't pop up
@@ -65,7 +66,8 @@ module('Unit | Controller | submissions/new/repositories', (hooks) => {
     });
     controller.set('model', model);
 
-    controller.transitionToRoute = function () {
+    const routerService = this.owner.lookup('service:router');
+    routerService.transitionTo = function (route) {
       assert.ok(true);
     };
     controller.send('validateAndLoadTab');
@@ -119,9 +121,10 @@ module('Unit | Controller | submissions/new/repositories', (hooks) => {
     });
 
     controller.set('model', model);
-    controller.set('transitionToRoute', (route) =>
-      assert.ok(['submissions.new.metadata', 'submissions.new.policies'].includes(route))
-    );
+    const routerService = this.owner.lookup('service:router');
+    routerService.transitionTo = function (route) {
+      assert.ok(['submissions.new.metadata', 'submissions.new.policies'].includes(route));
+    };
 
     controller.send('loadNext');
     assert.ok(subSaved);

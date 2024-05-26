@@ -8,6 +8,7 @@ import { inject as service } from '@ember/service';
 export default class SubmissionsNewFiles extends Controller {
   @service workflow;
   @service flashMessages;
+  @service router;
 
   @alias('model.newSubmission') submission;
   @alias('model.files') files;
@@ -50,7 +51,7 @@ export default class SubmissionsNewFiles extends Controller {
     this.updateRelatedData();
     await this.submission.save();
     set(this, 'loadingNext', false); // reset for next time
-    this.transitionToRoute(gotoRoute);
+    this.router.transitionTo(gotoRoute);
   }
 
   @action

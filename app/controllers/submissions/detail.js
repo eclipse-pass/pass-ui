@@ -12,6 +12,7 @@ export default class SubmissionsDetail extends Controller {
   @service submissionHandler;
   @service searchHelper;
   @service flashMessages;
+  @service router;
 
   constructor() {
     super(...arguments);
@@ -479,7 +480,7 @@ export default class SubmissionsDetail extends Controller {
 
         ignoreList.clearIgnore();
         ignoreList.ignore(submission.get('id'));
-        this.transitionToRoute('submissions');
+        this.router.transitionTo('submissions');
       } catch (e) {
         this.flashMessages.danger(
           'We encountered an error deleting this draft submission. Please try again later or contact your administrator'

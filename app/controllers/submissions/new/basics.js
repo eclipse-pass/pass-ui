@@ -10,6 +10,7 @@ import { task } from 'ember-concurrency-decorators';
 export default class SubmissionsNewBasics extends Controller {
   @service workflow;
   @service flashMessages;
+  @service router;
 
   @alias('model.newSubmission') submission;
   @alias('model.publication') publication;
@@ -64,7 +65,7 @@ export default class SubmissionsNewBasics extends Controller {
     this.doiInfo.title = this.publication.title;
 
     await this.submission.save();
-    this.transitionToRoute(gotoRoute);
+    this.router.transitionTo(gotoRoute);
   }
 
   @action

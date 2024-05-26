@@ -3,8 +3,11 @@ import Controller, { inject as controller } from '@ember/controller';
 import { action, computed, get } from '@ember/object';
 import { alias } from '@ember/object/computed';
 import { tracked } from '@glimmer/tracking';
+import { inject as service } from '@ember/service';
 
 export default class SubmissionsNewReview extends Controller {
+  @service router;
+
   @alias('model.newSubmission') submission;
   @alias('model.files') files;
   @alias('model.publication') publication;
@@ -31,9 +34,7 @@ export default class SubmissionsNewReview extends Controller {
 
   @action
   loadTab(gotoRoute) {
-    // add validation, processing
-    // this.submission.save().then(() => this.transitionToRoute(gotoRoute));
-    this.transitionToRoute(gotoRoute);
+    this.router.transitionTo(gotoRoute);
   }
 
   @action

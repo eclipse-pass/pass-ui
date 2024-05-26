@@ -22,7 +22,8 @@ module('Unit | Controller | submissions/new/policies', (hooks) => {
     });
 
     controller.set('model', model);
-    controller.transitionToRoute = function (route) {
+    const routerService = this.owner.lookup('service:router');
+    routerService.transitionTo = function (route) {
       assert.strictEqual(route, 'submissions.new.grants');
     };
     controller.send('loadPrevious');
@@ -39,7 +40,8 @@ module('Unit | Controller | submissions/new/policies', (hooks) => {
     });
 
     controller.set('model', model);
-    controller.transitionToRoute = function (route) {
+    const routerService = this.owner.lookup('service:router');
+    routerService.transitionTo = function (route) {
       assert.strictEqual(route, 'submissions.new.repositories');
     };
     controller.send('loadNext');
@@ -56,9 +58,10 @@ module('Unit | Controller | submissions/new/policies', (hooks) => {
     });
 
     controller.set('model', model);
-    controller.set('transitionToRoute', (route) =>
-      assert.ok(route === 'submissions.new.repositories' || route === 'submissions.new.grants')
-    );
+    const routerService = this.owner.lookup('service:router');
+    routerService.transitionTo = function (route) {
+      assert.ok(route === 'submissions.new.repositories' || route === 'submissions.new.grants');
+    };
 
     controller.send('loadNext');
     controller.send('loadPrevious');

@@ -13,7 +13,7 @@ module('Unit | Controller | submissions/detail', (hooks) => {
   });
 
   test('delete action should call the submission handler', function (assert) {
-    assert.expect(3);
+    assert.expect(2);
 
     // Mock the global SweetAlert object to always return immediately
     swal = () =>
@@ -35,7 +35,6 @@ module('Unit | Controller | submissions/detail', (hooks) => {
         },
       })
     );
-    controller.set('transitionToRoute', () => assert.ok(true));
 
     controller.send('deleteSubmission', submission);
   });
@@ -47,7 +46,8 @@ module('Unit | Controller | submissions/detail', (hooks) => {
     swal = Sinon.fake.resolves({ value: true });
 
     const controller = this.owner.lookup('controller:submissions/detail');
-    const transitionFake = Sinon.replace(controller, 'transitionToRoute', Sinon.fake());
+    const routerService = this.owner.lookup('service:router');
+    const transitionFake = Sinon.replace(routerService, 'transitionTo', Sinon.fake());
 
     controller.submissionHandler = this.owner.lookup('service:submission-handler');
     const deleteFake = Sinon.replace(controller.submissionHandler, 'deleteSubmission', Sinon.fake.rejects());

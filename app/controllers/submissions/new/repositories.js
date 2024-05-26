@@ -7,6 +7,7 @@ import { inject as service } from '@ember/service';
 
 export default class SubmissionsNewRepositories extends Controller {
   @service workflow;
+  @service router;
 
   @alias('model.newSubmission') submission;
   @alias('model.repositories') repositories;
@@ -82,7 +83,7 @@ export default class SubmissionsNewRepositories extends Controller {
   @action
   async loadTab(gotoRoute) {
     await this.submission.save();
-    this.transitionToRoute(gotoRoute);
+    this.router.transitionTo(gotoRoute);
     set(this, 'loadingNext', false); // reset for next time
   }
 
@@ -102,7 +103,7 @@ export default class SubmissionsNewRepositories extends Controller {
       });
 
       if (value.dismiss) {
-        this.transitionToRoute('dashboard');
+        this.router.transitionTo('dashboard');
       }
       // do nothing
     } else {

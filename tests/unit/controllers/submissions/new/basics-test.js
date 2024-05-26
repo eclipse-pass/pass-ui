@@ -139,7 +139,8 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
       publication,
     };
     controller.set('model', model);
-    controller.transitionToRoute = function () {
+    const routerService = this.owner.lookup('service:router');
+    routerService.transitionTo = () => {
       assert.ok(true);
       loadTabAccessed = true;
     };
@@ -192,7 +193,8 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
     };
 
     controller.set('model', model);
-    controller.set('transitionToRoute', (route) => {
+    const routerService = this.owner.lookup('service:router');
+    routerService.transitionTo = () => {
       // no errors and loadTab accessed
       assert.false(controller.get('submitterIsInvalid'));
       assert.false(controller.get('titleError'));
@@ -203,7 +205,7 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
       assert.strictEqual(controller.get('flaggedFields').indexOf('submitterEmail'), -1);
 
       assert.ok(subSaved, 'submission was not saved');
-    });
+    };
 
     assert.true(controller.get('model.newSubmission.isProxySubmission'));
     controller.send('validateAndLoadTab', 'submissions.new.basics');
