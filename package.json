@@ -71,7 +71,7 @@
     "ember-concurrency": "^2.3.4",
     "ember-concurrency-decorators": "^1.0.0",
     "ember-css-modules": "^2.0.1",
-    "ember-data": "~4.11.3",
+    "ember-data": "~4.12.8",
     "ember-fetch": "^8.1.2",
     "ember-file-upload": "^7.3.0",
     "ember-load-initializers": "^2.1.2",
