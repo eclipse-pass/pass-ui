@@ -1,7 +1,6 @@
 /* eslint-disable ember/no-get, ember/classic-decorator-no-classic-methods */
 import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
-import { A } from '@ember/array';
 import { action, get, set } from '@ember/object';
 import { inject as service } from '@ember/service';
 
@@ -105,7 +104,7 @@ export default class SubmissionsNew extends Controller {
         .then(() => {
           set(this, 'uploading', false);
           set(this, 'comment', '');
-          set(this, 'workflow.filesTemp', A());
+          set(this, 'workflow.filesTemp', []);
           this.router.transitionTo('thanks', { queryParams: { submission: get(sub, 'id') } });
         })
         .catch((error) => {

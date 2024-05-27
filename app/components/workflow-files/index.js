@@ -2,7 +2,6 @@
 import Component from '@glimmer/component';
 import { action, get, set, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
-import { A } from '@ember/array';
 import { task } from 'ember-concurrency-decorators';
 import ENV from 'pass-ui/config/environment';
 
@@ -20,8 +19,8 @@ export default class WorkflowFiles extends Component {
 
   @computed('args.newFiles.[]', 'previouslyUploadedFiles.[]')
   get manuscript() {
-    const newFiles = get(this, 'args.newFiles') || A([]);
-    const prevFiles = get(this, 'args.previouslyUploadedFiles') || A([]);
+    const newFiles = get(this, 'args.newFiles') || [];
+    const prevFiles = get(this, 'args.previouslyUploadedFiles') || [];
 
     return [...prevFiles.toArray(), ...newFiles.toArray()].find((file) => file.fileRole === 'manuscript');
   }
@@ -31,8 +30,8 @@ export default class WorkflowFiles extends Component {
    */
   @computed('args.newFiles.[]', 'previouslyUploadedFiles.[]')
   get supplementalFiles() {
-    const newFiles = get(this, 'args.newFiles') || A([]);
-    const prevFiles = get(this, 'args.previouslyUploadedFiles') || A([]);
+    const newFiles = get(this, 'args.newFiles') || [];
+    const prevFiles = get(this, 'args.previouslyUploadedFiles') || [];
 
     return [...prevFiles.toArray(), ...newFiles.toArray()].filter((file) => file.fileRole !== 'manuscript');
   }

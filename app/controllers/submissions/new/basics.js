@@ -2,7 +2,6 @@
 import Controller, { inject as controller } from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import { action, computed, get, set } from '@ember/object';
-import { A } from '@ember/array';
 import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import { task } from 'ember-concurrency-decorators';
@@ -26,7 +25,7 @@ export default class SubmissionsNewBasics extends Controller {
   @tracked submitterEmailError = false;
 
   get flaggedFields() {
-    let fields = A();
+    let fields = [];
     if (this.titleError) fields.pushObject('title');
     if (this.journalError) fields.pushObject('journal');
     if (this.submitterEmailError) fields.pushObject('submitterEmail');

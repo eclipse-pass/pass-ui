@@ -3,7 +3,6 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action, get, set } from '@ember/object';
 import { inject as service } from '@ember/service';
-import { A } from '@ember/array';
 
 export default class SubmissionsRepoidCell extends Component {
   @service store;
@@ -17,7 +16,7 @@ export default class SubmissionsRepoidCell extends Component {
     const publicationId = get(this, 'args.record.publication.id');
     if (!publicationId) {
       if (!(get(this, 'isDestroyed') || get(this, 'isDestroying'))) {
-        set(this, 'repoCopies', A());
+        set(this, 'repoCopies', []);
         return;
       }
     }

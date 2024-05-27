@@ -2,7 +2,6 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action, get, set } from '@ember/object';
-import { A } from '@ember/array';
 import { inject as service } from '@ember/service';
 
 /**
@@ -37,7 +36,7 @@ export default class WorkflowRepositories extends Component {
   @service submissionHandler;
   @service workflow;
 
-  @tracked addedRepos = A([]);
+  @tracked addedRepos = [];
 
   // Separate out repositories that PASS has some level of integration
   get requiredIntegratedRepos() {

@@ -2,7 +2,6 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action, get, set } from '@ember/object';
-import { A } from '@ember/array';
 import { inject as service } from '@ember/service';
 import { task } from 'ember-concurrency';
 
@@ -28,7 +27,7 @@ export default class WorkflowGrants extends Component {
   @tracked submitterGrants = null;
   @tracked totalGrants = 0;
   /** Grants already attached to the submission on component init */
-  @tracked _selectedGrants = A();
+  @tracked _selectedGrants = [];
   @tracked preLoadedGrant = this.args.preLoadedGrant;
   @tracked grantColumns = [
     {

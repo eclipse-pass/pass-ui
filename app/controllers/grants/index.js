@@ -1,5 +1,4 @@
 /* eslint-disable ember/classic-decorator-no-classic-methods */
-import { A } from '@ember/array';
 import Controller from '@ember/controller';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
@@ -185,7 +184,7 @@ export default class GrantsIndexController extends Controller {
         const meta = data.meta;
         let results = data.map((grant) => ({
           grant,
-          submissions: A(),
+          submissions: [],
         }));
 
         return {
