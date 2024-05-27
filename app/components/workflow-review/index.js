@@ -2,7 +2,6 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action, get, set } from '@ember/object';
-import { A } from '@ember/array';
 import { inject as service } from '@ember/service';
 import { task } from 'ember-concurrency-decorators';
 import { later } from '@ember/runloop';
@@ -23,12 +22,12 @@ export default class WorkflowReview extends Component {
   @service currentUser;
   @service flashMessages;
 
-  @tracked isValidated = A();
+  @tracked isValidated = [];
   @tracked filesTemp = this.workflow.filesTemp;
   @tracked hasVisitedWeblink = false;
 
   get parsedFiles() {
-    let newArr = A();
+    let newArr = [];
     if (this.filesTemp) {
       newArr.addObjects(this.filesTemp);
     }

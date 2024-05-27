@@ -1,5 +1,4 @@
 import { service } from '@ember/service';
-import { A } from '@ember/array';
 import CheckSessionRoute from '../check-session-route';
 import { grantsIndexGrantQuery, grantsIndexSubmissionQuery } from '../../util/paginated-query';
 
@@ -44,7 +43,7 @@ export default class IndexRoute extends CheckSessionRoute {
     grants.forEach((grant) => {
       results.grantMap.push({
         grant,
-        submissions: A(),
+        submissions: [],
       });
     });
 

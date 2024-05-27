@@ -1,5 +1,5 @@
 /* eslint-disable ember/no-get */
-import { A, isArray } from '@ember/array';
+import { isArray } from '@ember/array';
 import Service, { inject as service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
 import { task } from 'ember-concurrency-decorators';
@@ -22,7 +22,7 @@ export default class SubmissionHandlerService extends Service {
    * @returns EmberArray with repositories
    */
   getRepositoriesFromGrants(grants) {
-    let result = A();
+    let result = [];
 
     grants.forEach((grant) => {
       const directRepos = grant.get('directFunder.policy.repositories');
