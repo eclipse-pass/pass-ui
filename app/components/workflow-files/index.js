@@ -1,9 +1,10 @@
 /* eslint-disable ember/no-computed-properties-in-native-classes, ember/no-get, ember/require-computed-property-dependencies */
 import Component from '@glimmer/component';
-import { action, get, set, computed } from '@ember/object';
+import { action, get } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { task } from 'ember-concurrency-decorators';
 import ENV from 'pass-ui/config/environment';
+import { tracked } from '@glimmer/tracking';
 
 export default class WorkflowFiles extends Component {
   @service store;
@@ -12,42 +13,37 @@ export default class WorkflowFiles extends Component {
   @service currentUser;
   @service flashMessages;
 
-  @computed('manuscript')
   get hasManuscript() {
-    return !!get(this, 'manuscript');
+    return !!this.manuscript;
   }
 
-  @computed('args.newFiles.[]', 'previouslyUploadedFiles.[]')
   get manuscript() {
-    const newFiles = get(this, 'args.newFiles') || [];
-    const prevFiles = get(this, 'args.previouslyUploadedFiles') || [];
+    const newFiles = this.args.newFiles || [];
+    const prevFiles = this.args.previouslyUploadedFiles || [];
 
-    return [...prevFiles.toArray(), ...newFiles.toArray()].find((file) => file.fileRole === 'manuscript');
+    return [...prevFiles.slice(), ...newFiles.slice()].find((file) => file.fileRole === 'manuscript');
   }
 
   /**
    * Any non-manuscript files
    */
-  @computed('args.newFiles.[]', 'previouslyUploadedFiles.[]')
   get supplementalFiles() {
-    const newFiles = get(this, 'args.newFiles') || [];
-    const prevFiles = get(this, 'args.previouslyUploadedFiles') || [];
+    const newFiles = this.args.newFiles || [];
+    const prevFiles = this.args.previouslyUploadedFiles || [];
 
-    return [...prevFiles.toArray(), ...newFiles.toArray()].filter((file) => file.fileRole !== 'manuscript');
+    return [...prevFiles.slice(), ...newFiles.slice()].filter((file) => file.fileRole !== 'manuscript');
   }
 
   @task
   handleExternalMs = function* (file) {
-    const newFiles = get(this, 'args.newFiles');
-
-    file.set('submission', get(this, 'args.submission'));
-    if (!get(this, 'hasManuscript')) {
-      file.set('fileRole', 'manuscript');
+    file.submission = this.args.submission;
+    if (!this.hasManuscript) {
+      file.fileRole = 'manuscript';
     } else {
-      file.set('fileRole', 'supplemental');
+      file.fileRole = 'supplemental';
     }
 
-    newFiles.pushObject(file);
+    this.args.updateNewFiles(file);
     yield file.save();
   };
 
@@ -67,15 +63,15 @@ export default class WorkflowFiles extends Component {
         const deleted = await this.deleteFile(file);
 
         if (deleted) {
-          const mFiles = get(this, 'args.previouslyUploadedFiles');
+          const mFiles = this.args.previouslyUploadedFiles;
           // Remove the file from the model
           if (mFiles) {
-            mFiles.removeObject(file);
+            this.args.updatePreviouslyUploadedFiles(mFiles.filter((f) => f.id !== file.id));
           }
 
-          const newFiles = get(this, 'args.newFiles');
+          const newFiles = this.args.newFiles;
           if (newFiles) {
-            newFiles.removeObject(file);
+            this.args.updateNewFiles(newFiles.filter((f) => f.id !== file.id));
           }
           document.querySelector('#file-multiple-input').value = null;
         }
@@ -116,8 +112,10 @@ export default class WorkflowFiles extends Component {
       if (!this.hasManuscript) {
         newFile.fileRole = 'manuscript';
       }
-      await newFile.save();
-      this.args.newFiles.pushObject(newFile);
+      const savedFile = await newFile.save();
+
+      this.args.updateNewFiles([savedFile, ...this.args.newFiles]);
+      this.args.updateAllFiles([savedFile, ...this.args.newFiles, ...this.args.previouslyUploadedFiles]);
     } catch (error) {
       FileUpload.file.state = 'aborted';
       console.error(error);
@@ -139,7 +137,10 @@ export default class WorkflowFiles extends Component {
     return await file
       .destroyRecord()
       .then(() => {
-        files.removeObject(file);
+        const filteredFiles = files.filter((f) => f.id !== file.id);
+
+        this.args.updateAllFiles(filteredFiles);
+
         return true;
       })
       .catch((error) => {

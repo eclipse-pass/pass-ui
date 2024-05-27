@@ -98,14 +98,14 @@ export default class Workflow extends Service {
   }
 
   addGrant(grant) {
-    this.addedGrants.pushObject(grant);
+    this.addedGrants = [grant, ...this.addedGrants];
   }
 
   removeGrant(grant) {
-    this.addedGrants.removeObject(grant);
+    this.addedGrants = this.addedGrants.filter((g) => g.id !== grant.id);
   }
 
   clearAddedGrants() {
-    this.addedGrants.clear();
+    this.addedGrants = [];
   }
 }

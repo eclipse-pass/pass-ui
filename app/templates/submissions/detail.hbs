@@ -94,23 +94,20 @@
               <td>
                 <ul class="list-unstyled">
                   {{#each this.model.sub.grants as |grant|}}
-                    <li data-test-submission-detail-grant>
+                    <li class="grant-item" data-test-submission-detail-grant>
                       <b>
                         {{grant.awardNumber}}
                       </b>
                       :
                       {{grant.projectName}}
                     </li>
-                    <li data-test-submission-detail-funder>
+                    <li class="grant-item" data-test-submission-detail-funder>
                       <b>
                         Funder
                       </b>
                       :
                       {{grant.primaryFunder.name}}
                     </li>
-                    {{#if (not-eq grant this.model.sub.grants.lastObject)}}
-                      <hr />
-                    {{/if}}
                   {{/each}}
                 </ul>
               </td>

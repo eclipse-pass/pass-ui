@@ -97,12 +97,13 @@ export default class WorkflowGrants extends Component {
 
     // Init selected grants to grants already attached to submission
 
-    this._selectedGrants.clear();
+    this._selectedGrants = [];
+    let grants = yield this.args.submission.grants;
     if (this.preLoadedGrant) {
-      this.args.submission.grants.pushObject(this.preLoadedGrant);
+      grants = [this.preLoadedGrant, ...grants];
       this.workflow.addGrant(this.preLoadedGrant);
     }
-    this._selectedGrants.addObjects(get(this, 'args.submission.grants'));
+    this._selectedGrants = [...grants];
   };
 
   updateGrants = task(async () => {
@@ -174,18 +175,19 @@ export default class WorkflowGrants extends Component {
    * @param {Grant} grant
    */
   @action
-  addGrant(grant) {
+  async addGrant(grant) {
     const workflow = this.workflow;
     const submission = this.args.submission;
+    let grants = await submission.grants;
 
-    if (!get(submission, 'grants').includes(grant)) {
-      get(submission, 'grants').pushObject(grant);
+    if (!grants.includes(grant)) {
+      this.args.submission.grants = [grant, ...grants];
     }
     if (!workflow.getAddedGrants().includes(grant)) {
       workflow.addGrant(grant);
     }
     if (!this._selectedGrants.includes(grant)) {
-      this._selectedGrants.pushObject(grant);
+      this._selectedGrants = [grant, ...this._selectedGrants];
     }
 
     this.setWorkflowStepHere();
@@ -200,7 +202,7 @@ export default class WorkflowGrants extends Component {
    * @param {Grant} grant
    */
   @action
-  removeGrant(grant) {
+  async removeGrant(grant) {
     const workflow = this.workflow;
 
     // if grant is grant passed in from grant detail page remove query parms
@@ -208,9 +210,10 @@ export default class WorkflowGrants extends Component {
       this.preLoadedGrant = null;
     }
     const submission = this.args.submission;
-    get(submission, 'grants').removeObject(grant);
+    const grants = await submission.grants;
+    this.args.submission.grants = grants.filter((g) => g !== grant);
     workflow.removeGrant(grant);
-    this._selectedGrants.removeObject(grant);
+    this._selectedGrants = this._selectedGrants.filter((g) => g !== grant);
 
     this.setWorkflowStepHere();
   }

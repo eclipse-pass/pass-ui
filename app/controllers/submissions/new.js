@@ -3,6 +3,7 @@ import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import { action, get, set } from '@ember/object';
 import { inject as service } from '@ember/service';
+import _ from 'lodash';
 
 export default class SubmissionsNew extends Controller {
   queryParams = ['grant', 'submission', 'covid'];
@@ -79,8 +80,10 @@ export default class SubmissionsNew extends Controller {
   @action
   async submit() {
     let manuscriptFiles = []
-      .concat(this.filesTemp, get(this, 'model.files') && get(this, 'model.files').toArray())
-      .filter((file) => file && get(file, 'fileRole') === 'manuscript');
+      .concat(this.filesTemp, this.model.files && this.model.files.slice())
+      .filter((file) => file && file.fileRole === 'manuscript');
+
+    manuscriptFiles = _.uniqBy(manuscriptFiles, 'id');
 
     if (manuscriptFiles.length == 0 && this.userIsSubmitter) {
       swal('Manuscript Is Missing', 'At least one manuscript file is required.  Please go back and add one', 'warning');

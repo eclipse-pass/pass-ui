@@ -26,7 +26,7 @@ export default class FoundManuscriptsComponent extends Component {
     let prevFiles = this.args.previouslyUploadedFiles || [];
     let newFiles = this.args.newFiles || [];
 
-    const allFileNames = [...newFiles.toArray(), ...prevFiles.toArray()].map((file) => file.name);
+    const allFileNames = [...newFiles.slice(), ...prevFiles.slice()].map((file) => file.name);
 
     return this.foundManuscripts
       .filter((manuscript) => !allFileNames.includes(manuscript.name))
@@ -46,7 +46,7 @@ export default class FoundManuscriptsComponent extends Component {
     const foundOAMss = yield this.oaManuscriptService.lookup(doi);
 
     if (foundOAMss) {
-      this.foundManuscripts.pushObjects(foundOAMss);
+      this.foundManuscripts.push(foundOAMss);
     }
   };
 }

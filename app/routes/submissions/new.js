@@ -66,7 +66,7 @@ export default class NewRoute extends CheckSessionRoute {
         sort: '+performedDate',
       });
 
-      files = this.store.query('file', fileForSubmissionQuery(newSubmission.id)).then((files) => [...files.toArray()]);
+      files = this.store.query('file', fileForSubmissionQuery(newSubmission.id)).then((files) => [...files.slice()]);
 
       // Also seed workflow.doiInfo with metadata from the Submission
       const metadata = newSubmission.get('metadata');

@@ -117,14 +117,14 @@ module('Integration | Component | workflow grants', (hooks) => {
 
     this.set('preLoadedGrant', undefined);
 
-    const list = A();
+    let list = [];
     this.owner.register(
       'service:workflow',
       Service.extend({
         setMaxStep: (step) => {},
         addGrant(grant) {
           assert.ok(grant);
-          list.pushObject(grant);
+          list = [grant, ...list];
         },
         getAddedGrants() {
           return list;
@@ -167,7 +167,7 @@ module('Integration | Component | workflow grants', (hooks) => {
   test('Clicking on a selected grant will remove it', async function (assert) {
     assert.expect(6);
 
-    const list = A();
+    let list = [];
     this.owner.register(
       'service:workflow',
       Service.extend({
@@ -177,11 +177,11 @@ module('Integration | Component | workflow grants', (hooks) => {
         },
         getAddedGrants: () => list,
         addGrant: (grant) => {
-          list.pushObject(grant);
+          list = [grant, ...list];
         },
         removeGrant(grant) {
           assert.ok(true);
-          list.removeObject(grant);
+          list = list.filter((g) => g.id !== grant.id);
         },
       })
     );

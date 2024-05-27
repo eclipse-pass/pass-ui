@@ -47,12 +47,10 @@ module('Integration | Component | found-manuscripts', (hooks) => {
     const mockMsService = Service.extend({
       lookup(doi) {
         assert.ok(doi, 'DOI needs to be present');
-        return Promise.resolve([
-          {
-            name: 'This is a moo',
-            url: 'http://moo.example.com',
-          },
-        ]);
+        return Promise.resolve({
+          name: 'This is a moo',
+          url: 'http://moo.example.com',
+        });
       },
     });
 
