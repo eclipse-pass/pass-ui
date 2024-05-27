@@ -26,9 +26,9 @@ export default class SubmissionsNewBasics extends Controller {
 
   get flaggedFields() {
     let fields = [];
-    if (this.titleError) fields.pushObject('title');
-    if (this.journalError) fields.pushObject('journal');
-    if (this.submitterEmailError) fields.pushObject('submitterEmail');
+    if (this.titleError) fields.push('title');
+    if (this.journalError) fields.push('journal');
+    if (this.submitterEmailError) fields.push('submitterEmail');
 
     return fields;
   }

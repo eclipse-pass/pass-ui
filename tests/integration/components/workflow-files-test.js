@@ -1,6 +1,6 @@
 /* eslint-disable ember/no-classic-classes */
 import { selectFiles } from 'ember-file-upload/test-support';
-import EmberObject from '@ember/object';
+import EmberObject, { set } from '@ember/object';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
@@ -26,6 +26,20 @@ module('Integration | Component | workflow files', (hooks) => {
 
     // Bogus action so component actions don't complain
     this.fakeAction = sinon.fake();
+
+    this.updateAllFiles = (files) => {
+      files.forEach((file) => {
+        file.submission = this.submission;
+      });
+    };
+
+    this.updatePreviouslyUploadedFiles = (files) => {
+      this.previouslyUploadedFiles = [...files];
+    };
+
+    this.updateNewFiles = (files) => {
+      set(this, 'newFiles', [...files]);
+    };
 
     const staticConfig = this.owner.lookup('service:app-static-config');
     sinon.replace(
@@ -81,6 +95,9 @@ module('Integration | Component | workflow files', (hooks) => {
         @submission={{this.submission}}
         @previouslyUploadedFiles={{this.previouslyUploadedFiles}}
         @newFiles={{this.newFiles}}
+        @updatePreviouslyUploadedFiles={{this.updatePreviouslyUploadedFiles}}
+        @updateNewFiles={{this.updateNewFiles}}
+        @updateAllFiles={{this.updateAllFiles}}
         @next={{action this.fakeAction}}
         @back={{action this.fakeAction}}
         @abort={{action this.fakeAction}}
@@ -124,6 +141,9 @@ module('Integration | Component | workflow files', (hooks) => {
       @submission={{this.submission}}
       @previouslyUploadedFiles={{this.previouslyUploadedFiles}}
       @newFiles={{this.newFiles}}
+      @updatePreviouslyUploadedFiles={{this.updatePreviouslyUploadedFiles}}
+      @updateNewFiles={{this.updateNewFiles}}
+      @updateAllFiles={{this.updateAllFiles}}
       @next={{this.fakeAction}}
       @back={{this.fakeAction}}
       @abort={{this.fakeAction}}
@@ -148,6 +168,9 @@ module('Integration | Component | workflow files', (hooks) => {
       @submission={{this.submission}}
       @previouslyUploadedFiles={{this.previouslyUploadedFiles}}
       @newFiles={{this.newFiles}}
+      @updatePreviouslyUploadedFiles={{this.updatePreviouslyUploadedFiles}}
+      @updateNewFiles={{this.updateNewFiles}}
+      @updateAllFiles={{this.updateAllFiles}}
       @next={{this.fakeAction}}
       @back={{this.fakeAction}}
       @abort={{this.fakeAction}}
@@ -196,6 +219,9 @@ module('Integration | Component | workflow files', (hooks) => {
         @submission={{this.submission}}
         @previouslyUploadedFiles={{this.previouslyUploadedFiles}}
         @newFiles={{this.newFiles}}
+        @updatePreviouslyUploadedFiles={{this.updatePreviouslyUploadedFiles}}
+        @updateNewFiles={{this.updateNewFiles}}
+        @updateAllFiles={{this.updateAllFiles}}
         @next={{action this.fakeAction}}
         @back={{action this.fakeAction}}
         @abort={{action this.fakeAction}}

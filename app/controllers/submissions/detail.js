@@ -5,6 +5,7 @@ import { action, get, computed } from '@ember/object';
 import ENV from 'pass-ui/config/environment';
 import { inject as service } from '@ember/service';
 import { later, scheduleOnce } from '@ember/runloop';
+import _ from 'lodash';
 
 export default class SubmissionsDetail extends Controller {
   @service currentUser;
@@ -285,8 +286,10 @@ export default class SubmissionsDetail extends Controller {
 
     // Validate manuscript files
     let manuscriptFiles = []
-      .concat(this.filesTemp, get(this, 'model.files') && get(this, 'model.files').toArray())
+      .concat(this.filesTemp, get(this, 'model.files') && get(this, 'model.files').slice())
       .filter((file) => file && file.get('fileRole') === 'manuscript');
+
+    manuscriptFiles = _.uniqBy(manuscriptFiles, 'id');
 
     if (manuscriptFiles.length == 0) {
       swal(

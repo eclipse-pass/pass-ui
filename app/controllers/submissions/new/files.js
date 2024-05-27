@@ -19,6 +19,8 @@ export default class SubmissionsNewFiles extends Controller {
 
   @tracked loadingNext = false;
   @tracked filesTemp = this.workflow.filesTemp;
+  @tracked newFiles = [];
+  @tracked previouslyUploadedFiles = this.model.files;
 
   @computed('workflow.maxStep')
   get nextTabIsActive() {
@@ -28,11 +30,6 @@ export default class SubmissionsNewFiles extends Controller {
   @computed('nextTabIsActive', 'loadingNext')
   get needValidation() {
     return this.nextTabIsActive || this.loadingNext;
-  }
-
-  @computed('workflow.filesTemp')
-  get newFiles() {
-    return get(this, 'workflow').getFilesTemp();
   }
 
   @action
@@ -55,13 +52,31 @@ export default class SubmissionsNewFiles extends Controller {
   }
 
   @action
+  updateAllFiles(files) {
+    this.workflow.filesTemp = [...files, ...this.workflow.filesTemp];
+    files.forEach((file) => {
+      file.submission = this.submission;
+    });
+  }
+
+  @action
+  updatePreviouslyUploadedFiles(files) {
+    this.previouslyUploadedFiles = [...files];
+  }
+
+  @action
+  updateNewFiles(files) {
+    this.newFiles = [...files];
+  }
+
+  @action
   async validateAndLoadTab(gotoTab) {
     let needValidation = this.needValidation;
     if (needValidation) {
       let files = this.files;
-      let manuscriptFiles = []
-        .concat(this.newFiles, files && files.toArray())
-        .filter((file) => file && get(file, 'fileRole') === 'manuscript');
+      let manuscriptFiles = [...this.newFiles, ...this.model.files.slice()].filter(
+        (file) => file && get(file, 'fileRole') === 'manuscript'
+      );
 
       if (manuscriptFiles.length == 0 && !this.parent.userIsSubmitter) {
         let result = await swal({

@@ -415,7 +415,7 @@ export default class MetadataSchemaService extends Service {
       'volume',
     ];
 
-    const repos = await submission.repositories.toArray();
+    const repos = await submission.repositories.slice();
     const schemas = await this.getMetadataSchemas(repos);
     const titleMap = this.getFieldTitleMap(schemas);
     const metadata = JSON.parse(submission.metadata);

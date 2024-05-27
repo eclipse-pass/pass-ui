@@ -7,11 +7,13 @@ import { inject as service } from '@ember/service';
 
 export default class SubmissionsNewReview extends Controller {
   @service router;
+  @service workflow;
 
   @alias('model.newSubmission') submission;
-  @alias('model.files') files;
   @alias('model.publication') publication;
   @alias('model.submissionEvents') submissionEvents;
+
+  @tracked files = this.workflow.filesTemp;
 
   @controller('submissions.new') parent;
 

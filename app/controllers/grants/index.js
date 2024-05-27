@@ -201,7 +201,7 @@ export default class GrantsIndexController extends Controller {
           submission.grants.forEach((grant) => {
             let match = results.grantMap.find((res) => res.grant.id === grant.id);
             if (match) {
-              match.submissions.pushObject(submission);
+              match.submissions.push(submission);
             }
           });
         });

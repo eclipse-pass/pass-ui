@@ -10,7 +10,8 @@ module('Integration | Component | workflow repositories', (hooks) => {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.submission = { id: '0', repositories: [] };
+    this.storeService = this.owner.lookup('service:store');
+    this.submission = this.storeService.createRecord('submission', { repositories: [] });
     this.requiredRepositories = [];
     this.optionalRepositories = [];
     this.choiceRepositories = [];
@@ -33,7 +34,9 @@ module('Integration | Component | workflow repositories', (hooks) => {
   });
 
   test('required repositories should display with no checkboxes', async function (assert) {
-    this.requiredRepositories = [{ repository: { name: 'Moo-pository 1' } }];
+    this.requiredRepositories = [
+      { repository: this.storeService.createRecord('repository', { name: 'Moo-pository 1' }) },
+    ];
 
     await render(hbs`
       <WorkflowRepositories
@@ -80,8 +83,8 @@ module('Integration | Component | workflow repositories', (hooks) => {
   test('User cannot deselect all choice repos', async function (assert) {
     this.choiceRepositories = [
       [
-        { repository: EmberObject.create({ name: 'Moo-pository 1', _selected: true }) },
-        { repository: EmberObject.create({ name: 'Moo-pository 2', _selected: false }) },
+        { repository: this.storeService.createRecord('repository', { name: 'Moo-pository 1', _selected: true }) },
+        { repository: this.storeService.createRecord('repository', { name: 'Moo-pository 2', _selected: false }) },
       ],
     ];
 
@@ -111,12 +114,16 @@ module('Integration | Component | workflow repositories', (hooks) => {
   });
 
   test('Selecting an optional repo adds it to submission', async function (assert) {
-    this.requiredRepositories = [{ repository: { name: 'Moo-pository XYZ' } }];
-    this.optionalRepositories = [{ selected: false, repository: { name: 'Moo-pository 00' } }];
+    this.requiredRepositories = [
+      { repository: this.storeService.createRecord('repository', { name: 'Moo-pository XYZ' }) },
+    ];
+    this.optionalRepositories = [
+      { repository: this.storeService.createRecord('repository', { name: 'Moo-pository 00', selected: false }) },
+    ];
     this.choiceRepositories = [
       [
-        { repository: EmberObject.create({ name: 'Moo-pository 1', _selected: true }) },
-        { repository: EmberObject.create({ name: 'Moo-pository 2', _selected: false }) },
+        { repository: this.storeService.createRecord('repository', { name: 'Moo-pository 1', _selected: true }) },
+        { repository: this.storeService.createRecord('repository', { name: 'Moo-pository 2', _selected: false }) },
       ],
     ];
 
@@ -129,30 +136,35 @@ module('Integration | Component | workflow repositories', (hooks) => {
       />
     `);
 
-    const repos = this.submission.repositories;
-    assert.strictEqual(repos.length, 2, 'unexpected number of repositories attached to the submission');
-    assert.ok(repos.isAny('name', 'Moo-pository XYZ'));
+    let repos = this.submission.repositories.slice();
+    assert.strictEqual(repos.length, 2, 'expected number of repositories attached to the submission');
+    assert.ok(repos.some((repo) => repo.name === 'Moo-pository XYZ'));
 
     const checkboxes = this.element.querySelectorAll('input[type="checkbox"]');
-    assert.strictEqual(checkboxes.length, 3, 'Unexpected number of checkboxes found');
+    assert.strictEqual(checkboxes.length, 3, 'expected number of checkboxes found');
 
     assert.dom(checkboxes[2]).isNotChecked();
 
     await click(checkboxes[2]);
 
-    assert.strictEqual(repos.length, 3, 'unexpected number of repositories attached to submission');
-    assert.ok(repos.isAny('name', 'Moo-pository 00'));
+    repos = this.submission.repositories.slice();
+    assert.strictEqual(repos.length, 3, 'expected number of repositories attached to submission');
+    assert.ok(repos.some((repo) => repo.name === 'Moo-pository 00'));
     assert.notOk(repos.includes(undefined), 'there should be no "undefined" entries');
     assert.dom(checkboxes[2]).isChecked();
   });
 
   test('Unselecting optional repo removes it from submission', async function (assert) {
-    this.requiredRepositories = [{ repository: { name: 'Moo-pository XYZ' } }];
-    this.optionalRepositories = [{ repository: { name: 'Moo-pository 00', _selected: true } }];
+    this.requiredRepositories = [
+      { repository: this.storeService.createRecord('repository', { name: 'Moo-pository XYZ' }) },
+    ];
+    this.optionalRepositories = [
+      { repository: this.storeService.createRecord('repository', { name: 'Moo-pository 00', _selected: true }) },
+    ];
     this.choiceRepositories = [
       [
-        { repository: { name: 'Moo-pository 1', _selected: true } },
-        { repository: { name: 'Moo-pository 2', _selected: false } },
+        { repository: this.storeService.createRecord('repository', { name: 'Moo-pository 1', _selected: true }) },
+        { repository: this.storeService.createRecord('repository', { name: 'Moo-pository 2', _selected: false }) },
       ],
     ];
 
@@ -165,20 +177,25 @@ module('Integration | Component | workflow repositories', (hooks) => {
       />
     `);
 
-    const repos = this.submission.repositories;
+    let repos = this.submission.repositories.slice();
     assert.strictEqual(repos.length, 3, 'unexpected number of repositories attached to submission');
     assert.notOk(repos.includes(undefined), 'should be no undefined items');
-    assert.ok(repos.isAny('name', 'Moo-pository 00'), 'The optional repo should be present');
+    assert.ok(
+      repos.some((repo) => repo.name === 'Moo-pository 00'),
+      'The optional repo should be present'
+    );
 
     const checkboxes = this.element.querySelectorAll('input[type="checkbox"]');
-    assert.strictEqual(checkboxes.length, 3, 'unexpected number of checkboxes found');
+    assert.strictEqual(checkboxes.length, 3, 'expected number of checkboxes found');
 
     assert.dom(checkboxes[2]).isChecked();
 
     await click(checkboxes[2]);
 
-    assert.strictEqual(repos.length, 2, 'unexpected number of repositories attached to the submission');
-    assert.notOk(repos.isAny('name', 'Moo-pository 00'));
+    repos = this.submission.repositories.slice();
+    assert.strictEqual(repos.length, 2, 'expected number of repositories attached to the submission');
+
+    assert.notOk(repos.some((repo) => repo.name === 'Moo-pository 00'));
     assert.dom(checkboxes[2]).isNotChecked();
   });
 
@@ -230,9 +247,24 @@ module('Integration | Component | workflow repositories', (hooks) => {
 
   test('Weblink repos are broken out into separate section', async function (assert) {
     this.requiredRepositories = [
-      { repository: { id: 0, name: 'Required repo 1', type: 'full', _isWebLink: false } },
-      { repository: { id: 1, name: 'Required repo 2', type: 'full', _isWebLink: false } },
-      { repository: { id: 2, name: 'Required web-link repo 3', type: 'web-link', _isWebLink: true } },
+      {
+        repository: this.storeService.createRecord('repository', {
+          name: 'Required repo 1',
+          integrationType: 'full',
+        }),
+      },
+      {
+        repository: this.storeService.createRecord('repository', {
+          name: 'Required repo 2',
+          integrationType: 'full',
+        }),
+      },
+      {
+        repository: this.storeService.createRecord('repository', {
+          name: 'Required web-link repo 3',
+          integrationType: 'web-link',
+        }),
+      },
     ];
 
     await render(hbs`

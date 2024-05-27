@@ -63,23 +63,20 @@
               <td>
                 <ul class="list-unstyled" data-test-workflow-review-grant-list>
                   {{#each @submission.grants as |grant|}}
-                    <li>
+                    <li class="grant-item">
                       <b>
                         {{grant.awardNumber}}
                       </b>
                       :
                       {{grant.projectName}}
                     </li>
-                    <li>
+                    <li class="grant-item">
                       <b>
                         Funder
                       </b>
                       :
                       {{grant.primaryFunder.name}}
                     </li>
-                    {{#if (not-eq grant @submission.grants.lastObject)}}
-                      <hr />
-                    {{/if}}
                   {{/each}}
                 </ul>
               </td>

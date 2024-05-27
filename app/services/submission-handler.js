@@ -29,10 +29,10 @@ export default class SubmissionHandlerService extends Service {
       const primaryRepos = grant.get('primaryFunder.policy.repositories');
 
       if (isArray(directRepos)) {
-        result.pushObjects(directRepos.toArray());
+        result.push(directRepos.slice());
       }
       if (isArray(primaryRepos)) {
-        result.pushObjects(primaryRepos.toArray());
+        result.push(primaryRepos.slice());
       }
     });
 
