@@ -12,18 +12,18 @@ export default class SubmissionsRepoidCell extends Component {
   jscholarshipCheckString = '/handle/';
 
   @action
-  setUpRepoidCell() {
-    const publicationId = get(this, 'args.record.publication.id');
-    if (!publicationId) {
+  async setUpRepoidCell() {
+    const publication = await this.args.record.publication;
+    if (!publication?.id) {
       if (!(get(this, 'isDestroyed') || get(this, 'isDestroying'))) {
-        set(this, 'repoCopies', []);
+        this.repoCopies = [];
         return;
       }
     }
 
     const query = {
       filter: {
-        repositoryCopy: `publication.id==${publicationId}`,
+        repositoryCopy: `publication.id==${publication.id}`,
       },
     };
 

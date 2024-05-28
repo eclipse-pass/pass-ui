@@ -20,10 +20,11 @@ export default class SubmissionsNew extends Controller {
   @tracked user = this.currentUser.user;
   @tracked submitter = this.model.newSubmission.submitter;
   @tracked covid = null;
-  @tracked filesTemp = get(this, 'workflow.filesTemp');
+  @tracked filesTemp = this.workflow.filesTemp;
 
-  get userIsSubmitter() {
-    return get(this, 'model.newSubmission.submitter.id') === this.user.id;
+  async userIsSubmitter() {
+    const submitter = await this.model.newSubmission.submitter;
+    return submitter?.id === this.user.id;
   }
 
   /**
@@ -94,25 +95,26 @@ export default class SubmissionsNew extends Controller {
         'warning'
       );
     } else {
-      let sub = get(this, 'model.newSubmission');
-      let pub = get(this, 'model.publication');
+      let sub = this.model.newSubmission;
+      let pub = this.model.publication;
       let files = this.filesTemp;
       let comment = this.comment;
 
       this.set('uploading', true);
       this.set('waitingMessage', 'Saving your submission');
 
-      await get(this, 'submissionHandler.submit')
+      await this.submissionHandler.submit
         .perform(sub, pub, files, comment)
         .then(() => {
           set(this, 'uploading', false);
           set(this, 'comment', '');
           set(this, 'workflow.filesTemp', []);
-          this.router.transitionTo('thanks', { queryParams: { submission: get(sub, 'id') } });
+          this.router.transitionTo('thanks', { queryParams: { submission: sub.id } });
         })
         .catch((error) => {
           this.set('uploading', false);
 
+          console.error(error.stack);
           this.flashMessages.danger(`Submission failed: ${error.message}`);
 
           const elements = document.querySelectorAll('.block-user-input');
@@ -125,7 +127,7 @@ export default class SubmissionsNew extends Controller {
 
   @action
   async abort() {
-    const submission = get(this, 'model.newSubmission');
+    const submission = this.model.newSubmission;
     const ignoreList = this.searchHelper;
 
     let result = await swal({
@@ -140,7 +142,7 @@ export default class SubmissionsNew extends Controller {
       ignoreList.clearIgnore();
       if (submission.id) {
         await this.submissionHandler.deleteSubmission(submission);
-        ignoreList.ignore(get(submission, 'id'));
+        ignoreList.ignore(submission.id);
       }
       this.router.transitionTo('submissions');
     }

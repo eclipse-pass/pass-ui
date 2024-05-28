@@ -184,11 +184,16 @@ module('Unit | Controller | submissions/new', (hooks) => {
       },
     });
 
+    let file = EmberObject.create({
+      fileRole: 'manuscript',
+    });
+
     let comment = 'moo';
 
     let model = EmberObject.create({
       newSubmission: submission,
       publication,
+      files: [file],
     });
 
     assert.expect(11);
@@ -271,11 +276,16 @@ module('Unit | Controller | submissions/new', (hooks) => {
       },
     });
 
+    let file = EmberObject.create({
+      fileRole: 'manuscript',
+    });
+
     let comment = 'moo';
 
     let model = EmberObject.create({
       newSubmission: submission,
       publication,
+      files: [file],
     });
 
     assert.expect(13);

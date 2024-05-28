@@ -91,7 +91,8 @@ export default class WorkflowGrants extends Component {
   setup = function* () {
     this.contactUrl = this.appStaticConfig?.config?.branding?.pages?.contactUrl;
 
-    if (get(this, 'args.submission.submitter.id')) {
+    const submitter = yield this.args.submission.submitter;
+    if (submitter?.id) {
       yield this.updateGrants.perform();
     }
 
@@ -109,7 +110,7 @@ export default class WorkflowGrants extends Component {
   updateGrants = task(async () => {
     let info = {};
 
-    const userId = get(this, 'args.submission.submitter.id');
+    const userId = await this.args.submission.submitter.id;
     // TODO: Ignore date filter for now ( >= 2011-01-01 )
     const grantQuery = {
       filter: {
@@ -125,8 +126,8 @@ export default class WorkflowGrants extends Component {
 
     this.submitterGrants = results;
     // TODO: How do we get pagination to work with store.query like this?
-    set(this, 'totalGrants', info.total);
-    set(this, 'pageCount', Math.ceil(info.total / this.pageSize));
+    this.totalGrants = info.total;
+    this.pageCount = Math.ceil(info.total / this.pageSize);
   });
 
   /**

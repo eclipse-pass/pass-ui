@@ -55,9 +55,9 @@ export default class WorkflowRepositories extends Component {
    * are valid
    */
   @action
-  setupRepos() {
+  async setupRepos() {
     this.addedRepos = this.getAddedRepositories();
-    const currentRepos = this.args.submission.repositories.slice();
+    const currentRepos = await this.args.submission.repositories;
 
     const opt = this.args.optionalRepositories;
     const req = this.args.requiredRepositories;
@@ -206,8 +206,8 @@ export default class WorkflowRepositories extends Component {
    * @param {Repository} repository
    * @param {boolean} setMaxStep should we modify 'maxStep' in the workflow?
    */
-  addRepository(repository, setMaxStep) {
-    const repos = this.args.submission.repositories.slice();
+  async addRepository(repository, setMaxStep) {
+    const repos = await this.args.submission.repositories;
 
     if (!repos.includes(repository)) {
       this.args.submission.repositories = [repository, ...repos];
@@ -223,8 +223,8 @@ export default class WorkflowRepositories extends Component {
    * @param {Repository} repository
    * @param {boolean} setMaxStep should we modify 'maxStep' in the workflow?
    */
-  removeRepository(repository, setMaxStep) {
-    const repositories = this.args.submission.repositories.slice();
+  async removeRepository(repository, setMaxStep) {
+    const repositories = await this.args.submission.repositories;
     this.args.submission.repositories = repositories.filter((r) => r.name !== repository.name);
     if (setMaxStep) {
       this.workflow.setMaxStep(4);

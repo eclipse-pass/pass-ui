@@ -33,9 +33,8 @@ export default class SubmissionsNewRepositories extends Controller {
    * Do some light processing on the repository containers, such as adding the names of funders
    * that both are associated with the submission AND associated with each repository.
    */
-  @computed('model.requiredRepositories')
   get requiredRepositories() {
-    let req = get(this, 'model.requiredRepositories');
+    let req = this.model.requiredRepositories;
     const submission = this.submission;
 
     return req.map((repo) => ({
@@ -121,8 +120,10 @@ export default class SubmissionsNewRepositories extends Controller {
     this.parent.updateCovidSubmission();
   }
 
-  _getFunderNamesForRepo(repo, submission) {
-    const funders = get(submission, 'grants').map((grant) => get(grant, 'primaryFunder'));
+  async _getFunderNamesForRepo(repo, submission) {
+    const grants = await submission.grants;
+
+    const funders = grants.map((grant) => get(grant, 'primaryFunder'));
     const fundersWithRepos = funders.filter((funder) => get(funder, 'policy.repositories'));
     // List of funders that include this repository
     const fundersWithOurRepo = fundersWithRepos.filter(

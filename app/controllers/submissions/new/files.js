@@ -73,12 +73,13 @@ export default class SubmissionsNewFiles extends Controller {
   async validateAndLoadTab(gotoTab) {
     let needValidation = this.needValidation;
     if (needValidation) {
-      let files = this.files;
       let manuscriptFiles = [...this.newFiles, ...this.model.files.slice()].filter(
         (file) => file && get(file, 'fileRole') === 'manuscript'
       );
 
-      if (manuscriptFiles.length == 0 && !this.parent.userIsSubmitter) {
+      const submitter = await this.parent.userIsSubmitter();
+
+      if (manuscriptFiles.length == 0 && !submitter) {
         let result = await swal({
           title: 'No manuscript present',
           text: 'If no manuscript is attached, the designated submitter will need to add one before final submission',

@@ -78,11 +78,12 @@ export default class WorkflowMetadata extends Component {
     // 10.4137/CMC.S38446
     // 10.1039/c7an01256j
     if (!this.schemas) {
-      const repos = this.args.submission.repositories.map((repo) => repo.id);
+      const repositories = yield this.args.submission.repositories;
+      const repoIds = repositories.map((repo) => repo.id);
 
       // Load schemas by calling the Schema service
       try {
-        const schemas = yield this.metadataSchema.getMetadataSchemas(repos);
+        const schemas = yield this.metadataSchema.getMetadataSchemas(repoIds);
 
         const requiresJournal =
           schemas.findIndex((schema) => 'required' in schema && schema.required.includes('journal-title')) != -1;

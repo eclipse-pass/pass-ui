@@ -18,7 +18,7 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
     this.owner.register(
       'controller:submissions.new',
       EmberObject.extend({
-        userIsSubmitter: true,
+        userIsSubmitter: () => true,
       })
     );
     this.owner.register(
@@ -51,7 +51,7 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
     this.owner.register(
       'controller:submissions.new',
       EmberObject.extend({
-        userIsSubmitter: false,
+        userIsSubmitter: () => false,
       })
     );
     this.owner.register(
@@ -100,7 +100,7 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
     this.owner.register(
       'controller:submissions.new',
       EmberObject.extend({
-        userIsSubmitter: false,
+        userIsSubmitter: () => false,
       })
     );
     this.owner.register(
@@ -133,7 +133,7 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
     this.owner.register(
       'controller:submissions.new',
       EmberObject.extend({
-        userIsSubmitter: false,
+        userIsSubmitter: () => false,
       })
     );
     this.owner.register(

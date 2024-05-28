@@ -15,7 +15,7 @@ export default class RepositoriesRoute extends CheckSessionRoute {
     const parentModel = this.modelFor('submissions.new');
     const submission = parentModel.newSubmission;
 
-    const repoPromise = await get(this, 'policyService.getRepositories').perform(submission);
+    const repoPromise = await this.policyService.getRepositories.perform(submission);
 
     return hash({
       newSubmission: submission,

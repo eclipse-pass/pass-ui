@@ -90,10 +90,11 @@ export default class SubmissionsDetail extends Controller {
   /**
    * Get enough information about 'web-link' repositories to display to a user.
    */
-  get externalSubmissionsMetadata() {
+  async externalSubmissionsMetadata() {
     let result = [];
 
-    this.repositories
+    const repos = await this.model.sub.repositories;
+    repos
       .filter((repo) => repo._isWebLink)
       .forEach((repo) => {
         result.push({

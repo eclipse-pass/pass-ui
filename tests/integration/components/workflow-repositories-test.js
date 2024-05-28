@@ -136,7 +136,7 @@ module('Integration | Component | workflow repositories', (hooks) => {
       />
     `);
 
-    let repos = this.submission.repositories.slice();
+    let repos = await this.submission.repositories;
     assert.strictEqual(repos.length, 2, 'expected number of repositories attached to the submission');
     assert.ok(repos.some((repo) => repo.name === 'Moo-pository XYZ'));
 
@@ -147,7 +147,7 @@ module('Integration | Component | workflow repositories', (hooks) => {
 
     await click(checkboxes[2]);
 
-    repos = this.submission.repositories.slice();
+    repos = await this.submission.repositories;
     assert.strictEqual(repos.length, 3, 'expected number of repositories attached to submission');
     assert.ok(repos.some((repo) => repo.name === 'Moo-pository 00'));
     assert.notOk(repos.includes(undefined), 'there should be no "undefined" entries');
@@ -177,7 +177,7 @@ module('Integration | Component | workflow repositories', (hooks) => {
       />
     `);
 
-    let repos = this.submission.repositories.slice();
+    let repos = await this.submission.repositories;
     assert.strictEqual(repos.length, 3, 'unexpected number of repositories attached to submission');
     assert.notOk(repos.includes(undefined), 'should be no undefined items');
     assert.ok(
@@ -192,7 +192,7 @@ module('Integration | Component | workflow repositories', (hooks) => {
 
     await click(checkboxes[2]);
 
-    repos = this.submission.repositories.slice();
+    repos = await this.submission.repositories;
     assert.strictEqual(repos.length, 2, 'expected number of repositories attached to the submission');
 
     assert.notOk(repos.some((repo) => repo.name === 'Moo-pository 00'));
