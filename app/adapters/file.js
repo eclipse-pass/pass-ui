@@ -22,6 +22,10 @@ export default class FileAdapter extends ApplicationAdapter {
     }
     return fetch(url, {
       method: 'DELETE',
+      credentials: 'same-origin',
+      headers: {
+        'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN\=([^;]*)/)['1'],
+      },
     }).then((response) => {
       if (!response.ok) {
         throw new Error('Delete request to the file service failed');
