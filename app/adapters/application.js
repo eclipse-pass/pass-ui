@@ -2,7 +2,6 @@ import JSONAPIAdapter from '@ember-data/adapter/json-api';
 import { camelize } from '@ember/string';
 import ENV from 'pass-ui/config/environment';
 import { inject as service } from '@ember/service';
-import { get } from '@ember/object';
 
 /**
  * PASS specific extensions for Ember Data's JSON:API adapter
