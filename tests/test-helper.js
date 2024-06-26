@@ -15,3 +15,6 @@ setupSinon();
 setup(QUnit.assert);
 
 start();
+
+// Set a fake CSRF token
+document.cookie = 'XSRF-TOKEN=moo';
