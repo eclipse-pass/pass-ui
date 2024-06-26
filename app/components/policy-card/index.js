@@ -91,18 +91,19 @@ export default class PolicyCard extends Component {
   async _addEffectivePolicy(policy) {
     const effectivePolicies = await this.args.submission.effectivePolicies;
     // Only add the policy if it is not already in the list of effective policies
-    if (!this._hasEffectivePolicy(policy.id)) {
+    const hasEffectivePolicy = await this._hasEffectivePolicy(policy.id);
+    if (!hasEffectivePolicy) {
       this.args.submission.effectivePolicies = [...effectivePolicies, policy];
     }
   }
 
   async _removeEffectivePolicy(policy) {
     let effectivePolicies = await this.args.submission.effectivePolicies;
-    this.args.submission.effectivePolicies = effectivePolicies.filter((p) => p.id === policy.id);
+    this.args.submission.effectivePolicies = effectivePolicies.filter((p) => p.id !== policy.id);
   }
 
   async _hasEffectivePolicy(policyId) {
     const effectivePolicies = await this.args.submission.effectivePolicies;
-    return effectivePolicies && effectivePolicies.some((policy) => policy.id === policyId);
+    return !!effectivePolicies && effectivePolicies.some((policy) => policy.id === policyId);
   }
 }

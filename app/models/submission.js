@@ -21,11 +21,11 @@ export default class SubmissionModel extends Model {
   @attr('number') version;
 
   @belongsTo('user', { async: false, inverse: null }) submitter;
-  @belongsTo('publication', { async: false, inverse: null }) publication;
+  @belongsTo('publication', { async: true, inverse: null }) publication;
 
   @hasMany('user', { async: false, inverse: null }) preparers;
   @hasMany('repository', { async: false, inverse: null }) repositories;
-  @hasMany('policy', { async: false, inverse: null }) effectivePolicies;
+  @hasMany('policy', { async: true, inverse: null }) effectivePolicies;
   // not on this model on API
   @hasMany('submissionEvent', {
     async: true,

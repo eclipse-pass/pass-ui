@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-get */
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
-import { action, get, set } from '@ember/object';
+import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 
 /**
@@ -59,9 +59,9 @@ export default class WorkflowRepositories extends Component {
     this.addedRepos = this.getAddedRepositories();
     const currentRepos = await this.args.submission.repositories;
 
-    const opt = this.args.optionalRepositories;
-    const req = this.args.requiredRepositories;
-    const choice = this.args.choiceRepositories;
+    const opt = await this.args.optionalRepositories;
+    const req = await this.args.requiredRepositories;
+    const choice = await this.args.choiceRepositories;
 
     if (currentRepos && currentRepos.length > 0) {
       /**

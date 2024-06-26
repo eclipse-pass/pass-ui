@@ -96,7 +96,7 @@ module('Integration | Component | policy card', (hooks) => {
       assert.dom('[data-test-workflow-policies-radio-no-direct-deposit]').exists();
       assert.dom('[data-test-workflow-policies-radio-direct-deposit]').exists();
 
-      const effectivePolicies = this.submission.effectivePolicies.slice();
+      const effectivePolicies = await this.submission.effectivePolicies;
 
       assert.strictEqual(effectivePolicies.length, 1, 'Should be ONE effective policy on submission');
       assert.ok(effectivePolicies.some((p) => p.title === 'Moo title'));
