@@ -66,7 +66,7 @@ export default class SubmissionsIndex extends Controller {
           propertyName: 'submittedDate',
           title: 'Submitted Date',
           className: 'date-column',
-          component: 'date-cell',
+          component: 'dateCell',
         },
         {
           propertyName: 'submissionStatus',
@@ -107,7 +107,7 @@ export default class SubmissionsIndex extends Controller {
           propertyName: 'submittedDate',
           title: 'Submitted Date',
           className: 'date-column',
-          component: 'date-cell',
+          component: 'dateCell',
         },
         {
           propertyName: 'submissionStatus',
