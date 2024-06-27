@@ -5,5 +5,5 @@ export default class FunderModel extends Model {
   @attr('string') url;
   @attr('string') localKey;
 
-  @belongsTo('policy') policy;
+  @belongsTo('policy', { async: false, inverse: null }) policy;
 }

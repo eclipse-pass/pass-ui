@@ -8,7 +8,7 @@ export default class FileModel extends Model {
   @attr('string') uri;
   @attr('string') mimeType;
 
-  @belongsTo('submission') submission;
+  @belongsTo('submission', { async: false, inverse: null }) submission;
 
   // not represented on backend
   // @attr('string') _file;

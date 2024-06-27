@@ -5,8 +5,8 @@ export default class RepositoryCopyModel extends Model {
   @attr('string') accessUrl;
   @attr('string') copyStatus;
 
-  @belongsTo('publication') publication;
-  @belongsTo('repository') repository;
+  @belongsTo('publication', { async: false, inverse: null }) publication;
+  @belongsTo('repository', { async: false, inverse: null }) repository;
 }
 
 export const CopyStatus = {

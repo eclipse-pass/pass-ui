@@ -5,7 +5,7 @@ export default class PolicyModel extends Model {
   @attr('string') description;
   @attr('string') policyUrl;
 
-  @hasMany('repository') repositories;
+  @hasMany('repository', { async: false, inverse: null }) repositories;
   @attr('string') institution;
 
   @attr('string') _type;
