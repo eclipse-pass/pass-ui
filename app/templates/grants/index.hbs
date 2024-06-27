@@ -20,6 +20,13 @@
       <ModelsTableServerPaginated
         @data={{this.queuedModel.grantMap}}
         @columns={{this.columns}}
+        @columnComponents={{hash
+          grantLinkCell=(component "grant-link-cell")
+          piListCell=(component "pi-list-cell")
+          grantSubmissionCell=(component "grant-submission-cell")
+          grantActionCell=(component "grant-action-cell")
+          dateCell=(component "date-cell")
+        }}
         @themeInstance={{this.themeInstance}}
         @showColumnsDropdown={{false}}
         @useFilteringByColumns={{false}}

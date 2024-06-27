@@ -25,7 +25,7 @@ export default class GrantsIndexController extends Controller {
       propertyName: 'grant.projectName',
       title: 'Project Name',
       className: 'projectname-column',
-      component: 'grant-link-cell',
+      component: 'grantLinkCell',
     },
     {
       propertyName: 'grant.primaryFunder.name',
@@ -39,26 +39,26 @@ export default class GrantsIndexController extends Controller {
       title: 'Award Number',
       className: 'awardnum-column',
       disableFiltering: true,
-      component: 'grant-link-cell',
+      component: 'grantLinkCell',
     },
     {
       title: 'PI',
       propertyName: 'grant.pi',
-      component: 'pi-list-cell',
+      component: 'piListCell',
     },
     {
       propertyName: 'grant.startDate',
       title: 'Start',
       disableFiltering: true,
       className: 'date-column',
-      component: 'date-cell',
+      component: 'dateCell',
     },
     {
       propertyName: 'grant.endDate',
       title: 'End',
       disableFiltering: true,
       className: 'date-column',
-      component: 'date-cell',
+      component: 'dateCell',
     },
     {
       propertyName: 'grant.awardStatus',
@@ -70,7 +70,7 @@ export default class GrantsIndexController extends Controller {
       propertyName: 'submissions.length',
       title: 'Submissions count',
       disableFiltering: true,
-      component: 'grant-link-cell',
+      component: 'grantLinkCell',
     },
   ];
 
@@ -79,7 +79,7 @@ export default class GrantsIndexController extends Controller {
       propertyName: 'grant.projectName',
       title: 'Project Name',
       className: 'projectname-column',
-      component: 'grant-link-cell',
+      component: 'grantLinkCell',
     },
     {
       propertyName: 'grant.primaryFunder.name',
@@ -93,20 +93,20 @@ export default class GrantsIndexController extends Controller {
       title: 'Award #',
       className: 'awardnum-column',
       disableFiltering: true,
-      component: 'grant-link-cell',
+      component: 'grantLinkCell',
     },
     {
       propertyName: 'grant.endDate',
       title: 'End Date',
       disableFiltering: true,
       className: 'date-column',
-      component: 'date-cell',
+      component: 'dateCell',
     },
     {
       propertyName: 'submissions.length',
       title: '# of Submissions',
       disableFiltering: true,
-      component: 'grant-submission-cell',
+      component: 'grantSubmissionCell',
     },
     {
       propertyName: 'grant.awardStatus',
@@ -115,7 +115,7 @@ export default class GrantsIndexController extends Controller {
     },
     {
       title: 'Actions',
-      component: 'grant-action-cell',
+      component: 'grantActionCell',
     },
   ];
 
