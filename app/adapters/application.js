@@ -11,9 +11,12 @@ export default class ApplicationAdapter extends JSONAPIAdapter {
 
   namespace = ENV.passApi.namespace;
 
-  headers = {
-    withCredentials: true,
-  };
+  get headers() {
+    return {
+      withCredentials: true,
+      'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN\=([^;]*)/)['1'],
+    };
+  }
 
   // Camel case instead of pluralize model types for our API
   pathForType(type) {

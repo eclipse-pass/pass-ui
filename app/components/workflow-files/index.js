@@ -97,7 +97,12 @@ export default class WorkflowFiles extends Component {
   @action
   async uploadFile(FileUpload) {
     try {
-      const response = await FileUpload.upload(ENV.fileServicePath);
+      const response = await FileUpload.upload(ENV.fileServicePath, {
+        withCredentials: true,
+        headers: {
+          'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN\=([^;]*)/)['1'],
+        },
+      });
 
       const file = await response.json();
 
