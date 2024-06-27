@@ -11,7 +11,7 @@ export default function (config) {
 
   let finalConfig = {
     ...config,
-    models: { ...discoverEmberDataModels(), ...config.models },
+    models: { ...discoverEmberDataModels(config.store), ...config.models },
     serializers: {
       application: JSONAPISerializer.extend({
         keyForAttribute: (attr) => (attr ? camelize(attr) : null),
