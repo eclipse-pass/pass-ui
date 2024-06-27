@@ -51,14 +51,14 @@ export default class GrantsIndexController extends Controller {
       title: 'Start',
       disableFiltering: true,
       className: 'date-column',
-      component: 'date-cell',
+      component: 'dateCell',
     },
     {
       propertyName: 'grant.endDate',
       title: 'End',
       disableFiltering: true,
       className: 'date-column',
-      component: 'date-cell',
+      component: 'dateCell',
     },
     {
       propertyName: 'grant.awardStatus',
@@ -100,7 +100,7 @@ export default class GrantsIndexController extends Controller {
       title: 'End Date',
       disableFiltering: true,
       className: 'date-column',
-      component: 'date-cell',
+      component: 'dateCell',
     },
     {
       propertyName: 'submissions.length',
