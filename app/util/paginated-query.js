@@ -60,6 +60,7 @@ export function grantDetailsQuery(params, grantId, user) {
     filter: {
       submission: `grants.id==${grantId};submissionStatus=out=cancelled;(${userMatch})`,
     },
+    include: 'publication,repositories',
   };
 
   if (params.filter) {
