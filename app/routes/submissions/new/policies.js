@@ -30,15 +30,6 @@ export default class PoliciesRoute extends CheckSessionRoute {
   async model() {
     const parentModel = this.modelFor('submissions.new');
     const submission = parentModel.newSubmission;
-
-    // Weed out duplicates, while also resolving Policy objects
-    // let policies = Ember.A();
-    // results.forEach(async (res) => {
-    //   if (!policies.isAny('id', res.id)) {
-    //     policies.push(res);
-    //   }
-    // });
-
     /**
      * Remove current effectivePolicies from the submission because
      * it will be recalculated and added back in this step.
@@ -57,7 +48,7 @@ export default class PoliciesRoute extends CheckSessionRoute {
   }
 
   clearEffectivePolicies(submission) {
-    submission.get('effectivePolicies').clear();
+    submission.effectivePolicies = [];
   }
 
   @action

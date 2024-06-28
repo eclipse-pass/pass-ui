@@ -67,6 +67,28 @@ module('Integration | Component | policy card', (hooks) => {
     });
 
     test('PMC journal displays user input', async function (assert) {
+      const repositoryFactory = this.server.create('repository');
+      const policyFactory = this.server.create('policy', {
+        repositories: [repositoryFactory],
+      });
+      const journalFactory = this.server.create('journal', { pmcParticipation: 'B' });
+
+      const repository = this.store.createRecord('repository', repositoryFactory.attrs);
+      const policy = this.store.createRecord('policy', {
+        ...policyFactory.attrs,
+        description: 'This is a moo-scription',
+        title: 'Moo title',
+        repositories: [repository],
+      });
+      const journal = this.store.createRecord('journal', journalFactory.attrs);
+      const submissionAttrs = this.server.create('submission').attrs;
+      const submission = this.store.createRecord('submission', { effectivePolicies: [policy], ...submissionAttrs });
+
+      this.set('submission', submission);
+      this.set('policy', policy);
+      this.set('journal', journal);
+      this.set('repository', repository);
+
       await render(
         hbs`<PolicyCard @policy={{this.policy}} @journal={{this.journal}} @submission={{this.submission}} />`
       );
@@ -74,10 +96,10 @@ module('Integration | Component | policy card', (hooks) => {
       assert.dom('[data-test-workflow-policies-radio-no-direct-deposit]').exists();
       assert.dom('[data-test-workflow-policies-radio-direct-deposit]').exists();
 
-      const effectivePolicies = this.submission.effectivePolicies;
+      const effectivePolicies = await this.submission.effectivePolicies;
 
       assert.strictEqual(effectivePolicies.length, 1, 'Should be ONE effective policy on submission');
-      assert.ok(effectivePolicies.isAny('title', 'Moo title'));
+      assert.ok(effectivePolicies.some((p) => p.title === 'Moo title'));
     });
 
     test('PMC non-type A can be removed', async function (assert) {
@@ -91,7 +113,7 @@ module('Integration | Component | policy card', (hooks) => {
       // Select option to remove this policy
       await click('[data-test-workflow-policies-radio-direct-deposit]');
 
-      const effectivePolicies = this.submission.effectivePolicies;
+      const effectivePolicies = await this.submission.effectivePolicies;
       assert.strictEqual(effectivePolicies.length, 0, 'Should be ZERO effective policies');
     });
 

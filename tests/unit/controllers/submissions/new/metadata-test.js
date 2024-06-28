@@ -26,7 +26,8 @@ module('Unit | Controller | submissions/new/metadata', (hooks) => {
     });
 
     controller.set('model', model);
-    controller.transitionToRoute = function (route) {
+    const routerService = this.owner.lookup('service:router');
+    routerService.transitionTo = function (route) {
       assert.ok(subSaved, 'submission was not saved');
       assert.strictEqual(route, 'submissions.new.repositories');
     };
@@ -47,7 +48,9 @@ module('Unit | Controller | submissions/new/metadata', (hooks) => {
     });
 
     controller.set('model', model);
-    controller.transitionToRoute = function (route) {
+
+    const routerService = this.owner.lookup('service:router');
+    routerService.transitionTo = function (route) {
       assert.ok(subSaved, 'submission was not saved');
       assert.strictEqual(route, 'submissions.new.files');
     };

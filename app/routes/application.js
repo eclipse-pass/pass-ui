@@ -5,6 +5,7 @@ import { action } from '@ember/object';
 
 export default class ApplicationRoute extends CheckSessionRoute {
   @service('app-static-config') staticConfig;
+  @service router;
 
   queryParams = ['userToken'];
 
@@ -16,7 +17,7 @@ export default class ApplicationRoute extends CheckSessionRoute {
 
   @action
   transitionTo(route, model) {
-    this.transitionTo(route, model);
+    this.router.transitionTo(route, model);
   }
 
   /**

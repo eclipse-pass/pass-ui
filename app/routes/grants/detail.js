@@ -28,7 +28,7 @@ export default class DetailRoute extends CheckSessionRoute {
       return;
     }
 
-    const grant = this.store.findRecord('grant', params.grant_id);
+    const grant = this.store.findRecord('grant', params.grant_id, { include: 'pi,coPis' });
 
     const submissionQuery = grantDetailsQuery(params, params.grant_id, this.currentUser.user);
     const submissions = this.store.query('submission', submissionQuery).then((data) => ({ data, meta: data.meta }));

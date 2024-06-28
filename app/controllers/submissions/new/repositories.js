@@ -1,12 +1,13 @@
 /* eslint-disable ember/no-computed-properties-in-native-classes, ember/no-get, ember/require-computed-property-dependencies */
 import Controller, { inject as controller } from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
-import { action, computed, get, set } from '@ember/object';
+import { action, get, set } from '@ember/object';
 import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 
 export default class SubmissionsNewRepositories extends Controller {
   @service workflow;
+  @service router;
 
   @alias('model.newSubmission') submission;
   @alias('model.repositories') repositories;
@@ -18,54 +19,12 @@ export default class SubmissionsNewRepositories extends Controller {
   @tracked maxStep = this.workflow.maxStep;
   @tracked loadingNext = false;
 
-  @computed('workflow.maxStep')
   get nextTabIsActive() {
     return get(this, 'workflow').getMaxStep() > 6;
   }
 
-  @computed('nextTabIsActive', 'loadingNext')
   get needValidation() {
     return this.nextTabIsActive || this.loadingNext;
-  }
-
-  /*
-   * Do some light processing on the repository containers, such as adding the names of funders
-   * that both are associated with the submission AND associated with each repository.
-   */
-  @computed('model.requiredRepositories')
-  get requiredRepositories() {
-    let req = get(this, 'model.requiredRepositories');
-    const submission = this.submission;
-
-    return req.map((repo) => ({
-      repository: repo,
-      funders: this._getFunderNamesForRepo(repo, submission),
-    }));
-  }
-
-  @computed('model.optionalRepositories')
-  get optionalRepositories() {
-    const submission = this.submission;
-    let optionals = get(this, 'model.optionalRepositories');
-
-    return optionals.map((repo) => ({
-      repository: repo,
-      funders: this._getFunderNamesForRepo(repo, submission),
-    }));
-  }
-
-  @computed('model.choiceRepositories')
-  get choiceRespositories() {
-    const submission = this.submission;
-    let choices = get(this, 'model.choiceRepositories');
-
-    choices.forEach((group) => {
-      group.map((repo) => ({
-        repository: repo,
-        funders: this._getFunderNamesForRepo(repo, submission),
-      }));
-    });
-    return choices;
   }
 
   @action
@@ -82,7 +41,7 @@ export default class SubmissionsNewRepositories extends Controller {
   @action
   async loadTab(gotoRoute) {
     await this.submission.save();
-    this.transitionToRoute(gotoRoute);
+    this.router.transitionTo(gotoRoute);
     set(this, 'loadingNext', false); // reset for next time
   }
 
@@ -102,7 +61,7 @@ export default class SubmissionsNewRepositories extends Controller {
       });
 
       if (value.dismiss) {
-        this.transitionToRoute('dashboard');
+        this.router.transitionTo('dashboard');
       }
       // do nothing
     } else {
@@ -118,22 +77,5 @@ export default class SubmissionsNewRepositories extends Controller {
   @action
   updateCovidSubmission() {
     this.parent.updateCovidSubmission();
-  }
-
-  _getFunderNamesForRepo(repo, submission) {
-    const funders = get(submission, 'grants').map((grant) => get(grant, 'primaryFunder'));
-    const fundersWithRepos = funders.filter((funder) => get(funder, 'policy.repositories'));
-    // List of funders that include this repository
-    const fundersWithOurRepo = fundersWithRepos.filter(
-      (funder) => get(funder, 'policy') && funder.get('policy.repositories').includes(repo)
-    );
-
-    if (fundersWithRepos && fundersWithOurRepo.length > 0) {
-      return fundersWithOurRepo
-        .map((funder) => get(funder, 'name'))
-        .filter((item, index, arr) => arr.indexOf(item) == index)
-        .join(', ');
-    }
-    return '';
   }
 }

@@ -794,3 +794,11 @@ footer {
   overflow: auto;
   background-color: var(--grey-light);
 }
+
+.grant-item {
+  padding: 10px 0; /* Add padding if needed */
+}
+
+.grant-item:not(:last-child) {
+  border-bottom: 1px solid #ccc; /* Add a bottom border except for the last item */
+}

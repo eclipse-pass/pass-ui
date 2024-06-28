@@ -9,9 +9,9 @@
 >
   <WorkflowRepositories
     @submission={{this.submission}}
-    @requiredRepositories={{this.requiredRepositories}}
-    @optionalRepositories={{this.optionalRepositories}}
-    @choiceRepositories={{this.choiceRepositories}}
+    @requiredRepositories={{this.model.requiredRepositories}}
+    @optionalRepositories={{this.model.optionalRepositories}}
+    @choiceRepositories={{this.model.choiceRepositories}}
     @next={{action "loadNext"}}
     @back={{action "loadPrevious"}}
     @abort={{action "abort"}}

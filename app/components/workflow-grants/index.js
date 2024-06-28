@@ -2,7 +2,6 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action, get, set } from '@ember/object';
-import { A } from '@ember/array';
 import { inject as service } from '@ember/service';
 import { task } from 'ember-concurrency';
 
@@ -28,7 +27,7 @@ export default class WorkflowGrants extends Component {
   @tracked submitterGrants = null;
   @tracked totalGrants = 0;
   /** Grants already attached to the submission on component init */
-  @tracked _selectedGrants = A();
+  @tracked _selectedGrants = [];
   @tracked preLoadedGrant = this.args.preLoadedGrant;
   @tracked grantColumns = [
     {
@@ -92,24 +91,26 @@ export default class WorkflowGrants extends Component {
   setup = function* () {
     this.contactUrl = this.appStaticConfig?.config?.branding?.pages?.contactUrl;
 
-    if (get(this, 'args.submission.submitter.id')) {
+    const submitter = yield this.args.submission.submitter;
+    if (submitter?.id) {
       yield this.updateGrants.perform();
     }
 
     // Init selected grants to grants already attached to submission
 
-    this._selectedGrants.clear();
+    this._selectedGrants = [];
+    let grants = yield this.args.submission.grants;
     if (this.preLoadedGrant) {
-      this.args.submission.grants.pushObject(this.preLoadedGrant);
+      grants = [this.preLoadedGrant, ...grants];
       this.workflow.addGrant(this.preLoadedGrant);
     }
-    this._selectedGrants.addObjects(get(this, 'args.submission.grants'));
+    this._selectedGrants = [...grants];
   };
 
   updateGrants = task(async () => {
     let info = {};
 
-    const userId = get(this, 'args.submission.submitter.id');
+    const userId = await this.args.submission.submitter.id;
     // TODO: Ignore date filter for now ( >= 2011-01-01 )
     const grantQuery = {
       filter: {
@@ -125,8 +126,8 @@ export default class WorkflowGrants extends Component {
 
     this.submitterGrants = results;
     // TODO: How do we get pagination to work with store.query like this?
-    set(this, 'totalGrants', info.total);
-    set(this, 'pageCount', Math.ceil(info.total / this.pageSize));
+    this.totalGrants = info.total;
+    this.pageCount = Math.ceil(info.total / this.pageSize);
   });
 
   /**
@@ -175,18 +176,19 @@ export default class WorkflowGrants extends Component {
    * @param {Grant} grant
    */
   @action
-  addGrant(grant) {
+  async addGrant(grant) {
     const workflow = this.workflow;
     const submission = this.args.submission;
+    let grants = await submission.grants;
 
-    if (!get(submission, 'grants').includes(grant)) {
-      get(submission, 'grants').pushObject(grant);
+    if (!grants.includes(grant)) {
+      this.args.submission.grants = [grant, ...grants];
     }
     if (!workflow.getAddedGrants().includes(grant)) {
       workflow.addGrant(grant);
     }
     if (!this._selectedGrants.includes(grant)) {
-      this._selectedGrants.pushObject(grant);
+      this._selectedGrants = [grant, ...this._selectedGrants];
     }
 
     this.setWorkflowStepHere();
@@ -201,7 +203,7 @@ export default class WorkflowGrants extends Component {
    * @param {Grant} grant
    */
   @action
-  removeGrant(grant) {
+  async removeGrant(grant) {
     const workflow = this.workflow;
 
     // if grant is grant passed in from grant detail page remove query parms
@@ -209,9 +211,10 @@ export default class WorkflowGrants extends Component {
       this.preLoadedGrant = null;
     }
     const submission = this.args.submission;
-    get(submission, 'grants').removeObject(grant);
+    const grants = await submission.grants;
+    this.args.submission.grants = grants.filter((g) => g !== grant);
     workflow.removeGrant(grant);
-    this._selectedGrants.removeObject(grant);
+    this._selectedGrants = this._selectedGrants.filter((g) => g !== grant);
 
     this.setWorkflowStepHere();
   }

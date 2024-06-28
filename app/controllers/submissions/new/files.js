@@ -8,6 +8,7 @@ import { inject as service } from '@ember/service';
 export default class SubmissionsNewFiles extends Controller {
   @service workflow;
   @service flashMessages;
+  @service router;
 
   @alias('model.newSubmission') submission;
   @alias('model.files') files;
@@ -18,6 +19,8 @@ export default class SubmissionsNewFiles extends Controller {
 
   @tracked loadingNext = false;
   @tracked filesTemp = this.workflow.filesTemp;
+  @tracked newFiles = [];
+  @tracked previouslyUploadedFiles = this.model.files;
 
   @computed('workflow.maxStep')
   get nextTabIsActive() {
@@ -27,11 +30,6 @@ export default class SubmissionsNewFiles extends Controller {
   @computed('nextTabIsActive', 'loadingNext')
   get needValidation() {
     return this.nextTabIsActive || this.loadingNext;
-  }
-
-  @computed('workflow.filesTemp')
-  get newFiles() {
-    return get(this, 'workflow').getFilesTemp();
   }
 
   @action
@@ -50,19 +48,38 @@ export default class SubmissionsNewFiles extends Controller {
     this.updateRelatedData();
     await this.submission.save();
     set(this, 'loadingNext', false); // reset for next time
-    this.transitionToRoute(gotoRoute);
+    this.router.transitionTo(gotoRoute);
+  }
+
+  @action
+  updateAllFiles(files) {
+    this.workflow.filesTemp = [...files, ...this.workflow.filesTemp];
+    files.forEach((file) => {
+      file.submission = this.submission;
+    });
+  }
+
+  @action
+  updatePreviouslyUploadedFiles(files) {
+    this.previouslyUploadedFiles = [...files];
+  }
+
+  @action
+  updateNewFiles(files) {
+    this.newFiles = [...files];
   }
 
   @action
   async validateAndLoadTab(gotoTab) {
     let needValidation = this.needValidation;
     if (needValidation) {
-      let files = this.files;
-      let manuscriptFiles = []
-        .concat(this.newFiles, files && files.toArray())
-        .filter((file) => file && get(file, 'fileRole') === 'manuscript');
+      let manuscriptFiles = [...this.newFiles, ...this.model.files.slice()].filter(
+        (file) => file && get(file, 'fileRole') === 'manuscript'
+      );
 
-      if (manuscriptFiles.length == 0 && !this.parent.userIsSubmitter) {
+      const submitter = await this.parent.userIsSubmitter();
+
+      if (manuscriptFiles.length == 0 && !submitter) {
         let result = await swal({
           title: 'No manuscript present',
           text: 'If no manuscript is attached, the designated submitter will need to add one before final submission',

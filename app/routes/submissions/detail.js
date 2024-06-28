@@ -25,7 +25,9 @@ export default class DetailRoute extends CheckSessionRoute {
       // sort: '+performedDate',
     });
 
-    const sub = await this.store.findRecord('submission', params.submission_id);
+    const sub = await this.store.findRecord('submission', params.submission_id, {
+      include: 'publication.journal,repositories',
+    });
     const publication = await sub.get('publication');
     const repoCopies = await this.store.query('repositoryCopy', {
       filter: { repositoryCopy: `publication.id==${publication.id}` },

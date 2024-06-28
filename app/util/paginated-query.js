@@ -23,7 +23,7 @@ export function submissionsIndexQuery(params, user) {
         submission: `(${userMatch});submissionStatus=out=cancelled`,
       },
       sort: '-submittedDate',
-      include: 'publication',
+      include: ['publication', 'repositories', 'submitter'].join(','),
     };
   }
 
@@ -60,6 +60,7 @@ export function grantDetailsQuery(params, grantId, user) {
     filter: {
       submission: `grants.id==${grantId};submissionStatus=out=cancelled;(${userMatch})`,
     },
+    include: 'publication,repositories',
   };
 
   if (params.filter) {

@@ -2,7 +2,6 @@
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import { render, click } from '@ember/test-helpers';
 
 module('Unit | Controller | submissions/new/files', (hooks) => {
   setupTest(hooks);
@@ -19,7 +18,7 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
     this.owner.register(
       'controller:submissions.new',
       EmberObject.extend({
-        userIsSubmitter: true,
+        userIsSubmitter: () => true,
       })
     );
     this.owner.register(
@@ -36,7 +35,8 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
     let model = { files: [] };
     controller.set('model', model);
     controller.set('loadingNext', true);
-    controller.transitionToRoute = function () {
+    const routerService = this.owner.lookup('service:router');
+    routerService.transitionTo = (name) => {
       loadTabAccessed = true;
     };
     assert.strictEqual(controller.get('workflow').getFilesTemp().length, 0);
@@ -51,7 +51,7 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
     this.owner.register(
       'controller:submissions.new',
       EmberObject.extend({
-        userIsSubmitter: false,
+        userIsSubmitter: () => false,
       })
     );
     this.owner.register(
@@ -67,7 +67,8 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
     );
     let model = { files: [] };
     controller.set('model', model);
-    controller.transitionToRoute = function () {
+    const routerService = this.owner.lookup('service:router');
+    routerService.transitionTo = (name) => {
       loadTabAccessed = true;
     };
     assert.strictEqual(controller.get('workflow').getFilesTemp().length, 0);
@@ -78,15 +79,28 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
   });
 
   test('Multiple manuscript files stops transition', function (assert) {
-    let controller = this.owner.lookup('controller:submissions/new/files');
-    let loadTabAccessed = false;
-    let file = EmberObject.create({
-      fileRole: 'manuscript',
+    const storeService = this.owner.lookup('service:store');
+
+    const submission = storeService.createRecord('submission', {
+      save: () => {
+        return Promise.resolve();
+      },
     });
+    let controller = this.owner.lookup('controller:submissions/new/files');
+
+    let loadTabAccessed = false;
+
+    const file = storeService.createRecord('file', {
+      fileRole: 'manuscript',
+      save: () => {
+        return Promise.resolve();
+      },
+    });
+
     this.owner.register(
       'controller:submissions.new',
       EmberObject.extend({
-        userIsSubmitter: false,
+        userIsSubmitter: () => false,
       })
     );
     this.owner.register(
@@ -101,9 +115,10 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
       })
     );
     let files = [file];
-    let model = { files };
+    let model = { files, newSubmission: submission };
     controller.set('model', model);
-    controller.transitionToRoute = function () {
+    const routerService = this.owner.lookup('service:router');
+    routerService.transitionTo = (name) => {
       loadTabAccessed = true;
     };
     assert.strictEqual(controller.get('workflow').getFilesTemp().length, 1);
@@ -118,7 +133,7 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
     this.owner.register(
       'controller:submissions.new',
       EmberObject.extend({
-        userIsSubmitter: false,
+        userIsSubmitter: () => false,
       })
     );
     this.owner.register(
@@ -152,7 +167,8 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
       }),
     };
     controller.set('model', model);
-    controller.transitionToRoute = function () {
+    const routerService = this.owner.lookup('service:router');
+    routerService.transitionTo = () => {
       assert.ok(subSaved, 'Submission was not saved');
       assert.strictEqual(controller.get('workflow').getFilesTemp().length, 0);
       assert.strictEqual(controller.get('model.files').length, 1);

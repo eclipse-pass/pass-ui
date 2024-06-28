@@ -5,6 +5,7 @@ import { action, get, computed } from '@ember/object';
 import ENV from 'pass-ui/config/environment';
 import { inject as service } from '@ember/service';
 import { later, scheduleOnce } from '@ember/runloop';
+import _ from 'lodash';
 
 export default class SubmissionsDetail extends Controller {
   @service currentUser;
@@ -12,6 +13,7 @@ export default class SubmissionsDetail extends Controller {
   @service submissionHandler;
   @service searchHelper;
   @service flashMessages;
+  @service router;
 
   constructor() {
     super(...arguments);
@@ -88,10 +90,11 @@ export default class SubmissionsDetail extends Controller {
   /**
    * Get enough information about 'web-link' repositories to display to a user.
    */
-  get externalSubmissionsMetadata() {
+  async externalSubmissionsMetadata() {
     let result = [];
 
-    this.repositories
+    const repos = await this.model.sub.repositories;
+    repos
       .filter((repo) => repo._isWebLink)
       .forEach((repo) => {
         result.push({
@@ -284,8 +287,10 @@ export default class SubmissionsDetail extends Controller {
 
     // Validate manuscript files
     let manuscriptFiles = []
-      .concat(this.filesTemp, get(this, 'model.files') && get(this, 'model.files').toArray())
+      .concat(this.filesTemp, get(this, 'model.files') && get(this, 'model.files').slice())
       .filter((file) => file && file.get('fileRole') === 'manuscript');
+
+    manuscriptFiles = _.uniqBy(manuscriptFiles, 'id');
 
     if (manuscriptFiles.length == 0) {
       swal(
@@ -479,7 +484,7 @@ export default class SubmissionsDetail extends Controller {
 
         ignoreList.clearIgnore();
         ignoreList.ignore(submission.get('id'));
-        this.transitionToRoute('submissions');
+        this.router.transitionTo('submissions');
       } catch (e) {
         this.flashMessages.danger(
           'We encountered an error deleting this draft submission. Please try again later or contact your administrator'

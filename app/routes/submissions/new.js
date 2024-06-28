@@ -8,13 +8,14 @@ export default class NewRoute extends CheckSessionRoute {
   @service('workflow')
   workflow;
   @service store;
+  @service router;
 
   @service('current-user')
   currentUser;
 
   beforeModel() {
     if (this.workflow.getCurrentStep() === 0) {
-      this.transitionTo('submissions.new');
+      this.router.transitionTo('submissions.new');
     }
   }
 
@@ -54,7 +55,7 @@ export default class NewRoute extends CheckSessionRoute {
     if (params.submission) {
       // Operating on existing submission
 
-      newSubmission = await this.store.findRecord('submission', params.submission);
+      newSubmission = await this.store.findRecord('submission', params.submission, { include: 'publication.journal' });
       publication = await newSubmission.get('publication');
       journal = publication.get('journal');
 
@@ -65,7 +66,7 @@ export default class NewRoute extends CheckSessionRoute {
         sort: '+performedDate',
       });
 
-      files = this.store.query('file', fileForSubmissionQuery(newSubmission.id)).then((files) => [...files.toArray()]);
+      files = this.store.query('file', fileForSubmissionQuery(newSubmission.id)).then((files) => [...files.slice()]);
 
       // Also seed workflow.doiInfo with metadata from the Submission
       const metadata = newSubmission.get('metadata');

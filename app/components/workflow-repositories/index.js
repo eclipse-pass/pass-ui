@@ -1,8 +1,7 @@
 /* eslint-disable ember/no-get */
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
-import { action, get, set } from '@ember/object';
-import { A } from '@ember/array';
+import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 
 /**
@@ -37,7 +36,7 @@ export default class WorkflowRepositories extends Component {
   @service submissionHandler;
   @service workflow;
 
-  @tracked addedRepos = A([]);
+  @tracked addedRepos = [];
 
   // Separate out repositories that PASS has some level of integration
   get requiredIntegratedRepos() {
@@ -46,7 +45,9 @@ export default class WorkflowRepositories extends Component {
 
   // Separate out repositories that PASS has no integration
   get requiredWeblinkRepos() {
-    return this.args.requiredRepositories.filter((repoInfo) => repoInfo.repository._isWebLink);
+    const webLinkRepos = this.args.requiredRepositories.filter((repoInfo) => repoInfo.repository._isWebLink);
+
+    return webLinkRepos;
   }
 
   /**
@@ -54,13 +55,13 @@ export default class WorkflowRepositories extends Component {
    * are valid
    */
   @action
-  setupRepos() {
-    set(this, 'addedRepos', this.getAddedRepositories());
-    const currentRepos = get(this, 'submission.repositories');
+  async setupRepos() {
+    this.addedRepos = this.getAddedRepositories();
+    const currentRepos = await this.args.submission.repositories;
 
-    const opt = this.args.optionalRepositories;
-    const req = this.args.requiredRepositories;
-    const choice = this.args.choiceRepositories;
+    const opt = await this.args.optionalRepositories;
+    const req = await this.args.requiredRepositories;
+    const choice = await this.args.choiceRepositories;
 
     if (currentRepos && currentRepos.length > 0) {
       /**
@@ -107,7 +108,9 @@ export default class WorkflowRepositories extends Component {
        * Use IDs instead of full Repository objects to try to avoid weird JS equality
        * nonsense.
        */
-      currentRepos.filter((repo) => !validRepos.includes(repo.id)).forEach((repo) => currentRepos.removeObject(repo));
+      currentRepos
+        .filter((repo) => !validRepos.includes(repo.id))
+        .forEach((repo) => (this.args.submission.repositories = currentRepos.filter((r) => r.name === repo.name)));
     } else {
       /**
        * If no repositories have been saved to the submission yet, force add all required repositories
@@ -118,13 +121,13 @@ export default class WorkflowRepositories extends Component {
       }
       if (opt) {
         opt
-          .filter((repoInfo) => get(repoInfo, 'repository._selected'))
+          .filter((repoInfo) => repoInfo.repository._selected)
           .forEach((repoInfo) => this.addRepository(repoInfo.repository, false));
       }
       if (choice) {
         choice.forEach((group) => {
           group
-            .filter((repoInfo) => get(repoInfo, 'repository._selected'))
+            .filter((repoInfo) => repoInfo.repository._selected)
             .forEach((repoInfo) => this.addRepository(repoInfo.repository, false));
         });
       }
@@ -146,16 +149,16 @@ export default class WorkflowRepositories extends Component {
    *
    * @param {Repository} repo the repository that may be modified
    */
-  setSelected(repo) {
+  async setSelected(repo) {
     const id = repo.id;
     const addedRepos = this.addedRepos;
-    const currentRepos = get(this, 'args.submission.repositories');
+    const currentRepos = await this.args.submission.repositories;
 
-    if (addedRepos.isAny('id', id)) {
+    if (addedRepos.some((r) => r.id === id)) {
       return;
     }
 
-    repo.set('_selected', currentRepos.isAny('id', id));
+    repo._selected = currentRepos.some((r) => r.id === id);
   }
 
   /**
@@ -203,11 +206,11 @@ export default class WorkflowRepositories extends Component {
    * @param {Repository} repository
    * @param {boolean} setMaxStep should we modify 'maxStep' in the workflow?
    */
-  addRepository(repository, setMaxStep) {
-    const subRepos = get(this, 'args.submission.repositories');
+  async addRepository(repository, setMaxStep) {
+    const repos = await this.args.submission.repositories;
 
-    if (!subRepos.includes(repository)) {
-      subRepos.pushObject(repository);
+    if (!repos.includes(repository)) {
+      this.args.submission.repositories = [repository, ...repos];
     }
     if (setMaxStep) {
       this.workflow.setMaxStep(4);
@@ -220,8 +223,9 @@ export default class WorkflowRepositories extends Component {
    * @param {Repository} repository
    * @param {boolean} setMaxStep should we modify 'maxStep' in the workflow?
    */
-  removeRepository(repository, setMaxStep) {
-    get(this, 'args.submission.repositories').removeObject(repository);
+  async removeRepository(repository, setMaxStep) {
+    const repositories = await this.args.submission.repositories;
+    this.args.submission.repositories = repositories.filter((r) => r.name !== repository.name);
     if (setMaxStep) {
       this.workflow.setMaxStep(4);
     }

@@ -2,7 +2,6 @@
 import Controller, { inject as controller } from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import { action, computed, get, set } from '@ember/object';
-import { A } from '@ember/array';
 import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import { task } from 'ember-concurrency-decorators';
@@ -10,6 +9,7 @@ import { task } from 'ember-concurrency-decorators';
 export default class SubmissionsNewBasics extends Controller {
   @service workflow;
   @service flashMessages;
+  @service router;
 
   @alias('model.newSubmission') submission;
   @alias('model.publication') publication;
@@ -25,10 +25,10 @@ export default class SubmissionsNewBasics extends Controller {
   @tracked submitterEmailError = false;
 
   get flaggedFields() {
-    let fields = A();
-    if (this.titleError) fields.pushObject('title');
-    if (this.journalError) fields.pushObject('journal');
-    if (this.submitterEmailError) fields.pushObject('submitterEmail');
+    let fields = [];
+    if (this.titleError) fields.push('title');
+    if (this.journalError) fields.push('journal');
+    if (this.submitterEmailError) fields.push('submitterEmail');
 
     return fields;
   }
@@ -64,7 +64,7 @@ export default class SubmissionsNewBasics extends Controller {
     this.doiInfo.title = this.publication.title;
 
     await this.submission.save();
-    this.transitionToRoute(gotoRoute);
+    this.router.transitionTo(gotoRoute);
   }
 
   @action

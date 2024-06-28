@@ -2,7 +2,6 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action, get, set } from '@ember/object';
-import { A } from '@ember/array';
 import { inject as service } from '@ember/service';
 import { task } from 'ember-concurrency-decorators';
 import { later } from '@ember/runloop';
@@ -23,12 +22,13 @@ export default class WorkflowReview extends Component {
   @service currentUser;
   @service flashMessages;
 
-  @tracked isValidated = A();
+  @tracked isValidated = [];
   @tracked filesTemp = this.workflow.filesTemp;
   @tracked hasVisitedWeblink = false;
+  @tracked repositories = this.args.submission.repositories;
 
   get parsedFiles() {
-    let newArr = A();
+    let newArr = [];
     if (this.filesTemp) {
       newArr.addObjects(this.filesTemp);
     }
@@ -39,12 +39,14 @@ export default class WorkflowReview extends Component {
   }
 
   get weblinkRepos() {
-    const repos = get(this, 'args.submission.repositories').filter((repo) => repo.get('_isWebLink'));
-    return repos;
+    const webLinkRepos = this.repositories.filter((repo) => repo._isWebLink);
+
+    return webLinkRepos;
   }
 
   get mustVisitWeblink() {
-    const weblinkExists = get(this, 'weblinkRepos.length') > 0;
+    const weblinkExists = this.weblinkRepos.length > 0;
+
     const isSubmitter = get(this, 'currentUser.user.id') === get(this, 'args.submission.submitter.id');
     return weblinkExists && isSubmitter;
   }
@@ -102,24 +104,25 @@ export default class WorkflowReview extends Component {
     }
 
     // User is submitting on own behalf. Must get repository agreements.
-    let reposWithAgreementText = get(this, 'args.submission.repositories')
-      .filter((repo) => !repo.get('_isWebLink') && repo.get('agreementText'))
+    const repos = yield this.args.submission.repositories;
+    let reposWithAgreementText = repos
+      .filter((repo) => !repo._isWebLink && repo.agreementText)
       .map((repo) => ({
-        id: repo.get('name'),
-        title: `Deposit requirements for ${repo.get('name')}`,
-        html: `<div class="form-control deposit-agreement-content py-4 mt-4">${repo.get('agreementText')}</div>`,
+        id: repo.name,
+        title: `Deposit requirements for ${repo.name}`,
+        html: `<div class="form-control deposit-agreement-content py-4 mt-4">${repo.agreementText}</div>`,
       }));
 
-    let reposWithoutAgreementText = get(this, 'args.submission.repositories')
-      .filter((repo) => !repo.get('_isWebLink') && !repo.get('agreementText'))
+    let reposWithoutAgreementText = repos
+      .filter((repo) => !repo._isWebLink && !repo.agreementText)
       .map((repo) => ({
-        id: repo.get('name'),
+        id: repo.name,
       }));
 
-    let reposWithWebLink = get(this, 'args.submission.repositories')
-      .filter((repo) => repo.get('_isWebLink'))
+    let reposWithWebLink = repos
+      .filter((repo) => repo._isWebLink)
       .map((repo) => ({
-        id: repo.get('name'),
+        id: repo.name,
       }));
 
     const result = yield swal
@@ -182,22 +185,23 @@ export default class WorkflowReview extends Component {
              * It is assumed that the user has done the necessary steps for each web-link repository,
              * so those are also kept in the list
              */
-            set(
-              this,
-              'args.submission.repositories',
-              get(this, 'args.submission.repositories').filter((repo) => {
-                if (repo.get('_isWebLink')) {
-                  return true;
-                }
-                let temp = reposWithAgreementText.map((x) => x.id).includes(repo.get('name'));
-                if (!temp) {
-                  return true;
-                } else if (reposThatUserAgreedToDeposit.map((r) => r.id).includes(repo.get('name'))) {
-                  return true;
-                }
-                return false;
-              })
-            );
+
+            const repos = yield this.args.submission.repositories;
+
+            const filteredRepos = repos.filter((repo) => {
+              if (repo._isWebLink) {
+                return true;
+              }
+              let temp = reposWithAgreementText.map((x) => x.id).includes(repo.name);
+              if (!temp) {
+                return true;
+              } else if (reposThatUserAgreedToDeposit.map((r) => r.id).includes(repo.name)) {
+                return true;
+              }
+              return false;
+            });
+
+            this.args.submission.repositories = filteredRepos;
 
             this.args.submit();
           } else {
@@ -272,14 +276,14 @@ export default class WorkflowReview extends Component {
         return;
       }
       // Go to the weblink repo
-      this.externalRepoMap[repo.get('id')] = true;
+      this.externalRepoMap[repo.id] = true;
       const allLinksVisited = Object.values(this.externalRepoMap).every((val) => val === true);
       if (allLinksVisited) {
         this.hasVisitedWeblink = true;
       }
       $('#externalSubmission').modal('hide');
 
-      var win = window.open(repo.get('url'), '_blank');
+      var win = window.open(repo.url, '_blank');
 
       if (win) {
         win.focus();

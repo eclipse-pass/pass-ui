@@ -94,7 +94,9 @@ module('Unit | Controller | submissions/new', (hooks) => {
 
     // After the route transition to thanks, all promises should be resolved handler
     // and tests can be run.
-    controller.set('transitionToRoute', (name) => {
+
+    const routerService = this.owner.lookup('service:router');
+    routerService.transitionTo = (name) => {
       assert.strictEqual(name, 'thanks');
 
       assert.true(publicationSaved);
@@ -120,7 +122,7 @@ module('Unit | Controller | submissions/new', (hooks) => {
       assert.deepEqual(md.agreements[0], {
         moo: 'Milk cows',
       });
-    });
+    };
 
     controller.set('model', model);
     controller.set('comment', comment);
@@ -182,18 +184,24 @@ module('Unit | Controller | submissions/new', (hooks) => {
       },
     });
 
+    let file = EmberObject.create({
+      fileRole: 'manuscript',
+    });
+
     let comment = 'moo';
 
     let model = EmberObject.create({
       newSubmission: submission,
       publication,
+      files: [file],
     });
 
     assert.expect(11);
 
     // After the route transition to thanks, all promises should be resolved handler
     // and tests can be run.
-    controller.set('transitionToRoute', (name) => {
+    const routerService = this.owner.lookup('service:router');
+    routerService.transitionTo = (name) => {
       assert.strictEqual(name, 'thanks');
 
       assert.true(publicationSaved);
@@ -207,7 +215,7 @@ module('Unit | Controller | submissions/new', (hooks) => {
       assert.strictEqual(submissionEvent.performerRole, 'preparer');
       assert.strictEqual(submissionEvent.eventType, 'approval-requested');
       assert.strictEqual(submissionEvent.comment, comment);
-    });
+    };
 
     controller.set('model', model);
     controller.set('comment', comment);
@@ -268,18 +276,24 @@ module('Unit | Controller | submissions/new', (hooks) => {
       },
     });
 
+    let file = EmberObject.create({
+      fileRole: 'manuscript',
+    });
+
     let comment = 'moo';
 
     let model = EmberObject.create({
       newSubmission: submission,
       publication,
+      files: [file],
     });
 
     assert.expect(13);
 
     // After the route transition to thanks, all promises should be resolved handler
     // and tests can be run.
-    controller.set('transitionToRoute', (name) => {
+    const routerService = this.owner.lookup('service:router');
+    routerService.transitionTo = (name) => {
       assert.strictEqual(name, 'thanks');
 
       assert.true(publicationSaved);
@@ -295,7 +309,7 @@ module('Unit | Controller | submissions/new', (hooks) => {
       assert.strictEqual(submissionEvent.performerRole, 'preparer');
       assert.strictEqual(submissionEvent.eventType, 'approval-requested-newuser');
       assert.strictEqual(submissionEvent.comment, comment);
-    });
+    };
 
     controller.set('model', model);
     controller.set('comment', comment);
@@ -310,7 +324,7 @@ module('Unit | Controller | submissions/new', (hooks) => {
    * to the expected route.
    *
    * This action should first create a SweetAlert (swal), then call 'deleteSubmission' in the
-   * submission handler, finally call 'transitionToRoute' to transition to the 'submissions'
+   * submission handler, finally call 'transitionTo' to transition to the 'submissions'
    * route.
    */
   test('abort should delete submission and transition', async function (assert) {

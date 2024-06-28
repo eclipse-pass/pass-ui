@@ -24,6 +24,12 @@ module('Integration | Component | submissions repoid cell', (hooks) => {
   });
 
   test('it renders', async function (assert) {
+    const record = EmberObject.create({
+      publication: EmberObject.create({ id: '1' }),
+    });
+
+    this.record = record;
+
     await render(hbs`
       <th class='table-header' />
       <th class='table-header' />
@@ -31,7 +37,7 @@ module('Integration | Component | submissions repoid cell', (hooks) => {
       <th class='table-header' />
       <th class='table-header' />
       <th class='table-header' />
-      <SubmissionsRepoidCell />
+      <SubmissionsRepoidCell @record={{this.record}} />
     `);
 
     assert.ok(true);
@@ -54,7 +60,7 @@ module('Integration | Component | submissions repoid cell', (hooks) => {
     const record = EmberObject.create({
       publication: EmberObject.create({}),
     });
-    this.set('record', record);
+    this.record = record;
 
     await render(hbs`
       <th class='table-header' />
@@ -63,7 +69,7 @@ module('Integration | Component | submissions repoid cell', (hooks) => {
       <th class='table-header' />
       <th class='table-header' />
       <th class='table-header' />
-      <SubmissionsRepoidCell />
+      <SubmissionsRepoidCell @record={{this.record}} />
     `);
     assert.ok(true);
   });

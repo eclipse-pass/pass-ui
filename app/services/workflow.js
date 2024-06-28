@@ -1,5 +1,4 @@
 /* eslint-disable ember/classic-decorator-no-classic-methods */
-import { A } from '@ember/array';
 import Service from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 
@@ -20,7 +19,7 @@ export default class Workflow extends Service {
   @tracked filesTemp = [];
   @tracked defaultRepoLoaded = false; // you only want to load the default setting on first access, after that is should respect he user's choice.
 
-  @tracked addedGrants = A([]);
+  @tracked addedGrants = [];
 
   resetWorkflow() {
     this.setCurrentStep(0);
@@ -99,14 +98,14 @@ export default class Workflow extends Service {
   }
 
   addGrant(grant) {
-    this.addedGrants.pushObject(grant);
+    this.addedGrants = [grant, ...this.addedGrants];
   }
 
   removeGrant(grant) {
-    this.addedGrants.removeObject(grant);
+    this.addedGrants = this.addedGrants.filter((g) => g.id !== grant.id);
   }
 
   clearAddedGrants() {
-    this.addedGrants.clear();
+    this.addedGrants = [];
   }
 }

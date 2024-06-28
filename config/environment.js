@@ -26,7 +26,7 @@ module.exports = function (environment) {
       namespace: process.env.PASS_API_NAMESPACE || 'data',
     },
 
-    locationType: 'auto',
+    locationType: 'history',
     EmberENV: {
       FEATURES: {
         // Here you can enable experimental features on an ember canary build

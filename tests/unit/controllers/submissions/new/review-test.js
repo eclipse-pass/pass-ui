@@ -24,7 +24,8 @@ module('Unit | Controller | submissions/new/review', (hooks) => {
     controller.set('model', model);
 
     let loadTabAccessed = false;
-    controller.transitionToRoute = function (route) {
+    const routerService = this.owner.lookup('service:router');
+    routerService.transitionTo = function (route) {
       loadTabAccessed = true;
       assert.strictEqual(route, 'submissions.new.files');
     };

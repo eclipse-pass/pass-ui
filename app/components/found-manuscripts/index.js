@@ -1,7 +1,6 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
-import { A } from '@ember/array';
 import { task } from 'ember-concurrency-decorators';
 import { action, get, set } from '@ember/object';
 
@@ -11,8 +10,8 @@ export default class FoundManuscriptsComponent extends Component {
   @service store;
   @service appStaticConfig;
 
-  @tracked foundManuscripts = A([]);
-  @tracked manuscriptsWithErrors = A([]);
+  @tracked foundManuscripts = [];
+  @tracked manuscriptsWithErrors = [];
   @tracked selectedManuscript = null;
   @tracked contactUrl;
 
@@ -24,10 +23,10 @@ export default class FoundManuscriptsComponent extends Component {
   }
 
   get foundManuscriptsToDisplay() {
-    let prevFiles = this.args.previouslyUploadedFiles || A([]);
-    let newFiles = this.args.newFiles || A([]);
+    let prevFiles = this.args.previouslyUploadedFiles || [];
+    let newFiles = this.args.newFiles || [];
 
-    const allFileNames = [...newFiles.toArray(), ...prevFiles.toArray()].map((file) => file.name);
+    const allFileNames = [...newFiles.slice(), ...prevFiles.slice()].map((file) => file.name);
 
     return this.foundManuscripts
       .filter((manuscript) => !allFileNames.includes(manuscript.name))
@@ -47,7 +46,7 @@ export default class FoundManuscriptsComponent extends Component {
     const foundOAMss = yield this.oaManuscriptService.lookup(doi);
 
     if (foundOAMss) {
-      this.foundManuscripts.pushObjects(foundOAMss);
+      this.foundManuscripts.push(foundOAMss);
     }
   };
 }

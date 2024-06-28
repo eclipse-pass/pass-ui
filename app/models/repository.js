@@ -13,7 +13,6 @@ export default class RepositoryModel extends Model {
 
   @attr('boolean') _selected;
 
-  @computed('integrationType')
   get _isWebLink() {
     return this.integrationType === 'web-link';
   }

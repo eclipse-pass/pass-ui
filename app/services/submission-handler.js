@@ -1,10 +1,9 @@
 /* eslint-disable ember/no-get */
-import { A, isArray } from '@ember/array';
+import { isArray } from '@ember/array';
 import Service, { inject as service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
 import { task } from 'ember-concurrency-decorators';
 import { get } from '@ember/object';
-import SubmissionModel from '../models/submission';
 import { fileForSubmissionQuery, submissionsWithPublicationQuery } from '../util/paginated-query';
 
 /**
@@ -22,17 +21,17 @@ export default class SubmissionHandlerService extends Service {
    * @returns EmberArray with repositories
    */
   getRepositoriesFromGrants(grants) {
-    let result = A();
+    let result = [];
 
     grants.forEach((grant) => {
       const directRepos = grant.get('directFunder.policy.repositories');
       const primaryRepos = grant.get('primaryFunder.policy.repositories');
 
       if (isArray(directRepos)) {
-        result.pushObjects(directRepos.toArray());
+        result.push(directRepos.slice());
       }
       if (isArray(primaryRepos)) {
-        result.pushObjects(primaryRepos.toArray());
+        result.push(primaryRepos.slice());
       }
     });
 
@@ -77,8 +76,9 @@ export default class SubmissionHandlerService extends Service {
       submission.set('submissionStatus', 'submitted');
       submission.set('submittedDate', new Date());
 
+      const repos = yield submission.repositories;
       // Add agreements metadata
-      const agreemd = get(this, 'schemaService').getAgreementsBlob(submission.get('repositories'));
+      const agreemd = get(this, 'schemaService').getAgreementsBlob(repos);
 
       if (agreemd) {
         let md = JSON.parse(submission.get('metadata'));
@@ -135,9 +135,7 @@ export default class SubmissionHandlerService extends Service {
     yield get(this, '_finishSubmission')
       .perform(s, comment)
       .catch((e) => {
-        if (!didCancel(e)) {
-          throw e;
-        }
+        throw e;
       });
   };
 
