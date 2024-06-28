@@ -55,7 +55,7 @@ export default class NewRoute extends CheckSessionRoute {
     if (params.submission) {
       // Operating on existing submission
 
-      newSubmission = await this.store.findRecord('submission', params.submission);
+      newSubmission = await this.store.findRecord('submission', params.submission, { include: 'publication.journal' });
       publication = await newSubmission.get('publication');
       journal = publication.get('journal');
 
