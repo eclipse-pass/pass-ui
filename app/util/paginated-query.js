@@ -23,7 +23,7 @@ export function submissionsIndexQuery(params, user) {
         submission: `(${userMatch});submissionStatus=out=cancelled`,
       },
       sort: '-submittedDate',
-      include: ['publication', 'repositories'].join(','),
+      include: ['publication', 'repositories', 'submitter'].join(','),
     };
   }
 
