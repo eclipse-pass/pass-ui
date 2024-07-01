@@ -86,7 +86,8 @@ export default class SubmissionsNew extends Controller {
 
     manuscriptFiles = _.uniqBy(manuscriptFiles, 'id');
 
-    if (manuscriptFiles.length == 0 && this.userIsSubmitter) {
+    const submitter = await this.userIsSubmitter();
+    if (manuscriptFiles.length == 0 && submitter) {
       swal('Manuscript Is Missing', 'At least one manuscript file is required.  Please go back and add one', 'warning');
     } else if (manuscriptFiles.length > 1) {
       swal(
