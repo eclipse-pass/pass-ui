@@ -19,7 +19,7 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
       'controller:submissions.new',
       EmberObject.extend({
         userIsSubmitter: () => true,
-      })
+      }),
     );
     this.owner.register(
       'service:workflow',
@@ -30,7 +30,7 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
         getMaxStep() {
           return 6;
         },
-      })
+      }),
     );
     let model = { files: [] };
     controller.set('model', model);
@@ -52,7 +52,7 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
       'controller:submissions.new',
       EmberObject.extend({
         userIsSubmitter: () => false,
-      })
+      }),
     );
     this.owner.register(
       'service:workflow',
@@ -63,7 +63,7 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
         getMaxStep() {
           return 7;
         },
-      })
+      }),
     );
     let model = { files: [] };
     controller.set('model', model);
@@ -101,7 +101,7 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
       'controller:submissions.new',
       EmberObject.extend({
         userIsSubmitter: () => false,
-      })
+      }),
     );
     this.owner.register(
       'service:workflow',
@@ -112,7 +112,7 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
         getMaxStep() {
           return 7;
         },
-      })
+      }),
     );
     let files = [file];
     let model = { files, newSubmission: submission };
@@ -134,7 +134,7 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
       'controller:submissions.new',
       EmberObject.extend({
         userIsSubmitter: () => false,
-      })
+      }),
     );
     this.owner.register(
       'service:workflow',
@@ -145,7 +145,7 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
         getMaxStep() {
           return 7;
         },
-      })
+      }),
     );
 
     let subSaved = false;

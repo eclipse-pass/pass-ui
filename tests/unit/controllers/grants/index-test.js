@@ -26,7 +26,7 @@ module('Unit | Controller | grants/index', (hooks) => {
     assert.strictEqual(
       this.controller.get('adminColumns'),
       this.controller.get('columns'),
-      'Should return admin columns'
+      'Should return admin columns',
     );
   });
 
@@ -34,7 +34,7 @@ module('Unit | Controller | grants/index', (hooks) => {
     assert.strictEqual(
       this.controller.get('piColumns'),
       this.controller.get('columns'),
-      'Should return submitter columns'
+      'Should return submitter columns',
     );
   });
 

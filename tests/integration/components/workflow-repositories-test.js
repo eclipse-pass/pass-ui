@@ -170,7 +170,7 @@ module('Integration | Component | workflow repositories', (hooks) => {
     assert.notOk(repos.includes(undefined), 'should be no undefined items');
     assert.ok(
       repos.some((repo) => repo.name === 'Moo-pository 00'),
-      'The optional repo should be present'
+      'The optional repo should be present',
     );
 
     const checkboxes = this.element.querySelectorAll('input[type="checkbox"]');
@@ -223,7 +223,7 @@ module('Integration | Component | workflow repositories', (hooks) => {
 />`);
 
     const checkboxes = this.element.querySelectorAll(
-      '[data-test-workflow-repositories-optional-list] > li > input[type="checkbox"]'
+      '[data-test-workflow-repositories-optional-list] > li > input[type="checkbox"]',
     );
     assert.strictEqual(checkboxes.length, 3, 'Should be two checkboxes showing');
     assert.notOk(checkboxes[0].checked, 'First checkbox should NOT be checked');

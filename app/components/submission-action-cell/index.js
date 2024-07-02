@@ -48,7 +48,7 @@ export default class SubmissionActionCell extends Component {
       await this.submissionHandler.deleteSubmission(submission);
     } catch (e) {
       this.flashMessages.danger(
-        'We encountered an error deleting this draft submission. Please try again later or contact your administrator'
+        'We encountered an error deleting this draft submission. Please try again later or contact your administrator',
       );
     }
   }

@@ -54,7 +54,7 @@ module('Integration | Component | repository card', (hooks) => {
     });
 
     await render(
-      hbs`<RepositoryCard @repository={{this.repository}} @choice={{true}} @toggleRepository={{this.toggleRepository}} />`
+      hbs`<RepositoryCard @repository={{this.repository}} @choice={{true}} @toggleRepository={{this.toggleRepository}} />`,
     );
 
     await waitFor('input[type="checkbox"]');

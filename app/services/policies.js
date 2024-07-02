@@ -55,8 +55,8 @@ export default class PoliciesService extends Service {
         this.store.findRecord('policy', policyInfo.id).then((pol) => {
           pol.set('_type', policyInfo.type);
           return pol;
-        })
-      )
+        }),
+      ),
     );
   });
 
@@ -139,8 +139,8 @@ export default class PoliciesService extends Service {
           .then((repo) => {
             repo.set('_selected', repoInfo.selected);
             return repo;
-          })
-      )
+          }),
+      ),
     );
   })
   _resolveRepos;

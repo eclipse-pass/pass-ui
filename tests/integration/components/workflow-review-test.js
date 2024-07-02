@@ -63,7 +63,7 @@ module('Integration | Component | workflow review', (hooks) => {
       'service:current-user',
       EmberObject.extend({
         user: { id: 'preparer' },
-      })
+      }),
     );
 
     let submission = EmberObject.create({
@@ -125,7 +125,7 @@ module('Integration | Component | workflow review', (hooks) => {
       'service:current-user',
       EmberObject.extend({
         user: { id: 'pi' },
-      })
+      }),
     );
 
     let submission = EmberObject.create({
@@ -326,7 +326,7 @@ module('Integration | Component | workflow review', (hooks) => {
       'service:current-user',
       EmberObject.extend({
         user: { id: 'pi' },
-      })
+      }),
     );
 
     let submission = EmberObject.create({

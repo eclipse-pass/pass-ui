@@ -34,7 +34,7 @@ export default class MetadataSchemaService extends Service {
       new Ajv({
         logger: false,
         addUsedSchema: false,
-      })
+      }),
     );
   }
 
@@ -336,7 +336,7 @@ export default class MetadataSchemaService extends Service {
       .forEach((repo) =>
         result.push({
           [repo.name]: repo.agreementText,
-        })
+        }),
       );
 
     return {

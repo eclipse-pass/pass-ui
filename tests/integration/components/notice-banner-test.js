@@ -29,12 +29,12 @@ module('Integration | Component | notice-banner', (hooks) => {
     assert.equal(
       this.element.querySelector('.instructions-url').getAttribute('href'),
       'http://test-instructions/',
-      'instruction url populated'
+      'instruction url populated',
     );
     assert.equal(
       this.element.querySelector('.contact-us-url').getAttribute('href'),
       'http://test-contact/',
-      'contact us url populated'
+      'contact us url populated',
     );
   });
 });

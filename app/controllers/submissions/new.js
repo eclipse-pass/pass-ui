@@ -93,7 +93,7 @@ export default class SubmissionsNew extends Controller {
       swal(
         'Incorrect Manuscript Count',
         `Only one file may be designated as the manuscript.  Instead, found ${manuscriptFiles.length}.  Please go back and edit the file list`,
-        'warning'
+        'warning',
       );
     } else {
       let sub = this.model.newSubmission;

@@ -84,7 +84,7 @@ export default class WorkflowReview extends Component {
           $('.fa-exclamation-triangle').css('font-size', '2em');
         }, 4000);
         this.flashMessages.warning(
-          'Please visit the following web portal to submit your manuscript directly. Metadata displayed above could be used to aid in your submission progress.'
+          'Please visit the following web portal to submit your manuscript directly. Metadata displayed above could be used to aid in your submission progress.',
         );
       }
       disableSubmit = false;
@@ -160,15 +160,15 @@ export default class WorkflowReview extends Component {
             'Once you click confirm you will no longer be able to edit this submission or add repositories.<br/>';
           if (reposWithoutAgreementText.length > 0 || reposThatUserAgreedToDeposit.length) {
             swalMsg = `${swalMsg}You are about to submit your files to: <pre><code>${JSON.stringify(
-              reposThatUserAgreedToDeposit.map((repo) => repo.id)
+              reposThatUserAgreedToDeposit.map((repo) => repo.id),
             ).replace(/[\[\]']/g, '')}${JSON.stringify(reposWithoutAgreementText.map((repo) => repo.id)).replace(
               /[\[\]']/g,
-              ''
+              '',
             )} </code></pre>`;
           }
           if (reposWithWebLink.length > 0) {
             swalMsg = `${swalMsg}You were prompted to submit to: <code><pre>${JSON.stringify(
-              reposWithWebLink.map((repo) => repo.id)
+              reposWithWebLink.map((repo) => repo.id),
             ).replace(/[\[\]']/g, '')}</code></pre>`;
           }
 
@@ -220,7 +220,7 @@ export default class WorkflowReview extends Component {
           swal({
             title: 'Your submission cannot be submitted.',
             html: `You declined to agree to the deposit agreement(s) for ${JSON.stringify(
-              reposUserDidNotAgreeToDeposit.map((repo) => repo.id)
+              reposUserDidNotAgreeToDeposit.map((repo) => repo.id),
             ).replace(/[\[\]']/g, '')}. Therefore, this submission cannot be submitted.`,
             confirmButtonText: 'Ok',
           });

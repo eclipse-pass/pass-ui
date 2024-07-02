@@ -15,7 +15,7 @@ module('Unit | Controller | dashboard', (hooks) => {
         user: EmberObject.create({
           roles: ['submitter', 'admin', 'moderator'],
         }),
-      })
+      }),
     );
     // assert.expect(4);
 
@@ -45,7 +45,7 @@ module('Unit | Controller | dashboard', (hooks) => {
         user: EmberObject.create({
           roles: ['admin', 'moderator'],
         }),
-      })
+      }),
     );
     assert.ok(true);
   });

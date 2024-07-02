@@ -54,7 +54,7 @@ module('Integration | Component | workflow grants', (hooks) => {
           findRecord(type, id) {
             return Promise.resolve(grants.findBy('id', id));
           },
-        })
+        }),
       );
 
       this.owner.unregister('service:app-static-config');
@@ -128,7 +128,7 @@ module('Integration | Component | workflow grants', (hooks) => {
         clearAddedGrants: () => {
           list.clear();
         },
-      })
+      }),
     );
 
     await render(hbs`<WorkflowGrants
@@ -177,14 +177,14 @@ module('Integration | Component | workflow grants', (hooks) => {
           assert.ok(true);
           list = list.filter((g) => g.id !== grant.id);
         },
-      })
+      }),
     );
 
     this.set('preLoadedGrant', knownGrant);
     this.set('selectedItems', A([knownGrant]));
 
     await render(
-      hbs`<WorkflowGrants @submission={{this.submission}} @next={{this.loadNext}} @back={{this.loadPrevious}} />`
+      hbs`<WorkflowGrants @submission={{this.submission}} @next={{this.loadNext}} @back={{this.loadPrevious}} />`,
     );
 
     const grantRows = findAll('#grants-selection-table table tbody tr');

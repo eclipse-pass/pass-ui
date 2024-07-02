@@ -15,7 +15,7 @@ module('Unit | Service | submission-handler', (hooks) => {
       'service:current-user',
       EmberObject.extend({
         user: { id: 'proxy-user-id' },
-      })
+      }),
     );
 
     let submissionEvent = {};
@@ -33,7 +33,7 @@ module('Unit | Service | submission-handler', (hooks) => {
 
           return submissionEvent;
         },
-      })
+      }),
     );
 
     let repo1 = EmberObject.create({ id: 'test:repo1', integrationType: 'full' });
@@ -93,7 +93,7 @@ module('Unit | Service | submission-handler', (hooks) => {
       'service:current-user',
       EmberObject.extend({
         user: { id: 'submitter:test-id' },
-      })
+      }),
     );
 
     let submissionEvent = {};
@@ -111,7 +111,7 @@ module('Unit | Service | submission-handler', (hooks) => {
 
           return submissionEvent;
         },
-      })
+      }),
     );
 
     let repo1 = EmberObject.create({ id: 'test:repo1', integrationType: 'full' });
@@ -180,7 +180,7 @@ module('Unit | Service | submission-handler', (hooks) => {
 
           return submissionEvent;
         },
-      })
+      }),
     );
 
     let repo1 = EmberObject.create({ id: 'test:repo1', integrationType: 'full' });
@@ -238,7 +238,7 @@ module('Unit | Service | submission-handler', (hooks) => {
 
           return submissionEvent;
         },
-      })
+      }),
     );
 
     let submission = EmberObject.create({
@@ -285,7 +285,7 @@ module('Unit | Service | submission-handler', (hooks) => {
 
           return submissionEvent;
         },
-      })
+      }),
     );
 
     let submission = EmberObject.create({
@@ -465,7 +465,7 @@ module('Unit | Service | submission-handler', (hooks) => {
     assert.ok(publication.save.calledOnce, 'Publication deletion should be persisted');
     assert.ok(
       files.map((f) => f.destroyRecord).every((func) => func.calledOnce),
-      'All files should be destroyed'
+      'All files should be destroyed',
     );
   });
 });

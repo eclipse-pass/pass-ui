@@ -241,7 +241,7 @@ module('Integration | Component | workflow basics', (hooks) => {
         }),
         formatDOI: () => 'Formatted-Moo',
         isValidDOI: () => true,
-      })
+      }),
     );
 
     await render(hbs`<WorkflowBasics
@@ -347,7 +347,7 @@ module('Integration | Component | workflow basics', (hooks) => {
     await settled();
     assert.notOk(
       get(this, 'publication.doi'),
-      'After clearing the DOI input, there should no longer be a doi value on the publication'
+      'After clearing the DOI input, there should no longer be a doi value on the publication',
     );
 
     const inputs = this.element.querySelectorAll('input');

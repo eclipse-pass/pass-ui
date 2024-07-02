@@ -33,7 +33,7 @@ module('Unit | Controller | submissions/detail', (hooks) => {
           assert.ok(true);
           return Promise.resolve();
         },
-      })
+      }),
     );
 
     controller.send('deleteSubmission', submission);

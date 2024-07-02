@@ -18,7 +18,7 @@ export default class ChoiceRepositoriesCard extends Component {
   @action
   toggleRepository(repository, selected) {
     const checkboxes = Array.from(
-      document.querySelectorAll('.choice-repository-card-list > li > input[type="checkbox"]')
+      document.querySelectorAll('.choice-repository-card-list > li > input[type="checkbox"]'),
     ).filter((input) => input.checked);
     if (!selected && checkboxes.length === 0) {
       event.target.checked = true;

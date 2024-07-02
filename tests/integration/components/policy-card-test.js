@@ -90,7 +90,7 @@ module('Integration | Component | policy card', (hooks) => {
       this.set('repository', repository);
 
       await render(
-        hbs`<PolicyCard @policy={{this.policy}} @journal={{this.journal}} @submission={{this.submission}} />`
+        hbs`<PolicyCard @policy={{this.policy}} @journal={{this.journal}} @submission={{this.submission}} />`,
       );
 
       assert.dom('[data-test-workflow-policies-radio-no-direct-deposit]').exists();
@@ -104,7 +104,7 @@ module('Integration | Component | policy card', (hooks) => {
 
     test('PMC non-type A can be removed', async function (assert) {
       await render(
-        hbs`<PolicyCard @policy={{this.policy}} @journal={{this.journal}} @submission={{this.submission}} />`
+        hbs`<PolicyCard @policy={{this.policy}} @journal={{this.journal}} @submission={{this.submission}} />`,
       );
 
       const inputs = this.element.querySelectorAll('input');
@@ -138,14 +138,14 @@ module('Integration | Component | policy card', (hooks) => {
       this.set('repository', repository);
 
       await render(
-        hbs`<PolicyCard @policy={{this.policy}} @journal={{this.journal}} @submission={{this.submission}} />`
+        hbs`<PolicyCard @policy={{this.policy}} @journal={{this.journal}} @submission={{this.submission}} />`,
       );
       assert.ok(this.element, 'failed to render');
 
       assert
         .dom('[data-test-method-a-journal-pmc-intro]')
         .containsText(
-          'The journal you published in participates in the PMC Method A program, and will submit the published article to PMC on your behalf.'
+          'The journal you published in participates in the PMC Method A program, and will submit the published article to PMC on your behalf.',
         );
 
       assert.dom('[data-test-workflow-policies-radio-no-direct-deposit]').doesNotExist();

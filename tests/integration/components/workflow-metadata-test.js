@@ -307,7 +307,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       Service.extend({
         getDoiInfo: () => {},
         isDataFromCrossref: () => false,
-      })
+      }),
     );
 
     await render(hbs`<WorkflowMetadata @submission={{this.submission}} @publication={{this.publication}} />`);
@@ -378,7 +378,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       'metadata',
       JSON.stringify({
         ISSN: '123Moo',
-      })
+      }),
     );
     this.set('submission', sub);
 
@@ -407,7 +407,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
     assert.ok(nlmtaInput, 'NLMTA-ID input not found');
     assert.ok(
       nlmtaInput.hasAttribute('readonly') || nlmtaInput.hasAttribute('disabled'),
-      'NLMTA-ID input was found to be editable'
+      'NLMTA-ID input was found to be editable',
     );
     assert.ok(nlmtaInput.value, 'MOO JOURNAL', 'Unexpected "NLMTA-ID" found');
 
@@ -415,7 +415,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
     assert.ok(issnInput, 'ISSN input not found');
     assert.notOk(
       issnInput.hasAttribute('readonly') || issnInput.hasAttribute('disabled'),
-      'ISSN input was read only, but should be editable'
+      'ISSN input was read only, but should be editable',
     );
     assert.ok(issnInput.value, '123Moo', 'Unexpected ISSN value found');
   });
@@ -452,7 +452,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
     assert.notOk(component.metadata, 'No component metadata found');
     assert.notOk(
       get(component, 'metadata.badMoo'),
-      'metadata.badMoo property should not be found on the metadata object'
+      'metadata.badMoo property should not be found on the metadata object',
     );
   });
 

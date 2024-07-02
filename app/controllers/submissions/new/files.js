@@ -74,7 +74,7 @@ export default class SubmissionsNewFiles extends Controller {
     let needValidation = this.needValidation;
     if (needValidation) {
       let manuscriptFiles = [...this.newFiles, ...this.model.files.slice()].filter(
-        (file) => file && get(file, 'fileRole') === 'manuscript'
+        (file) => file && get(file, 'fileRole') === 'manuscript',
       );
 
       const submitter = await this.parent.userIsSubmitter();
@@ -96,7 +96,7 @@ export default class SubmissionsNewFiles extends Controller {
         this.flashMessages.warning('At least one manuscript file is required');
       } else if (manuscriptFiles.length > 1) {
         this.flashMessages.warning(
-          `Only one file may be designated as the manuscript.  Instead, found ${manuscriptFiles.length}`
+          `Only one file may be designated as the manuscript.  Instead, found ${manuscriptFiles.length}`,
         );
       } else {
         this.loadTab(gotoTab);

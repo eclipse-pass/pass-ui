@@ -45,20 +45,20 @@ module('Integration | Component | workflow files', (hooks) => {
     sinon.replace(
       staticConfig,
       'getStaticConfig',
-      sinon.fake.returns(Promise.resolve({ branding: { stylesheet: '', returns: {} } }))
+      sinon.fake.returns(Promise.resolve({ branding: { stylesheet: '', returns: {} } })),
     );
 
     this.owner.register('service:app-static-config', staticConfig);
 
     this.owner.register(
       'service:workflow',
-      sinon.stub(this.owner.lookup('service:workflow'), 'getDoiInfo').returns({ DOI: 'moo-doi' })
+      sinon.stub(this.owner.lookup('service:workflow'), 'getDoiInfo').returns({ DOI: 'moo-doi' }),
     );
 
     this.msServiceFake = sinon.replace(
       this.owner.lookup('service:oa-manuscript-service'),
       'lookup',
-      sinon.fake.returns(Promise.resolve([{ name: 'This is a moo', url: 'http://example.com/moo.pdf' }]))
+      sinon.fake.returns(Promise.resolve([{ name: 'This is a moo', url: 'http://example.com/moo.pdf' }])),
     );
     this.owner.register('service:oa-manuscript-service', this.msServiceFake);
 
@@ -69,7 +69,7 @@ module('Integration | Component | workflow files', (hooks) => {
         new Response(201, {
           Location: 'https://pass.local/api/v1/file/123456',
           'Content-Type': 'text/plain; charset=UTF-8',
-        })
+        }),
     );
   });
 

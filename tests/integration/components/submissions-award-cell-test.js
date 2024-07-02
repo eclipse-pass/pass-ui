@@ -31,7 +31,7 @@ module('Integration | Component | submissions award cell', (hooks) => {
     assert.equal(
       this.element.textContent.trim(),
       'test-awdnum-1\n  (test-pfname-1)\n    ,\n  test-awdnum-2\n  (test-pfname-2)',
-      'render many awards correctly'
+      'render many awards correctly',
     );
   });
 });

@@ -31,7 +31,7 @@ module('Unit | Service | current-user', (hooks) => {
 
           return new Promise((resolve) => resolve(user));
         },
-      })
+      }),
     );
 
     assert.expect(5);

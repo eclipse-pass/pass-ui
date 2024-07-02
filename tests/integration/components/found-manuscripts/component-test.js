@@ -23,14 +23,14 @@ module('Integration | Component | found-manuscripts', (hooks) => {
             },
           }),
         addCss: () => {},
-      })
+      }),
     );
 
     this.owner.register(
       'service:workflow',
       Service.extend({
         getDoiInfo: () => ({ DOI: 'doi-moo' }),
-      })
+      }),
     );
 
     // Dumb service mock to prevent random fetches
@@ -38,7 +38,7 @@ module('Integration | Component | found-manuscripts', (hooks) => {
       'service:oa-manuscript-service',
       Service.extend({
         lookup: () => Promise.resolve([]),
-      })
+      }),
     );
   });
 
@@ -78,7 +78,7 @@ module('Integration | Component | found-manuscripts', (hooks) => {
           assert.ok(doi, 'DOI still needs to be present');
           return Promise.resolve([]);
         },
-      })
+      }),
     );
 
     await render(hbs`<FoundManuscripts />`);

@@ -85,7 +85,7 @@ export default class SubmissionsNewBasics extends Controller {
       // If there's no submitter or submitter info and the submission is a new proxy submission:
       if (this.submitterIsInvalid) {
         this.flashMessages.warning(
-          'You have indicated that you are submitting on behalf of someone, please select the user or enter their name and email address.'
+          'You have indicated that you are submitting on behalf of someone, please select the user or enter their name and email address.',
         );
         return;
       }
@@ -94,7 +94,7 @@ export default class SubmissionsNewBasics extends Controller {
         if (this.submitterEmailIsInvalid) {
           set(this, 'submitterEmailError', true);
           this.flashMessages.warning(
-            'The email address you entered is invalid. Please verify the value and try again.'
+            'The email address you entered is invalid. Please verify the value and try again.',
           );
           return;
         }

@@ -53,7 +53,7 @@ module('Integration | Component | submissions repoid cell', (hooks) => {
         query(type, q) {
           assert.ok(true);
         },
-      })
+      }),
     );
     const record = EmberObject.create({
       publication: EmberObject.create({}),

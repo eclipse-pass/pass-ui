@@ -30,7 +30,7 @@ export default class RepositoriesRoute extends CheckSessionRoute {
     const fundersWithRepos = funders.filter((funder) => get(funder, 'policy.repositories'));
     // List of funders that include this repository
     const fundersWithOurRepo = fundersWithRepos.filter(
-      (funder) => get(funder, 'policy') && funder.get('policy.repositories').includes(repo)
+      (funder) => get(funder, 'policy') && funder.get('policy.repositories').includes(repo),
     );
 
     if (fundersWithRepos && fundersWithOurRepo.length > 0) {
@@ -50,7 +50,7 @@ export default class RepositoriesRoute extends CheckSessionRoute {
           repository: repo,
           funders,
         };
-      })
+      }),
     );
   }
 
@@ -63,7 +63,7 @@ export default class RepositoriesRoute extends CheckSessionRoute {
           repository: repo,
           funders,
         };
-      })
+      }),
     );
   }
 

@@ -38,7 +38,7 @@ module('Integration | Component | metadata-form', (hooks) => {
     assert.strictEqual(
       el.querySelectorAll('button').length,
       3,
-      'There should be three form control buttons (prev, abort, next)'
+      'There should be three form control buttons (prev, abort, next)',
     );
   });
 
