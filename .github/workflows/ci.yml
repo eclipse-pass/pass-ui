@@ -65,10 +65,6 @@ jobs:
           node-version: 18
           cache: yarn
 
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-        shell: bash
-
       - name: Build local image
         uses: ./.github/actions/build-pass-ui
 
