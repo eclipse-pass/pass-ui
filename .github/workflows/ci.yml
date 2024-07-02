@@ -49,7 +49,7 @@ jobs:
       - name: Install Dependencies
         run: pnpm install
       - name: Run Tests
-        run: ember test
+        run: pnpm run test:no-serve
 
   acceptance-test:
     name: "Acceptance test"
