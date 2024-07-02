@@ -134,8 +134,10 @@
   "ember": {
     "edition": "octane"
   },
-  "resolutions": {
-    "@embroider/macros": "1.16.0"
+  "pnpm": {
+    "overrides": {
+      "@embroider/macros": "1.16.0"
+    }
   },
   "dependencies": {}
 }
