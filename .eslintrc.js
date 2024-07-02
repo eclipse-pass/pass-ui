@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = {
   root: true,
   parser: '@babel/eslint-parser',
@@ -14,60 +16,13 @@ module.exports = {
   env: {
     browser: true,
   },
-
   rules: {
-    'import/extensions': 'off',
-    'import/no-unresolved': 'off',
-    'no-underscore-dangle': 'off',
-    'no-undef': 'off',
-    'func-names': 'off',
-    eqeqeq: 'off',
-    'one-var': 'off',
-    'prefer-rest-params': 'off',
-    // eventually re-enable these:
-    'max-len': 'off',
-    'prefer-destructuring': 'off',
-    'no-plusplus': 'off',
-    'no-prototype-builtins': 'off',
-    'no-restricted-properties': 'off',
-    'prefer-const': 'off',
-    'block-scoped-var': 'off',
-    'vars-on-top': 'off',
-    'no-console': 'off',
-    'no-shadow': 'off',
     'no-unused-vars': 'off',
-    'no-var': 'off',
-    'no-redeclare': 'off',
-    'guard-for-in': 'off',
-    'no-restricted-syntax': 'off',
-    'no-param-reassign': 'off',
-    'import/first': 'off',
-    'no-mixed-operators': 'off',
-    'no-throw-literal': 'off',
-    'consistent-return': 'off',
-    'import/no-extraneous-dependencies': 'off',
-    'no-restricted-globals': 'off',
-    'comma-dangle': 'off',
-    'array-callback-return': 'off',
-    'no-lonely-if': 'off',
+    'no-undef': 'off',
     'no-useless-escape': 'off',
-    'class-methods-use-this': 'off',
-    'generator-star-spacing': 'off',
-    // we're not enabling this yet
-    // 'ember/no-jquery': 'error'
+    'no-prototype-builtins': 'off',
+    'no-redeclare': 'off',
   },
-  ignorePatterns: [
-    '.eslintrc.js',
-    '.prettierrc.js',
-    '.template-lintrc.js',
-    'ember-cli-build.js',
-    'testem.js',
-    'blueprints/*/index.js',
-    'config/**/*.js',
-    'lib/*/index.js',
-    'server/**/*.js',
-    'dist/**/*',
-  ],
   overrides: [
     // node files
     {
@@ -90,17 +45,12 @@ module.exports = {
         browser: false,
         node: true,
       },
-    },
-    // ember tests
-    {
-      files: ['tests/**/*-test.{js,ts}'],
-      rules: {
-        'prefer-arrow-callback': 'off',
-        // this can be removed once the following is fixed
-        // https://github.com/mysticatea/eslint-plugin-node/issues/77
-        'node/no-unpublished-require': 'off',
-      },
       extends: ['plugin:n/recommended'],
+    },
+    {
+      // test files
+      files: ['tests/**/*-test.{js,ts}'],
+      extends: ['plugin:qunit/recommended'],
     },
   ],
 };
