@@ -12,13 +12,11 @@ module('Integration | Component | workflow basics user search', (hooks) => {
     this.set('pickSubmitter', (actual) => {});
     this.set('toggleUserSearchModal', (actual) => {});
 
-    await render(hbs`
-      <WorkflowBasicsUserSearch
-        @toggleUserSearchModal={{this.toggleUserSearchModal}}
-        @pickSubmitter={{this.pickSubmitter}}
-        @searchInput={{this.userSearchTerm}}
-      />
-    `);
+    await render(hbs`<WorkflowBasicsUserSearch
+  @toggleUserSearchModal={{this.toggleUserSearchModal}}
+  @pickSubmitter={{this.pickSubmitter}}
+  @searchInput={{this.userSearchTerm}}
+/>`);
 
     assert.ok(true);
   });

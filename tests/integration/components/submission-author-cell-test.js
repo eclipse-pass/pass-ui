@@ -7,7 +7,7 @@ module('Integration | Component | submission author cell', (hooks) => {
   setupRenderingTest(hooks);
 
   test('it renders', async function (assert) {
-    await render(hbs`{{submission-author-cell}}`);
+    await render(hbs`<SubmissionAuthorCell />`);
 
     assert.ok(true);
   });

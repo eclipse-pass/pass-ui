@@ -90,19 +90,17 @@ module('Integration | Component | workflow files', (hooks) => {
     this.previouslyUploadedFiles = [file];
     this.newFiles = [];
 
-    await render(hbs`
-      <WorkflowFiles
-        @submission={{this.submission}}
-        @previouslyUploadedFiles={{this.previouslyUploadedFiles}}
-        @newFiles={{this.newFiles}}
-        @updatePreviouslyUploadedFiles={{this.updatePreviouslyUploadedFiles}}
-        @updateNewFiles={{this.updateNewFiles}}
-        @updateAllFiles={{this.updateAllFiles}}
-        @next={{action this.fakeAction}}
-        @back={{action this.fakeAction}}
-        @abort={{action this.fakeAction}}
-      />
-    `);
+    await render(hbs`<WorkflowFiles
+  @submission={{this.submission}}
+  @previouslyUploadedFiles={{this.previouslyUploadedFiles}}
+  @newFiles={{this.newFiles}}
+  @updatePreviouslyUploadedFiles={{this.updatePreviouslyUploadedFiles}}
+  @updateNewFiles={{this.updateNewFiles}}
+  @updateAllFiles={{this.updateAllFiles}}
+  @next={{this.fakeAction}}
+  @back={{this.fakeAction}}
+  @abort={{this.fakeAction}}
+/>`);
 
     const btn = this.element.querySelector('button');
     assert.ok(btn);
@@ -138,16 +136,16 @@ module('Integration | Component | workflow files', (hooks) => {
     this.previouslyUploadedFiles = [ms];
 
     await render(hbs`<WorkflowFiles
-      @submission={{this.submission}}
-      @previouslyUploadedFiles={{this.previouslyUploadedFiles}}
-      @newFiles={{this.newFiles}}
-      @updatePreviouslyUploadedFiles={{this.updatePreviouslyUploadedFiles}}
-      @updateNewFiles={{this.updateNewFiles}}
-      @updateAllFiles={{this.updateAllFiles}}
-      @next={{this.fakeAction}}
-      @back={{this.fakeAction}}
-      @abort={{this.fakeAction}}
-    />`);
+  @submission={{this.submission}}
+  @previouslyUploadedFiles={{this.previouslyUploadedFiles}}
+  @newFiles={{this.newFiles}}
+  @updatePreviouslyUploadedFiles={{this.updatePreviouslyUploadedFiles}}
+  @updateNewFiles={{this.updateNewFiles}}
+  @updateAllFiles={{this.updateAllFiles}}
+  @next={{this.fakeAction}}
+  @back={{this.fakeAction}}
+  @abort={{this.fakeAction}}
+/>`);
 
     assert.dom('[data-test-foundmss-component]').doesNotExist();
     assert.dom('[data-test-added-supplemental-row]').doesNotExist();
@@ -165,16 +163,16 @@ module('Integration | Component | workflow files', (hooks) => {
     this.previouslyUploadedFiles = [];
 
     await render(hbs`<WorkflowFiles
-      @submission={{this.submission}}
-      @previouslyUploadedFiles={{this.previouslyUploadedFiles}}
-      @newFiles={{this.newFiles}}
-      @updatePreviouslyUploadedFiles={{this.updatePreviouslyUploadedFiles}}
-      @updateNewFiles={{this.updateNewFiles}}
-      @updateAllFiles={{this.updateAllFiles}}
-      @next={{this.fakeAction}}
-      @back={{this.fakeAction}}
-      @abort={{this.fakeAction}}
-    />`);
+  @submission={{this.submission}}
+  @previouslyUploadedFiles={{this.previouslyUploadedFiles}}
+  @newFiles={{this.newFiles}}
+  @updatePreviouslyUploadedFiles={{this.updatePreviouslyUploadedFiles}}
+  @updateNewFiles={{this.updateNewFiles}}
+  @updateAllFiles={{this.updateAllFiles}}
+  @next={{this.fakeAction}}
+  @back={{this.fakeAction}}
+  @abort={{this.fakeAction}}
+/>`);
 
     assert.ok(this.msServiceFake.calledOnce, 'Manuscript Service should be called once');
     assert.dom('[data-test-added-manuscript-row]').doesNotExist();
@@ -202,31 +200,29 @@ module('Integration | Component | workflow files', (hooks) => {
     // Need to make sure the flash message service is initialized
     this.flashMessages = this.owner.lookup('service:flash-messages');
 
-    await render(hbs`
-      {{#each this.flashMessages.queue as |flash|}}
-        <div class="flash-message-container">
-          <FlashMessage @flash={{flash}} as |component flash close|>
-            <div class="d-flex justify-content-between">
-              {{flash.message}}
-              <span role="button" {{on "click" close}}>
-                x
-              </span>
-            </div>
-          </FlashMessage>
-        </div>
-      {{/each}}
-      <WorkflowFiles
-        @submission={{this.submission}}
-        @previouslyUploadedFiles={{this.previouslyUploadedFiles}}
-        @newFiles={{this.newFiles}}
-        @updatePreviouslyUploadedFiles={{this.updatePreviouslyUploadedFiles}}
-        @updateNewFiles={{this.updateNewFiles}}
-        @updateAllFiles={{this.updateAllFiles}}
-        @next={{action this.fakeAction}}
-        @back={{action this.fakeAction}}
-        @abort={{action this.fakeAction}}
-      ></WorkflowFiles>
-    `);
+    await render(hbs`{{#each this.flashMessages.queue as |flash|}}
+  <div class='flash-message-container'>
+    <FlashMessage @flash={{flash}} as |component flash close|>
+      <div class='d-flex justify-content-between'>
+        {{flash.message}}
+        <span role='button' {{on 'click' close}}>
+          x
+        </span>
+      </div>
+    </FlashMessage>
+  </div>
+{{/each}}
+<WorkflowFiles
+  @submission={{this.submission}}
+  @previouslyUploadedFiles={{this.previouslyUploadedFiles}}
+  @newFiles={{this.newFiles}}
+  @updatePreviouslyUploadedFiles={{this.updatePreviouslyUploadedFiles}}
+  @updateNewFiles={{this.updateNewFiles}}
+  @updateAllFiles={{this.updateAllFiles}}
+  @next={{this.fakeAction}}
+  @back={{this.fakeAction}}
+  @abort={{this.fakeAction}}
+/>`);
 
     const btn = this.element.querySelector('button');
     assert.ok(btn);

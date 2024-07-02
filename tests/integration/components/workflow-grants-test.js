@@ -63,14 +63,12 @@ module('Integration | Component | workflow grants', (hooks) => {
   });
 
   test('it renders', async function (assert) {
-    await render(hbs`
-      <WorkflowGrants
-        @submission={{this.submission}}
-        @preLoadedGrant={{this.preLoadedGrant}}
-        @next={{this.loadNext}}
-        @back={{this.loadPrevious}}
-      />
-    `);
+    await render(hbs`<WorkflowGrants
+  @submission={{this.submission}}
+  @preLoadedGrant={{this.preLoadedGrant}}
+  @next={{this.loadNext}}
+  @back={{this.loadPrevious}}
+/>`);
     // Settled is required to let the call to store.query return before
     // checking the rendered component
     await settled();
@@ -85,14 +83,12 @@ module('Integration | Component | workflow grants', (hooks) => {
 
     this.set('preLoadedGrant', knownGrant);
 
-    await render(hbs`
-      <WorkflowGrants
-        @submission={{this.submission}}
-        @preLoadedGrant={{this.preLoadedGrant}}
-        @next={{this.loadNext}}
-        @back={{this.loadPrevious}}
-      />
-    `);
+    await render(hbs`<WorkflowGrants
+  @submission={{this.submission}}
+  @preLoadedGrant={{this.preLoadedGrant}}
+  @next={{this.loadNext}}
+  @back={{this.loadPrevious}}
+/>`);
 
     await settled();
 
@@ -135,14 +131,12 @@ module('Integration | Component | workflow grants', (hooks) => {
       })
     );
 
-    await render(hbs`
-      <WorkflowGrants
-        @submission={{this.submission}}
-        @preLoadedGrant={{this.preLoadedGrant}}
-        @next={{this.loadNext}}
-        @back={{this.loadPrevious}}
-      />
-    `);
+    await render(hbs`<WorkflowGrants
+  @submission={{this.submission}}
+  @preLoadedGrant={{this.preLoadedGrant}}
+  @next={{this.loadNext}}
+  @back={{this.loadPrevious}}
+/>`);
 
     await settled();
 
@@ -189,13 +183,9 @@ module('Integration | Component | workflow grants', (hooks) => {
     this.set('preLoadedGrant', knownGrant);
     this.set('selectedItems', A([knownGrant]));
 
-    await render(hbs`
-      <WorkflowGrants
-        @submission={{this.submission}}
-        @next={{this.loadNext}}
-        @back={{this.loadPrevious}}
-      />
-    `);
+    await render(
+      hbs`<WorkflowGrants @submission={{this.submission}} @next={{this.loadNext}} @back={{this.loadPrevious}} />`
+    );
 
     const grantRows = findAll('#grants-selection-table table tbody tr');
     assert.strictEqual(grantRows.length, 4, 'Should be 4 rows');

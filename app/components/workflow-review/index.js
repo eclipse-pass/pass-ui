@@ -99,7 +99,7 @@ export default class WorkflowReview extends Component {
     }
 
     if (get(this, 'args.submission.submitter.id') !== get(this, 'currentUser.user.id')) {
-      this.args.submit();
+      this.args.submitSubmission();
       return;
     }
 
@@ -203,7 +203,7 @@ export default class WorkflowReview extends Component {
 
             this.args.submission.repositories = filteredRepos;
 
-            this.args.submit();
+            this.args.submitSubmission();
           } else {
             const elements = document.querySelectorAll('.block-user-input');
             elements.forEach((el) => {

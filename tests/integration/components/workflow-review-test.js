@@ -33,18 +33,16 @@ module('Integration | Component | workflow review', (hooks) => {
     this.uploading = '';
     this.waitingMessage = '';
 
-    await render(hbs`
-      <WorkflowReview
-        @submission={{this.submission}}
-        @publication={{this.publication}}
-        @previouslyUploadedFiles={{this.files}}
-        @comment={{this.comment}}
-        @back={{action this.loadPrevious}}
-        @submit={{action this.submit}}
-        @uploading={{this.uploading}}
-        @waitingMessage={{this.waitingMessage}}
-      />
-    `);
+    await render(hbs`<WorkflowReview
+  @submission={{this.submission}}
+  @publication={{this.publication}}
+  @previouslyUploadedFiles={{this.files}}
+  @comment={{this.comment}}
+  @back={{this.loadPrevious}}
+  @submitSubmission={{this.submit}}
+  @uploading={{this.uploading}}
+  @waitingMessage={{this.waitingMessage}}
+/>`);
     assert.ok(true);
   });
 
@@ -90,17 +88,15 @@ module('Integration | Component | workflow review', (hooks) => {
     this.set('uploading', '');
     this.set('waitingMessage', '');
 
-    await render(hbs`
-      <WorkflowReview
-        @submission={{this.submission}}
-        @publication={{this.publication}}
-        @previouslyUploadedFiles={{this.files}}
-        @comment={{this.comment}}
-        @submit={{action this.submit}}
-        @uploading={{this.uploading}}
-        @waitingMessage={{this.waitingMessage}}
-      />
-    `);
+    await render(hbs`<WorkflowReview
+  @submission={{this.submission}}
+  @publication={{this.publication}}
+  @previouslyUploadedFiles={{this.files}}
+  @comment={{this.comment}}
+  @submitSubmission={{this.submit}}
+  @uploading={{this.uploading}}
+  @waitingMessage={{this.waitingMessage}}
+/>`);
 
     // Click on submit
     await click('.submit');
@@ -154,17 +150,15 @@ module('Integration | Component | workflow review', (hooks) => {
     this.set('uploading', '');
     this.set('waitingMessage', '');
 
-    await render(hbs`
-      <WorkflowReview
-        @submission={{this.submission}}
-        @publication={{this.publication}}
-        @previouslyUploadedFiles={{this.files}}
-        @comment={{this.comment}}
-        @submit={{action this.submit}}
-        @uploading={{this.uploading}}
-        @waitingMessage={{this.waitingMessage}}
-      />
-    `);
+    await render(hbs`<WorkflowReview
+  @submission={{this.submission}}
+  @publication={{this.publication}}
+  @previouslyUploadedFiles={{this.files}}
+  @comment={{this.comment}}
+  @submitSubmission={{this.submit}}
+  @uploading={{this.uploading}}
+  @waitingMessage={{this.waitingMessage}}
+/>`);
 
     // Click on submit
     await click('.submit');
@@ -217,17 +211,15 @@ module('Integration | Component | workflow review', (hooks) => {
       submitted = true;
     };
 
-    await render(hbs`
-      <WorkflowReview
-        @submission={{this.submission}}
-        @publication={{this.publication}}
-        @previouslyUploadedFiles={{this.files}}
-        @comment={{this.comment}}
-        @submit={{action this.submit}}
-        @uploading={{this.uploading}}
-        @waitingMessage={{this.waitingMessage}}
-      />
-    `);
+    await render(hbs`<WorkflowReview
+  @submission={{this.submission}}
+  @publication={{this.publication}}
+  @previouslyUploadedFiles={{this.files}}
+  @comment={{this.comment}}
+  @submitSubmission={{this.submit}}
+  @uploading={{this.uploading}}
+  @waitingMessage={{this.waitingMessage}}
+/>`);
 
     assert
       .dom('[data-test-workflow-review-submit]')
@@ -292,17 +284,15 @@ module('Integration | Component | workflow review', (hooks) => {
       submitted = true;
     };
 
-    await render(hbs`
-      <WorkflowReview
-        @submission={{this.submission}}
-        @publication={{this.publication}}
-        @previouslyUploadedFiles={{this.files}}
-        @comment={{this.comment}}
-        @submit={{action this.submit}}
-        @uploading={{this.uploading}}
-        @waitingMessage={{this.waitingMessage}}
-      />
-    `);
+    await render(hbs`<WorkflowReview
+  @submission={{this.submission}}
+  @publication={{this.publication}}
+  @previouslyUploadedFiles={{this.files}}
+  @comment={{this.comment}}
+  @submitSubmission={{this.submit}}
+  @uploading={{this.uploading}}
+  @waitingMessage={{this.waitingMessage}}
+/>`);
 
     assert
       .dom('[data-test-workflow-review-submit]')
@@ -361,17 +351,15 @@ module('Integration | Component | workflow review', (hooks) => {
     this.set('uploading', '');
     this.set('waitingMessage', '');
 
-    await render(hbs`
-      <WorkflowReview
-        @submission={{this.submission}}
-        @publication={{this.publication}}
-        @previouslyUploadedFiles={{this.files}}
-        @comment={{this.comment}}
-        @submit={{action this.submit}}
-        @uploading={{this.uploading}}
-        @waitingMessage={{this.waitingMessage}}
-      />
-    `);
+    await render(hbs`<WorkflowReview
+  @submission={{this.submission}}
+  @publication={{this.publication}}
+  @previouslyUploadedFiles={{this.files}}
+  @comment={{this.comment}}
+  @submitSubmission={{this.submit}}
+  @uploading={{this.uploading}}
+  @waitingMessage={{this.waitingMessage}}
+/>`);
 
     await click('.submit');
 

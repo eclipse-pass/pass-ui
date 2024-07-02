@@ -30,15 +30,13 @@ module('Integration | Component | submissions repoid cell', (hooks) => {
 
     this.record = record;
 
-    await render(hbs`
-      <th class='table-header' />
-      <th class='table-header' />
-      <th class='table-header' />
-      <th class='table-header' />
-      <th class='table-header' />
-      <th class='table-header' />
-      <SubmissionsRepoidCell @record={{this.record}} />
-    `);
+    await render(hbs`<th class='table-header' />
+<th class='table-header' />
+<th class='table-header' />
+<th class='table-header' />
+<th class='table-header' />
+<th class='table-header' />
+<SubmissionsRepoidCell @record={{this.record}} />`);
 
     assert.ok(true);
   });
@@ -62,15 +60,13 @@ module('Integration | Component | submissions repoid cell', (hooks) => {
     });
     this.record = record;
 
-    await render(hbs`
-      <th class='table-header' />
-      <th class='table-header' />
-      <th class='table-header' />
-      <th class='table-header' />
-      <th class='table-header' />
-      <th class='table-header' />
-      <SubmissionsRepoidCell @record={{this.record}} />
-    `);
+    await render(hbs`<th class='table-header' />
+<th class='table-header' />
+<th class='table-header' />
+<th class='table-header' />
+<th class='table-header' />
+<th class='table-header' />
+<SubmissionsRepoidCell @record={{this.record}} />`);
     assert.ok(true);
   });
 });

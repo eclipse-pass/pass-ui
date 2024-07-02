@@ -154,12 +154,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
   });
 
   test('should render common schema', async function (assert) {
-    await render(hbs`
-      <WorkflowMetadata
-        @submission={{this.submission}}
-        @publication={{this.publication}}
-      />
-    `);
+    await render(hbs`<WorkflowMetadata @submission={{this.submission}} @publication={{this.publication}} />`);
 
     await waitFor('input[type=text]');
 
@@ -169,12 +164,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
   test('should display current and total number of pages', async function (assert) {
     const expected = 'Form 1 of 3';
 
-    await render(hbs`
-      <WorkflowMetadata
-        @submission={{this.submission}}
-        @publication={{this.publication}}
-      />
-    `);
+    await render(hbs`<WorkflowMetadata @submission={{this.submission}} @publication={{this.publication}} />`);
 
     const header = find('h3');
     await waitUntil(() => {
@@ -184,12 +174,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
   });
 
   test('must show form nav buttons', async function (assert) {
-    await render(hbs`
-      <WorkflowMetadata
-        @submission={{this.submission}}
-        @publication={{this.publication}}
-      />
-    `);
+    await render(hbs`<WorkflowMetadata @submission={{this.submission}} @publication={{this.publication}} />`);
 
     await waitFor('[data-key="Next"]');
     await waitFor('[data-key="Back"]');
@@ -205,12 +190,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
   });
 
   test('second form should be NIHMS', async function (assert) {
-    await render(hbs`
-      <WorkflowMetadata
-        @submission={{this.submission}}
-        @publication={{this.publication}}
-      />
-    `);
+    await render(hbs`<WorkflowMetadata @submission={{this.submission}} @publication={{this.publication}} />`);
 
     await waitFor('[data-key="Next"]');
     await waitFor('[data-key="Back"]');
@@ -224,12 +204,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
   });
 
   test('third form should be J10P', async function (assert) {
-    await render(hbs`
-      <WorkflowMetadata
-        @submission={{this.submission}}
-        @publication={{this.publication}}
-      />
-    `);
+    await render(hbs`<WorkflowMetadata @submission={{this.submission}} @publication={{this.publication}} />`);
 
     await waitFor('[data-key="Next"]');
     await waitFor('[data-key="Back"]');
@@ -262,12 +237,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
 
     this.submission.metadata = JSON.stringify(badHintMetadata);
 
-    await render(hbs`
-    <WorkflowMetadata
-      @submission={{this.submission}}
-      @publication={{this.publication}}
-    />
-  `);
+    await render(hbs`<WorkflowMetadata @submission={{this.submission}} @publication={{this.publication}} />`);
     await waitFor('[data-key="Next"]');
     await click('[data-key="Next"]');
 
@@ -285,12 +255,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
   });
 
   test('Back button on J10P form takes you back to NIH form', async function (assert) {
-    await render(hbs`
-      <WorkflowMetadata
-        @submission={{this.submission}}
-        @publication={{this.publication}}
-      />
-    `);
+    await render(hbs`<WorkflowMetadata @submission={{this.submission}} @publication={{this.publication}} />`);
 
     await waitFor('[data-key="Next"]');
     await waitFor('[data-key="Back"]');
@@ -318,12 +283,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
   test('Test autofilling form fields', async function (assert) {
     const expectedISSN = '123moo321';
 
-    await render(hbs`
-      <WorkflowMetadata
-        @submission={{this.submission}}
-        @publication={{this.publication}}
-      />
-    `);
+    await render(hbs`<WorkflowMetadata @submission={{this.submission}} @publication={{this.publication}} />`);
 
     await waitFor('button[data-key="Next"]');
 
@@ -350,12 +310,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       })
     );
 
-    await render(hbs`
-      <WorkflowMetadata
-        @submission={{this.submission}}
-        @publication={{this.publication}}
-      />
-    `);
+    await render(hbs`<WorkflowMetadata @submission={{this.submission}} @publication={{this.publication}} />`);
 
     await waitFor('[data-key="Next"]');
     await waitFor('[data-key="Back"]');
@@ -395,12 +350,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
     });
 
     test('DOI info should autofill into forms', async function (assert) {
-      await render(hbs`
-        <WorkflowMetadata
-          @submission={{this.submission}}
-          @publication={{this.publication}}
-        />
-      `);
+      await render(hbs`<WorkflowMetadata @submission={{this.submission}} @publication={{this.publication}} />`);
 
       assert.ok(true, 'Failed to render');
 
@@ -450,12 +400,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
     this.owner.unregister('service:doi');
     this.owner.register('service:doi', mockDoiService);
 
-    await render(hbs`
-      <WorkflowMetadata
-        @submission={{this.submission}}
-        @publication={{this.publication}}
-      />
-    `);
+    await render(hbs`<WorkflowMetadata @submission={{this.submission}} @publication={{this.publication}} />`);
 
     await waitFor('input[name="journal-NLMTA-ID"]');
     const nlmtaInput = this.element.querySelector('input[name="journal-NLMTA-ID"]');
@@ -497,12 +442,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
     this.owner.unregister('service:workflow');
     this.owner.register('service:workflow', mockWorkflow);
 
-    await render(hbs`
-      <WorkflowMetadata
-        @submission={{this.submission}}
-        @publication={{this.publication}}
-      />
-    `);
+    await render(hbs`<WorkflowMetadata @submission={{this.submission}} @publication={{this.publication}} />`);
 
     assert.ok(true, 'Failed to render');
 
@@ -517,12 +457,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
   });
 
   test('Metadata merges should be able to remove fields', async function (assert) {
-    await render(hbs`
-      <WorkflowMetadata
-        @submission={{this.submission}}
-        @publication={{this.publication}}
-      />
-    `);
+    await render(hbs`<WorkflowMetadata @submission={{this.submission}} @publication={{this.publication}} />`);
 
     await waitFor('input[name="journal-NLMTA-ID"]');
     const nlmtaIn = this.element.querySelector('input[name="journal-NLMTA-ID"]');
@@ -562,12 +497,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       ];
     });
 
-    await render(hbs`
-      <WorkflowMetadata
-        @submission={{this.submission}}
-        @publication={{this.publication}}
-      />
-    `);
+    await render(hbs`<WorkflowMetadata @submission={{this.submission}} @publication={{this.publication}} />`);
 
     const text = this.element.textContent;
     assert.notOk(text.includes('Common schema'), 'Schema title should not be displayed');
@@ -623,12 +553,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
 
     this.owner.register('service:doi', mockDoiService);
 
-    await render(hbs`
-      <WorkflowMetadata
-        @submission={{this.submission}}
-        @publication={{this.publication}}
-      />
-    `);
+    await render(hbs`<WorkflowMetadata @submission={{this.submission}} @publication={{this.publication}} />`);
 
     await waitFor('legend');
     assert.notOk(this.element.querySelector('legend').textContent.includes('required'));
@@ -679,12 +604,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       ];
     });
 
-    await render(hbs`
-      <WorkflowMetadata
-        @submission={{this.submission}}
-        @publication={{this.publication}}
-      />
-    `);
+    await render(hbs`<WorkflowMetadata @submission={{this.submission}} @publication={{this.publication}} />`);
 
     await waitFor('button[data-alpaca-array-toolbar-action="add"]');
     const addBtn = this.element.querySelector('button[data-alpaca-array-toolbar-action="add"]');

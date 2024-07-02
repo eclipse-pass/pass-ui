@@ -31,15 +31,13 @@ module('Integration | Component | workflow policies', (hooks) => {
 
   test('it renders', async function (assert) {
     const policy = this.policies[0];
-    await render(hbs`
-      <WorkflowPolicies
-        @submission={{this.submission}}
-        @policies={{this.policies}}
-        @publication={{this.publication}}
-        @next={{action this.loadNext}}
-        @back={{action this.loadPrevious}}
-      />
-    `);
+    await render(hbs`<WorkflowPolicies
+  @submission={{this.submission}}
+  @policies={{this.policies}}
+  @publication={{this.publication}}
+  @next={{this.loadNext}}
+  @back={{this.loadPrevious}}
+/>`);
 
     assert
       .dom('[data-test-workflow-policies-lead-text]')

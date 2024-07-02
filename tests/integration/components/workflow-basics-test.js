@@ -131,8 +131,7 @@ module('Integration | Component | workflow basics', (hooks) => {
   test('lookupDOI should set doiInfo and publication', async function (assert) {
     this.set('validateTitle', () => true);
 
-    await render(hbs`
-      <WorkflowBasics
+    await render(hbs`<WorkflowBasics
   @submission={{this.submission}}
   @publication={{this.publication}}
   @preLoadedGrant={{this.preLoadedGrant}}
@@ -175,8 +174,7 @@ module('Integration | Component | workflow basics', (hooks) => {
 
     submission.set('publication', publication);
 
-    await render(hbs`
-      <WorkflowBasics
+    await render(hbs`<WorkflowBasics
   @submission={{this.submission}}
   @publication={{this.publication}}
   @preLoadedGrant={{this.preLoadedGrant}}
@@ -328,8 +326,7 @@ module('Integration | Component | workflow basics', (hooks) => {
     this.owner.unregister('service:doi');
     this.owner.register('service:doi', mockDoiService);
 
-    await render(hbs`
-      <WorkflowBasics
+    await render(hbs`<WorkflowBasics
   @submission={{this.submission}}
   @publication={{this.publication}}
   @preLoadedGrant={{this.preLoadedGrant}}
@@ -381,20 +378,19 @@ module('Integration | Component | workflow basics', (hooks) => {
 
     this.validateAndLoadTab = sinon.stub();
 
-    await render(hbs`
-      <WorkflowBasics
-        @submission={{this.submission}}
-        @publication={{this.publication}}
-        @preLoadedGrant={{this.preLoadedGrant}}
-        @doiInfo={{this.doiInfo}}
-        @flaggedFields={{this.flaggedFields}}
-        @validateTitle={{this.validateTitle}}
-        @validateJournal={{this.validateJournal}}
-        @validateSubmitterEmail={{this.validateSubmitterEmail}}
-        @updatePublication={{this.updatePublication}}
-        @updateDoiInfo={{this.updateDoiInfo}}
-        @validateAndLoadTab={{this.validateAndLoadTab}}
-      />`);
+    await render(hbs`<WorkflowBasics
+  @submission={{this.submission}}
+  @publication={{this.publication}}
+  @preLoadedGrant={{this.preLoadedGrant}}
+  @doiInfo={{this.doiInfo}}
+  @flaggedFields={{this.flaggedFields}}
+  @validateTitle={{this.validateTitle}}
+  @validateJournal={{this.validateJournal}}
+  @validateSubmitterEmail={{this.validateSubmitterEmail}}
+  @updatePublication={{this.updatePublication}}
+  @updateDoiInfo={{this.updateDoiInfo}}
+  @validateAndLoadTab={{this.validateAndLoadTab}}
+/>`);
 
     await doubleClick('[data-test-workflow-basics-next]');
 

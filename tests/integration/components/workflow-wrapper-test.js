@@ -18,15 +18,13 @@ module('Integration | Component | workflow wrapper', (hooks) => {
     this.set('validateAndLoadTab', (actual) => {});
     this.set('updateCovidSubmission', (actual) => {});
 
-    await render(hbs`
-      <WorkflowWrapper
-        @submission={{this.submission}}
-        @publication={{this.publication}}
-        @submissionEvents={{this.submissionEvents}}
-        @loadTab={{this.validateAndLoadTab}}
-        @updateCovidSubmission={{this.updateCovidSubmission}}
-      />
-    `);
+    await render(hbs`<WorkflowWrapper
+  @submission={{this.submission}}
+  @publication={{this.publication}}
+  @submissionEvents={{this.submissionEvents}}
+  @loadTab={{this.validateAndLoadTab}}
+  @updateCovidSubmission={{this.updateCovidSubmission}}
+/>`);
     assert.ok(true);
   });
 });
