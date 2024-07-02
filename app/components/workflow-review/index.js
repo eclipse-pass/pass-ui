@@ -30,11 +30,12 @@ export default class WorkflowReview extends Component {
   get parsedFiles() {
     let newArr = [];
     if (this.filesTemp) {
-      newArr.addObjects(this.filesTemp);
+      newArr = [...this.filesTemp, ...newArr];
     }
     if (this.args.previouslyUploadedFiles) {
-      newArr.addObjects(this.args.previouslyUploadedFiles);
+      newArr = [...this.args.previouslyUploadedFiles, ...newArr];
     }
+
     return newArr;
   }
 

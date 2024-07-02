@@ -246,7 +246,7 @@ module('Integration | Component | workflow review', (hooks) => {
 
     // Submission to full repo and web-link repo
     assert.strictEqual(submission.get('repositories.length'), 2);
-    assert.strictEqual(submission.get('repositories.firstObject.id'), repo1.id);
+    assert.strictEqual(submission.repositories[0].id, repo1.id);
   });
 
   test('Submission disabled until all web-link repos visited', async function (assert) {
