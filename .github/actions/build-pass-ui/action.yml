@@ -26,7 +26,7 @@ runs:
         export $(grep -v '^[#|SIGNING|PASS_CORE_POLICY]' .env | xargs -d '\n')
       shell: bash
 
-    - run: pnpm install --frozen-lockfile
+    - run: pnpm install --no-frozen-lockfile
       shell: bash
 
     - name: Production build

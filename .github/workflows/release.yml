@@ -34,7 +34,7 @@ jobs:
 
       - name: Update project version
         run: |
-          pnpm install --frozen-lockfile
+          pnpm install --no-frozen-lockfile
           pnpm version --new-version ${{ inputs.releaseversion }}
 
       - name: Tag release

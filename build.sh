@@ -20,7 +20,7 @@ fi
 
 rm -rf dist/
 
-pnpm install --frozen-lockfile
+pnpm install --no-frozen-lockfile
 pnpm run build:dev
 pnpm run build:latest
 
