@@ -34,8 +34,8 @@ jobs:
 
       - name: Update project version
         run: |
-          yarn install --frozen-lockfile
-          yarn version --new-version ${{ inputs.releaseversion }}
+          pnpm install --frozen-lockfile
+          pnpm version --new-version ${{ inputs.releaseversion }}
 
       - name: Tag release
         run: git tag ${{ inputs.releaseversion }}
@@ -59,7 +59,7 @@ jobs:
           docker push $DOCKER_IMAGE_NAME:${{ inputs.releaseversion }}
 
       - name: Update project version
-        run: yarn version --new-version ${{ inputs.nextversion }}
+        run: pnpm version --new-version ${{ inputs.nextversion }}
 
       - name: Build next dev version
         uses: ./.github/actions/build-pass-ui
