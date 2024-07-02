@@ -5,10 +5,6 @@
   height: 100%;
 }
 
-#on-behalf-of-block label {
-  margin-bottom: 0;
-}
-
 .error-text {
   font-size: 2em !important;
   margin-bottom: 0;
@@ -81,30 +77,28 @@
 }
 
 /* Tables */
-.table-bordered {
-  border-color: var(--grey-light);
-}
-
 th.table-header > i {
   display: inline-flex;
   cursor: pointer;
   float: right;
 }
 
+/* stylelint-disable font-family-no-missing-generic-family-keyword */
 th.table-header > i:not(.fa-sort-asc, .fa-sort-desc) {
   font: normal normal normal 14px/1 FontAwesome;
   -webkit-font-smoothing: antialiased;
 }
+/* stylelint-enable font-family-no-missing-generic-family-keyword */
 
 th.table-header > i:not(.fa-sort-asc, .fa-sort-desc)::before {
   content: '\f0dc' !important;
 }
 
-.models-table-wrapper .globalSearch span.input-group-addon {
+.models-table-wrapper span.input-group-addon {
   margin-top: 0.2rem;
 }
 
-.models-table-wrapper .globalSearch .filterString {
+.models-table-wrapper {
   height: 2rem;
   width: 30rem;
   max-width: 70%;
@@ -132,10 +126,6 @@ h6.card-subtitle {
   font-size: 1.1em;
 }
 
-.clearFilterIcon {
-  height: 32px;
-}
-
 .line-height-45 {
   line-height: 45px;
 }
@@ -144,12 +134,8 @@ h6.card-subtitle {
   width: unset !important;
 }
 
-.table thead th {
-  border-bottom: 2px solid #dedede !important;
-  border-top: 1px solid #dedede !important;
-}
-
 .table-bordered {
+  border-color: var(--grey-light);
   border-bottom: 1px solid #dedede !important;
   border-left: none !important;
   border-right: none !important;
@@ -158,6 +144,11 @@ h6.card-subtitle {
 th {
   border-left: none !important;
   border-right: none !important;
+}
+
+.table thead th {
+  border-bottom: 2px solid #dedede !important;
+  border-top: 1px solid #dedede !important;
 }
 
 td {
@@ -173,6 +164,7 @@ td {
 .site {
   display: flex;
   min-height: 100vh;
+  min-width: 300px;
   flex-direction: column;
 }
 
@@ -223,7 +215,7 @@ td {
   height: 35px;
   display: flex;
   overflow: hidden;
-  font-size: 0.65625rem;
+  font-size: 0.6563rem;
   background-color: #f0f3f5;
   border: solid #a4b7c1 1px;
 }
@@ -294,9 +286,11 @@ td {
   border-color: #dc3545;
 }
 
+/* stylelint-disable selector-class-pattern */
 .alpaca-message-notOptional {
   display: none;
 }
+/* stylelint-enable selector-class-pattern */
 
 .alpaca-required-indicator {
   margin-left: 5px;
@@ -304,10 +298,12 @@ td {
   font-size: 80%;
 }
 
+/* stylelint-disable font-family-no-missing-generic-family-keyword */
 .glyphicon {
   font-family: FontAwesome;
   font-style: normal;
 }
+/* stylelint-enable font-family-no-missing-generic-family-keyword */
 
 .glyphicon-plus-sign::before {
   content: '+';
@@ -343,6 +339,7 @@ td {
 
 .help-block {
   display: none;
+  font-size: 14px;
 }
 
 .form-control:disabled,
@@ -373,6 +370,10 @@ input[type='date']::-webkit-outer-spin-button {
 
 .swal2-radio label:not(:last-child) {
   margin-bottom: 4px !important;
+}
+
+#on-behalf-of-block label {
+  margin-bottom: 0;
 }
 
 /*
@@ -608,19 +609,12 @@ table td {
   opacity: 1;
 }
 
-.help-block {
-  font-size: 14px;
-}
-
 .swal2-confirm {
   display: inline-block;
   font-weight: 400;
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
-  user-select: none;
-  user-select: none;
-  user-select: none;
   user-select: none;
   border: 1px solid transparent;
   padding: 0.375rem 0.75rem;
@@ -642,9 +636,6 @@ table td {
   white-space: nowrap;
   vertical-align: middle;
   user-select: none;
-  user-select: none;
-  user-select: none;
-  user-select: none;
   border: 1px solid transparent;
   padding: 0.375rem 0.75rem;
   font-size: 0.875rem;
@@ -665,10 +656,6 @@ table td {
 
 footer {
   min-height: 100px;
-}
-
-.site {
-  min-width: 300px;
 }
 
 .repoid-cell {
@@ -856,14 +843,14 @@ footer {
   cursor: pointer;
 }
 
-#grants-selection-nav ul li.active a {
-  color: white !important;
-  background-color: #418fde;
-}
-
 #grants-selection-nav ul li a {
   color: black !important;
   background-color: white;
+}
+
+#grants-selection-nav ul li.active a {
+  color: white !important;
+  background-color: #418fde;
 }
 
 .deposit-agreement-content {

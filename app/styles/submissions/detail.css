@@ -16,10 +16,10 @@ table td {
   margin-top: 4px;
 }
 
-.files-table tbody.striped tr:nth-of-type(odd) {
-  background-color: white;
-}
-
 .files-table tbody.striped tr {
   background: #fdfdfd;
+}
+
+.files-table tbody.striped tr:nth-of-type(odd) {
+  background-color: white;
 }
