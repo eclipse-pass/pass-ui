@@ -94,16 +94,18 @@ th.table-header > i:not(.fa-sort-asc, .fa-sort-desc)::before {
   content: '\f0dc' !important;
 }
 
-.models-table-wrapper span.input-group-addon {
+/* stylelint-disable selector-class-pattern */
+.models-table-wrapper .globalSearch span.input-group-addon {
   margin-top: 0.2rem;
 }
 
-.models-table-wrapper {
+.models-table-wrapper .globalSearch .filterString {
   height: 2rem;
   width: 30rem;
   max-width: 70%;
   margin: 0 0 1em 12px;
 }
+/* stylelint-enable selector-class-pattern */
 
 .submission-details .row {
   padding: 6px 0;
