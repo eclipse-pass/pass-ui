@@ -6,3 +6,7 @@
 
 # addons
 /.node_modules.ember-try/
+
+# files which we didn't create/build
+public/coreUI.css
+app/styles/font-awesome-5-0-13.css
