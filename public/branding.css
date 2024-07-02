@@ -1,22 +1,17 @@
 :root {
   --primary-500: #2563eb;
   --primary-600: #1e40af;
-
   --secondary-500: #374151;
-
   --bg-primary: white;
   --text-primary: black;
-
   --grey-light: #e5e2e0;
   --grey-medium: #b4b2ad;
   --grey-dark: #7e7e7c;
-
   --btn-active-color: #c9c9c9;
   --danger: #cf4520;
   --danger-dark: #a6192e;
   --warning: #f1c400;
   --aqua: #86c8bc;
-
   --font-headline: 'Arial', 'Helvetica', sans-serif;
   --font-subhead: 'Arial', 'Helvetica', sans-serif;
   --font-bodycopy-accent: 'Arial', 'Helvetica', sans-serif;
@@ -28,6 +23,7 @@ body {
   font-weight: var(--font-bodyweight);
   color: var(--text-primary);
 }
+
 h1,
 h2,
 h3,
@@ -35,34 +31,42 @@ h4,
 h5 {
   font-family: var(--font-headline);
 }
+
 h1,
 h2 {
   color: var(--secondary-500);
 }
+
 a {
   font-weight: 500 !important;
   text-decoration: underline;
 }
+
 a,
 .btn-link {
   color: var(--primary-500);
   text-decoration: none;
 }
+
 .btn-link-underlined {
   color: var(--primary-500);
   text-decoration: underline;
 }
+
 a:hover,
 .btn-link:hover {
   color: var(--primary-600);
   text-decoration: underline;
 }
+
 a.text-danger:hover {
   color: white !important;
 }
+
 .models-table-wrapper tbody tr {
   background-color: white !important;
 }
+
 .ember-power-select-placeholder {
   color: #536c79;
 }
@@ -73,14 +77,16 @@ a.text-danger:hover {
   border-color: var(--primary-500) !important;
   color: white !important;
 }
+
 .btn-primary:hover {
   background-color: var(--primary-600) !important;
   border-color: var(--primary-600) !important;
 }
+
 /*
  * This mess must be done in order to properly override Bootstrap styles for a clicked button
  */
-.btn-primary:not(:disabled):not(.disabled):active {
+.btn-primary:not(:disabled, .disabled):active {
   background-color: var(--primary-500);
   border-color: var(--primary-500);
 }
@@ -89,12 +95,14 @@ a.text-danger:hover {
   border-color: var(--primary-500);
   color: var(--primary-500);
 }
+
 .btn-outline-primary:hover {
   background-color: var(--primary-500);
   border-color: var(--primary-500);
   color: white;
 }
-.btn-outline-primary:not(:disabled):not(.disabled):active {
+
+.btn-outline-primary:not(:disabled, .disabled):active {
   background-color: var(--primary-500);
   border-color: var(--primary-500);
   color: white;
@@ -104,11 +112,13 @@ a.text-danger:hover {
   color: white;
   background-color: var(--danger);
 }
+
 .btn-danger:hover {
   background-color: var(--danger-dark);
   border-color: var(--danger-dark);
 }
-.btn-danger:not(:disabled):not(.disabled):active {
+
+.btn-danger:not(:disabled, .disabled):active {
   background-color: var(--danger-dark);
   border-color: var(--danger-dark);
 }
@@ -122,49 +132,62 @@ a.text-danger:hover {
   background-color: var(--bg-primary);
   z-index: 0;
 }
+
 #navbar-container {
   z-index: 10;
 }
+
 #brand-header {
   background-color: var(--secondary-500);
   color: white;
 }
+
 #brand-header-title {
   color: white;
 }
+
 #header-navbar {
   font-family: var(--font-bodycopy);
   background-color: var(--bg-primary);
 }
+
 #header-navbar .nav-item .active {
   font-weight: bold;
 }
+
 #header-navbar .nav-link {
   color: var(--text-primary);
 }
+
 #user-menu {
   color: var(--secondary-500);
 }
+
 #user-menu-title {
   background-color: var(--primary-500);
   color: white;
 }
+
 #user-menu .dropdown-item:active {
   background-color: var(--btn-active-color);
 }
+
 #brand-logo {
   height: 110px;
   margin-top: -10px;
   margin-right: -35px;
   margin-bottom: -10px;
 }
+
 #submissions-detail-file-cell {
   min-width: 200px;
 }
+
 .submissions-detail-comment-textarea {
   resize: none;
   min-height: 38px !important;
 }
+
 .table-container {
   overflow-x: auto;
 }
@@ -186,18 +209,21 @@ a.text-danger:hover {
 .rejected .fa-info-circle {
   color: var(--warning);
 }
+
 .cancelled > .fa-circle,
 .cancelled .fa-info-circle,
 .not-submitted > .fa-circle,
 .not-submitted .fa-info-circle {
   color: var(--warning);
 }
+
 .submitted > .fa-circle,
 .submitted .fa-info-circle,
 .complete > .fa-circle,
 .complete .fa-info-circle {
   color: var(--aqua);
 }
+
 .draft > .fa-circle,
 .draft .fa-info-circle {
   color: gray;
@@ -207,11 +233,13 @@ th.table-header > i {
   color: var(--secondary-500);
   opacity: 0.8;
 }
+
 #grant-details-title .back-arrow,
 #submission-details-title .back-arrow {
   color: var(--secondary-500);
   opacity: 0.7;
 }
+
 #grant-details-title .back-arrow:hover,
 #submission-details-title .back-arrow:hover {
   opacity: 0.5;
