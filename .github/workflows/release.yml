@@ -20,7 +20,7 @@ jobs:
       DOCKER_IMAGE_NAME: ghcr.io/eclipse-pass/pass-ui
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Config git user
         run: |
