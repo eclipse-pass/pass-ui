@@ -288,7 +288,8 @@ export default class SubmissionsDetail extends Controller {
     // Validate manuscript files
     let manuscriptFiles = []
       .concat(this.filesTemp, get(this, 'model.files') && get(this, 'model.files').slice())
-      .filter((file) => file && file.get('fileRole') === 'manuscript');
+      .filter((file) => file && file.get('fileRole') === 'manuscript')
+      .filter((file) => file.submission.id === this.model.sub.id);
 
     manuscriptFiles = _.uniqBy(manuscriptFiles, 'id');
 

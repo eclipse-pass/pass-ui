@@ -18,8 +18,9 @@ export default class WorkflowFiles extends Component {
   }
 
   get manuscript() {
-    const newFiles = this.args.newFiles || [];
-    const prevFiles = this.args.previouslyUploadedFiles || [];
+    const newFiles = this.args.newFiles.filter((file) => file.submission.id === this.args.submission.id) || [];
+    const prevFiles =
+      this.args.previouslyUploadedFiles.filter((file) => file.submission.id === this.args.submission.id) || [];
 
     return [...prevFiles.slice(), ...newFiles.slice()].find((file) => file.fileRole === 'manuscript');
   }

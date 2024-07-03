@@ -4,6 +4,7 @@ import { tracked } from '@glimmer/tracking';
 import { action, computed, get, set } from '@ember/object';
 import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
+import _ from 'lodash';
 
 export default class SubmissionsNewFiles extends Controller {
   @service workflow;
@@ -53,8 +54,10 @@ export default class SubmissionsNewFiles extends Controller {
 
   @action
   updateAllFiles(files) {
-    this.workflow.filesTemp = [...files, ...this.workflow.filesTemp];
-    files.forEach((file) => {
+    const filteredFiles = _.uniq(files, 'id').filter((file) => file.submission.id === this.submission.id);
+
+    this.workflow.filesTemp = [...filteredFiles, ...this.workflow.filesTemp];
+    filteredFiles.forEach((file) => {
       file.submission = this.submission;
     });
   }
@@ -73,9 +76,9 @@ export default class SubmissionsNewFiles extends Controller {
   async validateAndLoadTab(gotoTab) {
     let needValidation = this.needValidation;
     if (needValidation) {
-      let manuscriptFiles = [...this.newFiles, ...this.model.files.slice()].filter(
-        (file) => file && get(file, 'fileRole') === 'manuscript',
-      );
+      let manuscriptFiles = [...this.newFiles, ...this.model.files.slice()]
+        .filter((file) => file && get(file, 'fileRole') === 'manuscript')
+        .filter((file) => file.submission.id === this.submission.id);
 
       const submitter = await this.parent.userIsSubmitter();
 

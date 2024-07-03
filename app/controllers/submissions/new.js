@@ -82,7 +82,8 @@ export default class SubmissionsNew extends Controller {
   async submit() {
     let manuscriptFiles = []
       .concat(this.filesTemp, this.model.files && this.model.files.slice())
-      .filter((file) => file && file.fileRole === 'manuscript');
+      .filter((file) => file && file.fileRole === 'manuscript')
+      .filter((file) => file.submission.id === this.model.newSubmission.id);
 
     manuscriptFiles = _.uniqBy(manuscriptFiles, 'id');
 

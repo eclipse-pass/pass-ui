@@ -5,6 +5,7 @@ import { action, get, set } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { task } from 'ember-concurrency-decorators';
 import { later } from '@ember/runloop';
+import _ from 'lodash';
 
 /**
  * Present the user with a summary of all information known about the current in-progress
@@ -18,6 +19,7 @@ import { later } from '@ember/runloop';
  * interaction
  */
 export default class WorkflowReview extends Component {
+  @service store;
   @service workflow;
   @service currentUser;
   @service flashMessages;
@@ -28,15 +30,7 @@ export default class WorkflowReview extends Component {
   @tracked repositories = this.args.submission.repositories;
 
   get parsedFiles() {
-    let newArr = [];
-    if (this.filesTemp) {
-      newArr = [...this.filesTemp, ...newArr];
-    }
-    if (this.args.previouslyUploadedFiles) {
-      newArr = [...this.args.previouslyUploadedFiles, ...newArr];
-    }
-
-    return newArr;
+    return this.store.peekAll('file').filter((file) => file.submission.id === this.args.submission.id);
   }
 
   get weblinkRepos() {
