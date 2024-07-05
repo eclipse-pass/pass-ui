@@ -30,15 +30,13 @@ module('Integration | Component | submissions repoid cell', (hooks) => {
 
     this.record = record;
 
-    await render(hbs`
-      <th class='table-header' />
-      <th class='table-header' />
-      <th class='table-header' />
-      <th class='table-header' />
-      <th class='table-header' />
-      <th class='table-header' />
-      <SubmissionsRepoidCell @record={{this.record}} />
-    `);
+    await render(hbs`<th class='table-header' />
+<th class='table-header' />
+<th class='table-header' />
+<th class='table-header' />
+<th class='table-header' />
+<th class='table-header' />
+<SubmissionsRepoidCell @record={{this.record}} />`);
 
     assert.ok(true);
   });
@@ -55,22 +53,20 @@ module('Integration | Component | submissions repoid cell', (hooks) => {
         query(type, q) {
           assert.ok(true);
         },
-      })
+      }),
     );
     const record = EmberObject.create({
       publication: EmberObject.create({}),
     });
     this.record = record;
 
-    await render(hbs`
-      <th class='table-header' />
-      <th class='table-header' />
-      <th class='table-header' />
-      <th class='table-header' />
-      <th class='table-header' />
-      <th class='table-header' />
-      <SubmissionsRepoidCell @record={{this.record}} />
-    `);
+    await render(hbs`<th class='table-header' />
+<th class='table-header' />
+<th class='table-header' />
+<th class='table-header' />
+<th class='table-header' />
+<th class='table-header' />
+<SubmissionsRepoidCell @record={{this.record}} />`);
     assert.ok(true);
   });
 });

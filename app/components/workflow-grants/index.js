@@ -78,7 +78,7 @@ export default class WorkflowGrants extends Component {
       (g) =>
         !get(this, 'submission.grants')
           .map((x) => x.id)
-          .includes(g.get('id'))
+          .includes(g.get('id')),
     );
   }
 

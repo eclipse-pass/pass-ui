@@ -21,7 +21,7 @@ module('Unit | Controller | submissions/new', (hooks) => {
       'service:current-user',
       EmberObject.extend({
         user: { id: 'submitter:test-id' },
-      })
+      }),
     );
 
     let submissionSaved = false;
@@ -41,7 +41,7 @@ module('Unit | Controller | submissions/new', (hooks) => {
         createRecord() {
           return submissionEvent;
         },
-      })
+      }),
     );
 
     let repository1 = EmberObject.create({
@@ -80,6 +80,7 @@ module('Unit | Controller | submissions/new', (hooks) => {
 
     let file = EmberObject.create({
       fileRole: 'manuscript',
+      submission,
     });
 
     let comment = 'moo';
@@ -139,7 +140,7 @@ module('Unit | Controller | submissions/new', (hooks) => {
       'service:current-user',
       EmberObject.extend({
         user: { id: 'submitter:test-proxy-id' },
-      })
+      }),
     );
 
     let submissionSaved = false;
@@ -159,7 +160,7 @@ module('Unit | Controller | submissions/new', (hooks) => {
         createRecord() {
           return submissionEvent;
         },
-      })
+      }),
     );
 
     let repository = EmberObject.create({ id: 'test:repo1', integrationType: 'full' });
@@ -186,6 +187,7 @@ module('Unit | Controller | submissions/new', (hooks) => {
 
     let file = EmberObject.create({
       fileRole: 'manuscript',
+      submission,
     });
 
     let comment = 'moo';
@@ -232,7 +234,7 @@ module('Unit | Controller | submissions/new', (hooks) => {
       'service:current-user',
       EmberObject.extend({
         user: { id: 'submitter:test-proxy-id' },
-      })
+      }),
     );
 
     let submissionSaved = false;
@@ -252,7 +254,7 @@ module('Unit | Controller | submissions/new', (hooks) => {
         createRecord() {
           return submissionEvent;
         },
-      })
+      }),
     );
 
     let repository = EmberObject.create({ id: 'test:repo1', integrationType: 'full' });
@@ -278,6 +280,7 @@ module('Unit | Controller | submissions/new', (hooks) => {
 
     let file = EmberObject.create({
       fileRole: 'manuscript',
+      submission,
     });
 
     let comment = 'moo';
@@ -357,7 +360,7 @@ module('Unit | Controller | submissions/new', (hooks) => {
           assert.ok(sub);
           return Promise.resolve();
         },
-      })
+      }),
     );
     controller.set('router', {
       transitionTo: (name) => {
@@ -400,7 +403,7 @@ module('Unit | Controller | submissions/new', (hooks) => {
           deleteSubmissionCalled = true;
           return Promise.resolve();
         },
-      })
+      }),
     );
     controller.set('router', {
       transitionTo: (name) => {

@@ -21,15 +21,15 @@ table td {
   margin-top: 4px;
 }
 
-.files-table tbody.striped tr:nth-of-type(odd) {
-  background-color: white;
-}
-
 .files-table tbody.striped tr {
   background: #fdfdfd;
 }
 
-.-workflow-review-file-name {
+.files-table tbody.striped tr:nth-of-type(odd) {
+  background-color: white;
+}
+
+.workflow-review-file-name {
   min-width: 200px;
 }
 

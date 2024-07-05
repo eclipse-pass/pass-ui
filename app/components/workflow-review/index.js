@@ -5,6 +5,7 @@ import { action, get, set } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { task } from 'ember-concurrency-decorators';
 import { later } from '@ember/runloop';
+import _ from 'lodash';
 
 /**
  * Present the user with a summary of all information known about the current in-progress
@@ -18,6 +19,7 @@ import { later } from '@ember/runloop';
  * interaction
  */
 export default class WorkflowReview extends Component {
+  @service store;
   @service workflow;
   @service currentUser;
   @service flashMessages;
@@ -28,14 +30,7 @@ export default class WorkflowReview extends Component {
   @tracked repositories = this.args.submission.repositories;
 
   get parsedFiles() {
-    let newArr = [];
-    if (this.filesTemp) {
-      newArr.addObjects(this.filesTemp);
-    }
-    if (this.args.previouslyUploadedFiles) {
-      newArr.addObjects(this.args.previouslyUploadedFiles);
-    }
-    return newArr;
+    return this.store.peekAll('file').filter((file) => file.submission.id === this.args.submission.id);
   }
 
   get weblinkRepos() {
@@ -84,7 +79,7 @@ export default class WorkflowReview extends Component {
           $('.fa-exclamation-triangle').css('font-size', '2em');
         }, 4000);
         this.flashMessages.warning(
-          'Please visit the following web portal to submit your manuscript directly. Metadata displayed above could be used to aid in your submission progress.'
+          'Please visit the following web portal to submit your manuscript directly. Metadata displayed above could be used to aid in your submission progress.',
         );
       }
       disableSubmit = false;
@@ -99,7 +94,7 @@ export default class WorkflowReview extends Component {
     }
 
     if (get(this, 'args.submission.submitter.id') !== get(this, 'currentUser.user.id')) {
-      this.args.submit();
+      this.args.submitSubmission();
       return;
     }
 
@@ -160,15 +155,15 @@ export default class WorkflowReview extends Component {
             'Once you click confirm you will no longer be able to edit this submission or add repositories.<br/>';
           if (reposWithoutAgreementText.length > 0 || reposThatUserAgreedToDeposit.length) {
             swalMsg = `${swalMsg}You are about to submit your files to: <pre><code>${JSON.stringify(
-              reposThatUserAgreedToDeposit.map((repo) => repo.id)
+              reposThatUserAgreedToDeposit.map((repo) => repo.id),
             ).replace(/[\[\]']/g, '')}${JSON.stringify(reposWithoutAgreementText.map((repo) => repo.id)).replace(
               /[\[\]']/g,
-              ''
+              '',
             )} </code></pre>`;
           }
           if (reposWithWebLink.length > 0) {
             swalMsg = `${swalMsg}You were prompted to submit to: <code><pre>${JSON.stringify(
-              reposWithWebLink.map((repo) => repo.id)
+              reposWithWebLink.map((repo) => repo.id),
             ).replace(/[\[\]']/g, '')}</code></pre>`;
           }
 
@@ -203,7 +198,7 @@ export default class WorkflowReview extends Component {
 
             this.args.submission.repositories = filteredRepos;
 
-            this.args.submit();
+            this.args.submitSubmission();
           } else {
             const elements = document.querySelectorAll('.block-user-input');
             elements.forEach((el) => {
@@ -220,7 +215,7 @@ export default class WorkflowReview extends Component {
           swal({
             title: 'Your submission cannot be submitted.',
             html: `You declined to agree to the deposit agreement(s) for ${JSON.stringify(
-              reposUserDidNotAgreeToDeposit.map((repo) => repo.id)
+              reposUserDidNotAgreeToDeposit.map((repo) => repo.id),
             ).replace(/[\[\]']/g, '')}. Therefore, this submission cannot be submitted.`,
             confirmButtonText: 'Ok',
           });

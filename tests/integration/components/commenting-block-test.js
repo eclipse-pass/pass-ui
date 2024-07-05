@@ -12,11 +12,9 @@ module('Integration | Component | commenting block', (hooks) => {
     assert.strictEqual(this.element.textContent.trim(), '');
 
     // Template block usage:
-    await render(hbs`
-      <CommentingBlock>
-        template block text
-      </CommentingBlock>
-    `);
+    await render(hbs`<CommentingBlock>
+  template block text
+</CommentingBlock>`);
 
     assert.strictEqual(this.element.textContent.trim(), '');
   });

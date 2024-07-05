@@ -9,7 +9,6 @@ module.exports = () => {
     Setting `disableAnalytics` to true will prevent any data from being sent.
   */
     liveReload: false,
-    yarn: true,
     disableAnalytics: false,
     /**
   Setting `isTypeScriptProject` to true will force the blueprint generators to generate TypeScript

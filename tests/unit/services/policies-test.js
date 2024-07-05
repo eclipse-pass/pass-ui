@@ -58,13 +58,13 @@ module('Unit | Service | policies', (hooks) => {
         assert.strictEqual(rules['one-of'][0].length, 2, 'Unexpected number of repos in choice group 1');
 
         rules.required.forEach((repo) =>
-          assert.strictEqual(repo.name, 'PubMed Central - NATIONAL INSTITUTE OF HEALTH')
+          assert.strictEqual(repo.name, 'PubMed Central - NATIONAL INSTITUTE OF HEALTH'),
         );
         rules.optional.forEach((repo) => assert.strictEqual(repo.name, 'JScholarship'));
         assert.ok(
           rules['one-of'][0].some((repo) => {
             return repo.name === 'JScholarship' || repo.name === 'PubMed Central - NATIONAL INSTITUTE OF HEALTH';
-          })
+          }),
         );
       });
   });

@@ -18,7 +18,7 @@ module('Unit | Route | submissions/new', (hooks) => {
       EmberObject.create({
         title: 'Test Publication',
         journal: get(this, 'journal'),
-      })
+      }),
     );
     this.set(
       'submission',
@@ -26,7 +26,7 @@ module('Unit | Route | submissions/new', (hooks) => {
         submissionStatus: 'draft',
         publication: get(this, 'publication'),
         metadata: '{ "moo": "This is a moo" }',
-      })
+      }),
     );
   });
 

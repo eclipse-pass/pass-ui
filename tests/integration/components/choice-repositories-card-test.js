@@ -26,7 +26,7 @@ module('Integration | Component | choice repositories card', (hooks) => {
           url: 'moo-2',
           repository: EmberObject.create({ name: 'Moo the Second', _selected: false }),
         }),
-      ])
+      ]),
     );
 
     await render(hbs`<ChoiceRepositoriesCard @choiceGroup={{this.choiceGroup}} />`);
@@ -53,7 +53,7 @@ module('Integration | Component | choice repositories card', (hooks) => {
           url: 'moo-2',
           repository: EmberObject.create({ name: 'Moo the Second', _selected: false }),
         }),
-      ])
+      ]),
     );
 
     await render(hbs`<ChoiceRepositoriesCard @choiceGroup={{this.choiceGroup}} />`);
@@ -80,14 +80,14 @@ module('Integration | Component | choice repositories card', (hooks) => {
           url: 'moo-2',
           repository: EmberObject.create({ name: 'Moo the Second', _selected: false }),
         }),
-      ])
+      ]),
     );
     this.set('toggleRepository', () => {
       assert.ok(true); // always fails because it should not be called
     });
 
     await render(
-      hbs`<ChoiceRepositoriesCard @choiceGroup={{this.choiceGroup}} @toggleRepository={{this.toggleRepository}} />`
+      hbs`<ChoiceRepositoriesCard @choiceGroup={{this.choiceGroup}} @toggleRepository={{this.toggleRepository}} />`,
     );
     assert.ok(this.element, 'failed to render');
 

@@ -95,7 +95,7 @@ module('Acceptance | proxy submission', function (hooks) {
     assert
       .dom('[data-test-article-title-text-area]')
       .hasValue(
-        'Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS'
+        'Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS',
       );
     assert.dom('[data-test-journal-name-input]').hasValue('The Analyst');
 
@@ -121,7 +121,7 @@ module('Acceptance | proxy submission', function (hooks) {
       assert
         .dom('[data-test-workflow-grants-no-account-message]')
         .includesText(
-          'Because the person you are submitting on behalf of is not yet in our system, PASS does not have information about his/her grant(s) and cannot associate this submission with a grant. Please click Next to continue.'
+          'Because the person you are submitting on behalf of is not yet in our system, PASS does not have information about his/her grant(s) and cannot associate this submission with a grant. Please click Next to continue.',
         );
     }
 
@@ -151,7 +151,7 @@ module('Acceptance | proxy submission', function (hooks) {
     assert
       .dom('[data-test-metadata-form] textarea[name=title]')
       .hasValue(
-        'Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS'
+        'Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS',
       );
     assert.dom('[data-test-metadata-form] input[name=journal-title]').hasValue('The Analyst');
 
@@ -187,7 +187,7 @@ module('Acceptance | proxy submission', function (hooks) {
     assert
       .dom('[data-test-workflow-review-title]')
       .includesText(
-        'Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS'
+        'Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS',
       );
     assert.dom('[data-test-workflow-review-doi]').includesText('10.1039/c7an01256j');
     assert.dom('[data-test-workflow-review-file-name]').includesText('my-submission.pdf');

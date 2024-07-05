@@ -279,7 +279,7 @@ export default class SubmissionsDetail extends Controller {
           $('.fa-exclamation-triangle').css('font-size', '2em');
         }, 4000);
         this.flashMessages.warning(
-          'Please visit the listed web portal(s) to submit your manuscript directly. Metadata displayed on this page can be used to help in the submission process.'
+          'Please visit the listed web portal(s) to submit your manuscript directly. Metadata displayed on this page can be used to help in the submission process.',
         );
       }
       return;
@@ -288,7 +288,8 @@ export default class SubmissionsDetail extends Controller {
     // Validate manuscript files
     let manuscriptFiles = []
       .concat(this.filesTemp, get(this, 'model.files') && get(this, 'model.files').slice())
-      .filter((file) => file && file.get('fileRole') === 'manuscript');
+      .filter((file) => file && file.get('fileRole') === 'manuscript')
+      .filter((file) => file.submission.id === this.model.sub.id);
 
     manuscriptFiles = _.uniqBy(manuscriptFiles, 'id');
 
@@ -296,14 +297,14 @@ export default class SubmissionsDetail extends Controller {
       swal(
         'Manuscript is missing',
         'At least one manuscript file is required.  Please Edit the submission to add one',
-        'warning'
+        'warning',
       );
       return;
     } else if (manuscriptFiles.length > 1) {
       swal(
         'Incorrect manuscript count',
         `Only one file may be designated as the manuscript.  Instead, found ${manuscriptFiles.length}.  Please edit the file list`,
-        'warning'
+        'warning',
       );
       return;
     }
@@ -315,7 +316,7 @@ export default class SubmissionsDetail extends Controller {
         title: `Deposit requirements for ${get(repo, 'name')}`,
         html: `<textarea rows="16" cols="40" name="embargo" class="alpaca-control form-control disabled" disabled="" autocomplete="off">${get(
           repo,
-          'agreementText'
+          'agreementText',
         )}</textarea>`,
       }));
 
@@ -358,15 +359,15 @@ export default class SubmissionsDetail extends Controller {
             'Once you click confirm you will no longer be able to edit this submission or add repositories.<br/>';
           if (reposWithoutAgreementText.length > 0 || reposThatUserAgreedToDeposit.length) {
             swalMsg = `${swalMsg}You are about to submit your files to: <pre><code>${JSON.stringify(
-              reposThatUserAgreedToDeposit.map((repo) => repo.id)
+              reposThatUserAgreedToDeposit.map((repo) => repo.id),
             ).replace(/[\[\]']/g, '')}${JSON.stringify(reposWithoutAgreementText.map((repo) => repo.id)).replace(
               /[\[\]']/g,
-              ''
+              '',
             )} </code></pre>`;
           }
           if (reposWithWebLink.length > 0) {
             swalMsg = `${swalMsg}You were prompted to submit to: <code><pre>${JSON.stringify(
-              reposWithWebLink.map((repo) => repo.id)
+              reposWithWebLink.map((repo) => repo.id),
             ).replace(/[\[\]']/g, '')}</code></pre>`;
           }
 
@@ -393,7 +394,7 @@ export default class SubmissionsDetail extends Controller {
                   return true;
                 }
                 return false;
-              })
+              }),
             );
 
             let sub = get(this, 'model.sub');
@@ -410,10 +411,10 @@ export default class SubmissionsDetail extends Controller {
           let result = await swal({
             title: 'Your submission cannot be submitted.',
             html: `You declined to agree to the deposit agreement(s) for ${JSON.stringify(
-              reposUserDidNotAgreeToDeposit.map((repo) => repo.id)
+              reposUserDidNotAgreeToDeposit.map((repo) => repo.id),
             ).replace(
               /[\[\]']/g,
-              ''
+              '',
             )}. Therefore, this submission cannot be submitted. \n You can either (a) cancel the submission or (b) return to the submission to provide required input and try again.`,
             confirmButtonText: 'Cancel submission',
             showCancelButton: true,
@@ -487,7 +488,7 @@ export default class SubmissionsDetail extends Controller {
         this.router.transitionTo('submissions');
       } catch (e) {
         this.flashMessages.danger(
-          'We encountered an error deleting this draft submission. Please try again later or contact your administrator'
+          'We encountered an error deleting this draft submission. Please try again later or contact your administrator',
         );
       }
     }

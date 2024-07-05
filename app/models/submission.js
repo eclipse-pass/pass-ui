@@ -50,7 +50,7 @@ export default class SubmissionModel extends Model {
     'submitterName',
     'submitterName.length',
     'preparers',
-    'preparers.length'
+    'preparers.length',
   )
   get isProxySubmission() {
     return (

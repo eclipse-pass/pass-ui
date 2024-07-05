@@ -18,14 +18,12 @@ module('Integration | Component | workflow repositories', (hooks) => {
   });
 
   test('it renders', async (assert) => {
-    await render(hbs`
-      <WorkflowRepositories
-        @submission={{this.submission}}
-        @requiredRepositories={{this.requiredRepositories}}
-        @optionalRepositories={{this.optionalRepositories}}
-        @choiceRepositories={{this.choiceRepositories}}
-      />
-    `);
+    await render(hbs`<WorkflowRepositories
+  @submission={{this.submission}}
+  @requiredRepositories={{this.requiredRepositories}}
+  @optionalRepositories={{this.optionalRepositories}}
+  @choiceRepositories={{this.choiceRepositories}}
+/>`);
 
     assert.ok(true);
     assert
@@ -38,14 +36,12 @@ module('Integration | Component | workflow repositories', (hooks) => {
       { repository: this.storeService.createRecord('repository', { name: 'Moo-pository 1' }) },
     ];
 
-    await render(hbs`
-      <WorkflowRepositories
-        @submission={{this.submission}}
-        @requiredRepositories={{this.requiredRepositories}}
-        @optionalRepositories={{this.optionalRepositories}}
-        @choiceRepositories={{this.choiceRepositories}}
-      />
-    `);
+    await render(hbs`<WorkflowRepositories
+  @submission={{this.submission}}
+  @requiredRepositories={{this.requiredRepositories}}
+  @optionalRepositories={{this.optionalRepositories}}
+  @choiceRepositories={{this.choiceRepositories}}
+/>`);
 
     assert.ok(this.element.textContent.includes('Moo-pository 1'), "couldn't find repository name");
 
@@ -62,14 +58,12 @@ module('Integration | Component | workflow repositories', (hooks) => {
     ];
     this.optionalRepositories = [{ selected: false, repository: { name: 'Moo-pository 00' } }];
 
-    await render(hbs`
-      <WorkflowRepositories
-        @submission={{this.submission}}
-        @requiredRepositories={{this.requiredRepositories}}
-        @optionalRepositories={{this.optionalRepositories}}
-        @choiceRepositories={{this.choiceRepositories}}
-      />
-    `);
+    await render(hbs`<WorkflowRepositories
+  @submission={{this.submission}}
+  @requiredRepositories={{this.requiredRepositories}}
+  @optionalRepositories={{this.optionalRepositories}}
+  @choiceRepositories={{this.choiceRepositories}}
+/>`);
 
     const text = this.element.textContent;
     assert.ok(text, 'No text found');
@@ -88,14 +82,12 @@ module('Integration | Component | workflow repositories', (hooks) => {
       ],
     ];
 
-    await render(hbs`
-      <WorkflowRepositories
-        @submission={{this.submission}}
-        @requiredRepositories={{this.requiredRepositories}}
-        @optionalRepositories={{this.optionalRepositories}}
-        @choiceRepositories={{this.choiceRepositories}}
-      />
-    `);
+    await render(hbs`<WorkflowRepositories
+  @submission={{this.submission}}
+  @requiredRepositories={{this.requiredRepositories}}
+  @optionalRepositories={{this.optionalRepositories}}
+  @choiceRepositories={{this.choiceRepositories}}
+/>`);
 
     assert.ok(this.element, 'failed to render');
 
@@ -127,14 +119,12 @@ module('Integration | Component | workflow repositories', (hooks) => {
       ],
     ];
 
-    await render(hbs`
-      <WorkflowRepositories
-        @submission={{this.submission}}
-        @requiredRepositories={{this.requiredRepositories}}
-        @optionalRepositories={{this.optionalRepositories}}
-        @choiceRepositories={{this.choiceRepositories}}
-      />
-    `);
+    await render(hbs`<WorkflowRepositories
+  @submission={{this.submission}}
+  @requiredRepositories={{this.requiredRepositories}}
+  @optionalRepositories={{this.optionalRepositories}}
+  @choiceRepositories={{this.choiceRepositories}}
+/>`);
 
     let repos = await this.submission.repositories;
     assert.strictEqual(repos.length, 2, 'expected number of repositories attached to the submission');
@@ -168,21 +158,19 @@ module('Integration | Component | workflow repositories', (hooks) => {
       ],
     ];
 
-    await render(hbs`
-      <WorkflowRepositories
-        @submission={{this.submission}}
-        @requiredRepositories={{this.requiredRepositories}}
-        @optionalRepositories={{this.optionalRepositories}}
-        @choiceRepositories={{this.choiceRepositories}}
-      />
-    `);
+    await render(hbs`<WorkflowRepositories
+  @submission={{this.submission}}
+  @requiredRepositories={{this.requiredRepositories}}
+  @optionalRepositories={{this.optionalRepositories}}
+  @choiceRepositories={{this.choiceRepositories}}
+/>`);
 
     let repos = await this.submission.repositories;
     assert.strictEqual(repos.length, 3, 'unexpected number of repositories attached to submission');
     assert.notOk(repos.includes(undefined), 'should be no undefined items');
     assert.ok(
       repos.some((repo) => repo.name === 'Moo-pository 00'),
-      'The optional repo should be present'
+      'The optional repo should be present',
     );
 
     const checkboxes = this.element.querySelectorAll('input[type="checkbox"]');
@@ -227,17 +215,15 @@ module('Integration | Component | workflow repositories', (hooks) => {
     const subHandlerStub = sinon.stub(submissionHandler, 'getRepositoriesFromGrants');
     subHandlerStub.returns([addedRepo]);
 
-    await render(hbs`
-      <WorkflowRepositories
-        @submission={{this.submission}}
-        @requiredRepositories={{this.requiredRepositories}}
-        @optionalRepositories={{this.optionalRepositories}}
-        @choiceRepositories={{this.choiceRepositories}}
-      />
-    `);
+    await render(hbs`<WorkflowRepositories
+  @submission={{this.submission}}
+  @requiredRepositories={{this.requiredRepositories}}
+  @optionalRepositories={{this.optionalRepositories}}
+  @choiceRepositories={{this.choiceRepositories}}
+/>`);
 
     const checkboxes = this.element.querySelectorAll(
-      '[data-test-workflow-repositories-optional-list] > li > input[type="checkbox"]'
+      '[data-test-workflow-repositories-optional-list] > li > input[type="checkbox"]',
     );
     assert.strictEqual(checkboxes.length, 3, 'Should be two checkboxes showing');
     assert.notOk(checkboxes[0].checked, 'First checkbox should NOT be checked');
@@ -267,14 +253,12 @@ module('Integration | Component | workflow repositories', (hooks) => {
       },
     ];
 
-    await render(hbs`
-      <WorkflowRepositories
-        @submission={{this.submission}}
-        @requiredRepositories={{this.requiredRepositories}}
-        @optionalRepositories={{this.optionalRepositories}}
-        @choiceRepositories={{this.choiceRepositories}}
-      />
-    `);
+    await render(hbs`<WorkflowRepositories
+  @submission={{this.submission}}
+  @requiredRepositories={{this.requiredRepositories}}
+  @optionalRepositories={{this.optionalRepositories}}
+  @choiceRepositories={{this.choiceRepositories}}
+/>`);
 
     const requiredList = this.element.querySelector('[data-test-workflow-repositories-required-list]');
     assert.dom(requiredList).exists('Required repositories list should exist');

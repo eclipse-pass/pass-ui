@@ -29,7 +29,7 @@ module('Unit | Route | submissions/index', (hooks) => {
         assert.deepEqual(
           query.page,
           { number: 1, size: 10, totals: true },
-          'Pagination in query should have default values'
+          'Pagination in query should have default values',
         );
         return Promise.resolve({});
       },
@@ -46,11 +46,11 @@ module('Unit | Route | submissions/index', (hooks) => {
         assert.deepEqual(
           query.page,
           { number: 2, size: 5, totals: true },
-          'Pagination in query should match input params'
+          'Pagination in query should match input params',
         );
         assert.ok(
           query.filter.submission.includes('=ini="*Hello moo!*"'),
-          'Query filter should include input param filter string'
+          'Query filter should include input param filter string',
         );
         return Promise.resolve({});
       },
@@ -82,7 +82,7 @@ module('Unit | Route | submissions/index', (hooks) => {
       query: (model, query) => {
         assert.notOk(
           query.filter.submission.includes(`submitter.id==0`),
-          'Filter does not include non-admin user selection'
+          'Filter does not include non-admin user selection',
         );
         return Promise.resolve({});
       },

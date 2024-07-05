@@ -10,7 +10,7 @@ module('Integration | Component | submissions status cell', (hooks) => {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.on('myAction', function(val) { ... });
 
-    await render(hbs`<SubmissionsStatusCell @submissionStatus="submitted" />`);
+    await render(hbs`<SubmissionsStatusCell @submissionStatus='submitted' />`);
     assert.ok(true);
   });
 

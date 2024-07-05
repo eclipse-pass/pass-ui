@@ -78,7 +78,7 @@ export default class ErrorHandlerService extends Service {
       type: 'error',
       title: 'Page could not load',
       text: `Some information required by this page did not load correctly. When you click OK the page will reload. If the issue persists, please contact us and include a copy of this message. ${JSON.stringify(
-        error.message
+        error.message,
       )}`,
     }).then((result) => {
       if (result.value) {
@@ -92,7 +92,7 @@ export default class ErrorHandlerService extends Service {
       type: 'error',
       title: 'Something went wrong.',
       text: `When you click OK the page will reload. If the issue persists, please contact us and include a copy of this message. ${JSON.stringify(
-        error.message
+        error.message,
       )}`,
     }).then((result) => {
       if (result.value) {

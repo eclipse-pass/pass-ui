@@ -42,7 +42,7 @@ module('Unit | Controller | submissions/new/review', (hooks) => {
           uploading: 'is uploading',
           comment: 'test comment',
           waitingMessage: 'test waiting message',
-        })
+        }),
       );
     });
 

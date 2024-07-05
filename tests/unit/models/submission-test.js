@@ -10,7 +10,7 @@ module('Unit | Model | submission', (hooks) => {
     const submission = run(() =>
       this.owner.lookup('service:store').createRecord('submission', {
         submitterEmail: 'mailto:test@test.com',
-      })
+      }),
     );
 
     assert.strictEqual(submission.get('submitterEmailDisplay'), 'test@test.com');

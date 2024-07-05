@@ -21,7 +21,7 @@ module('Unit | Controller | submissions/new/repositories', (hooks) => {
         getMaxStep() {
           return 7;
         },
-      })
+      }),
     );
     let submission = EmberObject.create({
       repositories: [],
@@ -51,7 +51,7 @@ module('Unit | Controller | submissions/new/repositories', (hooks) => {
         getMaxStep() {
           return 5;
         },
-      })
+      }),
     );
 
     let repository = EmberObject.create({

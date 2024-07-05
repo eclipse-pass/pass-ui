@@ -42,7 +42,7 @@ export default class WorkflowBasicsUserSearch extends Component {
   userFilter(input) {
     const match = `=ini="*${input}*"`;
     return [`firstName${match}`, `middleName${match}`, `lastName${match}`, `email${match}`, `displayName${match}`].join(
-      ','
+      ',',
     );
   }
 

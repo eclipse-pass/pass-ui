@@ -130,7 +130,7 @@ export default class SubmissionsIndex extends Controller {
       ];
     } else {
       console.warn(
-        `[Controller:Submissions/index] User has no known role (${this.currentUser.user.id}::${this.currentUser.user.roles})`
+        `[Controller:Submissions/index] User has no known role (${this.currentUser.user.id}::${this.currentUser.user.roles})`,
       );
       return [];
     }

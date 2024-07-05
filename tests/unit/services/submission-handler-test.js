@@ -15,7 +15,7 @@ module('Unit | Service | submission-handler', (hooks) => {
       'service:current-user',
       EmberObject.extend({
         user: { id: 'proxy-user-id' },
-      })
+      }),
     );
 
     let submissionEvent = {};
@@ -33,7 +33,7 @@ module('Unit | Service | submission-handler', (hooks) => {
 
           return submissionEvent;
         },
-      })
+      }),
     );
 
     let repo1 = EmberObject.create({ id: 'test:repo1', integrationType: 'full' });
@@ -93,7 +93,7 @@ module('Unit | Service | submission-handler', (hooks) => {
       'service:current-user',
       EmberObject.extend({
         user: { id: 'submitter:test-id' },
-      })
+      }),
     );
 
     let submissionEvent = {};
@@ -111,7 +111,7 @@ module('Unit | Service | submission-handler', (hooks) => {
 
           return submissionEvent;
         },
-      })
+      }),
     );
 
     let repo1 = EmberObject.create({ id: 'test:repo1', integrationType: 'full' });
@@ -152,7 +152,7 @@ module('Unit | Service | submission-handler', (hooks) => {
 
         // web-link repo should NOT be removed
         assert.strictEqual(submission.get('repositories.length'), 2);
-        assert.strictEqual(submission.get('repositories.firstObject.id'), repo1.id);
+        assert.strictEqual(submission.repositories[0].id, repo1.id);
 
         assert.strictEqual(submissionEvent.get('eventType'), 'submitted');
         assert.strictEqual(submissionEvent.get('performerRole'), 'submitter');
@@ -180,7 +180,7 @@ module('Unit | Service | submission-handler', (hooks) => {
 
           return submissionEvent;
         },
-      })
+      }),
     );
 
     let repo1 = EmberObject.create({ id: 'test:repo1', integrationType: 'full' });
@@ -209,7 +209,7 @@ module('Unit | Service | submission-handler', (hooks) => {
 
       // web-link repo should NOT be removed and external-submissions added not on metadata
       assert.strictEqual(submission.get('repositories.length'), 2);
-      assert.strictEqual(submission.get('repositories.firstObject.id'), repo1.id);
+      assert.strictEqual(submission.repositories[0].id, repo1.id);
       assert.notOk(submission.get('metadata').includes('external-submissions'));
 
       assert.strictEqual(submissionEvent.get('eventType'), 'submitted');
@@ -238,7 +238,7 @@ module('Unit | Service | submission-handler', (hooks) => {
 
           return submissionEvent;
         },
-      })
+      }),
     );
 
     let submission = EmberObject.create({
@@ -285,7 +285,7 @@ module('Unit | Service | submission-handler', (hooks) => {
 
           return submissionEvent;
         },
-      })
+      }),
     );
 
     let submission = EmberObject.create({
@@ -465,7 +465,7 @@ module('Unit | Service | submission-handler', (hooks) => {
     assert.ok(publication.save.calledOnce, 'Publication deletion should be persisted');
     assert.ok(
       files.map((f) => f.destroyRecord).every((func) => func.calledOnce),
-      'All files should be destroyed'
+      'All files should be destroyed',
     );
   });
 });

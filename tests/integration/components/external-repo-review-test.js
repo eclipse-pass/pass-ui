@@ -15,17 +15,14 @@ module('Integration | Component | external-repo-review', (hooks) => {
   });
 
   test('it renders', async function (assert) {
-    await render(hbs`
-      <ExternalRepoReview
-        @repos={{this.repos}}
-        @onExternalReposClicked={{this.onExternalReposClicked}}
-      />
-    `);
+    await render(
+      hbs`<ExternalRepoReview @repos={{this.repos}} @onExternalReposClicked={{this.onExternalReposClicked}} />`,
+    );
 
     assert
       .dom(this.element)
       .containsText(
-        'You are required to make a submission to these repositories directly because PASS cannot integrate with these systems.'
+        'You are required to make a submission to these repositories directly because PASS cannot integrate with these systems.',
       );
 
     const li = this.element.querySelectorAll('li');
@@ -34,12 +31,9 @@ module('Integration | Component | external-repo-review', (hooks) => {
   });
 
   test('Links unbold when clicked', async function (assert) {
-    await render(hbs`
-      <ExternalRepoReview
-        @repos={{this.repos}}
-        @onAllExternalReposClicked={{this.onExternalReposClicked}}
-      />
-    `);
+    await render(
+      hbs`<ExternalRepoReview @repos={{this.repos}} @onAllExternalReposClicked={{this.onExternalReposClicked}} />`,
+    );
 
     const btn = this.element.querySelectorAll('button');
     assert.dom(btn[0]).hasClass('font-weight-bold');
@@ -53,12 +47,9 @@ module('Integration | Component | external-repo-review', (hooks) => {
   });
 
   test('Clicking all links removes alert icon', async function (assert) {
-    await render(hbs`
-      <ExternalRepoReview
-        @repos={{this.repos}}
-        @onAllExternalReposClicked={{this.onExternalReposClicked}}
-      />
-    `);
+    await render(
+      hbs`<ExternalRepoReview @repos={{this.repos}} @onAllExternalReposClicked={{this.onExternalReposClicked}} />`,
+    );
 
     const btn = this.element.querySelectorAll('button');
     assert.equal(btn.length, 2, 'Should have 2 list elements for repos');

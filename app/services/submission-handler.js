@@ -5,6 +5,7 @@ import ENV from 'pass-ui/config/environment';
 import { task } from 'ember-concurrency-decorators';
 import { get } from '@ember/object';
 import { fileForSubmissionQuery, submissionsWithPublicationQuery } from '../util/paginated-query';
+import _ from 'lodash';
 
 /**
  * Service to manage submissions.
@@ -35,7 +36,7 @@ export default class SubmissionHandlerService extends Service {
       }
     });
 
-    return result.compact().uniqBy('id');
+    return _.uniqBy(_.compact(result), 'id');
   }
 
   /**

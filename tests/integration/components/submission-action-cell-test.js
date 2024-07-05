@@ -48,11 +48,9 @@ module('Integration | Component | submission action cell', (hooks) => {
     assert.strictEqual(this.element.textContent.trim(), 'No actions available.');
 
     // Template block usage:
-    await render(hbs`
-      <SubmissionActionCell @record={{this.record}}>
-        template block text
-      </SubmissionActionCell>
-    `);
+    await render(hbs`<SubmissionActionCell @record={{this.record}}>
+  template block text
+</SubmissionActionCell>`);
 
     assert.strictEqual(this.element.textContent.trim(), 'No actions available.');
   });
@@ -75,7 +73,7 @@ module('Integration | Component | submission action cell', (hooks) => {
     const handlerFake = Sinon.replace(submissionHandler, 'deleteSubmission', Sinon.fake.resolves());
     this.owner.register('service:submission-handler', submissionHandler);
 
-    await render(hbs`<SubmissionActionCell @record={{this.record}}></SubmissionActionCell>`);
+    await render(hbs`<SubmissionActionCell @record={{this.record}} />`);
     await click('a.delete-button');
     await click(document.querySelector('.swal2-confirm'));
 
@@ -98,21 +96,19 @@ module('Integration | Component | submission action cell', (hooks) => {
     // Need harness for flash messages
     // In the real app, this is done at the application level and will always be available
     // but needs to be injected for this isolated render test
-    await render(hbs`
-      {{#each this.flashMessages.queue as |flash|}}
-        <div class="flash-message-container">
-          <FlashMessage @flash={{flash}} as |component flash close|>
-            <div class="d-flex justify-content-between">
-              {{flash.message}}
-              <span role="button" {{on "click" close}}>
-                x
-              </span>
-            </div>
-          </FlashMessage>
-        </div>
-      {{/each}}
-      <SubmissionActionCell @record={{this.record}}></SubmissionActionCell>
-    `);
+    await render(hbs`{{#each this.flashMessages.queue as |flash|}}
+  <div class='flash-message-container'>
+    <FlashMessage @flash={{flash}} as |component flash close|>
+      <div class='d-flex justify-content-between'>
+        {{flash.message}}
+        <span role='button' {{on 'click' close}}>
+          x
+        </span>
+      </div>
+    </FlashMessage>
+  </div>
+{{/each}}
+<SubmissionActionCell @record={{this.record}} />`);
 
     assert.dom('a.delete-button').exists();
     assert.dom('a.btn').containsText('Edit');
@@ -138,7 +134,7 @@ module('Integration | Component | submission action cell', (hooks) => {
     });
     this.set('record', record);
 
-    await render(hbs`<SubmissionActionCell @record={{this.record}}></SubmissionActionCell>`);
+    await render(hbs`<SubmissionActionCell @record={{this.record}} />`);
 
     const buttons = this.element.querySelectorAll('a');
 

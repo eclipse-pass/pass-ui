@@ -98,7 +98,7 @@ module('Unit | Service | doi', (hooks) => {
           author: 'Moo, Jr Jones',
         },
       ],
-      'Unexpected "authors" found'
+      'Unexpected "authors" found',
     );
 
     assert.deepEqual(
@@ -119,7 +119,7 @@ module('Unit | Service | doi', (hooks) => {
           issn: 'oddagain',
         },
       ],
-      'Unexpected "issns" found'
+      'Unexpected "issns" found',
     );
   });
 
@@ -175,7 +175,7 @@ module('Unit | Service | doi', (hooks) => {
 
           return EmberObject.create(values);
         },
-      })
+      }),
     );
 
     assert.expect(7);

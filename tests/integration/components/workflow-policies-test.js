@@ -31,27 +31,25 @@ module('Integration | Component | workflow policies', (hooks) => {
 
   test('it renders', async function (assert) {
     const policy = this.policies[0];
-    await render(hbs`
-      <WorkflowPolicies
-        @submission={{this.submission}}
-        @policies={{this.policies}}
-        @publication={{this.publication}}
-        @next={{action this.loadNext}}
-        @back={{action this.loadPrevious}}
-      />
-    `);
+    await render(hbs`<WorkflowPolicies
+  @submission={{this.submission}}
+  @policies={{this.policies}}
+  @publication={{this.publication}}
+  @next={{this.loadNext}}
+  @back={{this.loadPrevious}}
+/>`);
 
     assert
       .dom('[data-test-workflow-policies-lead-text]')
       .containsText(
-        'Based on the information you provided so far, these are the public access policies that are applicable to your work:'
+        'Based on the information you provided so far, these are the public access policies that are applicable to your work:',
       );
 
     assert.dom('[data-test-method-a-journal-pmc-intro]').doesNotExist();
     assert
       .dom('[data-test-non-method-a-journal-pmc-intro]')
       .containsText(
-        'Some journals would submit your article to PMC on your behalf, for a fee. Specific arrangements would be required. Please indicate below whether or not you have made an arrangement with the publisher to have your article deposited by your journal/publisher.'
+        'Some journals would submit your article to PMC on your behalf, for a fee. Specific arrangements would be required. Please indicate below whether or not you have made an arrangement with the publisher to have your article deposited by your journal/publisher.',
       );
     assert.dom('[data-test-policy-title]').containsText(policy.title);
     assert.dom('[data-test-policy-deposit-expectation]').containsText(this.repository.name);
@@ -61,7 +59,7 @@ module('Integration | Component | workflow policies', (hooks) => {
     assert
       .dom('[data-test-non-method-a-journal-pmc-intro]')
       .containsText(
-        'Some journals would submit your article to PMC on your behalf, for a fee. Specific arrangements would be required. Please indicate below whether or not you have made an arrangement with the publisher to have your article deposited by your journal/publisher.'
+        'Some journals would submit your article to PMC on your behalf, for a fee. Specific arrangements would be required. Please indicate below whether or not you have made an arrangement with the publisher to have your article deposited by your journal/publisher.',
       );
 
     assert.dom('[data-test-workflow-policies-back]').exists();

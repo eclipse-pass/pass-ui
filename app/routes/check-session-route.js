@@ -28,7 +28,7 @@ export default class CheckSessionRouteRoute extends Route {
   @action
   async error(error, transition) {
     console.error(error);
-    const errorObject = error?.errors?.firstObject || {};
+    const errorObject = error?.errors[0] || {};
 
     if ([401, 403].includes(Number(errorObject.status))) {
       this.session.set('attemptedTransition', transition);

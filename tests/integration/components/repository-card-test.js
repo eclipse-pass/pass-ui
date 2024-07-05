@@ -21,9 +21,7 @@ module('Integration | Component | repository card', (hooks) => {
     this.set('selected', true);
     this.set('repository', EmberObject.create({ _selected: true }));
 
-    await render(hbs`<RepositoryCard
-      @repository={{this.repository}}
-      @choice={{true}} />`);
+    await render(hbs`<RepositoryCard @repository={{this.repository}} @choice={{true}} />`);
 
     assert.ok(this.element.querySelector('input[type="checkbox"]'), 'No checkbox found');
   });
@@ -55,13 +53,9 @@ module('Integration | Component | repository card', (hooks) => {
       assert.dom('input[type="checkbox"]').isChecked();
     });
 
-    await render(hbs`
-      <RepositoryCard
-        @repository={{this.repository}}
-        @choice={{true}}
-        @toggleRepository={{this.toggleRepository}}
-      />
-    `);
+    await render(
+      hbs`<RepositoryCard @repository={{this.repository}} @choice={{true}} @toggleRepository={{this.toggleRepository}} />`,
+    );
 
     await waitFor('input[type="checkbox"]');
     await click('input[type="checkbox"]');
