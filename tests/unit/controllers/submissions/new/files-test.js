@@ -92,6 +92,7 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
 
     const file = storeService.createRecord('file', {
       fileRole: 'manuscript',
+      submission,
       save: () => {
         return Promise.resolve();
       },
@@ -150,21 +151,24 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
 
     let subSaved = false;
 
-    let file = EmberObject.create({
+    const submission = EmberObject.create({
+      save: () => {
+        subSaved = true;
+        return Promise.resolve();
+      },
+    });
+
+    const file = EmberObject.create({
       fileRole: 'manuscript',
+      submission,
       save: () => {
         return Promise.resolve();
       },
     });
 
     let model = {
+      newSubmission: submission,
       files: [file],
-      newSubmission: EmberObject.create({
-        save: () => {
-          subSaved = true;
-          return Promise.resolve();
-        },
-      }),
     };
     controller.set('model', model);
     const routerService = this.owner.lookup('service:router');

@@ -80,6 +80,7 @@ module('Unit | Controller | submissions/new', (hooks) => {
 
     let file = EmberObject.create({
       fileRole: 'manuscript',
+      submission,
     });
 
     let comment = 'moo';
@@ -186,6 +187,7 @@ module('Unit | Controller | submissions/new', (hooks) => {
 
     let file = EmberObject.create({
       fileRole: 'manuscript',
+      submission,
     });
 
     let comment = 'moo';
@@ -278,6 +280,7 @@ module('Unit | Controller | submissions/new', (hooks) => {
 
     let file = EmberObject.create({
       fileRole: 'manuscript',
+      submission,
     });
 
     let comment = 'moo';

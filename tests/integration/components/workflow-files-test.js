@@ -77,17 +77,17 @@ module('Integration | Component | workflow files', (hooks) => {
    * First upload a file, then click the 'Remove' button
    */
   test("Files removed from UI should call the file's `destroyRecord`", async function (assert) {
-    const submission = EmberObject.create({});
+    const store = this.owner.lookup('service:store');
+    const submission = store.createRecord('submission');
 
     const deleteStub = sinon.stub().returns(Promise.resolve());
-    const file = {
+    const file = store.createRecord('file', {
       name: 'File-for-test',
       fileRole: 'manuscript',
       submission,
-      destroyRecord: deleteStub,
-    };
+    });
 
-    this.previouslyUploadedFiles = [file];
+    (file.destroyRecord = deleteStub), (this.previouslyUploadedFiles = [file]);
     this.newFiles = [];
 
     await render(hbs`<WorkflowFiles
@@ -128,10 +128,11 @@ module('Integration | Component | workflow files', (hooks) => {
     this.store = this.owner.lookup('service:store');
     this.submission = this.store.createRecord('submission');
 
-    const ms = {
+    const ms = this.store.createRecord('file', {
       name: 'This is the first moo',
       fileRole: 'manuscript',
-    };
+      submission: this.submission,
+    });
 
     this.previouslyUploadedFiles = [ms];
 
@@ -188,10 +189,12 @@ module('Integration | Component | workflow files', (hooks) => {
 
   test('Destroy record error displays error message', async function (assert) {
     const store = this.owner.lookup('service:store');
+    const submission = store.createRecord('submission');
 
     const file = store.createRecord('file', {
       name: 'File-for-test',
       fileRole: 'manuscript',
+      submission,
     });
     file.destroyRecord = () => Promise.reject();
 
