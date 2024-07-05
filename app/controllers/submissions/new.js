@@ -13,6 +13,7 @@ export default class SubmissionsNew extends Controller {
   @service searchHelper;
   @service flashMessages;
   @service router;
+  @service store;
 
   @tracked comment = ''; // Holds the comment that will be added to submissionEvent in the review step.
   @tracked uploading = false;
@@ -81,7 +82,7 @@ export default class SubmissionsNew extends Controller {
   @action
   async submit() {
     let manuscriptFiles = []
-      .concat(this.filesTemp, this.model.files && this.model.files.slice())
+      .concat(this.filesTemp, this.model.files && this.model.files.slice(), this.store.peekAll('file'))
       .filter((file) => file && file.fileRole === 'manuscript')
       .filter((file) => file.submission.id === this.model.newSubmission.id);
 
