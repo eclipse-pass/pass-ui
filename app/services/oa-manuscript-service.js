@@ -28,7 +28,14 @@ export default class OAManuscriptService extends Service {
 
     const url = `${this.lookUpPath}?doi=${doi}`;
 
-    return fetch(url, { method: 'GET' })
+    return fetch(url, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json; charset=utf-8',
+        withCredentials: 'include',
+        'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN\=([^;]*)/)['1'],
+      },
+    })
       .then((resp) => {
         if (resp.status !== 200) {
           console.log(`%cFailed to lookup files for DOI (${doi}). Reason: "${resp.message}"`, 'color: red;');
