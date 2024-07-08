@@ -1,6 +1,4 @@
-/* eslint-disable ember/no-computed-properties-in-native-classes */
 import Model, { attr } from '@ember-data/model';
-import { computed } from '@ember/object';
 
 export default class UserModel extends Model {
   /**
@@ -19,18 +17,11 @@ export default class UserModel extends Model {
   /** Possible values: admin, submitter */
   @attr('set') roles;
 
-  @computed('roles.[]')
   get isSubmitter() {
     return this.roles ? this.roles.includes('submitter') : false;
   }
 
-  @computed('roles.[]')
   get isAdmin() {
     return this.roles ? this.roles.includes('admin') : false;
   }
 }
-
-export const Role = {
-  SUBMITTER: 'SUBMITTER',
-  ADMIN: 'ADMIN',
-};

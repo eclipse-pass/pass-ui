@@ -3,7 +3,6 @@ import Service, { inject as service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
 import Ajv from 'ajv'; // https://github.com/epoberezkin/ajv
 import _ from 'lodash';
-import fetch from 'fetch';
 
 /**
  * Service to manipulate Alpaca schemas

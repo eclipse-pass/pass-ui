@@ -3,7 +3,6 @@ import Service, { inject as service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
 import { task, all, hash } from 'ember-concurrency';
 import { get } from '@ember/object';
-import fetch from 'fetch';
 import { run } from '@ember/runloop';
 
 /**
