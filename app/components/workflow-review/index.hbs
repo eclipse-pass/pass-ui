@@ -29,7 +29,7 @@
         <div class="text-muted">
           Please review the information below
         </div>
-        <table local-class="review-step-table" class="table table-responsive-sm table-bordered w-100">
+        <table id="#review-step-table" class="table table-responsive-sm table-bordered w-100">
           <tbody>
             {{#if this.mustVisitWeblink}}
               <ExternalRepoReview
@@ -39,7 +39,7 @@
             {{/if}}
 
             <tr>
-              <td local-class="max-width">
+              <td class="max-width">
                 Repositories
               </td>
               <td>
@@ -95,7 +95,7 @@
                 Files
               </td>
               <td>
-                <table local-class="files-table" class="w-100">
+                <table class="files-table w-100">
                   <thead>
                     <tr>
                       <th scope="col">File Type</th>
@@ -115,15 +115,15 @@
                       <tr>
                         <td data-label="icon">
                           {{#if (eq file.mimeType "png")}}
-                            <i local-class="line-height-35 text-gray fa-30" class="fas fa-file-image"></i>
+                            <i class="fas fa-file-image line-height-35 text-gray fa-30"></i>
                           {{else if (eq file.mimeType "vnd.openxmlformats-officedocument.presentationml.presentation")}}
-                            <i local-class="line-height-35 text-gray fa-30" class="fas fa-file-powerpoint"></i>
+                            <i class="fas fa-file-powerpoint line-height-35 text-gray fa-30"></i>
                           {{else if (eq file.mimeType "msword")}}
-                            <i local-class="line-height-35 text-gray fa-30" class="fas fa-file-word"></i>
+                            <i class="fas fa-file-word line-height-35 text-gray fa-30"></i>
                           {{else if (eq file.mimeType "pdf")}}
-                            <i local-class="line-height-35 text-gray fa-30" class="fas fa-file-pdf"></i>
+                            <i class="fas fa-file-pdf line-height-35 text-gray fa-30"></i>
                           {{else}}
-                            <i local-class="line-height-35 text-gray fa-30" class="far fa-file"></i>
+                            <i class="far fa-file line-height-35 text-gray fa-30"></i>
                           {{/if}}
                         </td>
                         <td class="workflow-review-file-name" data-label="name" data-test-workflow-review-file-name>

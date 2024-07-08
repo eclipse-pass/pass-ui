@@ -251,7 +251,7 @@
                     </i>
                   </p>
                 {{else}}
-                  <table local-class="files-table" class="w-100">
+                  <table class="files-table w-100">
                     <thead>
                       <tr>
                         <th scope="col"></th>
@@ -271,17 +271,15 @@
                         <tr>
                           <td data-label="icon">
                             {{#if (eq file.mimeType "png")}}
-                              <i local-class="line-height-35 text-gray fa-30" class="fas fa-file-image"></i>
-                            {{else if
-                              (eq file.mimeType "vnd.openxmlformats-officedocument.presentationml.presentation")
-                            }}
-                              <i local-class="line-height-35 text-gray fa-30" class="fas fa-file-powerpoint"></i>
+                              <i class="fas fa-file-image line-height-35 text-gray fa-30"></i>
+                            {{else if (eq file.mimeType "vnd.openxmlformats-officedocument.presentationml.presentation")}}
+                              <i class="fas fa-file-powerpoint line-height-35 text-gray fa-30"></i>
                             {{else if (eq file.mimeType "msword")}}
-                              <i local-class="line-height-35 text-gray fa-30" class="fas fa-file-word"></i>
+                              <i class="fas fa-file-word line-height-35 text-gray fa-30"></i>
                             {{else if (eq file.mimeType "pdf")}}
-                              <i local-class="line-height-35 text-gray fa-30" class="fas fa-file-pdf"></i>
+                              <i class="fas fa-file-pdf line-height-35 text-gray fa-30"></i>
                             {{else}}
-                              <i local-class="line-height-35 text-gray fa-30" class="far fa-file"></i>
+                              <i class="far fa-file line-height-35 text-gray fa-30"></i>
                             {{/if}}
                           </td>
                           <td id="submissions-detail-file-cell" data-label="name">

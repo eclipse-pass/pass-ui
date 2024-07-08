@@ -76,7 +76,6 @@
     "ember-composable-helpers": "^5.0.0",
     "ember-concurrency": "^2.3.4",
     "ember-concurrency-decorators": "^1.0.0",
-    "ember-css-modules": "^2.0.1",
     "ember-data": "~5.3.3",
     "ember-file-upload": "^7.3.0",
     "ember-inflector": "^4.0.2",

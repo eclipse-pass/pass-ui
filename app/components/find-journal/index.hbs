@@ -1,6 +1,6 @@
 {{! template-lint-disable no-action }}
 <PowerSelect
-  @triggerClass={{if (eq @journalClass "is-invalid") (local-class "is-invalid") (local-class "is-valid")}}
+  @triggerClass={{if (eq @journalClass "is-invalid") "is-invalid"}}
   @search={{perform this.searchJournals}}
   @searchEnabled={{true}}
   @selected={{@value}}

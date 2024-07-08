@@ -5,8 +5,6 @@
 const EmberApp = require('ember-cli/lib/broccoli/ember-app');
 const stringHash = require('string-hash');
 
-const disableCssModules = ['/pass-ui/styles/app.css', '/pass-ui/styles/font-awesome-5-0-13.css'];
-
 module.exports = function (defaults) {
   let app = new EmberApp(defaults, {
     // Add options here
@@ -27,19 +25,6 @@ module.exports = function (defaults) {
         '@ember-data/store': {
           polyfillUUID: true,
         },
-      },
-    },
-
-    cssModules: {
-      generateScopedName(className, modulePath) {
-        if (!disableCssModules.includes(modulePath)) {
-          let hash = stringHash(modulePath).toString(36).substring(0, 6);
-          let scopedName = `_${className}_${hash}`;
-
-          return scopedName;
-        }
-
-        return className;
       },
     },
 
