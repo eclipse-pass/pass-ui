@@ -32,8 +32,7 @@ export default class PoliciesService extends Service {
     const result = await fetch(url, {
       method: 'GET',
       headers: {
-        // 'Content-Type': 'application/json'
-        credentials: 'include',
+        'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN\=([^;]*)/)['1'],
       },
     });
 
@@ -86,7 +85,7 @@ export default class PoliciesService extends Service {
     const response = yield fetch(url, {
       method: 'GET',
       headers: {
-        credentials: 'include',
+        'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN\=([^;]*)/)['1'],
       },
     });
 

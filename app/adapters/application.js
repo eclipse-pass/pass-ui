@@ -13,7 +13,6 @@ export default class ApplicationAdapter extends JSONAPIAdapter {
 
   get headers() {
     return {
-      withCredentials: true,
       'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN\=([^;]*)/)['1'],
     };
   }

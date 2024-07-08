@@ -72,6 +72,7 @@ export default class MetadataSchemaService extends Service {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
+        'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN\=([^;]*)/)['1'],
       },
     };
 

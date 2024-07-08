@@ -31,7 +31,6 @@ export default class DoiService extends Service {
     let rawResponse = yield fetch(url, {
       headers: {
         Accept: 'application/json; charset=utf-8',
-        withCredentials: 'include',
         'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN\=([^;]*)/)['1'],
       },
     });
