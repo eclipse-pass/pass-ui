@@ -25,8 +25,7 @@
     "lint:js:fix": "eslint . --fix",
     "start": "ember server",
     "test": "concurrently \"npm:lint\" \"npm:test:*\" --names \"lint,test:\"",
-    "test:no-serve": "ember test",
-    "test:serve": "ember test -s",
+    "test:ember": "ember test",
     "prepare": "husky install"
   },
   "devDependencies": {
