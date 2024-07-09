@@ -135,8 +135,6 @@ module('Acceptance | submission', function (hooks) {
 
     assert.dom('#swal2-title').includesText('Deposit requirements for JScholarship');
 
-    await click('.swal2-modal').parentElement;
-
     await click('[data-test-workflow-review-submit]');
 
     await waitFor('#swal2-title');
@@ -329,23 +327,20 @@ module('Acceptance | submission', function (hooks) {
 
     await click('[data-test-workflow-review-submit]');
 
-    await waitFor(document.querySelector('#swal2-title'));
-    assert.dom(document.querySelector('#swal2-title')).includesText('Deposit requirements for JScholarship');
-
-    await click(document.querySelector('.swal2-modal').parentElement);
-    assert.dom('#swal2-title').doesNotExist();
+    await waitFor('#swal2-title');
+    assert.dom('#swal2-title').includesText('Deposit requirements for JScholarship');
 
     await click('[data-test-workflow-review-submit]');
 
-    await waitFor(document.querySelector('#swal2-title'));
-    assert.dom(document.querySelector('#swal2-title')).includesText('Deposit requirements for JScholarship');
-    await waitFor(document.querySelector('.swal2-radio label:nth-child(1) input[type="radio"]'));
-    await click(document.querySelector('.swal2-radio label:nth-child(1) input[type="radio"]'));
-    await click(document.querySelector('.swal2-confirm'));
+    await waitFor('#swal2-title');
+    assert.dom('#swal2-title').includesText('Deposit requirements for JScholarship');
+    await waitFor('.swal2-radio label:nth-child(1) input[type="radio"]');
+    await click('.swal2-radio label:nth-child(1) input[type="radio"]');
+    await click('.swal2-confirm');
 
-    await waitFor(document.querySelector('#swal2-title'));
-    assert.dom(document.querySelector('#swal2-title')).includesText('Confirm submission');
-    await click(document.querySelector('.swal2-confirm'));
+    await waitFor('#swal2-title');
+    assert.dom('#swal2-title').includesText('Confirm submission');
+    await click('.swal2-confirm');
 
     await waitFor('[data-test-workflow-thanks-thank-you]');
     assert.dom('[data-test-workflow-thanks-thank-you]').includesText('Thank you!');
@@ -457,12 +452,12 @@ module('Acceptance | submission', function (hooks) {
 
     await click('.alpaca-form-button-Next');
 
-    await waitFor(document.querySelector('#swal2-content'));
-    assert.dom(document.querySelector('#swal2-content')).includesText("should have required property 'author'");
+    await waitFor('#swal2-content');
+    assert.dom('#swal2-content').includesText("should have required property 'author'");
 
     // Some reason, setting the document query to a variable before clicking works,
     // but calling the query selector in the click does not work
-    const confirmBtn = document.querySelector('.swal2-confirm');
+    const confirmBtn = '.swal2-confirm';
     await waitFor(confirmBtn);
     assert.ok(confirmBtn);
     await click(confirmBtn);
@@ -493,23 +488,20 @@ module('Acceptance | submission', function (hooks) {
 
     await click('[data-test-workflow-review-submit]');
 
-    await waitFor(document.querySelector('#swal2-title'));
-    assert.dom(document.querySelector('#swal2-title')).includesText('Deposit requirements for JScholarship');
-
-    await click(document.querySelector('.swal2-modal').parentElement);
-    assert.dom('#swal2-title').doesNotExist();
+    await waitFor('#swal2-title');
+    assert.dom('#swal2-title').includesText('Deposit requirements for JScholarship');
 
     await click('[data-test-workflow-review-submit]');
 
-    await waitFor(document.querySelector('#swal2-title'));
-    assert.dom(document.querySelector('#swal2-title')).includesText('Deposit requirements for JScholarship');
-    await waitFor(document.querySelector('.swal2-radio label:nth-child(1) input[type="radio"]'));
-    await click(document.querySelector('.swal2-radio label:nth-child(1) input[type="radio"]'));
-    await click(document.querySelector('.swal2-confirm'));
+    await waitFor('#swal2-title');
+    assert.dom('#swal2-title').includesText('Deposit requirements for JScholarship');
+    await waitFor('.swal2-radio label:nth-child(1) input[type="radio"]');
+    await click('.swal2-radio label:nth-child(1) input[type="radio"]');
+    await click('.swal2-confirm');
 
-    await waitFor(document.querySelector('#swal2-title'));
-    assert.dom(document.querySelector('#swal2-title')).includesText('Confirm submission');
-    await click(document.querySelector('.swal2-confirm'));
+    await waitFor('#swal2-title');
+    assert.dom('#swal2-title').includesText('Confirm submission');
+    await click('.swal2-confirm');
 
     await waitFor('[data-test-workflow-thanks-thank-you]');
     assert.dom('[data-test-workflow-thanks-thank-you]').includesText('Thank you!');
@@ -599,10 +591,10 @@ module('Acceptance | submission', function (hooks) {
 
     await click('.alpaca-form-button-Next');
 
-    await waitFor(document.querySelector('#swal2-content'));
-    assert.dom(document.querySelector('#swal2-content')).includesText("should have required property 'author'");
+    await waitFor('#swal2-content');
+    assert.dom('#swal2-content').includesText("should have required property 'author'");
 
-    const confirmBtn = document.querySelector('.swal2-confirm');
+    const confirmBtn = '.swal2-confirm';
     assert.ok(confirmBtn, 'No SweetAlert OK button found');
     await waitFor(confirmBtn);
     await click(confirmBtn);
@@ -639,23 +631,20 @@ module('Acceptance | submission', function (hooks) {
 
     await click('[data-test-workflow-review-submit]');
 
-    await waitFor(document.querySelector('#swal2-title'));
-    assert.dom(document.querySelector('#swal2-title')).includesText('Deposit requirements for JScholarship');
-
-    await click(document.querySelector('.swal2-modal').parentElement);
-    assert.dom('#swal2-title').doesNotExist();
+    await waitFor('#swal2-title');
+    assert.dom('#swal2-title').includesText('Deposit requirements for JScholarship');
 
     await click('[data-test-workflow-review-submit]');
 
-    await waitFor(document.querySelector('#swal2-title'));
-    assert.dom(document.querySelector('#swal2-title')).includesText('Deposit requirements for JScholarship');
-    await waitFor(document.querySelector('.swal2-radio label:nth-child(1) input[type="radio"]'));
-    await click(document.querySelector('.swal2-radio label:nth-child(1) input[type="radio"]'));
-    await click(document.querySelector('.swal2-confirm'));
+    await waitFor('#swal2-title');
+    assert.dom('#swal2-title').includesText('Deposit requirements for JScholarship');
+    await waitFor('.swal2-radio label:nth-child(1) input[type="radio"]');
+    await click('.swal2-radio label:nth-child(1) input[type="radio"]');
+    await click('.swal2-confirm');
 
-    await waitFor(document.querySelector('#swal2-title'));
-    assert.dom(document.querySelector('#swal2-title')).includesText('Confirm submission');
-    await click(document.querySelector('.swal2-confirm'));
+    await waitFor('#swal2-title');
+    assert.dom('#swal2-title').includesText('Confirm submission');
+    await click('.swal2-confirm');
 
     await waitFor('[data-test-workflow-thanks-thank-you]');
     assert.dom('[data-test-workflow-thanks-thank-you]').includesText('Thank you!');
@@ -806,23 +795,20 @@ module('Acceptance | submission', function (hooks) {
 
     await click('[data-test-workflow-review-submit]');
 
-    await waitFor(document.querySelector('#swal2-title'));
-    assert.dom(document.querySelector('#swal2-title')).includesText('Deposit requirements for JScholarship');
-
-    await click(document.querySelector('.swal2-modal').parentElement);
-    assert.dom('#swal2-title').doesNotExist();
+    await waitFor('#swal2-title');
+    assert.dom('#swal2-title').includesText('Deposit requirements for JScholarship');
 
     await click('[data-test-workflow-review-submit]');
 
-    await waitFor(document.querySelector('#swal2-title'));
-    assert.dom(document.querySelector('#swal2-title')).includesText('Deposit requirements for JScholarship');
-    await waitFor(document.querySelector('.swal2-radio label:nth-child(1) input[type="radio"]'));
-    await click(document.querySelector('.swal2-radio label:nth-child(1) input[type="radio"]'));
-    await click(document.querySelector('.swal2-confirm'));
+    await waitFor('#swal2-title');
+    assert.dom('#swal2-title').includesText('Deposit requirements for JScholarship');
+    await waitFor('.swal2-radio label:nth-child(1) input[type="radio"]');
+    await click('.swal2-radio label:nth-child(1) input[type="radio"]');
+    await click('.swal2-confirm');
 
-    await waitFor(document.querySelector('#swal2-title'));
-    assert.dom(document.querySelector('#swal2-title')).includesText('Confirm submission');
-    await click(document.querySelector('.swal2-confirm'));
+    await waitFor('#swal2-title');
+    assert.dom('#swal2-title').includesText('Confirm submission');
+    await click('.swal2-confirm');
 
     await waitFor('[data-test-workflow-thanks-thank-you]');
     assert.dom('[data-test-workflow-thanks-thank-you]').includesText('Thank you!');
