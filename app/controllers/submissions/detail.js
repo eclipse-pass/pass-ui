@@ -229,6 +229,7 @@ export default class SubmissionsDetail extends Controller {
   @action
   async openWeblinkAlert(repo) {
     let value = await swal({
+      target: ENV.APP.rootElement,
       title: 'Notice!',
       text: 'You are being sent to an external site. This will open a new tab.',
       showCancelButton: true,
@@ -334,6 +335,7 @@ export default class SubmissionsDetail extends Controller {
 
     const result = await swal
       .mixin({
+        target: ENV.APP.rootElement,
         input: 'checkbox',
         inputPlaceholder: "I agree to the above statement on today's date ",
         confirmButtonText: 'Next &rarr;',
@@ -372,6 +374,7 @@ export default class SubmissionsDetail extends Controller {
           }
 
           let result = await swal({
+            target: ENV.APP.rootElement,
             title: 'Confirm submission',
             html: swalMsg, // eslint-disable-line
             confirmButtonText: 'Confirm',
@@ -409,6 +412,7 @@ export default class SubmissionsDetail extends Controller {
             }
           });
           let result = await swal({
+            target: ENV.APP.rootElement,
             title: 'Your submission cannot be submitted.',
             html: `You declined to agree to the deposit agreement(s) for ${JSON.stringify(
               reposUserDidNotAgreeToDeposit.map((repo) => repo.id),
@@ -428,6 +432,7 @@ export default class SubmissionsDetail extends Controller {
       } else {
         // no repositories associated with the submission
         let result = await swal({
+          target: ENV.APP.rootElement,
           title: 'Your submission cannot be submitted.',
           html: 'No repositories are associated with this submission. \n You can either (a) cancel the submission or (b) return to the submission and edit it to include a repository.',
           confirmButtonText: 'Cancel submission',
@@ -453,6 +458,7 @@ export default class SubmissionsDetail extends Controller {
     }
 
     let result = await swal({
+      target: ENV.APP.rootElement,
       title: 'Are you sure?',
       text: 'If you cancel this submission, it will not be able to be resumed.',
       confirmButtonText: 'Yes, cancel this submission',
@@ -471,6 +477,7 @@ export default class SubmissionsDetail extends Controller {
   @action
   async deleteSubmission(submission) {
     let result = await swal({
+      target: ENV.APP.rootElement,
       text: 'Are you sure you want to delete this draft submission? This cannot be undone.',
       confirmButtonText: 'Delete',
       confirmButtonColor: '#DC3545',

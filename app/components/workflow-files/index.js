@@ -1,10 +1,9 @@
 /* eslint-disable ember/no-computed-properties-in-native-classes, ember/no-get, ember/require-computed-property-dependencies */
 import Component from '@glimmer/component';
-import { action, get } from '@ember/object';
+import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { task } from 'ember-concurrency-decorators';
 import ENV from 'pass-ui/config/environment';
-import { tracked } from '@glimmer/tracking';
 
 export default class WorkflowFiles extends Component {
   @service store;
@@ -51,6 +50,7 @@ export default class WorkflowFiles extends Component {
   @action
   deleteExistingFile(file) {
     swal({
+      target: ENV.APP.rootElement,
       title: 'Are you sure?',
       text: 'If you delete this file, it will be gone forever.',
       type: 'warning',

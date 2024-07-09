@@ -6,6 +6,7 @@ import { inject as service } from '@ember/service';
 import { task } from 'ember-concurrency-decorators';
 import { later } from '@ember/runloop';
 import _ from 'lodash';
+import ENV from 'pass-ui/config/environment';
 
 /**
  * Present the user with a summary of all information known about the current in-progress
@@ -122,6 +123,7 @@ export default class WorkflowReview extends Component {
 
     const result = yield swal
       .mixin({
+        target: ENV.APP.rootElement,
         confirmButtonText: 'Next &rarr;',
         input: 'radio',
         inputOptions: {
@@ -168,6 +170,7 @@ export default class WorkflowReview extends Component {
           }
 
           const result = yield swal({
+            target: ENV.APP.rootElement,
             title: 'Confirm submission',
             html: swalMsg, // eslint-disable-line
             confirmButtonText: 'Confirm',
@@ -213,6 +216,7 @@ export default class WorkflowReview extends Component {
             }
           });
           swal({
+            target: ENV.APP.rootElement,
             title: 'Your submission cannot be submitted.',
             html: `You declined to agree to the deposit agreement(s) for ${JSON.stringify(
               reposUserDidNotAgreeToDeposit.map((repo) => repo.id),
@@ -227,6 +231,7 @@ export default class WorkflowReview extends Component {
       } else {
         // no repositories associated with the submission
         swal({
+          target: ENV.APP.rootElement,
           title: 'Your submission cannot be submitted.',
           html: 'No repositories are associated with this submission. \n Return to the submission and edit it to include a repository.',
           confirmButtonText: 'Ok',
@@ -260,6 +265,7 @@ export default class WorkflowReview extends Component {
   @action
   openWeblinkAlert(repo) {
     swal({
+      target: ENV.APP.rootElement,
       title: 'Notice!',
       text: 'You are being sent to an external site. This will open a new tab.',
       showCancelButton: true,

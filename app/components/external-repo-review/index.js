@@ -1,6 +1,7 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
+import ENV from 'pass-ui/config/environment';
 
 class VisitableRepo {
   @tracked visited;
@@ -47,6 +48,7 @@ export default class ExternalRepoReviewComponent extends Component {
   @action
   openWeblinkAlert(repo) {
     swal({
+      target: ENV.APP.rootElement,
       title: 'Notice!',
       text: 'You are being sent to an external site. This will open a new tab.',
       showCancelButton: true,
