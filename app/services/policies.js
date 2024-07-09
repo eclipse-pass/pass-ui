@@ -133,12 +133,10 @@ export default class PoliciesService extends Service {
   @task(function* (repos) {
     return yield all(
       repos.map((repoInfo) =>
-        get(this, 'store')
-          .findRecord('repository', repoInfo.url)
-          .then((repo) => {
-            repo.set('_selected', repoInfo.selected);
-            return repo;
-          }),
+        this.store.findRecord('repository', repoInfo.url).then((repo) => {
+          repo.set('_selected', repoInfo.selected);
+          return repo;
+        }),
       ),
     );
   })

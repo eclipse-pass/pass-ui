@@ -86,9 +86,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
 
     const _fetchSchemasSpy = sinon.spy(service, '_fetchSchemas');
 
-    service.getMetadataSchemas(['moo', 'too']);
-
-    await settled();
+    await service.getMetadataSchemas(['moo', 'too']);
 
     assert.ok(_fetchSchemasSpy.calledTwice, 'fetch schema was called twice');
   });
