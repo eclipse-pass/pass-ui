@@ -163,13 +163,13 @@ module('Integration | Component | workflow review', (hooks) => {
     // Click on submit
     await click('.submit');
 
-    await click(document.querySelector('.swal2-confirm'));
+    await click('.swal2-confirm');
 
-    await waitFor(document.querySelector('.swal2-validationerror'));
-    assert.dom(document.querySelector('.swal2-validationerror')).containsText('You need to choose something!');
+    await waitFor('.swal2-validationerror');
+    assert.dom('.swal2-validationerror').containsText('You need to choose something!');
 
-    await waitFor(document.querySelector('.swal2-container'));
-    await click(document.querySelector('.swal2-container'));
+    await waitFor('.swal2-container');
+    await click('.swal2-container');
   });
 
   test('submission success: web-link and agreement', async function (assert) {
@@ -227,7 +227,7 @@ module('Integration | Component | workflow review', (hooks) => {
 
     // Click on web-link repository and then confirm
     await click('[data-test-repo-link-button]');
-    await click(document.querySelector('.swal2-confirm'));
+    await click('.swal2-confirm');
 
     assert.dom('[data-test-workflow-review-submit]').isNotDisabled();
 
@@ -235,12 +235,12 @@ module('Integration | Component | workflow review', (hooks) => {
     await click('.submit');
 
     // Click on deposit agreement checkbox and then next
-    await waitFor(document.querySelector('.swal2-radio label:nth-child(1) input[type="radio"]'));
-    await click(document.querySelector('.swal2-radio label:nth-child(1) input[type="radio"]'));
-    await click(document.querySelector('.swal2-confirm'));
+    await waitFor('.swal2-radio label:nth-child(1) input[type="radio"]');
+    await click('.swal2-radio label:nth-child(1) input[type="radio"]');
+    await click('.swal2-confirm');
 
     // Click on confirm submission
-    await click(document.querySelector('.swal2-confirm'));
+    await click('.swal2-confirm');
 
     assert.true(submitted);
 
@@ -364,17 +364,17 @@ module('Integration | Component | workflow review', (hooks) => {
     await click('.submit');
 
     // Click the second radio indicating submit without agreeing to deposit agreement
-    await waitFor(document.querySelector('.swal2-radio label:nth-child(2) input[type="radio"]'));
-    await click(document.querySelector('.swal2-radio label:nth-child(2) input[type="radio"]'));
+    await waitFor('.swal2-radio label:nth-child(2) input[type="radio"]');
+    await click('.swal2-radio label:nth-child(2) input[type="radio"]');
 
     // Click Next without agreeing
-    await click(document.querySelector('.swal2-confirm'));
+    await click('.swal2-confirm');
 
     // Should be warning about no deposit agreement
-    assert.strictEqual(document.querySelector('.swal2-title').textContent, 'Your submission cannot be submitted.');
-    assert.true(document.querySelector('.swal2-content').textContent.includes(repo1.get('name')));
+    assert.dom('.swal2-title').includesText('Your submission cannot be submitted.');
+    assert.dom('.swal2-content').includesText(repo1.name);
 
-    await click(document.querySelector('.swal2-confirm'));
+    await click('.swal2-confirm');
 
     assert.false(submitted);
   });
