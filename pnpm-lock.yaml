@@ -255,8 +255,8 @@ devDependencies:
     specifier: ^2.20.1
     version: 2.21.0
   qunit-dom:
-    specifier: ^2.0.0
-    version: 2.0.0
+    specifier: ^3.1.2
+    version: 3.2.0
   sinon:
     specifier: ^15.0.2
     version: 15.2.0
@@ -11944,16 +11944,10 @@ packages:
       underscore.string: 3.3.6
     dev: true
 
-  /qunit-dom@2.0.0:
-    resolution: {integrity: sha512-mElzLN99wYPOGekahqRA+mq7NcThXY9c+/tDkgJmT7W5LeZAFNyITr2rFKNnCbWLIhuLdFw88kCBMrJSfyBYpA==}
-    engines: {node: 12.* || 14.* || >= 16.*}
+  /qunit-dom@3.2.0:
+    resolution: {integrity: sha512-VYFXbwod2sis16Nzgx5UrdCvjNUPYIAbTwEGv7hF1RfgJaVgG5ASVaQz9en0ZRvlybtql0LrVuAbleJU/57zQQ==}
     dependencies:
-      broccoli-funnel: 3.0.8
-      broccoli-merge-trees: 4.2.0
-      ember-cli-babel: 7.26.11
-      ember-cli-version-checker: 5.1.2
-    transitivePeerDependencies:
-      - supports-color
+      dom-element-descriptors: 0.5.1
     dev: true
 
   /qunit-theme-ember@1.0.0:
