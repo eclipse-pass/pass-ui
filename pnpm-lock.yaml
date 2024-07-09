@@ -150,8 +150,8 @@ devDependencies:
     specifier: ~5.3.3
     version: 5.3.8(@ember/string@3.1.1)(@ember/test-helpers@3.3.0)(@ember/test-waiters@3.1.0)(ember-inflector@4.0.2)(ember-source@5.8.0)(qunit@2.21.0)
   ember-file-upload:
-    specifier: ^7.3.0
-    version: 7.4.0(@babel/core@7.24.7)(ember-cli-mirage@3.0.3)(ember-source@5.8.0)(miragejs@0.1.48)(webpack@5.92.1)
+    specifier: ^9.0.0
+    version: 9.0.0(@ember/test-helpers@3.3.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-cli-mirage@3.0.3)(ember-modifier@4.2.0)(miragejs@0.1.48)(tracked-built-ins@3.3.0)(webpack@5.92.1)
   ember-inflector:
     specifier: ^4.0.2
     version: 4.0.2
@@ -2493,28 +2493,6 @@ packages:
     dependencies:
       ember-cli-babel: 7.26.11
     transitivePeerDependencies:
-      - supports-color
-    dev: true
-
-  /@ember/test-helpers@2.9.4(@babel/core@7.24.7)(ember-source@5.8.0):
-    resolution: {integrity: sha512-z+Qs1NYWyIVDmrY6WdmOS5mdG1lJ5CFfzh6dRhLfs9lq45deDaDrVNcaCYhnNeJZTvUBK2XR2SvPcZm0RloXdA==}
-    engines: {node: 10.* || 12.* || 14.* || 15.* || >= 16.*}
-    peerDependencies:
-      ember-source: '>=3.8.0'
-    dependencies:
-      '@ember/test-waiters': 3.1.0
-      '@embroider/macros': 1.16.0
-      '@embroider/util': 1.13.1(ember-source@5.8.0)
-      broccoli-debug: 0.6.5
-      broccoli-funnel: 3.0.8
-      ember-cli-babel: 7.26.11
-      ember-cli-htmlbars: 6.3.0
-      ember-destroyable-polyfill: 2.0.3(@babel/core@7.24.7)
-      ember-source: 5.8.0(@babel/core@7.24.7)(@glimmer/component@1.1.2)(rsvp@4.8.5)(webpack@5.92.1)
-    transitivePeerDependencies:
-      - '@babel/core'
-      - '@glint/environment-ember-loose'
-      - '@glint/template'
       - supports-color
     dev: true
 
@@ -7244,19 +7222,24 @@ packages:
       - supports-color
     dev: true
 
-  /ember-file-upload@7.4.0(@babel/core@7.24.7)(ember-cli-mirage@3.0.3)(ember-source@5.8.0)(miragejs@0.1.48)(webpack@5.92.1):
-    resolution: {integrity: sha512-ZWyUpdtEFZoSeJmeiNf0xdoUxWURbUtViFwPDW5qDZx8GX7245q5vb0kNizTTLuOnTVVly0Nnm7lOPvQhcMg9g==}
-    engines: {node: 14.* || 16.* || >= 18}
+  /ember-file-upload@9.0.0(@ember/test-helpers@3.3.0)(@glimmer/component@1.1.2)(@glimmer/tracking@1.1.2)(ember-cli-mirage@3.0.3)(ember-modifier@4.2.0)(miragejs@0.1.48)(tracked-built-ins@3.3.0)(webpack@5.92.1):
+    resolution: {integrity: sha512-7WJTXOoeXqN34aDNpKBIgUf07pYDjtqZRcyqYe4U1GNJGfJdsL+y42y+bKYLfuHLhbOAlZ1ZyEop34LR+hOZSA==}
+    engines: {node: 16.* || >= 18}
     peerDependencies:
+      '@ember/test-helpers': ^2.9.3 || ^3.0.3
+      '@glimmer/component': ^1.1.2
+      '@glimmer/tracking': ^1.1.2
       ember-cli-mirage: '*'
+      ember-modifier: ^3.2.7 || ^4.1.0
       miragejs: '*'
+      tracked-built-ins: ^3.1.1
     peerDependenciesMeta:
       ember-cli-mirage:
         optional: true
       miragejs:
         optional: true
     dependencies:
-      '@ember/test-helpers': 2.9.4(@babel/core@7.24.7)(ember-source@5.8.0)
+      '@ember/test-helpers': 3.3.0(ember-source@5.8.0)(webpack@5.92.1)
       '@ember/test-waiters': 3.1.0
       '@embroider/addon-shim': 1.8.9
       '@embroider/macros': 1.16.0
@@ -7268,10 +7251,7 @@ packages:
       miragejs: 0.1.48
       tracked-built-ins: 3.3.0
     transitivePeerDependencies:
-      - '@babel/core'
-      - '@glint/environment-ember-loose'
       - '@glint/template'
-      - ember-source
       - supports-color
       - webpack
     dev: true
