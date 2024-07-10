@@ -26,7 +26,7 @@ export default class DetailRoute extends CheckSessionRoute {
     });
 
     const sub = await this.store.findRecord('submission', params.submission_id, {
-      include: 'publication.journal,repositories',
+      include: 'publication.journal,repositories,preparers',
     });
     const publication = await sub.get('publication');
     const repoCopies = await this.store.query('repositoryCopy', {
