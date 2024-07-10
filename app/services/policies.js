@@ -3,7 +3,6 @@ import Service, { inject as service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
 import { task, all, hash } from 'ember-concurrency';
 import { get } from '@ember/object';
-import fetch from 'fetch';
 import { run } from '@ember/runloop';
 
 /**
@@ -133,12 +132,10 @@ export default class PoliciesService extends Service {
   @task(function* (repos) {
     return yield all(
       repos.map((repoInfo) =>
-        get(this, 'store')
-          .findRecord('repository', repoInfo.url)
-          .then((repo) => {
-            repo.set('_selected', repoInfo.selected);
-            return repo;
-          }),
+        this.store.findRecord('repository', repoInfo.url).then((repo) => {
+          repo.set('_selected', repoInfo.selected);
+          return repo;
+        }),
       ),
     );
   })

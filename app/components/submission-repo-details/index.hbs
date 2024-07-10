@@ -1,8 +1,8 @@
 {{! template-lint-disable link-rel-noopener no-curly-component-invocation no-implicit-this }}
 <li>
   <div class="card float-left col-5 mr-3 mb-0">
-    <div local-class="sub-status" class="card-body">
-      <div local-class="card-title" class="row card-title">
+    <div class="card-body sub-status">
+      <div class="row card-title">
         {{#if @repo.url}}
           <a href={{@repo.url}} target="_blank">{{@repo.name}}</a>
         {{else}}
@@ -16,7 +16,7 @@
             <div class="col">
               {{#if this.tooltip}}
                 <span class="{{this.status}}" tooltip-position="left" tooltip="{{this.tooltip}}">
-                  <i local-class="deposit-status-icon" class="fas fa-info-circle"></i>
+                  <i class="fas fa-info-circle deposit-status-icon"></i>
                   {{#if (eq this.status "not-submitted")}}
                     n&#47;a
                   {{else}}
@@ -25,7 +25,7 @@
                 </span>
               {{else}}
                 <span class="{{this.status}}">
-                  <i local-class="deposit-status-icon" class="fas fa-circle"></i>
+                  <i class="fas fa-circle deposit-status-icon"></i>
                   {{this.status}}
                 </span>
               {{/if}}

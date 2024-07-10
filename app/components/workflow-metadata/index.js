@@ -6,6 +6,7 @@ import _ from 'lodash';
 import { inject as service } from '@ember/service';
 import swal from 'sweetalert2';
 import { task } from 'ember-concurrency-decorators';
+import ENV from 'pass-ui/config/environment';
 
 /**
  * The schema service is invoked to retrieve appropriate metadata forms.
@@ -137,6 +138,7 @@ export default class WorkflowMetadata extends Component {
       console.log(metadataSchema.getErrors());
 
       swal({
+        target: ENV.APP.rootElement,
         type: 'error',
         title: 'Form Validation Error',
         html: this.validationErrorMsg(metadataSchema.getErrors()),

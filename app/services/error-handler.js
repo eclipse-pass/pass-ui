@@ -50,6 +50,7 @@ export default class ErrorHandlerService extends Service {
 
   handleSessionTimeout(error) {
     swal({
+      target: ENV.APP.rootElement,
       type: 'error',
       title: 'Your session timed out',
       text: 'When you click OK the page will reload.',
@@ -75,6 +76,7 @@ export default class ErrorHandlerService extends Service {
 
   handleDidNotLoadDataError(error) {
     swal({
+      target: ENV.APP.rootElement,
       type: 'error',
       title: 'Page could not load',
       text: `Some information required by this page did not load correctly. When you click OK the page will reload. If the issue persists, please contact us and include a copy of this message. ${JSON.stringify(
@@ -89,6 +91,7 @@ export default class ErrorHandlerService extends Service {
 
   handleUnknownError(error) {
     swal({
+      target: ENV.APP.rootElement,
       type: 'error',
       title: 'Something went wrong.',
       text: `When you click OK the page will reload. If the issue persists, please contact us and include a copy of this message. ${JSON.stringify(

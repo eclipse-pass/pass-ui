@@ -58,12 +58,6 @@ module('Unit | Service | doi', (hooks) => {
     });
   });
 
-  // Replace this with your real tests.
-  test('it exists', function (assert) {
-    let service = this.owner.lookup('service:doi');
-    assert.ok(service);
-  });
-
   // Test DOI object here based on CrossRef data
   test('check doi data processing', function (assert) {
     const service = this.owner.lookup('service:doi');

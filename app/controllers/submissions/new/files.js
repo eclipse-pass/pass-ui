@@ -5,6 +5,7 @@ import { action, computed, get, set } from '@ember/object';
 import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import _ from 'lodash';
+import ENV from 'pass-ui/config/environment';
 
 export default class SubmissionsNewFiles extends Controller {
   @service workflow;
@@ -84,6 +85,7 @@ export default class SubmissionsNewFiles extends Controller {
 
       if (manuscriptFiles.length == 0 && !submitter) {
         let result = await swal({
+          target: ENV.APP.rootElement,
           title: 'No manuscript present',
           text: 'If no manuscript is attached, the designated submitter will need to add one before final submission',
           type: 'warning',

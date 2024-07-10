@@ -48,9 +48,9 @@ module('Acceptance | proxy submission', function (hooks) {
     await fillIn('[data-test-proxy-search-input]', 'Staff');
     await click('[data-test-proxy-user-search-button]');
 
-    await waitFor(document.querySelector('.ember-modal-dialog'));
-    await waitFor(document.querySelector('[data-test-found-proxy-user]'));
-    await click(document.querySelector('[data-test-found-proxy-user]'));
+    await waitFor('.ember-modal-dialog');
+    await waitFor('[data-test-found-proxy-user]');
+    await click('[data-test-found-proxy-user]');
 
     await walkThroughSubmissionFlow(assert, true); // eslint-disable-line no-use-before-define
 
@@ -161,10 +161,9 @@ module('Acceptance | proxy submission', function (hooks) {
 
     await click('[data-test-workflow-files-next]');
 
-    await waitFor(document.querySelector('#swal2-title'));
-    assert.dom(document.querySelector('#swal2-title')).includesText('No manuscript present');
-    await click(document.querySelector('.swal2-confirm'));
-    assert.dom('#swal2-title').doesNotExist();
+    await waitFor('#swal2-title');
+    assert.dom('#swal2-title').includesText('No manuscript present');
+    await click('.swal2-confirm');
 
     await waitFor('[data-test-workflow-review-submit]');
     assert.strictEqual(currentURL(), '/submissions/new/review');

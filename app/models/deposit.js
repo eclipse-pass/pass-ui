@@ -8,10 +8,3 @@ export default class DepositModel extends Model {
   @belongsTo('submission', { async: false, inverse: null }) submission;
   @belongsTo('repository', { async: false, inverse: null }) repository;
 }
-
-export const DepositStatus = {
-  SUBMITTED: 'SUBMITTED',
-  REJECTED: 'REJECTED',
-  FAILED: 'FAILED',
-  ACCEPTED: 'ACCEPTED',
-};

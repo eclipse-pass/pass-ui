@@ -2,6 +2,7 @@ import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
 import { render } from '@ember/test-helpers';
+import stripEmptyArrays from 'pass-ui/util/strip-empty-arrays';
 
 module('Integration | Component | metadata-form', (hooks) => {
   setupRenderingTest(hooks);
@@ -43,8 +44,6 @@ module('Integration | Component | metadata-form', (hooks) => {
   });
 
   test('Test "stripEmptyArrays"', function (assert) {
-    const component = this.owner.lookup('component:metadata-form');
-
     const obj = {
       one: [],
       two: ['moo'],
@@ -54,7 +53,7 @@ module('Integration | Component | metadata-form', (hooks) => {
       six: {},
       seven: { moo: [] },
     };
-    const result = component.stripEmptyArrays(obj);
+    const result = stripEmptyArrays(obj);
 
     assert.notOk('one' in result);
     assert.ok('two' in result);

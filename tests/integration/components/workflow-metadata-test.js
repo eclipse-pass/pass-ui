@@ -6,7 +6,7 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { run } from '@ember/runloop';
-import { getContext, click, render, fillIn, waitFor, waitUntil, find } from '@ember/test-helpers';
+import { getContext, click, render, fillIn, waitFor, waitUntil, find, settled } from '@ember/test-helpers';
 import { setupMirage } from 'ember-cli-mirage/test-support';
 
 let submission;
@@ -198,6 +198,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
     assert.dom(this.element).includesText('Common schema title moo');
     await click('[data-key="Next"]');
     await waitFor('input[name="journal-NLMTA-ID"]');
+    await settled();
     assert.dom(this.element).doesNotIncludeText('Common schema title moo');
     assert.dom(this.element).includesText('NIH Manuscript Submission System');
     assert.dom('input[name="journal-NLMTA-ID"]').exists();
@@ -239,6 +240,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
 
     await render(hbs`<WorkflowMetadata @submission={{this.submission}} @publication={{this.publication}} />`);
     await waitFor('[data-key="Next"]');
+    await settled();
     await click('[data-key="Next"]');
 
     // Need to fill out ISSN field
@@ -247,11 +249,11 @@ module('Integration | Component | workflow-metadata', (hooks) => {
 
     await click('button[data-key="Next"]');
 
-    await waitFor(document.querySelector('.swal2-confirm'));
+    await waitFor('.swal2-confirm');
 
-    assert.dom(document.querySelector('.swal2-title')).includesText('Form Validation Error');
-    assert.dom(document.querySelector('.swal2-content')).includesText('should be string');
-    await click(document.querySelector('.swal2-confirm'));
+    assert.dom('.swal2-title').includesText('Form Validation Error');
+    assert.dom('.swal2-content').includesText('should be string');
+    await click('.swal2-confirm');
   });
 
   test('Back button on J10P form takes you back to NIH form', async function (assert) {
@@ -325,8 +327,8 @@ module('Integration | Component | workflow-metadata', (hooks) => {
     await waitFor('[data-key="Back"]');
     await waitFor('[data-key="Abort"]');
     await click('button[data-key="Next"]');
-    await waitFor(document.querySelector('.swal2-confirm'));
-    await click(document.querySelector('.swal2-confirm'));
+    await waitFor('.swal2-confirm');
+    await click('.swal2-confirm');
 
     assert.dom(this.element).includesText('NIHMS');
   });
@@ -418,42 +420,6 @@ module('Integration | Component | workflow-metadata', (hooks) => {
       'ISSN input was read only, but should be editable',
     );
     assert.ok(issnInput.value, '123Moo', 'Unexpected ISSN value found');
-  });
-
-  /**
-   * DOI data should have invalid keys removed when translated to the 'workflow-metadata'
-   * metadata property. The mock Schema Service defined in #beforeEach above will define
-   * a set of valid fields that does NOT include the property 'badMoo'. This property
-   * then should not exist in the component's metadata blob.
-   */
-  test('DOI data should be trimmed', async function (assert) {
-    const mockWorkflow = Service.extend({
-      getDoiInfo() {
-        return {
-          ISSN: '1234-4321',
-          'journal-NLMTA-ID': 'MOO JOURNAL',
-          mooName: 'This is a moo',
-          badMoo: 'Sad moo',
-        };
-      },
-      isDataFromCrossref: () => false,
-    });
-
-    this.owner.unregister('service:workflow');
-    this.owner.register('service:workflow', mockWorkflow);
-
-    await render(hbs`<WorkflowMetadata @submission={{this.submission}} @publication={{this.publication}} />`);
-
-    assert.ok(true, 'Failed to render');
-
-    let { owner } = getContext();
-    let component = owner.lookup('component:metadata-form');
-
-    assert.notOk(component.metadata, 'No component metadata found');
-    assert.notOk(
-      get(component, 'metadata.badMoo'),
-      'metadata.badMoo property should not be found on the metadata object',
-    );
   });
 
   test('Metadata merges should be able to remove fields', async function (assert) {

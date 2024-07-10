@@ -1,5 +1,16 @@
 @import url('branding.css');
 @import url('font-awesome-5-0-13.css');
+@import url('workflow-wrapper.css');
+@import url('workflow-review.css');
+@import url('grant-link-cell.css');
+@import url('workflow-files.css');
+@import url('find-journal.css');
+@import url('message-dialog.css');
+@import url('workflow-metadata.css');
+@import url('oap-compliance-cell.css');
+@import url('submission-action-cell.css');
+@import url('submission-repo-details.css');
+@import url('workflow-basics-user-search.css');
 
 #dashboard-container .card {
   height: 100%;

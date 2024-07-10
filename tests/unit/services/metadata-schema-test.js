@@ -76,8 +76,8 @@ module('Unit | Service | metadata-schema', (hooks) => {
 
   test('Should retry request without merge query param on failure', async function (assert) {
     this.server.get('/schema', (_schema, request) => {
-      if (request.queryParams.merge) {
-        return Response(500);
+      if (request.queryParams.merge === 'true') {
+        return new Response(500);
       }
       return [this.mockSchema];
     });
@@ -86,9 +86,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
 
     const _fetchSchemasSpy = sinon.spy(service, '_fetchSchemas');
 
-    service.getMetadataSchemas(['moo', 'too']);
-
-    await settled();
+    await service.getMetadataSchemas(['moo', 'too']);
 
     assert.ok(_fetchSchemasSpy.calledTwice, 'fetch schema was called twice');
   });

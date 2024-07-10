@@ -4,6 +4,7 @@ import { tracked } from '@glimmer/tracking';
 import { action, get, set } from '@ember/object';
 import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
+import ENV from 'pass-ui/config/environment';
 
 export default class SubmissionsNewRepositories extends Controller {
   @service workflow;
@@ -50,6 +51,7 @@ export default class SubmissionsNewRepositories extends Controller {
     let needValidation = this.needValidation;
     if (needValidation && get(this, 'submission.repositories.length') == 0) {
       let value = await swal({
+        target: ENV.APP.rootElement,
         type: 'warning',
         title: 'No repositories selected',
         html:

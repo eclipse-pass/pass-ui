@@ -5,14 +5,13 @@
 const EmberApp = require('ember-cli/lib/broccoli/ember-app');
 const stringHash = require('string-hash');
 
-const disableCssModules = ['/pass-ui/styles/app.css', '/pass-ui/styles/font-awesome-5-0-13.css'];
-
 module.exports = function (defaults) {
   let app = new EmberApp(defaults, {
     // Add options here
     inlineContent: {
       'initial-state': './initial-state.html',
     },
+
     'ember-composable-helpers': {
       only: ['queue', 'compute', 'invoke', 'includes'],
     },
@@ -29,23 +28,17 @@ module.exports = function (defaults) {
       },
     },
 
-    cssModules: {
-      generateScopedName(className, modulePath) {
-        if (!disableCssModules.includes(modulePath)) {
-          let hash = stringHash(modulePath).toString(36).substring(0, 6);
-          let scopedName = `_${className}_${hash}`;
-
-          return scopedName;
-        }
-
-        return className;
-      },
-    },
     fingerprint: {
       enabled: false,
     },
+
     'ember-test-selectors': {
       strip: false,
+    },
+
+    'ember-bootstrap': {
+      bootstrapVersion: 5,
+      importBootstrapCSS: true,
     },
   });
 
@@ -62,8 +55,22 @@ module.exports = function (defaults) {
   // please specify an object with the list of modules as keys
   // along with the exports of each module as its value.
 
-  app.import('node_modules/ember-modal-dialog/app/styles/ember-modal-dialog/ember-modal-structure.css');
-  app.import('node_modules/ember-modal-dialog/app/styles/ember-modal-dialog/ember-modal-appearance.css');
+  const { Webpack } = require('@embroider/webpack');
 
-  return app.toTree();
+  return require('@embroider/compat').compatBuild(app, Webpack, {
+    extraPublicTrees: [],
+    staticAddonTrees: true,
+    staticAddonTestSupportTrees: true,
+    staticHelpers: true,
+    staticModifiers: true,
+    staticComponents: true,
+    staticEmberSource: true,
+    amdCompatibility: {
+      es: [],
+    },
+    // splitAtRoutes: ['route.name'], // can also be a RegExp
+    // packagerOptions: {
+    //    webpackConfig: { }
+    // }
+  });
 };

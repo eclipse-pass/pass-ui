@@ -1,5 +1,5 @@
 import { module, test } from 'qunit';
-import { setupRenderingTest } from 'pass-ui/tests/helpers';
+import { setupRenderingTest } from 'ember-qunit';
 import { click, render, waitFor } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
@@ -40,8 +40,8 @@ module('Integration | Component | external-repo-review', (hooks) => {
 
     await click(btn[0]);
 
-    await waitFor(document.querySelector('button.swal2-confirm'));
-    await click(document.querySelector('button.swal2-confirm'));
+    await waitFor('button.swal2-confirm');
+    await click('button.swal2-confirm');
 
     assert.dom(btn[0]).doesNotHaveClass('font-weight-bold');
   });
@@ -55,13 +55,13 @@ module('Integration | Component | external-repo-review', (hooks) => {
     assert.equal(btn.length, 2, 'Should have 2 list elements for repos');
     await click(btn[0]);
 
-    await waitFor(document.querySelector('button.swal2-confirm'));
-    await click(document.querySelector('button.swal2-confirm'));
+    await waitFor('button.swal2-confirm');
+    await click('button.swal2-confirm');
 
     await click(btn[1]);
 
-    await waitFor(document.querySelector('button.swal2-confirm'));
-    await click(document.querySelector('button.swal2-confirm'));
+    await waitFor('button.swal2-confirm');
+    await click('button.swal2-confirm');
 
     assert.dom('i.fa-exclamation-triangle').doesNotExist();
     assert.dom('button.font-weight-bold').doesNotExist('There should be no bolded repo links');
