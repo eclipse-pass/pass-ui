@@ -11,9 +11,7 @@ export default class ApplicationController extends Controller {
   @service currentUser;
   @service router;
   @service flashMessages;
-
-  @alias('model.staticConfig')
-  staticConfig;
+  @service('app-static-config') staticConfig;
 
   rootURL = config.rootURL;
 
@@ -32,14 +30,14 @@ export default class ApplicationController extends Controller {
   }
 
   get logoUri() {
-    return get(this, 'brand.logo');
+    return this.staticConfig?._config?.branding?.logo ?? '';
   }
 
   get homepage() {
-    return get(this, 'brand.homepage');
+    return this.staticConfig?._config?.branding?.homepage ?? '';
   }
 
   get contactUrl() {
-    return get(this, 'brand.pages.contactUrl');
+    return this.staticConfig?._config?.branding?.contactUrl ?? '';
   }
 }
