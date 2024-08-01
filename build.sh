@@ -21,7 +21,7 @@ fi
 rm -rf dist/
 
 pnpm install --frozen-lockfile
-pnpm run build:dev
+pnpm run build
 pnpm run build:latest
 
 # For unambiguous naming to be used in local dev docker-compose env
