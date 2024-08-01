@@ -36,7 +36,7 @@ runs:
 
     - name: Dev build
       if: ${{ inputs.is-prod == 'false' }}
-      run: pnpm run build:dev
+      run: pnpm run build
       shell: bash
 
     - run: pnpm run build:docker
