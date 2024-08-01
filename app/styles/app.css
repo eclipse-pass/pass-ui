@@ -1,3 +1,4 @@
+@import url('core-ui.css');
 @import url('font-awesome-5-0-13.css');
 @import url('workflow-wrapper.css');
 @import url('workflow-review.css');
@@ -10,7 +11,6 @@
 @import url('submission-action-cell.css');
 @import url('submission-repo-details.css');
 @import url('workflow-basics-user-search.css');
-@import url('bootstrap.css');
 
 #dashboard-container .card {
   height: 100%;
@@ -635,7 +635,10 @@ table td {
   line-height: 1.5;
   border-radius: 0;
   /* stylelint-disable-next-line prettier/prettier */
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+  transition:
+    color 0.15s ease-in-out,
+    background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out,
     box-shadow 0.15s ease-in-out;
   background-color: #418fde !important;
   border-color: #418fde !important;
@@ -656,7 +659,10 @@ table td {
   line-height: 1.5;
   border-radius: 0;
   /* stylelint-disable-next-line prettier/prettier */
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+  transition:
+    color 0.15s ease-in-out,
+    background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out,
     box-shadow 0.15s ease-in-out;
   color: #151b1e !important;
   background-color: #a4b7c1 !important;
