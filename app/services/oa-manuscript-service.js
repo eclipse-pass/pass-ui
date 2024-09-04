@@ -23,7 +23,7 @@ export default class OAManuscriptService extends Service {
     console.assert(!!doi, '%cNo DOI was provided to the manuscript service lookup.', 'color: red;');
 
     if (!this.lookUpPath || !doi) {
-      return;
+      return [];
     }
 
     const url = `${this.lookUpPath}?doi=${doi}`;
@@ -38,7 +38,7 @@ export default class OAManuscriptService extends Service {
       .then((resp) => {
         if (resp.status !== 200) {
           console.log(`%cFailed to lookup files for DOI (${doi}). Reason: "${resp.message}"`, 'color: red;');
-          return {};
+          return [];
         }
         return resp.json();
       })
