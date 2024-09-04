@@ -46,7 +46,7 @@ export default class FoundManuscriptsComponent extends Component {
     const foundOAMss = yield this.oaManuscriptService.lookup(doi);
 
     if (foundOAMss) {
-      this.foundManuscripts.push(foundOAMss);
+      this.foundManuscripts = [...foundOAMss];
     }
   };
 }
