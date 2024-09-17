@@ -39,6 +39,7 @@ export default class SubmissionRepoDetails extends Component {
    * Return a tooltip based on the current status.
    */
   get tooltip() {
+    const depositStatusMsg = this.args.deposit?.statusMessage ? ` Message: ${this.args.deposit.statusMessage}.` : '';
     switch (this.status) {
       case 'complete':
         return 'Submission was accepted and processed by the repository. ID(s) have been assigned to the submitted manuscript.';
@@ -49,7 +50,7 @@ export default class SubmissionRepoDetails extends Component {
       case 'manuscript-required':
         return 'Your funder is aware of this publication and is expecting the deposit of your manuscript.';
       case 'failed':
-        return 'The system failed to receive the files for this submission. Please try again by starting a new submission';
+        return `The system failed to receive the files for this submission.${depositStatusMsg} Please try again by starting a new submission`;
       case 'rejected':
         return 'This target repository has rejected your submission. Please contact us for more details or try to submit your manuscript again.';
       case 'not-submitted':
