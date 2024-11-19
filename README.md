@@ -6,6 +6,13 @@ users. PASS UI streamlines the submission process, guiding users through creatin
 submissions while ensuring compliance with funder and institutional policies. Its design emphasizes ease of use, 
 enabling researchers to navigate the scholarly deposit process with minimal friction.
 
-You can find further documentation and details about [PASS UI](https://docs.eclipse-pass.org/developer-documentation/pass-ui)
-on the [full documentation site](https://docs.eclipse-pass.org). A full list of all the Eclipse PASS projects can also
-be found in the PASS Main repository [README](https://github.com/eclipse-pass/main/blob/main/README.md).
+A full list of all the Eclipse PASS projects can be found in the PASS Main repository [README](https://github.com/eclipse-pass/main).
+
+# Guides
+
+* [PASS UI Documentation](https://docs.eclipse-pass.org/developer-documentation/pass-ui)
+* [PASS Documentation](https://docs.eclipse-pass.org/)
+
+# License
+
+PASS Core is Open Source software released under the [Apache 2.0 license](LICENSE).
