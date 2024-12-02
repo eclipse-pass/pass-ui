@@ -70,7 +70,7 @@ jobs:
         shell: bash
 
       - name: Build local image
-        uses: eclipse-pass/main/.github/actions/node-build.yml@main
+        uses: eclipse-pass/main/.github/actions/node-build@main
         with:
           repository_dir: ${GITHUB_WORKSPACE}
           env_path: ${GITHUB_WORKSPACE}/.env
