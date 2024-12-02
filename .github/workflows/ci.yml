@@ -72,8 +72,8 @@ jobs:
       - name: Build local image
         uses: eclipse-pass/main/.github/actions/node-build@main
         with:
-          repository_dir: ${GITHUB_WORKSPACE}
-          env_path: ${GITHUB_WORKSPACE}/.env
+          repository_dir: ${{ github.workspace }}
+          env_path: ${{ github.workspace }}/.env
 
       - name: Run acceptance tests
         uses: eclipse-pass/main/.github/actions/acceptance-test@main
