@@ -64,8 +64,16 @@ jobs:
         with:
           node-version: 20
 
+      - name: Grab pass-docker's .env file
+        run: |
+          wget 'https://raw.githubusercontent.com/eclipse-pass/pass-docker/main/.env'
+        shell: bash
+
       - name: Build local image
-        uses: ./.github/actions/build-pass-ui
+        uses: eclipse-pass/main/.github/actions/node-build.yml@main
+        with:
+          repository_dir: ${GITHUB_WORKSPACE}
+          env_path: ${GITHUB_WORKSPACE}/.env
 
       - name: Run acceptance tests
         uses: eclipse-pass/main/.github/actions/acceptance-test@main
