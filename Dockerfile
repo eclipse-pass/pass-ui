@@ -27,5 +27,6 @@ RUN apk --no-cache add gettext && \
     mkdir /usr/share/nginx/html/app
 
 COPY ./dist/ /usr/share/nginx/html/app/
+COPY ./pass-ui-*-cyclonedx.json /
 
 ENTRYPOINT [ "/bin/entrypoint.sh" ]
