@@ -23,20 +23,20 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
-
       - name: Get current project version
         id: project-version
         run: echo "VERSION=`npx -c 'echo $npm_package_version'`" >> $GITHUB_OUTPUT
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Grab pass-docker's .env file
+        run: |
+          wget $ENV_FILE
+        shell: bash
 
-      - name: Build pass-ui
-        uses: ./.github/actions/build-pass-ui
+      - name: Build local image
+        uses: eclipse-pass/main/.github/actions/node-build@main
+        with:
+          repository_dir: ${{ github.workspace }}
+          env_path: ${{ github.workspace }}/.env
 
       - name: Login to GHCR
         uses: docker/login-action@v2
@@ -47,5 +47,4 @@ jobs:
 
       - name: 'Push new Docker images'
         run: |
-          docker push ghcr.io/eclipse-pass/pass-ui:latest
           docker push ghcr.io/eclipse-pass/pass-ui:${{ steps.project-version.outputs.version }}

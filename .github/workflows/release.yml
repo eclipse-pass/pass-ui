@@ -40,10 +40,16 @@ jobs:
       - name: Tag release
         run: git tag ${{ inputs.releaseversion }}
 
-      - name: Build pass-ui
-        uses: ./.github/actions/build-pass-ui
+      - name: Grab pass-docker's .env file
+        run: |
+          wget $ENV_FILE
+        shell: bash
+
+      - name: Build local image
+        uses: eclipse-pass/main/.github/actions/node-build@main
         with:
-          is-prod: true
+          repository_dir: ${{ github.workspace }}
+          env_path: ${{ github.workspace }}/.env
 
       - name: Login to GHCR
         uses: docker/login-action@v2
@@ -54,17 +60,17 @@ jobs:
 
       - name: Retag and push
         run: |
-          docker tag $DOCKER_IMAGE_NAME:latest $DOCKER_IMAGE_NAME:${{ inputs.releaseversion }}
-          docker push $DOCKER_IMAGE_NAME:latest
+          docker tag $DOCKER_IMAGE_NAME:${{ inputs.releaseversion }}
           docker push $DOCKER_IMAGE_NAME:${{ inputs.releaseversion }}
 
       - name: Update project version
         run: pnpm version --new-version ${{ inputs.nextversion }}
 
-      - name: Build next dev version
-        uses: ./.github/actions/build-pass-ui
+      - name: Build local image
+        uses: eclipse-pass/main/.github/actions/node-build@main
         with:
-          is-prod: false
+          repository_dir: ${{ github.workspace }}
+          env_path: ${{ github.workspace }}/.env
 
       # Commits made to branch specified in workflow_dispatch, push that branch if possible
       - name: Push release commits to GH
@@ -77,5 +83,5 @@ jobs:
 
       - name: Push next dev version image
         run: |
-          docker tag $DOCKER_IMAGE_NAME:${{ inputs.releaseversion }} $DOCKER_IMAGE_NAME:${{ inputs.nextversion }}
+          docker tag $DOCKER_IMAGE_NAME:${{ inputs.nextversion }}
           docker push $DOCKER_IMAGE_NAME:${{ inputs.nextversion }}
