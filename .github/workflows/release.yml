@@ -45,7 +45,7 @@ jobs:
           wget $ENV_FILE
         shell: bash
 
-      - name: Build local image
+      - name: Build Release image
         uses: eclipse-pass/main/.github/actions/node-build@main
         with:
           repository_dir: ${{ github.workspace }}
@@ -60,13 +60,12 @@ jobs:
 
       - name: Retag and push
         run: |
-          docker tag $DOCKER_IMAGE_NAME:${{ inputs.releaseversion }}
           docker push $DOCKER_IMAGE_NAME:${{ inputs.releaseversion }}
 
       - name: Update project version
         run: pnpm version --new-version ${{ inputs.nextversion }}
 
-      - name: Build local image
+      - name: Build Next Version image
         uses: eclipse-pass/main/.github/actions/node-build@main
         with:
           repository_dir: ${{ github.workspace }}
@@ -83,5 +82,4 @@ jobs:
 
       - name: Push next dev version image
         run: |
-          docker tag $DOCKER_IMAGE_NAME:${{ inputs.nextversion }}
           docker push $DOCKER_IMAGE_NAME:${{ inputs.nextversion }}
