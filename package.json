@@ -27,7 +27,7 @@
     "test": "concurrently \"npm:lint\" \"npm:test:*\" --names \"lint,test:\"",
     "test:ember": "ember test",
     "prepare": "husky install",
-    "create_sbom": "FETCH_LICENSE=true cdxgen --required-only --no-babel --type pnpm -o pass-ui-$npm_package_version-cyclonedx.json"
+    "create_sbom": "FETCH_LICENSE=true cdxgen --required-only --no-babel --type pnpm -o pass-ui-$npm_package_version-cyclonedx-sbom.json"
   },
   "dependencies": {
     "@coreui/ajax": "1.0.10",
