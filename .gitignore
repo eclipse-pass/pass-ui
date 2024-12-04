@@ -39,6 +39,7 @@ jsconfig.json
 /npm-debug.log*
 /testem.log
 /yarn-error.log
+/*-cyclonedx-sbom.json
 
 .python-version
 .env
