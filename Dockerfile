@@ -1,4 +1,4 @@
-FROM nginx:1.22.0-alpine
+FROM nginxinc/nginx-unprivileged:1.27.3-alpine
 
 ARG EMBER_ROOT_URL
 ARG USER_SERVICE_URL
@@ -19,14 +19,19 @@ ENV USER_SERVICE_URL=${USER_SERVICE_URL:-/pass-user-service/whoami} \
     STATIC_CONFIG_URL=${STATIC_CONFIG_URL:-/app/config.json} \
     PASS_UI_PORT=80
 
+USER root
+
 COPY .docker/bin/entrypoint.sh /bin/
 COPY .docker/nginx-template.conf /
+COPY ./pass-ui-*-cyclonedx-sbom.json /
+COPY ./dist/ /usr/share/nginx/html/app/
 
 RUN apk --no-cache add gettext && \
     chmod a+x /bin/entrypoint.sh && \
-    mkdir /usr/share/nginx/html/app
+    chown nginx:nginx /bin/entrypoint.sh && \
+    chown nginx:nginx /nginx-template.conf && \
+    chown -R nginx:nginx /usr/share/nginx/html/app
 
-COPY ./dist/ /usr/share/nginx/html/app/
-COPY ./pass-ui-*-cyclonedx-sbom.json /
+USER nginx
 
 ENTRYPOINT [ "/bin/entrypoint.sh" ]
