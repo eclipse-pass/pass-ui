@@ -41,6 +41,15 @@ export default class NavBar extends Component {
 
   @action
   async logOut() {
+    const url = `${window.location.origin}/logout`;
+    await fetch(url, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/vnd.api+json',
+        'Content-Type': 'application/vnd.api+json',
+        'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN\=([^;]*)/)['1'],
+      },
+    });
     await this.session.invalidate();
   }
 
