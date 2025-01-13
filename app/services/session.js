@@ -10,7 +10,7 @@ export default class SessionService extends BaseSessionService {
     @public
   */
   handleInvalidation() {
-    window.location.replace(`${window.location.origin}/logout`);
+    window.location.replace(`${window.location.origin}/`);
   }
 
   handleAuthentication() {
