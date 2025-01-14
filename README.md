@@ -1,4 +1,4 @@
-# PASS UI ![Pass UI](https://github.com/eclipse-pass/pass-ui/actions/workflows/ci.yml/badge.svg)
+# PASS UI ![Pass UI](https://github.com/eclipse-pass/pass-ui/actions/workflows/ci.yml/badge.svg) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=eclipse-pass_pass-ui&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=eclipse-pass_pass-ui)
 
 PASS UI is the user interface component of the PASS application, developed using the Ember.js framework. It connects 
 with PASS Core via an Elide-based API to display and manage data related to submissions, repositories, policies, and 
