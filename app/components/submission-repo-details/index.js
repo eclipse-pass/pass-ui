@@ -27,6 +27,10 @@ export default class SubmissionRepoDetails extends Component {
       return 'failed';
     }
 
+    if (deposit && get(deposit, 'depositStatus') === 'retry') {
+      return 'retry';
+    }
+
     // Failed aggregatedDepositStatus means deposit never created
     if (!deposit && source == 'pass' && get(this, 'submission.aggregatedDepositStatus') === 'failed') {
       return 'failed';
@@ -51,6 +55,8 @@ export default class SubmissionRepoDetails extends Component {
         return 'Your funder is aware of this publication and is expecting the deposit of your manuscript.';
       case 'failed':
         return `The system failed to receive the files for this submission.${depositStatusMsg} Please try again by starting a new submission`;
+      case 'retry':
+        return `The system failed to connect to the target repository. The deposit will be automatically retried later.`;
       case 'rejected':
         return 'This target repository has rejected your submission. Please contact us for more details or try to submit your manuscript again.';
       case 'not-submitted':
