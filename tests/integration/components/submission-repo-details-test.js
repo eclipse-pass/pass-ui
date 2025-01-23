@@ -41,4 +41,17 @@ module('Integration | Component | submission repo details', (hooks) => {
         'The system failed to receive the files for this submission. Please try again by starting a new submission',
       );
   });
+
+  test('renders deposit status message when present on retry', async function (assert) {
+    this.set('submission', EmberObject.create({ submitted: true }));
+    this.set('deposit', EmberObject.create({ depositStatus: 'retry' }));
+
+    await render(hbs`<SubmissionRepoDetails @deposit={{this.deposit}} @submission={{this.submission}} />`);
+    assert
+      .dom('span.retry')
+      .hasAttribute(
+        'tooltip',
+        'The system failed to connect to the target repository. The deposit will be automatically retried later.',
+      );
+  });
 });

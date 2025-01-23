@@ -823,6 +823,8 @@ footer {
 .stalled .fa-info-circle,
 .failed > .fa-circle,
 .failed .fa-info-circle,
+.retry > .fa-circle,
+.retry .fa-info-circle,
 .rejected > .fa-circle,
 .rejected .fa-info-circle {
   color: #ff9e1b;
