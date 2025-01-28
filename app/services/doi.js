@@ -149,7 +149,7 @@ export default class DoiService extends Service {
     }
     if (doiCopy.issued && doiCopy.issued['date-parts']) {
       const parts = doiCopy.issued['date-parts'];
-      doiCopy.publicationDate = parts.flat().join('-');
+      doiCopy.publicationDate = new Date(parts).toISOString().replace(/T.*/, '');
     }
 
     doiCopy.doi = doiCopy.DOI;
