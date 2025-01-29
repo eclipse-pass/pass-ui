@@ -1,6 +1,6 @@
 {
   "name": "pass-ui",
-  "version": "1.14.0",
+  "version": "1.15.0-SNAPSHOT",
   "private": true,
   "description": "The user interface for the eclipse-pass project",
   "license": "Apache-2.0",
