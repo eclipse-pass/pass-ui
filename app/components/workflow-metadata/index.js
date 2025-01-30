@@ -141,7 +141,7 @@ export default class WorkflowMetadata extends Component {
         target: ENV.APP.rootElement,
         type: 'error',
         title: 'Form Validation Error',
-        html: this.validationErrorMsg(metadataSchema.getErrors()),
+        html: metadataSchema.getErrorMessage(),
       });
       return;
     }

@@ -118,7 +118,7 @@ export default class MetadataSchemaService extends Service {
 
     if (readonly && readonly.length > 0) {
       /**
-       * For each key in the data object, if they are marked as "read only",
+       * For each key in the data object, if they are marked as "read only"
        * set the field's 'readonly' to true, and 'toolbarSticky' to false iff the
        * key refers to an array
        */
@@ -181,6 +181,41 @@ export default class MetadataSchemaService extends Service {
 
   getErrors() {
     return this.validator.errors;
+  }
+
+  /**
+   * Turn a property returned by something like Ajv into its title.
+   * Ideally this would be looked up in the schema instead, but the general case is complicated.
+   */
+  getPropertyTitle(property) {
+    // ab-cd -> abCd
+    let title = property.replace(/-\w/g, (s) => s.charAt(1).toUpperCase());
+
+    // Clean out non-word characters
+    title = property.replace(/\W/g, '');
+
+    // Turn into words
+    title = title.replace(/[A-Z]/g, (s) => ' ' + s).trim();
+
+    // Capitalize first word
+    title = title.charAt(0).toUpperCase() + title.slice(1);
+
+    return title;
+  }
+
+  /**
+   * Return a human readable message describing validation errorss.
+   */
+  getErrorMessage() {
+    return this.validator.errors
+      .map((error) => {
+        if (error.keyword === 'required') {
+          return 'Missing required metadata: ' + this.getPropertyTitle(error.params.missingProperty);
+        } else {
+          return error.message;
+        }
+      })
+      .join(', ');
   }
 
   /**
