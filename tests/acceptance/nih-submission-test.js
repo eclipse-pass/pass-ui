@@ -453,7 +453,7 @@ module('Acceptance | submission', function (hooks) {
     await click('.alpaca-form-button-Next');
 
     await waitFor('#swal2-content');
-    assert.dom('#swal2-content').includesText("should have required property 'author'");
+    assert.dom('#swal2-content').includesText('Missing required metadata: Author');
 
     // Some reason, setting the document query to a variable before clicking works,
     // but calling the query selector in the click does not work
@@ -592,7 +592,7 @@ module('Acceptance | submission', function (hooks) {
     await click('.alpaca-form-button-Next');
 
     await waitFor('#swal2-content');
-    assert.dom('#swal2-content').includesText("should have required property 'author'");
+    assert.dom('#swal2-content').includesText('Missing required metadata: Author');
 
     const confirmBtn = '.swal2-confirm';
     assert.ok(confirmBtn, 'No SweetAlert OK button found');
