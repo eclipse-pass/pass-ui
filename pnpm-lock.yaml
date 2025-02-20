@@ -174,9 +174,6 @@ importers:
       ember-cli-clean-css:
         specifier: ^3.0.0
         version: 3.0.0
-      ember-cli-content-security-policy:
-        specifier: ^2.0.3
-        version: 2.0.3
       ember-cli-dependency-checker:
         specifier: ^3.3.2
         version: 3.3.2(ember-cli@5.8.1(handlebars@4.7.8)(underscore@1.13.6))
@@ -3448,10 +3445,6 @@ packages:
   ember-cli-clean-css@3.0.0:
     resolution: {integrity: sha512-BbveJCyRvzzkaTH1llLW+MpHe/yzA5zpHOpMIg2vp/3JD9mban9zUm7lphaB0TSpPuMuby9rAhTI8pgXq0ifIA==}
     engines: {node: 16.* || >= 18}
-
-  ember-cli-content-security-policy@2.0.3:
-    resolution: {integrity: sha512-tSGRbR2XiOjHk7oEH7LVF1y5S643rUEjl3mujI6EYPkrQbHaV0WdLyIWJkLvuP1KGnjBfvnLCyiKDFu6z2PjVg==}
-    engines: {node: 12.* || 14.* || >= 16}
 
   ember-cli-dependency-checker@3.3.2:
     resolution: {integrity: sha512-PwkrW5oYsdPWwt+0Tojufmv/hxVETTjkrEdK7ANQB2VSnqpA5UcYubwpQM9ONuR2J8wyNDMwEHlqIrk/FYtBsQ==}
@@ -12872,16 +12865,6 @@ snapshots:
       broccoli-persistent-filter: 3.1.3
       clean-css: 5.3.3
       json-stable-stringify: 1.1.1
-    transitivePeerDependencies:
-      - supports-color
-
-  ember-cli-content-security-policy@2.0.3:
-    dependencies:
-      body-parser: 1.20.2
-      chalk: 4.1.2
-      debug: 4.3.5(supports-color@8.1.1)
-      ember-cli-babel: 7.26.11
-      ember-cli-version-checker: 5.1.2
     transitivePeerDependencies:
       - supports-color
 
