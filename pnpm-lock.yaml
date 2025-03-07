@@ -24,7 +24,7 @@ importers:
         specifier: ^6.5.2
         version: 6.5.2
       '@fortawesome/free-regular-svg-icons':
-        specifier: ^6.4.0
+        specifier: ^6.5.2
         version: 6.5.2
       '@glimmer/component':
         specifier: ^1.1.2
@@ -33,7 +33,7 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2
       ajv:
-        specifier: ^6.10.0
+        specifier: ^6.12.6
         version: 6.12.6
       alpaca:
         specifier: 1.5.24
@@ -48,13 +48,13 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0
       ember-concurrency:
-        specifier: ^2.3.4
+        specifier: ^2.3.7
         version: 2.3.7(@babel/core@7.24.7)
       ember-concurrency-decorators:
         specifier: ^1.0.0
         version: 1.0.0(@babel/core@7.24.7)
       ember-data:
-        specifier: ~5.3.3
+        specifier: ~5.3.8
         version: 5.3.8(@ember/string@3.1.1)(@ember/test-helpers@3.3.0(ember-source@5.8.0(@babel/core@7.24.7)(@glimmer/component@1.1.2(@babel/core@7.24.7))(rsvp@4.8.5)(webpack@5.92.1))(webpack@5.92.1))(@ember/test-waiters@3.1.0)(ember-inflector@4.0.2)(ember-source@5.8.0(@babel/core@7.24.7)(@glimmer/component@1.1.2(@babel/core@7.24.7))(rsvp@4.8.5)(webpack@5.92.1))(qunit@2.21.0)
       ember-file-upload:
         specifier: ^9.0.0
@@ -66,7 +66,7 @@ importers:
         specifier: ^2.1.2
         version: 2.1.2(@babel/core@7.24.7)
       ember-lodash:
-        specifier: ^4.19.4
+        specifier: ^4.19.5
         version: 4.19.5
       ember-modal-dialog:
         specifier: ^4.1.4
@@ -75,13 +75,13 @@ importers:
         specifier: ^5.4.1
         version: 5.4.1(@ember/test-helpers@3.3.0(ember-source@5.8.0(@babel/core@7.24.7)(@glimmer/component@1.1.2(@babel/core@7.24.7))(rsvp@4.8.5)(webpack@5.92.1))(webpack@5.92.1))(ember-source@5.8.0(@babel/core@7.24.7)(@glimmer/component@1.1.2(@babel/core@7.24.7))(rsvp@4.8.5)(webpack@5.92.1))(webpack@5.92.1)
       ember-modifier:
-        specifier: ^4.1.0
+        specifier: ^4.2.0
         version: 4.2.0(@babel/core@7.24.7)(ember-source@5.8.0(@babel/core@7.24.7)(@glimmer/component@1.1.2(@babel/core@7.24.7))(rsvp@4.8.5)(webpack@5.92.1))
       ember-page-title:
         specifier: ^8.2.3
         version: 8.2.3(ember-source@5.8.0(@babel/core@7.24.7)(@glimmer/component@1.1.2(@babel/core@7.24.7))(rsvp@4.8.5)(webpack@5.92.1))
       ember-power-select:
-        specifier: ^7.0.0
+        specifier: ^7.2.0
         version: 7.2.0(@babel/core@7.24.7)(ember-source@5.8.0(@babel/core@7.24.7)(@glimmer/component@1.1.2(@babel/core@7.24.7))(rsvp@4.8.5)(webpack@5.92.1))(webpack@5.92.1)
       ember-radio-buttons:
         specifier: ^5.0.0
@@ -102,23 +102,23 @@ importers:
         specifier: ^4.7.0
         version: 4.7.0
       popper.js:
-        specifier: ^1.14.5
+        specifier: ^1.16.1
         version: 1.16.1
       sweetalert2:
         specifier: 7.29.0
         version: 7.29.0
     devDependencies:
       '@babel/core':
-        specifier: ^7.24.4
+        specifier: ^7.24.7
         version: 7.24.7
       '@babel/eslint-parser':
-        specifier: ^7.24.1
+        specifier: ^7.24.7
         version: 7.24.7(@babel/core@7.24.7)(eslint@8.57.0)
       '@babel/plugin-proposal-class-properties':
         specifier: ^7.18.6
         version: 7.18.6(@babel/core@7.24.7)
       '@babel/plugin-proposal-decorators':
-        specifier: ^7.24.1
+        specifier: ^7.24.7
         version: 7.24.7(@babel/core@7.24.7)
       '@cyclonedx/cdxgen':
         specifier: ^11.0.3
@@ -127,7 +127,7 @@ importers:
         specifier: ^2.1.0
         version: 2.1.0
       '@ember/render-modifiers':
-        specifier: ^2.0.5
+        specifier: ^2.1.0
         version: 2.1.0(@babel/core@7.24.7)(ember-source@5.8.0(@babel/core@7.24.7)(@glimmer/component@1.1.2(@babel/core@7.24.7))(rsvp@4.8.5)(webpack@5.92.1))
       '@ember/test-helpers':
         specifier: ^3.3.0
@@ -142,7 +142,7 @@ importers:
         specifier: ^4.0.4
         version: 4.0.4(@embroider/core@3.4.14)(webpack@5.92.1)
       '@faker-js/faker':
-        specifier: ^8.1.0
+        specifier: ^8.4.1
         version: 8.4.1
       babel-plugin-dynamic-import-node:
         specifier: ^2.3.3
@@ -151,19 +151,19 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       clean-css:
-        specifier: '>=4.1.11'
+        specifier: ^5.3.3
         version: 5.3.3
       concurrently:
         specifier: ^8.2.2
         version: 8.2.2
       coveralls:
-        specifier: ^3.0.2
+        specifier: ^3.1.1
         version: 3.1.1
       ember-auto-import:
-        specifier: ^2.7.2
+        specifier: ^2.7.4
         version: 2.7.4(webpack@5.92.1)
       ember-cli:
-        specifier: ~5.8.0
+        specifier: ~5.8.1
         version: 5.8.1(handlebars@4.7.8)(underscore@1.13.6)
       ember-cli-app-version:
         specifier: ^6.0.1
@@ -205,10 +205,10 @@ importers:
         specifier: ^4.0.2
         version: 4.0.2
       ember-qunit:
-        specifier: ^8.0.2
+        specifier: ^8.1.0
         version: 8.1.0(@ember/test-helpers@3.3.0(ember-source@5.8.0(@babel/core@7.24.7)(@glimmer/component@1.1.2(@babel/core@7.24.7))(rsvp@4.8.5)(webpack@5.92.1))(webpack@5.92.1))(ember-source@5.8.0(@babel/core@7.24.7)(@glimmer/component@1.1.2(@babel/core@7.24.7))(rsvp@4.8.5)(webpack@5.92.1))(qunit@2.21.0)
       ember-sinon-qunit:
-        specifier: ^7.1.4
+        specifier: ^7.4.0
         version: 7.4.0(ember-source@5.8.0(@babel/core@7.24.7)(@glimmer/component@1.1.2(@babel/core@7.24.7))(rsvp@4.8.5)(webpack@5.92.1))(qunit@2.21.0)(sinon@15.2.0)
       ember-source:
         specifier: ~5.8.0
@@ -223,7 +223,7 @@ importers:
         specifier: ^6.0.0
         version: 6.0.0
       ember-truth-helpers:
-        specifier: ^3.1.0
+        specifier: ^3.1.1
         version: 3.1.1
       eslint:
         specifier: ^8.57.0
@@ -244,28 +244,28 @@ importers:
         specifier: ^8.1.1
         version: 8.1.1(eslint@8.57.0)
       husky:
-        specifier: ^8.0.0
+        specifier: ^8.0.3
         version: 8.0.3
       lint-staged:
-        specifier: ^13.2.3
+        specifier: ^13.3.0
         version: 13.3.0
       merge:
-        specifier: '>=1.2.1'
+        specifier: ^2.1.1
         version: 2.1.1
       miragejs:
         specifier: ^0.1.48
         version: 0.1.48
       prettier:
-        specifier: ^3.3.0
+        specifier: ^3.3.2
         version: 3.3.2
       qunit:
-        specifier: ^2.20.1
+        specifier: ^2.21.0
         version: 2.21.0
       qunit-dom:
-        specifier: ^3.1.2
+        specifier: ^3.2.0
         version: 3.2.0
       sinon:
-        specifier: ^15.0.2
+        specifier: ^15.2.0
         version: 15.2.0
       string-hash:
         specifier: ^1.1.3
@@ -274,7 +274,7 @@ importers:
         specifier: ^16.6.1
         version: 16.6.1(typescript@5.7.2)
       stylelint-config-standard:
-        specifier: ^36.0.0
+        specifier: ^36.0.1
         version: 36.0.1(stylelint@16.6.1(typescript@5.7.2))
       stylelint-prettier:
         specifier: ^5.0.0
@@ -3081,12 +3081,12 @@ packages:
     engines: {node: '>=6'}
     hasBin: true
 
-  cross-spawn@6.0.5:
-    resolution: {integrity: sha512-eTVLrBSt7fjbDygz805pMnstIs2VTBNkRm0qxZd+M7A5XDdxVRWO5MxGBXZhjY4cqLYLdtrGqRf8mBPmzwSpWQ==}
+  cross-spawn@6.0.6:
+    resolution: {integrity: sha512-VqCUuhcd1iB+dsv8gxPttb5iZh/D0iubSP21g36KXdEuf6I5JiioesUVjpCdHV9MZRUfVFlvwtIUyPfxo5trtw==}
     engines: {node: '>=4.8'}
 
-  cross-spawn@7.0.3:
-    resolution: {integrity: sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==}
+  cross-spawn@7.0.6:
+    resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
     engines: {node: '>= 8'}
 
   crypto-random-string@2.0.0:
@@ -5628,8 +5628,8 @@ packages:
     resolution: {integrity: sha512-DMy+ERcEW2q8Z2Po+WNXuw3c5YaUSFjAO5GsJqfEl7UjvtIuFKO6ZrKvcItdy98dwFI2N1tg3zNIdKaQT+aNdA==}
     engines: {node: '>=8.6'}
 
-  micromatch@4.0.7:
-    resolution: {integrity: sha512-LPP/3KorzCwBxfeUuZmaR6bG2kdeHSbe0P2tY3FLRU4vYrjYz5hI4QZwV0njUx3jeuKe67YukQ1LSPZBKDqO/Q==}
+  micromatch@4.0.8:
+    resolution: {integrity: sha512-PXwfBhYu0hBCPw8Dn0E+WDYb7af3dSLVWKi3HGv84IdF4TyFoC0ysxFd0Goxw7nSv4T/PzEJQxsYsEiFCKo2BA==}
     engines: {node: '>=8.6'}
 
   mime-db@1.52.0:
@@ -12371,7 +12371,7 @@ snapshots:
       minimist: 1.2.8
       request: 2.88.2
 
-  cross-spawn@6.0.5:
+  cross-spawn@6.0.6:
     dependencies:
       nice-try: 1.0.5
       path-key: 2.0.1
@@ -12379,7 +12379,7 @@ snapshots:
       shebang-command: 1.2.0
       which: 1.3.1
 
-  cross-spawn@7.0.3:
+  cross-spawn@7.0.6:
     dependencies:
       path-key: 3.1.1
       shebang-command: 2.0.0
@@ -13802,7 +13802,7 @@ snapshots:
       globby: 14.0.2
       is-glob: 4.0.3
       language-tags: 1.0.9
-      micromatch: 4.0.7
+      micromatch: 4.0.8
       resolve: 1.22.8
       v8-compile-cache: 2.4.0
       yargs: 17.7.2
@@ -14141,7 +14141,7 @@ snapshots:
       '@ungap/structured-clone': 1.2.0
       ajv: 6.12.6
       chalk: 4.1.2
-      cross-spawn: 7.0.3
+      cross-spawn: 7.0.6
       debug: 4.3.5(supports-color@8.1.1)
       doctrine: 3.0.0
       escape-string-regexp: 4.0.0
@@ -14216,7 +14216,7 @@ snapshots:
 
   execa@1.0.0:
     dependencies:
-      cross-spawn: 6.0.5
+      cross-spawn: 6.0.6
       get-stream: 4.1.0
       is-stream: 1.1.0
       npm-run-path: 2.0.2
@@ -14226,7 +14226,7 @@ snapshots:
 
   execa@2.1.0:
     dependencies:
-      cross-spawn: 7.0.3
+      cross-spawn: 7.0.6
       get-stream: 5.2.0
       is-stream: 2.0.1
       merge-stream: 2.0.0
@@ -14238,7 +14238,7 @@ snapshots:
 
   execa@4.1.0:
     dependencies:
-      cross-spawn: 7.0.3
+      cross-spawn: 7.0.6
       get-stream: 5.2.0
       human-signals: 1.1.1
       is-stream: 2.0.1
@@ -14250,7 +14250,7 @@ snapshots:
 
   execa@5.1.1:
     dependencies:
-      cross-spawn: 7.0.3
+      cross-spawn: 7.0.6
       get-stream: 6.0.1
       human-signals: 2.1.0
       is-stream: 2.0.1
@@ -14262,7 +14262,7 @@ snapshots:
 
   execa@7.2.0:
     dependencies:
-      cross-spawn: 7.0.3
+      cross-spawn: 7.0.6
       get-stream: 6.0.1
       human-signals: 4.3.1
       is-stream: 3.0.0
@@ -14377,7 +14377,7 @@ snapshots:
       '@nodelib/fs.walk': 1.2.8
       glob-parent: 5.1.2
       merge2: 1.4.1
-      micromatch: 4.0.7
+      micromatch: 4.0.8
 
   fast-json-stable-stringify@2.1.0: {}
 
@@ -14532,20 +14532,20 @@ snapshots:
 
   find-yarn-workspace-root@2.0.0:
     dependencies:
-      micromatch: 4.0.7
+      micromatch: 4.0.8
 
   findup-sync@4.0.0:
     dependencies:
       detect-file: 1.0.0
       is-glob: 4.0.3
-      micromatch: 4.0.7
+      micromatch: 4.0.8
       resolve-dir: 1.0.1
 
   findup-sync@5.0.0:
     dependencies:
       detect-file: 1.0.0
       is-glob: 4.0.3
-      micromatch: 4.0.7
+      micromatch: 4.0.8
       resolve-dir: 1.0.1
 
   fireworm@0.7.2:
@@ -14611,7 +14611,7 @@ snapshots:
 
   foreground-child@3.2.1:
     dependencies:
-      cross-spawn: 7.0.3
+      cross-spawn: 7.0.6
       signal-exit: 4.1.0
 
   forever-agent@0.6.1: {}
@@ -16023,7 +16023,7 @@ snapshots:
       braces: 3.0.3
       picomatch: 2.3.1
 
-  micromatch@4.0.7:
+  micromatch@4.0.8:
     dependencies:
       braces: 3.0.3
       picomatch: 2.3.1
@@ -17272,7 +17272,7 @@ snapshots:
       exec-sh: 0.3.6
       execa: 4.1.0
       fb-watchman: 2.0.2
-      micromatch: 4.0.7
+      micromatch: 4.0.8
       minimist: 1.2.8
       walker: 1.0.8
 
@@ -17826,7 +17826,7 @@ snapshots:
       known-css-properties: 0.31.0
       mathml-tag-names: 2.1.3
       meow: 13.2.0
-      micromatch: 4.0.7
+      micromatch: 4.0.8
       normalize-path: 3.0.0
       picocolors: 1.0.1
       postcss: 8.4.39
