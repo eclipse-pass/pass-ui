@@ -59,7 +59,7 @@ export default class NewRoute extends CheckSessionRoute {
         include: 'publication.journal,submitter',
       });
       publication = await newSubmission.get('publication');
-      journal = publication.get('journal');
+      journal = await publication.get('journal');
 
       submissionEvents = this.store.query('submissionEvent', {
         filter: {
@@ -70,11 +70,12 @@ export default class NewRoute extends CheckSessionRoute {
 
       files = this.store.query('file', fileForSubmissionQuery(newSubmission.id)).then((files) => [...files.slice()]);
 
+      // TODO What?
       // Also seed workflow.doiInfo with metadata from the Submission
-      const metadata = newSubmission.get('metadata');
-      if (metadata) {
-        this.workflow.setDoiInfo(JSON.parse(metadata));
-      }
+      // const metadata = newSubmission.get('metadata');
+      // if (metadata) {
+      //   this.workflow.setDoiInfo(JSON.parse(metadata));
+      // }
     } else {
       // Starting a new submission
 
@@ -85,16 +86,6 @@ export default class NewRoute extends CheckSessionRoute {
       });
 
       files = [];
-
-      if (params.covid) {
-        let covidHint = {
-          hints: {
-            'collection-tags': ['covid'],
-          },
-        };
-
-        set(newSubmission, 'metadata', JSON.stringify(covidHint));
-      }
     }
 
     return hash({

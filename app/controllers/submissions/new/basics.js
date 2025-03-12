@@ -61,7 +61,9 @@ export default class SubmissionsNewBasics extends Controller {
 
   @action
   async loadTab(gotoRoute) {
-    this.doiInfo.title = this.publication.title;
+    let metadata = this.submission.metadata ? JSON.parse(this.submission.metadata) : {};
+    metadata.title = this.publication.title;
+    this.submission.metadata = JSON.stringify(metadata);
 
     await this.submission.save();
     this.router.transitionTo(gotoRoute);

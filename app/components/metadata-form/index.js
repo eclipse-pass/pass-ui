@@ -1,47 +1,23 @@
 import Component from '@glimmer/component';
-import stripEmptyArrays from 'pass-ui/util/strip-empty-arrays';
 import { action } from '@ember/object';
+import { SurveyModel } from 'survey-js-ui';
 
 export default class MetadataForm extends Component {
   @action
   setupMetadataForm() {
-    const componentContext = this;
-    const originalForm = this.args.schema;
-    const newForm = JSON.parse(JSON.stringify(originalForm));
-    if (!originalForm.options) {
-      newForm.options = {};
-    }
+    const surveySchema = this.args.schema;
+    const surveyData = this.args.data;
 
-    // form ctrls
-    newForm.options.form = {
-      buttons: {
-        Back: {
-          title: 'Back',
-          styles: 'pull-left btn btn-outline-primary',
-          click() {
-            componentContext.args.previousForm(stripEmptyArrays(this.getValue()));
-          },
-        },
-        Abort: {
-          label: 'Cancel',
-          styles: 'pull-left btn btn-outline-danger ml-2',
-          click() {
-            componentContext.args.cancel();
-          },
-        },
-        Next: {
-          label: 'Next',
-          styles: 'pull-right btn btn-primary next',
-          click() {
-            componentContext.args.nextForm(stripEmptyArrays(this.getValue()));
-          },
-        },
-      },
-    };
+    console.log('hi');
+    console.log(surveySchema);
+    console.log(surveyData);
 
-    newForm.options.hideInitValidationError = true;
+    const survey = new SurveyModel(surveySchema);
+    survey.data = surveyData;
+    survey.render(document.getElementById('schemaForm'));
 
-    $('#schemaForm').empty();
-    $('#schemaForm').alpaca(newForm);
+    survey.onComplete.add((sender, options) => {
+      this.args.next(survey.data);
+    });
   }
 }

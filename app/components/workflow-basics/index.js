@@ -16,7 +16,7 @@ export default class WorkflowBasics extends Component {
   @service workflow;
   @service currentUser;
   @service('doi') doiService;
-  @service metadataSchema;
+  @service('metadata-schema') schemaService;
   @service appStaticConfig;
   @service flashMessages;
 
@@ -237,16 +237,12 @@ export default class WorkflowBasics extends Component {
    */
   @action
   selectJournal(journal) {
-    let doiInfo = this.doiInfo;
     // Formats metadata and adds journal metadata
-    let metadata = this.doiService.doiToMetadata(doiInfo, journal);
-    metadata['journal-title'] = get(journal, 'journalName');
-    doiInfo = this.metadataSchema.mergeBlobs(doiInfo, metadata);
+    let metadata = this.doiService.doiToMetadata(this.doiInfo, journal, this.schemaService.getAllFields());
+    metadata['journal-title'] = journal.journalName;
+    this.submission.metadata = JSON.stringify(metadata);
 
-    this.args.updateDoiInfo(doiInfo);
-
-    const publication = this.publication;
-    publication.journal = journal;
+    this.publication.journal = journal;
     this.args.validateJournal();
   }
 

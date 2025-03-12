@@ -35,9 +35,6 @@ importers:
       ajv:
         specifier: ^6.10.0
         version: 6.12.6
-      alpaca:
-        specifier: 1.5.24
-        version: 1.5.24
       bootstrap:
         specifier: 5.0.0
         version: 5.0.0(@popperjs/core@2.11.8)
@@ -95,15 +92,18 @@ importers:
       ember-tether:
         specifier: ^3.1.0
         version: 3.1.0(ember-source@5.8.0(@babel/core@7.24.7)(@glimmer/component@1.1.2(@babel/core@7.24.7))(rsvp@4.8.5)(webpack@5.92.1))(webpack@5.92.1)
-      jquery:
-        specifier: 3.6.4
-        version: 3.6.4
       loader.js:
         specifier: ^4.7.0
         version: 4.7.0
       popper.js:
         specifier: ^1.14.5
         version: 1.16.1
+      survey-core:
+        specifier: ^2.0.0
+        version: 2.0.0
+      survey-js-ui:
+        specifier: ^2.0.0
+        version: 2.0.0(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(survey-core@2.0.0)
       sweetalert2:
         specifier: 7.29.0
         version: 7.29.0
@@ -164,7 +164,7 @@ importers:
         version: 2.7.4(webpack@5.92.1)
       ember-cli:
         specifier: ~5.8.0
-        version: 5.8.1(handlebars@4.7.8)(underscore@1.13.6)
+        version: 5.8.1(handlebars@4.7.8)(react@16.14.0)(underscore@1.13.6)
       ember-cli-app-version:
         specifier: ^6.0.1
         version: 6.0.1(ember-source@5.8.0(@babel/core@7.24.7)(@glimmer/component@1.1.2(@babel/core@7.24.7))(rsvp@4.8.5)(webpack@5.92.1))
@@ -176,7 +176,7 @@ importers:
         version: 3.0.0
       ember-cli-dependency-checker:
         specifier: ^3.3.2
-        version: 3.3.2(ember-cli@5.8.1(handlebars@4.7.8)(underscore@1.13.6))
+        version: 3.3.2(ember-cli@5.8.1(handlebars@4.7.8)(react@16.14.0)(underscore@1.13.6))
       ember-cli-dependency-lint:
         specifier: ^2.0.1
         version: 2.0.1
@@ -1794,6 +1794,14 @@ packages:
   '@types/range-parser@1.2.7':
     resolution: {integrity: sha512-hKormJbkJqzQGhziax5PItDUTMAM9uE2XXQmM37dyd4hVM+5aVl7oVxMVUiVQn2oCQFN/LKCZdvSM0pFRqbSmQ==}
 
+  '@types/react-dom@19.0.4':
+    resolution: {integrity: sha512-4fSQ8vWFkg+TGhePfUzVmat3eC14TXYSsiiDSLI0dVLsrm9gZFABjPy/Qu6TKgl1tq1Bu1yDsuQgY3A3DOjCcg==}
+    peerDependencies:
+      '@types/react': ^19.0.0
+
+  '@types/react@19.0.10':
+    resolution: {integrity: sha512-JuRQ9KXLEjaUNjTWpzuR231Z2WpIwczOkBEIvbHNCzQefFIT0L8IqE6NV6ULLyC1SI/i234JnDoMkfg+RjQj2g==}
+
   '@types/resolve@1.20.2':
     resolution: {integrity: sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q==}
 
@@ -1988,9 +1996,6 @@ packages:
 
   ajv@8.17.1:
     resolution: {integrity: sha512-B/gBuNg5SiMTrPkC+A2+cW0RszwxYmn6VYxB/inlBStS5nx6xHIt/ehKRhIMhqusl7a8LjQoZnjCs5vhwxOQ1g==}
-
-  alpaca@1.5.24:
-    resolution: {integrity: sha512-U7qF6wdND/2FL3N8RZsgbCKP3azdY16gjuI4VFIrgCAZYzEgD8tvfyWbtqP/sHiXa3vnleNNqvicZ6K9r1AxMw==}
 
   amd-name-resolver@1.3.1:
     resolution: {integrity: sha512-26qTEWqZQ+cxSYygZ4Cf8tsjDBLceJahhtewxtKZA3SRa4PluuqYCuheemDQD+7Mf5B7sr+zhTDWAHDh02a1Dw==}
@@ -5490,6 +5495,10 @@ packages:
     resolution: {integrity: sha512-5UtUDQ/6edw4ofyljDNcOVJQ4c7OjDro4h3y8e1GQL5iYElYclVHJ3zeWchylvMaKnDbDilC8irOVyexnA/Slw==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
+  loose-envify@1.4.0:
+    resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
+    hasBin: true
+
   lower-case@2.0.2:
     resolution: {integrity: sha512-7fm3l3NAF9WfN6W3JOmf5drwpVqX78JtoGJ3A6W0a6ZnldM41w2fV5D490psKFTpMds8TJse/eHLFFsNHHjHgg==}
 
@@ -6448,6 +6457,9 @@ packages:
     resolution: {integrity: sha512-KYcnXctWUWyVD3W3Ye0ZDuA1N8Szrh85cVCxpG6xYrOk/0CttRtYCmU30nWsUch0NuExQQ63QXvzRE6FLimZmg==}
     engines: {node: 10.* || >= 12.*}
 
+  prop-types@15.8.1:
+    resolution: {integrity: sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==}
+
   proper-lockfile@4.1.2:
     resolution: {integrity: sha512-TjNPblN4BwAWMXU8s9AEz4JmQxnD1NNL7bNOY/AKUzyamc379FWASUhc/K1pL2noVb+XmZKLL68cjzLsiOAMaA==}
 
@@ -6531,6 +6543,13 @@ packages:
   rc@1.2.8:
     resolution: {integrity: sha512-y3bGgqKj3QBdxLbLkomlohkvsA8gdAiUQlSBJnBhfn+BPxg4bc62d8TcBW15wavDfgexCgccckhcZvywyQYPOw==}
     hasBin: true
+
+  react-is@16.13.1:
+    resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
+
+  react@16.14.0:
+    resolution: {integrity: sha512-0X2CImDkJGApiAlcf0ODKIneSwBPhqJawOa5wCtKbu7ZECrmS26NvtSILynQ66cgkT/RJ4LidJOc3bUESwmU8g==}
+    engines: {node: '>=0.10.0'}
 
   read-cmd-shim@5.0.0:
     resolution: {integrity: sha512-SEbJV7tohp3DAAILbEMPXavBjAnMN0tVnh4+9G8ihV4Pq3HYF9h8QNez9zkJ1ILkv9G2BjdzwctznGZXgu/HGw==}
@@ -7286,6 +7305,16 @@ packages:
   supports-preserve-symlinks-flag@1.0.0:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
+
+  survey-core@2.0.0:
+    resolution: {integrity: sha512-LwV81+K7zvAFJKuAnIPPxn7O04modWT91ZVTIEKayarQWn9PSTa2Qmx5vhH56zQKoUhJJ9DQg6WN5+G3ZCA1uw==}
+
+  survey-js-ui@2.0.0:
+    resolution: {integrity: sha512-heWCmjUqNif5IkFUf6KNUipOccd0Y/4WJosztG+IfSujT0BfSKrOJI0yFhqz0VX4PRjuq5SP/f3Iy+uR9dNoag==}
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
+      survey-core: 2.0.0
 
   svg-tags@1.0.0:
     resolution: {integrity: sha512-ovssysQTa+luh7A5Weu3Rta6FJlFBBbInjOh722LIt6klpU2/HtdUbszju/G4devcvk8PGt7FCLv5wftu3THUA==}
@@ -10792,6 +10821,14 @@ snapshots:
 
   '@types/range-parser@1.2.7': {}
 
+  '@types/react-dom@19.0.4(@types/react@19.0.10)':
+    dependencies:
+      '@types/react': 19.0.10
+
+  '@types/react@19.0.10':
+    dependencies:
+      csstype: 3.1.3
+
   '@types/resolve@1.20.2': {}
 
   '@types/rimraf@2.0.5':
@@ -11023,8 +11060,6 @@ snapshots:
       fast-uri: 3.0.3
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
-
-  alpaca@1.5.24: {}
 
   amd-name-resolver@1.3.1:
     dependencies:
@@ -12304,13 +12339,14 @@ snapshots:
       ora: 3.4.0
       through2: 3.0.2
 
-  consolidate@0.16.0(handlebars@4.7.8)(lodash@4.17.21)(mustache@4.2.0)(underscore@1.13.6):
+  consolidate@0.16.0(handlebars@4.7.8)(lodash@4.17.21)(mustache@4.2.0)(react@16.14.0)(underscore@1.13.6):
     dependencies:
       bluebird: 3.7.2
     optionalDependencies:
       handlebars: 4.7.8
       lodash: 4.17.21
       mustache: 4.2.0
+      react: 16.14.0
       underscore: 1.13.6
 
   content-disposition@0.5.4:
@@ -12868,10 +12904,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ember-cli-dependency-checker@3.3.2(ember-cli@5.8.1(handlebars@4.7.8)(underscore@1.13.6)):
+  ember-cli-dependency-checker@3.3.2(ember-cli@5.8.1(handlebars@4.7.8)(react@16.14.0)(underscore@1.13.6)):
     dependencies:
       chalk: 2.4.2
-      ember-cli: 5.8.1(handlebars@4.7.8)(underscore@1.13.6)
+      ember-cli: 5.8.1(handlebars@4.7.8)(react@16.14.0)(underscore@1.13.6)
       find-yarn-workspace-root: 1.2.1
       is-git-url: 1.0.0
       resolve: 1.22.8
@@ -13161,7 +13197,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ember-cli@5.8.1(handlebars@4.7.8)(underscore@1.13.6):
+  ember-cli@5.8.1(handlebars@4.7.8)(react@16.14.0)(underscore@1.13.6):
     dependencies:
       '@pnpm/find-workspace-dir': 6.0.3
       broccoli: 3.5.2
@@ -13240,7 +13276,7 @@ snapshots:
       sort-package-json: 1.57.0
       symlink-or-copy: 1.3.1
       temp: 0.9.4
-      testem: 3.15.0(handlebars@4.7.8)(lodash@4.17.21)(underscore@1.13.6)
+      testem: 3.15.0(handlebars@4.7.8)(lodash@4.17.21)(react@16.14.0)(underscore@1.13.6)
       tiny-lr: 2.0.0
       tree-sync: 2.1.0
       walk-sync: 3.0.0
@@ -15829,6 +15865,11 @@ snapshots:
       strip-ansi: 7.1.0
       wrap-ansi: 8.1.0
 
+  loose-envify@1.4.0:
+    dependencies:
+      js-tokens: 4.0.0
+    optional: true
+
   lower-case@2.0.2:
     dependencies:
       tslib: 2.6.3
@@ -16860,6 +16901,13 @@ snapshots:
 
   promise.hash.helper@1.0.8: {}
 
+  prop-types@15.8.1:
+    dependencies:
+      loose-envify: 1.4.0
+      object-assign: 4.1.1
+      react-is: 16.13.1
+    optional: true
+
   proper-lockfile@4.1.2:
     dependencies:
       graceful-fs: 4.2.11
@@ -16955,6 +17003,16 @@ snapshots:
       ini: 1.3.8
       minimist: 1.2.8
       strip-json-comments: 2.0.1
+    optional: true
+
+  react-is@16.13.1:
+    optional: true
+
+  react@16.14.0:
+    dependencies:
+      loose-envify: 1.4.0
+      object-assign: 4.1.1
+      prop-types: 15.8.1
     optional: true
 
   read-cmd-shim@5.0.0: {}
@@ -17864,6 +17922,14 @@ snapshots:
 
   supports-preserve-symlinks-flag@1.0.0: {}
 
+  survey-core@2.0.0: {}
+
+  survey-js-ui@2.0.0(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(survey-core@2.0.0):
+    dependencies:
+      '@types/react': 19.0.10
+      '@types/react-dom': 19.0.4(@types/react@19.0.10)
+      survey-core: 2.0.0
+
   svg-tags@1.0.0: {}
 
   sweetalert2@7.29.0: {}
@@ -17971,7 +18037,7 @@ snapshots:
       commander: 2.20.3
       source-map-support: 0.5.21
 
-  testem@3.15.0(handlebars@4.7.8)(lodash@4.17.21)(underscore@1.13.6):
+  testem@3.15.0(handlebars@4.7.8)(lodash@4.17.21)(react@16.14.0)(underscore@1.13.6):
     dependencies:
       '@xmldom/xmldom': 0.8.10
       backbone: 1.6.0
@@ -17979,7 +18045,7 @@ snapshots:
       charm: 1.0.2
       commander: 2.20.3
       compression: 1.7.4
-      consolidate: 0.16.0(handlebars@4.7.8)(lodash@4.17.21)(mustache@4.2.0)(underscore@1.13.6)
+      consolidate: 0.16.0(handlebars@4.7.8)(lodash@4.17.21)(mustache@4.2.0)(react@16.14.0)(underscore@1.13.6)
       execa: 1.0.0
       express: 4.19.2
       fireworm: 0.7.2

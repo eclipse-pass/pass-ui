@@ -59,7 +59,7 @@ export default class ExternalRepoReviewComponent extends Component {
         return; // Don't redirect
       }
 
-      $('#externalSubmission').modal('hide');
+      document.querySelector('#externalSubmission').hide();
 
       const win = window.open(repo.url, '_blank');
       if (win) {
