@@ -288,28 +288,6 @@ td {
   min-width: 250px !important;
 }
 
-/*
-* Custom alpaca css for bs4
-*/
-
-.alpaca-invalid > input,
-.alpaca-invalid > textarea,
-.alpaca-invalid > select {
-  border-color: #dc3545;
-}
-
-/* stylelint-disable selector-class-pattern */
-.alpaca-message-notOptional {
-  display: none;
-}
-/* stylelint-enable selector-class-pattern */
-
-.alpaca-required-indicator {
-  margin-left: 5px;
-  color: #777;
-  font-size: 80%;
-}
-
 /* stylelint-disable font-family-no-missing-generic-family-keyword */
 .glyphicon {
   font-family: FontAwesome;
@@ -335,18 +313,6 @@ td {
 
 .glyphicon-info-sign::before {
   content: '\f05a';
-}
-
-.alpaca-container {
-  width: 100%;
-}
-
-.alpaca-container .md-pubtype label {
-  display: block;
-}
-
-.alpaca-container .md-pubtype .radio input[type='radio'] {
-  margin: 0 8px;
 }
 
 .help-block {
@@ -887,4 +853,10 @@ footer {
 
 .grant-item:not(:last-child) {
   border-bottom: 1px solid #ccc; /* Add a bottom border except for the last item */
+}
+
+/* Adjust SurveyJS form to be left-justified */
+
+#schemaForm .sd-body {
+  margin-left: 0;
 }

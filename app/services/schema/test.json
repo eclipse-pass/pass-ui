@@ -1,5 +1,6 @@
 {
     "checkErrorsMode": "onValueChanged",
+    "questionTitleLocation": "left",
     "elements": [
         {
             "name": "title",
