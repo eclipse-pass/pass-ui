@@ -57,6 +57,7 @@ module.exports = function (defaults) {
 
   app.import('node_modules/ember-modal-dialog/app/styles/ember-modal-dialog/ember-modal-structure.css');
   app.import('node_modules/ember-modal-dialog/app/styles/ember-modal-dialog/ember-modal-appearance.css');
+  app.import('node_modules/sweetalert2/dist/sweetalert2.css');
 
   const { Webpack } = require('@embroider/webpack');
 
