@@ -1,7 +1,8 @@
 /* eslint-disable ember/classic-decorator-no-classic-methods, ember/no-get, ember/no-string-prototype-extensions */
 import Service, { inject as service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
-import testSchema from './schema/test.json';
+import surveySchema from './schema/surveyjs.json';
+import repositorySchemas from './schema/repository.json';
 
 /**
  * Service to manipulate metadata formschemas
@@ -13,43 +14,111 @@ export default class MetadataSchemaService extends Service {
   }
 
   /**
-   * TODO implement
+   * Return SurveyJS schema for the given repositories.
    *
    * @param {array} repositories list of repository URIs
    * @param {array} readonly list of properties that should be marked as read-only
    * @returns schema relevant to the given repositories
    */
   getMetadataSchema(repositories, readonly) {
+    // Each repository identifies a set of schemas which specify metadata fields for the user to fill out.
+    // The repositorySchemas object contains this mapping and also indicate whether or not the field is
+    // required or conditionally required. The surveySchema object is a SurveyJS schema which contains
+    // every field which could be filled out.
+
     if (!repositories) {
       return null;
     }
 
-    // TODO Set isReadonly
-    // Merge and set isRequired
+    // Get schemas being used for metadata.
+    let schemas = Array.from(new Set(repositories.flatMap((repo) => repo.schemas)));
 
-    return testSchema;
-  }
+    // Normalize schema URIs to keys that can be looked up.
+    schemas = schemas
+      .map((schema) => {
+        let slash_index = schema.lastIndexOf('/');
+        let dot_index = schema.lastIndexOf('.');
 
-  /**
-   * Add data to a metadata form schema to be prepopulated in the rendered form. Optionally
-   * force these fields to be read-only.
-   *
-   * @param {object} schema metadata (form) schema
-   * @param {object} data display data to add to the schema
-   * @param {array} readonly list of properties that should be marked as read-only
-   * @Returns {object} the modified schema
-   */
-  addDisplayData(schema, data, readonly) {
-    // schema.mergeData(data);
+        if (slash_index == -1 || dot_index == -1) {
+          return null;
+        }
 
-    // TODO handle readonly
+        return schema.substring(slash_index + 1, dot_index);
+      })
+      .filter((schema) => schema != null);
+
+    // Make sure the common schema is first so that fields are in order.
+
+    if (schemas.includes('common')) {
+      schemas = ['common'].concat(schemas.filter((schema) => schema != 'common'));
+    }
+
+    // Map schema field names to elements from surveySchema.
+    // Use Map to preserve order
+    let elementMap = new Map();
+
+    for (const schema of schemas) {
+      if ((!schema) in repositorySchemas) {
+        console.log('Warning: Schema %s not found', schema);
+        continue;
+      }
+
+      for (const field of repositorySchemas[schema]) {
+        let element = elementMap.get(field.name);
+
+        if (!element) {
+          // Copy element from surveySchema
+
+          element = surveySchema.elements.find((e) => e.name === field.name);
+
+          if (!element) {
+            console.log('Warning: Element %s not found in survey schema', field.name);
+            continue;
+          }
+
+          if (element) {
+            element = Object.assign({}, element);
+            elementMap.set(field.name, element);
+          }
+
+          // Handle readonly fields
+
+          if (readonly && readonly.includes(field.name)) {
+            element.isReadOnly = true;
+          }
+        }
+
+        // Handle merge of required and requiredIf
+        // Give precendence to required
+
+        if ('required' in field && field.required) {
+          element.isRequired = true;
+          delete element.requiredIf;
+        } else if ('requiredIf' in field) {
+          if ('requiredIf' in element) {
+            console.log('Warning: requireIf merge not supported on %s', field.name);
+          }
+
+          element.requiredIf = field.requiredIf;
+        }
+      }
+    }
+
+    let schema = {};
+    schema.elements = Array.from(elementMap.values());
+
+    // Add toplevel poperties from surveySchema
+    for (const key in surveySchema) {
+      if (key != 'elements') {
+        schema[key] = surveySchema[key];
+      }
+    }
 
     return schema;
   }
 
   /**
-   * Get all unique field names across a set of schema. This includes any unique field
-   * in schema referenced in the 'allOf' validation sections, unless otherwise specified.
+   * Get all field names of a SurveyJS schema.
    *
    * @param {object}  schema
    * @returns {array} list of unique field keys
@@ -58,17 +127,14 @@ export default class MetadataSchemaService extends Service {
     let fields = [];
 
     schema.elements.forEach((element) => {
-      if (!fields.includes(element.name)) {
-        fields.push(element.name);
-      }
+      fields.push(element.name);
     });
 
     return fields;
   }
 
-  // TODO work off global schema...
   getAllFields() {
-    return this.getFields(testSchema);
+    return this.getFields(surveySchema);
   }
 
   /**

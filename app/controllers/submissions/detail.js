@@ -283,8 +283,10 @@ export default class SubmissionsDetail extends Controller {
         });
 
         later(() => {
-          $('.fa-exclamation-triangle').css('color', '#b0b0b0');
-          $('.fa-exclamation-triangle').css('font-size', '2em');
+          document.querySelectorAll('.fa-exclamation-triangle').forEach((el) => {
+            el.style.color = '#b0b0b0';
+            el.style.fontSize = '2em';
+          });
         }, 4000);
         this.flashMessages.warning(
           'Please visit the listed web portal(s) to submit your manuscript directly. Metadata displayed on this page can be used to help in the submission process.',
@@ -475,7 +477,10 @@ export default class SubmissionsDetail extends Controller {
     });
 
     if (result.value) {
-      $('.block-user-input').css('display', 'block');
+      document.querySelectorAll('.block-user-input').forEach((el) => {
+        el.style.display = 'block';
+      });
+
       await this.submissionHandler.cancelSubmission(sub, message);
       window.location.reload(true);
     }

@@ -15,7 +15,8 @@ export default class MetadataForm extends Component {
 
     const survey = new SurveyModel(surveySchema);
 
-    survey.data = surveyData;
+    // Use mergeData to preserve default values
+    survey.mergeData(surveyData);
 
     survey.applyTheme(DefaultLightPanelless);
     survey.render(document.getElementById('schemaForm'));

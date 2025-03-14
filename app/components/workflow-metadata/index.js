@@ -83,6 +83,7 @@ export default class WorkflowMetadata extends Component {
     }
   };
 
+  // TODO This seems wrong
   /**
    * Set the object keys as read-only metadata fields. This assumes that incoming metadata captured
    * before this component is reached is read-only such as Crossref metadata or title/journal
