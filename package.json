@@ -61,7 +61,7 @@
     "jquery": "3.6.4",
     "loader.js": "^4.7.0",
     "popper.js": "^1.16.1",
-    "sweetalert2": "7.29.0"
+    "sweetalert2": "11.17.2"
   },
   "devDependencies": {
     "@babel/core": "^7.24.7",
