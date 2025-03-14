@@ -6,6 +6,7 @@ import ENV from 'pass-ui/config/environment';
 import { inject as service } from '@ember/service';
 import { later, scheduleOnce } from '@ember/runloop';
 import _ from 'lodash';
+import swal from 'sweetalert2/dist/sweetalert2.js';
 
 export default class SubmissionsDetail extends Controller {
   @service currentUser;
@@ -228,7 +229,7 @@ export default class SubmissionsDetail extends Controller {
 
   @action
   async openWeblinkAlert(repo) {
-    let value = await swal({
+    let value = await swal.fire({
       target: ENV.APP.rootElement,
       title: 'Notice!',
       text: 'You are being sent to an external site. This will open a new tab.',
@@ -259,7 +260,7 @@ export default class SubmissionsDetail extends Controller {
     let message = this.message;
 
     if (!message) {
-      swal('Comment field empty', 'Please add a comment before requesting changes.', 'warning');
+      swal.fire('Comment field empty', 'Please add a comment before requesting changes.', 'warning');
     } else {
       $('.block-user-input').css('display', 'block');
       await this.submissionHandler.requestSubmissionChanges(sub, message);
@@ -295,14 +296,14 @@ export default class SubmissionsDetail extends Controller {
     manuscriptFiles = _.uniqBy(manuscriptFiles, 'id');
 
     if (manuscriptFiles.length == 0) {
-      swal(
+      swal.fire(
         'Manuscript is missing',
         'At least one manuscript file is required.  Please Edit the submission to add one',
         'warning',
       );
       return;
     } else if (manuscriptFiles.length > 1) {
-      swal(
+      swal.fire(
         'Incorrect manuscript count',
         `Only one file may be designated as the manuscript.  Instead, found ${manuscriptFiles.length}.  Please edit the file list`,
         'warning',
@@ -332,18 +333,27 @@ export default class SubmissionsDetail extends Controller {
       .map((repo) => ({
         id: get(repo, 'name'),
       }));
-
-    const result = await swal
-      .mixin({
-        target: ENV.APP.rootElement,
-        input: 'checkbox',
-        inputPlaceholder: "I agree to the above statement on today's date ",
-        confirmButtonText: 'Next &rarr;',
-        showCancelButton: true,
-        progressSteps: reposWithAgreementText.map((repo, index) => index + 1),
-      })
-      .queue(reposWithAgreementText);
-    if (result.value) {
+    const reposProgressSteps = reposWithAgreementText.map((repo, index) => index);
+    const Queue = swal.mixin({
+      target: ENV.APP.rootElement,
+      input: 'checkbox',
+      inputPlaceholder: "I agree to the above statement on today's date ",
+      confirmButtonText: 'Next &rarr;',
+      showCancelButton: true,
+      progressSteps: reposProgressSteps.map((index) => '' + (index + 1)),
+    });
+    const result = { value: [] };
+    for (const repoStep of reposProgressSteps) {
+      const repoState = reposWithAgreementText[repoStep];
+      const repoResult = await Queue.fire({
+        currentProgressStep: repoStep,
+        title: repoState.title,
+        html: repoState.html,
+      });
+      result.value.push(repoResult.value);
+    }
+    const validResults = result.value.some((agree) => agree !== undefined);
+    if (validResults) {
       let reposThatUserAgreedToDeposit = reposWithAgreementText.filter((repo, index) => {
         // if the user agreed to depost to this repo === 1
         if (result.value[index] === 1) {
@@ -373,7 +383,7 @@ export default class SubmissionsDetail extends Controller {
             ).replace(/[\[\]']/g, '')}</code></pre>`;
           }
 
-          let result = await swal({
+          let result = await swal.fire({
             target: ENV.APP.rootElement,
             title: 'Confirm submission',
             html: swalMsg, // eslint-disable-line
@@ -411,7 +421,7 @@ export default class SubmissionsDetail extends Controller {
               return true;
             }
           });
-          let result = await swal({
+          let result = await swal.fire({
             target: ENV.APP.rootElement,
             title: 'Your submission cannot be submitted.',
             html: `You declined to agree to the deposit agreement(s) for ${JSON.stringify(
@@ -431,7 +441,7 @@ export default class SubmissionsDetail extends Controller {
         }
       } else {
         // no repositories associated with the submission
-        let result = await swal({
+        let result = await swal.fire({
           target: ENV.APP.rootElement,
           title: 'Your submission cannot be submitted.',
           html: 'No repositories are associated with this submission. \n You can either (a) cancel the submission or (b) return to the submission and edit it to include a repository.',
@@ -453,11 +463,11 @@ export default class SubmissionsDetail extends Controller {
     let sub = get(this, 'model.sub');
 
     if (!message) {
-      swal('Comment field empty', 'Please add a comment for your cancellation.', 'warning');
+      swal.fire('Comment field empty', 'Please add a comment for your cancellation.', 'warning');
       return;
     }
 
-    let result = await swal({
+    let result = await swal.fire({
       target: ENV.APP.rootElement,
       title: 'Are you sure?',
       text: 'If you cancel this submission, it will not be able to be resumed.',
@@ -476,14 +486,13 @@ export default class SubmissionsDetail extends Controller {
 
   @action
   async deleteSubmission(submission) {
-    let result = await swal({
+    let result = await swal.fire({
       target: ENV.APP.rootElement,
       text: 'Are you sure you want to delete this draft submission? This cannot be undone.',
       confirmButtonText: 'Delete',
       confirmButtonColor: '#DC3545',
       showCancelButton: true,
     });
-
     if (result.value) {
       const ignoreList = this.searchHelper;
 
