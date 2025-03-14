@@ -33,7 +33,8 @@
             "type": "text",
             "title": "Embargo end date",
             "inputType": "date",
-            "visibleIf": "{under-embargo}"
+            "visibleIf": "{under-embargo}",
+            "requiredIf": "{under-embargo}"
         },
         {
             "name": "issue",

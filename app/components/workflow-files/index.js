@@ -4,6 +4,7 @@ import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { task } from 'ember-concurrency-decorators';
 import ENV from 'pass-ui/config/environment';
+import { tracked } from '@glimmer/tracking';
 
 export default class WorkflowFiles extends Component {
   @service store;
@@ -11,6 +12,13 @@ export default class WorkflowFiles extends Component {
   @service submissionHandler;
   @service currentUser;
   @service flashMessages;
+
+  @tracked doi = null;
+
+  constructor() {
+    super(...arguments);
+    this.doi = this.args.doi;
+  }
 
   get hasManuscript() {
     return !!this.manuscript;
