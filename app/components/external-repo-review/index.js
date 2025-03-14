@@ -2,6 +2,7 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import ENV from 'pass-ui/config/environment';
+import swal from 'sweetalert2/dist/sweetalert2.js';
 
 class VisitableRepo {
   @tracked visited;
@@ -47,26 +48,25 @@ export default class ExternalRepoReviewComponent extends Component {
 
   @action
   openWeblinkAlert(repo) {
-    swal({
-      target: ENV.APP.rootElement,
-      title: 'Notice!',
-      text: 'You are being sent to an external site. This will open a new tab.',
-      showCancelButton: true,
-      cancelButtonText: 'Cancel',
-      confirmButtonText: 'Open new tab',
-    }).then((value) => {
-      if (value.dismiss) {
-        return; // Don't redirect
-      }
-
-      $('#externalSubmission').modal('hide');
-
-      const win = window.open(repo.url, '_blank');
-      if (win) {
-        win.focus();
-      }
-
-      this.handleRepo(repo);
-    });
+    swal
+      .fire({
+        target: ENV.APP.rootElement,
+        title: 'Notice!',
+        text: 'You are being sent to an external site. This will open a new tab.',
+        showCancelButton: true,
+        cancelButtonText: 'Cancel',
+        confirmButtonText: 'Open new tab',
+      })
+      .then((value) => {
+        if (value.dismiss) {
+          return; // Don't redirect
+        }
+        $('#externalSubmission').modal('hide');
+        const win = window.open(repo.url, '_blank');
+        if (win) {
+          win.focus();
+        }
+        this.handleRepo(repo);
+      });
   }
 }

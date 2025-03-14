@@ -3,6 +3,8 @@ import { A } from '@ember/array';
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
+import Swal from 'sweetalert2/dist/sweetalert2.js';
+import Sinon from 'sinon';
 
 module('Unit | Controller | submissions/new', (hooks) => {
   setupTest(hooks);
@@ -345,12 +347,12 @@ module('Unit | Controller | submissions/new', (hooks) => {
     controller.set('model', model);
 
     // Mock global 'swal' for this test
-    swal = () => {
+    const swalStub = Sinon.stub(Swal, 'fire').callsFake(() => {
       assert.ok(true);
       return Promise.resolve({
         value: 'moo',
       });
-    };
+    });
 
     // Having this mocked function run shows that the service will delete the submission
     controller.set(
@@ -369,6 +371,7 @@ module('Unit | Controller | submissions/new', (hooks) => {
     });
 
     controller.send('abort');
+    swalStub.restore();
   });
 
   test('abort should not delete submission if submission.id is undefined', async function (assert) {
@@ -386,12 +389,12 @@ module('Unit | Controller | submissions/new', (hooks) => {
     controller.set('model', model);
 
     // Mock global 'swal' for this test
-    swal = () => {
+    const swalStub = Sinon.stub(Swal, 'fire').callsFake(() => {
       assert.ok(true);
       return Promise.resolve({
         value: 'moo',
       });
-    };
+    });
 
     let deleteSubmissionCalled = false;
 
@@ -413,5 +416,6 @@ module('Unit | Controller | submissions/new', (hooks) => {
     });
 
     controller.send('abort');
+    swalStub.restore();
   });
 });

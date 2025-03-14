@@ -2,6 +2,7 @@ import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import Sinon from 'sinon';
+import Swal from 'sweetalert2/dist/sweetalert2.js';
 
 module('Unit | Controller | submissions/detail', (hooks) => {
   setupTest(hooks);
@@ -16,10 +17,7 @@ module('Unit | Controller | submissions/detail', (hooks) => {
     assert.expect(2);
 
     // Mock the global SweetAlert object to always return immediately
-    swal = () =>
-      Promise.resolve({
-        value: 'moo',
-      });
+    const swalStub = Sinon.stub(Swal, 'fire').resolves({ value: true });
 
     const submission = EmberObject.create();
 
@@ -37,13 +35,14 @@ module('Unit | Controller | submissions/detail', (hooks) => {
     );
 
     controller.send('deleteSubmission', submission);
+    swalStub.restore();
   });
 
   test('error message shown on submission deletion error', async function (assert) {
     const submission = {};
 
     // Mock global SweetAlert. Mocks a user clicking OK on the popup
-    swal = Sinon.fake.resolves({ value: true });
+    const swalStub = Sinon.stub(Swal, 'fire').resolves({ value: true });
 
     const controller = this.owner.lookup('controller:submissions/detail');
     const routerService = this.owner.lookup('service:router');
@@ -64,5 +63,6 @@ module('Unit | Controller | submissions/detail', (hooks) => {
     assert.ok(deleteFake.calledOnce, 'Submission handler delete should be called');
     assert.ok(flashFake.calledOnce, 'Flash message should be called');
     assert.equal(transitionFake.callCount, 0, 'Transition should not be called');
+    swalStub.restore();
   });
 });

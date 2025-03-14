@@ -5,8 +5,8 @@ import { action, get, set } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { task } from 'ember-concurrency-decorators';
 import { later } from '@ember/runloop';
-import _ from 'lodash';
 import ENV from 'pass-ui/config/environment';
+import swal from 'sweetalert2/dist/sweetalert2.js';
 
 /**
  * Present the user with a summary of all information known about the current in-progress
@@ -120,26 +120,35 @@ export default class WorkflowReview extends Component {
       .map((repo) => ({
         id: repo.name,
       }));
-
-    const result = yield swal
-      .mixin({
-        target: ENV.APP.rootElement,
-        confirmButtonText: 'Next &rarr;',
-        input: 'radio',
-        inputOptions: {
-          agree: `I agree to the above statement on today's date.`,
-          noAgree:
-            'I do not agree to the above statement and I understand that if I proceed and do not check this box, my submission will not be deposited to the above repository.',
-        },
-        inputValidator: (value) => {
-          if (!value) {
-            return 'You need to choose something!';
-          }
-        },
-        progressSteps: reposWithAgreementText.map((repo, index) => index + 1),
-      })
-      .queue(reposWithAgreementText);
-    if (result.value) {
+    const reposProgressSteps = reposWithAgreementText.map((repo, index) => index);
+    const Queue = swal.mixin({
+      target: ENV.APP.rootElement,
+      confirmButtonText: 'Next &rarr;',
+      input: 'radio',
+      inputOptions: {
+        agree: `I agree to the above statement on today's date.`,
+        noAgree:
+          'I do not agree to the above statement and I understand that if I proceed and do not check this box, my submission will not be deposited to the above repository.',
+      },
+      inputValidator: (value) => {
+        if (!value) {
+          return 'You need to choose something!';
+        }
+      },
+      progressSteps: reposProgressSteps.map((index) => '' + (index + 1)),
+    });
+    const result = { value: [] };
+    for (const repoStep of reposProgressSteps) {
+      const repoState = reposWithAgreementText[repoStep];
+      const repoResult = yield Queue.fire({
+        currentProgressStep: repoStep,
+        title: repoState.title,
+        html: repoState.html,
+      });
+      result.value.push(repoResult.value);
+    }
+    const validResults = result.value.some((agree) => agree !== undefined);
+    if (validResults) {
       let reposThatUserAgreedToDeposit = reposWithAgreementText.filter((repo, index) => {
         // if the user agreed to depost to this repo === 1
         if (result.value[index] === 'agree') {
@@ -169,7 +178,7 @@ export default class WorkflowReview extends Component {
             ).replace(/[\[\]']/g, '')}</code></pre>`;
           }
 
-          const result = yield swal({
+          const result = yield swal.fire({
             target: ENV.APP.rootElement,
             title: 'Confirm submission',
             html: swalMsg, // eslint-disable-line
@@ -215,7 +224,7 @@ export default class WorkflowReview extends Component {
               return true;
             }
           });
-          swal({
+          swal.fire({
             target: ENV.APP.rootElement,
             title: 'Your submission cannot be submitted.',
             html: `You declined to agree to the deposit agreement(s) for ${JSON.stringify(
@@ -230,7 +239,7 @@ export default class WorkflowReview extends Component {
         }
       } else {
         // no repositories associated with the submission
-        swal({
+        swal.fire({
           target: ENV.APP.rootElement,
           title: 'Your submission cannot be submitted.',
           html: 'No repositories are associated with this submission. \n Return to the submission and edit it to include a repository.',
@@ -264,32 +273,32 @@ export default class WorkflowReview extends Component {
 
   @action
   openWeblinkAlert(repo) {
-    swal({
-      target: ENV.APP.rootElement,
-      title: 'Notice!',
-      text: 'You are being sent to an external site. This will open a new tab.',
-      showCancelButton: true,
-      cancelButtonText: 'Cancel',
-      confirmButtonText: 'Open new tab',
-    }).then((value) => {
-      if (value.dismiss) {
-        // Don't redirect
-        return;
-      }
-      // Go to the weblink repo
-      this.externalRepoMap[repo.id] = true;
-      const allLinksVisited = Object.values(this.externalRepoMap).every((val) => val === true);
-      if (allLinksVisited) {
-        this.hasVisitedWeblink = true;
-      }
-      $('#externalSubmission').modal('hide');
-
-      var win = window.open(repo.url, '_blank');
-
-      if (win) {
-        win.focus();
-      }
-    });
+    swal
+      .fire({
+        target: ENV.APP.rootElement,
+        title: 'Notice!',
+        text: 'You are being sent to an external site. This will open a new tab.',
+        showCancelButton: true,
+        cancelButtonText: 'Cancel',
+        confirmButtonText: 'Open new tab',
+      })
+      .then((value) => {
+        if (value.dismiss) {
+          // Don't redirect
+          return;
+        }
+        // Go to the weblink repo
+        this.externalRepoMap[repo.id] = true;
+        const allLinksVisited = Object.values(this.externalRepoMap).every((val) => val === true);
+        if (allLinksVisited) {
+          this.hasVisitedWeblink = true;
+        }
+        $('#externalSubmission').modal('hide');
+        var win = window.open(repo.url, '_blank');
+        if (win) {
+          win.focus();
+        }
+      });
   }
 
   @action

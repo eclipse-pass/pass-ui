@@ -252,7 +252,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
     await waitFor('.swal2-confirm');
 
     assert.dom('.swal2-title').includesText('Form Validation Error');
-    assert.dom('.swal2-content').includesText('should be string');
+    assert.dom('.swal2-html-container').includesText('should be string');
     await click('.swal2-confirm');
   });
 

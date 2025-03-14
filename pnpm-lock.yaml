@@ -105,8 +105,8 @@ importers:
         specifier: ^1.16.1
         version: 1.16.1
       sweetalert2:
-        specifier: 7.29.0
-        version: 7.29.0
+        specifier: 11.17.2
+        version: 11.17.2
     devDependencies:
       '@babel/core':
         specifier: ^7.24.7
@@ -7290,9 +7290,8 @@ packages:
   svg-tags@1.0.0:
     resolution: {integrity: sha512-ovssysQTa+luh7A5Weu3Rta6FJlFBBbInjOh722LIt6klpU2/HtdUbszju/G4devcvk8PGt7FCLv5wftu3THUA==}
 
-  sweetalert2@7.29.0:
-    resolution: {integrity: sha512-QYMpgj+W1nmE5I6hQ+Kvj+xSAJ78o5oawNOm65fq+0DRuZqmNPwGNnyfMcA3/porpje6RjXJd41NCJN8Rj83wQ==}
-    engines: {node: '>=0.10.0'}
+  sweetalert2@11.17.2:
+    resolution: {integrity: sha512-HKxDr1IyV3Lxr3W6sb61qm/p2epFIEdr5EKwteRFHnIg6f8nHFl2kX++DBVz16Mac+fFiU3hMpjq1L6yE2Ge5w==}
 
   symbol-tree@3.2.4:
     resolution: {integrity: sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==}
@@ -17866,7 +17865,7 @@ snapshots:
 
   svg-tags@1.0.0: {}
 
-  sweetalert2@7.29.0: {}
+  sweetalert2@11.17.2: {}
 
   symbol-tree@3.2.4: {}
 

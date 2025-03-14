@@ -165,8 +165,8 @@ module('Integration | Component | workflow review', (hooks) => {
 
     await click('.swal2-confirm');
 
-    await waitFor('.swal2-validationerror');
-    assert.dom('.swal2-validationerror').containsText('You need to choose something!');
+    await waitFor('.swal2-validation-message');
+    assert.dom('.swal2-validation-message').containsText('You need to choose something!');
 
     await waitFor('.swal2-container');
     await click('.swal2-container');
@@ -372,7 +372,7 @@ module('Integration | Component | workflow review', (hooks) => {
 
     // Should be warning about no deposit agreement
     assert.dom('.swal2-title').includesText('Your submission cannot be submitted.');
-    assert.dom('.swal2-content').includesText(repo1.name);
+    assert.dom('.swal2-html-container').includesText(repo1.name);
 
     await click('.swal2-confirm');
 

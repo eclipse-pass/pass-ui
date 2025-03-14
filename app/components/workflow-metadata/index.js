@@ -2,9 +2,8 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
-import _ from 'lodash';
 import { inject as service } from '@ember/service';
-import swal from 'sweetalert2';
+import swal from 'sweetalert2/dist/sweetalert2.js';
 import { task } from 'ember-concurrency-decorators';
 import ENV from 'pass-ui/config/environment';
 
@@ -137,9 +136,9 @@ export default class WorkflowMetadata extends Component {
       console.log('%cError(s) found while validating data', 'color:red;');
       console.log(metadataSchema.getErrors());
 
-      swal({
+      swal.fire({
         target: ENV.APP.rootElement,
-        type: 'error',
+        icon: 'error',
         title: 'Form Validation Error',
         html: metadataSchema.getErrorMessage(),
       });

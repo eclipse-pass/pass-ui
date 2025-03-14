@@ -5,6 +5,7 @@ import { action, get, set } from '@ember/object';
 import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
+import swal from 'sweetalert2/dist/sweetalert2.js';
 
 export default class SubmissionsNewRepositories extends Controller {
   @service workflow;
@@ -50,9 +51,9 @@ export default class SubmissionsNewRepositories extends Controller {
   async validateAndLoadTab(gotoRoute) {
     let needValidation = this.needValidation;
     if (needValidation && get(this, 'submission.repositories.length') == 0) {
-      let value = await swal({
+      let value = await swal.fire({
         target: ENV.APP.rootElement,
-        type: 'warning',
+        icon: 'warning',
         title: 'No repositories selected',
         html:
           'If you don\'t plan on submitting to any repositories, you can stop at this time. Click "Exit ' +

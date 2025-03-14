@@ -1,5 +1,6 @@
 import Service from '@ember/service';
 import ENV from 'pass-ui/config/environment';
+import swal from 'sweetalert2/dist/sweetalert2.js';
 
 // Consolidates error handling.
 // The method handleError will figure out which handler to invoke.
@@ -49,16 +50,18 @@ export default class ErrorHandlerService extends Service {
   }
 
   handleSessionTimeout(error) {
-    swal({
-      target: ENV.APP.rootElement,
-      type: 'error',
-      title: 'Your session timed out',
-      text: 'When you click OK the page will reload.',
-    }).then((result) => {
-      if (result.value) {
-        window.location.reload(true);
-      }
-    });
+    swal
+      .fire({
+        target: ENV.APP.rootElement,
+        icon: 'error',
+        title: 'Your session timed out',
+        text: 'When you click OK the page will reload.',
+      })
+      .then((result) => {
+        if (result.value) {
+          window.location.reload(true);
+        }
+      });
   }
 
   handleLoginFailure(error) {
@@ -75,32 +78,36 @@ export default class ErrorHandlerService extends Service {
   }
 
   handleDidNotLoadDataError(error) {
-    swal({
-      target: ENV.APP.rootElement,
-      type: 'error',
-      title: 'Page could not load',
-      text: `Some information required by this page did not load correctly. When you click OK the page will reload. If the issue persists, please contact us and include a copy of this message. ${JSON.stringify(
-        error.message,
-      )}`,
-    }).then((result) => {
-      if (result.value) {
-        window.location.reload(true);
-      }
-    });
+    swal
+      .fire({
+        target: ENV.APP.rootElement,
+        icon: 'error',
+        title: 'Page could not load',
+        text: `Some information required by this page did not load correctly. When you click OK the page will reload. If the issue persists, please contact us and include a copy of this message. ${JSON.stringify(
+          error.message,
+        )}`,
+      })
+      .then((result) => {
+        if (result.value) {
+          window.location.reload(true);
+        }
+      });
   }
 
   handleUnknownError(error) {
-    swal({
-      target: ENV.APP.rootElement,
-      type: 'error',
-      title: 'Something went wrong.',
-      text: `When you click OK the page will reload. If the issue persists, please contact us and include a copy of this message. ${JSON.stringify(
-        error.message,
-      )}`,
-    }).then((result) => {
-      if (result.value) {
-        window.location.reload(true);
-      }
-    });
+    swal
+      .fire({
+        target: ENV.APP.rootElement,
+        icon: 'error',
+        title: 'Something went wrong.',
+        text: `When you click OK the page will reload. If the issue persists, please contact us and include a copy of this message. ${JSON.stringify(
+          error.message,
+        )}`,
+      })
+      .then((result) => {
+        if (result.value) {
+          window.location.reload(true);
+        }
+      });
   }
 }

@@ -3,6 +3,8 @@ import { A } from '@ember/array';
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
+import Swal from 'sweetalert2/dist/sweetalert2.js';
+import Sinon from 'sinon';
 
 module('Unit | Controller | submissions/new/repositories', (hooks) => {
   setupTest(hooks);
@@ -36,9 +38,10 @@ module('Unit | Controller | submissions/new/repositories', (hooks) => {
       loadTabAccessed = true;
     };
     // override swal so it doesn't pop up
-    swal = (result) => new Promise((resolve) => assert.ok(true));
+    const swalStub = Sinon.stub(Swal, 'fire').resolves(() => assert.ok(true));
     controller.send('validateAndLoadTab');
     assert.false(loadTabAccessed);
+    swalStub.restore();
   });
 
   test('transition if there are repositories', function (assert) {
