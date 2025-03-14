@@ -2,6 +2,8 @@
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
+import Swal from 'sweetalert2/dist/sweetalert2.js';
+import Sinon from 'sinon';
 
 module('Unit | Controller | submissions/new/files', (hooks) => {
   setupTest(hooks);
@@ -40,9 +42,10 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
       loadTabAccessed = true;
     };
     assert.strictEqual(controller.get('workflow').getFilesTemp().length, 0);
-    swal = (result) => new Promise((resolve) => assert.ok(true));
+    const swalStub = Sinon.stub(Swal, 'fire').resolves(() => assert.ok(true));
     controller.send('validateAndLoadTab', 'submissions.new.basics');
     assert.false(loadTabAccessed);
+    swalStub.restore();
   });
 
   test('No manuscript files, user not submitter, warns before transition', function (assert) {
@@ -73,9 +76,10 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
     };
     assert.strictEqual(controller.get('workflow').getFilesTemp().length, 0);
     // override swal so it doesn't pop up
-    swal = (result) => new Promise((resolve) => assert.ok(true));
+    const swalStub = Sinon.stub(Swal, 'fire').resolves(() => assert.ok(true));
     controller.send('validateAndLoadTab', 'submissions.new.basics');
     assert.false(loadTabAccessed);
+    swalStub.restore();
   });
 
   test('Multiple manuscript files stops transition', function (assert) {

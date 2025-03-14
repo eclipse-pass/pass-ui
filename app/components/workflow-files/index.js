@@ -4,6 +4,7 @@ import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { task } from 'ember-concurrency-decorators';
 import ENV from 'pass-ui/config/environment';
+import swal from 'sweetalert2/dist/sweetalert2.js';
 
 export default class WorkflowFiles extends Component {
   @service store;
@@ -49,35 +50,35 @@ export default class WorkflowFiles extends Component {
 
   @action
   deleteExistingFile(file) {
-    swal({
-      target: ENV.APP.rootElement,
-      title: 'Are you sure?',
-      text: 'If you delete this file, it will be gone forever.',
-      type: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'I Agree',
-      cancelButtonText: 'Never mind',
-    }).then(async (result) => {
-      if (result.value) {
-        const deleted = await this.deleteFile(file);
-
-        if (deleted) {
-          const mFiles = this.args.previouslyUploadedFiles;
-          // Remove the file from the model
-          if (mFiles) {
-            this.args.updatePreviouslyUploadedFiles(mFiles.filter((f) => f.id !== file.id));
+    swal
+      .fire({
+        target: ENV.APP.rootElement,
+        title: 'Are you sure?',
+        text: 'If you delete this file, it will be gone forever.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'I Agree',
+        cancelButtonText: 'Never mind',
+      })
+      .then(async (result) => {
+        if (result.value) {
+          const deleted = await this.deleteFile(file);
+          if (deleted) {
+            const mFiles = this.args.previouslyUploadedFiles;
+            // Remove the file from the model
+            if (mFiles) {
+              this.args.updatePreviouslyUploadedFiles(mFiles.filter((f) => f.id !== file.id));
+            }
+            const newFiles = this.args.newFiles;
+            if (newFiles) {
+              this.args.updateNewFiles(newFiles.filter((f) => f.id !== file.id));
+            }
+            document.querySelector('#file-multiple-input').value = null;
           }
-
-          const newFiles = this.args.newFiles;
-          if (newFiles) {
-            this.args.updateNewFiles(newFiles.filter((f) => f.id !== file.id));
-          }
-          document.querySelector('#file-multiple-input').value = null;
         }
-      }
-    });
+      });
   }
 
   @action

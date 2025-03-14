@@ -8,6 +8,7 @@ import { task, timeout } from 'ember-concurrency';
 import { scheduleOnce } from '@ember/runloop';
 import { dropTask } from 'ember-concurrency-decorators';
 import ENV from 'pass-ui/config/environment';
+import swal from 'sweetalert2/dist/sweetalert2.js';
 
 const DEBOUNCE_MS = 250;
 
@@ -197,9 +198,9 @@ export default class WorkflowBasics extends Component {
   async changeSubmitter(isProxySubmission, submitter) {
     let hasGrants = get(this, 'submission.grants') && get(this, 'submission.grants.length') > 0;
     if (hasGrants) {
-      let result = swal({
+      let result = swal.fire({
         target: ENV.APP.rootElement,
-        type: 'warning',
+        icon: 'warning',
         title: 'Are you sure?',
         html: 'Changing the submitter will also <strong>remove any grants</strong> currently attached to your submission. Are you sure you want to proceed?',
         showCancelButton: true,

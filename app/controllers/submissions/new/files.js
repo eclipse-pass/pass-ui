@@ -6,6 +6,7 @@ import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import _ from 'lodash';
 import ENV from 'pass-ui/config/environment';
+import swal from 'sweetalert2/dist/sweetalert2.js';
 
 export default class SubmissionsNewFiles extends Controller {
   @service workflow;
@@ -84,11 +85,11 @@ export default class SubmissionsNewFiles extends Controller {
       const submitter = await this.parent.userIsSubmitter();
 
       if (manuscriptFiles.length == 0 && !submitter) {
-        let result = await swal({
+        let result = await swal.fire({
           target: ENV.APP.rootElement,
           title: 'No manuscript present',
           text: 'If no manuscript is attached, the designated submitter will need to add one before final submission',
-          type: 'warning',
+          icon: 'warning',
           showCancelButton: true,
           confirmButtonText: 'OK',
           cancelButtonText: 'Cancel',

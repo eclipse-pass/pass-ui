@@ -5,6 +5,7 @@ import { action, get, set } from '@ember/object';
 import { inject as service } from '@ember/service';
 import _ from 'lodash';
 import ENV from 'pass-ui/config/environment';
+import swal from 'sweetalert2/dist/sweetalert2.js';
 
 export default class SubmissionsNew extends Controller {
   queryParams = ['grant', 'submission', 'covid'];
@@ -91,9 +92,13 @@ export default class SubmissionsNew extends Controller {
 
     const submitter = await this.userIsSubmitter();
     if (manuscriptFiles.length == 0 && submitter) {
-      swal('Manuscript Is Missing', 'At least one manuscript file is required.  Please go back and add one', 'warning');
+      swal.fire(
+        'Manuscript Is Missing',
+        'At least one manuscript file is required.  Please go back and add one',
+        'warning',
+      );
     } else if (manuscriptFiles.length > 1) {
-      swal(
+      swal.fire(
         'Incorrect Manuscript Count',
         `Only one file may be designated as the manuscript.  Instead, found ${manuscriptFiles.length}.  Please go back and edit the file list`,
         'warning',
@@ -134,7 +139,7 @@ export default class SubmissionsNew extends Controller {
     const submission = this.model.newSubmission;
     const ignoreList = this.searchHelper;
 
-    let result = await swal({
+    let result = await swal.fire({
       target: ENV.APP.rootElement,
       title: 'Discard Draft',
       text: "This will abort the current submission and discard progress you've made. This cannot be undone.",

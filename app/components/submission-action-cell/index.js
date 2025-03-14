@@ -2,7 +2,7 @@
 import { action, get } from '@ember/object';
 import { inject as service } from '@ember/service';
 import Component from '@glimmer/component';
-import swal from 'sweetalert2';
+import swal from 'sweetalert2/dist/sweetalert2.js';
 import ENV from 'pass-ui/config/environment';
 
 export default class SubmissionActionCell extends Component {
@@ -32,17 +32,19 @@ export default class SubmissionActionCell extends Component {
    */
   @action
   deleteSubmission(submission) {
-    swal({
-      target: ENV.APP.rootElement,
-      text: 'Are you sure you want to delete this draft submission? This cannot be undone.',
-      confirmButtonText: 'Delete',
-      confirmButtonColor: '#DC3545',
-      showCancelButton: true,
-    }).then((result) => {
-      if (result.value) {
-        this.do_delete(submission);
-      }
-    });
+    swal
+      .fire({
+        target: ENV.APP.rootElement,
+        text: 'Are you sure you want to delete this draft submission? This cannot be undone.',
+        confirmButtonText: 'Delete',
+        confirmButtonColor: '#DC3545',
+        showCancelButton: true,
+      })
+      .then((result) => {
+        if (result.value) {
+          this.do_delete(submission);
+        }
+      });
   }
 
   async do_delete(submission) {
