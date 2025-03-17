@@ -1,4 +1,4 @@
-{{! template-lint-disable no-action }}
+{{! template-lint-disable no-action require-button-type}}
 {{! takes in a schema and the model to save the schema to}}
 <div {{did-insert (perform this.setupSchema)}}>
 
@@ -10,11 +10,7 @@
     </p>
   {{else}}
     {{#if this.schema}}
-      <MetadataForm
-        @schema={{this.schema}}
-        @data={{this.metadata}}
-        @next={{action "next"}}
-      />
+      <MetadataForm @schema={{this.schema}} @data={{this.metadata}} @next={{action "next"}} />
     {{/if}}
   {{/if}}
 </div>
