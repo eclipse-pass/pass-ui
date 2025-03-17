@@ -857,6 +857,6 @@ footer {
 
 /* Adjust SurveyJS form to be left-justified */
 
-#schemaForm .sd-body {
+#schema-form .sd-body {
   margin-left: 0;
 }

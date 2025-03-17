@@ -17,7 +17,7 @@ export default class MetadataForm extends Component {
     survey.mergeData(surveyData);
 
     survey.applyTheme(DefaultLightPanelless);
-    survey.render(document.getElementById('schemaForm'));
+    survey.render(document.getElementById('metadata-form'));
 
     survey.onComplete.add((sender, options) => {
       this.args.next(survey.data);
