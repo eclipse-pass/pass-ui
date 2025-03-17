@@ -69,13 +69,6 @@ export default class NewRoute extends CheckSessionRoute {
       });
 
       files = this.store.query('file', fileForSubmissionQuery(newSubmission.id)).then((files) => [...files.slice()]);
-
-      // TODO What?
-      // Also seed workflow.doiInfo with metadata from the Submission
-      // const metadata = newSubmission.get('metadata');
-      // if (metadata) {
-      //   this.workflow.setDoiInfo(JSON.parse(metadata));
-      // }
     } else {
       // Starting a new submission
 

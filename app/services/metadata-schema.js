@@ -84,7 +84,7 @@ export default class MetadataSchemaService extends Service {
           // Handle readonly fields
 
           if (readonly && readonly.includes(field.name)) {
-            element.isReadOnly = true;
+            element.readOnly = true;
           }
         }
 
