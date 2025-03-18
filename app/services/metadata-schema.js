@@ -33,19 +33,17 @@ export default class MetadataSchemaService extends Service {
     // Get schemas being used for metadata.
     let schemas = Array.from(new Set(repositories.flatMap((repo) => repo.schemas)));
 
-    // Normalize schema URIs to keys that can be looked up.
-    schemas = schemas
-      .map((schema) => {
-        let slash_index = schema.lastIndexOf('/');
-        let dot_index = schema.lastIndexOf('.');
+    // Try to normalize schema URIs to keys that can be looked up.
+    schemas = schemas.map((schema) => {
+      let slash_index = schema.lastIndexOf('/');
+      let dot_index = schema.lastIndexOf('.');
 
-        if (slash_index == -1 || dot_index == -1) {
-          return null;
-        }
+      if (slash_index == -1 || dot_index == -1) {
+        return schema;
+      }
 
-        return schema.substring(slash_index + 1, dot_index);
-      })
-      .filter((schema) => schema != null);
+      return schema.substring(slash_index + 1, dot_index);
+    });
 
     // Make sure the common schema is first so that fields are in order.
 
@@ -54,11 +52,11 @@ export default class MetadataSchemaService extends Service {
     }
 
     // Map schema field names to elements from surveySchema.
-    // Use Map to preserve order
+    // Use Map to preserve order.
     let elementMap = new Map();
 
     for (const schema of schemas) {
-      if ((!schema) in repositorySchemas) {
+      if (!(schema in repositorySchemas)) {
         console.log('Warning: Schema %s not found', schema);
         continue;
       }
@@ -76,10 +74,8 @@ export default class MetadataSchemaService extends Service {
             continue;
           }
 
-          if (element) {
-            element = Object.assign({}, element);
-            elementMap.set(field.name, element);
-          }
+          element = Object.assign({}, element);
+          elementMap.set(field.name, element);
 
           // Handle readonly fields
 
@@ -133,14 +129,17 @@ export default class MetadataSchemaService extends Service {
     return fields;
   }
 
+  /**
+   * Get all possible field names.
+   *
+   * @returns {array} list of all field keys in the survey schema
+   */
   getAllFields() {
     return this.getFields(surveySchema);
   }
 
   /**
-   * Return map from field key to field title. Use title from the schema or
-   * just munge the key. Fields from additional schemas in `schema.allOf`
-   * should be added to the map as well.
+   * Return map from field key to field title.
    *
    * @param {array} schemas array of schemas
    */
@@ -255,8 +254,7 @@ export default class MetadataSchemaService extends Service {
     ];
 
     const repos = await submission.repositories;
-    const schema = this.getMetadataSchema(repos);
-    const titleMap = this.getFieldTitleMap(schema);
+    const titleMap = this.getFieldTitleMap(surveySchema);
     const metadata = JSON.parse(submission.metadata);
 
     const result = [];

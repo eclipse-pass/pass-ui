@@ -354,10 +354,6 @@ input[type='date']::-webkit-outer-spin-button {
   margin-bottom: 0;
 }
 
-/*
-* End Alpaca
-*/
-
 body {
   font-size: 1em !important;
   -webkit-font-smoothing: antialiased;
