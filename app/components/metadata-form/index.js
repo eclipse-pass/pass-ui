@@ -11,8 +11,6 @@ export default class MetadataForm extends Component {
 
     const survey = new SurveyModel(surveySchema);
 
-    console.log(surveySchema);
-
     // Use mergeData to preserve default values
     survey.mergeData(surveyData);
 
