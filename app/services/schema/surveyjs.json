@@ -4,12 +4,12 @@
         {
             "name": "abstract",
             "type": "comment",
-            "title": "The abstract of the article or manuscript being submitted"
+            "title": "Abstract"
         },
         {
             "name": "authors",
             "type": "paneldynamic",
-            "title": "Authors of this article or manuscript",
+            "title": "Authors",
             "templateElements": [
                 {
                     "name": "author",
@@ -19,14 +19,9 @@
                 {
                     "name": "orcid",
                     "type": "text",
-                    "title": "ORCID"
+                    "title": "ORCiD"
                 }
             ]
-        },
-        {
-            "name": "doi",
-            "type": "text",
-            "title": "The DOI of the individual article or manuscript submitted"
         },
         {
             "name": "Embargo-end-date",
@@ -44,7 +39,7 @@
         {
             "name": "issns",
             "type": "paneldynamic",
-            "title": "ISSN information for the manuscript's journal",
+            "title": "ISSN Information",
             "templateElements": [
                 {
                     "name": "issn",
@@ -54,7 +49,7 @@
                 {
                     "name": "pubType",
                     "type": "dropdown",
-                    "title": "Publication type",
+                    "title": "Publication Type",
                     "choices": [
                         "Print",
                         "Online"
@@ -65,17 +60,18 @@
         {
             "name": "journal-NLMTA-ID",
             "type": "text",
-            "title": "NLM identifier for a journal"
+            "title": "NTMLA",
+            "description": "NLM identifier for a journal"
         },
         {
             "name": "journal-title",
             "type": "text",
-            "title": "Journal title"
+            "title": "Journal Title"
         },
         {
             "name": "publicationDate",
             "type": "text",
-            "title": "Publication date",
+            "title": "Publication Date",
             "inputType": "date"
         },
         {
@@ -92,6 +88,7 @@
             "name": "under-embargo",
             "type": "boolean",
             "title": "Under Embargo",
+            "description": "The material being submitted is published under an embargo.",
             "defaultValue": false
         },
         {

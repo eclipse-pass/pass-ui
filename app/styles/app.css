@@ -850,9 +850,3 @@ footer {
 .grant-item:not(:last-child) {
   border-bottom: 1px solid #ccc; /* Add a bottom border except for the last item */
 }
-
-/* Adjust SurveyJS form to be left-justified */
-
-#schema-form .sd-body {
-  margin-left: 0;
-}
