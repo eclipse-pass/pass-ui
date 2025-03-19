@@ -32,9 +32,6 @@ importers:
       '@glimmer/tracking':
         specifier: ^1.1.2
         version: 1.1.2
-      ajv:
-        specifier: ^6.10.0
-        version: 6.12.6
       bootstrap:
         specifier: 5.0.0
         version: 5.0.0(@popperjs/core@2.11.8)

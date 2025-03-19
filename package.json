@@ -37,7 +37,6 @@
     "@fortawesome/free-regular-svg-icons": "^6.4.0",
     "@glimmer/component": "^1.1.2",
     "@glimmer/tracking": "^1.1.2",
-    "ajv": "^6.10.0",
     "bootstrap": "5.0.0",
     "ember-bootstrap": "^6.3.2",
     "ember-composable-helpers": "^5.0.0",
