@@ -14,7 +14,8 @@
                 {
                     "name": "author",
                     "type": "text",
-                    "title": "Author"
+                    "title": "Author",
+                    "isRequired": true
                 },
                 {
                     "name": "orcid",
@@ -44,12 +45,14 @@
                 {
                     "name": "issn",
                     "type": "text",
-                    "title": "ISSN"
+                    "title": "ISSN",
+                    "isRequired": true
                 },
                 {
                     "name": "pubType",
                     "type": "dropdown",
                     "title": "Publication Type",
+                    "defaultValue": "Print",
                     "choices": [
                         "Print",
                         "Online"
