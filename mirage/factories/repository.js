@@ -5,7 +5,6 @@ const RepositoryFactory = Factory.extend({
   name: `${faker.word.noun()} Repository`,
   description: faker.lorem.sentences(),
   url: faker.internet.url(),
-  formSchema: '',
   integrationType: 'FULL',
   repositoryKey: 'pmc',
 });

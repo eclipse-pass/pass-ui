@@ -11,204 +11,49 @@ module('Unit | Service | metadata-schema', (hooks) => {
   setupTest(hooks);
   setupMirage(hooks);
 
-  hooks.beforeEach(function () {
-    this.mockSchema = {
-      definitions: {
-        form: {
-          options: {
-            fields: {
-              name: { helper: 'Please enter your name' },
-              feedback: { type: 'textarea' },
-              ranking: { type: 'select', optionLabels: ['Awesome', "It's OK"] },
-            },
-          },
-          properties: {
-            name: { type: 'string', title: 'Full name' },
-            feedback: { type: 'string' },
-            ranking: {
-              type: 'string',
-              enum: ['excellent', 'ok', 'moo'],
-            },
-          },
-          type: 'object',
-        },
-      },
-      allOf: [
-        {
-          properties: {
-            name: { type: 'string' },
-            ranking: { type: 'string', enum: ['excellent', 'ok', 'moo'] },
-            issns: {
-              type: 'array',
-              title: 'ISSNs',
-              items: {
-                properties: {
-                  issn: { type: 'string', title: 'ISSN' },
-                  pubType: { type: 'string', title: 'Publication Type', enum: ['Print', 'Online'] },
-                },
-                type: 'object',
-              },
-            },
-          },
-          required: ['name', 'ranking'],
-        },
-      ],
-    };
-
-    this.server.get('/schema', (_schema, _request) => {
-      return [this.mockSchema];
-    });
-  });
-
-  /**
-   * Simple test showing that #getMetadataSchema uses the AJAX service to retrieve a
-   * set of schema
-   */
-  test('Test against mocked getMetadataSchemas endpoint', function (assert) {
-    this.owner
-      .lookup('service:metadata-schema')
-      .getMetadataSchemas(['moo', 'too'])
-      .then((result) => {
-        assert.ok(result, 'No result found');
-        assert.ok(result[0].definitions, 'mockSchema.definitions not found');
-      });
-  });
-
-  test('Should retry request without merge query param on failure', async function (assert) {
-    this.server.get('/schema', (_schema, request) => {
-      if (request.queryParams.merge === 'true') {
-        return new Response(500);
-      }
-      return [this.mockSchema];
-    });
-
+  test('Test get unknown schemas', function (assert) {
     const service = this.owner.lookup('service:metadata-schema');
+    const store = this.owner.lookup('service:store');
+    const repo = store.createRecord('repository', { schemas: ['moo', 'too'] });
 
-    const _fetchSchemasSpy = sinon.spy(service, '_fetchSchemas');
-
-    await service.getMetadataSchemas(['moo', 'too']);
-
-    assert.ok(_fetchSchemasSpy.calledTwice, 'fetch schema was called twice');
-  });
-
-  test('Alpacafication works as expected', function (assert) {
-    const service = this.owner.lookup('service:metadata-schema');
-    service.getMetadataSchemas(['moo', 'two']).then((schemas) => {
-      const alpa = service.alpacafySchema(schemas[0]);
-      assert.ok(alpa);
-      assert.ok(alpa.options);
-      assert.ok(alpa.schema);
-    });
-  });
-
-  /**
-   * Test adding data to display in a schema
-   */
-  test('Test adding display data, editable', function (assert) {
-    const data = {
-      name: 'Moo Jones',
-      feedback: 'Feedbag',
-    };
-    const service = this.owner.lookup('service:metadata-schema');
-    const schema = service.alpacafySchema(get(this, 'mockSchema'));
-    const result = this.owner.lookup('service:metadata-schema').addDisplayData(schema, data);
-
-    assert.ok(result.data, 'No data found in result');
-    assert.ok(result.schema, 'Schema not found in result');
-    assert.ok(result.options, 'options not found in result');
-  });
-
-  /**
-   * Another test of adding display data to a schema, but marking them as read-only
-   */
-  test('Test adding read-only display data', function (assert) {
-    const data = {
-      name: 'Moo Jones',
-      feedback: 'Feedbag',
-    };
-
-    const readonly = ['name'];
-
-    const service = this.owner.lookup('service:metadata-schema');
-    const schema = service.alpacafySchema(get(this, 'mockSchema'));
-    const result = service.addDisplayData(schema, data, readonly);
+    const result = service.getMetadataSchema([repo]);
 
     assert.ok(result, 'No result found');
-    assert.ok(result.data, 'No data found in result');
-
-    assert.ok(result.options.fields.name.readonly, "Property 'name' not marked as read only");
-    assert.notOk(result.options.fields.feedback.readonly, "Property 'feedback' marked as read only");
+    assert.equal(result.elements.length, 0, 'Found elements');
   });
 
-  test('Validation should fail when "name" field is not present in data', function (assert) {
+  test('Test get schema with readonly fields', function (assert) {
     const service = this.owner.lookup('service:metadata-schema');
+    const store = this.owner.lookup('service:store');
 
-    assert.notOk(service.validate(get(this, 'mockSchema'), {}), 'Should not validate');
+    const readonly = ['title', 'issns'];
+    const repo = store.createRecord('repository', { schemas: ['common', 'jscholarship'] });
 
-    const errors = service.getErrors();
-    assert.strictEqual(errors.length, 1, 'Should be 1 error');
-    assert.strictEqual(errors[0].message, "should have required property 'name'");
-  });
+    const result = service.getMetadataSchema([repo], readonly);
 
-  test('Validation should fail when "ranking" value is something not in enum', function (assert) {
-    const service = this.owner.lookup('service:metadata-schema');
+    assert.ok(result, 'No result found');
 
-    const data = {
-      name: 'Moo Jones',
-      ranking: 'invalid-moo',
-    };
+    for (const field of readonly) {
+      const element = result.elements.find((e) => e.name === field);
 
-    assert.notOk(service.validate(get(this, 'mockSchema'), data), 'Validation should fail');
-
-    const errors = service.getErrors();
-    assert.strictEqual(errors.length, 1, 'Should have found 1 error');
-  });
-
-  test('Try validating bad ISSN info', function (assert) {
-    const service = this.owner.lookup('service:metadata-schema');
-
-    const data = {
-      name: 'Moo Jones',
-      ranking: 'moo',
-      issns: [
-        {
-          issn: '1234',
-          pubType: 'Electronic',
-        },
-      ],
-    };
-
-    assert.notOk(service.validate(get(this, 'mockSchema'), data), 'Validation should fail');
-
-    const errors = service.getErrors();
-    assert.strictEqual(errors.length, 1, 'Should have found 1 error');
-  });
-
-  test("Get fields includes 'allOf' properties", function (assert) {
-    const service = this.owner.lookup('service:metadata-schema');
-    const result = service.getFields([get(this, 'mockSchema')]);
-
-    assert.ok(result, 'No results found');
-    assert.ok(result.includes('issns'));
-  });
-
-  test("Get fields does not include 'allOf' properties when told not to", function (assert) {
-    const service = this.owner.lookup('service:metadata-schema');
-    const result = service.getFields([get(this, 'mockSchema')], true);
-
-    assert.ok(result, 'No results found');
-    assert.notOk(result.includes('issns'));
+      assert.ok(element, `Field ${field} should be found`);
+      assert.ok(element.readOnly, `Field ${field} should be readonly`);
+    }
   });
 
   test('Get field to title map', function (assert) {
     const service = this.owner.lookup('service:metadata-schema');
 
-    const result = service.getFieldTitleMap([get(this, 'mockSchema')]);
+    const result = service.getFieldTitleMap({
+      elements: [
+        { name: 'name', title: 'Full name' },
+        { name: 'feedback', title: 'Feedback' },
+      ],
+    });
 
     assert.ok(result);
     assert.strictEqual(result.name, 'Full name');
     assert.strictEqual(result.feedback, 'Feedback');
-    assert.strictEqual(result.issns, 'ISSNs', 'issns field from "allOf" block should be included');
   });
 
   test('Should format complex metadata', async function (assert) {
@@ -223,7 +68,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
     const result = await service.displayMetadata(submission);
     const expected = [
       {
-        label: 'ISSNs',
+        label: 'ISSN Information',
         isArray: true,
         value: [{ ISSN: '123-moo' }, { ISSN: 'moo-321 (Print)' }],
       },
@@ -245,36 +90,11 @@ module('Unit | Service | metadata-schema', (hooks) => {
     assert.deepEqual(result, expected);
   });
 
-  test('mergeBlobs does not delete data normally', function (assert) {
+  test('No result if no repositories passed', async function (assert) {
     const service = this.owner.lookup('service:metadata-schema');
 
-    const b1 = { one: '1 moo', two: '2 moo' };
-    const b2 = { two: 'moo too' };
+    const result = service.getMetadataSchema([]);
 
-    const expected = { one: '1 moo', two: 'moo too' };
-
-    assert.deepEqual(service.mergeBlobs(b1, b2), expected);
-  });
-
-  test('mergeBlobs can delete only specified fields', function (assert) {
-    const service = this.owner.lookup('service:metadata-schema');
-
-    const b1 = { one: '1 moo', two: '2 moo' };
-    const b2 = { two: 'moo too' };
-
-    const list = ['one', 'two'];
-
-    const expected = { two: 'moo too' };
-
-    assert.deepEqual(service.mergeBlobs(b1, b2, list), expected);
-  });
-
-  test('No backend request if no repositories are passed', async function (assert) {
-    const service = this.owner.lookup('service:metadata-schema');
-    const serviceFetchFake = sinon.replace(service, '_fetchSchemas', sinon.fake());
-
-    service.getMetadataSchemas([]);
-
-    assert.ok(serviceFetchFake.notCalled, '_fetchSchemas should not have been called');
+    assert.equal(result.elements.length, 0, 'Should have no result');
   });
 });
