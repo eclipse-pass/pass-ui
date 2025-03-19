@@ -154,8 +154,7 @@ export default class MetadataSchemaService extends Service {
   }
 
   /**
-   * Get a metadata blob containing information about repository agreements. The resulting
-   * object can be merged into the larger metadata blob with #mergeBlobs.
+   * Get a metadata blob containing information about repository agreements.
    *
    * @param {object} repositories list of Repository model objects
    * @returns {
