@@ -28,6 +28,11 @@ export default class SubmissionsDetail extends Controller {
   @tracked externalRepoMap = {};
   @tracked _hasVisitedWeblink = null;
 
+  @computed('model.files')
+  get submissionFiles() {
+    return get(this, 'model.files');
+  }
+
   @computed('model.sub', 'model.sub.submitter.firstName')
   get displaySubmitterName() {
     if (get(this, 'model.sub.submitter.displayName')) {
@@ -288,14 +293,13 @@ export default class SubmissionsDetail extends Controller {
     }
 
     // Validate manuscript files
-    let manuscriptFiles = []
-      .concat(this.filesTemp, get(this, 'model.files') && get(this, 'model.files').slice())
+    let manuscriptFiles = this.submissionFiles()
       .filter((file) => file && file.get('fileRole') === 'manuscript')
       .filter((file) => file.submission.id === this.model.sub.id);
 
     manuscriptFiles = _.uniqBy(manuscriptFiles, 'id');
 
-    if (manuscriptFiles.length == 0) {
+    if (manuscriptFiles.length === 0) {
       swal.fire(
         'Manuscript is missing',
         'At least one manuscript file is required.  Please Edit the submission to add one',

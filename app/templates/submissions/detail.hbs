@@ -267,7 +267,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      {{#each (get this.model "files") as |file|}}
+                      {{#each this.submissionFiles as |file|}}
                         <tr>
                           <td data-label="icon">
                             {{#if (eq file.mimeType "png")}}
