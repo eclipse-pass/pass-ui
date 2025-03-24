@@ -13,7 +13,7 @@ export default class WorkflowFiles extends Component {
   @service flashMessages;
 
   get hasFiles() {
-    return this.workflow.getFiles().length > 0;
+    return this.workflow.getFiles().filter((file) => file.submission.id === this.args.submission.id).length > 0;
   }
 
   get hasManuscript() {
@@ -21,14 +21,20 @@ export default class WorkflowFiles extends Component {
   }
 
   get manuscript() {
-    return this.workflow.getFiles().find((file) => file.fileRole === 'manuscript');
+    return this.workflow
+      .getFiles()
+      .filter((file) => file.submission.id === this.args.submission.id)
+      .find((file) => file.fileRole === 'manuscript');
   }
 
   /**
    * Any non-manuscript files
    */
   get supplementalFiles() {
-    return this.workflow.getFiles().filter((file) => file.fileRole !== 'manuscript');
+    return this.workflow
+      .getFiles()
+      .filter((file) => file.submission.id === this.args.submission.id)
+      .filter((file) => file.fileRole !== 'manuscript');
   }
 
   @action
