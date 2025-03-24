@@ -18,28 +18,9 @@ module('Integration | Component | workflow files', (hooks) => {
       repositoriers: [],
       grants: [],
     });
-    this.files = [{}];
-    this.newFiles = [];
-
-    this.loadPrevious = sinon.fake();
-    this.loadNext = sinon.fake();
 
     // Bogus action so component actions don't complain
     this.fakeAction = sinon.fake();
-
-    this.updateAllFiles = (files) => {
-      files.forEach((file) => {
-        file.submission = this.submission;
-      });
-    };
-
-    this.updatePreviouslyUploadedFiles = (files) => {
-      this.previouslyUploadedFiles = [...files];
-    };
-
-    this.updateNewFiles = (files) => {
-      set(this, 'newFiles', [...files]);
-    };
 
     const staticConfig = this.owner.lookup('service:app-static-config');
     sinon.replace(
@@ -80,23 +61,19 @@ module('Integration | Component | workflow files', (hooks) => {
     const store = this.owner.lookup('service:store');
     const submission = store.createRecord('submission');
 
-    const deleteStub = sinon.stub().returns(Promise.resolve());
     const file = store.createRecord('file', {
       name: 'File-for-test',
       fileRole: 'manuscript',
       submission,
     });
+    const deleteStub = sinon.stub().returns(Promise.resolve());
+    file.destroyRecord = deleteStub;
 
-    (file.destroyRecord = deleteStub), (this.previouslyUploadedFiles = [file]);
-    this.newFiles = [];
+    const workflow = this.owner.lookup('service:workflow');
+    workflow.setFiles([file]);
 
     await render(hbs`<WorkflowFiles
   @submission={{this.submission}}
-  @previouslyUploadedFiles={{this.previouslyUploadedFiles}}
-  @newFiles={{this.newFiles}}
-  @updatePreviouslyUploadedFiles={{this.updatePreviouslyUploadedFiles}}
-  @updateNewFiles={{this.updateNewFiles}}
-  @updateAllFiles={{this.updateAllFiles}}
   @next={{this.fakeAction}}
   @back={{this.fakeAction}}
   @abort={{this.fakeAction}}
@@ -112,9 +89,8 @@ module('Integration | Component | workflow files', (hooks) => {
     assert.ok(sweetAlertBtn);
     await click(sweetAlertBtn);
 
-    const workflowFiles = this.previouslyUploadedFiles;
+    const workflowFiles = workflow.getFiles();
     assert.strictEqual(workflowFiles.length, 0, 'Should have 0 files tracked');
-
     assert.ok(deleteStub.calledOnce, 'File destroyRecord() should be called');
   });
 
@@ -134,15 +110,11 @@ module('Integration | Component | workflow files', (hooks) => {
       submission: this.submission,
     });
 
-    this.previouslyUploadedFiles = [ms];
+    const workflow = this.owner.lookup('service:workflow');
+    workflow.setFiles([ms]);
 
     await render(hbs`<WorkflowFiles
   @submission={{this.submission}}
-  @previouslyUploadedFiles={{this.previouslyUploadedFiles}}
-  @newFiles={{this.newFiles}}
-  @updatePreviouslyUploadedFiles={{this.updatePreviouslyUploadedFiles}}
-  @updateNewFiles={{this.updateNewFiles}}
-  @updateAllFiles={{this.updateAllFiles}}
   @next={{this.fakeAction}}
   @back={{this.fakeAction}}
   @abort={{this.fakeAction}}
@@ -161,15 +133,8 @@ module('Integration | Component | workflow files', (hooks) => {
   });
 
   test('Manually uploading a MS should hide FoundManuscript component', async function (assert) {
-    this.previouslyUploadedFiles = [];
-
     await render(hbs`<WorkflowFiles
   @submission={{this.submission}}
-  @previouslyUploadedFiles={{this.previouslyUploadedFiles}}
-  @newFiles={{this.newFiles}}
-  @updatePreviouslyUploadedFiles={{this.updatePreviouslyUploadedFiles}}
-  @updateNewFiles={{this.updateNewFiles}}
-  @updateAllFiles={{this.updateAllFiles}}
   @next={{this.fakeAction}}
   @back={{this.fakeAction}}
   @abort={{this.fakeAction}}
@@ -198,7 +163,8 @@ module('Integration | Component | workflow files', (hooks) => {
     });
     file.destroyRecord = () => Promise.reject();
 
-    this.previouslyUploadedFiles = [file];
+    const workflow = this.owner.lookup('service:workflow');
+    workflow.setFiles([file]);
 
     // Need to make sure the flash message service is initialized
     this.flashMessages = this.owner.lookup('service:flash-messages');
@@ -217,11 +183,6 @@ module('Integration | Component | workflow files', (hooks) => {
 {{/each}}
 <WorkflowFiles
   @submission={{this.submission}}
-  @previouslyUploadedFiles={{this.previouslyUploadedFiles}}
-  @newFiles={{this.newFiles}}
-  @updatePreviouslyUploadedFiles={{this.updatePreviouslyUploadedFiles}}
-  @updateNewFiles={{this.updateNewFiles}}
-  @updateAllFiles={{this.updateAllFiles}}
   @next={{this.fakeAction}}
   @back={{this.fakeAction}}
   @abort={{this.fakeAction}}

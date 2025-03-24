@@ -23,10 +23,7 @@ export default class FoundManuscriptsComponent extends Component {
   }
 
   get foundManuscriptsToDisplay() {
-    let prevFiles = this.args.previouslyUploadedFiles || [];
-    let newFiles = this.args.newFiles || [];
-
-    const allFileNames = [...newFiles.slice(), ...prevFiles.slice()].map((file) => file.name);
+    const allFileNames = this.workflow.getFiles().map((file) => file.name);
 
     return this.foundManuscripts
       .filter((manuscript) => !allFileNames.includes(manuscript.name))

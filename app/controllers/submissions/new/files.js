@@ -14,16 +14,12 @@ export default class SubmissionsNewFiles extends Controller {
   @service router;
 
   @alias('model.newSubmission') submission;
-  @alias('model.files') files;
   @alias('model.publication') publication;
   @alias('model.submissionEvents') submissionEvents;
 
   @controller('submissions.new') parent;
 
   @tracked loadingNext = false;
-  @tracked filesTemp = this.workflow.filesTemp;
-  @tracked newFiles = [];
-  @tracked previouslyUploadedFiles = this.model.files;
 
   @computed('workflow.maxStep')
   get nextTabIsActive() {
@@ -55,30 +51,11 @@ export default class SubmissionsNewFiles extends Controller {
   }
 
   @action
-  updateAllFiles(files) {
-    const filteredFiles = _.uniq(files, 'id').filter((file) => file.submission.id === this.submission.id);
-
-    this.workflow.filesTemp = [...filteredFiles, ...this.workflow.filesTemp];
-    filteredFiles.forEach((file) => {
-      file.submission = this.submission;
-    });
-  }
-
-  @action
-  updatePreviouslyUploadedFiles(files) {
-    this.previouslyUploadedFiles = [...files];
-  }
-
-  @action
-  updateNewFiles(files) {
-    this.newFiles = [...files];
-  }
-
-  @action
   async validateAndLoadTab(gotoTab) {
     let needValidation = this.needValidation;
     if (needValidation) {
-      let manuscriptFiles = [...this.newFiles, ...this.model.files.slice()]
+      let manuscriptFiles = this.workflow
+        .getFiles()
         .filter((file) => file && get(file, 'fileRole') === 'manuscript')
         .filter((file) => file.submission.id === this.submission.id);
 
@@ -114,7 +91,7 @@ export default class SubmissionsNewFiles extends Controller {
 
   @action
   updateRelatedData() {
-    const allFiles = [...this.model.files, ...this.newFiles];
+    const allFiles = this.workflow.getFiles();
     if (allFiles.length > 0) {
       allFiles.forEach((file) => {
         file.save();
