@@ -13,8 +13,6 @@ export default class SubmissionsNewReview extends Controller {
   @alias('model.publication') publication;
   @alias('model.submissionEvents') submissionEvents;
 
-  @tracked files = this.workflow.filesTemp;
-
   @controller('submissions.new') parent;
 
   @computed('parent.waitingMessage')

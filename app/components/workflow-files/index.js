@@ -2,7 +2,6 @@
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
-import { task } from 'ember-concurrency-decorators';
 import ENV from 'pass-ui/config/environment';
 import swal from 'sweetalert2/dist/sweetalert2.js';
 
@@ -13,40 +12,24 @@ export default class WorkflowFiles extends Component {
   @service currentUser;
   @service flashMessages;
 
+  get hasFiles() {
+    return this.workflow.getFiles().length > 0;
+  }
+
   get hasManuscript() {
     return !!this.manuscript;
   }
 
   get manuscript() {
-    const newFiles = this.args.newFiles.filter((file) => file.submission.id === this.args.submission.id) || [];
-    const prevFiles =
-      this.args.previouslyUploadedFiles.filter((file) => file.submission.id === this.args.submission.id) || [];
-
-    return [...prevFiles.slice(), ...newFiles.slice()].find((file) => file.fileRole === 'manuscript');
+    return this.workflow.getFiles().find((file) => file.fileRole === 'manuscript');
   }
 
   /**
    * Any non-manuscript files
    */
   get supplementalFiles() {
-    const newFiles = this.args.newFiles || [];
-    const prevFiles = this.args.previouslyUploadedFiles || [];
-
-    return [...prevFiles.slice(), ...newFiles.slice()].filter((file) => file.fileRole !== 'manuscript');
+    return this.workflow.getFiles().filter((file) => file.fileRole !== 'manuscript');
   }
-
-  @task
-  handleExternalMs = function* (file) {
-    file.submission = this.args.submission;
-    if (!this.hasManuscript) {
-      file.fileRole = 'manuscript';
-    } else {
-      file.fileRole = 'supplemental';
-    }
-
-    this.args.updateNewFiles(file);
-    yield file.save();
-  };
 
   @action
   deleteExistingFile(file) {
@@ -66,15 +49,6 @@ export default class WorkflowFiles extends Component {
         if (result.value) {
           const deleted = await this.deleteFile(file);
           if (deleted) {
-            const mFiles = this.args.previouslyUploadedFiles;
-            // Remove the file from the model
-            if (mFiles) {
-              this.args.updatePreviouslyUploadedFiles(mFiles.filter((f) => f.id !== file.id));
-            }
-            const newFiles = this.args.newFiles;
-            if (newFiles) {
-              this.args.updateNewFiles(newFiles.filter((f) => f.id !== file.id));
-            }
             document.querySelector('#file-multiple-input').value = null;
           }
         }
@@ -114,9 +88,7 @@ export default class WorkflowFiles extends Component {
         newFile.fileRole = 'manuscript';
       }
       const savedFile = await newFile.save();
-
-      this.args.updateNewFiles([savedFile, ...this.args.newFiles]);
-      this.args.updateAllFiles([savedFile, ...this.args.newFiles, ...this.args.previouslyUploadedFiles]);
+      this.workflow.addFile(savedFile);
     } catch (error) {
       FileUpload.file.state = 'aborted';
       console.error(error);
@@ -127,7 +99,6 @@ export default class WorkflowFiles extends Component {
 
   @action
   async deleteFile(file) {
-    let files = [...this.args.previouslyUploadedFiles, ...this.args.newFiles];
     if (!file) {
       return;
     }
@@ -135,13 +106,11 @@ export default class WorkflowFiles extends Component {
     // Delete record without a chance to roll back
     // This will automatically remove the uploaded bytes of the original file
     // then delete the File model record
+    const deletedFileId = file.id;
     return await file
       .destroyRecord()
       .then(() => {
-        const filteredFiles = files.filter((f) => f.id !== file.id);
-
-        this.args.updateAllFiles(filteredFiles);
-
+        this.workflow.removeFile(deletedFileId);
         return true;
       })
       .catch((error) => {
