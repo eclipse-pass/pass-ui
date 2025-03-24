@@ -293,7 +293,7 @@ export default class SubmissionsDetail extends Controller {
     }
 
     // Validate manuscript files
-    let manuscriptFiles = this.submissionFiles()
+    let manuscriptFiles = this.submissionFiles
       .filter((file) => file && file.get('fileRole') === 'manuscript')
       .filter((file) => file.submission.id === this.model.sub.id);
 
