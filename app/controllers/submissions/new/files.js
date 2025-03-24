@@ -4,7 +4,6 @@ import { tracked } from '@glimmer/tracking';
 import { action, computed, get, set } from '@ember/object';
 import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
-import _ from 'lodash';
 import ENV from 'pass-ui/config/environment';
 import swal from 'sweetalert2/dist/sweetalert2.js';
 
@@ -61,7 +60,7 @@ export default class SubmissionsNewFiles extends Controller {
 
       const submitter = await this.parent.userIsSubmitter();
 
-      if (manuscriptFiles.length == 0 && !submitter) {
+      if (manuscriptFiles.length === 0 && !submitter) {
         let result = await swal.fire({
           target: ENV.APP.rootElement,
           title: 'No manuscript present',
@@ -75,7 +74,7 @@ export default class SubmissionsNewFiles extends Controller {
         if (!result.dismiss) {
           this.loadTab(gotoTab);
         }
-      } else if (manuscriptFiles.length == 0) {
+      } else if (manuscriptFiles.length === 0) {
         this.flashMessages.warning('At least one manuscript file is required');
       } else if (manuscriptFiles.length > 1) {
         this.flashMessages.warning(

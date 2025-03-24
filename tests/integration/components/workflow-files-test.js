@@ -1,6 +1,5 @@
 /* eslint-disable ember/no-classic-classes */
 import { selectFiles } from 'ember-file-upload/test-support';
-import { set } from '@ember/object';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
