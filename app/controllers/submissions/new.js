@@ -105,14 +105,13 @@ export default class SubmissionsNew extends Controller {
     } else {
       let sub = this.model.newSubmission;
       let pub = this.model.publication;
-      let files = this.workflow.getFiles();
       let comment = this.comment;
 
       this.set('uploading', true);
       this.set('waitingMessage', 'Saving your submission');
 
       await this.submissionHandler.submit
-        .perform(sub, pub, files, comment)
+        .perform(sub, pub, comment)
         .then(() => {
           set(this, 'uploading', false);
           set(this, 'comment', '');
