@@ -65,7 +65,7 @@ module('Unit | Controller | submissions/new', (hooks) => {
       newSubmission: submission,
       publication,
     });
-    let file = EmberObject.create({
+    const file = EmberObject.create({
       fileRole: 'manuscript',
       submission,
     });
