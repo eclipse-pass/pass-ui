@@ -17,6 +17,11 @@ module('Unit | Controller | submissions/new', (hooks) => {
   let submissionEventSaved = false;
   let publicationSaved = false;
 
+  let submission;
+  let publication;
+  let model;
+  let comment;
+
   hooks.beforeEach(function () {
     controller = this.owner.lookup('controller:submissions/new');
     submissionHandler = this.owner.lookup('service:submission-handler');
@@ -38,7 +43,34 @@ module('Unit | Controller | submissions/new', (hooks) => {
         },
       }),
     );
+    publication = EmberObject.create({
+      id: 'pub:0',
+      save() {
+        publicationSaved = true;
+        return new Promise((resolve) => resolve(this));
+      },
+    });
+    comment = 'moo';
   });
+
+  const setUpSubmissionModel = (submissionArg) => {
+    submission = EmberObject.create({
+      ...submissionArg,
+      save() {
+        submissionSaved = true;
+        return new Promise((resolve) => resolve(this));
+      },
+    });
+    model = EmberObject.create({
+      newSubmission: submission,
+      publication,
+    });
+    let file = EmberObject.create({
+      fileRole: 'manuscript',
+      submission,
+    });
+    workflowService.setFiles([file]);
+  };
 
   // Replace this with your real tests.
   test('it exists', function (assert) {
@@ -65,39 +97,15 @@ module('Unit | Controller | submissions/new', (hooks) => {
       _isWebLink: true,
     });
 
-    let submission = EmberObject.create({
+    const submissionBase = EmberObject.create({
       id: 'sub:0',
       submitter: {
         id: 'submitter:test-id',
       },
       metadata: '{}',
       repositories: A([repository1, repository2]),
-      save() {
-        submissionSaved = true;
-        return new Promise((resolve) => resolve(this));
-      },
     });
-
-    let publication = EmberObject.create({
-      id: 'pub:0',
-      save() {
-        publicationSaved = true;
-        return new Promise((resolve) => resolve(this));
-      },
-    });
-
-    let comment = 'moo';
-
-    let model = EmberObject.create({
-      newSubmission: submission,
-      publication,
-    });
-
-    let file = EmberObject.create({
-      fileRole: 'manuscript',
-      submission,
-    });
-    workflowService.setFiles([file]);
+    setUpSubmissionModel(submissionBase);
 
     assert.expect(16);
 
@@ -148,38 +156,14 @@ module('Unit | Controller | submissions/new', (hooks) => {
     );
     let repository = EmberObject.create({ id: 'test:repo1', integrationType: 'full' });
 
-    let submission = EmberObject.create({
+    const submissionBase = EmberObject.create({
       id: 'sub:0',
       submitter: {
         id: 'submitter:test-id',
       },
       repositories: A([repository]),
-      save() {
-        submissionSaved = true;
-        return new Promise((resolve) => resolve(this));
-      },
     });
-
-    let publication = EmberObject.create({
-      id: 'pub:0',
-      save() {
-        publicationSaved = true;
-        return new Promise((resolve) => resolve(this));
-      },
-    });
-
-    let comment = 'moo';
-
-    let model = EmberObject.create({
-      newSubmission: submission,
-      publication,
-    });
-
-    let file = EmberObject.create({
-      fileRole: 'manuscript',
-      submission,
-    });
-    workflowService.setFiles([file]);
+    setUpSubmissionModel(submissionBase);
 
     assert.expect(11);
 
@@ -217,37 +201,13 @@ module('Unit | Controller | submissions/new', (hooks) => {
     );
     let repository = EmberObject.create({ id: 'test:repo1', integrationType: 'full' });
 
-    let submission = EmberObject.create({
+    const submissionBase = EmberObject.create({
       id: 'sub:0',
       submitterName: 'test name',
       submitterEmail: 'mailto:test@email.com',
       repositories: A([repository]),
-      save() {
-        submissionSaved = true;
-        return new Promise((resolve) => resolve(this));
-      },
     });
-
-    let publication = EmberObject.create({
-      id: 'pub:0',
-      save() {
-        publicationSaved = true;
-        return new Promise((resolve) => resolve(this));
-      },
-    });
-
-    let comment = 'moo';
-
-    let model = EmberObject.create({
-      newSubmission: submission,
-      publication,
-    });
-
-    let file = EmberObject.create({
-      fileRole: 'manuscript',
-      submission,
-    });
-    workflowService.setFiles([file]);
+    setUpSubmissionModel(submissionBase);
 
     assert.expect(13);
 
