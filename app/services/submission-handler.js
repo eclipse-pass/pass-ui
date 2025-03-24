@@ -124,7 +124,7 @@ export default class SubmissionHandlerService extends Service {
    * @returns {Promise}                Promise to perform the operation.
    */
   @task
-  submit = function* (submission, publication, files, comment) {
+  submit = function* (submission, publication, comment) {
     const p = yield publication.save();
 
     submission.set('submitted', false);
