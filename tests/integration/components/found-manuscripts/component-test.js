@@ -26,13 +26,6 @@ module('Integration | Component | found-manuscripts', (hooks) => {
       }),
     );
 
-    this.owner.register(
-      'service:workflow',
-      Service.extend({
-        getDoiInfo: () => ({ DOI: 'doi-moo' }),
-      }),
-    );
-
     // Dumb service mock to prevent random fetches
     this.owner.register(
       'service:oa-manuscript-service',
@@ -55,6 +48,14 @@ module('Integration | Component | found-manuscripts', (hooks) => {
         ]);
       },
     });
+
+    this.owner.register(
+      'service:workflow',
+      Service.extend({
+        getDoiInfo: () => ({ DOI: 'doi-moo' }),
+        getFiles: () => [],
+      }),
+    );
 
     this.owner.register('service:oa-manuscript-service', mockMsService);
 
@@ -80,6 +81,14 @@ module('Integration | Component | found-manuscripts', (hooks) => {
           assert.ok(doi, 'DOI still needs to be present');
           return Promise.resolve([]);
         },
+      }),
+    );
+
+    this.owner.register(
+      'service:workflow',
+      Service.extend({
+        getDoiInfo: () => ({ DOI: 'doi-moo' }),
+        getFiles: () => [],
       }),
     );
 

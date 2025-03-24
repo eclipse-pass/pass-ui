@@ -26,7 +26,7 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
     this.owner.register(
       'service:workflow',
       EmberObject.extend({
-        getFilesTemp() {
+        getFiles() {
           return [];
         },
         getMaxStep() {
@@ -41,7 +41,7 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
     routerService.transitionTo = (name) => {
       loadTabAccessed = true;
     };
-    assert.strictEqual(controller.get('workflow').getFilesTemp().length, 0);
+    assert.strictEqual(controller.get('workflow').getFiles().length, 0);
     const swalStub = Sinon.stub(Swal, 'fire').resolves(() => assert.ok(true));
     controller.send('validateAndLoadTab', 'submissions.new.basics');
     assert.false(loadTabAccessed);
@@ -60,7 +60,7 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
     this.owner.register(
       'service:workflow',
       EmberObject.extend({
-        getFilesTemp() {
+        getFiles() {
           return [];
         },
         getMaxStep() {
@@ -74,7 +74,7 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
     routerService.transitionTo = (name) => {
       loadTabAccessed = true;
     };
-    assert.strictEqual(controller.get('workflow').getFilesTemp().length, 0);
+    assert.strictEqual(controller.get('workflow').getFiles().length, 0);
     // override swal so it doesn't pop up
     const swalStub = Sinon.stub(Swal, 'fire').resolves(() => assert.ok(true));
     controller.send('validateAndLoadTab', 'submissions.new.basics');
@@ -111,7 +111,7 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
     this.owner.register(
       'service:workflow',
       EmberObject.extend({
-        getFilesTemp() {
+        getFiles() {
           return [file];
         },
         getMaxStep() {
@@ -126,8 +126,7 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
     routerService.transitionTo = (name) => {
       loadTabAccessed = true;
     };
-    assert.strictEqual(controller.get('workflow').getFilesTemp().length, 1);
-    assert.strictEqual(controller.get('model.files').length, 1);
+    assert.strictEqual(controller.get('workflow').getFiles().length, 1);
     controller.send('validateAndLoadTab', 'submissions.new.basics');
     assert.false(loadTabAccessed);
   });
@@ -141,27 +140,13 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
         userIsSubmitter: () => false,
       }),
     );
-    this.owner.register(
-      'service:workflow',
-      EmberObject.extend({
-        getFilesTemp() {
-          return [];
-        },
-        getMaxStep() {
-          return 7;
-        },
-      }),
-    );
-
     let subSaved = false;
-
     const submission = EmberObject.create({
       save: () => {
         subSaved = true;
         return Promise.resolve();
       },
     });
-
     const file = EmberObject.create({
       fileRole: 'manuscript',
       submission,
@@ -169,17 +154,26 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
         return Promise.resolve();
       },
     });
-
+    this.owner.register(
+      'service:workflow',
+      EmberObject.extend({
+        getFiles() {
+          return [file];
+        },
+        getMaxStep() {
+          return 7;
+        },
+      }),
+    );
     let model = {
       newSubmission: submission,
-      files: [file],
     };
     controller.set('model', model);
+
     const routerService = this.owner.lookup('service:router');
     routerService.transitionTo = () => {
       assert.ok(subSaved, 'Submission was not saved');
-      assert.strictEqual(controller.get('workflow').getFilesTemp().length, 0);
-      assert.strictEqual(controller.get('model.files').length, 1);
+      assert.strictEqual(controller.get('workflow').getFiles().length, 1);
     };
 
     controller.send('validateAndLoadTab', 'submissions.new.basics');

@@ -18,6 +18,7 @@ module('Unit | Controller | submissions/new', (hooks) => {
   test('finish and save non-proxy submission', async function (assert) {
     let controller = this.owner.lookup('controller:submissions/new');
     let submissionHandler = this.owner.lookup('service:submission-handler');
+    let workflowService = this.owner.lookup('service:workflow');
 
     this.owner.register(
       'service:current-user',
@@ -80,18 +81,18 @@ module('Unit | Controller | submissions/new', (hooks) => {
       },
     });
 
-    let file = EmberObject.create({
-      fileRole: 'manuscript',
-      submission,
-    });
-
     let comment = 'moo';
 
     let model = EmberObject.create({
       newSubmission: submission,
-      files: A([file]),
       publication,
     });
+
+    let file = EmberObject.create({
+      fileRole: 'manuscript',
+      submission,
+    });
+    workflowService.setFiles([file]);
 
     assert.expect(16);
 
@@ -129,7 +130,6 @@ module('Unit | Controller | submissions/new', (hooks) => {
 
     controller.set('model', model);
     controller.set('comment', comment);
-    controller.set('filesTemp', A());
 
     controller.send('submit');
   });
@@ -137,6 +137,7 @@ module('Unit | Controller | submissions/new', (hooks) => {
   test('finish and save proxy submission', async function (assert) {
     let controller = this.owner.lookup('controller:submissions/new');
     let submissionHandler = this.owner.lookup('service:submission-handler');
+    let workflowService = this.owner.lookup('service:workflow');
 
     this.owner.register(
       'service:current-user',
@@ -187,18 +188,18 @@ module('Unit | Controller | submissions/new', (hooks) => {
       },
     });
 
-    let file = EmberObject.create({
-      fileRole: 'manuscript',
-      submission,
-    });
-
     let comment = 'moo';
 
     let model = EmberObject.create({
       newSubmission: submission,
       publication,
-      files: [file],
     });
+
+    let file = EmberObject.create({
+      fileRole: 'manuscript',
+      submission,
+    });
+    workflowService.setFiles([file]);
 
     assert.expect(11);
 
@@ -223,7 +224,6 @@ module('Unit | Controller | submissions/new', (hooks) => {
 
     controller.set('model', model);
     controller.set('comment', comment);
-    controller.set('filesTemp', A());
 
     controller.send('submit');
   });
@@ -231,6 +231,7 @@ module('Unit | Controller | submissions/new', (hooks) => {
   test('finish and save proxy submission with new user', async function (assert) {
     let controller = this.owner.lookup('controller:submissions/new');
     let submissionHandler = this.owner.lookup('service:submission-handler');
+    let workflowService = this.owner.lookup('service:workflow');
 
     this.owner.register(
       'service:current-user',
@@ -280,18 +281,18 @@ module('Unit | Controller | submissions/new', (hooks) => {
       },
     });
 
-    let file = EmberObject.create({
-      fileRole: 'manuscript',
-      submission,
-    });
-
     let comment = 'moo';
 
     let model = EmberObject.create({
       newSubmission: submission,
       publication,
-      files: [file],
     });
+
+    let file = EmberObject.create({
+      fileRole: 'manuscript',
+      submission,
+    });
+    workflowService.setFiles([file]);
 
     assert.expect(13);
 
@@ -318,7 +319,6 @@ module('Unit | Controller | submissions/new', (hooks) => {
 
     controller.set('model', model);
     controller.set('comment', comment);
-    controller.set('filesTemp', A());
 
     controller.send('submit');
   });

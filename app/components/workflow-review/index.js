@@ -26,12 +26,11 @@ export default class WorkflowReview extends Component {
   @service flashMessages;
 
   @tracked isValidated = [];
-  @tracked filesTemp = this.workflow.filesTemp;
   @tracked hasVisitedWeblink = false;
   @tracked repositories = this.args.submission.repositories;
 
   get parsedFiles() {
-    return this.store.peekAll('file').filter((file) => file.submission.id === this.args.submission.id);
+    return this.workflow.getFiles().filter((file) => file.submission.id === this.args.submission.id);
   }
 
   get weblinkRepos() {
