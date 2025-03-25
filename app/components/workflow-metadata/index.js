@@ -31,14 +31,11 @@ export default class WorkflowMetadata extends Component {
   constructor() {
     super(...arguments);
 
-    let md;
     try {
-      md = JSON.parse(this.args.submission.metadata);
+      this.metadata = JSON.parse(this.args.submission.metadata);
     } catch (e) {
-      // console.log(e);
-      // Do nothing
-    } finally {
-      this.metadata = md || {};
+      console.log('Error: Submission metadata invalid');
+      this.metadata = {};
     }
   }
 
@@ -50,6 +47,11 @@ export default class WorkflowMetadata extends Component {
       this.schema = this.metadataSchema.getMetadataSchema(repositories, this.workflow.getReadOnlyProperties());
     }
   };
+
+  @action
+  back() {
+    this.args.back();
+  }
 
   @action
   cancel() {
