@@ -50,11 +50,6 @@ module('Integration | Component | workflow files', (hooks) => {
 
     this.owner.register('service:app-static-config', staticConfig);
 
-    this.owner.register(
-      'service:workflow',
-      sinon.stub(this.owner.lookup('service:workflow'), 'getDoiInfo').returns({ DOI: 'moo-doi' }),
-    );
-
     this.msServiceFake = sinon.replace(
       this.owner.lookup('service:oa-manuscript-service'),
       'lookup',
@@ -173,6 +168,7 @@ module('Integration | Component | workflow files', (hooks) => {
   @next={{this.fakeAction}}
   @back={{this.fakeAction}}
   @abort={{this.fakeAction}}
+  @doi="test"
 />`);
 
     assert.ok(this.msServiceFake.calledOnce, 'Manuscript Service should be called once');
