@@ -291,7 +291,8 @@ export default class WorkflowReview extends Component {
         this.hasVisitedWeblink = true;
       }
 
-      document.querySelector('#externalSubmission').hide();
+      swal.close();
+
       var win = window.open(repo.url, '_blank');
 
       if (win) {
