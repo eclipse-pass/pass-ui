@@ -168,7 +168,7 @@ module('Integration | Component | workflow files', (hooks) => {
   @next={{this.fakeAction}}
   @back={{this.fakeAction}}
   @abort={{this.fakeAction}}
-  @doi="test"
+  @doi='test'
 />`);
 
     assert.ok(this.msServiceFake.calledOnce, 'Manuscript Service should be called once');
