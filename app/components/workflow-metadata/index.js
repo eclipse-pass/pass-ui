@@ -45,6 +45,13 @@ export default class WorkflowMetadata extends Component {
     if (!this.schema) {
       const repositories = yield this.args.submission.repositories;
       this.schema = this.metadataSchema.getMetadataSchema(repositories, this.workflow.getReadOnlyProperties());
+
+      // If journal-title is required, assume a repository requires an existing journal be selected in basics step
+      const requiresJournal =
+        this.schema.elements.findIndex((el) => el.name === 'journal-title' && 'isRequired' in el && el.isRequired) !=
+        -1;
+      const journal = yield this.args.publication.journal;
+      this.missingRequiredJournal = requiresJournal && !journal;
     }
   };
 
