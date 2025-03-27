@@ -5,8 +5,7 @@ import { hash } from 'rsvp';
 import { fileForSubmissionQuery } from '../../util/paginated-query';
 
 export default class NewRoute extends CheckSessionRoute {
-  @service('workflow')
-  workflow;
+  @service('workflow') workflow;
   @service store;
   @service router;
 
@@ -14,9 +13,8 @@ export default class NewRoute extends CheckSessionRoute {
   currentUser;
 
   beforeModel() {
-    if (this.workflow.getCurrentStep() === 0) {
-      this.router.transitionTo('submissions.new');
-    }
+    this.workflow.resetWorkflow();
+    this.router.transitionTo('submissions.new.basics');
   }
 
   resetController(controller, isExiting, transition) {
@@ -41,7 +39,6 @@ export default class NewRoute extends CheckSessionRoute {
     let preLoadedGrant = null;
     let newSubmission = null;
     let submissionEvents = null;
-    let files = null;
     let publication = null;
     let journal = null;
 
@@ -68,7 +65,10 @@ export default class NewRoute extends CheckSessionRoute {
         sort: '+performedDate',
       });
 
-      files = this.store.query('file', fileForSubmissionQuery(newSubmission.id)).then((files) => [...files.slice()]);
+      const files = await this.store
+        .query('file', fileForSubmissionQuery(newSubmission.id))
+        .then((files) => [...files.slice()]);
+      this.workflow.setFiles(files);
 
       // Also seed workflow.doiInfo with metadata from the Submission
       const metadata = newSubmission.get('metadata');
@@ -84,7 +84,8 @@ export default class NewRoute extends CheckSessionRoute {
         submissionStatus: 'draft',
       });
 
-      files = [];
+      const files = [];
+      this.workflow.setFiles(files);
 
       if (params.covid) {
         let covidHint = {
@@ -104,7 +105,6 @@ export default class NewRoute extends CheckSessionRoute {
       publication,
       policies,
       preLoadedGrant,
-      files,
       journal,
     });
   }

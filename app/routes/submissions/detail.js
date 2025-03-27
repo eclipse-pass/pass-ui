@@ -1,6 +1,7 @@
 import CheckSessionRoute from '../check-session-route';
 import { hash } from 'rsvp';
 import { service } from '@ember/service';
+import { fileForSubmissionQuery } from '../../util/paginated-query';
 
 export default class DetailRoute extends CheckSessionRoute {
   @service store;
@@ -12,9 +13,6 @@ export default class DetailRoute extends CheckSessionRoute {
     }
 
     // const querySize = 500; // TODO: Ignore querysize of 500 for now
-    const files = this.store.query('file', {
-      filter: { file: `submission.id==${params.submission_id}` },
-    });
     const deposits = this.store.query('deposit', {
       filter: { deposit: `submission.id==${params.submission_id}` },
     });
@@ -33,6 +31,9 @@ export default class DetailRoute extends CheckSessionRoute {
       filter: { repositoryCopy: `publication.id==${publication.id}` },
     });
     const repos = await sub.get('repositories');
+    const files = await this.store
+      .query('file', fileForSubmissionQuery(params.submission_id))
+      .then((files) => [...files.slice()]);
 
     return hash({
       sub,

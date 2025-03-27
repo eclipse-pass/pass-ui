@@ -61,14 +61,13 @@ module('Unit | Service | submission-handler', (hooks) => {
       },
     });
 
-    let files = A();
     let comment = 'blarg';
 
     assert.expect(14);
 
     return service
       .get('submit')
-      .perform(submission, publication, files, comment)
+      .perform(submission, publication, comment)
       .then(() => {
         assert.false(submission.get('submitted'));
         assert.strictEqual(submission.get('submissionStatus'), 'approval-requested');
@@ -138,14 +137,13 @@ module('Unit | Service | submission-handler', (hooks) => {
       },
     });
 
-    let files = A();
     let comment = 'blarg';
 
     assert.expect(13);
 
     return service
       .get('submit')
-      .perform(submission, publication, files, comment)
+      .perform(submission, publication, comment)
       .then(() => {
         assert.true(submission.get('submitted'));
         assert.strictEqual(submission.get('submissionStatus'), 'submitted');

@@ -9,34 +9,32 @@ import Sinon from 'sinon';
 module('Unit | Controller | submissions/new', (hooks) => {
   setupTest(hooks);
 
-  // Replace this with your real tests.
-  test('it exists', function (assert) {
-    let controller = this.owner.lookup('controller:submissions/new');
-    assert.ok(controller);
-  });
+  let controller;
+  let submissionHandler;
+  let workflowService;
+  let submissionEvent;
+  let submissionSaved = false;
+  let submissionEventSaved = false;
+  let publicationSaved = false;
 
-  test('finish and save non-proxy submission', async function (assert) {
-    let controller = this.owner.lookup('controller:submissions/new');
-    let submissionHandler = this.owner.lookup('service:submission-handler');
+  let submission;
+  let publication;
+  let model;
+  let comment;
 
-    this.owner.register(
-      'service:current-user',
-      EmberObject.extend({
-        user: { id: 'submitter:test-id' },
-      }),
-    );
-
-    let submissionSaved = false;
-    let submissionEventSaved = false;
-    let publicationSaved = false;
-
-    let submissionEvent = EmberObject.create({
+  hooks.beforeEach(function () {
+    controller = this.owner.lookup('controller:submissions/new');
+    submissionHandler = this.owner.lookup('service:submission-handler');
+    workflowService = this.owner.lookup('service:workflow');
+    submissionSaved = false;
+    submissionEventSaved = false;
+    publicationSaved = false;
+    submissionEvent = EmberObject.create({
       save() {
         submissionEventSaved = true;
         return new Promise((resolve) => resolve(this));
       },
     });
-
     submissionHandler.set(
       'store',
       EmberObject.create({
@@ -45,7 +43,47 @@ module('Unit | Controller | submissions/new', (hooks) => {
         },
       }),
     );
+    publication = EmberObject.create({
+      id: 'pub:0',
+      save() {
+        publicationSaved = true;
+        return new Promise((resolve) => resolve(this));
+      },
+    });
+    comment = 'moo';
+  });
 
+  const setUpSubmissionModel = (submissionArg) => {
+    submission = EmberObject.create({
+      ...submissionArg,
+      save() {
+        submissionSaved = true;
+        return new Promise((resolve) => resolve(this));
+      },
+    });
+    model = EmberObject.create({
+      newSubmission: submission,
+      publication,
+    });
+    const file = EmberObject.create({
+      fileRole: 'manuscript',
+      submission,
+    });
+    workflowService.setFiles([file]);
+  };
+
+  // Replace this with your real tests.
+  test('it exists', function (assert) {
+    assert.ok(controller);
+  });
+
+  test('finish and save non-proxy submission', async function (assert) {
+    this.owner.register(
+      'service:current-user',
+      EmberObject.extend({
+        user: { id: 'submitter:test-id' },
+      }),
+    );
     let repository1 = EmberObject.create({
       id: 'test:repo1',
       integrationType: 'full',
@@ -59,39 +97,15 @@ module('Unit | Controller | submissions/new', (hooks) => {
       _isWebLink: true,
     });
 
-    let submission = EmberObject.create({
+    const submissionBase = EmberObject.create({
       id: 'sub:0',
       submitter: {
         id: 'submitter:test-id',
       },
       metadata: '{}',
       repositories: A([repository1, repository2]),
-      save() {
-        submissionSaved = true;
-        return new Promise((resolve) => resolve(this));
-      },
     });
-
-    let publication = EmberObject.create({
-      id: 'pub:0',
-      save() {
-        publicationSaved = true;
-        return new Promise((resolve) => resolve(this));
-      },
-    });
-
-    let file = EmberObject.create({
-      fileRole: 'manuscript',
-      submission,
-    });
-
-    let comment = 'moo';
-
-    let model = EmberObject.create({
-      newSubmission: submission,
-      files: A([file]),
-      publication,
-    });
+    setUpSubmissionModel(submissionBase);
 
     assert.expect(16);
 
@@ -129,76 +143,27 @@ module('Unit | Controller | submissions/new', (hooks) => {
 
     controller.set('model', model);
     controller.set('comment', comment);
-    controller.set('filesTemp', A());
 
     controller.send('submit');
   });
 
   test('finish and save proxy submission', async function (assert) {
-    let controller = this.owner.lookup('controller:submissions/new');
-    let submissionHandler = this.owner.lookup('service:submission-handler');
-
     this.owner.register(
       'service:current-user',
       EmberObject.extend({
         user: { id: 'submitter:test-proxy-id' },
       }),
     );
-
-    let submissionSaved = false;
-    let submissionEventSaved = false;
-    let publicationSaved = false;
-
-    let submissionEvent = EmberObject.create({
-      save() {
-        submissionEventSaved = true;
-        return new Promise((resolve) => resolve(this));
-      },
-    });
-
-    submissionHandler.set(
-      'store',
-      EmberObject.create({
-        createRecord() {
-          return submissionEvent;
-        },
-      }),
-    );
-
     let repository = EmberObject.create({ id: 'test:repo1', integrationType: 'full' });
 
-    let submission = EmberObject.create({
+    const submissionBase = EmberObject.create({
       id: 'sub:0',
       submitter: {
         id: 'submitter:test-id',
       },
       repositories: A([repository]),
-      save() {
-        submissionSaved = true;
-        return new Promise((resolve) => resolve(this));
-      },
     });
-
-    let publication = EmberObject.create({
-      id: 'pub:0',
-      save() {
-        publicationSaved = true;
-        return new Promise((resolve) => resolve(this));
-      },
-    });
-
-    let file = EmberObject.create({
-      fileRole: 'manuscript',
-      submission,
-    });
-
-    let comment = 'moo';
-
-    let model = EmberObject.create({
-      newSubmission: submission,
-      publication,
-      files: [file],
-    });
+    setUpSubmissionModel(submissionBase);
 
     assert.expect(11);
 
@@ -223,75 +188,26 @@ module('Unit | Controller | submissions/new', (hooks) => {
 
     controller.set('model', model);
     controller.set('comment', comment);
-    controller.set('filesTemp', A());
 
     controller.send('submit');
   });
 
   test('finish and save proxy submission with new user', async function (assert) {
-    let controller = this.owner.lookup('controller:submissions/new');
-    let submissionHandler = this.owner.lookup('service:submission-handler');
-
     this.owner.register(
       'service:current-user',
       EmberObject.extend({
         user: { id: 'submitter:test-proxy-id' },
       }),
     );
-
-    let submissionSaved = false;
-    let submissionEventSaved = false;
-    let publicationSaved = false;
-
-    let submissionEvent = EmberObject.create({
-      save() {
-        submissionEventSaved = true;
-        return new Promise((resolve) => resolve(this));
-      },
-    });
-
-    submissionHandler.set(
-      'store',
-      EmberObject.create({
-        createRecord() {
-          return submissionEvent;
-        },
-      }),
-    );
-
     let repository = EmberObject.create({ id: 'test:repo1', integrationType: 'full' });
 
-    let submission = EmberObject.create({
+    const submissionBase = EmberObject.create({
       id: 'sub:0',
       submitterName: 'test name',
       submitterEmail: 'mailto:test@email.com',
       repositories: A([repository]),
-      save() {
-        submissionSaved = true;
-        return new Promise((resolve) => resolve(this));
-      },
     });
-
-    let publication = EmberObject.create({
-      id: 'pub:0',
-      save() {
-        publicationSaved = true;
-        return new Promise((resolve) => resolve(this));
-      },
-    });
-
-    let file = EmberObject.create({
-      fileRole: 'manuscript',
-      submission,
-    });
-
-    let comment = 'moo';
-
-    let model = EmberObject.create({
-      newSubmission: submission,
-      publication,
-      files: [file],
-    });
+    setUpSubmissionModel(submissionBase);
 
     assert.expect(13);
 
@@ -318,7 +234,6 @@ module('Unit | Controller | submissions/new', (hooks) => {
 
     controller.set('model', model);
     controller.set('comment', comment);
-    controller.set('filesTemp', A());
 
     controller.send('submit');
   });
@@ -342,7 +257,6 @@ module('Unit | Controller | submissions/new', (hooks) => {
     const model = EmberObject.create({
       newSubmission: submission,
     });
-    const controller = this.owner.lookup('controller:submissions/new');
 
     controller.set('model', model);
 
@@ -384,7 +298,6 @@ module('Unit | Controller | submissions/new', (hooks) => {
     const model = EmberObject.create({
       newSubmission: submission,
     });
-    const controller = this.owner.lookup('controller:submissions/new');
 
     controller.set('model', model);
 

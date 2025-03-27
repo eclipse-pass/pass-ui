@@ -23,7 +23,6 @@ export default class SubmissionsNew extends Controller {
   @tracked user = this.currentUser.user;
   @tracked submitter = this.model.newSubmission.submitter;
   @tracked covid = null;
-  @tracked filesTemp = this.workflow.filesTemp;
 
   async userIsSubmitter() {
     const submitter = await this.model.newSubmission.submitter;
@@ -83,8 +82,8 @@ export default class SubmissionsNew extends Controller {
 
   @action
   async submit() {
-    let manuscriptFiles = []
-      .concat(this.filesTemp, this.model.files && this.model.files.slice(), this.store.peekAll('file'))
+    let manuscriptFiles = this.workflow
+      .getFiles()
       .filter((file) => file && file.fileRole === 'manuscript')
       .filter((file) => file.submission.id === this.model.newSubmission.id);
 
@@ -106,18 +105,17 @@ export default class SubmissionsNew extends Controller {
     } else {
       let sub = this.model.newSubmission;
       let pub = this.model.publication;
-      let files = this.filesTemp;
       let comment = this.comment;
 
       this.set('uploading', true);
       this.set('waitingMessage', 'Saving your submission');
 
       await this.submissionHandler.submit
-        .perform(sub, pub, files, comment)
+        .perform(sub, pub, comment)
         .then(() => {
           set(this, 'uploading', false);
           set(this, 'comment', '');
-          set(this, 'workflow.filesTemp', []);
+          set(this, 'workflow.files', []);
           this.router.transitionTo('thanks', { queryParams: { submission: sub.id } });
         })
         .catch((error) => {
