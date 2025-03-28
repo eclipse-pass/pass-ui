@@ -38,7 +38,7 @@ export default class SubmissionsIndex extends Controller {
   constructor() {
     super(...arguments);
 
-    this.faqUrl = this.staticConfig.config.branding.pages.faqUrl;
+    this.faqUrl = this.staticConfig.config?.branding?.pages?.faqUrl;
   }
 
   // Columns displayed depend on the user role

@@ -33,6 +33,8 @@ export default class CheckSessionRouteRoute extends Route {
     if ([401, 403].includes(Number(errorObject.status))) {
       this.session.set('attemptedTransition', transition);
       await this.session.invalidate();
+    } else {
+      this.errorHandler.handleError(error);
     }
   }
 }

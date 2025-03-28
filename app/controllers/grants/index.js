@@ -15,7 +15,7 @@ export default class GrantsIndexController extends Controller {
   constructor() {
     super(...arguments);
 
-    this.faqUrl = this.staticConfig.config.branding.pages.faqUrl;
+    this.faqUrl = this.staticConfig.config?.branding?.pages?.faqUrl;
   }
 
   // TODO Reduce duplication in column definitions
