@@ -35,7 +35,7 @@ export default class ErrorHandlerService extends Service {
     } else if (error.status == 403 || error.payload == 403) {
       // Some authorization issue
       this.handleAuthorizationProblem(error);
-    } else if (error.status == 404) {
+    } else if (error.status == 404 || error.message?.includes('returned a 404')) {
       // Failure to find a resource
       this.handleNotFound(error);
     } else {
