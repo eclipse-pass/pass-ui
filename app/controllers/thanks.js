@@ -14,6 +14,6 @@ export default class ThanksController extends Controller {
   constructor() {
     super(...arguments);
 
-    this.faqUrl = this.staticConfig.config.branding.pages.faqUrl;
+    this.faqUrl = this.staticConfig.config?.branding?.pages?.faqUrl;
   }
 }
