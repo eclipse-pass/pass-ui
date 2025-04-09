@@ -374,7 +374,6 @@ export default class SubmissionsDetail extends Controller {
     if (!validResults && reposWithAgreementText.length > 0) {
       return;
     }
-    console.log(result.value);
     let reposThatUserAgreedToDeposit = reposWithAgreementText.filter((repo, index) => {
       if (result.value[index] === 1) {
         return repo;
