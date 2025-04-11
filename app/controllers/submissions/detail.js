@@ -28,9 +28,8 @@ export default class SubmissionsDetail extends Controller {
   @tracked externalRepoMap = {};
   @tracked _hasVisitedWeblink = null;
 
-  @computed('model.files')
   get submissionFiles() {
-    return get(this, 'model.files');
+    return this.model.files;
   }
 
   @computed('model.sub', 'model.sub.submitter.firstName')
