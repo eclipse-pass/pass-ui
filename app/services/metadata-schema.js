@@ -1,358 +1,160 @@
 /* eslint-disable ember/classic-decorator-no-classic-methods, ember/no-get, ember/no-string-prototype-extensions */
 import Service, { inject as service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
-import Ajv from 'ajv'; // https://github.com/epoberezkin/ajv
-import _ from 'lodash';
+import surveySchema from './schema/surveyjs.json';
+import repositorySchemas from './schema/repository.json';
 
 /**
- * Service to manipulate Alpaca schemas
+ * Service to manipulate metadata formschemas
  */
 
 export default class MetadataSchemaService extends Service {
-  // JSON schema validator
-  validator = undefined;
-
   constructor() {
     super(...arguments);
-    /**
-     * We can adjust logging for the JSON schema validator here.
-     *
-     * Currently, logging is simply disabled.
-     *
-     * We could set 'logger' to an object with `log`, `warn`, and `error` functions
-     * to handle these things, if there is a need.
-     *
-     * 'addUsedSchema' option allows us to provide the full JSON schema object to the validate function
-     * of AJV without complaints. Without this option, the validate function will report an error because
-     * AJV does not like compiling a JSON schema that it already knows about (based on the schema's '$id').
-     * Speed can be improved if we enable this feature, then selectively add JSON schemas to avoid
-     * the re-compile step.
-     */
-    this.set(
-      'validator',
-      new Ajv({
-        logger: false,
-        addUsedSchema: false,
-      }),
-    );
   }
 
   /**
-   * Get the service URL with query parameters
-   * @param ids {Array} list of IDs
-   * @param merge {boolean} should the schemas be merged?
-   */
-  url(ids, merge) {
-    return `${ENV.schemaServicePath}?entityIds=${ids.join(',')}&merge=${merge}`;
-  }
-
-  /**
-   * First try to get a single merged schema that combines all repository schema.
-   * If that request fails, retry the request, but without trying to merge the schema.
-   *
-   * If the schema service fails to merge, it should return a 409 error. Any other error
-   * will likely have an unknown cause and may not be recoverable.
+   * Return SurveyJS schema for the given repositories.
    *
    * @param {array} repositories list of repository URIs
-   * @returns {array} list of schemas relevant to the given repositories
-   */
-  async getMetadataSchemas(repositories) {
-    if (!repositories) {
-      return [];
-    }
-
-    const areObjects = repositories.map((repos) => typeof repos).includes('object');
-    if (areObjects) {
-      // If we've gotten repository objects, map them to their IDs
-      repositories = repositories.map((repo) => repo.id);
-    }
-
-    const options = {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8',
-        'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN\=([^;]*)/)['1'],
-      },
-    };
-
-    if (!Array.isArray(repositories) || repositories.length === 0) {
-      return [];
-    }
-
-    try {
-      let response = await this._fetchSchemas(this.url(repositories, true), options);
-      if (response.status >= 400) {
-        response = await this._fetchSchemas(this.url(repositories, false), options);
-      }
-      const data = await response.json();
-
-      return data;
-    } catch (e) {
-      // Unknown error
-      const msg = `Unknown error fetching merged metadata schema: ${e}`;
-      // console.log(`msg \n${response}`, 'color:red;');
-      throw new Error(msg);
-    }
-  }
-
-  _fetchSchemas(url, options) {
-    return fetch(url, options);
-  }
-
-  /**
-   * Add data to a metadata form schema to be prepopulated in the rendered form. Optionally
-   * force these fields to be read-only.
-   *
-   * @param {object} schema metadata (form) schema
-   * @param {object} data display data to add to the schema
    * @param {array} readonly list of properties that should be marked as read-only
-   * @Returns {object} the modified schema
+   * @returns schema relevant to the given repositories
    */
-  addDisplayData(schema, data, readonly) {
-    if (!schema.data) {
-      schema.data = {};
-      schema.data.authors = [{}];
-    }
-    // Will merge 'data' onto 'schema.data'. 'schema.data' values may be overwritten by values from 'data'
-    schema.data = Object.assign(schema.data, data);
+  getMetadataSchema(repositories, readonly) {
+    // Each repository identifies a set of schemas which specify metadata fields for the user to fill out.
+    // The repositorySchemas object contains this mapping and also indicate whether or not the field is
+    // required or conditionally required. The surveySchema object is a SurveyJS schema which contains
+    // every field which could be filled out.
 
-    if (readonly && readonly.length > 0) {
-      /**
-       * For each key in the data object, if they are marked as "read only"
-       * set the field's 'readonly' to true, and 'toolbarSticky' to false iff the
-       * key refers to an array
-       */
-      Object.keys(data)
-        .filter((key) => readonly.includes(key))
-        .forEach((key) => {
-          if (key in schema.options.fields) {
-            if (Array.isArray(data[key])) {
-              schema.options.fields[key].toolbarSticky = false;
-            }
-            schema.options.fields[key].readonly = true;
+    if (!repositories) {
+      return null;
+    }
+
+    // Get schemas being used for metadata.
+    let schemas = Array.from(new Set(repositories.flatMap((repo) => repo.schemas)));
+
+    // Try to normalize schema URIs to keys that can be looked up.
+    schemas = schemas.map((schema) => {
+      let slash_index = schema.lastIndexOf('/');
+      let dot_index = schema.lastIndexOf('.');
+
+      if (slash_index == -1 || dot_index == -1) {
+        return schema;
+      }
+
+      return schema.substring(slash_index + 1, dot_index);
+    });
+
+    // Make sure the common schema is first so that fields are in order.
+
+    if (schemas.includes('common')) {
+      schemas = ['common'].concat(schemas.filter((schema) => schema != 'common'));
+    }
+
+    // Map schema field names to elements from surveySchema.
+    // Use Map to preserve order.
+    let elementMap = new Map();
+
+    for (const schema of schemas) {
+      if (!(schema in repositorySchemas)) {
+        console.log('Warning: Schema %s not found', schema);
+        continue;
+      }
+
+      for (const field of repositorySchemas[schema]) {
+        let element = elementMap.get(field.name);
+
+        if (!element) {
+          // Copy element from surveySchema
+
+          element = surveySchema.elements.find((e) => e.name === field.name);
+
+          if (!element) {
+            console.log('Warning: Element %s not found in survey schema', field.name);
+            continue;
           }
-        });
+
+          element = Object.assign({}, element);
+          elementMap.set(field.name, element);
+
+          // Handle readonly fields
+
+          if (readonly && readonly.includes(field.name)) {
+            element.readOnly = true;
+          }
+        }
+
+        // Handle merge of required and requiredIf
+        // Give precendence to required
+
+        if ('required' in field && field.required) {
+          element.isRequired = true;
+          delete element.requiredIf;
+        } else if ('requiredIf' in field) {
+          if ('requiredIf' in element) {
+            console.log('Warning: requireIf merge not supported on %s', field.name);
+          }
+
+          element.requiredIf = field.requiredIf;
+        }
+      }
+    }
+
+    let schema = {};
+    schema.elements = Array.from(elementMap.values());
+
+    // Add toplevel poperties from surveySchema
+    for (const key in surveySchema) {
+      if (key != 'elements') {
+        schema[key] = surveySchema[key];
+      }
     }
 
     return schema;
   }
 
   /**
-   * Map a JSON schema to on that Alpaca will recognize.
+   * Get all field names of a SurveyJS schema.
    *
-   * If a field of `type: 'array'` is marked as `required` in the schema, remove that
-   * required status only for the alpacafied schema.
-   *
-   * @param {object} schema JSON schema from the schema service
-   */
-  alpacafySchema(schema) {
-    if (!schema.hasOwnProperty('definitions')) {
-      return schema;
-    }
-
-    Object.keys(schema.definitions.form.properties)
-      .filter((key) => schema.definitions.form.properties[key].type === 'array')
-      .forEach((key) => {
-        const req = schema.definitions.form.required;
-        if (Array.isArray(req) && req.includes(key)) {
-          req.splice(req.indexOf(key), 1);
-        }
-      });
-
-    return {
-      schema: schema.definitions.form,
-      options: schema.definitions.options || schema.definitions.form.options,
-    };
-  }
-
-  /**
-   * Remove the schema's title to avoid showing it in the UI
-   *
-   * @param {object} schema JSON schema
-   */
-  untitleSchema(schema) {
-    delete schema.definitions.form.title;
-    return schema;
-  }
-
-  validate(schema, data) {
-    return this.validator.validate(schema, data);
-  }
-
-  getErrors() {
-    return this.validator.errors;
-  }
-
-  /**
-   * Turn a property returned by something like Ajv into its title.
-   * Ideally this would be looked up in the schema instead, but the general case is complicated.
-   */
-  getPropertyTitle(property) {
-    // ab-cd -> abCd
-    let title = property.replace(/-\w/g, (s) => s.charAt(1).toUpperCase());
-
-    // Clean out non-word characters
-    title = property.replace(/\W/g, '');
-
-    // Turn into words
-    title = title.replace(/[A-Z]/g, (s) => ' ' + s).trim();
-
-    // Capitalize first word
-    title = title.charAt(0).toUpperCase() + title.slice(1);
-
-    return title;
-  }
-
-  /**
-   * Return a human readable message describing validation errorss.
-   */
-  getErrorMessage() {
-    return this.validator.errors
-      .map((error) => {
-        if (error.keyword === 'required') {
-          return 'Missing required metadata: ' + this.getPropertyTitle(error.params.missingProperty);
-        } else {
-          return error.message;
-        }
-      })
-      .join(', ');
-  }
-
-  /**
-   * Get all unique field names across a set of schema. This includes any unique field
-   * in schema referenced in the 'allOf' validation sections, unless otherwise specified.
-   *
-   * @param {array} schemas array of schemas
-   * @param {boolean} onlyVisibleFields should this only return rendered fields
-   *                  this will ignore any unique fields that may be present in a linked
-   *                  schema in the 'allOf' section
+   * @param {object}  schema
    * @returns {array} list of unique field keys
    */
-  getFields(schemas, onlyVisibleFields) {
+  getFields(schema) {
     let fields = [];
 
-    schemas
-      .map((schema) => this.alpacafySchema(schema))
-      .forEach((schema) => {
-        Object.keys(schema.schema.properties)
-          .filter((key) => !fields.includes(key))
-          .forEach((key) => fields.push(key));
-      });
-
-    // Return early
-    if (onlyVisibleFields) {
-      return fields;
-    }
-
-    /**
-     * Add fields from properties defined in schema.allOf
-     * Make sure the top level `schema.additionalProperties` is not explicitly set to FALSE
-     */
-    schemas
-      .filter((schema) => schema.additionalProperties !== false && schema.allOf)
-      .map((schema) => schema.allOf)
-      .forEach((allOf) => {
-        allOf
-          .filter((schema) => schema.properties) // Make sure the schema has a 'properties' property
-          .map((schema) => schema.properties) // Operate on schema.properties
-          .forEach((props) => {
-            Object.keys(props)
-              .filter((key) => !fields.includes(key))
-              .forEach((key) => fields.push(key));
-          });
-      });
+    schema.elements.forEach((element) => {
+      fields.push(element.name);
+    });
 
     return fields;
   }
 
   /**
-   * Get a "title" value for a schema property. If a 'title' property exists, use that value. If
-   * one does not exist, format the key.
+   * Get all possible field names.
    *
-   * @param {Object} property a schema property
-   * @param {string} key the property key
-   * @returns {string} the property title, if one exists, or a formatted version of the properties key
+   * @returns {array} list of all field keys in the survey schema
    */
-  propertyTitle(property, key) {
-    return property.title || _.capitalize(key.replace('-', ' '));
+  getAllFields() {
+    return this.getFields(surveySchema);
   }
 
   /**
-   * Return map from field key to field title. Use title from the schema or
-   * just munge the key. Fields from additional schemas in `schema.allOf`
-   * should be added to the map as well.
+   * Return map from field key to field title.
    *
    * @param {array} schemas array of schemas
    */
-  getFieldTitleMap(schemas) {
+  getFieldTitleMap(schema) {
     let map = {};
 
-    schemas.forEach((schema) => {
-      let props = schema.definitions.form.properties;
-
-      Object.keys(props).forEach((key) => {
-        map[key] = this.propertyTitle(props[key], key);
-      });
-
-      /**
-       * Note: additionalProperties: undefined (or if it does not exist)
-       * should count as truthy
-       * See logic from #getFields
-       */
-      if (schema.additionalProperties !== false && Array.isArray(schema.allOf)) {
-        schema.allOf
-          .filter((schema) => schema.properties)
-          .map((schema) => schema.properties)
-          .forEach((props) => {
-            Object.keys(props).forEach((key) => {
-              if (!map.hasOwnProperty(key)) {
-                map[key] = this.propertyTitle(props[key], key);
-              }
-            });
-          });
-      }
+    schema.elements.forEach((element) => {
+      map[element.name] = element.title;
     });
 
     return map;
   }
 
   /**
-   * Merge data from metadata blob2 into metadata blob1 and output the result as a new
-   * object (this operation will not mutate either input objects). Think of this merge
-   * as overwriting values from 'blob2' in 'blob1' to get the output blob.
-   *
-   * A list of fields can be provided specifying the field keys that can be deleted
-   * during this merge - it is possible to have keys that are _required_ for various
-   * business logic reasons. Defining this list will make it so that if a key is NOT
-   * present in 'blob2' and IS present in the 'deletableFields' list, then that key
-   * will be deleted from the merged blob. If you do not want _any_ fields to be
-   * able to be deleted from the merged blob, 'deletableFields' can be UNDEFINED or
-   * an empty array.
-   *
-   * Impl note: each blob now has a default value set of an empty object because
-   * Object.assign will die if any arguments is undefined
-   *
-   * @param {object} blob1 arbitrary JSON object representing metadata for a submission
-   * @param {object} blob2 arbitrary JSON object representing metadata for a submission
-   * @param {array} deletableFields list of keys that can be deleted
-   *                if UNDNEFINED, assume that no fields can be deleted
-   */
-  mergeBlobs(blob1 = {}, blob2 = {}, deletableFields) {
-    let blob = Object.assign(blob1, blob2);
-
-    if (Array.isArray(deletableFields) && deletableFields.length > 0) {
-      // Filter out only keys that DO NOT appear in "blob2" and DO appear in the deletableFields list
-      Object.keys(blob)
-        .filter((key) => !(key in blob2) && deletableFields.includes(key))
-        .forEach((key) => delete blob[key]);
-    }
-
-    return blob;
-  }
-
-  /**
-   * Get a metadata blob containing information about repository agreements. The resulting
-   * object can be merged into the larger metadata blob with #mergeBlobs.
+   * Get a metadata blob containing information about repository agreements.
    *
    * @param {object} repositories list of Repository model objects
    * @returns {
@@ -451,8 +253,7 @@ export default class MetadataSchemaService extends Service {
     ];
 
     const repos = await submission.repositories;
-    const schemas = await this.getMetadataSchemas(repos);
-    const titleMap = this.getFieldTitleMap(schemas);
+    const titleMap = this.getFieldTitleMap(surveySchema);
     const metadata = JSON.parse(submission.metadata);
 
     const result = [];

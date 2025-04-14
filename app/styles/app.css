@@ -1,4 +1,3 @@
-@import url('core-ui.css');
 @import url('font-awesome-5-0-13.css');
 @import url('workflow-wrapper.css');
 @import url('workflow-review.css');
@@ -289,28 +288,6 @@ td {
   min-width: 250px !important;
 }
 
-/*
-* Custom alpaca css for bs4
-*/
-
-.alpaca-invalid > input,
-.alpaca-invalid > textarea,
-.alpaca-invalid > select {
-  border-color: #dc3545;
-}
-
-/* stylelint-disable selector-class-pattern */
-.alpaca-message-notOptional {
-  display: none;
-}
-/* stylelint-enable selector-class-pattern */
-
-.alpaca-required-indicator {
-  margin-left: 5px;
-  color: #777;
-  font-size: 80%;
-}
-
 /* stylelint-disable font-family-no-missing-generic-family-keyword */
 .glyphicon {
   font-family: FontAwesome;
@@ -336,18 +313,6 @@ td {
 
 .glyphicon-info-sign::before {
   content: '\f05a';
-}
-
-.alpaca-container {
-  width: 100%;
-}
-
-.alpaca-container .md-pubtype label {
-  display: block;
-}
-
-.alpaca-container .md-pubtype .radio input[type='radio'] {
-  margin: 0 8px;
 }
 
 .help-block {
@@ -388,10 +353,6 @@ input[type='date']::-webkit-outer-spin-button {
 #on-behalf-of-block label {
   margin-bottom: 0;
 }
-
-/*
-* End Alpaca
-*/
 
 body {
   font-size: 1em !important;

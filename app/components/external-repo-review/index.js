@@ -61,7 +61,7 @@ export default class ExternalRepoReviewComponent extends Component {
         if (value.dismiss) {
           return; // Don't redirect
         }
-        $('#externalSubmission').modal('hide');
+        swal.close();
         const win = window.open(repo.url, '_blank');
         if (win) {
           win.focus();

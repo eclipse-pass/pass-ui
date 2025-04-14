@@ -37,8 +37,6 @@
     "@fortawesome/free-regular-svg-icons": "^6.5.2",
     "@glimmer/component": "^1.1.2",
     "@glimmer/tracking": "^1.1.2",
-    "ajv": "^6.12.6",
-    "alpaca": "1.5.24",
     "bootstrap": "5.0.0",
     "ember-bootstrap": "^6.3.2",
     "ember-composable-helpers": "^5.0.0",
@@ -58,9 +56,10 @@
     "ember-resolver": "^11.0.1",
     "ember-simple-auth": "^6.0.0",
     "ember-tether": "^3.1.0",
-    "jquery": "3.6.4",
     "loader.js": "^4.7.0",
     "popper.js": "^1.16.1",
+    "survey-core": "^2.0.0",
+    "survey-js-ui": "^2.0.0",
     "sweetalert2": "11.17.2"
   },
   "devDependencies": {

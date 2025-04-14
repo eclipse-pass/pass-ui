@@ -17,7 +17,7 @@ export default class WorkflowBasics extends Component {
   @service workflow;
   @service currentUser;
   @service('doi') doiService;
-  @service metadataSchema;
+  @service('metadata-schema') schemaService;
   @service appStaticConfig;
   @service flashMessages;
 
@@ -28,7 +28,6 @@ export default class WorkflowBasics extends Component {
   @alias('args.publication') publication;
   @alias('args.submission') submission;
   @alias('args.preLoadedGrant') preLoadedGrant;
-  @alias('args.doiInfo') doiInfo;
   @alias('args.journal') journal;
   @alias('args.flaggedFields') flaggedFields;
 
@@ -111,8 +110,7 @@ export default class WorkflowBasics extends Component {
     this.lookupDOI.perform(setPublication);
     /**
      * If a Journal object exists in the model, then we have loaded an existing Submission
-     * with a Publication and a Journal. We need to make sure that this journal makes it
-     * into 'doiInfo' so it can be used in later steps.
+     * with a Publication and a Journal.
      *
      * Only do this if there is no publication DOI, as the DOI lookup will cover this case.
      */
@@ -152,7 +150,7 @@ export default class WorkflowBasics extends Component {
 
     if (workflow.isDataFromCrossref()) {
       workflow.setFromCrossref(false);
-      this.args.updateDoiInfo({});
+      workflow.setReadOnlyProperties([]);
       this.submission.metadata = '{}';
       this.clearPublication(doi);
     }
@@ -238,16 +236,12 @@ export default class WorkflowBasics extends Component {
    */
   @action
   selectJournal(journal) {
-    let doiInfo = this.doiInfo;
     // Formats metadata and adds journal metadata
-    let metadata = this.doiService.doiToMetadata(doiInfo, journal);
-    metadata['journal-title'] = get(journal, 'journalName');
-    doiInfo = this.metadataSchema.mergeBlobs(doiInfo, metadata);
+    let metadata = this.doiService.doiToMetadata({}, journal, this.schemaService.getAllFields());
+    metadata['journal-title'] = journal.journalName;
+    this.submission.metadata = JSON.stringify(metadata);
 
-    this.args.updateDoiInfo(doiInfo);
-
-    const publication = this.publication;
-    publication.journal = journal;
+    this.publication.journal = journal;
     this.args.validateJournal();
   }
 
@@ -294,8 +288,15 @@ export default class WorkflowBasics extends Component {
         this.args.updatePublication(result.publication);
       }
 
-      this.args.updateDoiInfo(result.doiInfo);
-      get(this, 'workflow').setFromCrossref(true);
+      let metadata = this.doiService.doiToMetadata(
+        result.doiInfo,
+        result.publication.journal,
+        this.schemaService.getAllFields(),
+      );
+      metadata['journal-title'] = result.publication.journal.get('journalName');
+      this.submission.metadata = JSON.stringify(metadata);
+
+      this.workflow.setFromCrossref(true);
 
       this.flashMessages.success("We've pre-populated information from the DOI provided!");
       this.args.validateTitle();

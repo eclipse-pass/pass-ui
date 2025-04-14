@@ -9,7 +9,7 @@ export default class PublicationModel extends Model {
   @attr('string') issue;
   @attr('string') pmid;
 
-  @belongsTo('journal', { async: false, inverse: null, autoSave: true }) journal;
+  @belongsTo('journal', { async: true, inverse: null, autoSave: true }) journal;
   get abstract() {
     return this.publicationAbstract;
   }

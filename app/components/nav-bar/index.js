@@ -18,6 +18,7 @@ export default class NavBar extends Component {
   @tracked aboutUrl = null;
   @tracked contactUrl = null;
   @tracked faqUrl = null;
+  @tracked isUserMenuOpen = false;
 
   constructor() {
     super(...arguments);
@@ -62,4 +63,9 @@ export default class NavBar extends Component {
       this.faqUrl = config.branding.pages.faqUrl;
     }
   };
+
+  @action
+  toggleUserMenu() {
+    this.isUserMenuOpen = !this.isUserMenuOpen;
+  }
 }

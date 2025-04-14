@@ -1,0 +1,103 @@
+{
+    "checkErrorsMode": "onValueChanged",
+    "elements": [
+        {
+            "name": "abstract",
+            "type": "comment",
+            "title": "Abstract"
+        },
+        {
+            "name": "authors",
+            "type": "paneldynamic",
+            "title": "Authors",
+            "templateElements": [
+                {
+                    "name": "author",
+                    "type": "text",
+                    "title": "Author",
+                    "isRequired": true
+                },
+                {
+                    "name": "orcid",
+                    "type": "text",
+                    "title": "ORCiD"
+                }
+            ]
+        },
+        {
+            "name": "Embargo-end-date",
+            "type": "text",
+            "title": "Embargo end date",
+            "inputType": "date",
+            "visibleIf": "{under-embargo}",
+            "requiredIf": "{under-embargo}"
+        },
+        {
+            "name": "issue",
+            "type": "text",
+            "title": "Journal issue"
+        },
+        {
+            "name": "issns",
+            "type": "paneldynamic",
+            "title": "ISSN Information",
+            "templateElements": [
+                {
+                    "name": "issn",
+                    "type": "text",
+                    "title": "ISSN",
+                    "isRequired": true
+                },
+                {
+                    "name": "pubType",
+                    "type": "dropdown",
+                    "title": "Publication Type",
+                    "defaultValue": "Print",
+                    "choices": [
+                        "Print",
+                        "Online"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "journal-NLMTA-ID",
+            "type": "text",
+            "title": "NTMLA",
+            "description": "NLM identifier for a journal"
+        },
+        {
+            "name": "journal-title",
+            "type": "text",
+            "title": "Journal Title"
+        },
+        {
+            "name": "publicationDate",
+            "type": "text",
+            "title": "Publication Date",
+            "inputType": "date"
+        },
+        {
+            "name": "publisher",
+            "type": "text",
+            "title": "Publisher"
+        },
+        {
+            "name": "title",
+            "type": "text",
+            "title": "Article / Manuscript Title"
+        },
+        {
+            "name": "under-embargo",
+            "type": "boolean",
+            "title": "Under Embargo",
+            "description": "The material being submitted is published under an embargo.",
+            "defaultValue": false
+        },
+        {
+            "name": "volume",
+            "type": "text",
+            "title": "Journal Volume"
+        }
+    ]
+}

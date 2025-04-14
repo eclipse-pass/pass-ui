@@ -1,0 +1,73 @@
+{
+  "common": [
+   {
+    "name": "title"
+   },
+   {
+    "name": "journal-title"
+   },
+   {
+    "name": "volume"
+   },
+   {
+    "name": "issue"
+   },
+   {
+    "name": "issns"
+   },
+   {
+    "name": "publisher"
+   },
+   {
+    "name": "publicationDate"
+   },
+   {
+    "name": "abstract"
+   }, 
+   {
+    "name": "authors"
+   },
+   {
+    "name": "under-embargo"
+   },
+   {
+    "name": "Embargo-end-date"
+   }
+  ], "nihms": [
+    {
+        "name": "title",
+        "required": true
+    }, {
+        "name": "journal-title",
+        "required": true
+    }, {
+        "name": "journal-NLMTA-ID",
+        "requiredIf": "{issns} empty"
+    }, {
+        "name": "issns",
+        "requiredIf": "{journal-NLMTA-ID} empty"
+    }
+  ], "jscholarship": [
+    {
+        "name": "title",
+        "required": true
+    }, {
+        "name": "authors",
+        "required": true
+    }, {
+        "name": "publicationDate",
+        "required": true
+    }
+  ], "inveniordm": [
+    {
+        "name": "title",
+        "required": true
+    }, {
+        "name": "authors",
+        "required": true
+    }, {
+        "name": "publicationDate",
+        "required": true
+    }
+  ]
+}

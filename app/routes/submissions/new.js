@@ -55,8 +55,8 @@ export default class NewRoute extends CheckSessionRoute {
       newSubmission = await this.store.findRecord('submission', params.submission, {
         include: 'publication.journal,submitter',
       });
-      publication = await newSubmission.get('publication');
-      journal = publication.get('journal');
+      publication = await newSubmission.publication;
+      journal = await publication.journal;
 
       submissionEvents = this.store.query('submissionEvent', {
         filter: {
@@ -69,12 +69,6 @@ export default class NewRoute extends CheckSessionRoute {
         .query('file', fileForSubmissionQuery(newSubmission.id))
         .then((files) => [...files.slice()]);
       this.workflow.setFiles(files);
-
-      // Also seed workflow.doiInfo with metadata from the Submission
-      const metadata = newSubmission.get('metadata');
-      if (metadata) {
-        this.workflow.setDoiInfo(JSON.parse(metadata));
-      }
     } else {
       // Starting a new submission
 

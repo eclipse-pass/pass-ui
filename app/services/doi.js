@@ -161,8 +161,6 @@ export default class DoiService extends Service {
         .forEach((key) => delete doiCopy[key]);
     }
 
-    doiCopy.$schema = ENV.doiMetadataSchemaUri;
-
     return doiCopy;
   }
 
