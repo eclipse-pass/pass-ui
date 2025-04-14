@@ -83,7 +83,7 @@ export default class SubmissionHandlerService extends Service {
 
       if (agreemd) {
         let md = JSON.parse(submission.get('metadata'));
-        get(this, 'schemaService').mergeBlobs(md, agreemd);
+        Object.assign(md, agreemd);
         submission.set('metadata', JSON.stringify(md));
       }
 
@@ -156,7 +156,7 @@ export default class SubmissionHandlerService extends Service {
 
     if (agreemd) {
       let md = JSON.parse(submission.get('metadata'));
-      this.schemaService.mergeBlobs(md, agreemd);
+      Object.assign(md, agreemd);
       submission.set('metadata', JSON.stringify(md));
     }
 

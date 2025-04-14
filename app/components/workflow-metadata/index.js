@@ -10,11 +10,6 @@ import ENV from 'pass-ui/config/environment';
 /**
  * The schema service is invoked to retrieve appropriate metadata forms.
  *
- * 'currentSchema' is recalculated every time 'currentFormStep' is changed, which
- * includes when the schemas are initially loaded. During this recalculation, the
- * schema is processed to include any data for fields that we already have information
- * present in the submission metadata blob.
- *
  * When a user first enters this step, metadata is pulled from the known DOI blob, if
  * one exists. That metadata is processed to be compliant with known schemas. This becomes
  * the submission metadata blob. Form fields for each metadata schema are prepopulated
@@ -29,138 +24,40 @@ export default class WorkflowMetadata extends Component {
   @service metadataSchema;
   @service doi;
 
-  @tracked doiInfo = this.workflow.doiInfo;
-  @tracked readOnlyProperties = [];
-  @tracked schemas = undefined;
   @tracked metadata = {};
+  @tracked schema = null;
   @tracked missingRequiredJournal = false;
-  @tracked currentFormStep = 0; // Current step #
-
-  /**
-   * Schema that is currently being shown to the user
-   */
-
-  get currentSchema() {
-    const schemas = this.schemas;
-    if (schemas && schemas.length > 0) {
-      const newSchema = this.preprocessSchema(schemas[this.currentFormStep]);
-      return newSchema;
-    }
-    return false;
-  }
-
-  get onlySingleSchema() {
-    return this.schemas.length === 1;
-  }
-
-  get displayFormStep() {
-    return this.currentFormStep + 1;
-  }
 
   constructor() {
     super(...arguments);
 
-    let md;
     try {
-      md = JSON.parse(this.args.submission.metadata);
+      this.metadata = JSON.parse(this.args.submission.metadata);
     } catch (e) {
-      // console.log(e);
-      // Do nothing
-    } finally {
-      this.metadata = md || {};
-      this.setReadOnly({});
+      console.log('Error: Submission metadata invalid');
+      this.metadata = {};
     }
   }
 
   @task
-  setupSchemas = function* () {
-    // doi:10.1002/0470841559.ch1
-    // 10.4137/CMC.S38446
-    // 10.1039/c7an01256j
-    if (!this.schemas) {
+  setupSchema = function* () {
+    // DOIs for testing: 10.1002/0470841559.ch1, 10.4137/CMC.S38446, 10.1039/c7an01256j
+    if (!this.schema) {
       const repositories = yield this.args.submission.repositories;
-      const repoIds = repositories.map((repo) => repo.id);
+      this.schema = this.metadataSchema.getMetadataSchema(repositories, this.workflow.getReadOnlyProperties());
 
-      // Load schemas by calling the Schema service
-      try {
-        const schemas = yield this.metadataSchema.getMetadataSchemas(repoIds);
-
-        const requiresJournal =
-          schemas.findIndex((schema) => 'required' in schema && schema.required.includes('journal-title')) != -1;
-        const doiInfo = this.doiInfo;
-        const journal = yield this.args.publication.journal;
-
-        this.missingRequiredJournal = requiresJournal && !journal;
-
-        // Add relevant fields from DOI data to submission metadata
-        const metadataFromDoi = this.doi.doiToMetadata(doiInfo, journal, this.metadataSchema.getFields(schemas));
-
-        if (this.workflow.isDataFromCrossref()) {
-          this.setReadOnly(metadataFromDoi);
-        }
-
-        this.updateMetadata(metadataFromDoi);
-
-        this.schemas = schemas;
-        this.currentFormStep = 0;
-      } catch (e) {
-        console.log('%cFailed to get schemas', 'color:red;');
-        console.log(e);
-      }
+      // If journal-title is required, assume a repository requires an existing journal be selected in basics step
+      const requiresJournal =
+        this.schema.elements.findIndex((el) => el.name === 'journal-title' && 'isRequired' in el && el.isRequired) !=
+        -1;
+      const journal = yield this.args.publication.journal;
+      this.missingRequiredJournal = requiresJournal && !journal;
     }
   };
 
-  /**
-   * Set the object keys as read-only metadata fields. This assumes that incoming metadata captured
-   * before this component is reached is read-only such as Crossref metadata or title/journal
-   * from the first step of the workflow
-   *
-   * @param {object} metadata
-   */
-  setReadOnly(metadata) {
-    this.readOnlyProperties = Object.keys(metadata);
-  }
-
   @action
-  nextForm(metadata) {
-    const step = this.currentFormStep;
-    this.updateMetadata(metadata, true);
-    this.hintsCleanup();
-
-    const metadataSchema = this.metadataSchema;
-    const schema = this.schemas[this.currentFormStep];
-
-    const validation = metadataSchema.validate(schema, this.metadata);
-
-    if (!validation) {
-      console.log('%cError(s) found while validating data', 'color:red;');
-      console.log(metadataSchema.getErrors());
-
-      swal.fire({
-        target: ENV.APP.rootElement,
-        icon: 'error',
-        title: 'Form Validation Error',
-        html: metadataSchema.getErrorMessage(),
-      });
-      return;
-    }
-
-    if (step >= this.schemas.length - 1) {
-      this.finalizeMetadata(metadata);
-      this.args.next();
-    } else {
-      this.currentFormStep = step + 1; // Changing step # will update current schema
-    }
-  }
-
-  @action
-  previousForm(metadata) {
-    const step = this.currentFormStep;
-    if (step > 0) {
-      this.currentFormStep = step - 1; // Changing step # will update current schema
-    } else {
-      this.args.back();
-    }
+  back() {
+    this.args.back();
   }
 
   @action
@@ -168,122 +65,14 @@ export default class WorkflowMetadata extends Component {
     this.args.abort();
   }
 
-  /**
-   * Process schema before displaying it to the user. Tasks during processing includes pre-populating
-   * appropriate data fields from current metadata, setting read-only fields, etc.
-   *  - Remove title of schema if there is only a single one to display
-   */
-  preprocessSchema(schema) {
-    const service = this.metadataSchema;
+  @action
+  next(newMetadata) {
+    const submission = this.args.submission;
 
-    if (this.onlySingleSchema) {
-      schema = service.untitleSchema(schema);
-    }
+    newMetadata.agent_information = this.getBrowserInfo();
+    submission.metadata = JSON.stringify(newMetadata);
 
-    let processed = service.alpacafySchema(schema);
-
-    const metadata = this.metadata;
-    const readonly = this.readOnlyProperties;
-
-    return service.addDisplayData(processed, metadata, readonly);
-  }
-
-  /**
-   * Add/update data in the current submission metadata blob based on information provided
-   * by a user from a metadata form. New metadata will be merged with the current metadata
-   * blob.
-   *
-   * Impl note:
-   * - The structure of the 'newMetadata' blob is determined by 'components/metadata-form.js'. Its
-   * metadata is provided to the #nextForm function call.
-   * - Merging current and new blobs together is done in 'services/metadata-schema.js'
-   *
-   * @param {object} newMetadata metadata blob from a single metadata form
-   * @param {boolean} allowDelete let the blob merge delete fields
-   */
-  updateMetadata(newMetadata, allowDelete) {
-    let mergedBlob;
-
-    let deletableFields;
-
-    /**
-     * TODO: We need a comprehensive definition of how to merge metadata blobs.
-     * The current implementation does not work! For example, it will not allow
-     * the deletion of data, so if a user removes some info from a metadata form,
-     * it will not be removed from the blob :(
-     */
-
-    if (allowDelete) {
-      /**
-       * For field deletion, we should look at what fields are displayed in the current schema
-       * then for each of those fields, if no value is present, remove that key from the
-       * metadata blob. Using 'rendered' fields as valid deletable fields should work around
-       * the need to explicitly ignore '$schema'
-       */
-      deletableFields = this.metadataSchema.getFields([this.currentSchema], true);
-    }
-
-    mergedBlob = this.metadataSchema.mergeBlobs(this.metadata, newMetadata, deletableFields);
-
-    this.metadata = mergedBlob;
-  }
-
-  /**
-   * Do any final processing of the submission's metadata blob here before moving on to the
-   * next submission step. The temporary metadata blob stored in this component will be
-   * processed and finally saved to the submission object. Processing can include adding or
-   * removing appropriate metadata properties.
-   *
-   * This should only be called once before the app transitions to the next workflow step.
-   *
-   * IMPL NOTE:
-   * The final metadata blob will include some extra data sourced from outside the metadata
-   * forms, include (browser) agent info.
-   */
-  finalizeMetadata() {
-    this.updateMetadata({
-      agent_information: this.getBrowserInfo(),
-    });
-
-    const finalMetadata = this.metadata;
-    this.args.submission.metadata = JSON.stringify(finalMetadata);
-  }
-
-  /**
-   * cleans up metadata before it is validated to align it with the submission
-   * model metadata field which is mutated by the covid selection box
-   */
-  hintsCleanup() {
-    let submission = this.args.submission;
-    let metadata = this.metadata;
-    let tags = [];
-    let mdHasCovid = false;
-
-    if ('hints' in metadata) {
-      tags = metadata.hints['collection-tags'];
-      mdHasCovid = tags.includes('covid');
-    }
-
-    if (mdHasCovid && !submission.isCovid) {
-      if (tags.length > 1) {
-        let tagsWithoutCovid = tags.filter((tag) => tag != 'covid');
-        metadata.hints['collection-tags'] = tagsWithoutCovid;
-      }
-
-      if (tags.length === 1) {
-        delete metadata.hints;
-      }
-    }
-
-    if (!mdHasCovid && submission.isCovid) {
-      if ('hints' in metadata) {
-        metadata.hints['collection-tags'].push('covid');
-      } else {
-        metadata.hints = {
-          'collection-tags': ['covid'],
-        };
-      }
-    }
+    this.args.next();
   }
 
   /**
@@ -312,15 +101,5 @@ export default class WorkflowMetadata extends Component {
       name: M[0],
       version: M[1],
     };
-  }
-
-  validationErrorMsg(errors) {
-    let msg = '<ul>';
-    errors.forEach((error) => {
-      msg += `<li>${error.message}</li>`;
-    });
-    msg += '</ul>';
-
-    return msg;
   }
 }

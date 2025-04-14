@@ -252,7 +252,8 @@ export default class SubmissionsDetail extends Controller {
     if (allLinksVisited) {
       this.hasVisitedWeblink = true;
     }
-    $('#externalSubmission').modal('hide');
+
+    document.querySelector('#externalSubmission').hide();
 
     var win = window.open(repo.url, '_blank');
     win.focus();
@@ -266,7 +267,10 @@ export default class SubmissionsDetail extends Controller {
     if (!message) {
       swal.fire('Comment field empty', 'Please add a comment before requesting changes.', 'warning');
     } else {
-      $('.block-user-input').css('display', 'block');
+      document.querySelectorAll('.block-user-input').forEach((el) => {
+        el.style.display = 'block';
+      });
+
       await this.submissionHandler.requestSubmissionChanges(sub, message);
       window.location.reload(true);
     }
@@ -278,11 +282,16 @@ export default class SubmissionsDetail extends Controller {
     // First, check if user has visited all required weblinks.
     if (this.disableSubmit) {
       if (!this.hasVisitedWeblink) {
-        $('.fa-exclamation-triangle').css('color', '#DC3545');
-        $('.fa-exclamation-triangle').css('font-size', '2.2em');
+        document.querySelectorAll('.fa-exclamation-triangle').forEach((el) => {
+          el.style.color = '#DC3545';
+          el.style.fontSize = '2.2em';
+        });
+
         later(() => {
-          $('.fa-exclamation-triangle').css('color', '#b0b0b0');
-          $('.fa-exclamation-triangle').css('font-size', '2em');
+          document.querySelectorAll('.fa-exclamation-triangle').forEach((el) => {
+            el.style.color = '#b0b0b0';
+            el.style.fontSize = '2em';
+          });
         }, 4000);
         this.flashMessages.warning(
           'Please visit the listed web portal(s) to submit your manuscript directly. Metadata displayed on this page can be used to help in the submission process.',
@@ -337,7 +346,7 @@ export default class SubmissionsDetail extends Controller {
       .map((repo) => ({
         id: get(repo, 'name'),
         title: `Deposit requirements for ${get(repo, 'name')}`,
-        html: `<textarea rows="16" cols="40" name="embargo" class="alpaca-control form-control disabled" disabled="" autocomplete="off">${get(
+        html: `<textarea rows="16" cols="40" name="embargo" class="form-control disabled" disabled="" autocomplete="off">${get(
           repo,
           'agreementText',
         )}</textarea>`,
@@ -482,7 +491,10 @@ export default class SubmissionsDetail extends Controller {
     });
 
     if (result.value) {
-      $('.block-user-input').css('display', 'block');
+      document.querySelectorAll('.block-user-input').forEach((el) => {
+        el.style.display = 'block';
+      });
+
       await this.submissionHandler.cancelSubmission(sub, message);
       window.location.reload(true);
     }
