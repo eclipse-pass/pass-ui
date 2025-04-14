@@ -59,14 +59,14 @@ module('Integration | Component | found-manuscripts', (hooks) => {
 
     this.owner.register('service:oa-manuscript-service', mockMsService);
 
-    await render(hbs`<FoundManuscripts />`);
+    await render(hbs`<FoundManuscripts @doi='test' />`);
 
     assert.ok(this.element.textContent.includes('http://moo.example.com'));
   });
 
   test('Nothing renders when disabled', async function (assert) {
     set(this, 'disabled', true);
-    await render(hbs`<FoundManuscripts @disabled={{this.disabled}} />`);
+    await render(hbs`<FoundManuscripts @doi='test' @disabled={{this.disabled}} />`);
     assert.strictEqual(this.element.childElementCount, 1);
   });
 
@@ -87,12 +87,12 @@ module('Integration | Component | found-manuscripts', (hooks) => {
     this.owner.register(
       'service:workflow',
       Service.extend({
-        getDoiInfo: () => ({ DOI: 'doi-moo' }),
         getFiles: () => [],
       }),
     );
 
-    await render(hbs`<FoundManuscripts />`);
+    await render(hbs`<FoundManuscripts @doi='test' />`);
+
     assert.ok(this.element.textContent.includes(expected));
   });
 });
