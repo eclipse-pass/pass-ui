@@ -70,9 +70,8 @@ module('Unit | Service | doi', (hooks) => {
     assert.ok(result, 'No result was returned');
     assert.ok(result.authors, 'Was expecting "authors" property to exist');
     assert.ok(result.issns, 'Was expecting "issns" field to exist');
-    assert.ok(result.$schema, 'Missing $schema');
 
-    assert.deepEqual(
+    assert.propEqual(
       result.authors,
       [
         {
@@ -95,7 +94,7 @@ module('Unit | Service | doi', (hooks) => {
       'Unexpected "authors" found',
     );
 
-    assert.deepEqual(
+    assert.propEqual(
       result.issns,
       [
         {

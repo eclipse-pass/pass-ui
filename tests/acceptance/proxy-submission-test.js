@@ -146,16 +146,16 @@ module('Acceptance | proxy submission', function (hooks) {
 
     await click('[data-test-workflow-repositories-next]');
 
-    await waitFor('[data-test-metadata-form] textarea[name=title]');
+    await waitFor('[data-test-metadata-form] div[data-name=title]');
     assert.strictEqual(currentURL(), '/submissions/new/metadata');
     assert
-      .dom('[data-test-metadata-form] textarea[name=title]')
+      .dom('[data-test-metadata-form] div[data-name=title] input')
       .hasValue(
         'Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS',
       );
-    assert.dom('[data-test-metadata-form] input[name=journal-title]').hasValue('The Analyst');
+    assert.dom('[data-test-metadata-form] div[data-name=journal-title] input').hasValue('The Analyst');
 
-    await click('.alpaca-form-button-Next');
+    await click('input[title=Complete]');
 
     await waitFor('input[type=file]');
 

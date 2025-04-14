@@ -64,7 +64,7 @@ module('Unit | Route | submissions/new', (hooks) => {
    * Expect that createRecord and findRecord are each called once and that
    */
   test("The mock submission returned from model() when it's ID is included", async function (assert) {
-    assert.expect(7);
+    assert.expect(5);
 
     const mockSub = get(this, 'submission');
 
@@ -93,11 +93,8 @@ module('Unit | Route | submissions/new', (hooks) => {
       },
       query: () => Promise.resolve(A()),
     });
+
     route.set('workflow', {
-      setDoiInfo(data) {
-        assert.ok(data);
-        assert.strictEqual(data.moo, 'This is a moo');
-      },
       setFiles(files) {
         assert.ok(files);
       },

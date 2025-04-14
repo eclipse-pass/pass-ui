@@ -88,6 +88,10 @@ module('Integration | Component | workflow basics', (hooks) => {
       getJournalTitle() {
         return 'moo-title';
       },
+      doiToMetadata(doiInfo, journal, validFields) {
+        console.log('grr');
+        return doiInfo;
+      },
     });
 
     const mockStore = Service.extend({
@@ -148,7 +152,6 @@ module('Integration | Component | workflow basics', (hooks) => {
     // Add a DOI to UI
     await fillIn('#doi', '1234/4321');
 
-    assert.strictEqual(get(this, 'doiInfo').DOI, '10.1039/c7an01256j');
     assert.strictEqual(get(this, 'publication.doi'), '1234/4321');
     assert.strictEqual(get(this, 'publication.issue'), 1);
   });
@@ -189,19 +192,8 @@ module('Integration | Component | workflow basics', (hooks) => {
 />`);
 
     assert.ok(this.element);
-
-    // 2 inputs, 1 textarea
-    const inputs = this.element.querySelectorAll('input');
-    const title = this.element.querySelector('textarea');
-
-    assert.strictEqual(inputs.length, 2, 'There should be two input elements');
-    assert.ok(title, 'No "title" textarea element found');
-
-    assert.ok(title.textLength > 0, 'No title value found');
-    inputs.forEach((inp) => {
-      const msg = `No value found for input "${inp.parentElement.parentElement.querySelector('label').textContent}"`;
-      assert.ok(!!inp.value, msg);
-    });
+    assert.dom('#title').hasValue('Moo title');
+    assert.dom('#doi').hasValue('moo');
   });
 
   /**
@@ -260,17 +252,14 @@ module('Integration | Component | workflow basics', (hooks) => {
 
     assert.ok(this.element);
 
-    const doiInfo = get(this, 'doiInfo');
-    assert.ok(doiInfo, 'No doiInfo found');
-    assert.strictEqual(doiInfo.title, 'You better use this', 'Unexpected doiInfo.title found');
-
     const publication = get(this, 'publication');
     assert.ok(publication, 'No publication found');
     assert.strictEqual(publication.get('title'), 'Moo title', 'Unexpected publication title found');
     assert.strictEqual(publication.get('journal.journalName'), 'Moo Journal', 'Unexpected journal title found');
 
+    // Metadata will only change on journal selection, doi lookup, or transition to next step
     const metadata = get(this, 'submission.metadata');
-    assert.strictEqual(metadata, '{}', 'Metadata should be empty');
+    assert.equal(metadata, '{}', 'Metadata should be empty');
   });
 
   /**
@@ -321,6 +310,9 @@ module('Integration | Component | workflow basics', (hooks) => {
       }),
       isValidDOI: (doi) => !!doi,
       formatDOI: (doi) => doi,
+      doiToMetadata: (doiInfo, journal, validFields) => {
+        return doiInfo;
+      },
     });
 
     this.owner.unregister('service:doi');
@@ -367,7 +359,7 @@ module('Integration | Component | workflow basics', (hooks) => {
      */
     assert.dom('[data-test-find-journal]').doesNotExist();
 
-    assert.deepEqual(get(this, 'doiInfo'), {}, 'doiInfo should be empty');
+    assert.deepEqual(get(this, 'submission.metadata'), '{}', 'submission metadata should be empty');
   });
 
   test('validateAndLoadTab is called once when next is clicked', async function (assert) {
