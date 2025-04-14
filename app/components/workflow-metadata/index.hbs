@@ -1,9 +1,6 @@
-{{! template-lint-disable no-action }}
+{{! template-lint-disable no-action require-button-type}}
 {{! takes in a schema and the model to save the schema to}}
-<div {{did-insert (perform this.setupSchemas)}}>
-  <h3 class="font-weight-light pull-right form-step-header">
-    {{concat "Form" " " this.displayFormStep " " "of" " " this.schemas.length}}
-  </h3>
+<div {{did-insert (perform this.setupSchema)}}>
 
   {{#if this.missingRequiredJournal}}
     <h2>Missing required journal</h2>
@@ -12,14 +9,17 @@
       <LinkTo @route="submissions.new.basics">go back and enter a journal</LinkTo>.
     </p>
   {{else}}
-    {{#if this.currentSchema}}
-      <MetadataForm
-        @schema={{this.currentSchema}}
-        @nextForm={{this.nextForm}}
-        @previousForm={{this.previousForm}}
-        @cancel={{this.cancel}}
-      />
+    {{#if this.schema}}
+      <MetadataForm @schema={{this.schema}} @data={{this.metadata}} @next={{action "next"}} />
     {{/if}}
   {{/if}}
 </div>
+
 {{yield}}
+
+<button class="btn btn-outline-primary" data-test-workflow-metadata-back {{action "back"}}>
+  Back
+</button>
+<button class="btn btn-outline-danger ml-2" data-test-workflow-metadata-cancel {{action "cancel"}}>
+  Cancel
+</button>

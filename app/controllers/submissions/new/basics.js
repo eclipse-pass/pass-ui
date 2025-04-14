@@ -15,7 +15,6 @@ export default class SubmissionsNewBasics extends Controller {
   @alias('model.publication') publication;
   @alias('model.submissionEvents') submissionEvents;
   @alias('model.journal') journal;
-  @alias('workflow.doiInfo') doiInfo;
 
   @controller('submissions.new') parent;
 
@@ -61,7 +60,11 @@ export default class SubmissionsNewBasics extends Controller {
 
   @action
   async loadTab(gotoRoute) {
-    this.doiInfo.title = this.publication.title;
+    // Make sure title is saved in metadata
+    let metadata = this.submission.metadata ? JSON.parse(this.submission.metadata) : {};
+    metadata.title = this.publication.title;
+    this.submission.metadata = JSON.stringify(metadata);
+    this.workflow.setReadOnlyProperties(Object.keys(metadata));
 
     await this.submission.save();
     this.router.transitionTo(gotoRoute);
@@ -132,11 +135,6 @@ export default class SubmissionsNewBasics extends Controller {
   @action
   updatePublication(publication) {
     set(this, 'model.publication', publication);
-  }
-
-  @action
-  updateDoiInfo(doiInfo) {
-    this.workflow.setDoiInfo(doiInfo);
   }
 
   @action

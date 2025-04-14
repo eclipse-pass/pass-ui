@@ -14,7 +14,7 @@ export default class Workflow extends Service {
    */
   @tracked pmcPublisherDeposit = false;
 
-  @tracked doiInfo = {};
+  @tracked readOnlyProperties = [];
 
   @tracked files = [];
   @tracked defaultRepoLoaded = false; // you only want to load the default setting on first access, after that is should respect he user's choice.
@@ -26,7 +26,6 @@ export default class Workflow extends Service {
     this.setMaxStep(1);
     this.setPmcPublisherDeposit(false);
     this.setFiles([]);
-    this.setDoiInfo({});
     this.setDefaultRepoLoaded(false);
     this.clearAddedGrants();
   }
@@ -86,13 +85,12 @@ export default class Workflow extends Service {
     this.set('defaultRepoLoaded', defaultRepoLoaded);
   }
 
-  getDoiInfo() {
-    return this.doiInfo;
+  getReadOnlyProperties() {
+    return this.readOnlyProperties;
   }
 
-  setDoiInfo(doiInfo, fromCrossref) {
-    this.set('doiInfo', doiInfo);
-    this.setFromCrossref(!!fromCrossref);
+  setReadOnlyProperties(readOnlyProperties) {
+    this.set('readOnlyProperties', readOnlyProperties);
   }
 
   setFromCrossref(fromCrossref) {
