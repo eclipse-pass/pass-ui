@@ -24,6 +24,7 @@ export default class WorkflowReview extends Component {
   @service workflow;
   @service currentUser;
   @service flashMessages;
+  @service submissionHandler;
 
   @tracked isValidated = [];
   @tracked hasVisitedWeblink = false;
@@ -74,16 +75,18 @@ export default class WorkflowReview extends Component {
 
   @task
   submitTask = function* () {
-    $('.block-user-input').css('display', 'block');
+    document.querySelectorAll('.block-user-input').forEach((el) => {
+      el.style.display = 'block';
+    });
+
     let disableSubmit = true;
     // In case a crafty user edits the page HTML, don't submit when not allowed
     if (this.disableSubmit) {
       if (!this.hasVisitedWeblink) {
-        $('.fa-exclamation-triangle').css('color', '#DC3545');
-        $('.fa-exclamation-triangle').css('font-size', '2.2em');
+        this.submissionHandler.setLinkVisited(false);
+
         later(() => {
-          $('.fa-exclamation-triangle').css('color', '#b0b0b0');
-          $('.fa-exclamation-triangle').css('font-size', '2em');
+          this.submissionHandler.setLinkVisited(true);
         }, 4000);
         this.flashMessages.warning(
           'Please visit the following web portal to submit your manuscript directly. Metadata displayed above could be used to aid in your submission progress.',
@@ -284,7 +287,7 @@ export default class WorkflowReview extends Component {
         if (allLinksVisited) {
           this.hasVisitedWeblink = true;
         }
-        $('#externalSubmission').modal('hide');
+        swal.close();
         var win = window.open(repo.url, '_blank');
         if (win) {
           win.focus();

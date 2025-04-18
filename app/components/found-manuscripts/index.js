@@ -7,7 +7,6 @@ import { action, get, set } from '@ember/object';
 export default class FoundManuscriptsComponent extends Component {
   @service oaManuscriptService;
   @service workflow;
-  @service store;
   @service appStaticConfig;
 
   @tracked foundManuscripts = [];
@@ -39,11 +38,14 @@ export default class FoundManuscriptsComponent extends Component {
 
   @task
   setupManuscripts = function* () {
-    const doi = this.workflow.getDoiInfo().DOI;
-    const foundOAMss = yield this.oaManuscriptService.lookup(doi);
+    const doi = this.args.doi;
 
-    if (foundOAMss) {
-      this.foundManuscripts = [...foundOAMss];
+    if (doi) {
+      const foundOAMss = yield this.oaManuscriptService.lookup(doi);
+
+      if (foundOAMss) {
+        this.foundManuscripts = [...foundOAMss];
+      }
     }
   };
 }

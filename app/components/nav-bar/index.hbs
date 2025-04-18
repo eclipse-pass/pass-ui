@@ -61,23 +61,24 @@
         <div class="nav-item dropdown ml-auto w-25">
           <a
             id="user-menu-name"
-            class="nav-link accountInfo pr-1"
-            data-toggle="dropdown"
+            class="nav-link dropdown-toggle accountInfo pr-1"
             href="#"
+            data-bs-toggle="dropdown"
             role="button"
             aria-haspopup="true"
             aria-expanded="false"
+            {{on "click" this.toggleUserMenu}}
           >
             {{this.currentUser.user.displayName}}
           </a>
-          <div id="user-menu" class="dropdown">
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <ul class="dropdown-menu {{if this.isUserMenuOpen 'show'}}" aria-labelledby="user-menu-name">
+            <li>
               <a class="dropdown-item" href="#" {{on "click" this.logOut}}>
                 <i class="fa fa-lock"></i>
                 Logout
               </a>
-            </div>
-          </div>
+            </li>
+          </ul>
         </div>
       </div>
     </div>

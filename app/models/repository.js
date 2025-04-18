@@ -10,6 +10,7 @@ export default class RepositoryModel extends Model {
   @attr('string') integrationType;
   @attr('string', { defaultValue: false }) agreementText;
   @attr('string') repositoryKey;
+  @attr('set') schemas;
 
   @attr('boolean') _selected;
 

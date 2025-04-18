@@ -76,17 +76,17 @@ module('Acceptance | submission', function (hooks) {
 
     await click('[data-test-workflow-repositories-next]');
 
-    await waitFor('[data-test-metadata-form] textarea[name=title]');
+    await waitFor('[data-test-metadata-form] div[data-name=title]');
     assert.strictEqual(currentURL(), '/submissions/new/metadata');
 
     assert
-      .dom('[data-test-metadata-form] textarea[name=title]')
+      .dom('[data-test-metadata-form] div[data-name=title] input')
       .hasValue(
         'Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS',
       );
-    assert.dom('[data-test-metadata-form] input[name=journal-title]').hasValue('The Analyst');
+    assert.dom('[data-test-metadata-form] div[data-name=journal-title] input').hasValue('The Analyst');
 
-    await click('.alpaca-form-button-Next');
+    await click('input[title=Complete]');
 
     await waitFor('input[type=file]');
 
@@ -291,16 +291,16 @@ module('Acceptance | submission', function (hooks) {
 
     await click('[data-test-workflow-repositories-next]');
 
-    await waitFor('[data-test-metadata-form] textarea[name=title]');
+    await waitFor('[data-test-metadata-form] div[data-name=title]');
     assert.ok(currentURL().includes(`/submissions/new/metadata?${fragment}`));
     assert
-      .dom('[data-test-metadata-form] textarea[name=title]')
+      .dom('[data-test-metadata-form] div[data-name=title] input')
       .hasValue(
         'Quantitative profiling of carbonyl metabolites directly in crude biological extracts using chemoselective tagging and nanoESI-FTMS',
       );
-    assert.dom('[data-test-metadata-form] input[name=journal-title]').hasValue('The Analyst');
+    assert.dom('[data-test-metadata-form] div[data-name=journal-title] input').hasValue('The Analyst');
 
-    await click('.alpaca-form-button-Next');
+    await click('input[title=Complete]');
 
     await waitFor('input[type=file]');
 
@@ -409,7 +409,7 @@ module('Acceptance | submission', function (hooks) {
 
     await waitFor('[data-test-doi-input]');
     await fillIn('[data-test-doi-input]', '');
-    await fillIn('[data-test-article-title-text-area]', 'My article');
+    await fillIn('#title', 'My article');
 
     await click('.ember-power-select-trigger');
     await fillIn('.ember-power-select-search-input', 'The Analyst');
@@ -444,28 +444,30 @@ module('Acceptance | submission', function (hooks) {
 
     await click('[data-test-workflow-repositories-next]');
 
-    await waitFor('[data-test-metadata-form] textarea[name=title]');
+    await waitFor('[data-test-metadata-form] div[data-name=title]');
     assert.strictEqual(currentURL(), '/submissions/new/metadata');
 
-    assert.dom('[data-test-metadata-form] textarea[name=title]').hasValue('My article');
-    assert.dom('[data-test-metadata-form] input[name=journal-title]').hasValue('The Analyst');
+    assert.dom('[data-test-metadata-form] div[data-name=title] input').hasValue('My article');
+    assert.dom('[data-test-metadata-form] div[data-name=journal-title] input').hasValue('The Analyst');
 
-    await click('.alpaca-form-button-Next');
+    await click('input[title=Complete]');
 
-    await waitFor('#swal2-html-container');
-    assert.dom('#swal2-html-container').includesText('Missing required metadata: Author');
+    await waitFor('[data-test-metadata-form] div[data-name=authors] div[role=alert]');
+    assert
+      .dom('[data-test-metadata-form] div[data-name=authors] div[role=alert] span span')
+      .includesText('Response required');
 
-    // Some reason, setting the document query to a variable before clicking works,
-    // but calling the query selector in the click does not work
-    const confirmBtn = '.swal2-confirm';
-    await waitFor(confirmBtn);
-    assert.ok(confirmBtn);
-    await click(confirmBtn);
+    // Add author
+    await click('[data-test-metadata-form] div[data-name=authors] button');
 
-    await waitFor('input[name=authors_0_author]');
-    await fillIn('input[name=authors_0_author]', 'John Moo');
+    await waitFor('div[data-name=author] input');
+    await fillIn('div[data-name=author] input', 'John Moo');
 
-    await click('.alpaca-form-button-Next');
+    // Must also set publication date
+    await fillIn('div[data-name=publicationDate] input', '2024-01-01');
+    await waitFor('div[data-name=publicationDate] input');
+
+    await click('input[title=Complete]');
 
     await waitFor('input[type=file]');
 
@@ -582,31 +584,31 @@ module('Acceptance | submission', function (hooks) {
 
     await click('[data-test-workflow-repositories-next]');
 
-    await waitFor('[data-test-metadata-form] textarea[name=title]');
+    await waitFor('[data-test-metadata-form] div[data-name=title]');
     assert.strictEqual(currentURL(), '/submissions/new/metadata');
 
-    assert.dom('[data-test-metadata-form] textarea[name=title]').hasValue('My article');
-    assert.dom('[data-test-metadata-form] input[name=journal-title]').hasValue('The Analyst');
-    assert.dom('[data-test-metadata-form] input[name=journal-NLMTA-ID]').doesNotExist();
+    assert.dom('[data-test-metadata-form] div[data-name=title] input').hasValue('My article');
+    assert.dom('[data-test-metadata-form] div[data-name=journal-title] input').hasValue('The Analyst');
+    assert.dom('[data-test-metadata-form] div[data-name=journal-NLMTA-ID] input').doesNotExist();
 
-    await click('.alpaca-form-button-Next');
+    await click('input[title=Complete]');
 
-    await waitFor('#swal2-html-container');
-    assert.dom('#swal2-html-container').includesText('Missing required metadata: Author');
+    await waitFor('[data-test-metadata-form] div[data-name=authors] div[role=alert]');
+    assert
+      .dom('[data-test-metadata-form] div[data-name=authors] div[role=alert] span span')
+      .includesText('Response required');
 
-    const confirmBtn = '.swal2-confirm';
-    assert.ok(confirmBtn, 'No SweetAlert OK button found');
-    await waitFor(confirmBtn);
-    await click(confirmBtn);
+    // Add author
+    await click('[data-test-metadata-form] div[data-name=authors] button');
 
-    const addAuthorBtn = document.querySelectorAll('.alpaca-array-toolbar-action').item(1);
-    assert.ok(addAuthorBtn, "Couldn't find the Add Author button");
-    await click(addAuthorBtn);
+    await waitFor('div[data-name=author] input');
+    await fillIn('div[data-name=author] input', 'John Moo');
 
-    await waitFor('input[name=authors_0_author]');
-    await fillIn('input[name=authors_0_author]', 'John Moo');
+    // Must also set publication date
+    await fillIn('div[data-name=publicationDate] input', '2024-01-01');
+    await waitFor('div[data-name=publicationDate] input');
 
-    await click('.alpaca-form-button-Next');
+    await click('input[title=Complete]');
 
     await waitFor('input[type=file]');
 
@@ -694,12 +696,10 @@ module('Acceptance | submission', function (hooks) {
 
     await click('[data-test-workflow-repositories-next]');
 
-    await waitFor('[data-test-metadata-form] textarea[name="title"]');
+    await waitFor('[data-test-metadata-form] div[data-name=title]');
     assert.strictEqual(currentURL(), '/submissions/new/metadata');
 
-    await waitFor('[data-test-metadata-form] textarea[name="title"]');
-
-    assert.dom('[data-test-metadata-form] textarea[name="title"]').hasValue('a pub title');
+    assert.dom('[data-test-metadata-form] div[data-name="title"] input').hasValue('a pub title');
 
     await click('[data-test-workflow-basics-nav-button]');
 
@@ -707,9 +707,9 @@ module('Acceptance | submission', function (hooks) {
 
     await click('[data-test-workflow-details-nav-button]');
 
-    await waitFor('[data-test-metadata-form] textarea[name="title"]');
+    await waitFor('[data-test-metadata-form] div[data-name=title] input');
 
-    assert.dom('[data-test-metadata-form] textarea[name="title"]').hasValue('a new pub title');
+    assert.dom('[data-test-metadata-form] div[data-name=title] input').hasValue('a new pub title');
   });
 
   test('can make a submission without specifying a journal', async function (assert) {
@@ -756,21 +756,24 @@ module('Acceptance | submission', function (hooks) {
 
     await click('[data-test-workflow-repositories-next]');
 
-    await waitFor('[data-test-metadata-form] textarea[name="title"]');
+    await waitFor('[data-test-metadata-form] div[data-name="title"]');
     assert.strictEqual(currentURL(), '/submissions/new/metadata');
 
-    await waitFor('[data-test-metadata-form] textarea[name="title"]');
+    assert.dom('[data-test-metadata-form] div[data-name="title"] input').hasValue('a pub title');
 
-    assert.dom('[data-test-metadata-form] textarea[name="title"]').hasValue('a pub title');
+    // Add author
+    await click('[data-test-metadata-form] div[data-name=authors] button');
 
-    await click('.alpaca-form-button-Next');
+    await waitFor('div[data-name=author] input');
+    await fillIn('div[data-name=author] input', 'John Moo');
 
-    await waitFor('input[name=authors_0_author]');
-    await fillIn('input[name=authors_0_author]', 'John Moo');
-    assert.dom('input[name=authors_0_author]').hasValue('John Moo');
+    // Must also set publication date
+    await fillIn('div[data-name=publicationDate] input', '2024-01-01');
+    await waitFor('div[data-name=publicationDate] input');
 
-    await waitFor('.alpaca-form-button-Next');
-    await click('.alpaca-form-button-Next');
+    await click('input[title=Complete]');
+
+    await waitFor('input[type=file]');
 
     assert.strictEqual(currentURL(), '/submissions/new/files');
     const submissionFile = new Blob(['moo'], { type: 'application/pdf' });
