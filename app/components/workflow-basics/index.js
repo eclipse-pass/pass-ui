@@ -171,6 +171,15 @@ export default class WorkflowBasics extends Component {
     });
   }
 
+  /**
+   * Update the submission metadata, giving priority to this metadata. Also mark it as read only.
+   */
+  updateMetadata(metadata) {
+    this.workflow.setReadOnlyProperties(Object.keys(metadata));
+    metadata = Object.assign(this.submission.metadata ? JSON.parse(this.submission.metadata) : {}, metadata);
+    this.submission.metadata = JSON.stringify(metadata);
+  }
+
   @action
   proxyStatusToggled(isProxySubmission) {
     // do only if the values indicate a switch of proxy
@@ -239,7 +248,8 @@ export default class WorkflowBasics extends Component {
     // Formats metadata and adds journal metadata
     let metadata = this.doiService.doiToMetadata({}, journal, this.schemaService.getAllFields());
     metadata['journal-title'] = journal.journalName;
-    this.submission.metadata = JSON.stringify(metadata);
+    metadata.title = this.publication.title;
+    this.updateMetadata(metadata);
 
     this.publication.journal = journal;
     this.args.validateJournal();
@@ -294,7 +304,8 @@ export default class WorkflowBasics extends Component {
         this.schemaService.getAllFields(),
       );
       metadata['journal-title'] = result.publication.journal.get('journalName');
-      this.submission.metadata = JSON.stringify(metadata);
+      metadata.title = this.publication.title;
+      this.updateMetadata(metadata);
 
       this.workflow.setFromCrossref(true);
 
