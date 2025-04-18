@@ -64,7 +64,6 @@ export default class SubmissionsNewBasics extends Controller {
     let metadata = this.submission.metadata ? JSON.parse(this.submission.metadata) : {};
     metadata.title = this.publication.title;
     this.submission.metadata = JSON.stringify(metadata);
-    this.workflow.setReadOnlyProperties(Object.keys(metadata));
 
     await this.submission.save();
     this.router.transitionTo(gotoRoute);
