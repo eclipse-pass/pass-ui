@@ -253,7 +253,7 @@ export default class SubmissionsDetail extends Controller {
       this.hasVisitedWeblink = true;
     }
 
-    document.querySelector('#externalSubmission').hide();
+    swal.close();
 
     var win = window.open(repo.url, '_blank');
     win.focus();
@@ -282,16 +282,10 @@ export default class SubmissionsDetail extends Controller {
     // First, check if user has visited all required weblinks.
     if (this.disableSubmit) {
       if (!this.hasVisitedWeblink) {
-        document.querySelectorAll('.fa-exclamation-triangle').forEach((el) => {
-          el.style.color = '#DC3545';
-          el.style.fontSize = '2.2em';
-        });
+        this.submissionHandler.setLinkVisited(false);
 
         later(() => {
-          document.querySelectorAll('.fa-exclamation-triangle').forEach((el) => {
-            el.style.color = '#b0b0b0';
-            el.style.fontSize = '2em';
-          });
+          this.submissionHandler.setLinkVisited(true);
         }, 4000);
         this.flashMessages.warning(
           'Please visit the listed web portal(s) to submit your manuscript directly. Metadata displayed on this page can be used to help in the submission process.',

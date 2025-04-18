@@ -24,6 +24,7 @@ export default class WorkflowReview extends Component {
   @service workflow;
   @service currentUser;
   @service flashMessages;
+  @service submissionHandler;
 
   @tracked isValidated = [];
   @tracked hasVisitedWeblink = false;
@@ -82,16 +83,10 @@ export default class WorkflowReview extends Component {
     // In case a crafty user edits the page HTML, don't submit when not allowed
     if (this.disableSubmit) {
       if (!this.hasVisitedWeblink) {
-        document.querySelectorAll('.fa-exclamation-triangle').forEach((el) => {
-          el.style.color = '#DC3545';
-          el.style.fontSize = '2.2em';
-        });
+        this.submissionHandler.setLinkVisited(false);
 
         later(() => {
-          document.querySelectorAll('.fa-exclamation-triangle').forEach((el) => {
-            el.style.color = '#b0b0b0';
-            el.style.fontSize = '2em';
-          });
+          this.submissionHandler.setLinkVisited(true);
         }, 4000);
         this.flashMessages.warning(
           'Please visit the following web portal to submit your manuscript directly. Metadata displayed above could be used to aid in your submission progress.',
