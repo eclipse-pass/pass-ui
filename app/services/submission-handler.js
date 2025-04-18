@@ -271,4 +271,16 @@ export default class SubmissionHandlerService extends Service {
       await publication.save();
     }
   }
+
+  /**
+   * Sets the style of an exclamation mark indicating whether or not an adjacent link has been visisted.
+   *
+   * @param {*} visited whether or not the link has been visited
+   */
+  async setLinkVisited(visited) {
+    document.querySelectorAll('.fa-exclamation-triangle').forEach((el) => {
+      el.style.color = visited ? '#b0b0b0' : '#DC3545';
+      el.style.fontSize = visited ? '2em' : '2.2em';
+    });
+  }
 }
