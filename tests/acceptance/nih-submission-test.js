@@ -602,10 +602,10 @@ module('Acceptance | submission', function (hooks) {
     await click('[data-test-metadata-form] div[data-name=authors] button');
 
     await waitFor('div[data-name=author] input');
-    await fillIn('div[data-name=author] input', 'John Moo');
+    await fillIn('div[data-name=author] input', 'Millie Moo');
 
     // Must also set publication date
-    await fillIn('div[data-name=publicationDate] input', '2024-01-01');
+    await fillIn('div[data-name=publicationDate] input', '2020-01-01');
     await waitFor('div[data-name=publicationDate] input');
 
     await click('input[title=Complete]');
@@ -765,10 +765,10 @@ module('Acceptance | submission', function (hooks) {
     await click('[data-test-metadata-form] div[data-name=authors] button');
 
     await waitFor('div[data-name=author] input');
-    await fillIn('div[data-name=author] input', 'John Moo');
+    await fillIn('div[data-name=author] input', 'Bob Moo');
 
     // Must also set publication date
-    await fillIn('div[data-name=publicationDate] input', '2024-01-01');
+    await fillIn('div[data-name=publicationDate] input', '2018-01-01');
     await waitFor('div[data-name=publicationDate] input');
 
     await click('input[title=Complete]');
