@@ -218,6 +218,8 @@ export default class MetadataSchemaService extends Service {
   _formatMetadata(key, val) {
     if (Array.isArray(val)) {
       return val.map((o) => this._formatComplexMetadataObject(key, o));
+    } else if (key === 'publicationDate' && !isNaN(new Date(val))) {
+      return new Date(val).toLocaleDateString();
     } else if (typeof val === 'object') {
       return this._formatComplexMetadataObject(key, val);
     } else if (typeof val === 'string') {
