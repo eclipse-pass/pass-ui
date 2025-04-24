@@ -1,5 +1,5 @@
 {{! template-lint-disable no-action no-inline-styles no-unknown-arguments-for-builtin-components require-button-type require-input-label }}
-<div class="form-group row" {{did-insert this.initializeTooltip}}>
+<div class="mb-3 row" {{did-insert this.initializeTooltip}}>
   {{#each this.flashMessages.queue as |flash|}}
     <div class="flash-message-container">
       <FlashMessage @flash={{flash}} as |component flash close|>

@@ -2,21 +2,21 @@
 {{#if this.show}}
   <ModalDialog @onClose="toggleModal" @translucentOverlay={{false}}>
     <form class="dialog-form-width">
-      <div class="form-group row">
+      <div class="mb-3 row">
         <label class="col-sm-3 col-form-label" for="msg-to">Recipient:</label>
         <div class="col-sm-9">
           <Input aria-label="msg-to" @id="msg-to" class="form-control" @type="text" @value={{this.to}} />
         </div>
       </div>
 
-      <div class="form-group row">
+      <div class="mb-3 row">
         <label class="col-sm-3 col-form-label" for="msg-subject">Subject:</label>
         <div class="col-sm-9">
           <Input aria-label="msg-subject" @id="msg-subject" class="form-control" @type="text" @value={{this.subject}} />
         </div>
       </div>
 
-      <div class="form-group">
+      <div class="mb-3">
         <label for="msg-text">Message:</label>
         <Textarea aria-label="msg-text" @id="msg-text" class="form-control" @value={{this.message}} @rows="10" />
       </div>
