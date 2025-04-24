@@ -57,7 +57,6 @@
     "ember-simple-auth": "^6.0.0",
     "ember-tether": "^3.1.0",
     "loader.js": "^4.7.0",
-    "popper.js": "^1.16.1",
     "survey-core": "^2.0.0",
     "survey-js-ui": "^2.0.0",
     "sweetalert2": "11.17.2"
