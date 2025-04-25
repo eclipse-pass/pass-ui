@@ -853,3 +853,17 @@ footer {
 .grant-item:not(:last-child) {
   border-bottom: 1px solid #ccc; /* Add a bottom border except for the last item */
 }
+
+/* Reset border-radius for common UI elements */
+.ember-basic-dropdown-trigger,
+.btn,
+.form-control,
+.card,
+.alert,
+.modal-content,
+.dropdown-menu,
+.input-group-text,
+.nav-pills .nav-link,
+.badge {
+  border-radius: 0 !important;
+}
