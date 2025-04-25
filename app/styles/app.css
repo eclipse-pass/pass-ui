@@ -105,17 +105,18 @@ th.table-header > i:not(.fa-sort-asc, .fa-sort-desc)::before {
 }
 
 /* stylelint-disable selector-class-pattern */
-.models-table-wrapper .globalSearch span.input-group-addon {
-  margin-top: 0.2rem;
-}
-
-.models-table-wrapper .globalSearch .filterString {
-  height: 2rem;
-  width: 30rem;
-  max-width: 70%;
-  margin: 0 0 1em 12px;
+.globalSearch.input-group {
+  max-width: 50%;
+  margin-bottom: 16px;
 }
 /* stylelint-enable selector-class-pattern */
+
+.table-nav.col-5 {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+}
 
 .submission-details .row {
   padding: 6px 0;
