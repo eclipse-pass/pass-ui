@@ -8,7 +8,7 @@ import { grantsIndexGrantQuery, grantsIndexSubmissionQuery } from '../../util/pa
 export default class GrantsIndexController extends Controller {
   @service currentUser;
   @service('app-static-config') staticConfig;
-  @service('emt-themes/bootstrap4') themeInstance;
+  @service('emt-themes/ember-bootstrap-v5') themeInstance;
   @service router;
   @service store;
 
