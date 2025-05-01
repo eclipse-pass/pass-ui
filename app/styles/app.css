@@ -830,6 +830,14 @@ footer {
   cursor: pointer;
 }
 
+a.navbar-brand:hover {
+  text-decoration: none !important;
+}
+
+#navbar-supported-content a:hover {
+  text-decoration: none !important;
+}
+
 #grants-selection-nav ul li a {
   color: black !important;
   background-color: white;
@@ -866,4 +874,8 @@ footer {
 .nav-pills .nav-link,
 .badge {
   border-radius: 0 !important;
+}
+
+.btn:hover {
+  text-decoration: none !important;
 }
