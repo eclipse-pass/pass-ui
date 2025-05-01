@@ -11,12 +11,12 @@
       Submission Detail
     </h2>
   </div>
-  <div class="col-6 text-right">
+  <div class="col-6 text-end">
     {{#if this.model.sub.isStub}}
       <LinkTo
         @route="submissions.new"
         @query={{hash submission=this.model.sub.id}}
-        class="btn btn-outline-primary text-right"
+        class="btn btn-outline-primary text-end"
       >
         Finish submission
       </LinkTo>
@@ -24,12 +24,12 @@
       <LinkTo
         @route="submissions.new"
         @query={{hash submission=this.model.sub.id}}
-        class="btn btn-outline-primary text-right"
+        class="btn btn-outline-primary text-end"
         data-test-submission-detail-edit-submission
       >
         Edit submission
       </LinkTo>
-      <button class="btn btn-outline-danger text-right" {{action "deleteSubmission" this.model.sub}}>
+      <button class="btn btn-outline-danger text-end" {{action "deleteSubmission" this.model.sub}}>
         Delete
       </button>
     {{/if}}
@@ -44,7 +44,7 @@
             {{this.model.sub.publication.title}}
           </h5>
           {{#if this.model.sub.submittedDate}}
-            <small class="text-muted text-right">
+            <small class="text-muted text-end">
               Submitted
               {{format-date this.model.sub.submittedDate}}
             </small>
@@ -335,7 +335,7 @@
 </div>
 {{#if (and this.isSubmitter this.submissionNeedsSubmitter)}}
   <div class="row">
-    <div class="col-12 text-right">
+    <div class="col-12 text-end">
       <button class="btn btn-primary" onclick={{action "approveChanges"}}>
         Submit
       </button>
@@ -353,7 +353,7 @@
 {{/if}}
 {{#if (and this.isPreparer this.submissionNeedsPreparer)}}
   <div class="row">
-    <div class="col-12 text-right">
+    <div class="col-12 text-end">
       <LinkTo @route="submissions.new" @query={{hash submission=this.model.sub.id}} class="btn btn-primary">
         Edit this submission
       </LinkTo>
