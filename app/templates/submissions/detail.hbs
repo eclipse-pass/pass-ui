@@ -2,14 +2,14 @@
 <div class="block-user-input text-center">
   <div class="lds-dual-ring mx-auto"></div>
 </div>
-<div id="submission-details-title" class="row mb-2">
-  <div class="col-6">
-    <LinkTo @route="submissions" class="btn btn-small back-arrow" aria-label="Go back to the previous page">
+<div id="submission-details-title" class="d-flex justify-content-between align-items-center my-3">
+  <div class="d-flex align-items-center">
+    <LinkTo @route="submissions" class="btn btn-small back-arrow mr-1" aria-label="Go back to the previous page">
       <i class="fa fa-arrow-left fa-lg"></i>
     </LinkTo>
-    <h2 class="font-weight-light d-inline-block">
+    <h1 class="font-weight-light m-0">
       Submission Detail
-    </h2>
+    </h1>
   </div>
   <div class="col-6 text-end">
     {{#if this.model.sub.isStub}}
