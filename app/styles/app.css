@@ -861,6 +861,7 @@ a.navbar-brand:hover {
 }
 
 /* Reset border-radius for common UI elements */
+/* stylelint-disable selector-class-pattern */
 .ember-basic-dropdown-trigger,
 .btn,
 .form-control,
@@ -870,6 +871,7 @@ a.navbar-brand:hover {
 .dropdown-menu,
 .input-group-text,
 .nav-pills .nav-link,
+.sd-element--with-frame,
 .badge {
   border-radius: 0 !important;
 }

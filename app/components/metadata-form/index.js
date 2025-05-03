@@ -4,21 +4,53 @@ import { SurveyModel } from 'survey-js-ui';
 import { DefaultLightPanelless } from 'survey-core/themes';
 
 export default class MetadataForm extends Component {
+  survey = null;
+
   @action
   setupMetadataForm() {
     const surveySchema = this.args.schema;
     const surveyData = this.args.data;
 
-    const survey = new SurveyModel(surveySchema);
+    const customCss = {
+      navigation: {
+        complete: 'd-none',
+      },
+      text: {
+        root: 'form-control',
+      },
+      comment: {
+        root: 'form-control',
+      },
+      dropdown: {
+        control: 'form-control',
+      },
+    };
 
-    // Use mergeData to preserve default values
-    survey.mergeData(surveyData);
+    this.survey = new SurveyModel(surveySchema);
 
-    survey.applyTheme(DefaultLightPanelless);
-    survey.render(document.getElementById('metadata-form'));
+    this.survey.css = customCss;
 
-    survey.onComplete.add((sender, options) => {
-      this.args.next(survey.data);
+    this.survey.mergeData(surveyData);
+
+    this.survey.applyTheme(DefaultLightPanelless);
+
+    this.survey.applyTheme({
+      cssVariables: {
+        '--sjs-primary-backcolor': 'black',
+        '--sjs-primary-forecolor': 'white',
+        '--sjs-primary-backcolor-light': '#f0f0f0',
+        '--sjs-general-backcolor-dim': 'white',
+        '--sjs-font-family': 'var(--font-bodycopy)',
+      },
+    });
+    this.survey.render(document.getElementById('metadata-form'));
+
+    if (typeof this.args.onSurveyReady === 'function') {
+      this.args.onSurveyReady(this.survey);
+    }
+
+    this.survey.onComplete.add((_sender, _options) => {
+      this.args.next(this.survey.data);
     });
   }
 }
