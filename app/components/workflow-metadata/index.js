@@ -1,11 +1,8 @@
-/* eslint-disable ember/no-get */
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
-import swal from 'sweetalert2/dist/sweetalert2.js';
 import { task } from 'ember-concurrency-decorators';
-import ENV from 'pass-ui/config/environment';
 
 /**
  * The schema service is invoked to retrieve appropriate metadata forms.
@@ -27,6 +24,7 @@ export default class WorkflowMetadata extends Component {
   @tracked metadata = {};
   @tracked schema = null;
   @tracked missingRequiredJournal = false;
+  @tracked surveyInstance = null;
 
   constructor() {
     super(...arguments);
@@ -73,6 +71,18 @@ export default class WorkflowMetadata extends Component {
     submission.metadata = JSON.stringify(newMetadata);
 
     this.args.next();
+  }
+
+  @action
+  onSurveyReady(survey) {
+    this.surveyInstance = survey;
+  }
+
+  @action
+  handleExternalSubmit() {
+    if (this.surveyInstance) {
+      this.surveyInstance.doComplete();
+    }
   }
 
   /**

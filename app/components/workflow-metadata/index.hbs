@@ -1,4 +1,3 @@
-{{! template-lint-disable no-action require-button-type}}
 {{! takes in a schema and the model to save the schema to}}
 <div {{did-insert (perform this.setupSchema)}}>
 
@@ -10,16 +9,24 @@
     </p>
   {{else}}
     {{#if this.schema}}
-      <MetadataForm @schema={{this.schema}} @data={{this.metadata}} @next={{action "next"}} />
+      <MetadataForm
+        @schema={{this.schema}}
+        @data={{this.metadata}}
+        @next={{this.next}}
+        @onSurveyReady={{this.onSurveyReady}}
+      />
     {{/if}}
   {{/if}}
 </div>
 
 {{yield}}
 
-<button class="btn btn-outline-primary" data-test-workflow-metadata-back {{action "back"}}>
+<button class="btn btn-outline-primary" data-test-workflow-metadata-back type="button" {{on "click" this.back}}>
   Back
 </button>
-<button class="btn btn-outline-danger ml-2" data-test-workflow-metadata-cancel {{action "cancel"}}>
+<button class="btn btn-outline-danger ml-2" data-test-workflow-metadata-cancel type="button" {{on "click" this.cancel}}>
   Cancel
+</button>
+<button class="btn btn-primary next pull-right" type="button" {{on "click" this.handleExternalSubmit}}>
+  Next
 </button>
