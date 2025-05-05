@@ -12,6 +12,11 @@ export default class MetadataForm extends Component {
     const surveyData = this.args.data;
 
     const customCss = {
+      body: 'pt-4',
+      page: {
+        // Remove default survey.js page class
+        root: '',
+      },
       navigation: {
         complete: 'd-none',
       },
