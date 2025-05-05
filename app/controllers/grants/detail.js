@@ -6,7 +6,7 @@ import { inject as service } from '@ember/service';
 import { grantDetailsQuery } from '../../util/paginated-query';
 
 export default class GrantDetailsController extends Controller {
-  @service('emt-themes/bootstrap4') themeInstance;
+  @service('emt-themes/pass-table-theme') themeInstance;
   @service currentUser;
   @service store;
 
