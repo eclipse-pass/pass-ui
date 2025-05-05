@@ -15,21 +15,23 @@
   <div class="col-md-12">
     <div class="list-group">
       <div href="#" class="list-group-item flex-column align-items-start">
-        <div class="d-flex w-100 justify-content-between">
-          <h4 class="mb-1" data-test-workflow-review-title>
-            {{@publication.title}}
-          </h4>
-          <small class="text-muted">
-            {{@submission.dateSubmitted.date-time}}<br />{{@submission.dateCreated.date-time}}
-          </small>
+        <div class="review-step-title d-flex flex-column w-100 border-bottom pb-2">
+          <div class="d-flex flex-row w-100 justify-content-between">
+            <h4 class="mb-1" data-test-workflow-review-title>
+              {{@publication.title}}
+            </h4>
+            <small class="text-muted">
+              {{@submission.dateSubmitted.date-time}}<br />{{@submission.dateCreated.date-time}}
+            </small>
+          </div>
+          <p class="mb-1" data-test-workflow-review-doi>
+            {{@publication.doi}}
+          </p>
+          <div class="text-muted">
+            Please review the information below
+          </div>
         </div>
-        <p class="mb-1" data-test-workflow-review-doi>
-          {{@publication.doi}}
-        </p>
-        <div class="text-muted">
-          Please review the information below
-        </div>
-        <table id="#review-step-table" class="table table-responsive-sm table-bordered w-100">
+        <table id="review-step-table" class="table table-responsive-sm w-100">
           <tbody>
             {{#if this.mustVisitWeblink}}
               <ExternalRepoReview
@@ -95,7 +97,7 @@
                 Files
               </td>
               <td>
-                <table class="files-table w-100">
+                <table class="files-table w-100 border-bottom border-top">
                   <thead>
                     <tr>
                       <th scope="col">File Type</th>
