@@ -1,5 +1,5 @@
 {{! template-lint-disable no-triple-curlies }}
-<ul class="list-unstyled" {{did-insert this.setupDisplayData}}>
+<ul class="d-flex flex-column list-unstyled gap-3" {{did-insert this.setupDisplayData}}>
   {{#each this.displayData as |data|}}
     <li>
       {{#if data.isArray}}
