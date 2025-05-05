@@ -880,3 +880,11 @@ a.navbar-brand:hover {
 .btn:hover {
   text-decoration: none !important;
 }
+
+#submission-details-body table,
+#submission-details-body th,
+#submission-details-body td {
+  border-width: 0 !important;
+  border-style: none !important;
+  border-color: transparent !important;
+}

@@ -39,27 +39,29 @@
   <div class="col-12">
     <div class="list-group">
       <div href="#" class="list-group-item flex-column align-items-start">
-        <div class="d-flex w-100 justify-content-between">
-          <h5 class="mb-1">
-            {{this.model.sub.publication.title}}
-          </h5>
-          {{#if this.model.sub.submittedDate}}
-            <small class="text-muted text-end">
-              Submitted
-              {{format-date this.model.sub.submittedDate}}
-            </small>
-          {{/if}}
+        <div class="submission-details-title border-bottom d-flex flex-column w-100">
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">
+              {{this.model.sub.publication.title}}
+            </h5>
+            {{#if this.model.sub.submittedDate}}
+              <small class="text-muted text-end">
+                Submitted
+                {{format-date this.model.sub.submittedDate}}
+              </small>
+            {{/if}}
+          </div>
+          <p class="mb-1">
+            DOI:
+            {{#if this.model.sub.publication.doi}}
+              {{this.model.sub.publication.doi}}
+            {{else}}
+              <span class="text-muted">
+                None
+              </span>
+            {{/if}}
+          </p>
         </div>
-        <p class="mb-1">
-          DOI:
-          {{#if this.model.sub.publication.doi}}
-            {{this.model.sub.publication.doi}}
-          {{else}}
-            <span class="text-muted">
-              None
-            </span>
-          {{/if}}
-        </p>
         <table class="table table-responsive-sm table-bordered w-100 d-flex">
           <tbody>
             <tr>
@@ -252,7 +254,7 @@
                   </p>
                 {{else}}
                   <table class="files-table w-100">
-                    <thead>
+                    <thead class="border-bottom border-top">
                       <tr>
                         <th scope="col"></th>
                         <th scope="col" class="font-weight-light">
