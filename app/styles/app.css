@@ -872,6 +872,7 @@ a.navbar-brand:hover {
 .input-group-text,
 .nav-pills .nav-link,
 .sd-element--with-frame,
+.list-group-item,
 .badge {
   border-radius: 0 !important;
 }
