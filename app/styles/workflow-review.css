@@ -9,8 +9,9 @@
 #review-step-table {
   /* stylelint-disable-next-line no-descending-specificity */
   td {
-    border: 1px dotted silver;
-    word-break: break-all;
+    border-width: 0 !important;
+    border-style: none !important;
+    border-color: transparent !important;
   }
 }
 
