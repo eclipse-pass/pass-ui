@@ -822,6 +822,19 @@ footer {
   max-width: 100%;
 }
 
+#grants-selection-nav ul li a {
+  color: black !important;
+  background-color: white;
+}
+
+#submission-details-body table,
+#submission-details-body th,
+#submission-details-body td {
+  border-width: 0 !important;
+  border-style: none !important;
+  border-color: transparent !important;
+}
+
 /* Row selection in ember-models-table */
 #grants-selection-table tr:hover td {
   background-color: #eee;
@@ -834,11 +847,6 @@ a.navbar-brand:hover {
 
 #navbar-supported-content a:hover {
   text-decoration: none !important;
-}
-
-#grants-selection-nav ul li a {
-  color: black !important;
-  background-color: white;
 }
 
 #grants-selection-nav ul li.active a {
@@ -879,12 +887,4 @@ a.navbar-brand:hover {
 
 .btn:hover {
   text-decoration: none !important;
-}
-
-#submission-details-body table,
-#submission-details-body th,
-#submission-details-body td {
-  border-width: 0 !important;
-  border-style: none !important;
-  border-color: transparent !important;
 }
