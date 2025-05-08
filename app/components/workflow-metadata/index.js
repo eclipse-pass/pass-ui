@@ -81,7 +81,7 @@ export default class WorkflowMetadata extends Component {
   @action
   handleExternalSubmit() {
     if (this.surveyInstance) {
-      this.surveyInstance.doComplete();
+      this.surveyInstance.tryComplete();
     }
   }
 
