@@ -155,7 +155,7 @@ module('Acceptance | proxy submission', function (hooks) {
       );
     assert.dom('[data-test-metadata-form] div[data-name=journal-title] input').hasValue('The Analyst');
 
-    await click('input[title=Complete]');
+    await click('[data-test-workflow-metadata-next]');
 
     await waitFor('input[type=file]');
 

@@ -86,7 +86,7 @@ module('Acceptance | submission', function (hooks) {
       );
     assert.dom('[data-test-metadata-form] div[data-name=journal-title] input').hasValue('The Analyst');
 
-    await click('input[title=Complete]');
+    await click('[data-test-workflow-metadata-next]');
 
     await waitFor('input[type=file]');
 
@@ -300,7 +300,7 @@ module('Acceptance | submission', function (hooks) {
       );
     assert.dom('[data-test-metadata-form] div[data-name=journal-title] input').hasValue('The Analyst');
 
-    await click('input[title=Complete]');
+    await click('[data-test-workflow-metadata-next]');
 
     await waitFor('input[type=file]');
 
@@ -450,7 +450,7 @@ module('Acceptance | submission', function (hooks) {
     assert.dom('[data-test-metadata-form] div[data-name=title] input').hasValue('My article');
     assert.dom('[data-test-metadata-form] div[data-name=journal-title] input').hasValue('The Analyst');
 
-    await click('input[title=Complete]');
+    await click('[data-test-workflow-metadata-next]');
 
     await waitFor('[data-test-metadata-form] div[data-name=authors] div[role=alert]');
     assert
@@ -467,7 +467,7 @@ module('Acceptance | submission', function (hooks) {
     await fillIn('div[data-name=publicationDate] input', '2024-01-01');
     await waitFor('div[data-name=publicationDate] input');
 
-    await click('input[title=Complete]');
+    await click('[data-test-workflow-metadata-next]');
 
     await waitFor('input[type=file]');
 
@@ -591,7 +591,7 @@ module('Acceptance | submission', function (hooks) {
     assert.dom('[data-test-metadata-form] div[data-name=journal-title] input').hasValue('The Analyst');
     assert.dom('[data-test-metadata-form] div[data-name=journal-NLMTA-ID] input').doesNotExist();
 
-    await click('input[title=Complete]');
+    await click('[data-test-workflow-metadata-next]');
 
     await waitFor('[data-test-metadata-form] div[data-name=authors] div[role=alert]');
     assert
@@ -608,7 +608,7 @@ module('Acceptance | submission', function (hooks) {
     await fillIn('div[data-name=publicationDate] input', '2020-01-01');
     await waitFor('div[data-name=publicationDate] input');
 
-    await click('input[title=Complete]');
+    await click('[data-test-workflow-metadata-next]');
 
     await waitFor('input[type=file]');
 
@@ -771,7 +771,7 @@ module('Acceptance | submission', function (hooks) {
     await fillIn('div[data-name=publicationDate] input', '2018-01-01');
     await waitFor('div[data-name=publicationDate] input');
 
-    await click('input[title=Complete]');
+    await click('[data-test-workflow-metadata-next]');
 
     await waitFor('input[type=file]');
 
