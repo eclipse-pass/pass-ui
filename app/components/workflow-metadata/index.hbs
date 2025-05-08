@@ -27,6 +27,11 @@
 <button class="btn btn-outline-danger ml-2" data-test-workflow-metadata-cancel type="button" {{on "click" this.cancel}}>
   Cancel
 </button>
-<button class="btn btn-primary next pull-right" type="button" {{on "click" this.handleExternalSubmit}}>
+<button
+  class="btn btn-primary next pull-right"
+  data-test-workflow-metadata-next
+  type="button"
+  {{on "click" this.handleExternalSubmit}}
+>
   Next
 </button>
