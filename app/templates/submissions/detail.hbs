@@ -2,21 +2,21 @@
 <div class="block-user-input text-center">
   <div class="lds-dual-ring mx-auto"></div>
 </div>
-<div id="submission-details-title" class="row mb-2">
-  <div class="col-6">
-    <LinkTo @route="submissions" class="btn btn-small back-arrow" aria-label="Go back to the previous page">
+<div id="submission-details-title" class="d-flex justify-content-between align-items-center my-3">
+  <div class="d-flex align-items-center">
+    <LinkTo @route="submissions" class="btn btn-small back-arrow mr-1" aria-label="Go back to the previous page">
       <i class="fa fa-arrow-left fa-lg"></i>
     </LinkTo>
-    <h2 class="font-weight-light d-inline-block">
+    <h1 class="font-weight-light m-0">
       Submission Detail
-    </h2>
+    </h1>
   </div>
-  <div class="col-6 text-right">
+  <div class="col-6 text-end">
     {{#if this.model.sub.isStub}}
       <LinkTo
         @route="submissions.new"
         @query={{hash submission=this.model.sub.id}}
-        class="btn btn-outline-primary text-right"
+        class="btn btn-outline-primary text-end text-nowrap"
       >
         Finish submission
       </LinkTo>
@@ -24,42 +24,44 @@
       <LinkTo
         @route="submissions.new"
         @query={{hash submission=this.model.sub.id}}
-        class="btn btn-outline-primary text-right"
+        class="btn btn-outline-primary text-end"
         data-test-submission-detail-edit-submission
       >
         Edit submission
       </LinkTo>
-      <button class="btn btn-outline-danger text-right" {{action "deleteSubmission" this.model.sub}}>
+      <button class="btn btn-outline-danger text-end" {{action "deleteSubmission" this.model.sub}}>
         Delete
       </button>
     {{/if}}
   </div>
 </div>
-<div id="submission-details-body" class="form-group row">
+<div id="submission-details-body" class="mb-3 row">
   <div class="col-12">
     <div class="list-group">
       <div href="#" class="list-group-item flex-column align-items-start">
-        <div class="d-flex w-100 justify-content-between">
-          <h5 class="mb-1">
-            {{this.model.sub.publication.title}}
-          </h5>
-          {{#if this.model.sub.submittedDate}}
-            <small class="text-muted text-right">
-              Submitted
-              {{format-date this.model.sub.submittedDate}}
-            </small>
-          {{/if}}
+        <div class="submission-details-title border-bottom d-flex flex-column w-100">
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">
+              {{this.model.sub.publication.title}}
+            </h5>
+            {{#if this.model.sub.submittedDate}}
+              <small class="text-muted text-end">
+                Submitted
+                {{format-date this.model.sub.submittedDate}}
+              </small>
+            {{/if}}
+          </div>
+          <p class="mb-1">
+            DOI:
+            {{#if this.model.sub.publication.doi}}
+              {{this.model.sub.publication.doi}}
+            {{else}}
+              <span class="text-muted">
+                None
+              </span>
+            {{/if}}
+          </p>
         </div>
-        <p class="mb-1">
-          DOI:
-          {{#if this.model.sub.publication.doi}}
-            {{this.model.sub.publication.doi}}
-          {{else}}
-            <span class="text-muted">
-              None
-            </span>
-          {{/if}}
-        </p>
         <table class="table table-responsive-sm table-bordered w-100 d-flex">
           <tbody>
             <tr>
@@ -252,7 +254,7 @@
                   </p>
                 {{else}}
                   <table class="files-table w-100">
-                    <thead>
+                    <thead class="border-bottom border-top">
                       <tr>
                         <th scope="col"></th>
                         <th scope="col" class="font-weight-light">
@@ -335,7 +337,7 @@
 </div>
 {{#if (and this.isSubmitter this.submissionNeedsSubmitter)}}
   <div class="row">
-    <div class="col-12 text-right">
+    <div class="col-12 text-end">
       <button class="btn btn-primary" onclick={{action "approveChanges"}}>
         Submit
       </button>
@@ -353,7 +355,7 @@
 {{/if}}
 {{#if (and this.isPreparer this.submissionNeedsPreparer)}}
   <div class="row">
-    <div class="col-12 text-right">
+    <div class="col-12 text-end">
       <LinkTo @route="submissions.new" @query={{hash submission=this.model.sub.id}} class="btn btn-primary">
         Edit this submission
       </LinkTo>

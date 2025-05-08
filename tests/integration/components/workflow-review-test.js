@@ -24,7 +24,7 @@ module('Integration | Component | workflow review', (hooks) => {
   });
 
   test('it renders', async function (assert) {
-    this.submission = { metadata: '[]', repositories: [] };
+    this.submission = { metadata: '{}', repositories: [] };
     this.publication = {};
     this.submit = () => {};
     this.loadPrevious = () => {};

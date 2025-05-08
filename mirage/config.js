@@ -2,7 +2,6 @@ import { camelize } from '@ember/string';
 import { discoverEmberDataModels } from 'ember-cli-mirage';
 import { createServer, JSONAPISerializer, Response } from 'miragejs';
 import doiJournals from './custom-fixtures/nih-submission/doi-journals';
-import schemas from './routes/schemas';
 import ENV from 'pass-ui/config/environment';
 import MockDataFinder from './service-handler';
 
@@ -105,9 +104,6 @@ export default function (config) {
       this.delete('/data/file/:id', (_schema, _request) => {
         return new Response(204);
       });
-
-      /** Schema Service */
-      schemas(this);
 
       // Users
       this.get('/data/user/:id', (schema, request) => schema.find('user', request.params.id));

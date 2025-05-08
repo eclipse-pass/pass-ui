@@ -1,47 +1,61 @@
 import Component from '@glimmer/component';
-import stripEmptyArrays from 'pass-ui/util/strip-empty-arrays';
 import { action } from '@ember/object';
+import { SurveyModel } from 'survey-js-ui';
+import { DefaultLightPanelless } from 'survey-core/themes';
 
 export default class MetadataForm extends Component {
+  survey = null;
+
   @action
   setupMetadataForm() {
-    const componentContext = this;
-    const originalForm = this.args.schema;
-    const newForm = JSON.parse(JSON.stringify(originalForm));
-    if (!originalForm.options) {
-      newForm.options = {};
-    }
+    const surveySchema = this.args.schema;
+    const surveyData = this.args.data;
 
-    // form ctrls
-    newForm.options.form = {
-      buttons: {
-        Back: {
-          title: 'Back',
-          styles: 'pull-left btn btn-outline-primary',
-          click() {
-            componentContext.args.previousForm(stripEmptyArrays(this.getValue()));
-          },
-        },
-        Abort: {
-          label: 'Cancel',
-          styles: 'pull-left btn btn-outline-danger ml-2',
-          click() {
-            componentContext.args.cancel();
-          },
-        },
-        Next: {
-          label: 'Next',
-          styles: 'pull-right btn btn-primary next',
-          click() {
-            componentContext.args.nextForm(stripEmptyArrays(this.getValue()));
-          },
-        },
+    const customCss = {
+      body: 'pt-4',
+      page: {
+        // Remove default survey.js page class
+        root: '',
+      },
+      navigation: {
+        complete: 'd-none',
+      },
+      text: {
+        root: 'form-control',
+      },
+      comment: {
+        root: 'form-control',
+      },
+      dropdown: {
+        control: 'form-control',
       },
     };
 
-    newForm.options.hideInitValidationError = true;
+    this.survey = new SurveyModel(surveySchema);
 
-    $('#schemaForm').empty();
-    $('#schemaForm').alpaca(newForm);
+    this.survey.css = customCss;
+
+    this.survey.mergeData(surveyData);
+
+    this.survey.applyTheme(DefaultLightPanelless);
+
+    this.survey.applyTheme({
+      cssVariables: {
+        '--sjs-primary-backcolor': 'black',
+        '--sjs-primary-forecolor': 'white',
+        '--sjs-primary-backcolor-light': '#f0f0f0',
+        '--sjs-general-backcolor-dim': 'white',
+        '--sjs-font-family': 'var(--font-bodycopy)',
+      },
+    });
+    this.survey.render(document.getElementById('metadata-form'));
+
+    if (typeof this.args.onSurveyReady === 'function') {
+      this.args.onSurveyReady(this.survey);
+    }
+
+    this.survey.onComplete.add((_sender, _options) => {
+      this.args.next(this.survey.data);
+    });
   }
 }

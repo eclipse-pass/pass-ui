@@ -9,38 +9,28 @@ module('Integration | Component | metadata-form', (hooks) => {
 
   hooks.beforeEach(function () {
     const schema = {
-      id: 'nih',
-      data: {},
-      schema: {
-        title:
-          'NIH Manuscript Submission System (NIHMS) <br><p class="lead text-muted">The following metadata fields will be part of the NIHMS submission.</p>',
-        type: 'object',
-        properties: {
-          'journal-NLMTA-ID': { type: 'string', required: true },
-          ISSN: { type: 'string', required: true },
+      elements: [
+        {
+          name: 'title',
+          type: 'text',
+          title: 'Title',
+          isRequired: true,
         },
-      },
-      options: {
-        fields: {
-          'journal-NLMTA-ID': { type: 'text', label: 'Journal NLMTA ID', placeholder: '' },
-          ISSN: { type: 'text', label: 'ISSN', placeholder: '' },
-        },
-      },
+      ],
     };
+
+    const data = {
+      title: 'this is a title',
+    };
+
     this.set('schema', schema);
+    this.set('data', data);
   });
 
   test('it renders', async function (assert) {
     await render(hbs`<MetadataForm @schema={{this.schema}} />`);
 
-    const el = this.element.querySelector('#schemaForm');
-    assert.ok(el);
-
-    assert.strictEqual(
-      el.querySelectorAll('button').length,
-      3,
-      'There should be three form control buttons (prev, abort, next)',
-    );
+    assert.dom('#metadata-form').exists();
   });
 
   test('Test "stripEmptyArrays"', function (assert) {

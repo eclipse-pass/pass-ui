@@ -1,6 +1,6 @@
 {{! template-lint-disable link-href-attributes no-action no-inline-styles no-invalid-interactive }}
 {{#if @record.isStub}}
-  <LinkTo @route="submissions.new" @query={{hash submission=@record.id}} class="btn btn-outline-primary">
+  <LinkTo @route="submissions.new" @query={{hash submission=@record.id}} class="btn btn-outline-primary text-nowrap">
     Finish submission
   </LinkTo>
 {{else if (and (eq @record.submissionStatus "changes-requested") this.isSubmitter)}}
