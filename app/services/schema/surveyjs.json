@@ -92,7 +92,9 @@
             "type": "boolean",
             "title": "Under Embargo",
             "description": "The material being submitted is published under an embargo.",
-            "defaultValue": false
+            "defaultValue": "false",
+            "valueTrue": "true",
+            "valueFalse": "false"
         },
         {
             "name": "volume",
