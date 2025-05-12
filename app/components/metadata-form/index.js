@@ -17,9 +17,6 @@ export default class MetadataForm extends Component {
         // Remove default survey.js page class
         root: '',
       },
-      navigation: {
-        complete: 'd-none',
-      },
       text: {
         root: 'form-control',
       },
@@ -34,6 +31,7 @@ export default class MetadataForm extends Component {
     this.survey = new SurveyModel(surveySchema);
 
     this.survey.css = customCss;
+    this.survey.showCompleteButton = false;
 
     this.survey.mergeData(surveyData);
 
