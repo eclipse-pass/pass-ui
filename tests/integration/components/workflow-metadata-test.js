@@ -126,7 +126,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
     );
     await waitFor('div[data-name=title]');
 
-    await click('input[title=Complete]');
+    await click('[data-test-workflow-metadata-next]');
     await waitFor('div[role=alert]');
 
     // Should fail validation
@@ -140,7 +140,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
     await fillIn('div[data-name=journal-title] input', 'Goats are great');
     await fillIn('div[data-name=journal-NLMTA-ID] input', 'goats');
 
-    await click('input[title=Complete]');
+    await click('[data-test-workflow-metadata-next]');
 
     // Validation should succeed
     assert.dom('div[data-name=title] div[role=alert]').doesNotExist();
