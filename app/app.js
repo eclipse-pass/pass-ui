@@ -8,6 +8,7 @@ import 'ember-modal-dialog/app/styles/ember-modal-dialog/ember-modal-structure.c
 import 'ember-modal-dialog/app/styles/ember-modal-dialog/ember-modal-appearance.css';
 import 'sweetalert2/dist/sweetalert2.css';
 import 'survey-core/survey-core.fontless.min.css';
+import './font-awesome';
 
 export default class App extends Application {
   modulePrefix = config.modulePrefix;
