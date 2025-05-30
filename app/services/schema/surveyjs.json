@@ -1,5 +1,6 @@
 {
     "checkErrorsMode": "onValueChanged",
+    "textUpdateMode": "onTyping",
     "elements": [
         {
             "name": "abstract",
@@ -20,7 +21,19 @@
                 {
                     "name": "orcid",
                     "type": "text",
-                    "title": "ORCiD"
+                    "title": "ORCID iD",
+                    "validators": [{
+                        "type": "expression",
+                        "expression": "{panel.orcid} empty or validateOrcid({panel.orcid})",
+                        "text": "Please enter a valid ORCID iD."
+                    }]
+                },
+                {
+                    "name": "orcid-link",
+                    "type": "html",
+                    "title": "ORCID iD Link",
+                    "html": "<a href='{panel.orcid}' target='_blank' rel='noopener noreferrer' aria-label='View ORCID record'><img src='/app/ORCID-iD_icon_unauth_24x24.png' alt='ORCID iD'/> {panel.orcid} (unauthenticated)</a>",
+                    "visibleIf": "{panel.orcid} notempty and validateOrcid({panel.orcid})"
                 }
             ]
         },
