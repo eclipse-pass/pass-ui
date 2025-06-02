@@ -16,7 +16,7 @@ module('Unit | Service | doi', (hooks) => {
       },
       author: [
         {
-          ORCID: 'http://orcid.org/0000-0003-2974-7389',
+          ORCID: 'https://orcid.org/0000-0003-2974-7389',
           'authenticated-orcid': false,
           given: 'Moo',
           family: 'Jones',
@@ -75,12 +75,12 @@ module('Unit | Service | doi', (hooks) => {
       result.authors,
       [
         {
-          ORCID: 'http://orcid.org/0000-0003-2974-7389',
+          ORCID: 'https://orcid.org/0000-0003-2974-7389',
           'authenticated-orcid': false,
           given: 'Moo',
           family: 'Jones',
           sequence: 'first',
-          orcid: 'http://orcid.org/0000-0003-2974-7389',
+          orcid: 'https://orcid.org/0000-0003-2974-7389',
           author: 'Moo Jones',
         },
         {

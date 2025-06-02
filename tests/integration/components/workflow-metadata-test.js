@@ -14,7 +14,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
 
   const metadata = {
     abstract: 'this is an abtract',
-    authors: [{ author: 'Bob Bobson', orcid: '1234' }],
+    authors: [{ author: 'Bob Bobson', orcid: 'https://orcid.org/0000-0001-5109-3700' }],
     'Embargo-end-date': '2021-01-01',
     issue: '3',
     issns: [{ issn: '1234-4321', pubType: 'Print' }],
