@@ -22,6 +22,11 @@
                     "name": "orcid",
                     "type": "text",
                     "title": "ORCID iD",
+                    "maskType": "pattern",
+                    "maskSettings": {
+                        "pattern": "https://orcid.org/9999-9999-9999-999#",
+                        "saveMaskedValue": true
+                    },
                     "validators": [{
                         "type": "expression",
                         "expression": "{panel.orcid} empty or validateOrcid({panel.orcid})",
