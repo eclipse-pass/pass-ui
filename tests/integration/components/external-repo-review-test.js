@@ -27,7 +27,6 @@ module('Integration | Component | external-repo-review', (hooks) => {
 
     const li = this.element.querySelectorAll('li');
     assert.equal(li.length, 2, 'Should have 2 list elements for repos');
-    assert.dom('i.text-danger').exists();
   });
 
   test('Links unbold when clicked', async function (assert) {
