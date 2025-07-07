@@ -80,18 +80,18 @@
   {{#if (gt this.pageCount "1")}}
     <nav id="grants-selection-nav" aria-label="...">
       <ul class="pagination justify-content-center">
-        <li class="page-item active">
+        <li class="page-item active btn">
           <a class="fa fa-angle-left" {{action "prevPage"}}></a>
         </li>
-        <li class="page-item">
-          <a class="page-link">
+        <li class="page-item d-flex align-items-center">
+          <span>
             Page
             {{this.pageNumber}}
             of
             {{this.pageCount}}
-          </a>
+          </span>
         </li>
-        <li class="page-item active">
+        <li class="page-item active btn">
           <a class="fa fa-angle-right" {{action "nextPage"}}></a>
         </li>
       </ul>
