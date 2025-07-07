@@ -198,7 +198,19 @@ export default function (config) {
 
       // Grants
       this.get('/data/grant/:id', (schema, request) => schema.find('grant', request.params.id));
-      this.get('/data/grant', (schema, request) => schema.all('grant'));
+      this.get('/data/grant', function (schema, request) {
+        const grantsModel = schema.grant.all();
+        const grants = this.serialize(grantsModel);
+        return {
+          ...grants,
+          meta: {
+            page: {
+              totalRecords: 5,
+              totalPages: 1,
+            },
+          },
+        };
+      });
 
       this.get('/data/repositoryCopy/:id', (schema, request) => schema.find('repositoryCopy', request.params.id));
       this.get('/data/repositoryCopy', (schema, request) => schema.none('repositoryCopy'));

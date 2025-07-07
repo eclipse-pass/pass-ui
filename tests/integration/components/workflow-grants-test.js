@@ -29,6 +29,7 @@ module('Integration | Component | workflow grants', (hooks) => {
       EmberObject.create({ id: 3, awardNumber: '3', projectName: 'Moo 3' }),
       EmberObject.create({ id: 4, awardNumber: '4', projectName: 'Moo 4' }),
     ]);
+    grants.meta = { page: { totalRecords: 4, totalPages: 1 } };
 
     const mockStaticConfig = Service.extend({
       getStaticConfig: () =>
