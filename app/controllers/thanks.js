@@ -9,11 +9,11 @@ export default class ThanksController extends Controller {
   @service('app-static-config') staticConfig;
 
   @tracked submission = null;
-  @tracked faqUrl = null;
+  @tracked userGuideUrl = null;
 
   constructor() {
     super(...arguments);
 
-    this.faqUrl = this.staticConfig.config?.branding?.pages?.faqUrl;
+    this.userGuideUrl = this.staticConfig.config?.branding?.pages?.userGuideUrl;
   }
 }
