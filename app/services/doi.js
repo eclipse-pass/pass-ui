@@ -68,10 +68,9 @@ export default class DoiService extends Service {
     const ancientDOIRegExp = /^(https?:\/\/(dx\.)?doi\.org\/)?10.1002\/[^\s]+$/i;
     if (doi == null || !doi) {
       return false;
-    } else if (newDOIRegExp.test(doi) === true || ancientDOIRegExp.test(doi) === true) {
-      return true;
     }
-    return false;
+    const testDoi = doi.trim();
+    return newDOIRegExp.test(testDoi) === true || ancientDOIRegExp.test(testDoi) === true;
   }
 
   formatDOI(doi) {

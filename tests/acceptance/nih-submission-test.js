@@ -26,7 +26,7 @@ module('Acceptance | submission', function (hooks) {
     await waitFor('[data-test-workflow-basics-next]');
     assert.strictEqual(currentURL(), '/submissions/new/basics');
     assert.dom('[data-test-doi-input]').exists();
-    await fillIn('[data-test-doi-input]', '10.1039/c7an01256j');
+    await fillIn('[data-test-doi-input]', '10.1039/c7an01256j ');
 
     await waitFor('.flash-message.alert.alert-success');
     assert.dom('.flash-message.alert.alert-success').exists({ count: 1 });
