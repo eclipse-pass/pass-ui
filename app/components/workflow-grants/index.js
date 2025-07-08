@@ -38,9 +38,28 @@ export default class WorkflowGrants extends Component {
       disableSorting: true,
     },
     {
-      title: 'Project name (funding period)',
-      className: 'projectname-date-column',
-      component: 'grantTitleDateCell',
+      propertyName: 'projectName',
+      title: 'Project Name',
+      className: 'projectname-column',
+      disableSorting: true,
+    },
+    {
+      propertyName: 'startDate',
+      title: 'Start',
+      className: 'date-column',
+      component: 'dateCell',
+      disableSorting: true,
+    },
+    {
+      propertyName: 'endDate',
+      title: 'End',
+      className: 'date-column',
+      component: 'dateCell',
+      disableSorting: true,
+    },
+    {
+      propertyName: 'awardStatus',
+      title: 'Status',
       disableSorting: true,
     },
     {
