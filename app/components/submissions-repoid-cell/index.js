@@ -9,8 +9,6 @@ export default class SubmissionsRepoidCell extends Component {
 
   @tracked repoCopies = null;
 
-  jscholarshipCheckString = '/handle/';
-
   @action
   async setUpRepoidCell() {
     const publication = await this.args.record.publication;
@@ -51,6 +49,24 @@ export default class SubmissionsRepoidCell extends Component {
   }
 
   /**
+   * Format a repository ID for display.
+   * If the ID includes one of the markers, return the ID after the marker
+   * This deals with DSpace handle and item URLs.
+   */
+  formatId(id) {
+    const markers = ['/handle/', '/items/'];
+
+    for (let marker of markers) {
+      let index = id.indexOf(marker);
+      if (index !== -1) {
+        return id.slice(index + marker.length);
+      }
+    }
+
+    return id;
+  }
+
+  /**
    * Formatted:
    *  [
    *    {
@@ -73,14 +89,10 @@ export default class SubmissionsRepoidCell extends Component {
     return rc
       .filter((repoCopy) => !!repoCopy.externalIds)
       .map((repoCopy) => {
-        const check = this.jscholarshipCheckString;
-
-        // If an ID has the 'check' string, only display the sub-string after the 'check' string
         let ids = repoCopy.externalIds.map((id) => {
-          // eslint-disable-line
           return {
             title: id,
-            display: id.includes(check) ? id.slice(id.indexOf(check) + check.length) : id,
+            display: this.formatId(id),
           };
         });
         return {
