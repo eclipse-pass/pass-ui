@@ -78,11 +78,11 @@ export default class GrantDetailsController extends Controller {
   };
 
   get itemsCount() {
-    return this.queuedModel.submissions.meta?.page?.totalRecords;
+    return this.queuedModel.submissions?.meta?.page?.totalRecords;
   }
 
   get pagesCount() {
-    return this.queuedModel.submissions.meta?.page?.totalPages;
+    return this.queuedModel.submissions?.meta?.page?.totalPages;
   }
 
   @action
