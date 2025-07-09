@@ -13,7 +13,19 @@ module('Integration | Component | submissions repoid cell', (hooks) => {
   // Inject mocked store that on query returns a single user
   hooks.beforeEach(function () {
     let store = Service.extend({
-      query: (type, q) => Promise.resolve([EmberObject.create({ id: 'test' })]),
+      query: (type, q) =>
+        Promise.resolve([
+          EmberObject.create({
+            id: 'test',
+            accessUrl: 'https://dspace.example.com/handle/12345/67890',
+            externalIds: ['https://dspace.example.com/handle/12345/67890'],
+          }),
+          EmberObject.create({
+            id: 'test2',
+            accessUrl: 'https://dspace.example.com/items/abcde-12345',
+            externalIds: ['https://dspace.example.com/items/abcde-12345'],
+          }),
+        ]),
     });
 
     run(() => {
@@ -68,5 +80,33 @@ module('Integration | Component | submissions repoid cell', (hooks) => {
 <th class='table-header' />
 <SubmissionsRepoidCell @record={{this.record}} />`);
     assert.ok(true);
+  });
+
+  /**
+   * Make sure the DSpace ids with handles and items are formatted correctly
+   */
+  test('DSpace ids are formatted correctly', async function (assert) {
+    assert.expect(4);
+
+    const record = EmberObject.create({
+      publication: EmberObject.create({ id: '2' }),
+    });
+    this.record = record;
+
+    await render(hbs`<th class='table-header' />
+<th class='table-header' />
+<th class='table-header' />
+<th class='table-header' />
+<th class='table-header' />
+<th class='table-header' />
+<SubmissionsRepoidCell @record={{this.record}} />`);
+
+    assert.ok(true);
+    console.log(this.element);
+
+    const lis = this.element.querySelectorAll('li');
+    assert.strictEqual(lis.length, 2);
+    assert.strictEqual(lis[0].textContent.trim(), '12345/67890');
+    assert.strictEqual(lis[1].textContent.trim(), 'abcde-12345');
   });
 });
