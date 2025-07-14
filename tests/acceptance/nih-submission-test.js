@@ -46,12 +46,12 @@ module('Acceptance | submission', function (hooks) {
     await waitFor('[data-test-workflow-basics-next]');
     await click('[data-test-workflow-basics-next]');
 
-    await waitFor('[data-test-grants-selection-table] tbody tr td.projectname-date-column');
+    await waitFor('[data-test-grants-selection-table] tbody tr td.projectname-column');
     assert.strictEqual(currentURL(), '/submissions/new/grants');
     assert
-      .dom('[data-test-grants-selection-table] tbody tr td.projectname-date-column')
+      .dom('[data-test-grants-selection-table] tbody tr td.projectname-column')
       .includesText('Regulation of Synaptic Plasticity in Visual Cortex');
-    await click('[data-test-grants-selection-table] tbody tr td.projectname-date-column');
+    await click('[data-test-grants-selection-table] tbody tr td.projectname-column');
     await waitFor('[data-test-submission-funding-table] tbody tr td.projectname-date-column');
     assert
       .dom('[data-test-submission-funding-table] tbody tr td.projectname-date-column')
@@ -220,12 +220,12 @@ module('Acceptance | submission', function (hooks) {
     await waitFor('[data-test-workflow-basics-next]');
     await click('[data-test-workflow-basics-next]');
 
-    await waitFor('[data-test-grants-selection-table] tbody tr td.projectname-date-column');
+    await waitFor('[data-test-grants-selection-table] tbody tr td.projectname-column');
     assert.strictEqual(currentURL(), '/submissions/new/grants');
     assert
-      .dom('[data-test-grants-selection-table] tbody tr td.projectname-date-column')
+      .dom('[data-test-grants-selection-table] tbody tr td.projectname-column')
       .includesText('Regulation of Synaptic Plasticity in Visual Cortex');
-    await click('[data-test-grants-selection-table] tbody tr td.projectname-date-column');
+    await click('[data-test-grants-selection-table] tbody tr td.projectname-column');
     await waitFor('[data-test-submission-funding-table] tbody tr td.projectname-date-column');
     assert
       .dom('[data-test-submission-funding-table] tbody tr td.projectname-date-column')
@@ -390,12 +390,12 @@ module('Acceptance | submission', function (hooks) {
     await waitFor('[data-test-workflow-basics-next]');
     await click('[data-test-workflow-basics-next]');
 
-    await waitFor('[data-test-grants-selection-table] tbody tr td.projectname-date-column');
+    await waitFor('[data-test-grants-selection-table] tbody tr td.projectname-column');
     assert.strictEqual(currentURL(), '/submissions/new/grants');
     assert
-      .dom('[data-test-grants-selection-table] tbody tr td.projectname-date-column')
+      .dom('[data-test-grants-selection-table] tbody tr td.projectname-column')
       .includesText('Regulation of Synaptic Plasticity in Visual Cortex');
-    await click('[data-test-grants-selection-table] tbody tr td.projectname-date-column');
+    await click('[data-test-grants-selection-table] tbody tr td.projectname-column');
     await waitFor('[data-test-submission-funding-table] tbody tr td.projectname-date-column');
     assert
       .dom('[data-test-submission-funding-table] tbody tr td.projectname-date-column')
@@ -418,7 +418,7 @@ module('Acceptance | submission', function (hooks) {
     await waitFor('[data-test-workflow-basics-next]');
     await click('[data-test-workflow-basics-next]');
 
-    await waitFor('[data-test-grants-selection-table] tbody tr td.projectname-date-column');
+    await waitFor('[data-test-grants-selection-table] tbody tr td.projectname-column');
     assert.strictEqual(currentURL(), '/submissions/new/grants');
     await waitFor('[data-test-submission-funding-table] tbody tr td.projectname-date-column');
     assert
@@ -532,12 +532,12 @@ module('Acceptance | submission', function (hooks) {
     await waitFor('[data-test-workflow-basics-next]');
     await click('[data-test-workflow-basics-next]');
 
-    await waitFor('[data-test-grants-selection-table] tbody tr td.projectname-date-column');
+    await waitFor('[data-test-grants-selection-table] tbody tr td.projectname-column');
     assert.strictEqual(currentURL(), '/submissions/new/grants');
     assert
-      .dom('[data-test-grants-selection-table] tbody tr td.projectname-date-column')
+      .dom('[data-test-grants-selection-table] tbody tr td.projectname-column')
       .includesText('Regulation of Synaptic Plasticity in Visual Cortex');
-    await click('[data-test-grants-selection-table] tbody tr td.projectname-date-column');
+    await click('[data-test-grants-selection-table] tbody tr td.projectname-column');
     await waitFor('[data-test-submission-funding-table] tbody tr td.projectname-date-column');
     assert
       .dom('[data-test-submission-funding-table] tbody tr td.projectname-date-column')
@@ -669,12 +669,12 @@ module('Acceptance | submission', function (hooks) {
     await waitFor('[data-test-workflow-basics-next]');
     await click('[data-test-workflow-basics-next]');
 
-    await waitFor('[data-test-grants-selection-table] tbody tr td.projectname-date-column');
+    await waitFor('[data-test-grants-selection-table] tbody tr td.projectname-column');
     assert.strictEqual(currentURL(), '/submissions/new/grants');
     assert
-      .dom('[data-test-grants-selection-table] tbody tr td.projectname-date-column')
+      .dom('[data-test-grants-selection-table] tbody tr td.projectname-column')
       .includesText('Regulation of Synaptic Plasticity in Visual Cortex');
-    await click('[data-test-grants-selection-table] tbody tr td.projectname-date-column');
+    await click('[data-test-grants-selection-table] tbody tr td.projectname-column');
     await waitFor('[data-test-submission-funding-table] tbody tr td.projectname-date-column');
     assert
       .dom('[data-test-submission-funding-table] tbody tr td.projectname-date-column')
@@ -728,12 +728,12 @@ module('Acceptance | submission', function (hooks) {
     await waitFor('[data-test-workflow-basics-next]');
     await click('[data-test-workflow-basics-next]');
 
-    await waitFor('[data-test-grants-selection-table] tbody tr td.projectname-date-column');
+    await waitFor('[data-test-grants-selection-table] tbody tr td.projectname-column');
     assert.strictEqual(currentURL(), '/submissions/new/grants');
     assert
-      .dom('[data-test-grants-selection-table] tbody tr:nth-child(10) td.projectname-date-column')
+      .dom('[data-test-grants-selection-table] tbody tr:nth-child(10) td.projectname-column')
       .includesText('Pre-Study of wild-type');
-    await click('[data-test-grants-selection-table] tbody tr:nth-child(10) td.projectname-date-column');
+    await click('[data-test-grants-selection-table] tbody tr:nth-child(10) td.projectname-column');
     await waitFor('[data-test-submission-funding-table] tbody tr td.projectname-date-column');
     assert
       .dom('[data-test-submission-funding-table] tbody tr td.projectname-date-column')

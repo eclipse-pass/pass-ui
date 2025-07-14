@@ -106,12 +106,12 @@ module('Acceptance | proxy submission', function (hooks) {
     await click('[data-test-workflow-basics-next]');
 
     if (hasAccount) {
-      await waitFor('[data-test-grants-selection-table] tbody tr td.projectname-date-column');
+      await waitFor('[data-test-grants-selection-table] tbody tr td.projectname-column');
       assert.strictEqual(currentURL(), '/submissions/new/grants');
       assert
-        .dom('[data-test-grants-selection-table] tbody tr td.projectname-date-column')
+        .dom('[data-test-grants-selection-table] tbody tr td.projectname-column')
         .includesText('Regulation of Synaptic Plasticity in Visual Cortex');
-      await click('[data-test-grants-selection-table] tbody tr td.projectname-date-column');
+      await click('[data-test-grants-selection-table] tbody tr td.projectname-column');
       await waitFor('[data-test-submission-funding-table] tbody tr td.projectname-date-column');
       assert
         .dom('[data-test-submission-funding-table] tbody tr td.projectname-date-column')
