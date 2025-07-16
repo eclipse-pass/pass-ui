@@ -1,4 +1,10 @@
 {{! template-lint-disable no-unknown-arguments-for-builtin-components }}
-<LinkTo @route="grants.detail" @model={{@record.id}} target="_blank" rel="noopener noreferrer" {{on "click" this.stopPropagation}}>
+<LinkTo
+  @route="grants.detail"
+  @model={{@record.id}}
+  target="_blank"
+  rel="noopener noreferrer"
+  {{on "click" this.stopPropagation}}
+>
   {{get @record @column.propertyName}}
 </LinkTo>
