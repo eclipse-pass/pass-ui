@@ -1,6 +1,6 @@
 {
   "name": "pass-ui",
-  "version": "2.3.0-SNAPSHOT",
+  "version": "2.3.0",
   "private": true,
   "description": "The user interface for the eclipse-pass project",
   "license": "Apache-2.0",
@@ -34,7 +34,7 @@
     "@ember/string": "^3.1.1",
     "@fortawesome/ember-fontawesome": "^3.0.0",
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
-    "@fortawesome/free-regular-svg-icons": "^6.7.2",     
+    "@fortawesome/free-regular-svg-icons": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@glimmer/component": "^1.1.2",
     "@glimmer/tracking": "^1.1.2",
