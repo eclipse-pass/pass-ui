@@ -144,9 +144,7 @@ module('Integration | Component | policy card', (hooks) => {
 
       assert
         .dom('[data-test-method-a-journal-pmc-intro]')
-        .containsText(
-          'The journal you published in participates in the PMC Method A program, and will submit the published article to PMC on your behalf.',
-        );
+        .containsText('The journal you published in will submit the published article to PMC on your behalf.');
 
       assert.dom('[data-test-workflow-policies-radio-no-direct-deposit]').doesNotExist();
       assert.dom('[data-test-workflow-policies-radio-direct-deposit]').doesNotExist();
