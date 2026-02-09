@@ -2,6 +2,25 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## TypeScript Conversion Rules (Active)
+
+This codebase is being converted from JavaScript to TypeScript. The cardinal rule:
+
+**ZERO RUNTIME CHANGES.** When converting `.js` → `.ts`, only add type annotations. Do not change any runtime behavior. Specifically:
+- Do NOT change `get(this, 'prop')` to `this.prop`
+- Do NOT change `this.set('prop', value)` to `this.prop = value`
+- Do NOT change import sources (e.g. `ember-concurrency-decorators` → `ember-concurrency`)
+- Do NOT change `@alias`, `@computed`, `@observes` patterns to modern equivalents
+- Do NOT change task decorator patterns (`@task(function*(){})` vs `@task prop = function*(){}`)
+- DO add `declare` to `@service` and `@controller` injected properties
+- DO add type annotations to method parameters and return types
+- DO add `import type` for model/service types
+- DO use `// eslint-disable-next-line @typescript-eslint/no-explicit-any` above `any` typed declarations
+- DO change `super(...arguments)` to `constructor(...args: any[]) { super(...args); }` with rest params (Ember passes owner as constructor arg — must forward it)
+- For `@alias` properties, do NOT add `declare` (alias initializes the property at runtime)
+
+Legacy pattern cleanup (get/set, @computed, @alias, @observes) happens in a separate, later pass — not during the TypeScript conversion.
+
 ## Ember.js Development Guidance
 
 When working in this codebase, operate as a senior staff Ember.js engineer. Apply deep knowledge of Ember's reactivity model, Ember Data, the Glimmer rendering engine, and Octane idioms.
