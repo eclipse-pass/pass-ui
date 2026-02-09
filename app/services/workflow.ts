@@ -1,6 +1,13 @@
 /* eslint-disable ember/classic-decorator-no-classic-methods */
 import Service from '@ember/service';
 import { tracked } from '@glimmer/tracking';
+import type GrantModel from 'pass-ui/models/grant';
+
+export interface WorkflowFile {
+  id: string;
+  name: string;
+  [key: string]: unknown;
+}
 
 // service to hold workflow form state information that is not part of the model
 export default class Workflow extends Service {
@@ -14,14 +21,14 @@ export default class Workflow extends Service {
    */
   @tracked pmcPublisherDeposit = false;
 
-  @tracked readOnlyProperties = [];
+  @tracked readOnlyProperties: string[] = [];
 
-  @tracked files = [];
+  @tracked files: WorkflowFile[] = [];
   @tracked defaultRepoLoaded = false; // you only want to load the default setting on first access, after that is should respect he user's choice.
 
-  @tracked addedGrants = [];
+  @tracked addedGrants: GrantModel[] = [];
 
-  resetWorkflow() {
+  resetWorkflow(): void {
     this.setCurrentStep(0);
     this.setMaxStep(1);
     this.setPmcPublisherDeposit(false);
@@ -30,90 +37,90 @@ export default class Workflow extends Service {
     this.clearAddedGrants();
   }
 
-  getCurrentStep() {
+  getCurrentStep(): number {
     return this.currentStep;
   }
 
-  setCurrentStep(stepNumber) {
+  setCurrentStep(stepNumber: number): void {
     this.set('currentStep', stepNumber);
     if (this.maxStep < stepNumber) {
       this.setMaxStep(stepNumber);
     }
   }
 
-  getMaxStep() {
+  getMaxStep(): number {
     return this.maxStep;
   }
 
-  setMaxStep(stepNumber) {
+  setMaxStep(stepNumber: number): void {
     this.set('maxStep', stepNumber);
     // This ensures default repo is reloaded
     if (stepNumber < 4) this.setDefaultRepoLoaded(false);
   }
 
-  getPmcPublisherDeposit() {
+  getPmcPublisherDeposit(): boolean {
     return this.pmcPublisherDeposit;
   }
 
-  setPmcPublisherDeposit(pmcPublisherDeposit) {
+  setPmcPublisherDeposit(pmcPublisherDeposit: boolean): void {
     this.pmcPublisherDeposit = pmcPublisherDeposit;
   }
 
-  getFiles() {
+  getFiles(): WorkflowFile[] {
     return this.files;
   }
 
-  setFiles(files) {
+  setFiles(files: WorkflowFile[]): void {
     this.set('files', files);
   }
 
-  addFile(file) {
+  addFile(file: WorkflowFile): void {
     const newFiles = [...this.files, file];
     this.setFiles(newFiles);
   }
 
-  removeFile(fileId) {
+  removeFile(fileId: string): void {
     const newFiles = this.files.filter((file) => file.id !== fileId);
     this.setFiles(newFiles);
   }
 
-  getDefaultRepoLoaded() {
+  getDefaultRepoLoaded(): boolean {
     return this.defaultRepoLoaded;
   }
 
-  setDefaultRepoLoaded(defaultRepoLoaded) {
+  setDefaultRepoLoaded(defaultRepoLoaded: boolean): void {
     this.set('defaultRepoLoaded', defaultRepoLoaded);
   }
 
-  getReadOnlyProperties() {
+  getReadOnlyProperties(): string[] {
     return this.readOnlyProperties;
   }
 
-  setReadOnlyProperties(readOnlyProperties) {
+  setReadOnlyProperties(readOnlyProperties: string[]): void {
     this.set('readOnlyProperties', readOnlyProperties);
   }
 
-  setFromCrossref(fromCrossref) {
+  setFromCrossref(fromCrossref: boolean): void {
     this.set('dataFromCrossref', fromCrossref);
   }
 
-  isDataFromCrossref() {
+  isDataFromCrossref(): boolean {
     return this.dataFromCrossref;
   }
 
-  getAddedGrants() {
+  getAddedGrants(): GrantModel[] {
     return this.addedGrants;
   }
 
-  addGrant(grant) {
+  addGrant(grant: GrantModel): void {
     this.addedGrants = [grant, ...this.addedGrants];
   }
 
-  removeGrant(grant) {
+  removeGrant(grant: GrantModel): void {
     this.addedGrants = this.addedGrants.filter((g) => g.id !== grant.id);
   }
 
-  clearAddedGrants() {
+  clearAddedGrants(): void {
     this.addedGrants = [];
   }
 }

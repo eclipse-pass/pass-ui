@@ -4,6 +4,28 @@ import Service, { inject as service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
 import { task } from 'ember-concurrency';
 import { get } from '@ember/object';
+import type JournalModel from 'pass-ui/models/journal';
+import type PublicationModel from 'pass-ui/models/publication';
+
+export interface DoiInfo {
+  [key: string]: unknown;
+  title?: string | string[];
+  'container-title'?: string;
+  'journal-title'?: string;
+  issue?: string;
+  volume?: string;
+  abstract?: string;
+  DOI?: string;
+  doi?: string;
+  deposited?: string;
+  created?: string;
+  author?: Array<{ given: string; family: string; ORCID?: string }>;
+}
+
+export interface DoiResolution {
+  publication: PublicationModel;
+  doiInfo: DoiInfo;
+}
 
 /**
  * This service contains functions for interacting with Crossref and manipulating Crossref
@@ -14,7 +36,8 @@ import { get } from '@ember/object';
  */
 
 export default class DoiService extends Service {
-  @service store;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  @service declare store: any;
 
   /**
    * resolveDOI - Lookup information about a DOI using the PASS doi service. Return that information along
@@ -26,25 +49,25 @@ export default class DoiService extends Service {
    * @returns {object}    Object with doiInfo and publication
    */
   @task(function* (doi) {
-    let url = `${ENV.doiService.journalPath}?doi=${encodeURIComponent(doi)}`;
+    const url = `${ENV.doiService.journalPath}?doi=${encodeURIComponent(doi)}`;
 
-    let rawResponse = yield fetch(url, {
+    const rawResponse = yield fetch(url, {
       headers: {
         Accept: 'application/json; charset=utf-8',
         'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN\=([^;]*)/)['1'],
       },
     });
 
-    let response = yield rawResponse.json();
+    const response = yield rawResponse.json();
 
-    let journal = yield get(this, 'store').findRecord('journal', response['journal-id']);
+    const journal = yield get(this, 'store').findRecord('journal', response['journal-id']);
 
-    let doiInfo = this._processRawDoi(response.crossref.message);
+    const doiInfo = this._processRawDoi(response.crossref.message);
 
     // Needed by schemas
     doiInfo['journal-title'] = doiInfo['container-title'];
 
-    let publication = get(this, 'store').createRecord('publication', {
+    const publication = get(this, 'store').createRecord('publication', {
       doi,
       journal,
       title: Array.isArray(doiInfo.title) ? doiInfo.title.join(', ') : doiInfo.title,
@@ -62,7 +85,7 @@ export default class DoiService extends Service {
   })
   resolveDOI;
 
-  isValidDOI(doi) {
+  isValidDOI(doi: string | null | undefined): boolean {
     // ref: https://www.crossref.org/blog/dois-and-matching-regular-expressions/
     const newDOIRegExp = /^(https?:\/\/(dx\.)?doi\.org\/)?10.\d{4,9}\/[-._;()/:A-Z0-9]+$/i;
     const ancientDOIRegExp = /^(https?:\/\/(dx\.)?doi\.org\/)?10.1002\/[^\s]+$/i;
@@ -73,7 +96,7 @@ export default class DoiService extends Service {
     return newDOIRegExp.test(testDoi) === true || ancientDOIRegExp.test(testDoi) === true;
   }
 
-  formatDOI(doi) {
+  formatDOI(doi: string): string {
     doi = doi.trim();
     doi = doi.replace(/doi:/gi, '');
     doi = doi.replace(/https?:\/\/(dx\.)?doi\.org\//gi, '');
@@ -91,7 +114,7 @@ export default class DoiService extends Service {
    * @param {array} validFields OPTIONAL array of accepted property names on final metadata object
    * @returns {object} metadata blob seeded with DOI data
    */
-  doiToMetadata(doiInfo, journal, validFields) {
+  doiToMetadata(doiInfo: DoiInfo, journal: JournalModel | null, validFields?: string[]): Record<string, unknown> {
     const doiCopy = Object.assign({}, doiInfo);
 
     // Add issns key in expected format by parsing journal issns.
@@ -100,13 +123,13 @@ export default class DoiService extends Service {
     if (journal) {
       if (isArray(journal.get('issns'))) {
         journal.get('issns').forEach((s) => {
-          let i = s.indexOf(':');
-          let value = {};
+          const i = s.indexOf(':');
+          const value = {};
 
           if (i == -1) {
             value.issn = s;
           } else {
-            let prefix = s.substring(0, i);
+            const prefix = s.substring(0, i);
 
             if (prefix === 'Print') {
               value.pubType = 'Print';
@@ -129,7 +152,7 @@ export default class DoiService extends Service {
     if (Array.isArray(doiCopy.author)) {
       doiCopy.authors = [];
       doiCopy.author.forEach((author) => {
-        let a = {
+        const a = {
           author: `${author.given} ${author.family}`,
           orcid: author.ORCID,
         };
@@ -163,11 +186,11 @@ export default class DoiService extends Service {
     return doiCopy;
   }
 
-  getJournalTitle(doiInfo) {
+  getJournalTitle(doiInfo: DoiInfo): string | undefined {
     return this._maybeArrayToString('journal-title', doiInfo);
   }
 
-  getTitle(doiInfo) {
+  getTitle(doiInfo: DoiInfo): string | undefined {
     return this._maybeArrayToString('title', doiInfo);
   }
 
@@ -180,7 +203,7 @@ export default class DoiService extends Service {
    * @param {object} doiInfo data from Crossref
    * @returns {string} get a stringified value from a possible array of strings
    */
-  _maybeArrayToString(prop, doiInfo) {
+  _maybeArrayToString(prop: string, doiInfo: DoiInfo): string | undefined {
     const val = doiInfo[prop];
 
     if (Array.isArray(val)) {
@@ -198,7 +221,7 @@ export default class DoiService extends Service {
    * @param {object} data DOI data from Crossref
    * @returns {object} return the processed DOI data
    */
-  _processRawDoi(data) {
+  _processRawDoi(data: DoiInfo): DoiInfo {
     const toProcess = ['container-title', 'short-container-title', 'title', 'original-title', 'short-title'];
 
     toProcess

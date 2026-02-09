@@ -1,8 +1,16 @@
 import Service from '@ember/service';
 import ENV from 'pass-ui/config/environment';
 
+export interface ManuscriptInfo {
+  url: string;
+  name: string;
+  type: string;
+  source: string;
+  repositoryLabel: string;
+}
+
 export default class OAManuscriptService extends Service {
-  lookUpPath = ENV.doiService.manuscriptLookUpPath;
+  lookUpPath: string = ENV.doiService.manuscriptLookUpPath;
 
   /**
    * Get a list of open access copies for the given DOI
@@ -18,7 +26,7 @@ export default class OAManuscriptService extends Service {
    *    }
    *  ]
    */
-  lookup(doi) {
+  lookup(doi: string): ManuscriptInfo[] | Promise<ManuscriptInfo[] | void> {
     console.assert(!!this.lookUpPath, '%cOA Manuscript service lookup for DOIs not found.', 'color: red;');
     console.assert(!!doi, '%cNo DOI was provided to the manuscript service lookup.', 'color: red;');
 

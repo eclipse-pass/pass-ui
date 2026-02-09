@@ -1,7 +1,8 @@
 import Service, { inject as service } from '@ember/service';
 
 export default class AutocompleteService extends Service {
-  @service store;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  @service declare store: any;
 
   /**
    * Get suggestions for autocomplete possibilities based on the given
@@ -30,7 +31,8 @@ export default class AutocompleteService extends Service {
    *                                    Ember data store query
    * @returns {array} array of model objects
    */
-  suggest(type, fieldName, suggestPrefix, context = {}) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  suggest(type: string, fieldName: string | string[], suggestPrefix: string, context: Record<string, any> = {}) {
     if (!type) {
       return Promise.reject(new Error('No model type provided to the autocomplete service'));
     }

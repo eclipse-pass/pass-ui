@@ -2,11 +2,20 @@ import Service from '@ember/service';
 import ENV from 'pass-ui/config/environment';
 import swal from 'sweetalert2/dist/sweetalert2.js';
 
+export interface AppError {
+  name?: string;
+  message?: string;
+  stack?: string;
+  status?: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  payload?: any;
+}
+
 // Consolidates error handling.
 // The method handleError will figure out which handler to invoke.
 
 export default class ErrorHandlerService extends Service {
-  handleError(error) {
+  handleError(error: AppError): void {
     if (error.name == 'TransitionAborted') {
       // Ignore what seems to be spurious transition errors.
       // See https://github.com/emberjs/ember.js/issues/12505
@@ -49,7 +58,7 @@ export default class ErrorHandlerService extends Service {
     }
   }
 
-  handleSessionTimeout(error) {
+  handleSessionTimeout(_error: AppError): void {
     swal
       .fire({
         target: ENV.APP.rootElement,
@@ -64,20 +73,20 @@ export default class ErrorHandlerService extends Service {
       });
   }
 
-  handleLoginFailure(error) {
+  handleLoginFailure(_error: AppError): void {
     window.location.replace('/401.html');
   }
 
-  handleAuthorizationProblem(error) {
+  handleAuthorizationProblem(_error: AppError): void {
     window.location.replace('/403.html');
   }
 
-  handleNotFound(error) {
+  handleNotFound(_error: AppError): void {
     // Assume rootURL ends in '/'
     window.location.replace(`${ENV.rootURL}404`);
   }
 
-  handleDidNotLoadDataError(error) {
+  handleDidNotLoadDataError(error: AppError): void {
     swal
       .fire({
         target: ENV.APP.rootElement,
@@ -94,7 +103,7 @@ export default class ErrorHandlerService extends Service {
       });
   }
 
-  handleUnknownError(error) {
+  handleUnknownError(error: AppError): void {
     swal
       .fire({
         target: ENV.APP.rootElement,

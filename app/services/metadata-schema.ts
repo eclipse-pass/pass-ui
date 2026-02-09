@@ -3,6 +3,28 @@ import Service, { inject as service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
 import surveySchema from './schema/surveyjs.json';
 import repositorySchemas from './schema/repository.json';
+import type RepositoryModel from 'pass-ui/models/repository';
+import type SubmissionModel from 'pass-ui/models/submission';
+
+export interface SurveyElement {
+  name: string;
+  title?: string;
+  isRequired?: boolean;
+  requiredIf?: string;
+  readOnly?: boolean;
+  [key: string]: unknown;
+}
+
+export interface SurveySchema {
+  elements: SurveyElement[];
+  [key: string]: unknown;
+}
+
+export interface MetadataDisplayEntry {
+  label: string;
+  value: unknown;
+  isArray: boolean;
+}
 
 /**
  * Service to manipulate metadata formschemas
@@ -10,7 +32,7 @@ import repositorySchemas from './schema/repository.json';
 
 export default class MetadataSchemaService extends Service {
   constructor() {
-    super(...arguments);
+    super();
   }
 
   /**
@@ -20,7 +42,7 @@ export default class MetadataSchemaService extends Service {
    * @param {array} readonly list of properties that should be marked as read-only
    * @returns schema relevant to the given repositories
    */
-  getMetadataSchema(repositories, readonly) {
+  getMetadataSchema(repositories: RepositoryModel[] | null, readonly?: string[]): SurveySchema | null {
     // Each repository identifies a set of schemas which specify metadata fields for the user to fill out.
     // The repositorySchemas object contains this mapping and also indicate whether or not the field is
     // required or conditionally required. The surveySchema object is a SurveyJS schema which contains
@@ -35,8 +57,8 @@ export default class MetadataSchemaService extends Service {
 
     // Try to normalize schema URIs to keys that can be looked up.
     schemas = schemas.map((schema) => {
-      let slash_index = schema.lastIndexOf('/');
-      let dot_index = schema.lastIndexOf('.');
+      const slash_index = schema.lastIndexOf('/');
+      const dot_index = schema.lastIndexOf('.');
 
       if (slash_index == -1 || dot_index == -1) {
         return schema;
@@ -53,7 +75,7 @@ export default class MetadataSchemaService extends Service {
 
     // Map schema field names to elements from surveySchema.
     // Use Map to preserve order.
-    let elementMap = new Map();
+    const elementMap = new Map();
 
     for (const schema of schemas) {
       if (!(schema in repositorySchemas)) {
@@ -100,7 +122,7 @@ export default class MetadataSchemaService extends Service {
       }
     }
 
-    let schema = {};
+    const schema = {};
     schema.elements = Array.from(elementMap.values());
 
     // Add toplevel poperties from surveySchema
@@ -119,8 +141,8 @@ export default class MetadataSchemaService extends Service {
    * @param {object}  schema
    * @returns {array} list of unique field keys
    */
-  getFields(schema) {
-    let fields = [];
+  getFields(schema: SurveySchema): string[] {
+    const fields = [];
 
     schema.elements.forEach((element) => {
       fields.push(element.name);
@@ -134,7 +156,7 @@ export default class MetadataSchemaService extends Service {
    *
    * @returns {array} list of all field keys in the survey schema
    */
-  getAllFields() {
+  getAllFields(): string[] {
     return this.getFields(surveySchema);
   }
 
@@ -143,8 +165,8 @@ export default class MetadataSchemaService extends Service {
    *
    * @param {array} schemas array of schemas
    */
-  getFieldTitleMap(schema) {
-    let map = {};
+  getFieldTitleMap(schema: SurveySchema): Record<string, string | undefined> {
+    const map = {};
 
     schema.elements.forEach((element) => {
       map[element.name] = element.title;
@@ -165,7 +187,7 @@ export default class MetadataSchemaService extends Service {
    *    ]
    * }
    */
-  getAgreementsBlob(repositories) {
+  getAgreementsBlob(repositories: RepositoryModel[]): { agreements: Array<Record<string, string>> } {
     const result = [];
 
     repositories
@@ -187,7 +209,7 @@ export default class MetadataSchemaService extends Service {
    * @param {*} key
    * @param {*} obj
    */
-  _formatComplexMetadataObject(key, obj) {
+  _formatComplexMetadataObject(key: string, obj: Record<string, unknown>): Record<string, unknown> {
     if (key === 'issns') {
       let issn = obj.issn;
 
@@ -215,7 +237,7 @@ export default class MetadataSchemaService extends Service {
    * @param {*} key
    * @param {*} obj
    */
-  _formatMetadata(key, val) {
+  _formatMetadata(key: string, val: unknown): unknown {
     if (Array.isArray(val)) {
       return val.map((o) => this._formatComplexMetadataObject(key, o));
     } else if (key === 'publicationDate' && !isNaN(new Date(val))) {
@@ -236,7 +258,7 @@ export default class MetadataSchemaService extends Service {
    * @param {*} submission
    * @returns [{label, value, isArray}]
    */
-  async displayMetadata(submission) {
+  async displayMetadata(submission: SubmissionModel): Promise<MetadataDisplayEntry[]> {
     // Metadata keys to display and the order to display them in.
     const whiteList = [
       'authors',

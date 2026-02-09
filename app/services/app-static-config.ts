@@ -2,24 +2,36 @@ import Service from '@ember/service';
 import { service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
 
-export default class AppStaticConfigService extends Service {
-  @service flashMessages;
+export interface BrandingConfig {
+  stylesheet?: string;
+  overrides?: string;
+  [key: string]: unknown;
+}
 
-  configUrl = null;
+export interface StaticConfig {
+  branding: BrandingConfig;
+  [key: string]: unknown;
+}
+
+export default class AppStaticConfigService extends Service {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  @service declare flashMessages: any;
+
+  configUrl: string | null = null;
 
   /** Cached static config object */
-  _config = null;
+  _config: StaticConfig | null = null;
 
   constructor() {
-    super(...arguments);
+    super();
     this.configUrl = ENV.APP.staticConfigUri;
   }
 
-  get config() {
+  get config(): StaticConfig | null {
     return this._config;
   }
 
-  async setupStaticConfig() {
+  async setupStaticConfig(): Promise<void> {
     await this.getStaticConfig();
     if (this._config) {
       if (this._config.branding.stylesheet) {
@@ -43,7 +55,7 @@ export default class AppStaticConfigService extends Service {
    *
    * @returns {Promise}
    */
-  async getStaticConfig() {
+  async getStaticConfig(): Promise<StaticConfig | undefined> {
     // return Promise.resolve(PassEmber);
     const cached = this._config;
     if (cached) {
@@ -68,7 +80,7 @@ export default class AppStaticConfigService extends Service {
    *
    * @param {string} uri URI of CSS resource
    */
-  addCSS(uri) {
+  addCSS(uri: string): void {
     if (window.document.querySelector(`link[rel="${uri}"`)) {
       return;
     }

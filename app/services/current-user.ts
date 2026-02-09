@@ -2,16 +2,19 @@
 /* eslint-disable no-debugger */
 import Service, { inject as service } from '@ember/service';
 import { task } from 'ember-concurrency-decorators';
+import type UserModel from 'pass-ui/models/user';
 
 /**
  * Service which returns information about the logged in user.
  */
 
 export default class CurrentUserService extends Service {
-  @service store;
-  @service session;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  @service declare store: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  @service declare session: any;
 
-  user = null;
+  user: UserModel | null = null;
 
   /**
    * load - Retrieve the logged in User and also sets the
@@ -21,10 +24,10 @@ export default class CurrentUserService extends Service {
    */
   @task
   load = function* () {
-    let userId = this.session.data.authenticated.id;
+    const userId = this.session.data.authenticated.id;
 
     if (userId) {
-      let user = yield this.store.findRecord('user', userId);
+      const user = yield this.store.findRecord('user', userId);
       this.user = user;
     }
 

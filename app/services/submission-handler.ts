@@ -6,14 +6,21 @@ import { task } from 'ember-concurrency-decorators';
 import { get } from '@ember/object';
 import { fileForSubmissionQuery, submissionsWithPublicationQuery } from '../util/paginated-query';
 import _ from 'lodash';
+import type SubmissionModel from 'pass-ui/models/submission';
+import type PublicationModel from 'pass-ui/models/publication';
+import type GrantModel from 'pass-ui/models/grant';
+import type RepositoryModel from 'pass-ui/models/repository';
 
 /**
  * Service to manage submissions.
  */
 export default class SubmissionHandlerService extends Service {
-  @service store;
-  @service currentUser;
-  @service('metadata-schema') schemaService;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  @service declare store: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  @service declare currentUser: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  @service('metadata-schema') declare schemaService: any;
 
   /**
    * Get all repositories associated with grants.
@@ -21,8 +28,8 @@ export default class SubmissionHandlerService extends Service {
    * @param {EmberArray} grant list of Grants
    * @returns EmberArray with repositories
    */
-  getRepositoriesFromGrants(grants) {
-    let result = [];
+  getRepositoriesFromGrants(grants: GrantModel[]): RepositoryModel[] {
+    const result: RepositoryModel[][] = [];
 
     grants.forEach((grant) => {
       const directRepos = grant.get('directFunder.policy.repositories');
@@ -45,8 +52,8 @@ export default class SubmissionHandlerService extends Service {
    * @param  {Submission} submission
    * @returns {string} URL to submission details page
    */
-  _getSubmissionView(submission) {
-    let baseURL = window.location.href.replace(new RegExp(`${ENV.rootURL}.*`), '');
+  _getSubmissionView(submission: SubmissionModel): string {
+    const baseURL = window.location.href.replace(new RegExp(`${ENV.rootURL}.*`), '');
 
     return `${baseURL}${ENV.rootURL}submissions/${encodeURIComponent(`${submission.id}`)}`;
   }
@@ -63,7 +70,7 @@ export default class SubmissionHandlerService extends Service {
    */
   @task
   _finishSubmission = function* (submission, comment) {
-    let subEvent = yield get(this, 'store').createRecord('submissionEvent');
+    const subEvent = yield get(this, 'store').createRecord('submissionEvent');
 
     subEvent.set('performedBy', get(this, 'currentUser.user'));
     subEvent.set('comment', comment);
@@ -82,7 +89,7 @@ export default class SubmissionHandlerService extends Service {
       const agreemd = get(this, 'schemaService').getAgreementsBlob(repos);
 
       if (agreemd) {
-        let md = JSON.parse(submission.get('metadata'));
+        const md = JSON.parse(submission.get('metadata'));
         Object.assign(md, agreemd);
         submission.set('metadata', JSON.stringify(md));
       }
@@ -150,17 +157,17 @@ export default class SubmissionHandlerService extends Service {
    * @param  {string} comment  Comment is added to SubmissionEvent.
    * @returns {Promise}        Promise which performs the operation.
    */
-  approveSubmission(submission, comment) {
+  approveSubmission(submission: SubmissionModel, comment: string) {
     // Add agreements metadata
     const agreemd = this.schemaService.getAgreementsBlob(submission.get('repositories'));
 
     if (agreemd) {
-      let md = JSON.parse(submission.get('metadata'));
+      const md = JSON.parse(submission.get('metadata'));
       Object.assign(md, agreemd);
       submission.set('metadata', JSON.stringify(md));
     }
 
-    let se = this.store.createRecord('submissionEvent', {
+    const se = this.store.createRecord('submissionEvent', {
       submission,
       performedBy: get(this, 'currentUser.user'),
       performedDate: new Date(),
@@ -187,8 +194,8 @@ export default class SubmissionHandlerService extends Service {
    * @param  {string} comment    Comment is added to submission event.
    * @returns {Promise}          Promise which performs the operation.
    */
-  requestSubmissionChanges(submission, comment) {
-    let se = this.store.createRecord('submissionEvent', {
+  requestSubmissionChanges(submission: SubmissionModel, comment: string) {
+    const se = this.store.createRecord('submissionEvent', {
       submission,
       comment,
       performedBy: submission.get('submitter'),
@@ -213,8 +220,8 @@ export default class SubmissionHandlerService extends Service {
    * @param  {string} comment      Comment is added to SubmissionEvent.
    * @returns {Promise}            Promise which performs the operation.
    */
-  cancelSubmission(submission, comment) {
-    let se = this.store.createRecord('submissionEvent', {
+  cancelSubmission(submission: SubmissionModel, comment: string) {
+    const se = this.store.createRecord('submissionEvent', {
       submission,
       comment,
       performedBy: submission.get('submitter'),
@@ -249,7 +256,7 @@ export default class SubmissionHandlerService extends Service {
    * @param {Submission} submission submission to delete
    * @returns {Promise} that returns once the submission deletion is persisted
    */
-  async deleteSubmission(submission) {
+  async deleteSubmission(submission: SubmissionModel) {
     if (submission.source !== 'pass' || submission.submissionStatus !== 'draft') {
       return Promise.reject(`Non-DRAFT submissions cannot be deleted`);
     }
@@ -277,7 +284,7 @@ export default class SubmissionHandlerService extends Service {
    *
    * @param {*} visited whether or not the link has been visited
    */
-  async setLinkVisited(visited) {
+  async setLinkVisited(visited: boolean) {
     document.querySelectorAll('.fa-exclamation-triangle').forEach((el) => {
       el.style.color = visited ? '#b0b0b0' : '#DC3545';
       el.style.fontSize = visited ? '2em' : '2.2em';

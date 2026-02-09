@@ -4,13 +4,22 @@ import ENV from 'pass-ui/config/environment';
 import { task, all, hash } from 'ember-concurrency';
 import { get } from '@ember/object';
 import { run } from '@ember/runloop';
+import type PolicyModel from 'pass-ui/models/policy';
+import type RepositoryModel from 'pass-ui/models/repository';
+
+export interface RepoDslResult {
+  required?: RepositoryModel[];
+  'one-of'?: RepositoryModel[][];
+  optional?: RepositoryModel[];
+}
 
 /**
  * Service that can get policies and associated repositories for a submission
  */
 
 export default class PoliciesService extends Service {
-  @service store;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  @service declare store: any;
 
   /**
    * Get a list of applicable policies for a given submission.
@@ -98,7 +107,7 @@ export default class PoliciesService extends Service {
      */
     const dsl = yield response.json();
 
-    let result = {};
+    const result = {};
 
     if (dsl.hasOwnProperty('required')) {
       result.required = yield get(this, '_resolveRepos').perform(dsl.required);

@@ -19,20 +19,21 @@ import Service, { inject as service } from '@ember/service';
  */
 
 export default class SearchHelperService extends Service {
-  @service store;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  @service declare store: any;
 
   /** List of object IDs to ignore */
-  ignoreList = [];
+  ignoreList: string[] = [];
 
   constructor() {
-    super(...arguments);
+    super();
     this.clearIgnore();
   }
 
   /**
    * Clear the ignore list.
    */
-  clearIgnore() {
+  clearIgnore(): void {
     this.set('ignoreList', []);
   }
 
@@ -41,7 +42,7 @@ export default class SearchHelperService extends Service {
    *
    * @param {string} id model object ID
    */
-  ignore(id) {
+  ignore(id: string): void {
     if (typeof id !== 'string') {
       console.log('%cYou can only add ID strings to the ignore list', 'color: red;');
       return;
@@ -49,7 +50,7 @@ export default class SearchHelperService extends Service {
     this.ignoreList.push(id);
   }
 
-  unignore(id) {
+  unignore(id: string): void {
     if (typeof id !== 'string') {
       console.log("%cYou can only remove ID 'strings' to the ignore list", 'color: red;');
       return;
@@ -61,11 +62,11 @@ export default class SearchHelperService extends Service {
     }
   }
 
-  getIgnoreList() {
+  getIgnoreList(): string[] {
     return this.ignoreList;
   }
 
-  shouldIgnore(id) {
+  shouldIgnore(id: string): boolean {
     return this.ignoreList.includes(id);
   }
 
