@@ -1,0 +1,13 @@
+{
+  "extends": "@tsconfig/ember/tsconfig.json",
+  "compilerOptions": {
+    "declaration": false,
+    "declarationMap": false,
+    "emitDeclarationOnly": false,
+    "allowJs": true,
+    "checkJs": false
+  },
+  "glint": {
+    "environment": ["ember-template-imports"]
+  }
+}

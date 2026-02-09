@@ -24,6 +24,30 @@ module.exports = {
     'no-redeclare': 'off',
   },
   overrides: [
+    // typescript files
+    {
+      files: ['**/*.ts'],
+      parser: '@typescript-eslint/parser',
+      plugins: ['@typescript-eslint'],
+      extends: ['plugin:@typescript-eslint/recommended'],
+      rules: {
+        '@typescript-eslint/no-unused-vars': 'off',
+      },
+    },
+    // gts files (template-tag components)
+    {
+      files: ['**/*.gts'],
+      parser: 'ember-eslint-parser',
+      plugins: ['ember', '@typescript-eslint'],
+      extends: ['plugin:ember/recommended'],
+    },
+    // gjs files (template-tag components without TypeScript)
+    {
+      files: ['**/*.gjs'],
+      parser: 'ember-eslint-parser',
+      plugins: ['ember'],
+      extends: ['plugin:ember/recommended'],
+    },
     // node files
     {
       files: [
