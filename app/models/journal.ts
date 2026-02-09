@@ -14,22 +14,22 @@ const PMCParticipation = {
   B: 'B',
   C: 'C',
   D: 'D',
-};
+} as const;
 
 export default class JournalModel extends Model {
   /**
    * Name of the journal (REQUIRED)
    */
-  @attr('string') journalName;
-  @attr('string') nlmta;
-  @attr('string') pmcParticipation;
-  @attr('set') issns;
+  @attr('string') declare journalName: string;
+  @attr('string') declare nlmta: string;
+  @attr('string') declare pmcParticipation: string;
+  @attr('set') declare issns: string[];
 
-  get isMethodA() {
+  get isMethodA(): boolean {
     return this.pmcParticipation ? this.pmcParticipation === PMCParticipation.A : false;
   }
 
-  get isMethodB() {
+  get isMethodB(): boolean {
     return this.pmcParticipation ? this.pmcParticipation === PMCParticipation.B : false;
   }
 }
