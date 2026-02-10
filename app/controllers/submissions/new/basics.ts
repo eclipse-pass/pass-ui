@@ -5,10 +5,11 @@ import { action, computed, get, set } from '@ember/object';
 import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import { task } from 'ember-concurrency-decorators';
+import type Workflow from 'pass-ui/services/workflow';
+import type SubmissionsNew from 'pass-ui/controllers/submissions/new';
 
 export default class SubmissionsNewBasics extends Controller {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare workflow: any;
+  @service declare workflow: Workflow;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare flashMessages: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -23,8 +24,7 @@ export default class SubmissionsNewBasics extends Controller {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @alias('model.journal') journal: any;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @controller('submissions.new') declare parent: any;
+  @controller('submissions.new') declare parent: SubmissionsNew;
 
   // these errors start as false since you don't want to immediately have all fields turn red
   @tracked titleError: boolean = false;

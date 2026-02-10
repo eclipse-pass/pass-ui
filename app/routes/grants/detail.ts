@@ -2,6 +2,7 @@ import { service } from '@ember/service';
 import CheckSessionRoute from '../check-session-route';
 import { hash } from 'rsvp';
 import { grantDetailsQuery } from '../../util/paginated-query';
+import type CurrentUserService from 'pass-ui/services/current-user';
 
 /**
  * Grant details route: `grant/:id`
@@ -13,8 +14,7 @@ import { grantDetailsQuery } from '../../util/paginated-query';
  */
 
 export default class DetailRoute extends CheckSessionRoute {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service('current-user') declare currentUser: any;
+  @service('current-user') declare currentUser: CurrentUserService;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare store: any;
 

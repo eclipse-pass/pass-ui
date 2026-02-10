@@ -4,12 +4,12 @@ import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import { grantDetailsQuery } from '../../util/paginated-query';
+import type CurrentUserService from 'pass-ui/services/current-user';
 
 export default class GrantDetailsController extends Controller {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service('emt-themes/pass-table-theme') declare themeInstance: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare currentUser: any;
+  @service declare currentUser: CurrentUserService;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare store: any;
 

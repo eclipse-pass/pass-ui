@@ -4,12 +4,12 @@ import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import { submissionsIndexQuery } from '../../util/paginated-query';
+import type CurrentUserService from 'pass-ui/services/current-user';
+import type AppStaticConfigService from 'pass-ui/services/app-static-config';
 
 export default class SubmissionsIndex extends Controller {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare currentUser: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service('app-static-config') declare staticConfig: any;
+  @service declare currentUser: CurrentUserService;
+  @service('app-static-config') declare staticConfig: AppStaticConfigService;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service('emt-themes/pass-table-theme') declare themeInstance: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

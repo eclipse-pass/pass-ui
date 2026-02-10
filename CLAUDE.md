@@ -15,8 +15,10 @@ This codebase is being converted from JavaScript to TypeScript. The cardinal rul
 - DO add `declare` to `@service` and `@controller` injected properties
 - DO add type annotations to method parameters and return types
 - DO add `import type` for model/service types
-- DO use `// eslint-disable-next-line @typescript-eslint/no-explicit-any` above `any` typed declarations
 - DO change `super(...arguments)` to `constructor(...args: any[]) { super(...args); }` with rest params (Ember passes owner as constructor arg — must forward it)
+- For `@service` and `@controller` declarations of **our own** services/controllers, use `import type` and the real class (e.g., `import type Workflow from 'pass-ui/services/workflow';` → `@service declare workflow: Workflow;`)
+- `any` is ONLY acceptable for framework/addon types with no stable exports: `store`, `router`, `session`, `flashMessages`, `themeInstance` (emt-themes)
+- Use `// eslint-disable-next-line @typescript-eslint/no-explicit-any` ONLY above lines that genuinely must use `any` (framework types, untyped callback params)
 - For `@alias` properties, do NOT add `declare` (alias initializes the property at runtime)
 
 Legacy pattern cleanup (get/set, @computed, @alias, @observes) happens in a separate, later pass — not during the TypeScript conversion.

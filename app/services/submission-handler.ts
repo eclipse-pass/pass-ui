@@ -10,6 +10,8 @@ import type SubmissionModel from 'pass-ui/models/submission';
 import type PublicationModel from 'pass-ui/models/publication';
 import type GrantModel from 'pass-ui/models/grant';
 import type RepositoryModel from 'pass-ui/models/repository';
+import type CurrentUserService from 'pass-ui/services/current-user';
+import type MetadataSchemaService from 'pass-ui/services/metadata-schema';
 
 /**
  * Service to manage submissions.
@@ -17,10 +19,8 @@ import type RepositoryModel from 'pass-ui/models/repository';
 export default class SubmissionHandlerService extends Service {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare store: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare currentUser: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service('metadata-schema') declare schemaService: any;
+  @service declare currentUser: CurrentUserService;
+  @service('metadata-schema') declare schemaService: MetadataSchemaService;
 
   /**
    * Get all repositories associated with grants.

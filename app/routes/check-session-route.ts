@@ -2,15 +2,15 @@ import { inject as service } from '@ember/service';
 import Route from '@ember/routing/route';
 import { action } from '@ember/object';
 import type { AppError } from 'pass-ui/services/error-handler';
+import type CurrentUserService from 'pass-ui/services/current-user';
+import type ErrorHandlerService from 'pass-ui/services/error-handler';
 
 export default class CheckSessionRouteRoute extends Route {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare session: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare currentUser: any;
+  @service declare currentUser: CurrentUserService;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service('error-handler') declare errorHandler: any;
+  @service('error-handler') declare errorHandler: ErrorHandlerService;
 
   async beforeModel() {
     if (!this.session.isAuthenticated) {

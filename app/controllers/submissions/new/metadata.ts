@@ -3,6 +3,7 @@ import Controller, { inject as controller } from '@ember/controller';
 import { action } from '@ember/object';
 import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
+import type SubmissionsNew from 'pass-ui/controllers/submissions/new';
 
 export default class SubmissionsNewMetadata extends Controller {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -17,8 +18,7 @@ export default class SubmissionsNewMetadata extends Controller {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @alias('model.submissionEvents') submissionEvents: any;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @controller('submissions.new') declare parent: any;
+  @controller('submissions.new') declare parent: SubmissionsNew;
 
   @action
   loadNext(): void {

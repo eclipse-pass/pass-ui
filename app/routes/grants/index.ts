@@ -1,10 +1,10 @@
 import { service } from '@ember/service';
 import CheckSessionRoute from '../check-session-route';
 import { grantsIndexGrantQuery, grantsIndexSubmissionQuery } from '../../util/paginated-query';
+import type CurrentUserService from 'pass-ui/services/current-user';
 
 export default class IndexRoute extends CheckSessionRoute {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service('current-user') declare currentUser: any;
+  @service('current-user') declare currentUser: CurrentUserService;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare store: any;
 

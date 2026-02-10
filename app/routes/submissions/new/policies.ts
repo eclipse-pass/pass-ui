@@ -3,15 +3,15 @@ import { action, get } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { hash } from 'rsvp';
 import CheckSessionRoute from '../../check-session-route';
+import type Workflow from 'pass-ui/services/workflow';
+import type PoliciesService from 'pass-ui/services/policies';
 
 export default class PoliciesRoute extends CheckSessionRoute {
   @service('workflow')
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  declare workflow: any;
+  declare workflow: Workflow;
 
   @service('policies')
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  declare policyService: any;
+  declare policyService: PoliciesService;
 
   /**
    * First call the Policy Service to get the list of applicable policy IDs.

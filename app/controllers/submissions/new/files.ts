@@ -6,10 +6,11 @@ import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
 import swal from 'sweetalert2/dist/sweetalert2.js';
+import type Workflow from 'pass-ui/services/workflow';
+import type SubmissionsNew from 'pass-ui/controllers/submissions/new';
 
 export default class SubmissionsNewFiles extends Controller {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare workflow: any;
+  @service declare workflow: Workflow;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare flashMessages: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -22,8 +23,7 @@ export default class SubmissionsNewFiles extends Controller {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @alias('model.submissionEvents') submissionEvents: any;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @controller('submissions.new') declare parent: any;
+  @controller('submissions.new') declare parent: SubmissionsNew;
 
   @tracked loadingNext: boolean = false;
 

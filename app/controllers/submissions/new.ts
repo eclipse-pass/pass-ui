@@ -6,17 +6,17 @@ import { inject as service } from '@ember/service';
 import _ from 'lodash';
 import ENV from 'pass-ui/config/environment';
 import swal from 'sweetalert2/dist/sweetalert2.js';
+import type CurrentUserService from 'pass-ui/services/current-user';
+import type Workflow from 'pass-ui/services/workflow';
+import type SubmissionHandlerService from 'pass-ui/services/submission-handler';
+import type SearchHelperService from 'pass-ui/services/search-helper';
 
 export default class SubmissionsNew extends Controller {
   queryParams: string[] = ['grant', 'submission', 'covid'];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare currentUser: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare workflow: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare submissionHandler: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare searchHelper: any;
+  @service declare currentUser: CurrentUserService;
+  @service declare workflow: Workflow;
+  @service declare submissionHandler: SubmissionHandlerService;
+  @service declare searchHelper: SearchHelperService;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare flashMessages: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

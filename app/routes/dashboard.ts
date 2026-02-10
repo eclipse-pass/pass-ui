@@ -2,10 +2,10 @@
 import CheckSessionRoute from './check-session-route';
 import { inject as service } from '@ember/service';
 import { get } from '@ember/object';
+import type CurrentUserService from 'pass-ui/services/current-user';
 
 export default class DashboardRoute extends CheckSessionRoute {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service('current-user') declare currentUser: any;
+  @service('current-user') declare currentUser: CurrentUserService;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare store: any;
 

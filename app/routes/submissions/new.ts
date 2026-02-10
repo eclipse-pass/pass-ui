@@ -3,18 +3,18 @@ import { inject as service } from '@ember/service';
 import { set } from '@ember/object';
 import { hash } from 'rsvp';
 import { fileForSubmissionQuery } from '../../util/paginated-query';
+import type Workflow from 'pass-ui/services/workflow';
+import type CurrentUserService from 'pass-ui/services/current-user';
 
 export default class NewRoute extends CheckSessionRoute {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service('workflow') declare workflow: any;
+  @service('workflow') declare workflow: Workflow;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare store: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare router: any;
 
   @service('current-user')
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  declare currentUser: any;
+  declare currentUser: CurrentUserService;
 
   beforeModel(): void {
     this.workflow.resetWorkflow();

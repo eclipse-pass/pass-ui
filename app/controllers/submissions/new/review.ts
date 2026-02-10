@@ -4,12 +4,13 @@ import { action, computed, get } from '@ember/object';
 import { alias } from '@ember/object/computed';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
+import type Workflow from 'pass-ui/services/workflow';
+import type SubmissionsNew from 'pass-ui/controllers/submissions/new';
 
 export default class SubmissionsNewReview extends Controller {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare router: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare workflow: any;
+  @service declare workflow: Workflow;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @alias('model.newSubmission') submission: any;
@@ -18,8 +19,7 @@ export default class SubmissionsNewReview extends Controller {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @alias('model.submissionEvents') submissionEvents: any;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @controller('submissions.new') declare parent: any;
+  @controller('submissions.new') declare parent: SubmissionsNew;
 
   @computed('parent.waitingMessage')
   get waitingMessage(): string {
