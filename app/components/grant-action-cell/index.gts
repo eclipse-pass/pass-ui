@@ -1,0 +1,11 @@
+import { get, hash } from '@ember/helper';
+import { LinkTo } from '@ember/routing';
+
+<template>
+  <LinkTo
+    @route='submissions.new'
+    @query={{hash grant=(get @record 'grant.id') submission=null}}
+    class='btn btn-outline-primary text-nowrap'
+  >New submission</LinkTo>
+  {{yield}}
+</template>

@@ -1,0 +1,13 @@
+import { LinkTo } from '@ember/routing';
+
+<template>
+  {{#each @record.grants as |grant index|}}
+    {{#if index}}
+      <span>,</span><br />
+    {{/if}}
+    <LinkTo @route='grants.detail' @model={{grant.id}}>{{grant.awardNumber}}</LinkTo>
+    ({{grant.primaryFunder.name}})
+  {{else}}
+    Not Available
+  {{/each}}
+</template>

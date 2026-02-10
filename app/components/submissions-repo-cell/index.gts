@@ -1,0 +1,10 @@
+<template>
+  {{#each @record.repositories as |repo index|}}
+    {{if index ', '}}
+    {{#if repo.name}}
+      {{repo.name}}
+    {{/if}}
+  {{else}}
+    Not Available
+  {{/each}}
+</template>
