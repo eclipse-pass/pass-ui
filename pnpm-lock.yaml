@@ -11,9 +11,6 @@ importers:
 
   .:
     dependencies:
-      '@coreui/ajax':
-        specifier: 1.0.10
-        version: 1.0.10
       '@ember/string':
         specifier: ^3.1.1
         version: 3.1.1
@@ -41,9 +38,6 @@ importers:
       ember-bootstrap:
         specifier: ^6.3.2
         version: 6.3.2(@babel/core@7.24.7)(@ember/string@3.1.1)(@glimmer/component@1.1.2(@babel/core@7.24.7))(@glimmer/tracking@1.1.2)(@glint/environment-ember-loose@1.5.2(@glimmer/component@1.1.2(@babel/core@7.24.7))(@glint/template@1.7.4)(ember-cli-htmlbars@6.3.0)(ember-modifier@4.2.0(@babel/core@7.24.7)(ember-source@5.8.0(@babel/core@7.24.7)(@glimmer/component@1.1.2(@babel/core@7.24.7))(@glint/template@1.7.4)(rsvp@4.8.5)(webpack@5.92.1))))(@glint/template@1.7.4)(ember-modifier@4.2.0(@babel/core@7.24.7)(ember-source@5.8.0(@babel/core@7.24.7)(@glimmer/component@1.1.2(@babel/core@7.24.7))(@glint/template@1.7.4)(rsvp@4.8.5)(webpack@5.92.1)))(ember-source@5.8.0(@babel/core@7.24.7)(@glimmer/component@1.1.2(@babel/core@7.24.7))(@glint/template@1.7.4)(rsvp@4.8.5)(webpack@5.92.1))(webpack@5.92.1)
-      ember-composable-helpers:
-        specifier: ^5.0.0
-        version: 5.0.0
       ember-concurrency:
         specifier: ^2.3.7
         version: 2.3.7(@babel/core@7.24.7)
@@ -80,9 +74,6 @@ importers:
       ember-power-select:
         specifier: ^7.2.0
         version: 7.2.0(@babel/core@7.24.7)(@glint/environment-ember-loose@1.5.2(@glimmer/component@1.1.2(@babel/core@7.24.7))(@glint/template@1.7.4)(ember-cli-htmlbars@6.3.0)(ember-modifier@4.2.0(@babel/core@7.24.7)(ember-source@5.8.0(@babel/core@7.24.7)(@glimmer/component@1.1.2(@babel/core@7.24.7))(@glint/template@1.7.4)(rsvp@4.8.5)(webpack@5.92.1))))(@glint/template@1.7.4)(ember-source@5.8.0(@babel/core@7.24.7)(@glimmer/component@1.1.2(@babel/core@7.24.7))(@glint/template@1.7.4)(rsvp@4.8.5)(webpack@5.92.1))(webpack@5.92.1)
-      ember-radio-buttons:
-        specifier: ^5.0.0
-        version: 5.0.0
       ember-resolver:
         specifier: ^11.0.1
         version: 11.0.1(ember-source@5.8.0(@babel/core@7.24.7)(@glimmer/component@1.1.2(@babel/core@7.24.7))(@glint/template@1.7.4)(rsvp@4.8.5)(webpack@5.92.1))
@@ -249,9 +240,6 @@ importers:
       ember-test-selectors:
         specifier: ^6.0.0
         version: 6.0.0
-      ember-truth-helpers:
-        specifier: ^3.1.1
-        version: 3.1.1
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
@@ -1062,9 +1050,6 @@ packages:
     resolution: {integrity: sha512-v9kIhKwjeZThiWrLmj0y17CWoyddASLj9O2yvbZkbvw/N3rWOYy9zkV66ursAoVr0mV15bL8g0c4QZUE6cdDoQ==}
     engines: {node: '>=0.1.95'}
     hasBin: true
-
-  '@coreui/ajax@1.0.10':
-    resolution: {integrity: sha512-37gnJ8pBeNxR+fD5k0vLgbslypL8VXNMjYii92INIo13nC9UhLnnkSNekt8xIQIP656UBgQeKtI/ABPmPm5ysQ==}
 
   '@csstools/css-parser-algorithms@2.7.1':
     resolution: {integrity: sha512-2SJS42gxmACHgikc1WGesXLIT8d/q2l0UFM7TaEeIzdFCE/FPMtTiizcPGGJtlPo2xuQzY09OhrLTzRxqJqwGw==}
@@ -3982,10 +3967,6 @@ packages:
       '@ember/test-helpers': '>=3.0.3'
       ember-source: '>=4.0.0'
       qunit: ^2.13.0
-
-  ember-radio-buttons@5.0.0:
-    resolution: {integrity: sha512-cxMIPpqdDSTMb1rzt7eDGm4XpB5pzwSuVAgSeM+wjBvRc9VdUCP96ReZPd7cKe80czf4pJFacpX3Mqzu0pQ/Ug==}
-    engines: {node: 8.* || >= 10.*}
 
   ember-ref-bucket@5.0.7:
     resolution: {integrity: sha512-O9UednDVYAOJTuCaHrJww7c7ch9QnE2c+Z7IQoYOOiouVREH1Ns78T5Afhbwn293jCUcz2rdaRv89BPtTj1A0w==}
@@ -9880,8 +9861,6 @@ snapshots:
       exec-sh: 0.3.6
       minimist: 1.2.8
 
-  '@coreui/ajax@1.0.10': {}
-
   '@csstools/css-parser-algorithms@2.7.1(@csstools/css-tokenizer@2.4.1)':
     dependencies:
       '@csstools/css-tokenizer': 2.4.1
@@ -14135,13 +14114,6 @@ snapshots:
       qunit-theme-ember: 1.0.0
     transitivePeerDependencies:
       - '@glint/template'
-      - supports-color
-
-  ember-radio-buttons@5.0.0:
-    dependencies:
-      ember-cli-babel: 7.26.11
-      ember-cli-htmlbars: 4.5.0
-    transitivePeerDependencies:
       - supports-color
 
   ember-ref-bucket@5.0.7(@babel/core@7.24.7)(@glint/template@1.7.4)(ember-source@5.8.0(@babel/core@7.24.7)(@glimmer/component@1.1.2(@babel/core@7.24.7))(@glint/template@1.7.4)(rsvp@4.8.5)(webpack@5.92.1))(webpack@5.92.1):

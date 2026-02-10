@@ -12,10 +12,6 @@ module.exports = function (defaults) {
       'initial-state': './initial-state.html',
     },
 
-    'ember-composable-helpers': {
-      only: ['queue', 'compute', 'invoke', 'includes'],
-    },
-
     autoImport: {
       forbidEval: true,
     },

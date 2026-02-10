@@ -30,7 +30,6 @@
     "create_sbom": "FETCH_LICENSE=true cdxgen --required-only --no-babel --type pnpm -o pass-ui-$npm_package_version-cyclonedx-sbom.json"
   },
   "dependencies": {
-    "@coreui/ajax": "1.0.10",
     "@ember/string": "^3.1.1",
     "@fortawesome/ember-fontawesome": "^3.0.0",
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
@@ -40,7 +39,6 @@
     "@glimmer/tracking": "^1.1.2",
     "bootstrap": "5.0.0",
     "ember-bootstrap": "^6.3.2",
-    "ember-composable-helpers": "^5.0.0",
     "ember-concurrency": "^2.3.7",
     "ember-concurrency-decorators": "^1.0.0",
     "ember-data": "~5.3.8",
@@ -53,7 +51,6 @@
     "ember-modifier": "^4.2.0",
     "ember-page-title": "^8.2.3",
     "ember-power-select": "^7.2.0",
-    "ember-radio-buttons": "^5.0.0",
     "ember-resolver": "^11.0.1",
     "ember-route-template": "^1.0.3",
     "ember-simple-auth": "^6.0.0",
@@ -111,7 +108,6 @@
     "ember-template-lint": "6.0.0",
     "ember-template-lint-plugin-prettier": "^5.0.0",
     "ember-test-selectors": "^6.0.0",
-    "ember-truth-helpers": "^3.1.1",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-ember": "^11.12.0",
