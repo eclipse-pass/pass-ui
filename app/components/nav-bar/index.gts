@@ -1,0 +1,160 @@
+import Component from '@glimmer/component';
+import { tracked } from '@glimmer/tracking';
+import { action } from '@ember/object';
+import { inject as service } from '@ember/service';
+import { task } from 'ember-concurrency-decorators';
+import { on } from '@ember/modifier';
+import didInsert from '@ember/render-modifiers/modifiers/did-insert';
+import didUpdate from '@ember/render-modifiers/modifiers/did-update';
+import { LinkTo } from '@ember/routing';
+
+export default class NavBar extends Component {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  @service declare currentUser: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  @service declare appStaticConfig: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  @service declare session: any;
+
+  @tracked aboutUrl: string | null = null;
+  @tracked contactUrl: string | null = null;
+  @tracked faqUrl: string | null = null;
+  @tracked isUserMenuOpen = false;
+
+  constructor(...args: any[]) {
+    super(...args);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (this as any)._setupAppStaticConfig.perform();
+  }
+
+  get hasAUser(): boolean {
+    return !!this.currentUser.user;
+  }
+
+  @action
+  scrollToAnchor() {
+    if (window.location.search.indexOf('anchor=') == -1) {
+      window.scrollTo(0, 0);
+    }
+  }
+
+  @action
+  async logOut() {
+    const url = `${window.location.origin}/logout`;
+    await fetch(url, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/vnd.api+json',
+        'Content-Type': 'application/vnd.api+json',
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN\=([^;]*)/)!['1'],
+      },
+    });
+    await this.session.invalidate();
+  }
+
+  @task
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  _setupAppStaticConfig = function* (this: any) {
+    const config = yield this.appStaticConfig.config;
+    if (config && config.branding.showPagesNavBar) {
+      this.aboutUrl = config.branding.pages.aboutUrl;
+      this.contactUrl = config.branding.pages.contactUrl;
+      this.faqUrl = config.branding.pages.faqUrl;
+    }
+  };
+
+  @action
+  toggleUserMenu() {
+    this.isUserMenuOpen = !this.isUserMenuOpen;
+  }
+
+  <template>
+    <nav
+      id='header-navbar'
+      class='navbar navbar-light navbar-fixed-top navbar-expand-md w-100'
+      {{didInsert this.scrollToAnchor}}
+      {{didUpdate this.scrollToAnchor}}
+    >
+      <div class={{if @fullWidth 'container-fluid' 'container'}}>
+        <div class='col-xs-12 w-100'>
+          <button
+            class='navbar-toggler text-center border-none'
+            type='button'
+            data-toggle='collapse'
+            data-target='#navbar-supported-content'
+            aria-controls='navbar-supported-content'
+            aria-expanded='false'
+            aria-label='Toggle navigation'
+          >
+            <span class='navbar-toggler-icon'></span>
+          </button>
+          <div class='collapse navbar-collapse' id='navbar-supported-content'>
+            <ul class='navbar-nav w-75'>
+              <li class='nav-item'>
+                <LinkTo @route='dashboard' class='nav-link pl-0 ml-0'>
+                  Dashboard
+                </LinkTo>
+              </li>
+              {{#if this.hasAUser}}
+                <li class='nav-item'>
+                  <LinkTo @route='grants' class='nav-link' data-test-navbar-grants-link>
+                    Grants
+                  </LinkTo>
+                </li>
+                <li class='nav-item'>
+                  <LinkTo @route='submissions' class='nav-link' data-test-navbar-submissions-link>
+                    Submissions
+                  </LinkTo>
+                </li>
+              {{/if}}
+              {{#if this.aboutUrl}}
+                <li class='nav-item'>
+                  <a class='nav-link' href='{{this.aboutUrl}}'>
+                    About
+                  </a>
+                </li>
+              {{/if}}
+              {{#if this.contactUrl}}
+                <li class='nav-item'>
+                  <a class='nav-link' href='{{this.contactUrl}}'>
+                    Contact
+                  </a>
+                </li>
+              {{/if}}
+              {{#if this.faqUrl}}
+                <li class='nav-item'>
+                  <a class='nav-link' href='{{this.faqUrl}}'>
+                    FAQ
+                  </a>
+                </li>
+              {{/if}}
+            </ul>
+            <div class='nav-item dropdown ml-auto w-25'>
+              <a
+                id='user-menu-name'
+                class='nav-link dropdown-toggle accountInfo pr-1'
+                href='#'
+                data-bs-toggle='dropdown'
+                role='button'
+                aria-haspopup='true'
+                aria-expanded='false'
+                {{on 'click' this.toggleUserMenu}}
+              >
+                {{this.currentUser.user.displayName}}
+              </a>
+              <ul class='dropdown-menu {{if this.isUserMenuOpen "show"}}' aria-labelledby='user-menu-name'>
+                <li>
+                  <a class='dropdown-item' href='#' {{on 'click' this.logOut}}>
+                    <i class='fa fa-lock'></i>
+                    Logout
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </template>
+}
