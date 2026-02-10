@@ -39,9 +39,9 @@ module('Integration | Component | workflow basics', (hooks) => {
     this.set('updatePublication', (publication) => this.set('publication', publication));
     this.set('updateDoiInfo', (doiInfo) => this.set('doiInfo', doiInfo));
 
-    const mockDoiService = Service.extend({
-      resolveDOI: task(function* (doi) {
-        return yield Promise.resolve({
+    class MockDoiService extends Service {
+      resolveDOI = task(async (doi) => {
+        return await Promise.resolve({
           doiInfo: {
             publisher: 'Royal Society of Chemistry (RSC)',
             issue: 1,
@@ -78,21 +78,22 @@ module('Integration | Component | workflow basics', (hooks) => {
             journal: EmberObject.create({ journalName: 'moo-title' }),
           }),
         });
-      }),
+      });
       formatDOI(doi) {
         return 'moo';
-      },
+      }
       isValidDOI() {
         return true;
-      },
+      }
       getJournalTitle() {
         return 'moo-title';
-      },
+      }
       doiToMetadata(doiInfo, journal, validFields) {
         console.log('grr');
         return doiInfo;
-      },
-    });
+      }
+    }
+    const mockDoiService = MockDoiService;
 
     const mockStore = Service.extend({
       query(type, query) {
@@ -220,21 +221,23 @@ module('Integration | Component | workflow basics', (hooks) => {
     });
     this.set('submission', submission);
 
-    this.owner.register(
-      'service:doi',
-      Service.extend({
-        resolveDOI: task(function* () {
-          return yield Promise.resolve({
-            publication: EmberObject.create({
-              title: 'Do not want',
-            }), // This publication should not be used
-            doiInfo: { title: 'You better use this' },
-          });
-        }),
-        formatDOI: () => 'Formatted-Moo',
-        isValidDOI: () => true,
-      }),
-    );
+    class MockDoiService2 extends Service {
+      resolveDOI = task(async () => {
+        return await Promise.resolve({
+          publication: EmberObject.create({
+            title: 'Do not want',
+          }), // This publication should not be used
+          doiInfo: { title: 'You better use this' },
+        });
+      });
+      formatDOI() {
+        return 'Formatted-Moo';
+      }
+      isValidDOI() {
+        return true;
+      }
+    }
+    this.owner.register('service:doi', MockDoiService2);
 
     await render(hbs`<WorkflowBasics
   @submission={{this.submission}}
@@ -299,24 +302,28 @@ module('Integration | Component | workflow basics', (hooks) => {
     });
     this.set('submission', submission);
 
-    const mockDoiService = Service.extend({
-      resolveDOI: task(function* () {
-        return yield Promise.resolve({
+    class MockDoiService3 extends Service {
+      resolveDOI = task(async () => {
+        return await Promise.resolve({
           doiInfo: {
             title: "Don't use",
           },
           publication,
         });
-      }),
-      isValidDOI: (doi) => !!doi,
-      formatDOI: (doi) => doi,
-      doiToMetadata: (doiInfo, journal, validFields) => {
+      });
+      isValidDOI(doi) {
+        return !!doi;
+      }
+      formatDOI(doi) {
+        return doi;
+      }
+      doiToMetadata(doiInfo, journal, validFields) {
         return doiInfo;
-      },
-    });
+      }
+    }
 
     this.owner.unregister('service:doi');
-    this.owner.register('service:doi', mockDoiService);
+    this.owner.register('service:doi', MockDoiService3);
 
     await render(hbs`<WorkflowBasics
   @submission={{this.submission}}
