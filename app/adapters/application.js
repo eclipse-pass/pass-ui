@@ -1,5 +1,4 @@
 import JSONAPIAdapter from '@ember-data/adapter/json-api';
-import { camelize } from '@ember/string';
 import ENV from 'pass-ui/config/environment';
 import { inject as service } from '@ember/service';
 
@@ -19,7 +18,7 @@ export default class ApplicationAdapter extends JSONAPIAdapter {
 
   // Camel case instead of pluralize model types for our API
   pathForType(type) {
-    return camelize(type);
+    return type.replace(/[-_\s]+(.)?/g, (_, c) => (c ? c.toUpperCase() : ''));
   }
 
   /**

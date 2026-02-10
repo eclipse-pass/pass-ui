@@ -11,9 +11,6 @@ importers:
 
   .:
     dependencies:
-      '@ember/string':
-        specifier: ^3.1.1
-        version: 3.1.1
       '@fortawesome/ember-fontawesome':
         specifier: ^3.0.0
         version: 3.0.1(@fortawesome/fontawesome-svg-core@6.7.2)(@glimmer/component@1.1.2(@babel/core@7.24.7))

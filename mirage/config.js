@@ -1,4 +1,4 @@
-import { camelize } from '@ember/string';
+const camelize = (str) => str.replace(/[-_\s]+(.)?/g, (_, c) => (c ? c.toUpperCase() : ''));
 import { discoverEmberDataModels } from 'ember-cli-mirage';
 import { createServer, JSONAPISerializer, Response } from 'miragejs';
 import doiJournals from './custom-fixtures/nih-submission/doi-journals';

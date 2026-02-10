@@ -30,7 +30,6 @@
     "create_sbom": "FETCH_LICENSE=true cdxgen --required-only --no-babel --type pnpm -o pass-ui-$npm_package_version-cyclonedx-sbom.json"
   },
   "dependencies": {
-    "@ember/string": "^3.1.1",
     "@fortawesome/ember-fontawesome": "^3.0.0",
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/free-regular-svg-icons": "^6.7.2",

@@ -1,4 +1,9 @@
-import { camelize, dasherize } from '@ember/string';
+const camelize = (str) => str.replace(/[-_\s]+(.)?/g, (_, c) => (c ? c.toUpperCase() : ''));
+const dasherize = (str) =>
+  str
+    .replace(/[_\s]+/g, '-')
+    .replace(/([a-z\d])([A-Z])/g, '$1-$2')
+    .toLowerCase();
 import { singularize } from 'ember-inflector';
 import JSONAPISerializer from '@ember-data/serializer/json-api';
 
