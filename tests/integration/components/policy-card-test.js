@@ -2,7 +2,7 @@ import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
 import { render, click } from '@ember/test-helpers';
-import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
+import { setupMirage } from 'pass-ui/tests/test-support/mirage';
 
 module('Integration | Component | policy card', (hooks) => {
   setupRenderingTest(hooks);

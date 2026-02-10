@@ -1,6 +1,6 @@
 import EmberObject from '@ember/object';
 import { setupTest } from 'ember-qunit';
-import { setupMirage } from 'ember-cli-mirage/test-support';
+import { setupMirage } from 'pass-ui/tests/test-support/mirage';
 import { module, test } from 'qunit';
 import { Response } from 'miragejs';
 

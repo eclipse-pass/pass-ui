@@ -5,7 +5,7 @@ import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { run } from '@ember/runloop';
 import { getContext, click, render, fillIn, waitFor, waitUntil, find, settled } from '@ember/test-helpers';
-import { setupMirage } from 'ember-cli-mirage/test-support';
+import { setupMirage } from 'pass-ui/tests/test-support/mirage';
 import sinon from 'sinon';
 
 module('Integration | Component | workflow-metadata', (hooks) => {

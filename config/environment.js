@@ -41,7 +41,7 @@ module.exports = function (environment) {
     },
   };
 
-  ENV['ember-cli-mirage'] = {
+  ENV['ember-mirage'] = {
     enabled: false,
   };
 
@@ -53,7 +53,7 @@ module.exports = function (environment) {
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
 
     if (process.env.MIRAGE === 'true') {
-      ENV['ember-cli-mirage'] = { enabled: true };
+      ENV['ember-mirage'] = { enabled: true };
     }
   }
 
@@ -67,7 +67,7 @@ module.exports = function (environment) {
     ENV.APP.LOG_VIEW_LOOKUPS = false;
 
     ENV.APP.rootElement = '#ember-testing';
-    ENV['ember-cli-mirage'] = {
+    ENV['ember-mirage'] = {
       enabled: true,
     };
   }

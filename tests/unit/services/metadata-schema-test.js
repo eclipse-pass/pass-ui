@@ -2,7 +2,7 @@
 import EmberObject, { get } from '@ember/object';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import { setupMirage } from 'ember-cli-mirage/test-support';
+import { setupMirage } from 'pass-ui/tests/test-support/mirage';
 import sinon from 'sinon';
 import { Response } from 'miragejs';
 import { settled } from '@ember/test-helpers';

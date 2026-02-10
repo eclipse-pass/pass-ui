@@ -1,16 +1,80 @@
 const camelize = (str) => str.replace(/[-_\s]+(.)?/g, (_, c) => (c ? c.toUpperCase() : ''));
-import { discoverEmberDataModels } from 'ember-cli-mirage';
-import { createServer, JSONAPISerializer, Response } from 'miragejs';
+import { createServer, JSONAPISerializer, Model, Response, belongsTo, hasMany } from 'miragejs';
 import doiJournals from './custom-fixtures/nih-submission/doi-journals';
 import ENV from 'pass-ui/config/environment';
 import MockDataFinder from './service-handler';
+
+// Factories
+import journalFactory from './factories/journal';
+import policyFactory from './factories/policy';
+import publicationFactory from './factories/publication';
+import repositoryFactory from './factories/repository';
+import submissionFactory from './factories/submission';
+
+// Fixtures
+import funderFixtures from './fixtures/funder';
+import grantFixtures from './fixtures/grant';
+import journalFixtures from './fixtures/journal';
+import policyFixtures from './fixtures/policy';
+import publicationFixtures from './fixtures/publication';
+import repositoryFixtures from './fixtures/repository';
+import submissionFixtures from './fixtures/submission';
+import userFixtures from './fixtures/user';
 
 export default function (config) {
   const dataFinder = new MockDataFinder(ENV.environment);
 
   let finalConfig = {
+    environment: 'test',
     ...config,
-    models: { ...discoverEmberDataModels(config.store), ...config.models },
+    inflector: {
+      pluralize: (word) => word,
+      singularize: (word) => word,
+    },
+    models: {
+      deposit: Model.extend({ repository: belongsTo(), repositoryCopy: belongsTo(), submission: belongsTo() }),
+      file: Model.extend({ submission: belongsTo() }),
+      funder: Model.extend({ policy: belongsTo() }),
+      grant: Model.extend({
+        pi: belongsTo('user'),
+        coPis: hasMany('user'),
+        primaryFunder: belongsTo('funder'),
+        directFunder: belongsTo('funder'),
+      }),
+      journal: Model.extend({}),
+      policy: Model.extend({ repositories: hasMany('repository') }),
+      publication: Model.extend({ journal: belongsTo() }),
+      repository: Model.extend({}),
+      repositoryCopy: Model.extend({ repository: belongsTo(), publication: belongsTo() }),
+      submission: Model.extend({
+        submitter: belongsTo('user'),
+        publication: belongsTo(),
+        repositories: hasMany('repository'),
+        grants: hasMany('grant'),
+        preparers: hasMany('user'),
+        effectivePolicies: hasMany('policy'),
+      }),
+      submissionEvent: Model.extend({ submission: belongsTo(), performedBy: belongsTo('user') }),
+      user: Model.extend({}),
+      ...config.models,
+    },
+    factories: {
+      journal: journalFactory,
+      policy: policyFactory,
+      publication: publicationFactory,
+      repository: repositoryFactory,
+      submission: submissionFactory,
+    },
+    fixtures: {
+      funder: funderFixtures,
+      grant: grantFixtures,
+      journal: journalFixtures,
+      policy: policyFixtures,
+      publication: publicationFixtures,
+      repository: repositoryFixtures,
+      submission: submissionFixtures,
+      user: userFixtures,
+    },
     serializers: {
       application: JSONAPISerializer.extend({
         keyForAttribute: (attr) => (attr ? camelize(attr) : null),
@@ -288,6 +352,10 @@ export default function (config) {
   const server = createServer(finalConfig);
   server.logging = true;
 
+  // In test mode with factories present, miragejs skips auto-loading fixtures.
+  // Explicitly load them so fixture data is available for route handlers.
+  server.loadFixtures();
+
   server.create('journal', {
     id: '10',
     issns: ['Print:0003-2654', 'Online:1364-5528'],
@@ -295,8 +363,6 @@ export default function (config) {
     nlmta: 'Analyst',
     pmcParticipation: 'B',
   });
-
-  server.loadFixtures();
 
   return server;
 }

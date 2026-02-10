@@ -3,8 +3,8 @@ import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
 import { visit } from '@ember/test-helpers';
 import { authenticateSession } from 'ember-simple-auth/test-support';
-import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
-import sharedScenario from '../../mirage/scenarios/shared';
+import { setupMirage } from 'pass-ui/tests/test-support/mirage';
+import sharedScenario from 'pass-ui/mirage/scenarios/shared';
 
 module('Acceptance | application', function (hooks) {
   setupApplicationTest(hooks);

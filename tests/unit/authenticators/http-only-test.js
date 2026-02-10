@@ -1,7 +1,7 @@
 import HttpOnly from 'pass-ui/authenticators/http-only';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import { setupMirage } from 'ember-cli-mirage/test-support';
+import { setupMirage } from 'pass-ui/tests/test-support/mirage';
 
 module('HttpOnlyAuthenticator', function (hooks) {
   setupTest(hooks);
@@ -15,7 +15,7 @@ module('HttpOnlyAuthenticator', function (hooks) {
 
   module('#restore', function () {
     test('returns a resolving promise', async function (assert) {
-      server.get('/user/whoami', (_schema, _request) => {
+      this.server.get('/user/whoami', (_schema, _request) => {
         return {
           id: '0',
         };
@@ -28,7 +28,7 @@ module('HttpOnlyAuthenticator', function (hooks) {
     });
 
     test('returns a resolving promise even when whoami response is not normalized', async function (assert) {
-      server.get('/user/whoami', (_schema, _request) => {
+      this.server.get('/user/whoami', (_schema, _request) => {
         return {
           user: { id: '0' },
         };
@@ -43,7 +43,7 @@ module('HttpOnlyAuthenticator', function (hooks) {
 
   module('#authenticate', function () {
     test('returns a resolving promise', async function (assert) {
-      server.get('/user/whoami', (_schema, _request) => {
+      this.server.get('/user/whoami', (_schema, _request) => {
         return {
           id: '0',
         };
@@ -56,7 +56,7 @@ module('HttpOnlyAuthenticator', function (hooks) {
     });
 
     test('returns a resolving promise even when whoami response is not normalized', async function (assert) {
-      server.get('/user/whoami', (_schema, _request) => {
+      this.server.get('/user/whoami', (_schema, _request) => {
         return {
           user: { id: '0' },
         };
