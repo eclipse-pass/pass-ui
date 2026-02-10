@@ -5,7 +5,6 @@ import ENV from 'pass-ui/config/environment';
 import { task } from 'ember-concurrency';
 import { get } from '@ember/object';
 import { fileForSubmissionQuery, submissionsWithPublicationQuery } from '../util/paginated-query';
-import _ from 'lodash';
 import type SubmissionModel from 'pass-ui/models/submission';
 import type PublicationModel from 'pass-ui/models/publication';
 import type GrantModel from 'pass-ui/models/grant';
@@ -43,7 +42,7 @@ export default class SubmissionHandlerService extends Service {
       }
     });
 
-    return _.uniqBy(_.compact(result), 'id');
+    return [...new Map(result.filter(Boolean).map((x) => [x.id, x])).values()];
   }
 
   /**

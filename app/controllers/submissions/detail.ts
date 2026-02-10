@@ -5,7 +5,6 @@ import { action, get, computed } from '@ember/object';
 import ENV from 'pass-ui/config/environment';
 import { inject as service } from '@ember/service';
 import { later, scheduleOnce } from '@ember/runloop';
-import _ from 'lodash';
 import swal from 'sweetalert2/dist/sweetalert2.js';
 import type CurrentUserService from 'pass-ui/services/current-user';
 import type SubmissionHandlerService from 'pass-ui/services/submission-handler';
@@ -325,7 +324,7 @@ export default class SubmissionsDetail extends Controller {
       .filter((file: any) => file && file.get('fileRole') === 'manuscript') // eslint-disable-line @typescript-eslint/no-explicit-any
       .filter((file: any) => file.submission.id === this.model.sub.id); // eslint-disable-line @typescript-eslint/no-explicit-any
 
-    manuscriptFiles = _.uniqBy(manuscriptFiles, 'id');
+    manuscriptFiles = [...new Map(manuscriptFiles.map((file: any) => [file.id, file])).values()]; // eslint-disable-line @typescript-eslint/no-explicit-any
 
     if (manuscriptFiles.length === 0) {
       swal.fire(

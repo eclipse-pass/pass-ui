@@ -3,7 +3,6 @@ import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import { action, get, set } from '@ember/object';
 import { inject as service } from '@ember/service';
-import _ from 'lodash';
 import ENV from 'pass-ui/config/environment';
 import swal from 'sweetalert2/dist/sweetalert2.js';
 import type CurrentUserService from 'pass-ui/services/current-user';
@@ -98,7 +97,8 @@ export default class SubmissionsNew extends Controller {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .filter((file: any) => file.submission.id === this.model.newSubmission.id);
 
-    manuscriptFiles = _.uniqBy(manuscriptFiles, 'id');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    manuscriptFiles = [...new Map(manuscriptFiles.map((file: any) => [file.id, file])).values()];
 
     const submitter = await this.userIsSubmitter();
     if (manuscriptFiles.length == 0 && submitter) {

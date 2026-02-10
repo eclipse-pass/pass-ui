@@ -53,9 +53,6 @@ importers:
       ember-load-initializers:
         specifier: ^2.1.2
         version: 2.1.2(@babel/core@7.24.7)
-      ember-lodash:
-        specifier: ^4.19.5
-        version: 4.19.5
       ember-modal-dialog:
         specifier: ^4.1.4
         version: 4.1.4(@glint/environment-ember-loose@1.5.2(@glimmer/component@1.1.2(@babel/core@7.24.7))(@glint/template@1.7.4)(ember-cli-htmlbars@6.3.0)(ember-modifier@4.2.0(@babel/core@7.24.7)(ember-source@5.8.0(@babel/core@7.24.7)(@glimmer/component@1.1.2(@babel/core@7.24.7))(@glint/template@1.7.4)(rsvp@4.8.5)(webpack@5.92.1))))(@glint/template@1.7.4)(ember-source@5.8.0(@babel/core@7.24.7)(@glimmer/component@1.1.2(@babel/core@7.24.7))(@glint/template@1.7.4)(rsvp@4.8.5)(webpack@5.92.1))(ember-tether@3.1.0(@glint/template@1.7.4)(ember-source@5.8.0(@babel/core@7.24.7)(@glimmer/component@1.1.2(@babel/core@7.24.7))(@glint/template@1.7.4)(rsvp@4.8.5)(webpack@5.92.1))(webpack@5.92.1))
@@ -2706,9 +2703,6 @@ packages:
     resolution: {integrity: sha512-NXfi+Vas24n3Ivo21GvENTI55qxKu7OwKRnCLWXld8MiLiQKQlWIq28eoARaFj0lTUFwUa4jKZeA7fW9PiWQeg==}
     engines: {node: 8.* || >= 10.*}
 
-  broccoli-string-replace@0.1.2:
-    resolution: {integrity: sha512-QHESTrrrPlKuXQNWsvXawSQbV2g34wCZ5oKgd6bntdOuN8VHxbg1BCBHqVY5HxXJhWelimgGxj3vI7ECkyij8g==}
-
   broccoli-terser-sourcemap@4.1.1:
     resolution: {integrity: sha512-8sbpRf0/+XeszBJQM7vph2UNj4Kal0lCI/yubcrBIzb2NvYj5gjTHJABXOdxx5mKNmlCMu2hx2kvOtMpQsxrfg==}
     engines: {node: ^10.12.0 || 12.* || >= 14}
@@ -3899,10 +3893,6 @@ packages:
   ember-load-initializers@2.1.2:
     resolution: {integrity: sha512-CYR+U/wRxLbrfYN3dh+0Tb6mFaxJKfdyz+wNql6cqTrA0BBi9k6J3AaKXj273TqvEpyyXegQFFkZEiuZdYtgJw==}
     engines: {node: 6.* || 8.* || >= 10.*}
-
-  ember-lodash@4.19.5:
-    resolution: {integrity: sha512-3NMtKvEMpipaxRuf5jbihQ5iGWnZyYssxLd0xDbqzxTU/3rHhnDIVS3+qPnw5AT0iH+hjlFlk1M4Ekv/K8a+bw==}
-    engines: {node: ^4.5 || 6.* || >= 7.*}
 
   ember-maybe-in-element@2.1.0:
     resolution: {integrity: sha512-6WAzPbf4BNQIQzkur2+zRJJJ/PKQoujIYgFjrpj3fOPy8iRlxVUm0/B41qbFyg1LE6bVbg0cWbuESWEvJ9Rswg==}
@@ -5626,9 +5616,6 @@ packages:
   locate-path@7.2.0:
     resolution: {integrity: sha512-gvVijfZvn7R+2qyPX8mAuKcFGDf6Nc61GdvGafQsHL0sBIxfKzA+usWn4GFC/bk+QdwPUD4kWFJLhElipq+0VA==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
-
-  lodash-es@4.17.21:
-    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
 
   lodash._baseflatten@3.1.4:
     resolution: {integrity: sha512-fESngZd+X4k+GbTxdMutf8ohQa0s3sJEHIcwtu4/LsIQ2JTDzdRxDCMQjW+ezzwRitLmHnacVVmosCbxifefbw==}
@@ -12341,13 +12328,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  broccoli-string-replace@0.1.2:
-    dependencies:
-      broccoli-persistent-filter: 1.4.6
-      minimatch: 3.1.2
-    transitivePeerDependencies:
-      - supports-color
-
   broccoli-terser-sourcemap@4.1.1:
     dependencies:
       async-promise-queue: 1.0.5
@@ -13957,17 +13937,6 @@ snapshots:
       ember-cli-typescript: 2.0.2(@babel/core@7.24.7)
     transitivePeerDependencies:
       - '@babel/core'
-      - supports-color
-
-  ember-lodash@4.19.5:
-    dependencies:
-      broccoli-debug: 0.6.5
-      broccoli-funnel: 2.0.2
-      broccoli-merge-trees: 3.0.2
-      broccoli-string-replace: 0.1.2
-      ember-cli-babel: 7.26.11
-      lodash-es: 4.17.21
-    transitivePeerDependencies:
       - supports-color
 
   ember-maybe-in-element@2.1.0:
@@ -16258,8 +16227,6 @@ snapshots:
   locate-path@7.2.0:
     dependencies:
       p-locate: 6.0.0
-
-  lodash-es@4.17.21: {}
 
   lodash._baseflatten@3.1.4:
     dependencies:
