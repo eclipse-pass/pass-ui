@@ -276,8 +276,8 @@ export default function (config) {
         };
       });
 
-      this.get('/data/repositoryCopy/:id', (schema, request) => schema.find('repositoryCopy', request.params.id));
-      this.get('/data/repositoryCopy', (schema, request) => schema.none('repositoryCopy'));
+      this.get('/data/repositoryCopy/:id', (schema, request) => schema.find('repository-copy', request.params.id));
+      this.get('/data/repositoryCopy', (schema, request) => schema.none('repository-copy'));
 
       this.get('/data/deposit/:id', (schema, request) => schema.find('deposit', request.params.id));
       this.get('/data/deposit', (schema, request) => schema.none('deposit'));
@@ -295,12 +295,16 @@ export default function (config) {
       this.get('/policy/policies', async (schema, request) => {
         const { id } = schema.policy.findBy({ title: 'Johns Hopkins University (JHU) Open Access Policy' });
         const policies = [{ id, type: 'institution' }];
+        const seenIds = new Set([id]);
 
         schema.submission.find(request.queryParams.submission).grants.models.forEach((grant) => {
           const { policyId } = schema.funder.find(grant.primaryFunder.id);
           const { id } = schema.policy.find(policyId);
 
-          if (id) policies.push({ id, type: 'funder' });
+          if (id && !seenIds.has(id)) {
+            seenIds.add(id);
+            policies.push({ id, type: 'funder' });
+          }
         });
 
         return policies;

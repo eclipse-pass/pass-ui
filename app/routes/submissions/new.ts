@@ -65,7 +65,7 @@ export default class NewRoute extends CheckSessionRoute {
       publication = await newSubmission.publication;
       journal = await publication.journal;
 
-      submissionEvents = this.store.query('submissionEvent', {
+      submissionEvents = this.store.query('submission-event', {
         filter: {
           submissionEvent: `submission.id==${newSubmission.get('id')}`,
         },

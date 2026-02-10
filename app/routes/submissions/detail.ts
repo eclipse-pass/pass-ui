@@ -18,7 +18,7 @@ export default class DetailRoute extends CheckSessionRoute {
     const deposits = this.store.query('deposit', {
       filter: { deposit: `submission.id==${params.submission_id}` },
     });
-    const submissionEvents = this.store.query('submissionEvent', {
+    const submissionEvents = this.store.query('submission-event', {
       filter: {
         submissionEvent: `submission.id==${params.submission_id}`,
       },
@@ -29,7 +29,7 @@ export default class DetailRoute extends CheckSessionRoute {
       include: 'publication.journal,repositories,preparers,submitter',
     });
     const publication = await sub.get('publication');
-    const repoCopies = await this.store.query('repositoryCopy', {
+    const repoCopies = await this.store.query('repository-copy', {
       filter: { repositoryCopy: `publication.id==${publication.id}` },
     });
     const repos = await sub.get('repositories');

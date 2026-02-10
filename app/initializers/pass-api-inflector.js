@@ -1,28 +1,31 @@
-import Inflector from 'ember-inflector';
+import { uncountable } from '@ember-data/request-utils/string';
+
+const MODEL_NAMES = [
+  'deposit',
+  'file',
+  'funder',
+  'grant',
+  'journal',
+  'person',
+  'policy',
+  'publication',
+  'repository-copy',
+  'repository',
+  'submission-event',
+  'submission',
+  'user',
+];
 
 /**
- * Our API current does not use pluralized model names for its endpoints
- * So we need to change default ember-data behavior to get the API calls
- * right.
+ * Our API does not use pluralized model names for its endpoints.
+ * Register uncountable rules with @ember-data/request-utils so Ember Data
+ * does not pluralize model names in API paths. The adapter's pathForType
+ * handles camelCase conversion for the API.
  */
 export function initialize() {
-  const inflector = Inflector.inflector;
-
-  // Tell the inflector to not pluralize our model names
-  // by saying the plural is the same word
-  inflector.uncountable('deposit');
-  inflector.uncountable('file');
-  inflector.uncountable('funder');
-  inflector.uncountable('grant');
-  inflector.uncountable('journal');
-  inflector.uncountable('person');
-  inflector.uncountable('policy');
-  inflector.uncountable('publication');
-  inflector.uncountable('repositoryCopy');
-  inflector.uncountable('repository');
-  inflector.uncountable('submissionEvent');
-  inflector.uncountable('submission');
-  inflector.uncountable('user');
+  for (const name of MODEL_NAMES) {
+    uncountable(name);
+  }
 }
 
 export default {

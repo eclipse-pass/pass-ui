@@ -29,9 +29,10 @@ export default class SubmissionModel extends Model {
 
   @hasMany('user', { async: false, inverse: null }) declare preparers: UserModel[];
   @hasMany('repository', { async: false, inverse: null }) declare repositories: RepositoryModel[];
-  @hasMany('policy', { async: true, inverse: null }) declare effectivePolicies: PolicyModel[];
+  @hasMany('policy', { async: true, inverse: null, resetOnRemoteUpdate: false })
+  declare effectivePolicies: PolicyModel[];
   // not on this model on API
-  @hasMany('submissionEvent', {
+  @hasMany('submission-event', {
     async: true,
     inverse: 'submission',
   })

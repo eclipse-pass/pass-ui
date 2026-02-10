@@ -18,6 +18,9 @@ importers:
       '@ember-data/model':
         specifier: ~5.3.8
         version: 5.3.8(drey2ppnt4g5d2xbze3c4phm5i)
+      '@ember-data/request-utils':
+        specifier: ~5.3.8
+        version: 5.3.8(@babel/core@7.24.7)(@ember/string@3.1.1)(@glint/template@1.7.4)(@warp-drive/core-types@0.0.0-beta.11(@babel/core@7.24.7)(@glint/template@1.7.4))(ember-inflector@4.0.2)
       '@ember-data/serializer':
         specifier: ~5.3.8
         version: 5.3.8(aqtkbne7nvkhv7o4fvan55wdn4)

@@ -68,7 +68,7 @@ export default class SubmissionHandlerService extends Service {
    * @returns {Promise}          Promise resolves to the updated submission.
    */
   _finishSubmission = task(async (submission: SubmissionModel, comment: string) => {
-    const subEvent = await get(this, 'store').createRecord('submissionEvent');
+    const subEvent = await get(this, 'store').createRecord('submission-event');
 
     subEvent.set('performedBy', get(this, 'currentUser.user'));
     subEvent.set('comment', comment);
@@ -165,7 +165,7 @@ export default class SubmissionHandlerService extends Service {
       submission.set('metadata', JSON.stringify(md));
     }
 
-    const se = this.store.createRecord('submissionEvent', {
+    const se = this.store.createRecord('submission-event', {
       submission,
       performedBy: get(this, 'currentUser.user'),
       performedDate: new Date(),
@@ -193,7 +193,7 @@ export default class SubmissionHandlerService extends Service {
    * @returns {Promise}          Promise which performs the operation.
    */
   requestSubmissionChanges(submission: SubmissionModel, comment: string) {
-    const se = this.store.createRecord('submissionEvent', {
+    const se = this.store.createRecord('submission-event', {
       submission,
       comment,
       performedBy: submission.get('submitter'),
@@ -219,7 +219,7 @@ export default class SubmissionHandlerService extends Service {
    * @returns {Promise}            Promise which performs the operation.
    */
   cancelSubmission(submission: SubmissionModel, comment: string) {
-    const se = this.store.createRecord('submissionEvent', {
+    const se = this.store.createRecord('submission-event', {
       submission,
       comment,
       performedBy: submission.get('submitter'),

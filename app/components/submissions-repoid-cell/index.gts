@@ -29,7 +29,7 @@ export default class SubmissionsRepoidCell extends Component {
     };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.store.query('repositoryCopy', query).then((rc: any) => {
+    this.store.query('repository-copy', query).then((rc: any) => {
       if (!(this.isDestroyed || this.isDestroying)) {
         this.repoCopies = rc;
       }
