@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-get, ember/classic-decorator-no-classic-methods */
 /* eslint-disable no-debugger */
 import Service, { inject as service } from '@ember/service';
-import { task } from 'ember-concurrency-decorators';
+import { task } from 'ember-concurrency';
 import type UserModel from 'pass-ui/models/user';
 
 /**

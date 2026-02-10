@@ -1,7 +1,7 @@
 import Component from '@glimmer/component';
 import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
-import { task } from 'ember-concurrency-decorators';
+import { task } from 'ember-concurrency';
 import type AppStaticConfigService from 'pass-ui/services/app-static-config';
 
 export default class NoticeBanner extends Component {

@@ -12,6 +12,10 @@ module.exports = function (defaults) {
       'initial-state': './initial-state.html',
     },
 
+    babel: {
+      plugins: [require.resolve('ember-concurrency/async-arrow-task-transform')],
+    },
+
     autoImport: {
       forbidEval: true,
     },

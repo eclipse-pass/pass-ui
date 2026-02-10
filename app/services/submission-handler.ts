@@ -2,7 +2,7 @@
 import { isArray } from '@ember/array';
 import Service, { inject as service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
-import { task } from 'ember-concurrency-decorators';
+import { task } from 'ember-concurrency';
 import { get } from '@ember/object';
 import { fileForSubmissionQuery, submissionsWithPublicationQuery } from '../util/paginated-query';
 import _ from 'lodash';
