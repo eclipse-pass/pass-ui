@@ -20,15 +20,13 @@ export default class NoticeBanner extends Component {
     return true;
   }
 
-  @task
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  _setupAppStaticConfig = function* (this: any) {
-    const config = yield this.appStaticConfig.config;
+  _setupAppStaticConfig = task(async () => {
+    const config = await this.appStaticConfig.config;
     if (config) {
       this.contactUrl = config.branding.pages.contactUrl;
       this.instructionsUrl = config.branding.pages.instructionsUrl;
     }
-  };
+  });
 
   <template>
     {{#if this.displayInfoBanner}}

@@ -48,19 +48,19 @@ export default class DoiService extends Service {
    * @param  {string} doi
    * @returns {object}    Object with doiInfo and publication
    */
-  @task(function* (doi) {
+  resolveDOI = task(async (doi: string) => {
     const url = `${ENV.doiService.journalPath}?doi=${encodeURIComponent(doi)}`;
 
-    const rawResponse = yield fetch(url, {
+    const rawResponse = await fetch(url, {
       headers: {
         Accept: 'application/json; charset=utf-8',
         'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN\=([^;]*)/)['1'],
       },
     });
 
-    const response = yield rawResponse.json();
+    const response = await rawResponse.json();
 
-    const journal = yield get(this, 'store').findRecord('journal', response['journal-id']);
+    const journal = await get(this, 'store').findRecord('journal', response['journal-id']);
 
     const doiInfo = this._processRawDoi(response.crossref.message);
 
@@ -82,8 +82,7 @@ export default class DoiService extends Service {
       publication,
       doiInfo,
     };
-  })
-  resolveDOI;
+  });
 
   isValidDOI(doi: string | null | undefined): boolean {
     // ref: https://www.crossref.org/blog/dois-and-matching-regular-expressions/

@@ -23,12 +23,10 @@ export default class FindJournal extends Component {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   declare autocomplete: any;
 
-  @dropTask
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  searchJournals = function* (this: any, term: string) {
-    yield timeout(DEBOUNCE_MS);
+  searchJournals = dropTask(async (term: string) => {
+    await timeout(DEBOUNCE_MS);
     return this.autocomplete.suggest('journal', 'journalName', term);
-  };
+  });
 
   @action
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

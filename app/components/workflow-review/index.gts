@@ -84,9 +84,7 @@ export default class WorkflowReview extends Component {
     this.hasVisitedWeblink = true;
   }
 
-  @task
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  submitTask = function* (this: any) {
+  submitTask = task(async () => {
     document.querySelectorAll('.block-user-input').forEach((el) => {
       (el as HTMLElement).style.display = 'block';
     });
@@ -116,7 +114,7 @@ export default class WorkflowReview extends Component {
       return;
     }
 
-    const repos = yield this.args.submission.repositories;
+    const repos = await this.args.submission.repositories;
     if (repos.length === 0) {
       swal.fire({
         target: ENV.APP.rootElement,
@@ -168,7 +166,7 @@ export default class WorkflowReview extends Component {
     const result: { value: any[] } = { value: [] };
     for (const repoStep of reposProgressSteps) {
       const repoState = reposWithAgreementText[repoStep];
-      const repoResult = yield Queue.fire({
+      const repoResult = await Queue.fire({
         currentProgressStep: repoStep,
         title: repoState.title,
         html: repoState.html,
@@ -206,7 +204,7 @@ export default class WorkflowReview extends Component {
         ).replace(/[\[\]']/g, '')}</code></pre>`;
       }
 
-      const resultConfirm = yield swal.fire({
+      const resultConfirm = await swal.fire({
         target: ENV.APP.rootElement,
         title: 'Confirm submission',
         html: swalMsg,
@@ -215,7 +213,7 @@ export default class WorkflowReview extends Component {
       });
 
       if (resultConfirm.value) {
-        const repos = yield this.args.submission.repositories;
+        const repos = await this.args.submission.repositories;
 
         const filteredRepos = repos.filter((repo: any) => {
           if (repo._isWebLink) {
@@ -252,7 +250,7 @@ export default class WorkflowReview extends Component {
       });
       this.unblockUserInput();
     }
-  };
+  });
 
   @action
   initializeTooltip() {

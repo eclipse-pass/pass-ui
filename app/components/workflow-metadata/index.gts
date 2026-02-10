@@ -46,11 +46,9 @@ export default class WorkflowMetadata extends Component {
     }
   }
 
-  @task
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  setupSchema = function* (this: any) {
+  setupSchema = task(async () => {
     if (!this.schema) {
-      const repositories = yield this.args.submission.repositories;
+      const repositories = await this.args.submission.repositories;
       this.schema = this.metadataSchema.getMetadataSchema(repositories, this.workflow.getReadOnlyProperties());
 
       const requiresJournal =
@@ -59,10 +57,10 @@ export default class WorkflowMetadata extends Component {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (el: any) => el.name === 'journal-title' && 'isRequired' in el && el.isRequired,
         ) !== -1;
-      const journal = yield this.args.publication.journal;
+      const journal = await this.args.publication.journal;
       this.missingRequiredJournal = requiresJournal && !journal;
     }
-  };
+  });
 
   @action
   back() {

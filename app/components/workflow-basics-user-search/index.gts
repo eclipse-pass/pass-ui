@@ -69,9 +69,7 @@ export default class WorkflowBasicsUserSearch extends Component {
     }
   }
 
-  @task
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  searchForUsers = function* (this: any, page: any) {
+  searchForUsers = task(async (page: number) => {
     let input = this.args.searchInput.replace(/\W+/g, ' ').trim();
 
     if (input.length == 0) {
@@ -97,14 +95,14 @@ export default class WorkflowBasicsUserSearch extends Component {
       },
     };
 
-    const users = yield this.store.query('user', query);
+    const users = await this.store.query('user', query);
 
     if (users.meta) {
       this.numberOfPages = users.meta.page.totalPages;
     }
 
     this.matchingUsers = users;
-  };
+  });
 
   <template>
     {{! template-lint-disable link-href-attributes require-button-type require-input-label }}

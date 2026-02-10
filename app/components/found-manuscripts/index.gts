@@ -47,25 +47,21 @@ export default class FoundManuscriptsComponent extends Component {
     );
   }
 
-  @task
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  getAppConfig = function* (this: any) {
-    this.contactUrl = yield this.appStaticConfig.config?.branding?.pages?.contactUrl;
-  };
+  getAppConfig = task(async () => {
+    this.contactUrl = await this.appStaticConfig.config?.branding?.pages?.contactUrl;
+  });
 
-  @task
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  setupManuscripts = function* (this: any) {
+  setupManuscripts = task(async () => {
     const doi = this.args.doi;
 
     if (doi) {
-      const foundOAMss = yield this.oaManuscriptService.lookup(doi);
+      const foundOAMss = await this.oaManuscriptService.lookup(doi);
 
       if (foundOAMss) {
         this.foundManuscripts = [...foundOAMss];
       }
     }
-  };
+  });
 
   <template>
     {{! template-lint-disable link-rel-noopener simple-unless }}

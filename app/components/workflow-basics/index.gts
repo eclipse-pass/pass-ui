@@ -303,10 +303,8 @@ export default class WorkflowBasics extends Component {
     this.changeSubmitter(this.isProxySubmission, null);
   }
 
-  @dropTask
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  lookupDOI = function* (this: any, setPublication: boolean) {
-    yield timeout(DEBOUNCE_MS);
+  lookupDOI = dropTask(async (setPublication: boolean) => {
+    await timeout(DEBOUNCE_MS);
 
     try {
       this.doiServiceError = false;
@@ -330,7 +328,7 @@ export default class WorkflowBasics extends Component {
 
       this.flashMessages.info('Please wait while we look up information about your DOI');
 
-      const result = yield doiService.resolveDOI.perform(doi);
+      const result = await doiService.resolveDOI.perform(doi);
 
       if (setPublication) {
         this.args.updatePublication(result.publication);
@@ -356,7 +354,7 @@ export default class WorkflowBasics extends Component {
       this.clearDoiData(this.publication.doi);
       this.doiServiceError = error;
     }
-  };
+  });
 
   <template>
     {{! template-lint-disable link-href-attributes no-triple-curlies require-button-type require-input-label simple-unless }}

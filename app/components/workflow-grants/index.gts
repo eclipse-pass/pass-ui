@@ -14,6 +14,7 @@ import SubmissionFundingTable from 'pass-ui/components/submission-funding-table'
 import GrantLinkNewtabCell from 'pass-ui/components/grant-link-newtab-cell';
 import SelectRowToggle from 'pass-ui/components/select-row-toggle';
 import DateCell from 'pass-ui/components/date-cell';
+import type GrantModel from 'pass-ui/models/grant';
 
 const gt = (a: unknown, b: unknown) => Number(a) > Number(b);
 
@@ -113,24 +114,22 @@ export default class WorkflowGrants extends Component {
     this.workflow.setMaxStep(this.workflowStep);
   }
 
-  @task
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  setup = function* (this: any) {
+  setup = task(async () => {
     this.contactUrl = this.appStaticConfig?.config?.branding?.pages?.contactUrl;
 
-    const submitter = yield this.args.submission.submitter;
+    const submitter = await this.args.submission.submitter;
     if (submitter?.id) {
-      yield this.updateGrants.perform();
+      await this.updateGrants.perform();
     }
 
     this._selectedGrants = [];
-    let grants = yield this.args.submission.grants;
+    let grants = await this.args.submission.grants;
     if (this.preLoadedGrant) {
       grants = [this.preLoadedGrant, ...grants];
       this.workflow.addGrant(this.preLoadedGrant);
     }
     this._selectedGrants = [...grants];
-  };
+  });
 
   updateGrants = task(async () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -156,19 +155,17 @@ export default class WorkflowGrants extends Component {
     this.pageCount = results.page.totalPages;
   });
 
-  @task
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  initialAddGrant = function* (this: any, grant: any, event: any) {
+  initialAddGrant = task(async (grant: GrantModel | null, event?: Event) => {
     if (grant) {
       this.addGrant(grant);
-    } else if (event && event.target.value) {
-      let grant = yield this.store.findRecord('grant', event.target.value);
+    } else if (event && (event.target as HTMLSelectElement).value) {
+      let grant = await this.store.findRecord('grant', (event.target as HTMLSelectElement).value);
 
       grant.get('primaryFunder.policy');
       this.addGrant(grant);
       document.querySelectorAll('select')[0].selectedIndex = 0;
     }
-  };
+  });
 
   @action
   prevPage() {

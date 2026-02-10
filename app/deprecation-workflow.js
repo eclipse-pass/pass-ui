@@ -1,8 +1,5 @@
 import setupDeprecationWorkflow from 'ember-cli-deprecation-workflow';
 
 setupDeprecationWorkflow({
-  workflow: [
-    { handler: 'throw', matchId: 'ember-data:deprecate-promise-many-array-behaviors' },
-    { handler: 'silence', matchId: 'ember-concurrency.deprecate-decorator-task' },
-  ],
+  workflow: [{ handler: 'throw', matchId: 'ember-data:deprecate-promise-many-array-behaviors' }],
 });

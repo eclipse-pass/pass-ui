@@ -53,16 +53,14 @@ export default class NavBar extends Component {
     await this.session.invalidate();
   }
 
-  @task
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  _setupAppStaticConfig = function* (this: any) {
-    const config = yield this.appStaticConfig.config;
+  _setupAppStaticConfig = task(async () => {
+    const config = await this.appStaticConfig.config;
     if (config && config.branding.showPagesNavBar) {
       this.aboutUrl = config.branding.pages.aboutUrl;
       this.contactUrl = config.branding.pages.contactUrl;
       this.faqUrl = config.branding.pages.faqUrl;
     }
-  };
+  });
 
   @action
   toggleUserMenu() {

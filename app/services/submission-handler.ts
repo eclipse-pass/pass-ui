@@ -68,9 +68,8 @@ export default class SubmissionHandlerService extends Service {
    * @param  {string} comment    Added to SubmissionEvent
    * @returns {Promise}          Promise resolves to the updated submission.
    */
-  @task
-  _finishSubmission = function* (submission, comment) {
-    const subEvent = yield get(this, 'store').createRecord('submissionEvent');
+  _finishSubmission = task(async (submission: SubmissionModel, comment: string) => {
+    const subEvent = await get(this, 'store').createRecord('submissionEvent');
 
     subEvent.set('performedBy', get(this, 'currentUser.user'));
     subEvent.set('comment', comment);
@@ -84,7 +83,7 @@ export default class SubmissionHandlerService extends Service {
       submission.set('submissionStatus', 'submitted');
       submission.set('submittedDate', new Date());
 
-      const repos = yield submission.repositories;
+      const repos = await submission.repositories;
       // Add agreements metadata
       const agreemd = get(this, 'schemaService').getAgreementsBlob(repos);
 
@@ -111,9 +110,9 @@ export default class SubmissionHandlerService extends Service {
     }
 
     // Save the updated submission, then save the submissionEvent
-    yield subEvent.save();
-    yield submission.save();
-  };
+    await subEvent.save();
+    await submission.save();
+  });
 
   /**
    * submit - Perform or prepares a submission. Persists the publication, associate
@@ -130,22 +129,22 @@ export default class SubmissionHandlerService extends Service {
    * @param  {String} comment          Comment added as to SubmissionEvent.
    * @returns {Promise}                Promise to perform the operation.
    */
-  @task
-  submit = function* (submission, publication, comment) {
-    const p = yield publication.save();
+  submit = task(async (submission: SubmissionModel, publication: PublicationModel, comment: string) => {
+    const p = await publication.save();
 
     submission.set('submitted', false);
     submission.set('source', 'pass');
     submission.set('aggregatedDepositStatus', 'not-started');
     submission.set('publication', p);
 
-    const s = yield submission.save();
-    yield get(this, '_finishSubmission')
+    const s = await submission.save();
+    await get(this, '_finishSubmission')
       .perform(s, comment)
-      .catch((e) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .catch((e: any) => {
         throw e;
       });
-  };
+  });
 
   /**
    * approveSubmission - Submitter approves submission. Metadata is added to

@@ -22,15 +22,14 @@ export default class CurrentUserService extends Service {
    *
    * @returns {Promise}        Promise which resolves to the User.
    */
-  @task
-  load = function* () {
+  load = task(async () => {
     const userId = this.session.data.authenticated.id;
 
     if (userId) {
-      const user = yield this.store.findRecord('user', userId);
+      const user = await this.store.findRecord('user', userId);
       this.user = user;
     }
 
     return this.user;
-  };
+  });
 }

@@ -2,10 +2,10 @@
 import Service, { inject as service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
 import { task, all, hash } from 'ember-concurrency';
-import { get } from '@ember/object';
 import { run } from '@ember/runloop';
 import type PolicyModel from 'pass-ui/models/policy';
 import type RepositoryModel from 'pass-ui/models/repository';
+import type SubmissionModel from 'pass-ui/models/submission';
 
 export interface RepoDslResult {
   required?: RepositoryModel[];
@@ -87,10 +87,10 @@ export default class PoliciesService extends Service {
    *    'optional': []
    * }
    */
-  @task(function* (submission) {
+  getRepositories = task(async (submission: SubmissionModel) => {
     const url = `${ENV.policyService.repositoryPath}?submission=${submission.id}`;
 
-    const response = yield fetch(url, {
+    const response = await fetch(url, {
       method: 'GET',
       headers: {
         'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN\=([^;]*)/)['1'],
@@ -105,29 +105,28 @@ export default class PoliciesService extends Service {
      * For each DSL field (required, one-of, optional), transform each repository info object
      * to a Promise for a Repository object from the Store
      */
-    const dsl = yield response.json();
+    const dsl = await response.json();
 
     const result = {};
 
     if (dsl.hasOwnProperty('required')) {
-      result.required = yield get(this, '_resolveRepos').perform(dsl.required);
+      result.required = await this._resolveRepos.perform(dsl.required);
     }
 
     if (dsl.hasOwnProperty('one-of')) {
       const choices = [];
       dsl['one-of'].forEach((choiceGroup) => {
-        choices.push(get(this, '_resolveRepos').perform(choiceGroup));
+        choices.push(this._resolveRepos.perform(choiceGroup));
       });
-      result['one-of'] = yield all(choices);
+      result['one-of'] = await all(choices);
     }
 
     if (dsl.hasOwnProperty('optional')) {
-      result.optional = yield get(this, '_resolveRepos').perform(dsl.optional);
+      result.optional = await this._resolveRepos.perform(dsl.optional);
     }
 
-    return yield hash(result);
-  })
-  getRepositories;
+    return await hash(result);
+  });
 
   /**
    * Transform a list of repository information objects to Repository model objects
@@ -138,15 +137,15 @@ export default class PoliciesService extends Service {
    * }
    * @returns {array} list of Promises of Repository objects
    */
-  @task(function* (repos) {
-    return yield all(
+  _resolveRepos = task(async (repos: Array<{ url: string; selected: boolean }>) => {
+    return await all(
       repos.map((repoInfo) =>
-        this.store.findRecord('repository', repoInfo.url).then((repo) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        this.store.findRecord('repository', repoInfo.url).then((repo: any) => {
           repo.set('_selected', repoInfo.selected);
           return repo;
         }),
       ),
     );
-  })
-  _resolveRepos;
+  });
 }

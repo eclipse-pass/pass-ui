@@ -4,7 +4,7 @@ import { tracked } from '@glimmer/tracking';
 import { action, computed, get, set } from '@ember/object';
 import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
-import { task } from 'ember-concurrency';
+
 import type Workflow from 'pass-ui/services/workflow';
 import type SubmissionsNew from 'pass-ui/controllers/submissions/new';
 
