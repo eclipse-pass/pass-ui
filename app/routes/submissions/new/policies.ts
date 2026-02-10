@@ -1,6 +1,6 @@
 /* eslint-disable ember/no-get */
 import { action, get } from '@ember/object';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import { hash } from 'rsvp';
 import CheckSessionRoute from '../../check-session-route';
 import type Workflow from 'pass-ui/services/workflow';

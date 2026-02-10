@@ -1,6 +1,6 @@
 /* eslint-disable ember/no-get */
 import CheckSessionRoute from './check-session-route';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import { get } from '@ember/object';
 import type CurrentUserService from 'pass-ui/services/current-user';
 

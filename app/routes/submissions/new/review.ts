@@ -1,5 +1,5 @@
 import { action } from '@ember/object';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import CheckSessionRoute from '../../check-session-route';
 import type Workflow from 'pass-ui/services/workflow';
 

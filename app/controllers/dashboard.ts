@@ -1,6 +1,6 @@
 import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import type CurrentUserService from 'pass-ui/services/current-user';
 
 export default class DashboardController extends Controller {

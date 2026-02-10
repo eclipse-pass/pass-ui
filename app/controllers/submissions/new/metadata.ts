@@ -2,7 +2,7 @@
 import Controller, { inject as controller } from '@ember/controller';
 import { action } from '@ember/object';
 import { alias } from '@ember/object/computed';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import type SubmissionsNew from 'pass-ui/controllers/submissions/new';
 
 export default class SubmissionsNewMetadata extends Controller {

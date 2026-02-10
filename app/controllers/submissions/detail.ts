@@ -3,7 +3,7 @@ import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import { action, get, computed } from '@ember/object';
 import ENV from 'pass-ui/config/environment';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import { later, scheduleOnce } from '@ember/runloop';
 import swal from 'sweetalert2/dist/sweetalert2.js';
 import type CurrentUserService from 'pass-ui/services/current-user';

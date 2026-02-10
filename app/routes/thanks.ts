@@ -1,5 +1,5 @@
 import CheckSessionRoute from './check-session-route';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 export default class ThanksRoute extends CheckSessionRoute {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -1,5 +1,5 @@
 import CheckSessionRoute from './check-session-route';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import RSVP from 'rsvp';
 import type AppStaticConfigService from 'pass-ui/services/app-static-config';
 

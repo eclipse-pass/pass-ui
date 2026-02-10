@@ -1,7 +1,7 @@
 /* eslint-disable ember/classic-decorator-no-classic-methods */
 import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import type AppStaticConfigService from 'pass-ui/services/app-static-config';
 
 export default class ThanksController extends Controller {

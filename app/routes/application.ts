@@ -1,6 +1,6 @@
 /* eslint-disable ember/no-get */
 import CheckSessionRoute from './check-session-route';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import { action } from '@ember/object';
 import type AppStaticConfigService from 'pass-ui/services/app-static-config';
 

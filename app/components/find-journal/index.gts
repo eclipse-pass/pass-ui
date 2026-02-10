@@ -1,6 +1,6 @@
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import { dropTask, timeout } from 'ember-concurrency';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore

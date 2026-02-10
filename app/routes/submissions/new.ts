@@ -1,5 +1,5 @@
 import CheckSessionRoute from '../check-session-route';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import { set } from '@ember/object';
 import { hash } from 'rsvp';
 import { fileForSubmissionQuery } from '../../util/paginated-query';

@@ -1,5 +1,5 @@
 /* eslint-disable ember/classic-decorator-no-classic-methods, ember/no-get, ember/no-string-prototype-extensions */
-import Service, { inject as service } from '@ember/service';
+import Service, { service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
 import surveySchema from './schema/surveyjs.json';
 import repositorySchemas from './schema/repository.json';

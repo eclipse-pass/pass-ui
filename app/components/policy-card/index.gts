@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-computed-properties-in-native-classes, ember/require-computed-property-dependencies */
 import Component from '@glimmer/component';
 import { action, computed, set } from '@ember/object';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import { fn } from '@ember/helper';
 import { on } from '@ember/modifier';
 import didInsert from '@ember/render-modifiers/modifiers/did-insert';

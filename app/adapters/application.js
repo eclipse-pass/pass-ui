@@ -1,6 +1,6 @@
 import JSONAPIAdapter from '@ember-data/adapter/json-api';
 import ENV from 'pass-ui/config/environment';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 /**
  * PASS specific extensions for Ember Data's JSON:API adapter

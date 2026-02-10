@@ -3,7 +3,7 @@ import Controller, { inject as controller } from '@ember/controller';
 import { action, computed, get } from '@ember/object';
 import { alias } from '@ember/object/computed';
 import { tracked } from '@glimmer/tracking';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import type Workflow from 'pass-ui/services/workflow';
 import type SubmissionsNew from 'pass-ui/controllers/submissions/new';
 

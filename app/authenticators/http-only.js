@@ -1,6 +1,6 @@
 import Base from 'ember-simple-auth/authenticators/base';
 import RSVP from 'rsvp';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import { isEmpty } from '@ember/utils';
 
 export default class HttpOnly extends Base {
