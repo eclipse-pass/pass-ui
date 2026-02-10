@@ -4,6 +4,7 @@ import config from 'pass-ui/config/environment';
 import { initialize } from 'pass-ui/instance-initializers/surveyjs';
 import { module, test } from 'qunit';
 import Resolver from 'ember-resolver';
+import compatModules from '@embroider/virtual/compat-modules';
 import { run } from '@ember/runloop';
 
 module('Unit | Instance Initializer | surveyjs', function (hooks) {
@@ -11,7 +12,7 @@ module('Unit | Instance Initializer | surveyjs', function (hooks) {
     this.TestApplication = class TestApplication extends Application {
       modulePrefix = config.modulePrefix;
       podModulePrefix = config.podModulePrefix;
-      Resolver = Resolver;
+      Resolver = Resolver.withModules(compatModules);
     };
 
     this.TestApplication.instanceInitializer({

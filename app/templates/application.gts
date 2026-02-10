@@ -3,9 +3,7 @@ import { on } from '@ember/modifier';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import FlashMessage from 'ember-cli-flash/components/flash-message';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import appVersion from 'pass-ui/helpers/app-version';
+import config from 'pass-ui/config/environment';
 import NavBar from 'pass-ui/components/nav-bar';
 import NoticeBanner from 'pass-ui/components/notice-banner';
 
@@ -75,7 +73,7 @@ export default RouteTemplate(
           {{/if}}
           <br />
           <small>
-            rev.&nbsp;{{appVersion hideVersion=true}}
+            rev.&nbsp;{{config.APP.version}}
           </small>
         </div>
       </footer>

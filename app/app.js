@@ -10,10 +10,12 @@ import 'sweetalert2/dist/sweetalert2.css';
 import 'survey-core/survey-core.fontless.min.css';
 import './font-awesome';
 
+import compatModules from '@embroider/virtual/compat-modules';
+
 export default class App extends Application {
   modulePrefix = config.modulePrefix;
   podModulePrefix = config.podModulePrefix;
-  Resolver = Resolver;
+  Resolver = Resolver.withModules(compatModules);
 }
 
-loadInitializers(App, config.modulePrefix);
+loadInitializers(App, config.modulePrefix, compatModules);
