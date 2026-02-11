@@ -5,9 +5,24 @@
     "declarationMap": false,
     "emitDeclarationOnly": false,
     "allowJs": true,
-    "checkJs": false
+    "checkJs": false,
+    "plugins": [{ "name": "@glint/ember-tsc/ts-plugin" }],
+    "types": [
+      "ember-source/types",
+      "@ember-data-types/model/unstable-preview-types",
+      "@ember-data-types/adapter/unstable-preview-types",
+      "@ember-data-types/serializer/unstable-preview-types",
+      "@ember-data-types/store/unstable-preview-types",
+      "@ember-data-types/graph/unstable-preview-types",
+      "@ember-data-types/legacy-compat/unstable-preview-types",
+      "@ember-data-types/tracking/unstable-preview-types",
+      "@warp-drive-types/core-types/unstable-preview-types",
+      "@types/rsvp"
+    ],
+    "paths": {
+      "pass-ui/*": ["./app/*"],
+      "pass-ui/config/*": ["./app/config/*"]
+    }
   },
-  "glint": {
-    "environment": ["ember-template-imports"]
-  }
+  "include": ["app/**/*", "tests/**/*", "types/**/*"]
 }

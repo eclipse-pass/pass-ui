@@ -1,5 +1,4 @@
 import Base from 'ember-simple-auth/authenticators/base';
-import RSVP from 'rsvp';
 import { service } from '@ember/service';
 import { isEmpty } from '@ember/utils';
 
@@ -19,7 +18,7 @@ export default class HttpOnly extends Base {
     const normalizedData = this.normalizeSessionData(data);
     const dataIsValid = await this._validateData(normalizedData);
 
-    return new RSVP.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       if (dataIsValid) {
         return resolve(normalizedData);
       } else {
@@ -57,7 +56,7 @@ export default class HttpOnly extends Base {
       const data = await response.json();
       const normalizedData = this.normalizeSessionData(data);
 
-      return new RSVP.Promise((resolve, _reject) => {
+      return new Promise((resolve, _reject) => {
         return resolve(normalizedData);
       });
     } else {
