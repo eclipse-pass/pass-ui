@@ -29,7 +29,6 @@ export default class NavBar extends Component<NavBarSignature> {
 
   constructor(...args: any[]) {
     super(...args);
-    // @ts-expect-error TS2729 - class fields are initialized after super()
     this._setupAppStaticConfig.perform();
   }
 

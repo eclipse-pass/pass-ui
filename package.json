@@ -23,6 +23,7 @@
     "lint:hbs:fix": "ember-template-lint . --fix",
     "lint:js": "eslint . --cache",
     "lint:js:fix": "eslint . --fix",
+    "typecheck": "ember-tsc --noEmit",
     "start": "vite",
     "test": "concurrently \"npm:lint\" \"npm:test:*\" --names \"lint,test:\"",
     "test:ember": "vite build --mode development && ember test --path dist",

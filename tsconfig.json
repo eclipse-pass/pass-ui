@@ -6,7 +6,6 @@
     "emitDeclarationOnly": false,
     "allowJs": true,
     "checkJs": false,
-    "plugins": [{ "name": "@glint/ember-tsc/ts-plugin" }],
     "types": [
       "ember-source/types",
       "@ember-data-types/model/unstable-preview-types",

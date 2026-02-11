@@ -55,7 +55,6 @@ export default class WorkflowBasicsUserSearch extends Component<WorkflowBasicsUs
     super(...args);
 
     if (this.args.searchInput) {
-      // @ts-expect-error TS2729 - class fields are initialized after super()
       this.searchForUsers.perform(1);
     }
   }

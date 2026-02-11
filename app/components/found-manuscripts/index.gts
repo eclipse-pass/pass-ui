@@ -33,9 +33,7 @@ export default class FoundManuscriptsComponent extends Component<FoundManuscript
 
   constructor(...args: any[]) {
     super(...args);
-    // @ts-expect-error TS2729 - class fields are initialized after super()
     this.getAppConfig.perform();
-    // @ts-expect-error TS2729 - class fields are initialized after super()
     this.setupManuscripts.perform();
   }
 
