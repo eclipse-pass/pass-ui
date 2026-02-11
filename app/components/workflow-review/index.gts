@@ -273,11 +273,9 @@ export default class WorkflowReview extends Component<WorkflowReviewSignature> {
 
   @action
   initializeTooltip() {
-    const el = document.querySelector('[data-toggle="tooltip"]');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if (el && (el as any).tooltip) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (el as any).tooltip();
+    const el = document.querySelector('[data-toggle="tooltip"]') as (Element & { tooltip?: () => void }) | null;
+    if (el && el.tooltip) {
+      el.tooltip();
     }
   }
 

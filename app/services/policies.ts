@@ -140,8 +140,7 @@ export default class PoliciesService extends Service {
   _resolveRepos = task(async (repos: Array<{ url: string; selected: boolean }>) => {
     return await all(
       repos.map((repoInfo) =>
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        this.store.findRecord('repository', repoInfo.url).then((repo: any) => {
+        this.store.findRecord('repository', repoInfo.url).then((repo: RepositoryModel) => {
           repo.set('_selected', repoInfo.selected);
           return repo;
         }),

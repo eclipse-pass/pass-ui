@@ -45,7 +45,7 @@ export default class OAManuscriptService extends Service {
     })
       .then((resp) => {
         if (resp.status !== 200) {
-          console.log(`%cFailed to lookup files for DOI (${doi}). Reason: "${(resp as any).message}"`, 'color: red;'); // eslint-disable-line @typescript-eslint/no-explicit-any
+          console.log(`%cFailed to lookup files for DOI (${doi}). Reason: "${resp.statusText}"`, 'color: red;');
           return [];
         }
         return resp.json();

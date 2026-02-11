@@ -9,16 +9,25 @@ import { SurveyModel } from 'survey-js-ui';
 // @ts-ignore
 import { DefaultLightPanelless } from 'survey-core/themes';
 
-export default class MetadataForm extends Component {
+interface MetadataFormSignature {
+  Args: {
+    schema: unknown;
+    data: unknown;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onSurveyReady?: (survey: any) => void;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    next: (data: any) => void;
+  };
+}
+
+export default class MetadataForm extends Component<MetadataFormSignature> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   survey: any = null;
 
   @action
   setupMetadataForm() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const args = this.args as any;
-    const surveySchema = args.schema;
-    const surveyData = args.data;
+    const surveySchema = this.args.schema;
+    const surveyData = this.args.data;
 
     const customCss = {
       body: 'pt-4',
@@ -56,13 +65,13 @@ export default class MetadataForm extends Component {
     });
     this.survey.render(document.getElementById('metadata-form'));
 
-    if (typeof args.onSurveyReady === 'function') {
-      args.onSurveyReady(this.survey);
+    if (typeof this.args.onSurveyReady === 'function') {
+      this.args.onSurveyReady(this.survey);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.survey.onComplete.add((_sender: any, _options: any) => {
-      args.next(this.survey.data);
+      this.args.next(this.survey.data);
     });
   }
 

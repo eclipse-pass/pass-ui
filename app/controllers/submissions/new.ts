@@ -31,6 +31,7 @@ interface NewSubmissionModel {
 
 export default class SubmissionsNew extends Controller {
   declare model: NewSubmissionModel;
+  declare preLoadedGrant: GrantModel | null;
 
   queryParams: string[] = ['grant', 'submission', 'covid'];
   @service declare currentUser: CurrentUserService;

@@ -33,10 +33,10 @@ export default class FoundManuscriptsComponent extends Component<FoundManuscript
 
   constructor(...args: any[]) {
     super(...args);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this as any).getAppConfig.perform();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this as any).setupManuscripts.perform();
+    // @ts-expect-error TS2729 - class fields are initialized after super()
+    this.getAppConfig.perform();
+    // @ts-expect-error TS2729 - class fields are initialized after super()
+    this.setupManuscripts.perform();
   }
 
   get foundManuscriptsToDisplay() {

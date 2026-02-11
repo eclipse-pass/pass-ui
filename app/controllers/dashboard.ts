@@ -10,8 +10,7 @@ export default class DashboardController extends Controller {
   @service declare flashMessages: any;
   @service declare currentUser: CurrentUserService;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @tracked roles: any = get(this, 'currentUser.user.roles');
+  @tracked roles: string[] = get(this, 'currentUser.user.roles') as string[];
 
   get isSubmitter(): boolean {
     return this.roles.includes('submitter');

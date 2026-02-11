@@ -1,17 +1,26 @@
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { on } from '@ember/modifier';
+import type RepositoryModel from 'pass-ui/models/repository';
 
-export default class RepositoryCard extends Component {
+interface RepositoryCardSignature {
+  Args: {
+    repository: RepositoryModel;
+    type: string;
+    toggleRepository: (repo: RepositoryModel, selected: boolean, type: string) => void;
+    choice?: string;
+    funders?: string[];
+  };
+  Blocks: {
+    default: [];
+  };
+}
+
+export default class RepositoryCard extends Component<RepositoryCardSignature> {
   @action
   toggle(event: Event) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const args = this.args as any;
-    const repo = args.repository;
-    const type = args.type;
     const selected = (event.target as HTMLInputElement).checked;
-
-    args.toggleRepository(repo, selected, type);
+    this.args.toggleRepository(this.args.repository, selected, this.args.type);
   }
 
   <template>

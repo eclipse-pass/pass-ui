@@ -13,6 +13,8 @@ import type PublicationModel from 'pass-ui/models/publication';
 import type JournalModel from 'pass-ui/models/journal';
 import type GrantModel from 'pass-ui/models/grant';
 import type SubmissionEventModel from 'pass-ui/models/submission-event';
+import type SubmissionsNewController from 'pass-ui/controllers/submissions/new';
+import type SubmissionsNewGrantsController from 'pass-ui/controllers/submissions/new/grants';
 
 interface NewSubmissionModel {
   repositories: RepositoryModel[];
@@ -133,9 +135,8 @@ export default class NewRoute extends CheckSessionRoute {
   setupController(controller: any, model: any): void {
     super.setupController(controller, model);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this.controller as any).preLoadedGrant = model.preLoadedGrant;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this.controllerFor('submissions.new.grants') as any).preLoadedGrant = model.preLoadedGrant;
+    (controller as SubmissionsNewController).preLoadedGrant = model.preLoadedGrant;
+    (this.controllerFor('submissions.new.grants') as SubmissionsNewGrantsController).preLoadedGrant =
+      model.preLoadedGrant;
   }
 }

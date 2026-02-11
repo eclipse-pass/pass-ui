@@ -29,8 +29,8 @@ export default class NavBar extends Component<NavBarSignature> {
 
   constructor(...args: any[]) {
     super(...args);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this as any)._setupAppStaticConfig.perform();
+    // @ts-expect-error TS2729 - class fields are initialized after super()
+    this._setupAppStaticConfig.perform();
   }
 
   get hasAUser(): boolean {

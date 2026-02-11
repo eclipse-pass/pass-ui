@@ -9,6 +9,7 @@ import type SubmissionModel from 'pass-ui/models/submission';
 import type PublicationModel from 'pass-ui/models/publication';
 import type GrantModel from 'pass-ui/models/grant';
 import type RepositoryModel from 'pass-ui/models/repository';
+import type FileModel from 'pass-ui/models/file';
 import type CurrentUserService from 'pass-ui/services/current-user';
 import type MetadataSchemaService from 'pass-ui/services/metadata-schema';
 
@@ -36,10 +37,10 @@ export default class SubmissionHandlerService extends Service {
       const primaryRepos = grant.get('primaryFunder.policy.repositories');
 
       if (isArray(directRepos)) {
-        result.push((directRepos as any).slice()); // eslint-disable-line @typescript-eslint/no-explicit-any
+        result.push((directRepos as RepositoryModel[]).slice());
       }
       if (isArray(primaryRepos)) {
-        result.push((primaryRepos as any).slice()); // eslint-disable-line @typescript-eslint/no-explicit-any
+        result.push((primaryRepos as RepositoryModel[]).slice());
       }
     });
 
@@ -262,7 +263,7 @@ export default class SubmissionHandlerService extends Service {
 
     // Get submissions for this file
     const files = await this.store.query('file', fileForSubmissionQuery(submission.id));
-    await Promise.all(files.map((file: any) => file.destroyRecord())); // eslint-disable-line @typescript-eslint/no-explicit-any
+    await Promise.all(files.map((file: FileModel) => file.destroyRecord()));
 
     const publication = await submission.publication;
 

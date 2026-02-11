@@ -55,8 +55,8 @@ export default class WorkflowBasicsUserSearch extends Component<WorkflowBasicsUs
     super(...args);
 
     if (this.args.searchInput) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (this as any).searchForUsers.perform(1);
+      // @ts-expect-error TS2729 - class fields are initialized after super()
+      this.searchForUsers.perform(1);
     }
   }
 
@@ -70,8 +70,7 @@ export default class WorkflowBasicsUserSearch extends Component<WorkflowBasicsUs
   @action
   handleEnterSearch(event: KeyboardEvent) {
     if (event.key === 'Enter') {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (this as any).searchForUsers.perform(1);
+      this.searchForUsers.perform(1);
     }
   }
 

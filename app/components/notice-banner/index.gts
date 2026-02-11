@@ -9,11 +9,10 @@ export default class NoticeBanner extends Component {
   @tracked contactUrl: string | null = null;
   @tracked instructionsUrl: string | null = null;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   constructor(...args: any[]) {
     super(...args);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this as any)._setupAppStaticConfig.perform();
+    // @ts-expect-error TS2729 - class fields are initialized after super()
+    this._setupAppStaticConfig.perform();
   }
 
   get displayInfoBanner() {
