@@ -1,16 +1,27 @@
 import Component from '@glimmer/component';
 import RepocopyDisplay from 'pass-ui/components/repocopy-display';
+import type RepositoryModel from 'pass-ui/models/repository';
+import type DepositModel from 'pass-ui/models/deposit';
+import type RepositoryCopyModel from 'pass-ui/models/repository-copy';
+import type SubmissionModel from 'pass-ui/models/submission';
 
 const eq = (a: unknown, b: unknown) => a === b;
 
-export default class SubmissionRepoDetails extends Component {
+interface SubmissionRepoDetailsSignature {
+  Args: {
+    repo: RepositoryModel;
+    deposit?: DepositModel;
+    repoCopy?: RepositoryCopyModel;
+    submission?: SubmissionModel;
+  };
+}
+
+export default class SubmissionRepoDetails extends Component<SubmissionRepoDetailsSignature> {
   get status(): string {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const args = this.args as any;
-    const deposit = args.deposit;
-    const repoCopy = args.repoCopy;
-    const source = args.submission?.source;
-    const isSubmitted = args.submission?.submitted;
+    const deposit = this.args.deposit;
+    const repoCopy = this.args.repoCopy;
+    const source = this.args.submission?.source;
+    const isSubmitted = this.args.submission?.submitted;
 
     if (!isSubmitted) {
       return 'not-submitted';
@@ -32,7 +43,7 @@ export default class SubmissionRepoDetails extends Component {
     }
 
     // Failed aggregatedDepositStatus means deposit never created
-    if (!deposit && source == 'pass' && args.submission?.aggregatedDepositStatus === 'failed') {
+    if (!deposit && source == 'pass' && this.args.submission?.aggregatedDepositStatus === 'failed') {
       return 'failed';
     }
 
@@ -40,10 +51,7 @@ export default class SubmissionRepoDetails extends Component {
   }
 
   get tooltip(): string {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const depositStatusMsg = (this.args as any).deposit?.statusMessage
-      ? ` Message: ${(this.args as any).deposit.statusMessage}.`
-      : '';
+    const depositStatusMsg = this.args.deposit?.statusMessage ? ` Message: ${this.args.deposit.statusMessage}.` : '';
     switch (this.status) {
       case 'complete':
         return 'Submission was accepted and processed by the repository. ID(s) have been assigned to the submitted manuscript.';
@@ -67,13 +75,11 @@ export default class SubmissionRepoDetails extends Component {
   }
 
   get isExternalRepo(): boolean {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (this.args as any).repo?._isWebLink;
+    return this.args.repo?._isWebLink;
   }
 
   get isSubmitted(): boolean {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (this.args as any).submission?.submitted;
+    return this.args.submission?.submitted;
   }
 
   <template>

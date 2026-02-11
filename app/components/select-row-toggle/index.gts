@@ -4,12 +4,19 @@ import { fn } from '@ember/helper';
 import { on } from '@ember/modifier';
 import FaIcon from '@fortawesome/ember-fontawesome/components/fa-icon';
 
-export default class SelectRowToggle extends Component {
+interface SelectRowToggleSignature {
+  Args: {
+    clickOnRow: (index: number, record: unknown) => void;
+    index: number;
+    record: unknown;
+    isSelected: boolean;
+  };
+}
+
+export default class SelectRowToggle extends Component<SelectRowToggleSignature> {
   @action
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  clickOnRow(index: number, record: any, event: Event) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this.args as any).clickOnRow(index, record);
+  clickOnRow(index: number, record: unknown, event: Event) {
+    this.args.clickOnRow(index, record);
     event.stopPropagation();
   }
 

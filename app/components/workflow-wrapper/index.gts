@@ -2,15 +2,29 @@ import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import SubmissionNav from 'pass-ui/components/submission-nav';
 import CommentingBlock from 'pass-ui/components/commenting-block';
+import type SubmissionModel from 'pass-ui/models/submission';
+import type PublicationModel from 'pass-ui/models/publication';
+import type SubmissionEventModel from 'pass-ui/models/submission-event';
 
 const and = (...args: unknown[]) => args.every(Boolean);
 
-export default class WorkflowWrapper extends Component {
+interface WorkflowWrapperSignature {
+  Args: {
+    loadTab: (gotoRoute: string) => void;
+    publication: PublicationModel;
+    submission: SubmissionModel;
+    submissionEvents: SubmissionEventModel[];
+    updateCovidSubmission: () => void;
+  };
+  Blocks: {
+    default: [];
+  };
+}
+
+export default class WorkflowWrapper extends Component<WorkflowWrapperSignature> {
   @action
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  loadTab(gotoRoute: any) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this.args as any).loadTab(gotoRoute);
+  loadTab(gotoRoute: string) {
+    this.args.loadTab(gotoRoute);
   }
 
   <template>

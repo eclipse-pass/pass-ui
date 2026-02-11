@@ -2,12 +2,25 @@ import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { on } from '@ember/modifier';
 import PolicyCard from 'pass-ui/components/policy-card';
+import type PolicyModel from 'pass-ui/models/policy';
+import type PublicationModel from 'pass-ui/models/publication';
+import type SubmissionModel from 'pass-ui/models/submission';
 
-export default class WorkflowPolicies extends Component {
+interface WorkflowPoliciesSignature {
+  Args: {
+    policies: PolicyModel[];
+    publication: PublicationModel;
+    submission: SubmissionModel;
+    next: () => void;
+    back: () => void;
+    abort: () => void;
+  };
+}
+
+export default class WorkflowPolicies extends Component<WorkflowPoliciesSignature> {
   @action
   cancel() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this.args as any).abort();
+    this.args.abort();
   }
 
   <template>

@@ -7,26 +7,31 @@ import ENV from 'pass-ui/config/environment';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import swal from 'sweetalert2/dist/sweetalert2.js';
+import type RepositoryModel from 'pass-ui/models/repository';
+
+interface ExternalRepoReviewSignature {
+  Args: {
+    repos: RepositoryModel[];
+    onAllExternalReposClicked: () => void;
+  };
+}
 
 class VisitableRepo {
   @tracked visited: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  repo: any;
+  repo: RepositoryModel;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  constructor(repo: any, visited: boolean) {
+  constructor(repo: RepositoryModel, visited: boolean) {
     this.repo = repo;
     this.visited = visited;
   }
 }
 
-export default class ExternalRepoReviewComponent extends Component {
+export default class ExternalRepoReviewComponent extends Component<ExternalRepoReviewSignature> {
   @tracked repoList: VisitableRepo[] = [];
 
   constructor(...args: any[]) {
     super(...args);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.repoList = (this.args as any).repos.map((repo: any) => new VisitableRepo(repo, false));
+    this.repoList = this.args.repos.map((repo: RepositoryModel) => new VisitableRepo(repo, false));
   }
 
   get hasUnvisited(): boolean {
@@ -37,20 +42,17 @@ export default class ExternalRepoReviewComponent extends Component {
     return this.repoList.every((entry) => entry.visited);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  handleRepo(repo: any) {
+  handleRepo(repo: RepositoryModel) {
     const index = this.repoList.findIndex((entry) => repo.id === entry.repo.id);
     this.repoList[index].visited = true;
 
     if (this.allReposVisited) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (this.args as any).onAllExternalReposClicked();
+      this.args.onAllExternalReposClicked();
     }
   }
 
   @action
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  openWeblinkAlert(repo: any) {
+  openWeblinkAlert(repo: RepositoryModel) {
     swal
       .fire({
         target: ENV.APP.rootElement,

@@ -1,12 +1,19 @@
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { on } from '@ember/modifier';
+import type SubmissionModel from 'pass-ui/models/submission';
 
-export default class CovidSelectionBanner extends Component {
+interface CovidSelectionBannerSignature {
+  Args: {
+    updateCovidSubmission: (checked: boolean) => void;
+    submission: SubmissionModel;
+  };
+}
+
+export default class CovidSelectionBanner extends Component<CovidSelectionBannerSignature> {
   @action
   toggleCovidSubmission(event: Event) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this.args as any).updateCovidSubmission((event.target as HTMLInputElement).checked);
+    this.args.updateCovidSubmission((event.target as HTMLInputElement).checked);
   }
 
   <template>

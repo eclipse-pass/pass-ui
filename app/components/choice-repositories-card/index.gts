@@ -1,11 +1,26 @@
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import RepositoryCard from 'pass-ui/components/repository-card';
+import type RepositoryModel from 'pass-ui/models/repository';
 
-export default class ChoiceRepositoriesCard extends Component {
+interface RepoInfo {
+  repository: RepositoryModel;
+  funders: string[];
+}
+
+interface ChoiceRepositoriesCardSignature {
+  Args: {
+    choiceGroup: RepoInfo[];
+    toggleRepository: (repository: RepositoryModel, selected: boolean, type: string) => void;
+  };
+  Blocks: {
+    default: [];
+  };
+}
+
+export default class ChoiceRepositoriesCard extends Component<ChoiceRepositoriesCardSignature> {
   @action
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  toggleRepository(repository: any, selected: boolean) {
+  toggleRepository(repository: RepositoryModel, selected: boolean) {
     const checkboxes = Array.from(
       document.querySelectorAll('.choice-repository-card-list > li > input[type="checkbox"]'),
     ).filter((input) => (input as HTMLInputElement).checked);
@@ -18,8 +33,7 @@ export default class ChoiceRepositoriesCard extends Component {
         checkbox.checked = true;
       }
     } else {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (this.args as any).toggleRepository(repository, selected, 'choice');
+      this.args.toggleRepository(repository, selected, 'choice');
     }
   }
 

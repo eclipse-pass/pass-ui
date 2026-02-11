@@ -1,9 +1,15 @@
 import Component from '@glimmer/component';
+import type GrantModel from 'pass-ui/models/grant';
 
-export default class OapComplianceCell extends Component {
+interface OapComplianceCellSignature {
+  Args: {
+    grant: GrantModel;
+  };
+}
+
+export default class OapComplianceCell extends Component<OapComplianceCellSignature> {
   get isStalled(): boolean {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const grant = (this.args as any).grant;
+    const grant = this.args.grant;
     if (grant?.submissions) {
       for (const submission of grant.submissions) {
         if (submission.deposits) {
