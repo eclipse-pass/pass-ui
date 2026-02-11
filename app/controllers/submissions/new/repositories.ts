@@ -8,20 +8,20 @@ import ENV from 'pass-ui/config/environment';
 import swal from 'sweetalert2/dist/sweetalert2.js';
 import type Workflow from 'pass-ui/services/workflow';
 import type SubmissionsNew from 'pass-ui/controllers/submissions/new';
+import type SubmissionModel from 'pass-ui/models/submission';
+import type RepositoryModel from 'pass-ui/models/repository';
+import type PublicationModel from 'pass-ui/models/publication';
+import type SubmissionEventModel from 'pass-ui/models/submission-event';
 
 export default class SubmissionsNewRepositories extends Controller {
   @service declare workflow: Workflow;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare router: any;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @alias('model.newSubmission') submission: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @alias('model.repositories') repositories: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @alias('model.publication') publication: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @alias('model.submissionEvents') submissionEvents: any;
+  @alias('model.newSubmission') submission!: SubmissionModel;
+  @alias('model.repositories') repositories!: RepositoryModel[];
+  @alias('model.publication') publication!: PublicationModel;
+  @alias('model.submissionEvents') submissionEvents!: SubmissionEventModel[];
 
   @controller('submissions.new') declare parent: SubmissionsNew;
 

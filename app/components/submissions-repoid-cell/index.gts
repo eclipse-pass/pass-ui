@@ -3,18 +3,29 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
 import didInsert from '@ember/render-modifiers/modifiers/did-insert';
+import type SubmissionModel from 'pass-ui/models/submission';
+import type RepositoryCopyModel from 'pass-ui/models/repository-copy';
 
-export default class SubmissionsRepoidCell extends Component {
+interface DisplayIdInfo {
+  url: string;
+  ids: Array<{ title: string; display: string }>;
+}
+
+interface SubmissionsRepoidCellSignature {
+  Args: {
+    record: SubmissionModel;
+  };
+}
+
+export default class SubmissionsRepoidCell extends Component<SubmissionsRepoidCellSignature> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare store: any;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @tracked repoCopies: any[] | null = null;
+  @tracked repoCopies: RepositoryCopyModel[] | null = null;
 
   @action
   async setUpRepoidCell() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const publication = await (this.args as any).record.publication;
+    const publication = await this.args.record.publication;
     if (!publication?.id) {
       if (!(this.isDestroyed || this.isDestroying)) {
         this.repoCopies = [];
@@ -66,29 +77,24 @@ export default class SubmissionsRepoidCell extends Component {
     return id;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  get displayIds(): any[] {
+  get displayIds(): DisplayIdInfo[] {
     const rc = this.repoCopies;
     if (!rc) {
       return [];
     }
 
-    return (
-      rc
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .filter((repoCopy: any) => !!repoCopy.externalIds)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .map((repoCopy: any) => {
-          const ids = repoCopy.externalIds.map((id: string) => ({
-            title: id,
-            display: this.formatId(id),
-          }));
-          return {
-            url: repoCopy.accessUrl,
-            ids,
-          };
-        })
-    );
+    return rc
+      .filter((repoCopy: RepositoryCopyModel) => !!repoCopy.externalIds)
+      .map((repoCopy: RepositoryCopyModel) => {
+        const ids = repoCopy.externalIds.map((id: string) => ({
+          title: id,
+          display: this.formatId(id),
+        }));
+        return {
+          url: repoCopy.accessUrl,
+          ids,
+        };
+      });
   }
 
   <template>

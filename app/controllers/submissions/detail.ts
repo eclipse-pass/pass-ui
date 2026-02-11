@@ -15,10 +15,31 @@ import type DepositModel from 'pass-ui/models/deposit';
 import type RepositoryCopyModel from 'pass-ui/models/repository-copy';
 import type UserModel from 'pass-ui/models/user';
 import type FileModel from 'pass-ui/models/file';
+import type SubmissionEventModel from 'pass-ui/models/submission-event';
+
+interface ExternalRepoMetadata {
+  message: string;
+  name: string;
+  url: string;
+}
+
+interface RepoMapEntry {
+  repo: RepositoryModel;
+  deposit?: DepositModel;
+  repositoryCopy?: RepositoryCopyModel;
+}
+
+interface DetailModel {
+  sub: SubmissionModel;
+  deposits: DepositModel[];
+  repoCopies: RepositoryCopyModel[];
+  repos: RepositoryModel[];
+  files: FileModel[];
+  submissionEvents: SubmissionEventModel[];
+}
 
 export default class SubmissionsDetail extends Controller {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  declare model: any;
+  declare model: DetailModel;
 
   @service declare currentUser: CurrentUserService;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -30,26 +51,23 @@ export default class SubmissionsDetail extends Controller {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare router: any;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  md: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  message: any;
+  md: ExternalRepoMetadata[] | undefined;
+  message: string | undefined;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   constructor(...args: any[]) {
     super(...args);
 
-    const element: any = document.querySelector('[data-toggle="tooltip"]'); // eslint-disable-line @typescript-eslint/no-explicit-any
-    if (element) element.tooltip();
+    const element = document.querySelector('[data-toggle="tooltip"]') as HTMLElement | null;
+    if (element) (element as HTMLElement & { tooltip(): void }).tooltip();
   }
 
-  @tracked submitted: any = get(this, 'model.sub.submitted'); // eslint-disable-line @typescript-eslint/no-explicit-any
-  @tracked repositories: any = get(this, 'model.sub.repositories'); // eslint-disable-line @typescript-eslint/no-explicit-any
+  @tracked submitted: boolean = get(this, 'model.sub.submitted') as boolean;
+  @tracked repositories: RepositoryModel[] = get(this, 'model.sub.repositories') as RepositoryModel[];
   @tracked externalRepoMap: Record<string, boolean> = {};
   @tracked _hasVisitedWeblink: boolean | null = null;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  get submissionFiles(): any {
+  get submissionFiles(): FileModel[] {
     return this.model.files;
   }
 
@@ -77,12 +95,11 @@ export default class SubmissionsDetail extends Controller {
     return '';
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  get externalSubmission(): any[] {
-    let result: any[] = []; // eslint-disable-line @typescript-eslint/no-explicit-any
+  get externalSubmission(): ExternalRepoMetadata[] {
+    let result: ExternalRepoMetadata[] = [];
 
     const processExternalSubmissionsMetadata = () => {
-      result = this.externalSubmissionsMetadata as unknown as any[]; // eslint-disable-line @typescript-eslint/no-explicit-any
+      result = this.externalSubmissionsMetadata as unknown as ExternalRepoMetadata[];
     };
 
     if (this.submitted) {
@@ -117,9 +134,8 @@ export default class SubmissionsDetail extends Controller {
   /**
    * Get enough information about 'web-link' repositories to display to a user.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async externalSubmissionsMetadata(): Promise<any[]> {
-    const result: any[] = []; // eslint-disable-line @typescript-eslint/no-explicit-any
+  async externalSubmissionsMetadata(): Promise<ExternalRepoMetadata[]> {
+    const result: ExternalRepoMetadata[] = [];
 
     const repos = await this.model.sub.repositories;
     repos
@@ -135,12 +151,10 @@ export default class SubmissionsDetail extends Controller {
     return result;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  get weblinkRepos(): any[] {
+  get weblinkRepos(): ExternalRepoMetadata[] {
     const setRepoMap = () => {
-      this.md = this.externalSubmissionsMetadata;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      this.md.forEach((repo: any) => {
+      this.md = this.externalSubmissionsMetadata as unknown as ExternalRepoMetadata[];
+      this.md.forEach((repo: ExternalRepoMetadata) => {
         this.externalRepoMap[repo.name] = false;
       });
     };
@@ -174,8 +188,7 @@ export default class SubmissionsDetail extends Controller {
    *
    * Explicitly exclude 'web-link' repositories.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  get repoMap(): any[] | null {
+  get repoMap(): RepoMapEntry[] | null {
     let hasStuff = false;
     const repos = get(this, 'model.repos') as RepositoryModel[];
     const deps = get(this, 'model.deposits') as DepositModel[];
@@ -183,7 +196,7 @@ export default class SubmissionsDetail extends Controller {
     if (!repos) {
       return null;
     }
-    const map: Record<string, any> = {}; // eslint-disable-line @typescript-eslint/no-explicit-any
+    const map: Record<string, RepoMapEntry> = {};
     repos
       .filter((repo: RepositoryModel) => !repo._isWebLink)
       .forEach((r: RepositoryModel) => {
@@ -203,7 +216,7 @@ export default class SubmissionsDetail extends Controller {
             deposit,
           };
         } else {
-          map[repoId] = Object.assign(map[repoId], {
+          map[repoId] = Object.assign(map[repoId]!, {
             deposit,
             repositoryCopy: get(deposit, 'repositoryCopy'),
           });
@@ -221,15 +234,15 @@ export default class SubmissionsDetail extends Controller {
             repositoryCopy: rc,
           };
         } else {
-          map[repoId] = Object.assign(map[repoId], {
+          map[repoId] = Object.assign(map[repoId]!, {
             repositoryCopy: rc,
           });
         }
       });
     }
     if (hasStuff) {
-      const results: any[] = []; // eslint-disable-line @typescript-eslint/no-explicit-any
-      Object.keys(map).forEach((k: string) => results.push(map[k]));
+      const results: RepoMapEntry[] = [];
+      Object.keys(map).forEach((k: string) => results.push(map[k]!));
       return results;
     }
 
@@ -258,8 +271,7 @@ export default class SubmissionsDetail extends Controller {
   }
 
   @action
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async openWeblinkAlert(repo: any): Promise<void> {
+  async openWeblinkAlert(repo: ExternalRepoMetadata): Promise<void> {
     const value = await swal.fire({
       target: ENV.APP.rootElement,
       title: 'Notice!',
@@ -393,7 +405,7 @@ export default class SubmissionsDetail extends Controller {
       showCancelButton: true,
       progressSteps: reposProgressSteps.map((index) => '' + (index + 1)),
     });
-    const result: { value: any[] } = { value: [] }; // eslint-disable-line @typescript-eslint/no-explicit-any
+    const result: { value: (number | undefined)[] } = { value: [] };
     for (const repoStep of reposProgressSteps) {
       const repoState = reposWithAgreementText[repoStep]!;
       const repoResult = await Queue.fire({
@@ -462,7 +474,7 @@ export default class SubmissionsDetail extends Controller {
 
         const sub = get(this, 'model.sub') as SubmissionModel;
         const message = this.message;
-        this.submissionHandler.approveSubmission(sub, message);
+        this.submissionHandler.approveSubmission(sub, message!);
       }
     } else {
       // there were repositories, but the user didn't sign any of the agreements
@@ -522,8 +534,7 @@ export default class SubmissionsDetail extends Controller {
   }
 
   @action
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async deleteSubmission(submission: any) {
+  async deleteSubmission(submission: SubmissionModel) {
     const result = await swal.fire({
       target: ENV.APP.rootElement,
       text: 'Are you sure you want to delete this draft submission? This cannot be undone.',
@@ -538,7 +549,7 @@ export default class SubmissionsDetail extends Controller {
         await this.submissionHandler.deleteSubmission(submission);
 
         ignoreList.clearIgnore();
-        ignoreList.ignore(submission.get('id'));
+        ignoreList.ignore(submission.get('id')!);
         this.router.transitionTo('submissions');
       } catch (e) {
         this.flashMessages.danger(

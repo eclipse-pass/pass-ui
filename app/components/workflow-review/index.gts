@@ -17,6 +17,13 @@ import FlashMessage from 'ember-cli-flash/components/flash-message';
 import ExternalRepoReview from 'pass-ui/components/external-repo-review';
 import CommentingBlock from 'pass-ui/components/commenting-block';
 import DisplayMetadataKeys from 'pass-ui/components/display-metadata-keys';
+import type Workflow from 'pass-ui/services/workflow';
+import type CurrentUserService from 'pass-ui/services/current-user';
+import type SubmissionHandlerService from 'pass-ui/services/submission-handler';
+import type SubmissionModel from 'pass-ui/models/submission';
+import type PublicationModel from 'pass-ui/models/publication';
+import type RepositoryModel from 'pass-ui/models/repository';
+import type { WorkflowFile } from 'pass-ui/services/workflow';
 
 const eq = (a: unknown, b: unknown) => a === b;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -25,47 +32,60 @@ const perform =
   (...args: any[]) =>
     task.perform(...args);
 
-export default class WorkflowReview extends Component {
+interface RepoAgreementStep {
+  id: string;
+  title?: string;
+  html?: string;
+}
+
+interface WorkflowReviewSignature {
+  Args: {
+    submission: SubmissionModel;
+    publication: PublicationModel;
+    comment: string;
+    uploading: boolean;
+    waitingMessage: string;
+    submitSubmission: () => void;
+    back: () => void;
+    abort: () => void;
+  };
+}
+
+export default class WorkflowReview extends Component<WorkflowReviewSignature> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare store: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare workflow: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare currentUser: any;
+  @service declare workflow: Workflow;
+  @service declare currentUser: CurrentUserService;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare flashMessages: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare submissionHandler: any;
+  @service declare submissionHandler: SubmissionHandlerService;
 
   @tracked isValidated: unknown[] = [];
   @tracked hasVisitedWeblink = false;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @tracked repositories: any = (this.args as any).submission.repositories;
+  @tracked repositories: RepositoryModel[] = this.args.submission.repositories;
 
   get parsedFiles() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return this.workflow.getFiles().filter((file: any) => file.submission.id === (this.args as any).submission.id);
+    return this.workflow.getFiles().filter((file: WorkflowFile) => file.submission.id === this.args.submission.id);
   }
 
   get weblinkRepos() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return this.repositories.filter((repo: any) => repo._isWebLink);
+    return this.repositories.filter((repo: RepositoryModel) => repo._isWebLink);
   }
 
   get mustVisitWeblink(): boolean {
     const weblinkExists = this.weblinkRepos.length > 0;
-    const isSubmitter = this.currentUser.user?.id === (this.args as any).submission.submitter?.id;
+    const isSubmitter = this.currentUser.user?.id === this.args.submission.submitter?.id;
     return weblinkExists && isSubmitter;
   }
 
   get disableSubmit(): boolean {
     const needsToVisitWeblink = this.mustVisitWeblink && !this.hasVisitedWeblink;
-    return (this.args as any).uploading || needsToVisitWeblink;
+    return this.args.uploading || needsToVisitWeblink;
   }
 
   get userIsPreparer(): boolean {
-    const isNotSubmitter = (this.args as any).submission.submitter?.id !== this.currentUser.user?.id;
-    return (this.args as any).submission.isProxySubmission && isNotSubmitter;
+    const isNotSubmitter = this.args.submission.submitter?.id !== this.currentUser.user?.id;
+    return this.args.submission.isProxySubmission && isNotSubmitter;
   }
 
   get submitButtonText(): string {
@@ -126,27 +146,27 @@ export default class WorkflowReview extends Component {
       return;
     }
 
-    let reposWithAgreementText = repos
-      .filter((repo: any) => !repo._isWebLink && repo.agreementText)
-      .map((repo: any) => ({
+    let reposWithAgreementText: RepoAgreementStep[] = repos
+      .filter((repo: RepositoryModel) => !repo._isWebLink && repo.agreementText)
+      .map((repo: RepositoryModel) => ({
         id: repo.name,
         title: `Deposit requirements for ${repo.name}`,
         html: `<div class="form-control deposit-agreement-content py-4 mt-4">${repo.agreementText}</div>`,
       }));
 
-    let reposWithoutAgreementText = repos
-      .filter((repo: any) => !repo._isWebLink && !repo.agreementText)
-      .map((repo: any) => ({
+    let reposWithoutAgreementText: RepoAgreementStep[] = repos
+      .filter((repo: RepositoryModel) => !repo._isWebLink && !repo.agreementText)
+      .map((repo: RepositoryModel) => ({
         id: repo.name,
       }));
 
-    let reposWithWebLink = repos
-      .filter((repo: any) => repo._isWebLink)
-      .map((repo: any) => ({
+    let reposWithWebLink: RepoAgreementStep[] = repos
+      .filter((repo: RepositoryModel) => repo._isWebLink)
+      .map((repo: RepositoryModel) => ({
         id: repo.name,
       }));
 
-    const reposProgressSteps = reposWithAgreementText.map((_repo: any, index: number) => index);
+    const reposProgressSteps = reposWithAgreementText.map((_repo: RepoAgreementStep, index: number) => index);
     const Queue = swal.mixin({
       target: ENV.APP.rootElement,
       confirmButtonText: 'Next &rarr;',
@@ -156,14 +176,14 @@ export default class WorkflowReview extends Component {
         noAgree:
           'I do not agree to the above statement and I understand that if I proceed and do not check this box, my submission will not be deposited to the above repository.',
       },
-      inputValidator: (value: any) => {
+      inputValidator: (value: string | null) => {
         if (!value) {
           return 'You need to choose something!';
         }
       },
       progressSteps: reposProgressSteps.map((index: number) => '' + (index + 1)),
     });
-    const result: { value: any[] } = { value: [] };
+    const result: { value: (string | undefined)[] } = { value: [] };
     for (const repoStep of reposProgressSteps) {
       const repoState = reposWithAgreementText[repoStep];
       const repoResult = await Queue.fire({
@@ -173,12 +193,12 @@ export default class WorkflowReview extends Component {
       });
       result.value.push(repoResult.value);
     }
-    const validResults = result.value.some((agree: any) => agree !== undefined);
+    const validResults = result.value.some((agree: string | undefined) => agree !== undefined);
     if (!validResults && reposWithAgreementText.length > 0) {
       this.unblockUserInput();
       return;
     }
-    let reposThatUserAgreedToDeposit = reposWithAgreementText.filter((_repo: any, index: number) => {
+    let reposThatUserAgreedToDeposit = reposWithAgreementText.filter((_repo: RepoAgreementStep, index: number) => {
       if (result.value[index] === 'agree') {
         return true;
       }
@@ -192,15 +212,14 @@ export default class WorkflowReview extends Component {
         'Once you click confirm you will no longer be able to edit this submission or add repositories.<br/>';
       if (reposWithoutAgreementText.length > 0 || reposThatUserAgreedToDeposit.length) {
         swalMsg = `${swalMsg}You are about to submit your files to: <pre><code>${JSON.stringify(
-          reposThatUserAgreedToDeposit.map((repo: any) => repo.id),
-        ).replace(/[\[\]']/g, '')}${JSON.stringify(reposWithoutAgreementText.map((repo: any) => repo.id)).replace(
-          /[\[\]']/g,
-          '',
-        )} </code></pre>`;
+          reposThatUserAgreedToDeposit.map((repo: RepoAgreementStep) => repo.id),
+        ).replace(/[\[\]']/g, '')}${JSON.stringify(
+          reposWithoutAgreementText.map((repo: RepoAgreementStep) => repo.id),
+        ).replace(/[\[\]']/g, '')} </code></pre>`;
       }
       if (reposWithWebLink.length > 0) {
         swalMsg = `${swalMsg}You were prompted to submit to: <code><pre>${JSON.stringify(
-          reposWithWebLink.map((repo: any) => repo.id),
+          reposWithWebLink.map((repo: RepoAgreementStep) => repo.id),
         ).replace(/[\[\]']/g, '')}</code></pre>`;
       }
 
@@ -215,14 +234,14 @@ export default class WorkflowReview extends Component {
       if (resultConfirm.value) {
         const repos = await this.args.submission.repositories;
 
-        const filteredRepos = repos.filter((repo: any) => {
+        const filteredRepos = repos.filter((repo: RepositoryModel) => {
           if (repo._isWebLink) {
             return true;
           }
-          let temp = reposWithAgreementText.map((x: any) => x.id).includes(repo.name);
+          let temp = reposWithAgreementText.map((x: RepoAgreementStep) => x.id).includes(repo.name);
           if (!temp) {
             return true;
-          } else if (reposThatUserAgreedToDeposit.map((r: any) => r.id).includes(repo.name)) {
+          } else if (reposThatUserAgreedToDeposit.map((r: RepoAgreementStep) => r.id).includes(repo.name)) {
             return true;
           }
           return false;
@@ -235,7 +254,7 @@ export default class WorkflowReview extends Component {
         this.unblockUserInput();
       }
     } else {
-      let reposUserDidNotAgreeToDeposit = reposWithAgreementText.filter((repo: any) => {
+      let reposUserDidNotAgreeToDeposit = reposWithAgreementText.filter((repo: RepoAgreementStep) => {
         if (!reposThatUserAgreedToDeposit.includes(repo)) {
           return true;
         }
@@ -244,7 +263,7 @@ export default class WorkflowReview extends Component {
         target: ENV.APP.rootElement,
         title: 'Your submission cannot be submitted.',
         html: `You declined to agree to the deposit agreement(s) for ${JSON.stringify(
-          reposUserDidNotAgreeToDeposit.map((repo: any) => repo.id),
+          reposUserDidNotAgreeToDeposit.map((repo: RepoAgreementStep) => repo.id),
         ).replace(/[\[\]']/g, '')}. Therefore, this submission cannot be submitted.`,
         confirmButtonText: 'Ok',
       });
@@ -264,14 +283,12 @@ export default class WorkflowReview extends Component {
 
   @action
   back() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this.args as any).back();
+    this.args.back();
   }
 
   @action
   cancel() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this.args as any).abort();
+    this.args.abort();
   }
 
   <template>

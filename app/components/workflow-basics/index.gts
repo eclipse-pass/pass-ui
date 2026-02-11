@@ -3,6 +3,7 @@ import { tracked } from '@glimmer/tracking';
 import { action, set } from '@ember/object';
 import { service } from '@ember/service';
 import { task, timeout, dropTask } from 'ember-concurrency';
+import type { Task } from 'ember-concurrency';
 import { scheduleOnce } from '@ember/runloop';
 import { fn, concat } from '@ember/helper';
 import { on } from '@ember/modifier';
@@ -18,69 +19,83 @@ import ModalDialog from 'ember-modal-dialog/components/modal-dialog';
 import FindJournal from 'pass-ui/components/find-journal';
 import WorkflowBasicsUserSearch from 'pass-ui/components/workflow-basics-user-search';
 
+import type Workflow from 'pass-ui/services/workflow';
+import type CurrentUserService from 'pass-ui/services/current-user';
+import type DoiService from 'pass-ui/services/doi';
+import type AppStaticConfigService from 'pass-ui/services/app-static-config';
+import type MetadataSchemaService from 'pass-ui/services/metadata-schema';
+import type SubmissionModel from 'pass-ui/models/submission';
+import type PublicationModel from 'pass-ui/models/publication';
+import type JournalModel from 'pass-ui/models/journal';
+import type GrantModel from 'pass-ui/models/grant';
+import type UserModel from 'pass-ui/models/user';
+
 const or = (...args: unknown[]) => args.some(Boolean);
 const not = (a: unknown) => !a;
 const and = (...args: unknown[]) => args.every(Boolean);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const perform =
-  (task: any, ...curried: any[]) =>
-  (...args: any[]) =>
+  (task: Task<unknown, unknown[]>, ...curried: unknown[]) =>
+  (...args: unknown[]) =>
     task.perform(...curried, ...args);
 
 const DEBOUNCE_MS = 250;
 
-export default class WorkflowBasics extends Component {
+interface WorkflowBasicsSignature {
+  Args: {
+    submission: SubmissionModel;
+    publication: PublicationModel;
+    preLoadedGrant: GrantModel | null;
+    journal: JournalModel | null;
+    flaggedFields: string[];
+    validateTitle: () => void;
+    validateJournal: () => void;
+    validateSubmitterEmail: () => void;
+    updatePublication: (publication: PublicationModel) => void;
+    validateAndLoadTab: (gotoRoute: string) => Promise<void>;
+    abort: () => void;
+  };
+  Blocks: {
+    default: [];
+  };
+}
+
+export default class WorkflowBasics extends Component<WorkflowBasicsSignature> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare store: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare workflow: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare currentUser: any;
+  @service declare workflow: Workflow;
+  @service declare currentUser: CurrentUserService;
   @service('doi')
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  declare doiService: any;
+  declare doiService: DoiService;
   @service('metadata-schema')
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  declare schemaService: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare appStaticConfig: any;
+  declare schemaService: MetadataSchemaService;
+  @service declare appStaticConfig: AppStaticConfigService;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare flashMessages: any;
 
   @tracked contactUrl: string | null = null;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @tracked doiServiceError: any = false;
+  @tracked doiServiceError: string | boolean | unknown = false;
   @tracked isShowingUserSearchModal = false;
   @tracked userSearchTerm = '';
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  get publication(): any {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (this.args as any).publication;
+  get publication(): PublicationModel {
+    return this.args.publication;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  get submission(): any {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (this.args as any).submission;
+  get submission(): SubmissionModel {
+    return this.args.submission;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  get preLoadedGrant(): any {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (this.args as any).preLoadedGrant;
+  get preLoadedGrant(): GrantModel | null {
+    return this.args.preLoadedGrant;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  get journal(): any {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (this.args as any).journal;
+  get journal(): JournalModel | null {
+    return this.args.journal;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  get flaggedFields(): any {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (this.args as any).flaggedFields;
+  get flaggedFields(): string[] {
+    return this.args.flaggedFields;
   }
 
   get isProxySubmission(): boolean {
@@ -124,8 +139,7 @@ export default class WorkflowBasics extends Component {
 
   loadNext = task({ drop: true }, async () => {
     await timeout(100);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await (this.args as any).validateAndLoadTab('submissions.new.grants');
+    await this.args.validateAndLoadTab('submissions.new.grants');
   });
 
   @action
@@ -142,8 +156,7 @@ export default class WorkflowBasics extends Component {
   }
 
   lookupDoiAndJournal(setPublication: boolean) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this as any).lookupDOI.perform(setPublication);
+    this.lookupDOI.perform(setPublication);
     if (!this.publication?.doi && this.journal) {
       scheduleOnce('afterRender', this, 'selectJournal', this.journal);
     }
@@ -175,8 +188,7 @@ export default class WorkflowBasics extends Component {
     return 'form-control is-invalid';
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  clearDoiData(doi?: any) {
+  clearDoiData(doi?: string) {
     const workflow = this.workflow;
 
     if (workflow.isDataFromCrossref()) {
@@ -187,8 +199,7 @@ export default class WorkflowBasics extends Component {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  clearPublication(doi?: any) {
+  clearPublication(doi?: string) {
     this.publication.setProperties({
       doi,
       title: '',
@@ -200,8 +211,7 @@ export default class WorkflowBasics extends Component {
     });
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  updateMetadata(metadata: any) {
+  updateMetadata(metadata: Record<string, unknown>) {
     this.workflow.setReadOnlyProperties(Object.keys(metadata));
     metadata = Object.assign(this.submission.metadata ? JSON.parse(this.submission.metadata) : {}, metadata);
     this.submission.metadata = JSON.stringify(metadata);
@@ -227,18 +237,15 @@ export default class WorkflowBasics extends Component {
   }
 
   @action
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  pickSubmitter(submitter: any) {
+  pickSubmitter(submitter: UserModel) {
     this.changeSubmitter(true, submitter);
     this.toggleUserSearchModal();
     this.userSearchTerm = '';
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this.args as any).validateSubmitterEmail();
+    this.args.validateSubmitterEmail();
   }
 
   @action
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async changeSubmitter(isProxySubmission: boolean, submitter: any) {
+  async changeSubmitter(isProxySubmission: boolean, submitter: UserModel | null) {
     const grants = this.submission?.grants;
     const hasGrants = grants && grants.length > 0;
     if (hasGrants) {
@@ -264,8 +271,7 @@ export default class WorkflowBasics extends Component {
   }
 
   @action
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  updateSubmitterModel(isProxySubmission: boolean, submitter: any) {
+  updateSubmitterModel(isProxySubmission: boolean, submitter: UserModel | null) {
     this.workflow.setMaxStep(1);
     this.submission.submitterEmail = null;
     this.submission.submitterName = '';
@@ -279,22 +285,19 @@ export default class WorkflowBasics extends Component {
   }
 
   @action
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  selectJournal(journal: any) {
+  selectJournal(journal: JournalModel) {
     const metadata = this.doiService.doiToMetadata({}, journal, this.schemaService.getAllFields());
     metadata['journal-title'] = journal.journalName;
     metadata.title = this.publication.title;
     this.updateMetadata(metadata);
 
     this.publication.journal = journal;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this.args as any).validateJournal();
+    this.args.validateJournal();
   }
 
   @action
   cancel() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this.args as any).abort();
+    this.args.abort();
   }
 
   @action

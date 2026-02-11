@@ -5,20 +5,31 @@ import { service } from '@ember/service';
 import { fn } from '@ember/helper';
 import { on } from '@ember/modifier';
 import didInsert from '@ember/render-modifiers/modifiers/did-insert';
+import type Workflow from 'pass-ui/services/workflow';
+import type PolicyModel from 'pass-ui/models/policy';
+import type SubmissionModel from 'pass-ui/models/submission';
+import type JournalModel from 'pass-ui/models/journal';
+import type RepositoryModel from 'pass-ui/models/repository';
 
 const not = (a: unknown) => !a;
 
-export default class PolicyCard extends Component {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare workflow: any;
+interface PolicyCardSignature {
+  Args: {
+    policy: PolicyModel;
+    submission: SubmissionModel;
+    journal: JournalModel;
+  };
+}
+
+export default class PolicyCard extends Component<PolicyCardSignature> {
+  @service declare workflow: Workflow;
 
   @computed('workflow.pmcPublisherDeposit')
   get pmcPublisherDeposit() {
     return this.workflow.getPmcPublisherDeposit();
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  set pmcPublisherDeposit(value: any) {
+  set pmcPublisherDeposit(value: boolean) {
     this.workflow.setPmcPublisherDeposit(value);
   }
 
@@ -27,29 +38,24 @@ export default class PolicyCard extends Component {
     return this.workflow.getMaxStep();
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  set maxStep(value: any) {
+  set maxStep(value: number) {
     this.workflow.setMaxStep(value);
   }
 
   @computed('policy.repositories')
   get usesPmcRepository(): boolean {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const repos = (this.args as any).policy.repositories;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return repos ? repos.filter((repo: any) => repo.repositoryKey === 'pmc').length > 0 : false;
+    const repos = this.args.policy.repositories;
+    return repos ? repos.filter((repo: RepositoryModel) => repo.repositoryKey === 'pmc').length > 0 : false;
   }
 
   @computed('journal')
   get methodAJournal(): boolean {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const journal = (this.args as any).journal;
+    const journal = this.args.journal;
     return journal?.get?.('isMethodA');
   }
 
   get policyIsJHU(): boolean {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (this.args as any).policy.title === 'Johns Hopkins University (JHU) Open Access Policy';
+    return this.args.policy.title === 'Johns Hopkins University (JHU) Open Access Policy';
   }
 
   @action
@@ -59,8 +65,7 @@ export default class PolicyCard extends Component {
     }
 
     if (!this.usesPmcRepository || !this.pmcPublisherDeposit) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      this._addEffectivePolicy((this.args as any).policy);
+      this._addEffectivePolicy(this.args.policy);
     }
   }
 
@@ -69,8 +74,7 @@ export default class PolicyCard extends Component {
     set(this, 'pmcPublisherDeposit', choice);
     set(this, 'maxStep', 3);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const policy = (this.args as any).policy;
+    const policy = this.args.policy;
 
     if (this._hasEffectivePolicy(policy.id)) {
       this._removeEffectivePolicy(policy);
@@ -79,30 +83,22 @@ export default class PolicyCard extends Component {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async _addEffectivePolicy(policy: any) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const effectivePolicies = await (this.args as any).submission.effectivePolicies;
+  async _addEffectivePolicy(policy: PolicyModel) {
+    const effectivePolicies = await this.args.submission.effectivePolicies;
     const hasEffectivePolicy = await this._hasEffectivePolicy(policy.id);
     if (!hasEffectivePolicy) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (this.args as any).submission.effectivePolicies = [...effectivePolicies, policy];
+      this.args.submission.effectivePolicies = [...effectivePolicies, policy];
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async _removeEffectivePolicy(policy: any) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const effectivePolicies = await (this.args as any).submission.effectivePolicies;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this.args as any).submission.effectivePolicies = effectivePolicies.filter((p: any) => p.id !== policy.id);
+  async _removeEffectivePolicy(policy: PolicyModel) {
+    const effectivePolicies = await this.args.submission.effectivePolicies;
+    this.args.submission.effectivePolicies = effectivePolicies.filter((p: PolicyModel) => p.id !== policy.id);
   }
 
   async _hasEffectivePolicy(policyId: string) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const effectivePolicies = await (this.args as any).submission.effectivePolicies;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return !!effectivePolicies && effectivePolicies.some((policy: any) => policy.id === policyId);
+    const effectivePolicies = await this.args.submission.effectivePolicies;
+    return !!effectivePolicies && effectivePolicies.some((policy: PolicyModel) => policy.id === policyId);
   }
 
   <template>

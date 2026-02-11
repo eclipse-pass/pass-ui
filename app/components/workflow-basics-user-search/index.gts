@@ -6,6 +6,8 @@ import { task } from 'ember-concurrency';
 import { fn } from '@ember/helper';
 import { on } from '@ember/modifier';
 import { Input } from '@ember/component';
+import type CurrentUserService from 'pass-ui/services/current-user';
+import type UserModel from 'pass-ui/models/user';
 
 const eq = (a: unknown, b: unknown) => a === b;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -14,14 +16,20 @@ const perform =
   (...args: any[]) =>
     task.perform(...curried, ...args);
 
-export default class WorkflowBasicsUserSearch extends Component {
+interface WorkflowBasicsUserSearchSignature {
+  Args: {
+    searchInput: string;
+    toggleUserSearchModal: () => void;
+    pickSubmitter: (user: UserModel) => void;
+  };
+}
+
+export default class WorkflowBasicsUserSearch extends Component<WorkflowBasicsUserSearchSignature> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare store: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare currentUser: any;
+  @service declare currentUser: CurrentUserService;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @tracked matchingUsers: any[] = [];
+  @tracked matchingUsers: UserModel[] = [];
   @tracked currentPage = 1;
   @tracked usersPerPage = 30;
   @tracked numberOfPages = 1;
@@ -40,15 +48,13 @@ export default class WorkflowBasicsUserSearch extends Component {
 
   get filteredUsers() {
     const users = this.matchingUsers;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return users.filter((u: any) => u.id !== this.currentUser.user?.id);
+    return users.filter((u: UserModel) => u.id !== this.currentUser.user?.id);
   }
 
   constructor(...args: any[]) {
     super(...args);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if ((this.args as any).searchInput) {
+    if (this.args.searchInput) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (this as any).searchForUsers.perform(1);
     }

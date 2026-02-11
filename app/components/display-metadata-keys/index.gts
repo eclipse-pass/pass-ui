@@ -3,19 +3,28 @@ import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import didInsert from '@ember/render-modifiers/modifiers/did-insert';
+import type MetadataSchemaService from 'pass-ui/services/metadata-schema';
+import type { MetadataDisplayEntry } from 'pass-ui/services/metadata-schema';
+import type SubmissionModel from 'pass-ui/models/submission';
 
-export default class DisplayMetadataKeys extends Component {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare metadataSchema: any;
+interface DisplayMetadataKeysSignature {
+  Args: {
+    submission: SubmissionModel;
+  };
+  Blocks: {
+    default: [];
+  };
+}
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @tracked displayData: any[] | null = null;
+export default class DisplayMetadataKeys extends Component<DisplayMetadataKeysSignature> {
+  @service declare metadataSchema: MetadataSchemaService;
+
+  @tracked displayData: MetadataDisplayEntry[] | null = null;
 
   @action
   async setupDisplayData() {
     const schemaService = this.metadataSchema;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const displayData = await schemaService.displayMetadata((this.args as any).submission);
+    const displayData = await schemaService.displayMetadata(this.args.submission);
     this.displayData = displayData;
   }
 

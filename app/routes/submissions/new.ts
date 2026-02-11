@@ -4,7 +4,25 @@ import { set } from '@ember/object';
 import { hash } from 'rsvp';
 import { fileForSubmissionQuery } from '../../util/paginated-query';
 import type Workflow from 'pass-ui/services/workflow';
+import type { WorkflowFile } from 'pass-ui/services/workflow';
 import type CurrentUserService from 'pass-ui/services/current-user';
+import type SubmissionModel from 'pass-ui/models/submission';
+import type RepositoryModel from 'pass-ui/models/repository';
+import type PolicyModel from 'pass-ui/models/policy';
+import type PublicationModel from 'pass-ui/models/publication';
+import type JournalModel from 'pass-ui/models/journal';
+import type GrantModel from 'pass-ui/models/grant';
+import type SubmissionEventModel from 'pass-ui/models/submission-event';
+
+interface NewSubmissionModel {
+  repositories: RepositoryModel[];
+  newSubmission: SubmissionModel | null;
+  submissionEvents: SubmissionEventModel[] | null;
+  publication: PublicationModel | null;
+  policies: PolicyModel[];
+  preLoadedGrant: GrantModel | null;
+  journal: JournalModel | null;
+}
 
 export default class NewRoute extends CheckSessionRoute {
   @service('workflow') declare workflow: Workflow;
@@ -26,8 +44,7 @@ export default class NewRoute extends CheckSessionRoute {
     // Explicitly clear the 'grant' query parameter when reloading this route
     if (isExiting) {
       controller.queryParams.forEach((param: string) => controller.set(param, null));
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      this.store.peekAll('submission').forEach((s: any) => s.rollbackAttributes());
+      this.store.peekAll('submission').forEach((s: SubmissionModel) => s.rollbackAttributes());
     }
   }
 
@@ -43,7 +60,7 @@ export default class NewRoute extends CheckSessionRoute {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async model(params: any): Promise<any> {
+  async model(params: any): Promise<NewSubmissionModel> {
     let preLoadedGrant = null;
     let newSubmission = null;
     let submissionEvents = null;
@@ -87,8 +104,7 @@ export default class NewRoute extends CheckSessionRoute {
         submissionStatus: 'draft',
       });
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const files: any[] = [];
+      const files: WorkflowFile[] = [];
       this.workflow.setFiles(files);
 
       if (params.covid) {

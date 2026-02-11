@@ -15,6 +15,9 @@ import GrantLinkNewtabCell from 'pass-ui/components/grant-link-newtab-cell';
 import SelectRowToggle from 'pass-ui/components/select-row-toggle';
 import DateCell from 'pass-ui/components/date-cell';
 import type GrantModel from 'pass-ui/models/grant';
+import type SubmissionModel from 'pass-ui/models/submission';
+import type Workflow from 'pass-ui/services/workflow';
+import type AppStaticConfigService from 'pass-ui/services/app-static-config';
 
 const gt = (a: unknown, b: unknown) => Number(a) > Number(b);
 
@@ -24,13 +27,24 @@ const perform =
   (...args: any[]) =>
     task.perform(...args);
 
-export default class WorkflowGrants extends Component {
+interface WorkflowGrantsSignature {
+  Args: {
+    submission: SubmissionModel;
+    preLoadedGrant: GrantModel | null;
+    next: () => void;
+    back: () => void;
+    abort: () => void;
+  };
+  Blocks: {
+    default: [];
+  };
+}
+
+export default class WorkflowGrants extends Component<WorkflowGrantsSignature> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare store: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare workflow: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare appStaticConfig: any;
+  @service declare workflow: Workflow;
+  @service declare appStaticConfig: AppStaticConfigService;
   @service('emt-themes/bootstrap4')
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   declare themeInstance: any;
@@ -41,13 +55,10 @@ export default class WorkflowGrants extends Component {
   @tracked pageNumber = 1;
   @tracked pageCount = 0;
   @tracked pageSize = 10;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @tracked submitterGrants: any = null;
+  @tracked submitterGrants: GrantModel[] | null = null;
   @tracked totalGrants = 0;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @tracked _selectedGrants: any[] = [];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @tracked preLoadedGrant: any = (this.args as any).preLoadedGrant;
+  @tracked _selectedGrants: GrantModel[] = [];
+  @tracked preLoadedGrant: GrantModel | null = this.args.preLoadedGrant;
   @tracked grantColumns = [
     {
       propertyName: 'awardNumber',
@@ -115,7 +126,7 @@ export default class WorkflowGrants extends Component {
   }
 
   setup = task(async () => {
-    this.contactUrl = this.appStaticConfig?.config?.branding?.pages?.contactUrl;
+    this.contactUrl = this.appStaticConfig?.config?.branding?.pages?.contactUrl ?? null;
 
     const submitter = await this.args.submission.submitter;
     if (submitter?.id) {
@@ -132,8 +143,7 @@ export default class WorkflowGrants extends Component {
   });
 
   updateGrants = task(async () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const userId = await (this.args as any).submission.submitter.id;
+    const userId = await this.args.submission.submitter.id;
     const grantQuery = {
       filter: {
         grant: `pi.id==${userId},coPis.id==${userId}`,
@@ -188,16 +198,13 @@ export default class WorkflowGrants extends Component {
   }
 
   @action
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async addGrant(grant: any) {
+  async addGrant(grant: GrantModel) {
     const workflow = this.workflow;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const submission = (this.args as any).submission;
+    const submission = this.args.submission;
     const grants = await submission.grants;
 
     if (!grants.includes(grant)) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (this.args as any).submission.grants = [grant, ...grants];
+      this.args.submission.grants = [grant, ...grants];
     }
     if (!workflow.getAddedGrants().includes(grant)) {
       workflow.addGrant(grant);
@@ -210,28 +217,23 @@ export default class WorkflowGrants extends Component {
   }
 
   @action
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async removeGrant(grant: any) {
+  async removeGrant(grant: GrantModel) {
     const workflow = this.workflow;
 
     if (grant === this.preLoadedGrant) {
       this.preLoadedGrant = null;
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const submission = (this.args as any).submission;
+    const submission = this.args.submission;
     const grants = await submission.grants;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this.args as any).submission.grants = grants.filter((g: any) => g !== grant);
+    this.args.submission.grants = grants.filter((g: GrantModel) => g !== grant);
     workflow.removeGrant(grant);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this._selectedGrants = this._selectedGrants.filter((g: any) => g !== grant);
+    this._selectedGrants = this._selectedGrants.filter((g: GrantModel) => g !== grant);
 
     this.setWorkflowStepHere();
   }
 
   @action
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  dataChange(options: any) {
+  dataChange(options: { selectedItems: GrantModel[] }) {
     const selectedItems = options.selectedItems;
 
     const previousSelection = this._selectedGrants;
@@ -240,15 +242,13 @@ export default class WorkflowGrants extends Component {
     const prevLen = previousSelection.length;
 
     if (curLen > prevLen) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       selectedItems
-        .filter((grant: any) => !previousSelection.includes(grant))
-        .forEach((grant: any) => this.addGrant(grant));
+        .filter((grant: GrantModel) => !previousSelection.includes(grant))
+        .forEach((grant: GrantModel) => this.addGrant(grant));
     } else if (curLen < prevLen) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       previousSelection
-        .filter((grant: any) => !selectedItems.includes(grant))
-        .forEach((grant: any) => this.removeGrant(grant));
+        .filter((grant: GrantModel) => !selectedItems.includes(grant))
+        .forEach((grant: GrantModel) => this.removeGrant(grant));
     } else if (curLen === 1 && prevLen === 1) {
       this.addGrant(selectedItems[0]);
 
@@ -260,8 +260,7 @@ export default class WorkflowGrants extends Component {
 
   @action
   abortSubmission() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this.args as any).abort();
+    this.args.abort();
   }
 
   <template>

@@ -5,23 +5,39 @@ import { hash } from 'rsvp';
 import CheckSessionRoute from '../../check-session-route';
 import type Workflow from 'pass-ui/services/workflow';
 import type PoliciesService from 'pass-ui/services/policies';
+import type { RepoDslResult } from 'pass-ui/services/policies';
 import type GrantModel from 'pass-ui/models/grant';
 import type FunderModel from 'pass-ui/models/funder';
 import type RepositoryModel from 'pass-ui/models/repository';
+import type SubmissionModel from 'pass-ui/models/submission';
+
+interface RepositoryWithFunders {
+  repository: RepositoryModel;
+  funders: string;
+}
+
+interface RepositoriesModel {
+  newSubmission: SubmissionModel;
+  preLoadedGrant: GrantModel | null;
+  requiredRepositories: RepositoryWithFunders[];
+  optionalRepositories: RepositoryWithFunders[];
+  choiceRepositories: RepositoryWithFunders[][];
+}
+
+interface NewSubmissionParentModel {
+  newSubmission: SubmissionModel;
+  preLoadedGrant: GrantModel | null;
+}
 
 export default class RepositoriesRoute extends CheckSessionRoute {
   @service declare workflow: Workflow;
   @service declare policies: PoliciesService;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  submission: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  repositories: any;
+  submission: SubmissionModel | null = null;
+  repositories: RepoDslResult | null = null;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async model(): Promise<any> {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const parentModel = this.modelFor('submissions.new') as any;
+  async model(): Promise<RepositoriesModel> {
+    const parentModel = this.modelFor('submissions.new') as NewSubmissionParentModel;
     this.submission = parentModel.newSubmission;
 
     this.repositories = await this.policies.getRepositories.perform(this.submission);
@@ -35,8 +51,7 @@ export default class RepositoriesRoute extends CheckSessionRoute {
     });
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async _getFunderNamesForRepo(repo: RepositoryModel, submission: any): Promise<string> {
+  async _getFunderNamesForRepo(repo: RepositoryModel, submission: SubmissionModel): Promise<string> {
     const grants = await submission.grants;
 
     const funders = grants.map((grant: GrantModel) => get(grant, 'primaryFunder'));
@@ -56,42 +71,39 @@ export default class RepositoriesRoute extends CheckSessionRoute {
     return '';
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async requiredRepositories(): Promise<any[]> {
+  async requiredRepositories(): Promise<RepositoryWithFunders[]> {
     return Promise.all(
-      this.repositories?.required.map(async (repo: RepositoryModel) => {
-        const funders = await this._getFunderNamesForRepo(repo, this.submission);
+      this.repositories?.required?.map(async (repo: RepositoryModel) => {
+        const funders = await this._getFunderNamesForRepo(repo, this.submission!);
         return {
           repository: repo,
           funders,
         };
-      }),
+      }) ?? [],
     );
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async optionalRepositories(): Promise<any[]> {
+  async optionalRepositories(): Promise<RepositoryWithFunders[]> {
     return Promise.all(
-      this.repositories?.optional.map(async (repo: RepositoryModel) => {
-        const funders = await this._getFunderNamesForRepo(repo, this.submission);
+      this.repositories?.optional?.map(async (repo: RepositoryModel) => {
+        const funders = await this._getFunderNamesForRepo(repo, this.submission!);
 
         return {
           repository: repo,
           funders,
         };
-      }),
+      }) ?? [],
     );
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async choiceRepositories(): Promise<any[]> {
+  async choiceRepositories(): Promise<RepositoryWithFunders[][]> {
     const formattedChoices = [];
-    const choices = this.repositories['one-of'] ?? [];
+    const choices = this.repositories?.['one-of'] ?? [];
 
     for (const group of choices) {
       const formattedGroup = [];
       for (const repo of group) {
-        const funders = await this._getFunderNamesForRepo(repo, this.submission);
+        const funders = await this._getFunderNamesForRepo(repo, this.submission!);
 
         formattedGroup.push({
           repository: repo,

@@ -5,6 +5,41 @@ import { tracked } from '@glimmer/tracking';
 import { service } from '@ember/service';
 import { grantDetailsQuery } from '../../util/paginated-query';
 import type CurrentUserService from 'pass-ui/services/current-user';
+import type GrantModel from 'pass-ui/models/grant';
+import type SubmissionModel from 'pass-ui/models/submission';
+
+interface GrantDetailModel {
+  grant: GrantModel;
+  submissions: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    data: any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    meta: any;
+  };
+}
+
+interface QueuedGrantDetailModel {
+  submissions?: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    data: any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    meta: any;
+  };
+}
+
+interface TableColumnDef {
+  propertyName?: string;
+  title: string;
+  className?: string;
+  component?: string;
+  disableSorting?: boolean;
+}
+
+interface DisplayAction {
+  currentPageNumber: number;
+  pageSize: number;
+  filterString: string;
+}
 
 export default class GrantDetailsController extends Controller {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -13,17 +48,14 @@ export default class GrantDetailsController extends Controller {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare store: any;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  declare model: any;
+  declare model: GrantDetailModel;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  get grant(): any {
+  get grant(): GrantModel {
     return this.model.grant;
   }
 
   // Columns displayed depend on the user role
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  columns: Array<Record<string, any>> = [
+  columns: TableColumnDef[] = [
     {
       propertyName: 'publicationTitle',
       className: 'title-column',
@@ -70,8 +102,7 @@ export default class GrantDetailsController extends Controller {
     },
   ];
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @tracked queuedModel: any;
+  @tracked queuedModel: QueuedGrantDetailModel | undefined;
 
   queryParams: string[] = ['page', 'pageSize', 'filter'];
 
@@ -87,16 +118,15 @@ export default class GrantDetailsController extends Controller {
   };
 
   get itemsCount(): number | undefined {
-    return this.queuedModel.submissions?.meta?.page?.totalRecords;
+    return this.queuedModel?.submissions?.meta?.page?.totalRecords;
   }
 
   get pagesCount(): number | undefined {
-    return this.queuedModel.submissions?.meta?.page?.totalPages;
+    return this.queuedModel?.submissions?.meta?.page?.totalPages;
   }
 
   @action
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  displayAction(display: any): void {
+  displayAction(display: DisplayAction): void {
     this.page = display.currentPageNumber;
     this.pageSize = display.pageSize;
     this.filter = display.filterString;
@@ -104,8 +134,8 @@ export default class GrantDetailsController extends Controller {
 
   @action
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  doQuery(params: any): any {
-    const query = grantDetailsQuery(params, this.grant.id, this.currentUser.user);
+  doQuery(params: any) {
+    const query = grantDetailsQuery(params, this.grant.id!, this.currentUser.user);
     // Don't need to re-load the grant
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return this.store.query('submission', query).then((data: any) => {

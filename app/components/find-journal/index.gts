@@ -5,6 +5,8 @@ import { dropTask, timeout } from 'ember-concurrency';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import PowerSelect from 'ember-power-select/components/power-select';
+import type AutocompleteService from 'pass-ui/services/autocomplete';
+import type JournalModel from 'pass-ui/models/journal';
 
 const eq = (a: unknown, b: unknown) => a === b;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -15,13 +17,20 @@ const perform =
 
 const DEBOUNCE_MS = 750;
 
-export default class FindJournal extends Component {
+interface FindJournalSignature {
+  Args: {
+    journalClass: string;
+    value: JournalModel | null;
+    selectJournal: (journal: JournalModel) => void;
+  };
+}
+
+export default class FindJournal extends Component<FindJournalSignature> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare store: any;
 
   @service('autocomplete')
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  declare autocomplete: any;
+  declare autocomplete: AutocompleteService;
 
   searchJournals = dropTask(async (term: string) => {
     await timeout(DEBOUNCE_MS);
@@ -29,10 +38,8 @@ export default class FindJournal extends Component {
   });
 
   @action
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onSelect(selected: any) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.store.findRecord('journal', selected.id).then((journal: any) => (this.args as any).selectJournal(journal));
+  onSelect(selected: JournalModel) {
+    this.store.findRecord('journal', selected.id).then((journal: JournalModel) => this.args.selectJournal(journal));
   }
 
   <template>

@@ -17,9 +17,43 @@ This codebase is being converted from JavaScript to TypeScript. The cardinal rul
 - DO add `import type` for model/service types
 - DO change `super(...arguments)` to `constructor(...args: any[]) { super(...args); }` with rest params (Ember passes owner as constructor arg — must forward it)
 - For `@service` and `@controller` declarations of **our own** services/controllers, use `import type` and the real class (e.g., `import type Workflow from 'pass-ui/services/workflow';` → `@service declare workflow: Workflow;`)
-- `any` is ONLY acceptable for framework/addon types with no stable exports: `store`, `router`, `session`, `flashMessages`, `themeInstance` (emt-themes)
-- Use `// eslint-disable-next-line @typescript-eslint/no-explicit-any` ONLY above lines that genuinely must use `any` (framework types, untyped callback params)
 - For `@alias` properties, do NOT add `declare` (alias initializes the property at runtime)
+
+### Strict `any` Policy
+
+**NEVER use `any` for types we own.** This is a hard rule with zero exceptions.
+
+#### What "types we own" means:
+- All models in `app/models/` (e.g., `SubmissionModel`, `GrantModel`, `RepositoryModel`, `PolicyModel`, `UserModel`, `FileModel`, `DepositModel`, `RepositoryCopyModel`, `PublicationModel`, `JournalModel`, `FunderModel`, `SubmissionEventModel`)
+- All services in `app/services/` (e.g., `Workflow`, `CurrentUserService`, `SubmissionHandlerService`, `MetadataSchemaService`, `PoliciesService`, `DoiService`, `ErrorHandlerService`, `AppStaticConfigService`, `AutocompleteService`, `OAManuscriptService`, `SearchHelperService`)
+- All controllers in `app/controllers/`
+- All components in `app/components/`
+- Any interface or type defined in this codebase
+
+#### `any` IS acceptable ONLY for:
+- `store`, `router`, `session`, `flashMessages`, `themeInstance` — framework/addon types with no stable exports
+- `constructor(...args: any[])` — required by Ember's owner-forwarding pattern
+- Ember Data `store.query()` / `store.findRecord()` return values at the query boundary (the `.then((data: any) => ...)` callback)
+- `modelFor(...)` return value — returns `unknown`, cast to a specific interface (NOT `any`)
+- `get(this, 'dotted.path')` return value — cast to the specific expected type (NOT `any`)
+
+#### Specific prohibitions:
+- **`@service declare xxx: any`** when we own the service → use `import type` and the real class
+- **`as any`** on model/service/controller types → use the specific type or a typed interface
+- **`(this.args as any).foo`** → define a `Signature` interface with `Args` for the component
+- **`: any` on function parameters** where the value is a known model → use the model type (e.g., `repo: RepositoryModel`, NOT `repo: any`)
+- **`: any` on `@tracked` properties** that hold known types → use the specific type
+- **`: any[]` on arrays** of known model types → use `ModelType[]`
+
+#### When you encounter `any` on a type we own:
+1. Find the correct type in `app/models/`, `app/services/`, or `app/controllers/`
+2. Add `import type FooModel from 'pass-ui/models/foo';` (use `import type`, not `import`)
+3. Replace `any` with the correct type
+4. If the type needs an interface (e.g., for component args or route model shapes), define one in the same file
+
+#### `eslint-disable-next-line @typescript-eslint/no-explicit-any`:
+- ONLY use above lines that genuinely must use `any` (the five acceptable cases listed above)
+- NEVER use to silence warnings on types we own — fix the type instead
 
 Legacy pattern cleanup (get/set, @computed, @alias, @observes) happens in a separate, later pass — not during the TypeScript conversion.
 

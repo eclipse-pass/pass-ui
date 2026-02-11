@@ -6,6 +6,30 @@ import { service } from '@ember/service';
 import { submissionsIndexQuery } from '../../util/paginated-query';
 import type CurrentUserService from 'pass-ui/services/current-user';
 import type AppStaticConfigService from 'pass-ui/services/app-static-config';
+import type SubmissionModel from 'pass-ui/models/submission';
+
+interface SubmissionsIndexModel {
+  submissions: SubmissionModel[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  meta: any;
+}
+
+interface TableColumnDef {
+  propertyName?: string;
+  title: string;
+  className?: string;
+  component?: string;
+  disableSorting?: boolean;
+  filterWithSelect?: boolean;
+  predefinedFilterOptions?: string[];
+  disableFiltering?: boolean;
+}
+
+interface DisplayAction {
+  currentPageNumber: number;
+  pageSize: number;
+  filterString: string;
+}
 
 export default class SubmissionsIndex extends Controller {
   @service declare currentUser: CurrentUserService;
@@ -25,8 +49,7 @@ export default class SubmissionsIndex extends Controller {
   @tracked messageText: string = '';
   @tracked tablePageSize: number = 50;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @tracked queuedModel: any;
+  @tracked queuedModel: SubmissionsIndexModel | undefined;
 
   queryParams: string[] = ['page', 'pageSize', 'filter'];
 
@@ -49,8 +72,7 @@ export default class SubmissionsIndex extends Controller {
   }
 
   // Columns displayed depend on the user role
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  get columns(): any[] {
+  get columns(): TableColumnDef[] {
     if (this.currentUser.user!.isAdmin) {
       return [
         {
@@ -145,16 +167,15 @@ export default class SubmissionsIndex extends Controller {
   }
 
   get itemsCount(): number | undefined {
-    return this.queuedModel.meta?.page?.totalRecords;
+    return this.queuedModel?.meta?.page?.totalRecords;
   }
 
   get pagesCount(): number | undefined {
-    return this.queuedModel.meta?.page?.totalPages;
+    return this.queuedModel?.meta?.page?.totalPages;
   }
 
   @action
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  displayAction(display: any): void {
+  displayAction(display: DisplayAction): void {
     this.page = display.currentPageNumber;
     this.pageSize = display.pageSize;
     this.filter = display.filterString;

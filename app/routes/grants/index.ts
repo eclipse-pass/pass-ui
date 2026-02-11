@@ -5,6 +5,12 @@ import type CurrentUserService from 'pass-ui/services/current-user';
 import type GrantModel from 'pass-ui/models/grant';
 import type SubmissionModel from 'pass-ui/models/submission';
 
+interface GrantsIndexModel {
+  grantMap: Array<{ grant: GrantModel; submissions: SubmissionModel[] }>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  meta: any;
+}
+
 export default class IndexRoute extends CheckSessionRoute {
   @service('current-user') declare currentUser: CurrentUserService;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -40,8 +46,7 @@ export default class IndexRoute extends CheckSessionRoute {
     const grantQuery = grantsIndexGrantQuery(params, user);
     // First search for all Grants associated with the current user
     const grants = await this.store.query('grant', grantQuery);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const results: { grantMap: Array<{ grant: GrantModel; submissions: SubmissionModel[] }>; meta: any } = {
+    const results: GrantsIndexModel = {
       grantMap: [],
       meta: grants.meta,
     };

@@ -9,39 +9,42 @@ import { hash } from '@ember/helper';
 // @ts-ignore
 import swal from 'sweetalert2/dist/sweetalert2.js';
 import ENV from 'pass-ui/config/environment';
+import type CurrentUserService from 'pass-ui/services/current-user';
+import type SubmissionHandlerService from 'pass-ui/services/submission-handler';
+import type SubmissionModel from 'pass-ui/models/submission';
+import type UserModel from 'pass-ui/models/user';
 
 const eq = (a: unknown, b: unknown) => a === b;
 const and = (...args: unknown[]) => args.every(Boolean);
 
-export default class SubmissionActionCell extends Component {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare currentUser: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare submissionHandler: any;
+interface SubmissionActionCellSignature {
+  Args: {
+    record: SubmissionModel;
+  };
+}
+
+export default class SubmissionActionCell extends Component<SubmissionActionCellSignature> {
+  @service declare currentUser: CurrentUserService;
+  @service declare submissionHandler: SubmissionHandlerService;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare flashMessages: any;
 
   get isPreparer(): boolean {
     const userId = this.currentUser.user.id;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const preparers = (this.args as any).record.preparers;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return preparers.map((x: any) => x.id).includes(userId);
+    const preparers = this.args.record.preparers;
+    return preparers.map((x: UserModel) => x.id).includes(userId);
   }
 
   get isSubmitter(): boolean {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return this.currentUser.user?.id === (this.args as any).record.submitter?.id;
+    return this.currentUser.user?.id === this.args.record.submitter?.id;
   }
 
   get submissionIsDraft(): boolean {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (this.args as any).record.isDraft;
+    return this.args.record.isDraft;
   }
 
   @action
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  deleteSubmission(submission: any) {
+  deleteSubmission(submission: SubmissionModel) {
     swal
       .fire({
         target: ENV.APP.rootElement,
@@ -58,8 +61,7 @@ export default class SubmissionActionCell extends Component {
       });
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async do_delete(submission: any) {
+  async do_delete(submission: SubmissionModel) {
     try {
       await this.submissionHandler.deleteSubmission(submission);
     } catch (e) {

@@ -6,30 +6,49 @@ import { on } from '@ember/modifier';
 import didInsert from '@ember/render-modifiers/modifiers/did-insert';
 import RepositoryCard from 'pass-ui/components/repository-card';
 import ChoiceRepositoriesCard from 'pass-ui/components/choice-repositories-card';
+import type SubmissionHandlerService from 'pass-ui/services/submission-handler';
+import type Workflow from 'pass-ui/services/workflow';
+import type RepositoryModel from 'pass-ui/models/repository';
+import type SubmissionModel from 'pass-ui/models/submission';
+import type FunderModel from 'pass-ui/models/funder';
 
-export default class WorkflowRepositories extends Component {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare submissionHandler: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare workflow: any;
+interface RepoInfo {
+  repository: RepositoryModel;
+  funders?: FunderModel[];
+}
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @tracked addedRepos: any[] = [];
+interface WorkflowRepositoriesSignature {
+  Args: {
+    submission: SubmissionModel;
+    requiredRepositories: RepoInfo[];
+    optionalRepositories: RepoInfo[];
+    choiceRepositories: RepoInfo[][];
+    next: () => void;
+    back: () => void;
+    abort: () => void;
+  };
+  Blocks: {
+    default: [];
+  };
+}
+
+export default class WorkflowRepositories extends Component<WorkflowRepositoriesSignature> {
+  @service declare submissionHandler: SubmissionHandlerService;
+  @service declare workflow: Workflow;
+
+  @tracked addedRepos: RepositoryModel[] = [];
 
   get requiredIntegratedRepos() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (this.args as any).requiredRepositories.filter((repoInfo: any) => !repoInfo.repository._isWebLink);
+    return this.args.requiredRepositories.filter((repoInfo: RepoInfo) => !repoInfo.repository._isWebLink);
   }
 
   get requiredWeblinkRepos() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (this.args as any).requiredRepositories.filter((repoInfo: any) => repoInfo.repository._isWebLink);
+    return this.args.requiredRepositories.filter((repoInfo: RepoInfo) => repoInfo.repository._isWebLink);
   }
 
   @action
   async setupRepos() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const args = this.args as any;
+    const args = this.args;
     this.addedRepos = this.getAddedRepositories();
     const currentRepos = await args.submission.repositories;
 
@@ -40,24 +59,20 @@ export default class WorkflowRepositories extends Component {
     if (currentRepos && currentRepos.length > 0) {
       const validRepos: string[] = [];
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      req.forEach((repoInfo: any) => {
+      req.forEach((repoInfo: RepoInfo) => {
         validRepos.push(repoInfo.repository.id);
         this.addRepository(repoInfo.repository, false);
       });
 
       if (opt) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        opt.forEach((optInfo: any) => {
+        opt.forEach((optInfo: RepoInfo) => {
           validRepos.push(optInfo.repository.id);
           this.setSelected(optInfo.repository);
         });
       }
       if (choice) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        choice.forEach((group: any[]) => {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          group.forEach((repoInfo: any) => {
+        choice.forEach((group: RepoInfo[]) => {
+          group.forEach((repoInfo: RepoInfo) => {
             validRepos.push(repoInfo.repository.id);
             this.setSelected(repoInfo.repository);
           });
@@ -65,30 +80,25 @@ export default class WorkflowRepositories extends Component {
       }
 
       currentRepos
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .filter((repo: any) => !validRepos.includes(repo.id))
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .forEach((repo: any) => (args.submission.repositories = currentRepos.filter((r: any) => r.name === repo.name)));
+        .filter((repo: RepositoryModel) => !validRepos.includes(repo.id))
+        .forEach(
+          (repo: RepositoryModel) =>
+            (args.submission.repositories = currentRepos.filter((r: RepositoryModel) => r.name === repo.name)),
+        );
     } else {
       if (req) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        req.forEach((repoInfo: any) => this.addRepository(repoInfo.repository, false));
+        req.forEach((repoInfo: RepoInfo) => this.addRepository(repoInfo.repository, false));
       }
       if (opt) {
         opt
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          .filter((repoInfo: any) => repoInfo.repository._selected)
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          .forEach((repoInfo: any) => this.addRepository(repoInfo.repository, false));
+          .filter((repoInfo: RepoInfo) => repoInfo.repository._selected)
+          .forEach((repoInfo: RepoInfo) => this.addRepository(repoInfo.repository, false));
       }
       if (choice) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        choice.forEach((group: any[]) => {
+        choice.forEach((group: RepoInfo[]) => {
           group
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            .filter((repoInfo: any) => repoInfo.repository._selected)
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            .forEach((repoInfo: any) => this.addRepository(repoInfo.repository, false));
+            .filter((repoInfo: RepoInfo) => repoInfo.repository._selected)
+            .forEach((repoInfo: RepoInfo) => this.addRepository(repoInfo.repository, false));
         });
       }
     }
@@ -99,25 +109,20 @@ export default class WorkflowRepositories extends Component {
     return this.submissionHandler.getRepositoriesFromGrants(grants);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async setSelected(repo: any) {
+  async setSelected(repo: RepositoryModel) {
     const id = repo.id;
     const addedRepos = this.addedRepos;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const currentRepos = await (this.args as any).submission.repositories;
+    const currentRepos = await this.args.submission.repositories;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if (addedRepos.some((r: any) => r.id === id)) {
+    if (addedRepos.some((r: RepositoryModel) => r.id === id)) {
       return;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    repo._selected = currentRepos.some((r: any) => r.id === id);
+    repo._selected = currentRepos.some((r: RepositoryModel) => r.id === id);
   }
 
   @action
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  toggleRepository(repository: any, selected: boolean, _type: string) {
+  toggleRepository(repository: RepositoryModel, selected: boolean, _type: string) {
     if (selected) {
       this.addRepository(repository, true);
     } else {
@@ -127,42 +132,33 @@ export default class WorkflowRepositories extends Component {
 
   @action
   cancel() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this.args as any).abort();
+    this.args.abort();
   }
 
   @action
   next() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this.args as any).next();
+    this.args.next();
   }
 
   @action
   back() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this.args as any).back();
+    this.args.back();
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async addRepository(repository: any, setMaxStep: boolean) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const repos = await (this.args as any).submission.repositories;
+  async addRepository(repository: RepositoryModel, setMaxStep: boolean) {
+    const repos = await this.args.submission.repositories;
 
     if (!repos.includes(repository)) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (this.args as any).submission.repositories = [repository, ...repos];
+      this.args.submission.repositories = [repository, ...repos];
     }
     if (setMaxStep) {
       this.workflow.setMaxStep(4);
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async removeRepository(repository: any, setMaxStep: boolean) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const repositories = await (this.args as any).submission.repositories;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this.args as any).submission.repositories = repositories.filter((r: any) => r.name !== repository.name);
+  async removeRepository(repository: RepositoryModel, setMaxStep: boolean) {
+    const repositories = await this.args.submission.repositories;
+    this.args.submission.repositories = repositories.filter((r: RepositoryModel) => r.name !== repository.name);
     if (setMaxStep) {
       this.workflow.setMaxStep(4);
     }

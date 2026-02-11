@@ -12,18 +12,30 @@ import swal from 'sweetalert2/dist/sweetalert2.js';
 // @ts-ignore
 import fileQueue from 'ember-file-upload/helpers/file-queue';
 import FoundManuscripts from 'pass-ui/components/found-manuscripts';
+import type Workflow from 'pass-ui/services/workflow';
+import type SubmissionHandlerService from 'pass-ui/services/submission-handler';
+import type CurrentUserService from 'pass-ui/services/current-user';
+import type SubmissionModel from 'pass-ui/models/submission';
+import type FileModel from 'pass-ui/models/file';
 
 const eq = (a: unknown, b: unknown) => a === b;
 
-export default class WorkflowFiles extends Component {
+interface WorkflowFilesSignature {
+  Args: {
+    submission: SubmissionModel;
+    doi: string | null;
+    next: () => void;
+    back: () => void;
+    abort: () => void;
+  };
+}
+
+export default class WorkflowFiles extends Component<WorkflowFilesSignature> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare store: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare workflow: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare submissionHandler: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare currentUser: any;
+  @service declare workflow: Workflow;
+  @service declare submissionHandler: SubmissionHandlerService;
+  @service declare currentUser: CurrentUserService;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare flashMessages: any;
 
@@ -31,14 +43,12 @@ export default class WorkflowFiles extends Component {
 
   constructor(...args: any[]) {
     super(...args);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.doi = (this.args as any).doi;
+    this.doi = this.args.doi;
   }
 
   get hasFiles(): boolean {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (
-      this.workflow.getFiles().filter((file: any) => file.submission.id === (this.args as any).submission.id).length > 0
+      this.workflow.getFiles().filter((file: FileModel) => file.submission.id === this.args.submission.id).length > 0
     );
   }
 
@@ -46,32 +56,22 @@ export default class WorkflowFiles extends Component {
     return !!this.manuscript;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  get manuscript(): any {
-    return (
-      this.workflow
-        .getFiles()
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .filter((file: any) => file.submission.id === (this.args as any).submission.id)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .find((file: any) => file.fileRole === 'manuscript')
-    );
+  get manuscript(): FileModel | undefined {
+    return this.workflow
+      .getFiles()
+      .filter((file: FileModel) => file.submission.id === this.args.submission.id)
+      .find((file: FileModel) => file.fileRole === 'manuscript');
   }
 
   get supplementalFiles() {
-    return (
-      this.workflow
-        .getFiles()
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .filter((file: any) => file.submission.id === (this.args as any).submission.id)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .filter((file: any) => file.fileRole !== 'manuscript')
-    );
+    return this.workflow
+      .getFiles()
+      .filter((file: FileModel) => file.submission.id === this.args.submission.id)
+      .filter((file: FileModel) => file.fileRole !== 'manuscript');
   }
 
   @action
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  deleteExistingFile(file: any) {
+  deleteExistingFile(file: FileModel) {
     swal
       .fire({
         target: ENV.APP.rootElement,
@@ -89,22 +89,19 @@ export default class WorkflowFiles extends Component {
         if (result.value) {
           const deleted = await this.deleteFile(file);
           if (deleted) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (document.querySelector('#file-multiple-input') as any).value = null;
+            (document.querySelector('#file-multiple-input') as HTMLInputElement).value = '';
           }
         }
       });
   }
 
   @action
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  updateFileDescription(file: any, event: Event) {
+  updateFileDescription(file: FileModel, event: Event) {
     file.description = (event.target as HTMLInputElement).value;
   }
 
   @action
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  updateFileRole(file: any, event: Event) {
+  updateFileRole(file: FileModel, event: Event) {
     file.fileRole = (event.target as HTMLSelectElement).value;
   }
 
@@ -127,8 +124,7 @@ export default class WorkflowFiles extends Component {
         description: '',
         fileRole: 'supplemental',
         uri: `/file/${file.uuid}/${encodeURIComponent(file.fileName)}`,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        submission: (this.args as any).submission,
+        submission: this.args.submission,
       });
       if (!this.hasManuscript) {
         newFile.fileRole = 'manuscript';
@@ -144,8 +140,7 @@ export default class WorkflowFiles extends Component {
   }
 
   @action
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async deleteFile(file: any) {
+  async deleteFile(file: FileModel) {
     if (!file) {
       return;
     }
@@ -157,8 +152,7 @@ export default class WorkflowFiles extends Component {
         this.workflow.removeFile(deletedFileId);
         return true;
       })
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .catch((error: any) => {
+      .catch((error: unknown) => {
         console.error('[Workflow Files] Failed to delete file');
         console.error(error);
         this.flashMessages.danger('We encountered an error when removing this file');
@@ -168,8 +162,7 @@ export default class WorkflowFiles extends Component {
 
   @action
   cancel() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this.args as any).abort();
+    this.args.abort();
   }
 
   <template>

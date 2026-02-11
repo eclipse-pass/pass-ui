@@ -2,6 +2,11 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { service } from '@ember/service';
 import { task } from 'ember-concurrency';
+import type OAManuscriptService from 'pass-ui/services/oa-manuscript-service';
+import type { ManuscriptInfo } from 'pass-ui/services/oa-manuscript-service';
+import type Workflow from 'pass-ui/services/workflow';
+import type AppStaticConfigService from 'pass-ui/services/app-static-config';
+import type { WorkflowFile } from 'pass-ui/services/workflow';
 
 const eq = (a: unknown, b: unknown) => a === b;
 const includes = (needle: unknown, haystack: unknown) => {
@@ -9,19 +14,21 @@ const includes = (needle: unknown, haystack: unknown) => {
   return haystack.includes(needle);
 };
 
-export default class FoundManuscriptsComponent extends Component {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare oaManuscriptService: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare workflow: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare appStaticConfig: any;
+interface FoundManuscriptsSignature {
+  Args: {
+    disabled: boolean;
+    doi: string | null;
+  };
+}
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @tracked foundManuscripts: any[] = [];
+export default class FoundManuscriptsComponent extends Component<FoundManuscriptsSignature> {
+  @service declare oaManuscriptService: OAManuscriptService;
+  @service declare workflow: Workflow;
+  @service declare appStaticConfig: AppStaticConfigService;
+
+  @tracked foundManuscripts: ManuscriptInfo[] = [];
   @tracked manuscriptsWithErrors: string[] = [];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @tracked selectedManuscript: any = null;
+  @tracked selectedManuscript: ManuscriptInfo | null = null;
   @tracked contactUrl: string | undefined;
 
   constructor(...args: any[]) {
@@ -33,18 +40,13 @@ export default class FoundManuscriptsComponent extends Component {
   }
 
   get foundManuscriptsToDisplay() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const allFileNames = this.workflow.getFiles().map((file: any) => file.name);
+    const allFileNames = this.workflow.getFiles().map((file: WorkflowFile) => file.name);
 
-    return (
-      this.foundManuscripts
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .filter((manuscript: any) => !allFileNames.includes(manuscript.name))
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .filter((manuscript: any) => {
-          return !!manuscript.name && !!manuscript.url;
-        })
-    );
+    return this.foundManuscripts
+      .filter((manuscript: ManuscriptInfo) => !allFileNames.includes(manuscript.name))
+      .filter((manuscript: ManuscriptInfo) => {
+        return !!manuscript.name && !!manuscript.url;
+      });
   }
 
   getAppConfig = task(async () => {

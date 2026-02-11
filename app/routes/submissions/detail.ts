@@ -2,13 +2,28 @@ import CheckSessionRoute from '../check-session-route';
 import { hash } from 'rsvp';
 import { service } from '@ember/service';
 import { fileForSubmissionQuery } from '../../util/paginated-query';
+import type SubmissionModel from 'pass-ui/models/submission';
+import type FileModel from 'pass-ui/models/file';
+import type DepositModel from 'pass-ui/models/deposit';
+import type RepositoryCopyModel from 'pass-ui/models/repository-copy';
+import type SubmissionEventModel from 'pass-ui/models/submission-event';
+import type RepositoryModel from 'pass-ui/models/repository';
+
+interface DetailModel {
+  sub: SubmissionModel;
+  files: FileModel[];
+  deposits: DepositModel[];
+  repoCopies: RepositoryCopyModel[];
+  submissionEvents: SubmissionEventModel[];
+  repos: RepositoryModel[];
+}
 
 export default class DetailRoute extends CheckSessionRoute {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare store: any;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async model(params: any): Promise<any> {
+  async model(params: any): Promise<DetailModel | void> {
     if (!params || !params.submission_id) {
       this.errorHandler.handleError(new Error('didNotLoadData'));
       return;

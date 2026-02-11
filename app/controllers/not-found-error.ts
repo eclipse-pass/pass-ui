@@ -1,15 +1,19 @@
 /* eslint-disable ember/no-get */
 import Controller from '@ember/controller';
+import type { StaticConfig } from 'pass-ui/services/app-static-config';
+
+interface NotFoundErrorModel {
+  config: StaticConfig | null;
+}
 
 export default class NotFoundErrorController extends Controller {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  declare model: any;
+  declare model: NotFoundErrorModel;
 
   get icon(): string | undefined {
-    return this.model.config.branding.error?.icon;
+    return (this.model.config?.branding?.['error'] as Record<string, string> | undefined)?.['icon'];
   }
 
   get contactUrl(): string | undefined {
-    return this.model.config.branding.pages?.contactUrl;
+    return this.model.config?.branding?.pages?.['contactUrl'];
   }
 }

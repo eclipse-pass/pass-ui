@@ -7,12 +7,18 @@ import { on } from '@ember/modifier';
 import didInsert from '@ember/render-modifiers/modifiers/did-insert';
 import didUpdate from '@ember/render-modifiers/modifiers/did-update';
 import { LinkTo } from '@ember/routing';
+import type CurrentUserService from 'pass-ui/services/current-user';
+import type AppStaticConfigService from 'pass-ui/services/app-static-config';
 
-export default class NavBar extends Component {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare currentUser: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare appStaticConfig: any;
+interface NavBarSignature {
+  Args: {
+    fullWidth?: boolean;
+  };
+}
+
+export default class NavBar extends Component<NavBarSignature> {
+  @service declare currentUser: CurrentUserService;
+  @service declare appStaticConfig: AppStaticConfigService;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare session: any;
 

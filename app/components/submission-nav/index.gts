@@ -6,13 +6,22 @@ import { fn } from '@ember/helper';
 import { on } from '@ember/modifier';
 import ENV from 'pass-ui/config/environment';
 import CovidSelectionBanner from 'pass-ui/components/covid-selection-banner';
+import type Workflow from 'pass-ui/services/workflow';
+import type SubmissionModel from 'pass-ui/models/submission';
 
 const eq = (a: unknown, b: unknown) => a === b;
 const gt = (a: unknown, b: unknown) => Number(a) > Number(b);
 
-export default class SubmissionNav extends Component {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare workflow: any;
+interface SubmissionNavSignature {
+  Args: {
+    submission: SubmissionModel;
+    loadTab: (route: string) => void;
+    updateCovidSubmission: () => void;
+  };
+}
+
+export default class SubmissionNav extends Component<SubmissionNavSignature> {
+  @service declare workflow: Workflow;
 
   @tracked step = this.workflow.getCurrentStep();
   @tracked maxStep = this.workflow.getMaxStep();

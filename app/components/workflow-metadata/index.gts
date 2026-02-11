@@ -7,39 +7,60 @@ import { on } from '@ember/modifier';
 import didInsert from '@ember/render-modifiers/modifiers/did-insert';
 import { LinkTo } from '@ember/routing';
 import MetadataForm from 'pass-ui/components/metadata-form';
+import type Workflow from 'pass-ui/services/workflow';
+import type CurrentUserService from 'pass-ui/services/current-user';
+import type MetadataSchemaService from 'pass-ui/services/metadata-schema';
+import type { SurveySchema, SurveyElement } from 'pass-ui/services/metadata-schema';
+import type DoiService from 'pass-ui/services/doi';
+import type SubmissionModel from 'pass-ui/models/submission';
+import type PublicationModel from 'pass-ui/models/publication';
+import type RepositoryModel from 'pass-ui/models/repository';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const perform =
-  (task: any) =>
-  (...args: any[]) =>
-    task.perform(...args);
-
-export default class WorkflowMetadata extends Component {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare currentUser: any;
+  (task: any) =>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (...args: any[]) =>
+      task.perform(...args);
+
+interface SurveyInstance {
+  tryComplete(): void;
+  data: Record<string, unknown>;
+}
+
+interface WorkflowMetadataSignature {
+  Args: {
+    submission: SubmissionModel;
+    publication: PublicationModel;
+    repositories: RepositoryModel[];
+    next: () => void;
+    back: () => void;
+    abort: () => void;
+  };
+  Blocks: {
+    default: [];
+  };
+}
+
+export default class WorkflowMetadata extends Component<WorkflowMetadataSignature> {
+  @service declare currentUser: CurrentUserService;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare router: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare workflow: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare metadataSchema: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare doi: any;
+  @service declare workflow: Workflow;
+  @service declare metadataSchema: MetadataSchemaService;
+  @service declare doi: DoiService;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @tracked metadata: any = {};
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @tracked schema: any = null;
+  @tracked metadata: Record<string, unknown> = {};
+  @tracked schema: SurveySchema | null = null;
   @tracked missingRequiredJournal = false;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @tracked surveyInstance: any = null;
+  @tracked surveyInstance: SurveyInstance | null = null;
 
   constructor(...args: any[]) {
     super(...args);
 
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      this.metadata = JSON.parse((this.args as any).submission.metadata);
+      this.metadata = JSON.parse(this.args.submission.metadata);
     } catch (e) {
       console.log('Error: Submission metadata invalid');
       this.metadata = {};
@@ -52,10 +73,8 @@ export default class WorkflowMetadata extends Component {
       this.schema = this.metadataSchema.getMetadataSchema(repositories, this.workflow.getReadOnlyProperties());
 
       const requiresJournal =
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        this.schema.elements.findIndex(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (el: any) => el.name === 'journal-title' && 'isRequired' in el && el.isRequired,
+        this.schema!.elements.findIndex(
+          (el: SurveyElement) => el.name === 'journal-title' && 'isRequired' in el && el.isRequired,
         ) !== -1;
       const journal = await this.args.publication.journal;
       this.missingRequiredJournal = requiresJournal && !journal;
@@ -64,32 +83,26 @@ export default class WorkflowMetadata extends Component {
 
   @action
   back() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this.args as any).back();
+    this.args.back();
   }
 
   @action
   cancel() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this.args as any).abort();
+    this.args.abort();
   }
 
   @action
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  next(newMetadata: any) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const submission = (this.args as any).submission;
+  next(newMetadata: Record<string, unknown>) {
+    const submission = this.args.submission;
 
     newMetadata.agent_information = this.getBrowserInfo();
     submission.metadata = JSON.stringify(newMetadata);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this.args as any).next();
+    this.args.next();
   }
 
   @action
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onSurveyReady(survey: any) {
+  onSurveyReady(survey: SurveyInstance) {
     this.surveyInstance = survey;
   }
 

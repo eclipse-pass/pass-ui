@@ -10,10 +10,27 @@ import type Workflow from 'pass-ui/services/workflow';
 import type SubmissionHandlerService from 'pass-ui/services/submission-handler';
 import type SearchHelperService from 'pass-ui/services/search-helper';
 import type FileModel from 'pass-ui/models/file';
+import type SubmissionModel from 'pass-ui/models/submission';
+import type PublicationModel from 'pass-ui/models/publication';
+import type RepositoryModel from 'pass-ui/models/repository';
+import type PolicyModel from 'pass-ui/models/policy';
+import type GrantModel from 'pass-ui/models/grant';
+import type JournalModel from 'pass-ui/models/journal';
+import type SubmissionEventModel from 'pass-ui/models/submission-event';
+import type UserModel from 'pass-ui/models/user';
+
+interface NewSubmissionModel {
+  newSubmission: SubmissionModel;
+  publication: PublicationModel;
+  repositories: RepositoryModel[];
+  policies: PolicyModel[];
+  preLoadedGrant: GrantModel | null;
+  journal: JournalModel | null;
+  submissionEvents: SubmissionEventModel[] | null;
+}
 
 export default class SubmissionsNew extends Controller {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  declare model: any;
+  declare model: NewSubmissionModel;
 
   queryParams: string[] = ['grant', 'submission', 'covid'];
   @service declare currentUser: CurrentUserService;
@@ -31,16 +48,14 @@ export default class SubmissionsNew extends Controller {
   @tracked uploading: boolean = false;
   @tracked waitingMessage: string = '';
   // @ts-expect-error TS2729 - @service creates a prototype getter, available during field init
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @tracked user: any = this.currentUser.user;
+  @tracked user: UserModel | null = this.currentUser.user;
   // @ts-expect-error TS2729 - model available via Ember controller prototype
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @tracked submitter: any = this.model.newSubmission.submitter;
+  @tracked submitter: UserModel = this.model.newSubmission.submitter;
   @tracked covid: string | null = null;
 
   async userIsSubmitter(): Promise<boolean> {
     const submitter = await this.model.newSubmission.submitter;
-    return submitter?.id === this.user.id;
+    return submitter?.id === this.user?.id;
   }
 
   /**

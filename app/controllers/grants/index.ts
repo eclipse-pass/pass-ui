@@ -6,6 +6,37 @@ import { service } from '@ember/service';
 import { grantsIndexGrantQuery, grantsIndexSubmissionQuery } from '../../util/paginated-query';
 import type CurrentUserService from 'pass-ui/services/current-user';
 import type AppStaticConfigService from 'pass-ui/services/app-static-config';
+import type GrantModel from 'pass-ui/models/grant';
+import type SubmissionModel from 'pass-ui/models/submission';
+import type UserModel from 'pass-ui/models/user';
+
+interface GrantMapEntry {
+  grant: GrantModel;
+  submissions: SubmissionModel[];
+}
+
+interface GrantsIndexModel {
+  grantMap: GrantMapEntry[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  meta: any;
+}
+
+interface TableColumnDef {
+  propertyName?: string;
+  title: string;
+  className?: string;
+  component?: string;
+  filterWithSelect?: boolean;
+  predefinedFilterOptions?: string[];
+  disableFiltering?: boolean;
+  disableSorting?: boolean;
+}
+
+interface DisplayAction {
+  currentPageNumber: number;
+  pageSize: number;
+  filterString: string;
+}
 
 export default class GrantsIndexController extends Controller {
   @service declare currentUser: CurrentUserService;
@@ -25,8 +56,7 @@ export default class GrantsIndexController extends Controller {
   }
 
   // TODO Reduce duplication in column definitions
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  adminColumns: Array<Record<string, any>> = [
+  adminColumns: TableColumnDef[] = [
     {
       propertyName: 'grant.projectName',
       title: 'Project Name',
@@ -80,8 +110,7 @@ export default class GrantsIndexController extends Controller {
     },
   ];
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  piColumns: Array<Record<string, any>> = [
+  piColumns: TableColumnDef[] = [
     {
       propertyName: 'grant.projectName',
       title: 'Project Name',
@@ -133,8 +162,7 @@ export default class GrantsIndexController extends Controller {
   @tracked messageSubject: string = '';
   @tracked messageText: string = '';
   // @ts-expect-error TS2729 - @service creates a prototype getter, available during field init
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @tracked user: any = this.currentUser.user;
+  @tracked user: UserModel | null = this.currentUser.user;
 
   queryParams: string[] = ['page', 'pageSize', 'filter'];
 
@@ -149,32 +177,29 @@ export default class GrantsIndexController extends Controller {
     globalFilter: 'filter',
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @tracked queuedModel: any;
+  @tracked queuedModel: GrantsIndexModel | undefined;
 
   // Columns displayed depend on the user role
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  get columns(): Array<Record<string, any>> {
-    if (this.user.isAdmin) {
+  get columns(): TableColumnDef[] {
+    if (this.user?.isAdmin) {
       return this.adminColumns;
-    } else if (this.user.isSubmitter) {
+    } else if (this.user?.isSubmitter) {
       return this.piColumns;
     }
-    console.warn(`[Route:Grants/index] User has no known role (${this.user.id}::${this.user.roles})`);
+    console.warn(`[Route:Grants/index] User has no known role (${this.user?.id}::${this.user?.roles})`);
     return [];
   }
 
   get itemsCount(): number | undefined {
-    return this.queuedModel.meta?.page?.totalRecords;
+    return this.queuedModel?.meta?.page?.totalRecords;
   }
 
   get pagesCount(): number | undefined {
-    return this.queuedModel.meta?.page?.totalPages;
+    return this.queuedModel?.meta?.page?.totalPages;
   }
 
   @action
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  displayAction(display: any): void {
+  displayAction(display: DisplayAction): void {
     this.page = display.currentPageNumber;
     this.pageSize = display.pageSize;
     this.filter = display.filterString;
@@ -182,7 +207,7 @@ export default class GrantsIndexController extends Controller {
 
   @action
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  doQuery(params: any): any {
+  doQuery(params: any) {
     const user = this.currentUser.user;
     if (!user) {
       return;
@@ -198,10 +223,9 @@ export default class GrantsIndexController extends Controller {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .then((data: any) => {
           const meta = data.meta;
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const results = data.map((grant: any) => ({
+          const results = data.map((grant: GrantModel) => ({
             grant,
-            submissions: [],
+            submissions: [] as SubmissionModel[],
           }));
 
           return {
@@ -209,18 +233,13 @@ export default class GrantsIndexController extends Controller {
             meta,
           };
         })
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .then(async (results: any) => {
+        .then(async (results: GrantsIndexModel) => {
           // TODO: (see todo in the route)
           // Refactor to not reload submissions each refresh
-          // Only need to update the mapping (counts)
           const subs = await this.store.query('submission', submissionQuery);
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          subs.forEach((submission: any) => {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            submission.grants.forEach((grant: any) => {
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              const match = results.grantMap.find((res: any) => res.grant.id === grant.id);
+          subs.forEach((submission: SubmissionModel) => {
+            submission.grants.forEach((grant: GrantModel) => {
+              const match = results.grantMap.find((res: GrantMapEntry) => res.grant.id === grant.id);
               if (match) {
                 match.submissions.push(submission);
               }
@@ -228,8 +247,7 @@ export default class GrantsIndexController extends Controller {
           });
           return results;
         })
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .then((results: any) => {
+        .then((results: GrantsIndexModel) => {
           this.queuedModel = results;
         })
     );

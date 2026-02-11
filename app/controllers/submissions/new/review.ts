@@ -6,18 +6,18 @@ import { tracked } from '@glimmer/tracking';
 import { service } from '@ember/service';
 import type Workflow from 'pass-ui/services/workflow';
 import type SubmissionsNew from 'pass-ui/controllers/submissions/new';
+import type SubmissionModel from 'pass-ui/models/submission';
+import type PublicationModel from 'pass-ui/models/publication';
+import type SubmissionEventModel from 'pass-ui/models/submission-event';
 
 export default class SubmissionsNewReview extends Controller {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare router: any;
   @service declare workflow: Workflow;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @alias('model.newSubmission') submission: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @alias('model.publication') publication: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @alias('model.submissionEvents') submissionEvents: any;
+  @alias('model.newSubmission') submission!: SubmissionModel;
+  @alias('model.publication') publication!: PublicationModel;
+  @alias('model.submissionEvents') submissionEvents!: SubmissionEventModel[];
 
   @controller('submissions.new') declare parent: SubmissionsNew;
 
