@@ -7,8 +7,6 @@ import { hash } from '@ember/helper';
 import { on } from '@ember/modifier';
 import didInsert from '@ember/render-modifiers/modifiers/did-insert';
 import didUpdate from '@ember/render-modifiers/modifiers/did-update';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import ModelsTable from 'ember-models-table/components/models-table';
 import SubmissionFundingTable from 'pass-ui/components/submission-funding-table';
 import GrantLinkNewtabCell from 'pass-ui/components/grant-link-newtab-cell';
@@ -55,7 +53,7 @@ export default class WorkflowGrants extends Component<WorkflowGrantsSignature> {
   @tracked pageNumber = 1;
   @tracked pageCount = 0;
   @tracked pageSize = 10;
-  @tracked submitterGrants: GrantModel[] | null = null;
+  @tracked submitterGrants: GrantModel[] = [];
   @tracked totalGrants = 0;
   @tracked _selectedGrants: GrantModel[] = [];
   @tracked preLoadedGrant: GrantModel | null = this.args.preLoadedGrant;
@@ -126,7 +124,7 @@ export default class WorkflowGrants extends Component<WorkflowGrantsSignature> {
   }
 
   setup = task(async () => {
-    this.contactUrl = this.appStaticConfig?.config?.branding?.pages?.contactUrl ?? null;
+    this.contactUrl = this.appStaticConfig?.config?.branding?.pages?.['contactUrl'] ?? null;
 
     const submitter = await this.args.submission.submitter;
     if (submitter?.id) {
@@ -173,7 +171,7 @@ export default class WorkflowGrants extends Component<WorkflowGrantsSignature> {
 
       grant.get('primaryFunder.policy');
       this.addGrant(grant);
-      document.querySelectorAll('select')[0].selectedIndex = 0;
+      document.querySelectorAll('select')[0]!.selectedIndex = 0;
     }
   });
 
@@ -250,11 +248,11 @@ export default class WorkflowGrants extends Component<WorkflowGrantsSignature> {
         .filter((grant: GrantModel) => !selectedItems.includes(grant))
         .forEach((grant: GrantModel) => this.removeGrant(grant));
     } else if (curLen === 1 && prevLen === 1) {
-      this.addGrant(selectedItems[0]);
+      this.addGrant(selectedItems[0]!);
 
       return;
     } else if (curLen === 0 && prevLen === 1) {
-      this.removeGrant(selectedItems[0]);
+      this.removeGrant(selectedItems[0]!);
     }
   }
 

@@ -5,7 +5,7 @@ import type RepositoryModel from 'pass-ui/models/repository';
 
 interface RepoInfo {
   repository: RepositoryModel;
-  funders: string[];
+  funders?: string;
 }
 
 interface ChoiceRepositoriesCardSignature {

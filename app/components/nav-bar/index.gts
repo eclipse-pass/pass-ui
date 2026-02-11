@@ -27,8 +27,9 @@ export default class NavBar extends Component<NavBarSignature> {
   @tracked faqUrl: string | null = null;
   @tracked isUserMenuOpen = false;
 
-  constructor(...args: any[]) {
-    super(...args);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  constructor(owner: any, args: NavBarSignature['Args']) {
+    super(owner, args);
     this._setupAppStaticConfig.perform();
   }
 
@@ -52,7 +53,7 @@ export default class NavBar extends Component<NavBarSignature> {
         Accept: 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN\=([^;]*)/)!['1'],
+        'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN\=([^;]*)/)![1]!,
       },
     });
     await this.session.invalidate();
@@ -60,10 +61,10 @@ export default class NavBar extends Component<NavBarSignature> {
 
   _setupAppStaticConfig = task(async () => {
     const config = await this.appStaticConfig.config;
-    if (config && config.branding.showPagesNavBar) {
-      this.aboutUrl = config.branding.pages.aboutUrl;
-      this.contactUrl = config.branding.pages.contactUrl;
-      this.faqUrl = config.branding.pages.faqUrl;
+    if (config && config.branding['showPagesNavBar']) {
+      this.aboutUrl = config.branding?.pages?.['aboutUrl'] ?? null;
+      this.contactUrl = config.branding?.pages?.['contactUrl'] ?? null;
+      this.faqUrl = config.branding?.pages?.['faqUrl'] ?? null;
     }
   });
 

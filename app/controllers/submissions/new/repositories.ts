@@ -13,7 +13,21 @@ import type RepositoryModel from 'pass-ui/models/repository';
 import type PublicationModel from 'pass-ui/models/publication';
 import type SubmissionEventModel from 'pass-ui/models/submission-event';
 
+interface RepositoryWithFunders {
+  repository: RepositoryModel;
+  funders: string;
+}
+
+interface RepositoriesControllerModel {
+  newSubmission: SubmissionModel;
+  requiredRepositories: RepositoryWithFunders[];
+  optionalRepositories: RepositoryWithFunders[];
+  choiceRepositories: RepositoryWithFunders[][];
+}
+
 export default class SubmissionsNewRepositories extends Controller {
+  declare model: RepositoriesControllerModel;
+
   @service declare workflow: Workflow;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare router: any;

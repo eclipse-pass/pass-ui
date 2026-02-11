@@ -1,7 +1,5 @@
 import type { TemplateOnlyComponent } from '@ember/component/template-only';
 import { hash } from '@ember/helper';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import ModelsTableServerPaginated from 'ember-models-table/components/models-table-server-paginated';
 import GrantLinkCell from 'pass-ui/components/grant-link-cell';
 import PiListCell from 'pass-ui/components/pi-list-cell';

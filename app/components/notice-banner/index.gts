@@ -4,13 +4,20 @@ import { tracked } from '@glimmer/tracking';
 import { task } from 'ember-concurrency';
 import type AppStaticConfigService from 'pass-ui/services/app-static-config';
 
-export default class NoticeBanner extends Component {
+interface NoticeBannerSignature {
+  Args: {
+    contactUrl?: string | null;
+  };
+}
+
+export default class NoticeBanner extends Component<NoticeBannerSignature> {
   @service declare appStaticConfig: AppStaticConfigService;
   @tracked contactUrl: string | null = null;
   @tracked instructionsUrl: string | null = null;
 
-  constructor(...args: any[]) {
-    super(...args);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  constructor(owner: any, args: NoticeBannerSignature['Args']) {
+    super(owner, args);
     this._setupAppStaticConfig.perform();
   }
 
@@ -21,8 +28,8 @@ export default class NoticeBanner extends Component {
   _setupAppStaticConfig = task(async () => {
     const config = await this.appStaticConfig.config;
     if (config) {
-      this.contactUrl = config.branding.pages.contactUrl;
-      this.instructionsUrl = config.branding.pages.instructionsUrl;
+      this.contactUrl = config.branding?.pages?.['contactUrl'] ?? null;
+      this.instructionsUrl = config.branding?.pages?.['instructionsUrl'] ?? null;
     }
   });
 

@@ -66,6 +66,7 @@ interface Signature {
   <div id='submission-details-body' class='mb-3 row'>
     <div class='col-12'>
       <div class='list-group'>
+        {{! @glint-expect-error - href attribute on div element, legacy HTML }}
         <div href='#' class='list-group-item flex-column align-items-start'>
           <div class='submission-details-title border-bottom d-flex flex-column w-100'>
             <div class='d-flex w-100 justify-content-between'>

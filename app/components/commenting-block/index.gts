@@ -1,5 +1,14 @@
+import type { TemplateOnlyComponent } from '@ember/component/template-only';
+import type SubmissionEventModel from 'pass-ui/models/submission-event';
 import formatDate from 'pass-ui/helpers/format-date';
 
+interface CommentingBlockSignature {
+  Args: {
+    submissionEvents: SubmissionEventModel[];
+  };
+}
+
+// prettier-ignore
 <template>
   {{#if @submissionEvents}}
     {{#each @submissionEvents as |submissionEvent|}}
@@ -26,4 +35,4 @@ import formatDate from 'pass-ui/helpers/format-date';
       {{/if}}
     {{/each}}
   {{/if}}
-</template>
+</template> satisfies TemplateOnlyComponent<CommentingBlockSignature>

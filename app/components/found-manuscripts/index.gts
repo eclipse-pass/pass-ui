@@ -31,8 +31,9 @@ export default class FoundManuscriptsComponent extends Component<FoundManuscript
   @tracked selectedManuscript: ManuscriptInfo | null = null;
   @tracked contactUrl: string | undefined;
 
-  constructor(...args: any[]) {
-    super(...args);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  constructor(owner: any, args: FoundManuscriptsSignature['Args']) {
+    super(owner, args);
     this.getAppConfig.perform();
     this.setupManuscripts.perform();
   }
@@ -48,7 +49,7 @@ export default class FoundManuscriptsComponent extends Component<FoundManuscript
   }
 
   getAppConfig = task(async () => {
-    this.contactUrl = await this.appStaticConfig.config?.branding?.pages?.contactUrl;
+    this.contactUrl = this.appStaticConfig.config?.branding?.pages?.['contactUrl'];
   });
 
   setupManuscripts = task(async () => {

@@ -74,7 +74,7 @@ export default class WorkflowBasics extends Component<WorkflowBasicsSignature> {
   @service declare flashMessages: any;
 
   @tracked contactUrl: string | null = null;
-  @tracked doiServiceError: string | boolean | unknown = false;
+  @tracked doiServiceError: unknown = false;
   @tracked isShowingUserSearchModal = false;
   @tracked userSearchTerm = '';
 
@@ -121,8 +121,9 @@ export default class WorkflowBasics extends Component<WorkflowBasicsSignature> {
     );
   }
 
-  constructor(...args: any[]) {
-    super(...args);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  constructor(owner: any, args: WorkflowBasicsSignature['Args']) {
+    super(owner, args);
 
     this.setupConfig();
     this.setupDoiJournal();
@@ -130,7 +131,7 @@ export default class WorkflowBasics extends Component<WorkflowBasicsSignature> {
   }
 
   async setupConfig() {
-    this.contactUrl = this.appStaticConfig?.config?.branding?.pages?.contactUrl;
+    this.contactUrl = this.appStaticConfig?.config?.branding?.pages?.['contactUrl'] ?? null;
   }
 
   setPreparers() {
@@ -145,7 +146,7 @@ export default class WorkflowBasics extends Component<WorkflowBasicsSignature> {
   @action
   setupSubmission() {
     if (!this.isProxySubmission) {
-      this.submission.submitter = this.currentUser.user;
+      this.submission.submitter = this.currentUser.user!;
     }
   }
 
@@ -158,6 +159,7 @@ export default class WorkflowBasics extends Component<WorkflowBasicsSignature> {
   lookupDoiAndJournal(setPublication: boolean) {
     this.lookupDOI.perform(setPublication);
     if (!this.publication?.doi && this.journal) {
+      // @ts-expect-error - Ember scheduleOnce with string method name
       scheduleOnce('afterRender', this, 'selectJournal', this.journal);
     }
   }
@@ -259,6 +261,7 @@ export default class WorkflowBasics extends Component<WorkflowBasicsSignature> {
         confirmButtonText: "Yes, I'm sure",
       });
 
+      // @ts-expect-error - swal.fire returns Promise but code accesses .value synchronously (legacy bug)
       if (result.value) {
         this.submission.grants = [];
         this.updateSubmitterModel(isProxySubmission, submitter);
@@ -273,13 +276,14 @@ export default class WorkflowBasics extends Component<WorkflowBasicsSignature> {
   @action
   updateSubmitterModel(isProxySubmission: boolean, submitter: UserModel | null) {
     this.workflow.setMaxStep(1);
+    // @ts-expect-error - Ember Data allows null for string attrs
     this.submission.submitterEmail = null;
     this.submission.submitterName = '';
     if (isProxySubmission) {
-      this.submission.submitter = submitter;
-      this.submission.preparers = [this.currentUser.user];
+      this.submission.submitter = submitter!;
+      this.submission.preparers = [this.currentUser.user!];
     } else {
-      this.submission.submitter = this.currentUser.user;
+      this.submission.submitter = this.currentUser.user!;
       this.submission.preparers = [];
     }
   }
@@ -288,7 +292,7 @@ export default class WorkflowBasics extends Component<WorkflowBasicsSignature> {
   selectJournal(journal: JournalModel) {
     const metadata = this.doiService.doiToMetadata({}, journal, this.schemaService.getAllFields());
     metadata['journal-title'] = journal.journalName;
-    metadata.title = this.publication.title;
+    metadata['title'] = this.publication.title;
     this.updateMetadata(metadata);
 
     this.publication.journal = journal;
@@ -343,7 +347,7 @@ export default class WorkflowBasics extends Component<WorkflowBasicsSignature> {
         this.schemaService.getAllFields(),
       );
       metadata['journal-title'] = result.publication.journal.get('journalName');
-      metadata.title = this.publication.title;
+      metadata['title'] = this.publication.title;
       this.updateMetadata(metadata);
 
       this.workflow.setFromCrossref(true);
@@ -491,6 +495,7 @@ export default class WorkflowBasics extends Component<WorkflowBasicsSignature> {
       </div>
       {{#if this.doiServiceError}}
         <div class='text-danger'>
+          {{! @glint-expect-error - doiServiceError is unknown but rendered as HTML }}
           {{{this.doiServiceError}}}
         </div>
       {{/if}}

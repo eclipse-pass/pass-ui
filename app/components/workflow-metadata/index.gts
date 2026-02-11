@@ -56,8 +56,9 @@ export default class WorkflowMetadata extends Component<WorkflowMetadataSignatur
   @tracked missingRequiredJournal = false;
   @tracked surveyInstance: SurveyInstance | null = null;
 
-  constructor(...args: any[]) {
-    super(...args);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  constructor(owner: any, args: WorkflowMetadataSignature['Args']) {
+    super(owner, args);
 
     try {
       this.metadata = JSON.parse(this.args.submission.metadata);
@@ -95,7 +96,7 @@ export default class WorkflowMetadata extends Component<WorkflowMetadataSignatur
   next(newMetadata: Record<string, unknown>) {
     const submission = this.args.submission;
 
-    newMetadata.agent_information = this.getBrowserInfo();
+    newMetadata['agent_information'] = this.getBrowserInfo();
     submission.metadata = JSON.stringify(newMetadata);
 
     this.args.next();
@@ -116,8 +117,8 @@ export default class WorkflowMetadata extends Component<WorkflowMetadataSignatur
   getBrowserInfo() {
     const ua = navigator.userAgent;
     let tem;
-    let M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
-    if (/trident/i.test(M[1])) {
+    let M: string[] = (ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || []) as string[];
+    if (/trident/i.test(M[1]!)) {
       tem = /\brv[ :]+(\d+)/g.exec(ua) || [];
       return { name: 'IE ', version: tem[1] || '' };
     }
@@ -127,10 +128,10 @@ export default class WorkflowMetadata extends Component<WorkflowMetadataSignatur
         return { name: 'Opera', version: tem[1] };
       }
     }
-    M = M[2] ? [M[1], M[2]] : [navigator.appName, navigator.appVersion, '-?'];
+    M = M[2] ? [M[1]!, M[2]!] : [navigator.appName, navigator.appVersion, '-?'];
     //  eslint-disable-next-line
     if ((tem = ua.match(/version\/(\d+)/i)) != null) {
-      M.splice(1, 1, tem[1]);
+      M.splice(1, 1, tem[1]!);
     }
     return {
       name: M[0],

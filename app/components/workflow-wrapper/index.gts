@@ -10,10 +10,12 @@ const and = (...args: unknown[]) => args.every(Boolean);
 
 interface WorkflowWrapperSignature {
   Args: {
+    isProxySubmission?: boolean;
     loadTab: (gotoRoute: string) => void;
-    publication: PublicationModel;
+    publication?: PublicationModel;
     submission: SubmissionModel;
     submissionEvents: SubmissionEventModel[];
+    title?: string;
     updateCovidSubmission: () => void;
   };
   Blocks: {

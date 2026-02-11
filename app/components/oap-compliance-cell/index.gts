@@ -1,9 +1,11 @@
 import Component from '@glimmer/component';
 import type GrantModel from 'pass-ui/models/grant';
+import type SubmissionModel from 'pass-ui/models/submission';
+import type DepositModel from 'pass-ui/models/deposit';
 
 interface OapComplianceCellSignature {
   Args: {
-    grant: GrantModel;
+    grant: GrantModel & { submissions?: (SubmissionModel & { deposits?: DepositModel[] })[] };
   };
 }
 

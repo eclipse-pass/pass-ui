@@ -1,8 +1,6 @@
 import type { TemplateOnlyComponent } from '@ember/component/template-only';
 import { LinkTo } from '@ember/routing';
 import { hash } from '@ember/helper';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import ModelsTableServerPaginated from 'ember-models-table/components/models-table-server-paginated';
 import formatDate from 'pass-ui/helpers/format-date';
 import SubmissionsArticleCell from 'pass-ui/components/submissions-article-cell';

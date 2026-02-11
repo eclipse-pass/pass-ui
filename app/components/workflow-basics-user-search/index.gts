@@ -51,8 +51,9 @@ export default class WorkflowBasicsUserSearch extends Component<WorkflowBasicsUs
     return users.filter((u: UserModel) => u.id !== this.currentUser.user?.id);
   }
 
-  constructor(...args: any[]) {
-    super(...args);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  constructor(owner: any, args: WorkflowBasicsUserSearchSignature['Args']) {
+    super(owner, args);
 
     if (this.args.searchInput) {
       this.searchForUsers.perform(1);

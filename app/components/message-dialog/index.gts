@@ -8,7 +8,16 @@ import { Textarea } from '@ember/component';
 // @ts-ignore
 import ModalDialog from 'ember-modal-dialog/components/modal-dialog';
 
-export default class MessageDialog extends Component {
+interface MessageDialogSignature {
+  Args: {
+    show?: boolean;
+    to?: string;
+    subject?: string;
+    message?: string;
+  };
+}
+
+export default class MessageDialog extends Component<MessageDialogSignature> {
   @tracked show = false;
   @tracked to = '';
   @tracked subject = '';

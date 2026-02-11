@@ -25,6 +25,13 @@ import type PublicationModel from 'pass-ui/models/publication';
 import type RepositoryModel from 'pass-ui/models/repository';
 import type { WorkflowFile } from 'pass-ui/services/workflow';
 
+interface ReviewFile extends WorkflowFile {
+  submission: { id: string };
+  mimeType: string;
+  fileRole: string;
+  description: string;
+}
+
 const eq = (a: unknown, b: unknown) => a === b;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const perform =
@@ -64,8 +71,10 @@ export default class WorkflowReview extends Component<WorkflowReviewSignature> {
   @tracked hasVisitedWeblink = false;
   @tracked repositories: RepositoryModel[] = this.args.submission.repositories;
 
-  get parsedFiles() {
-    return this.workflow.getFiles().filter((file: WorkflowFile) => file.submission.id === this.args.submission.id);
+  get parsedFiles(): ReviewFile[] {
+    return this.workflow
+      .getFiles()
+      .filter((file: WorkflowFile) => (file as ReviewFile).submission?.id === this.args.submission.id) as ReviewFile[];
   }
 
   get weblinkRepos() {
@@ -186,6 +195,7 @@ export default class WorkflowReview extends Component<WorkflowReviewSignature> {
     const result: { value: (string | undefined)[] } = { value: [] };
     for (const repoStep of reposProgressSteps) {
       const repoState = reposWithAgreementText[repoStep];
+      if (!repoState) continue;
       const repoResult = await Queue.fire({
         currentProgressStep: repoStep,
         title: repoState.title,
@@ -306,6 +316,7 @@ export default class WorkflowReview extends Component<WorkflowReviewSignature> {
       {{/each}}
       <div class='col-md-12'>
         <div class='list-group'>
+          {{! @glint-expect-error - href attribute on div element, legacy HTML }}
           <div href='#' class='list-group-item flex-column align-items-start'>
             <div class='review-step-title d-flex flex-column w-100 border-bottom pb-2'>
               <div class='d-flex flex-row w-100 justify-content-between'>
@@ -313,7 +324,10 @@ export default class WorkflowReview extends Component<WorkflowReviewSignature> {
                   {{@publication.title}}
                 </h4>
                 <small class='text-muted'>
-                  {{@submission.dateSubmitted.date-time}}<br />{{@submission.dateCreated.date-time}}
+                  {{! @glint-ignore - dateSubmitted is a legacy template property }}
+                  {{@submission.dateSubmitted.date-time}}<br />
+                  {{! @glint-ignore - dateCreated is a legacy template property }}
+                  {{@submission.dateCreated.date-time}}
                 </small>
               </div>
               <p class='mb-1' data-test-workflow-review-doi>
@@ -485,6 +499,7 @@ export default class WorkflowReview extends Component<WorkflowReviewSignature> {
                         </p>
                       {{/unless}}
                       <hr />
+                      {{! @glint-expect-error - submissionEvents is _submissionEvents on model, legacy property access }}
                       <CommentingBlock @submissionEvents={{@submission.submissionEvents}} />
                       <Textarea
                         placeholder='Add comment'

@@ -1,5 +1,14 @@
+import type { TemplateOnlyComponent } from '@ember/component/template-only';
+
 const eq = (a: unknown, b: unknown) => a === b;
 
+interface SubmissionStatusSignature {
+  Args: {
+    submissionStatus: string;
+  };
+}
+
+// prettier-ignore
 <template>
   <span class='status {{@submissionStatus}} pr-1' data-test-submission-detail-status>
     {{#if (eq @submissionStatus 'manuscript-required')}}
@@ -69,4 +78,4 @@ const eq = (a: unknown, b: unknown) => a === b;
       </span>
     {{/if}}
   </span>
-</template>
+</template> satisfies TemplateOnlyComponent<SubmissionStatusSignature>

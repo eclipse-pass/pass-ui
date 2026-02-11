@@ -29,8 +29,9 @@ class VisitableRepo {
 export default class ExternalRepoReviewComponent extends Component<ExternalRepoReviewSignature> {
   @tracked repoList: VisitableRepo[] = [];
 
-  constructor(...args: any[]) {
-    super(...args);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  constructor(owner: any, args: ExternalRepoReviewSignature['Args']) {
+    super(owner, args);
     this.repoList = this.args.repos.map((repo: RepositoryModel) => new VisitableRepo(repo, false));
   }
 
@@ -44,7 +45,9 @@ export default class ExternalRepoReviewComponent extends Component<ExternalRepoR
 
   handleRepo(repo: RepositoryModel) {
     const index = this.repoList.findIndex((entry) => repo.id === entry.repo.id);
-    this.repoList[index].visited = true;
+    if (this.repoList[index]) {
+      this.repoList[index].visited = true;
+    }
 
     if (this.allReposVisited) {
       this.args.onAllExternalReposClicked();

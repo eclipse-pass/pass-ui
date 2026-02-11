@@ -24,6 +24,8 @@ export default class ApplicationController extends Controller {
   // @ts-expect-error TS2729 - @service creates a prototype getter, available during field init
   @tracked currentRouteName: string = this.router.currentRouteName;
 
+  declare institution: string;
+  declare assetsUri: string;
   declare showNoticeBanner: boolean;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

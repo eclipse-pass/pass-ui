@@ -1,7 +1,18 @@
+import type { TemplateOnlyComponent } from '@ember/component/template-only';
 import { fn } from '@ember/helper';
 import { on } from '@ember/modifier';
 import { LinkTo } from '@ember/routing';
 import formatDate from 'pass-ui/helpers/format-date';
+import type GrantModel from 'pass-ui/models/grant';
+
+interface Signature {
+  Args: {
+    grants: GrantModel[];
+    remove?: (grant: GrantModel) => void;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    setup?: any;
+  };
+}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const queue =
@@ -13,6 +24,7 @@ const queue =
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const perform = (task: any) => () => task.perform();
 
+// prettier-ignore
 <template>
   <table class='table' data-test-submission-funding-table>
     <thead>
@@ -51,4 +63,4 @@ const perform = (task: any) => () => task.perform();
       {{/each}}
     </tbody>
   </table>
-</template>
+</template> satisfies TemplateOnlyComponent<Signature>

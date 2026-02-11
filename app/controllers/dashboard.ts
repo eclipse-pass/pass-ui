@@ -5,7 +5,13 @@ import { get } from '@ember/object';
 import { service } from '@ember/service';
 import type CurrentUserService from 'pass-ui/services/current-user';
 
+interface DashboardModel {
+  numberAwaitingApproval: number;
+  numberAwaitingEdits: number;
+}
+
 export default class DashboardController extends Controller {
+  declare model: DashboardModel;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare flashMessages: any;
   @service declare currentUser: CurrentUserService;

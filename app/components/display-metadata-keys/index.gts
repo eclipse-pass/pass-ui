@@ -37,10 +37,12 @@ export default class DisplayMetadataKeys extends Component<DisplayMetadataKeysSi
             <span class='col-6'>
               <b>{{data.label}}</b>
               <ul>
+                {{! @glint-expect-error - data.value is unknown }}
                 {{#each data.value as |moo|}}
                   <li>
                     {{#each-in moo as |key val|}}
                       <span class='col-6'>
+                        {{! @glint-ignore - key/val are unknown from each-in on unknown value }}
                         <b>{{key}}</b>
                         :
                         {{val}}
@@ -54,6 +56,7 @@ export default class DisplayMetadataKeys extends Component<DisplayMetadataKeysSi
             <span class='col-6'>
               <b>{{data.label}}</b>
               :
+              {{! @glint-expect-error - data.value is unknown }}
               {{{data.value}}}
             </span>
           {{/if}}

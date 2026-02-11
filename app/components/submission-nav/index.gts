@@ -23,12 +23,15 @@ interface SubmissionNavSignature {
 export default class SubmissionNav extends Component<SubmissionNavSignature> {
   @service declare workflow: Workflow;
 
-  @tracked step = this.workflow.getCurrentStep();
-  @tracked maxStep = this.workflow.getMaxStep();
+  @tracked step!: number;
+  @tracked maxStep!: number;
   @tracked covidSelectionBanner = false;
 
-  constructor(...args: any[]) {
-    super(...args);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  constructor(owner: any, args: SubmissionNavSignature['Args']) {
+    super(owner, args);
+    this.step = this.workflow.getCurrentStep();
+    this.maxStep = this.workflow.getMaxStep();
 
     if (ENV.environment === 'test') {
       this.covidSelectionBanner = true;

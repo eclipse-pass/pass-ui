@@ -1,3 +1,13 @@
+import type { TemplateOnlyComponent } from '@ember/component/template-only';
+import type RepositoryCopyModel from 'pass-ui/models/repository-copy';
+
+interface Signature {
+  Args: {
+    repoCopy?: RepositoryCopyModel;
+  };
+}
+
+// prettier-ignore
 <template>
   <div class='d-flex'>
     <strong class='col-5 px-0'>Manuscript ID(s):</strong>
@@ -19,4 +29,4 @@
       <span class='col nodata-placeholder'>Manuscript ID(s) are not yet assigned by the repository.</span>
     {{/if}}
   </div>
-</template>
+</template> satisfies TemplateOnlyComponent<Signature>

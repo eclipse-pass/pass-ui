@@ -2,8 +2,6 @@ import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { dropTask, timeout } from 'ember-concurrency';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import PowerSelect from 'ember-power-select/components/power-select';
 import type AutocompleteService from 'pass-ui/services/autocomplete';
 import type JournalModel from 'pass-ui/models/journal';
@@ -18,10 +16,13 @@ const perform =
 const DEBOUNCE_MS = 750;
 
 interface FindJournalSignature {
+  Element: HTMLDivElement;
   Args: {
     journalClass: string;
     value: JournalModel | null;
     selectJournal: (journal: JournalModel) => void;
+    id?: string;
+    isValidDOI?: boolean;
   };
 }
 

@@ -45,6 +45,7 @@ interface Signature {
       </div>
     </header>
     {{#if @controller.showNoticeBanner}}
+      {{! @glint-expect-error - contactUrl passed as HTML attribute }}
       <NoticeBanner contactUrl={{@controller.contactUrl}} />
     {{/if}}
     <div id='navbar-container'>

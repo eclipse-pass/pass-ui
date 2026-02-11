@@ -7,9 +7,9 @@ interface RepositoryCardSignature {
   Args: {
     repository: RepositoryModel;
     type: string;
-    toggleRepository: (repo: RepositoryModel, selected: boolean, type: string) => void;
+    toggleRepository?: (repo: RepositoryModel, selected: boolean, type: string) => void;
     choice?: string;
-    funders?: string[];
+    funders?: string;
   };
   Blocks: {
     default: [];
@@ -20,7 +20,7 @@ export default class RepositoryCard extends Component<RepositoryCardSignature> {
   @action
   toggle(event: Event) {
     const selected = (event.target as HTMLInputElement).checked;
-    this.args.toggleRepository(this.args.repository, selected, this.args.type);
+    this.args.toggleRepository!(this.args.repository, selected, this.args.type);
   }
 
   <template>

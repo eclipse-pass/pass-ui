@@ -13,10 +13,18 @@ import swal from 'sweetalert2/dist/sweetalert2.js';
 import fileQueue from 'ember-file-upload/helpers/file-queue';
 import FoundManuscripts from 'pass-ui/components/found-manuscripts';
 import type Workflow from 'pass-ui/services/workflow';
+import type { WorkflowFile } from 'pass-ui/services/workflow';
 import type SubmissionHandlerService from 'pass-ui/services/submission-handler';
 import type CurrentUserService from 'pass-ui/services/current-user';
 import type SubmissionModel from 'pass-ui/models/submission';
 import type FileModel from 'pass-ui/models/file';
+
+interface WorkflowFileWithDetails extends WorkflowFile {
+  submission: { id: string };
+  fileRole: string;
+  uri: string;
+  description: string;
+}
 
 const eq = (a: unknown, b: unknown) => a === b;
 
@@ -41,14 +49,17 @@ export default class WorkflowFiles extends Component<WorkflowFilesSignature> {
 
   @tracked doi: string | null = null;
 
-  constructor(...args: any[]) {
-    super(...args);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  constructor(owner: any, args: WorkflowFilesSignature['Args']) {
+    super(owner, args);
     this.doi = this.args.doi;
   }
 
   get hasFiles(): boolean {
     return (
-      this.workflow.getFiles().filter((file: FileModel) => file.submission.id === this.args.submission.id).length > 0
+      this.workflow
+        .getFiles()
+        .filter((file) => (file as WorkflowFileWithDetails).submission?.id === this.args.submission.id).length > 0
     );
   }
 
@@ -56,18 +67,20 @@ export default class WorkflowFiles extends Component<WorkflowFilesSignature> {
     return !!this.manuscript;
   }
 
-  get manuscript(): FileModel | undefined {
+  get manuscript(): WorkflowFileWithDetails | undefined {
     return this.workflow
       .getFiles()
-      .filter((file: FileModel) => file.submission.id === this.args.submission.id)
-      .find((file: FileModel) => file.fileRole === 'manuscript');
+      .filter((file) => (file as WorkflowFileWithDetails).submission?.id === this.args.submission.id)
+      .find((file) => (file as WorkflowFileWithDetails).fileRole === 'manuscript') as
+      | WorkflowFileWithDetails
+      | undefined;
   }
 
-  get supplementalFiles() {
+  get supplementalFiles(): WorkflowFileWithDetails[] {
     return this.workflow
       .getFiles()
-      .filter((file: FileModel) => file.submission.id === this.args.submission.id)
-      .filter((file: FileModel) => file.fileRole !== 'manuscript');
+      .filter((file) => (file as WorkflowFileWithDetails).submission?.id === this.args.submission.id)
+      .filter((file) => (file as WorkflowFileWithDetails).fileRole !== 'manuscript') as WorkflowFileWithDetails[];
   }
 
   @action
@@ -145,7 +158,7 @@ export default class WorkflowFiles extends Component<WorkflowFilesSignature> {
       return;
     }
 
-    const deletedFileId = file.id;
+    const deletedFileId = file.id!;
     return await file
       .destroyRecord()
       .then(() => {

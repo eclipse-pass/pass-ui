@@ -11,8 +11,11 @@ import type SubmissionModel from 'pass-ui/models/submission';
 import type PublicationModel from 'pass-ui/models/publication';
 import type SubmissionEventModel from 'pass-ui/models/submission-event';
 import type JournalModel from 'pass-ui/models/journal';
+import type GrantModel from 'pass-ui/models/grant';
 
 export default class SubmissionsNewBasics extends Controller {
+  declare preLoadedGrant: GrantModel | null;
+
   @service declare workflow: Workflow;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare flashMessages: any;

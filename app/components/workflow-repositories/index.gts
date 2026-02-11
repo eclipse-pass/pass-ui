@@ -14,7 +14,7 @@ import type FunderModel from 'pass-ui/models/funder';
 
 interface RepoInfo {
   repository: RepositoryModel;
-  funders?: FunderModel[];
+  funders?: string;
 }
 
 interface WorkflowRepositoriesSignature {
@@ -60,27 +60,27 @@ export default class WorkflowRepositories extends Component<WorkflowRepositories
       const validRepos: string[] = [];
 
       req.forEach((repoInfo: RepoInfo) => {
-        validRepos.push(repoInfo.repository.id);
+        validRepos.push(repoInfo.repository.id!);
         this.addRepository(repoInfo.repository, false);
       });
 
       if (opt) {
         opt.forEach((optInfo: RepoInfo) => {
-          validRepos.push(optInfo.repository.id);
+          validRepos.push(optInfo.repository.id!);
           this.setSelected(optInfo.repository);
         });
       }
       if (choice) {
         choice.forEach((group: RepoInfo[]) => {
           group.forEach((repoInfo: RepoInfo) => {
-            validRepos.push(repoInfo.repository.id);
+            validRepos.push(repoInfo.repository.id!);
             this.setSelected(repoInfo.repository);
           });
         });
       }
 
       currentRepos
-        .filter((repo: RepositoryModel) => !validRepos.includes(repo.id))
+        .filter((repo: RepositoryModel) => !validRepos.includes(repo.id!))
         .forEach(
           (repo: RepositoryModel) =>
             (args.submission.repositories = currentRepos.filter((r: RepositoryModel) => r.name === repo.name)),

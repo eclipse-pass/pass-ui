@@ -79,7 +79,7 @@ export default class SubmissionRepoDetails extends Component<SubmissionRepoDetai
   }
 
   get isSubmitted(): boolean {
-    return this.args.submission?.submitted;
+    return this.args.submission?.submitted ?? false;
   }
 
   <template>

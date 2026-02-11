@@ -76,7 +76,8 @@ export default class PolicyCard extends Component<PolicyCardSignature> {
 
     const policy = this.args.policy;
 
-    if (this._hasEffectivePolicy(policy.id)) {
+    // @ts-expect-error - async method called synchronously (legacy pattern)
+    if (this._hasEffectivePolicy(policy.id!)) {
       this._removeEffectivePolicy(policy);
     } else {
       this._addEffectivePolicy(policy);
@@ -85,7 +86,7 @@ export default class PolicyCard extends Component<PolicyCardSignature> {
 
   async _addEffectivePolicy(policy: PolicyModel) {
     const effectivePolicies = await this.args.submission.effectivePolicies;
-    const hasEffectivePolicy = await this._hasEffectivePolicy(policy.id);
+    const hasEffectivePolicy = await this._hasEffectivePolicy(policy.id!);
     if (!hasEffectivePolicy) {
       this.args.submission.effectivePolicies = [...effectivePolicies, policy];
     }

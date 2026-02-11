@@ -30,9 +30,9 @@ export default class SubmissionActionCell extends Component<SubmissionActionCell
   @service declare flashMessages: any;
 
   get isPreparer(): boolean {
-    const userId = this.currentUser.user.id;
+    const userId = this.currentUser.user?.id;
     const preparers = this.args.record.preparers;
-    return preparers.map((x: UserModel) => x.id).includes(userId);
+    return preparers.map((x: UserModel) => x.id).includes(userId ?? null);
   }
 
   get isSubmitter(): boolean {

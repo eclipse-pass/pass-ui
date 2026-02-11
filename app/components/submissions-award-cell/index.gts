@@ -1,5 +1,15 @@
+import type { TemplateOnlyComponent } from '@ember/component/template-only';
 import { LinkTo } from '@ember/routing';
+import type SubmissionModel from 'pass-ui/models/submission';
 
+interface Signature {
+  Args: {
+    record: SubmissionModel;
+    column: { propertyName?: string; title?: string; className?: string };
+  };
+}
+
+// prettier-ignore
 <template>
   {{#each @record.grants as |grant index|}}
     {{#if index}}
@@ -10,4 +20,4 @@ import { LinkTo } from '@ember/routing';
   {{else}}
     Not Available
   {{/each}}
-</template>
+</template> satisfies TemplateOnlyComponent<Signature>
