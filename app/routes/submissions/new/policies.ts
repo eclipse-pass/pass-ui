@@ -31,7 +31,8 @@ export default class PoliciesRoute extends CheckSessionRoute {
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async model(): Promise<any> {
-    const parentModel = this.modelFor('submissions.new');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const parentModel = this.modelFor('submissions.new') as any;
     const submission = parentModel.newSubmission;
     /**
      * Remove current effectivePolicies from the submission because
@@ -39,7 +40,8 @@ export default class PoliciesRoute extends CheckSessionRoute {
      */
     this.clearEffectivePolicies(submission);
 
-    const policies = await get(this, 'policyService.getPolicies').perform(submission);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const policies = await (get(this, 'policyService.getPolicies') as any).perform(submission);
 
     return hash({
       repositories: parentModel.repositories,

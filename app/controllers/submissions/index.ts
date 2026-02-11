@@ -45,13 +45,13 @@ export default class SubmissionsIndex extends Controller {
   constructor(...args: any[]) {
     super(...args);
 
-    this.faqUrl = this.staticConfig.config?.branding?.pages?.faqUrl;
+    this.faqUrl = this.staticConfig.config?.branding?.pages?.['faqUrl'] ?? null;
   }
 
   // Columns displayed depend on the user role
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   get columns(): any[] {
-    if (this.currentUser.user.isAdmin) {
+    if (this.currentUser.user!.isAdmin) {
       return [
         {
           propertyName: 'publication',
@@ -89,7 +89,7 @@ export default class SubmissionsIndex extends Controller {
           component: 'submissionsRepoidCell',
         },
       ];
-    } else if (this.currentUser.user.isSubmitter) {
+    } else if (this.currentUser.user!.isSubmitter) {
       return [
         {
           propertyName: 'publicationTitle',
@@ -138,7 +138,7 @@ export default class SubmissionsIndex extends Controller {
       ];
     } else {
       console.warn(
-        `[Controller:Submissions/index] User has no known role (${this.currentUser.user.id}::${this.currentUser.user.roles})`,
+        `[Controller:Submissions/index] User has no known role (${this.currentUser.user!.id}::${this.currentUser.user!.roles})`,
       );
       return [];
     }

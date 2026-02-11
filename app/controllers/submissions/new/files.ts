@@ -8,6 +8,7 @@ import ENV from 'pass-ui/config/environment';
 import swal from 'sweetalert2/dist/sweetalert2.js';
 import type Workflow from 'pass-ui/services/workflow';
 import type SubmissionsNew from 'pass-ui/controllers/submissions/new';
+import type FileModel from 'pass-ui/models/file';
 
 export default class SubmissionsNewFiles extends Controller {
   @service declare workflow: Workflow;
@@ -63,7 +64,7 @@ export default class SubmissionsNewFiles extends Controller {
       const manuscriptFiles = this.workflow
         .getFiles()
         .filter((file) => file && get(file, 'fileRole') === 'manuscript')
-        .filter((file) => file.submission.id === this.submission.id);
+        .filter((file) => (file as unknown as FileModel).submission.id === this.submission.id);
 
       const submitter = await this.parent.userIsSubmitter();
 
@@ -100,7 +101,7 @@ export default class SubmissionsNewFiles extends Controller {
     const allFiles = this.workflow.getFiles();
     if (allFiles.length > 0) {
       allFiles.forEach((file) => {
-        file.save();
+        (file as unknown as FileModel).save();
       });
     }
   }

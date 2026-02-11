@@ -9,6 +9,12 @@ import swal from 'sweetalert2/dist/sweetalert2.js';
 import type CurrentUserService from 'pass-ui/services/current-user';
 import type SubmissionHandlerService from 'pass-ui/services/submission-handler';
 import type SearchHelperService from 'pass-ui/services/search-helper';
+import type SubmissionModel from 'pass-ui/models/submission';
+import type RepositoryModel from 'pass-ui/models/repository';
+import type DepositModel from 'pass-ui/models/deposit';
+import type RepositoryCopyModel from 'pass-ui/models/repository-copy';
+import type UserModel from 'pass-ui/models/user';
+import type FileModel from 'pass-ui/models/file';
 
 export default class SubmissionsDetail extends Controller {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -50,11 +56,11 @@ export default class SubmissionsDetail extends Controller {
   @computed('model.sub', 'model.sub.submitter.firstName')
   get displaySubmitterName(): string {
     if (get(this, 'model.sub.submitter.displayName')) {
-      return get(this, 'model.sub.submitter.displayName');
+      return get(this, 'model.sub.submitter.displayName') as string;
     } else if (get(this, 'model.sub.submitter.firstName')) {
-      return `${get(this, 'model.sub.submitter.firstName')} ${get(this, 'model.sub.submitter.lastName')}`;
+      return `${get(this, 'model.sub.submitter.firstName') as string} ${get(this, 'model.sub.submitter.lastName') as string}`;
     } else if (get(this, 'model.sub.submitterName')) {
-      return get(this, 'model.sub.submitterName');
+      return get(this, 'model.sub.submitterName') as string;
     }
 
     return '';
@@ -63,9 +69,9 @@ export default class SubmissionsDetail extends Controller {
   @computed('model.sub', 'model.sub.submitter.email')
   get displaySubmitterEmail(): string {
     if (get(this, 'model.sub.submitter.email')) {
-      return get(this, 'model.sub.submitter.email');
+      return get(this, 'model.sub.submitter.email') as string;
     } else if (get(this, 'model.sub.submitterEmail')) {
-      return get(this, 'model.sub.submitterEmailDisplay');
+      return get(this, 'model.sub.submitterEmailDisplay') as string;
     }
 
     return '';
@@ -76,7 +82,7 @@ export default class SubmissionsDetail extends Controller {
     let result: any[] = []; // eslint-disable-line @typescript-eslint/no-explicit-any
 
     const processExternalSubmissionsMetadata = () => {
-      result = this.externalSubmissionsMetadata;
+      result = this.externalSubmissionsMetadata as unknown as any[]; // eslint-disable-line @typescript-eslint/no-explicit-any
     };
 
     if (this.submitted) {
@@ -117,9 +123,8 @@ export default class SubmissionsDetail extends Controller {
 
     const repos = await this.model.sub.repositories;
     repos
-      .filter((repo: any) => repo._isWebLink) // eslint-disable-line @typescript-eslint/no-explicit-any
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .forEach((repo: any) => {
+      .filter((repo: RepositoryModel) => repo._isWebLink)
+      .forEach((repo: RepositoryModel) => {
         result.push({
           message: `Deposit into ${repo.name} was prompted`,
           name: repo.name,
@@ -151,7 +156,7 @@ export default class SubmissionsDetail extends Controller {
   get mustVisitWeblink(): boolean {
     const weblinkExists = this.weblinkRepos.length > 0;
     const isSubmitter = get(this, 'currentUser.user.id') === get(this, 'model.sub.submitter.id');
-    const isProxySubmission = get(this, 'model.sub.isProxySubmission');
+    const isProxySubmission = get(this, 'model.sub.isProxySubmission') as boolean;
     const isSubmitted = this.submitted;
 
     return weblinkExists && isSubmitter && isProxySubmission && !isSubmitted;
@@ -172,28 +177,26 @@ export default class SubmissionsDetail extends Controller {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   get repoMap(): any[] | null {
     let hasStuff = false;
-    const repos = get(this, 'model.repos');
-    const deps = get(this, 'model.deposits');
-    const repoCopies = get(this, 'model.repoCopies');
+    const repos = get(this, 'model.repos') as RepositoryModel[];
+    const deps = get(this, 'model.deposits') as DepositModel[];
+    const repoCopies = get(this, 'model.repoCopies') as RepositoryCopyModel[];
     if (!repos) {
       return null;
     }
     const map: Record<string, any> = {}; // eslint-disable-line @typescript-eslint/no-explicit-any
     repos
-      .filter((repo: any) => !repo._isWebLink) // eslint-disable-line @typescript-eslint/no-explicit-any
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .forEach((r: any) => {
-        map[r.id] = {
+      .filter((repo: RepositoryModel) => !repo._isWebLink)
+      .forEach((r: RepositoryModel) => {
+        map[r.id!] = {
           repo: r,
         };
       });
 
     if (deps) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      deps.forEach((deposit: any) => {
+      deps.forEach((deposit: DepositModel) => {
         hasStuff = true;
         const repo = get(deposit, 'repository');
-        const repoId = get(repo, 'id');
+        const repoId = get(repo, 'id') as string;
         if (!map.hasOwnProperty(repoId)) {
           map[repoId] = {
             repo,
@@ -209,10 +212,9 @@ export default class SubmissionsDetail extends Controller {
     }
     if (repoCopies) {
       hasStuff = true;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      repoCopies.forEach((rc: any) => {
+      repoCopies.forEach((rc: RepositoryCopyModel) => {
         const repo = rc.get('repository');
-        const repoId = get(repo, 'id');
+        const repoId = get(repo, 'id') as string;
         if (!map.hasOwnProperty(repoId)) {
           map[repoId] = {
             repo,
@@ -239,9 +241,9 @@ export default class SubmissionsDetail extends Controller {
   }
 
   get isPreparer(): boolean {
-    return get(this, 'model.sub.preparers')
-      .map((x: any) => x.id) // eslint-disable-line @typescript-eslint/no-explicit-any
-      .includes(get(this, 'currentUser.user.id'));
+    return (get(this, 'model.sub.preparers') as UserModel[])
+      .map((x: UserModel) => x.id)
+      .includes(get(this, 'currentUser.user.id') as string | null);
   }
 
   get submissionNeedsPreparer(): boolean {
@@ -281,12 +283,12 @@ export default class SubmissionsDetail extends Controller {
     swal.close();
 
     const win = window.open(repo.url, '_blank');
-    win.focus();
+    win!.focus();
   }
 
   @action
   async requestMoreChanges(): Promise<void> {
-    const sub = get(this, 'model.sub');
+    const sub = get(this, 'model.sub') as SubmissionModel;
     const message = this.message;
 
     if (!message) {
@@ -297,7 +299,7 @@ export default class SubmissionsDetail extends Controller {
       });
 
       await this.submissionHandler.requestSubmissionChanges(sub, message);
-      window.location.reload(true);
+      window.location.reload();
     }
   }
 
@@ -321,10 +323,10 @@ export default class SubmissionsDetail extends Controller {
 
     // Validate manuscript files
     let manuscriptFiles = this.submissionFiles
-      .filter((file: any) => file && file.get('fileRole') === 'manuscript') // eslint-disable-line @typescript-eslint/no-explicit-any
-      .filter((file: any) => file.submission.id === this.model.sub.id); // eslint-disable-line @typescript-eslint/no-explicit-any
+      .filter((file: FileModel) => file && file.get('fileRole') === 'manuscript')
+      .filter((file: FileModel) => file.submission.id === this.model.sub.id);
 
-    manuscriptFiles = [...new Map(manuscriptFiles.map((file: any) => [file.id, file])).values()]; // eslint-disable-line @typescript-eslint/no-explicit-any
+    manuscriptFiles = [...new Map(manuscriptFiles.map((file: FileModel) => [file.id, file])).values()];
 
     if (manuscriptFiles.length === 0) {
       swal.fire(
@@ -342,7 +344,7 @@ export default class SubmissionsDetail extends Controller {
       return;
     }
 
-    const repositories = get(this, 'model.repos');
+    const repositories = get(this, 'model.repos') as RepositoryModel[];
     if (repositories.length === 0) {
       // no repositories associated with the submission
       const result = await swal.fire({
@@ -361,9 +363,8 @@ export default class SubmissionsDetail extends Controller {
     }
 
     const reposWithAgreementText = repositories
-      .filter((repo: any) => !get(repo, '_isWebLink') && get(repo, 'agreementText')) // eslint-disable-line @typescript-eslint/no-explicit-any
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .map((repo: any) => ({
+      .filter((repo: RepositoryModel) => !get(repo, '_isWebLink') && get(repo, 'agreementText'))
+      .map((repo: RepositoryModel) => ({
         id: get(repo, 'name'),
         title: `Deposit requirements for ${get(repo, 'name')}`,
         html: `<textarea rows="16" cols="40" name="embargo" class="form-control disabled" disabled="" autocomplete="off">${get(
@@ -373,19 +374,17 @@ export default class SubmissionsDetail extends Controller {
       }));
 
     const reposWithoutAgreementText = repositories
-      .filter((repo: any) => !get(repo, '_isWebLink') && !get(repo, 'agreementText')) // eslint-disable-line @typescript-eslint/no-explicit-any
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .map((repo: any) => ({
+      .filter((repo: RepositoryModel) => !get(repo, '_isWebLink') && !get(repo, 'agreementText'))
+      .map((repo: RepositoryModel) => ({
         id: get(repo, 'name'),
       }));
 
     const reposWithWebLink = repositories
-      .filter((repo: any) => get(repo, '_isWebLink')) // eslint-disable-line @typescript-eslint/no-explicit-any
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .map((repo: any) => ({
+      .filter((repo: RepositoryModel) => get(repo, '_isWebLink'))
+      .map((repo: RepositoryModel) => ({
         id: get(repo, 'name'),
       }));
-    const reposProgressSteps = reposWithAgreementText.map((_repo: any, index: number) => index); // eslint-disable-line @typescript-eslint/no-explicit-any
+    const reposProgressSteps = reposWithAgreementText.map((_repo, index: number) => index);
     const Queue = swal.mixin({
       target: ENV.APP.rootElement,
       input: 'checkbox',
@@ -394,9 +393,9 @@ export default class SubmissionsDetail extends Controller {
       showCancelButton: true,
       progressSteps: reposProgressSteps.map((index) => '' + (index + 1)),
     });
-    const result = { value: [] };
+    const result: { value: any[] } = { value: [] }; // eslint-disable-line @typescript-eslint/no-explicit-any
     for (const repoStep of reposProgressSteps) {
-      const repoState = reposWithAgreementText[repoStep];
+      const repoState = reposWithAgreementText[repoStep]!;
       const repoResult = await Queue.fire({
         currentProgressStep: repoStep,
         title: repoState.title,
@@ -447,7 +446,7 @@ export default class SubmissionsDetail extends Controller {
         // Must keep web-link repos.
         this.set(
           'model.sub.repositories',
-          get(this, 'model.sub.repositories').filter((repo) => {
+          (get(this, 'model.sub.repositories') as RepositoryModel[]).filter((repo: RepositoryModel) => {
             if (get(repo, '_isWebLink')) {
               return true;
             }
@@ -461,7 +460,7 @@ export default class SubmissionsDetail extends Controller {
           }),
         );
 
-        const sub = get(this, 'model.sub');
+        const sub = get(this, 'model.sub') as SubmissionModel;
         const message = this.message;
         this.submissionHandler.approveSubmission(sub, message);
       }
@@ -495,7 +494,7 @@ export default class SubmissionsDetail extends Controller {
   @action
   async cancelSubmission() {
     const message = this.message;
-    const sub = get(this, 'model.sub');
+    const sub = get(this, 'model.sub') as SubmissionModel;
 
     if (!message) {
       swal.fire('Comment field empty', 'Please add a comment for your cancellation.', 'warning');
@@ -513,12 +512,12 @@ export default class SubmissionsDetail extends Controller {
     });
 
     if (result.value) {
-      document.querySelectorAll('.block-user-input').forEach((el) => {
+      document.querySelectorAll<HTMLElement>('.block-user-input').forEach((el: HTMLElement) => {
         el.style.display = 'block';
       });
 
       await this.submissionHandler.cancelSubmission(sub, message);
-      window.location.reload(true);
+      window.location.reload();
     }
   }
 

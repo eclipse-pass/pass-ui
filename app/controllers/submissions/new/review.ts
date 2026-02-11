@@ -23,14 +23,15 @@ export default class SubmissionsNewReview extends Controller {
 
   @computed('parent.waitingMessage')
   get waitingMessage(): string {
-    return get(this, 'parent.waitingMessage');
+    return get(this, 'parent.waitingMessage') as string;
   }
 
   @computed('parent', 'parent.uploading')
   get uploading(): boolean {
-    return get(this, 'parent.uploading');
+    return get(this, 'parent.uploading') as boolean;
   }
 
+  // @ts-expect-error TS2729 - @controller creates a prototype getter, available during field init
   @tracked comment: string = this.parent.comment;
 
   @action

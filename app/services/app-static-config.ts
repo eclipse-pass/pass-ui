@@ -5,6 +5,10 @@ import ENV from 'pass-ui/config/environment';
 export interface BrandingConfig {
   stylesheet?: string;
   overrides?: string;
+  logo?: string;
+  homepage?: string;
+  contactUrl?: string;
+  pages?: Record<string, string>;
   [key: string]: unknown;
 }
 
@@ -63,7 +67,7 @@ export default class AppStaticConfigService extends Service {
     }
 
     try {
-      const resp = await fetch(this.configUrl, {
+      const resp = await fetch(this.configUrl!, {
         headers: { 'Content-Type': 'application/json' },
       });
       const data = await resp.json();

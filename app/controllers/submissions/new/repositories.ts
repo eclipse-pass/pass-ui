@@ -25,6 +25,7 @@ export default class SubmissionsNewRepositories extends Controller {
 
   @controller('submissions.new') declare parent: SubmissionsNew;
 
+  // @ts-expect-error TS2729 - @service creates a prototype getter, available during field init
   @tracked maxStep: number = this.workflow.maxStep;
   @tracked loadingNext: boolean = false;
 

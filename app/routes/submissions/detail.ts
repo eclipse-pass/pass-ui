@@ -35,7 +35,8 @@ export default class DetailRoute extends CheckSessionRoute {
     const repos = await sub.get('repositories');
     const files = await this.store
       .query('file', fileForSubmissionQuery(params.submission_id))
-      .then((files) => [...files.slice()]);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .then((files: any) => [...files.slice()]);
 
     return hash({
       sub,

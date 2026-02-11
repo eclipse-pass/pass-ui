@@ -29,8 +29,9 @@ export default class CheckSessionRouteRoute extends Route {
   }
 
   @action
+  // @ts-expect-error async error handler override with different return type
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async error(error: any, transition: any) {
+  async error(error: any, transition: any): Promise<void> {
     console.error(error);
     const errorObject = error?.errors[0] || {};
 

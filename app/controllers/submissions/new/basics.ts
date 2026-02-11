@@ -61,7 +61,7 @@ export default class SubmissionsNewBasics extends Controller {
   @computed('submission.submitterEmailDisplay')
   get submitterEmailIsInvalid(): boolean {
     const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    const email = get(this, 'submission.submitterEmailDisplay');
+    const email = get(this, 'submission.submitterEmailDisplay') as string | undefined;
 
     return !get(this, 'submission.submitter.id') && (!email || !emailPattern.test(email));
   }

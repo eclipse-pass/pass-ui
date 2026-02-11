@@ -40,12 +40,12 @@ export default class OAManuscriptService extends Service {
       method: 'GET',
       headers: {
         Accept: 'application/json; charset=utf-8',
-        'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN\=([^;]*)/)['1'],
+        'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN\=([^;]*)/)!['1']!,
       },
     })
       .then((resp) => {
         if (resp.status !== 200) {
-          console.log(`%cFailed to lookup files for DOI (${doi}). Reason: "${resp.message}"`, 'color: red;');
+          console.log(`%cFailed to lookup files for DOI (${doi}). Reason: "${(resp as any).message}"`, 'color: red;'); // eslint-disable-line @typescript-eslint/no-explicit-any
           return [];
         }
         return resp.json();

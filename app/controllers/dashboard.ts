@@ -1,5 +1,7 @@
+/* eslint-disable ember/no-get */
 import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
+import { get } from '@ember/object';
 import { service } from '@ember/service';
 import type CurrentUserService from 'pass-ui/services/current-user';
 

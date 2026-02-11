@@ -16,7 +16,7 @@ export default class NewRoute extends CheckSessionRoute {
   @service('current-user')
   declare currentUser: CurrentUserService;
 
-  beforeModel(): void {
+  async beforeModel(): Promise<void> {
     this.workflow.resetWorkflow();
     this.router.transitionTo('submissions.new.basics');
   }
@@ -25,8 +25,9 @@ export default class NewRoute extends CheckSessionRoute {
   resetController(controller: any, isExiting: boolean, transition: any): void {
     // Explicitly clear the 'grant' query parameter when reloading this route
     if (isExiting) {
-      controller.queryParams.forEach((param) => controller.set(param, null));
-      this.store.peekAll('submission').forEach((s) => s.rollbackAttributes());
+      controller.queryParams.forEach((param: string) => controller.set(param, null));
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      this.store.peekAll('submission').forEach((s: any) => s.rollbackAttributes());
     }
   }
 
@@ -74,7 +75,8 @@ export default class NewRoute extends CheckSessionRoute {
 
       const files = await this.store
         .query('file', fileForSubmissionQuery(newSubmission.id))
-        .then((files) => [...files.slice()]);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .then((files: any) => [...files.slice()]);
       this.workflow.setFiles(files);
     } else {
       // Starting a new submission
@@ -85,7 +87,8 @@ export default class NewRoute extends CheckSessionRoute {
         submissionStatus: 'draft',
       });
 
-      const files = [];
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const files: any[] = [];
       this.workflow.setFiles(files);
 
       if (params.covid) {
@@ -114,7 +117,9 @@ export default class NewRoute extends CheckSessionRoute {
   setupController(controller: any, model: any): void {
     super.setupController(controller, model);
 
-    this.controller.preLoadedGrant = model.preLoadedGrant;
-    this.controllerFor('submissions.new.grants').preLoadedGrant = model.preLoadedGrant;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (this.controller as any).preLoadedGrant = model.preLoadedGrant;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (this.controllerFor('submissions.new.grants') as any).preLoadedGrant = model.preLoadedGrant;
   }
 }

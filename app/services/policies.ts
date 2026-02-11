@@ -34,13 +34,13 @@ export default class PoliciesService extends Service {
    * ]
    */
 
-  getPolicies = task(async (submission) => {
+  getPolicies = task(async (submission: SubmissionModel) => {
     const url = `${ENV.policyService.policyPath}?submission=${submission.id}`;
 
     const result = await fetch(url, {
       method: 'GET',
       headers: {
-        'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN\=([^;]*)/)['1'],
+        'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN\=([^;]*)/)!['1']!,
       },
     });
 
@@ -58,8 +58,8 @@ export default class PoliciesService extends Service {
     const data = await result.json();
 
     return await all(
-      data.map((policyInfo) =>
-        this.store.findRecord('policy', policyInfo.id).then((pol) => {
+      data.map((policyInfo: { id: string; type: string }) =>
+        this.store.findRecord('policy', policyInfo.id).then((pol: PolicyModel) => {
           pol.set('_type', policyInfo.type);
           return pol;
         }),
@@ -93,7 +93,7 @@ export default class PoliciesService extends Service {
     const response = await fetch(url, {
       method: 'GET',
       headers: {
-        'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN\=([^;]*)/)['1'],
+        'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN\=([^;]*)/)!['1']!,
       },
     });
 
@@ -107,15 +107,15 @@ export default class PoliciesService extends Service {
      */
     const dsl = await response.json();
 
-    const result = {};
+    const result: Partial<RepoDslResult> = {};
 
     if (dsl.hasOwnProperty('required')) {
       result.required = await this._resolveRepos.perform(dsl.required);
     }
 
     if (dsl.hasOwnProperty('one-of')) {
-      const choices = [];
-      dsl['one-of'].forEach((choiceGroup) => {
+      const choices: Promise<RepositoryModel[]>[] = [];
+      dsl['one-of'].forEach((choiceGroup: Array<{ url: string; selected: boolean }>) => {
         choices.push(this._resolveRepos.perform(choiceGroup));
       });
       result['one-of'] = await all(choices);

@@ -21,7 +21,7 @@ export default class GrantsIndexController extends Controller {
   constructor(...args: any[]) {
     super(...args);
 
-    this.faqUrl = this.staticConfig.config?.branding?.pages?.faqUrl;
+    this.faqUrl = this.staticConfig.config?.branding?.pages?.['faqUrl'] ?? null;
   }
 
   // TODO Reduce duplication in column definitions
@@ -132,6 +132,7 @@ export default class GrantsIndexController extends Controller {
   @tracked messageTo: string = '';
   @tracked messageSubject: string = '';
   @tracked messageText: string = '';
+  // @ts-expect-error TS2729 - @service creates a prototype getter, available during field init
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @tracked user: any = this.currentUser.user;
 

@@ -21,6 +21,7 @@ export default class ApplicationController extends Controller {
 
   @tracked wideRoutes: string[] = ['grants.index', 'grants.detail', 'submissions.index'];
   @tracked brand = get(this, 'staticConfig.branding');
+  // @ts-expect-error TS2729 - @service creates a prototype getter, available during field init
   @tracked currentRouteName: string = this.router.currentRouteName;
 
   declare showNoticeBanner: boolean;

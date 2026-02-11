@@ -27,22 +27,23 @@ export default class SubmissionHandlerService extends Service {
    * @param {EmberArray} grant list of Grants
    * @returns EmberArray with repositories
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getRepositoriesFromGrants(grants: GrantModel[]): RepositoryModel[] {
-    const result: RepositoryModel[][] = [];
+    const result: any[] = []; // eslint-disable-line @typescript-eslint/no-explicit-any
 
     grants.forEach((grant) => {
       const directRepos = grant.get('directFunder.policy.repositories');
       const primaryRepos = grant.get('primaryFunder.policy.repositories');
 
       if (isArray(directRepos)) {
-        result.push(directRepos.slice());
+        result.push((directRepos as any).slice()); // eslint-disable-line @typescript-eslint/no-explicit-any
       }
       if (isArray(primaryRepos)) {
-        result.push(primaryRepos.slice());
+        result.push((primaryRepos as any).slice()); // eslint-disable-line @typescript-eslint/no-explicit-any
       }
     });
 
-    return [...new Map(result.filter(Boolean).map((x) => [x.id, x])).values()];
+    return [...new Map(result.filter(Boolean).map((x: any) => [x.id, x])).values()]; // eslint-disable-line @typescript-eslint/no-explicit-any
   }
 
   /**
@@ -261,7 +262,7 @@ export default class SubmissionHandlerService extends Service {
 
     // Get submissions for this file
     const files = await this.store.query('file', fileForSubmissionQuery(submission.id));
-    await Promise.all(files.map((file) => file.destroyRecord()));
+    await Promise.all(files.map((file: any) => file.destroyRecord())); // eslint-disable-line @typescript-eslint/no-explicit-any
 
     const publication = await submission.publication;
 
@@ -283,7 +284,7 @@ export default class SubmissionHandlerService extends Service {
    * @param {*} visited whether or not the link has been visited
    */
   async setLinkVisited(visited: boolean) {
-    document.querySelectorAll('.fa-exclamation-triangle').forEach((el) => {
+    document.querySelectorAll<HTMLElement>('.fa-exclamation-triangle').forEach((el) => {
       el.style.color = visited ? '#b0b0b0' : '#DC3545';
       el.style.fontSize = visited ? '2em' : '2.2em';
     });

@@ -9,6 +9,7 @@ export default class ApplicationRoute extends CheckSessionRoute {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare router: any;
 
+  // @ts-expect-error legacy queryParams array format
   queryParams = ['userToken'];
 
   /* Used as route-action in templates */
@@ -27,6 +28,7 @@ export default class ApplicationRoute extends CheckSessionRoute {
    * If there is a userToken query parameter call the user service with that parameter
    * to ensure objects are updated in the backend before any queries are done.
    */
+  // @ts-expect-error beforeModel override uses transition parameter
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async beforeModel(transition: any) {
     const userToken = transition.to.queryParams.userToken;
@@ -36,7 +38,7 @@ export default class ApplicationRoute extends CheckSessionRoute {
     }
 
     if (userToken) {
-      return fetch(`/user/whoami?userToken=${encodeURIComponent(userToken)}`);
+      await fetch(`/user/whoami?userToken=${encodeURIComponent(userToken)}`);
     }
   }
 

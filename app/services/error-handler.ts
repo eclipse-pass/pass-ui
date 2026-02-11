@@ -68,7 +68,7 @@ export default class ErrorHandlerService extends Service {
       })
       .then((result) => {
         if (result.value) {
-          window.location.reload(true);
+          window.location.reload();
         }
       });
   }
@@ -98,7 +98,7 @@ export default class ErrorHandlerService extends Service {
       })
       .then((result) => {
         if (result.value) {
-          window.location.reload(true);
+          window.location.reload();
         }
       });
   }
@@ -115,7 +115,7 @@ export default class ErrorHandlerService extends Service {
       })
       .then((result) => {
         if (result.value) {
-          window.location.reload(true);
+          window.location.reload();
         }
       });
   }

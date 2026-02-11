@@ -16,6 +16,6 @@ export default class ThanksController extends Controller {
   constructor(...args: any[]) {
     super(...args);
 
-    this.userGuideUrl = this.staticConfig.config?.branding?.pages?.instructionsUrl;
+    this.userGuideUrl = this.staticConfig.config?.branding?.pages?.['instructionsUrl'] ?? null;
   }
 }

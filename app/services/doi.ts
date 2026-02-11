@@ -20,6 +20,14 @@ export interface DoiInfo {
   deposited?: string;
   created?: string;
   author?: Array<{ given: string; family: string; ORCID?: string }>;
+  issns?: Array<{ issn?: string; pubType?: string }>;
+  authors?: Array<{ author?: string; orcid?: string; given?: string; family?: string; ORCID?: string }>;
+  nlmta?: string;
+  issued?: { ['date-parts']?: unknown[] };
+  publicationDate?: string;
+  'journal-NLMTA-ID'?: string;
+  'container-title-short'?: string;
+  'journal-title-short'?: string;
 }
 
 export interface DoiResolution {
@@ -54,7 +62,7 @@ export default class DoiService extends Service {
     const rawResponse = await fetch(url, {
       headers: {
         Accept: 'application/json; charset=utf-8',
-        'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN\=([^;]*)/)['1'],
+        'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN\=([^;]*)/)!['1']!,
       },
     });
 
@@ -123,7 +131,7 @@ export default class DoiService extends Service {
       if (isArray(journal.get('issns'))) {
         journal.get('issns').forEach((s) => {
           const i = s.indexOf(':');
-          const value = {};
+          const value: { issn?: string; pubType?: string } = {};
 
           if (i == -1) {
             value.issn = s;
@@ -140,7 +148,7 @@ export default class DoiService extends Service {
           }
 
           if (value.issn.length > 0) {
-            doiCopy.issns.push(value);
+            doiCopy.issns!.push(value);
           }
         });
       }
@@ -155,7 +163,7 @@ export default class DoiService extends Service {
           author: `${author.given} ${author.family}`,
           orcid: author.ORCID,
         };
-        doiCopy.authors.push(Object.assign(a, author));
+        doiCopy.authors!.push(Object.assign(a, author));
       });
     }
 
@@ -170,7 +178,7 @@ export default class DoiService extends Service {
     }
     if (doiCopy.issued && doiCopy.issued['date-parts']) {
       const parts = doiCopy.issued['date-parts'];
-      doiCopy.publicationDate = new Date(parts).toISOString().replace(/T.*/, '');
+      doiCopy.publicationDate = new Date(parts as unknown as string).toISOString().replace(/T.*/, '');
     }
 
     doiCopy.doi = doiCopy.DOI;

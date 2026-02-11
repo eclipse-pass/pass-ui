@@ -5,6 +5,9 @@ import { hash } from 'rsvp';
 import CheckSessionRoute from '../../check-session-route';
 import type Workflow from 'pass-ui/services/workflow';
 import type PoliciesService from 'pass-ui/services/policies';
+import type GrantModel from 'pass-ui/models/grant';
+import type FunderModel from 'pass-ui/models/funder';
+import type RepositoryModel from 'pass-ui/models/repository';
 
 export default class RepositoriesRoute extends CheckSessionRoute {
   @service declare workflow: Workflow;
@@ -17,7 +20,8 @@ export default class RepositoriesRoute extends CheckSessionRoute {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async model(): Promise<any> {
-    const parentModel = this.modelFor('submissions.new');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const parentModel = this.modelFor('submissions.new') as any;
     this.submission = parentModel.newSubmission;
 
     this.repositories = await this.policies.getRepositories.perform(this.submission);
@@ -32,20 +36,21 @@ export default class RepositoriesRoute extends CheckSessionRoute {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async _getFunderNamesForRepo(repo: any, submission: any): Promise<string> {
+  async _getFunderNamesForRepo(repo: RepositoryModel, submission: any): Promise<string> {
     const grants = await submission.grants;
 
-    const funders = grants.map((grant) => get(grant, 'primaryFunder'));
-    const fundersWithRepos = funders.filter((funder) => get(funder, 'policy.repositories'));
+    const funders = grants.map((grant: GrantModel) => get(grant, 'primaryFunder'));
+    const fundersWithRepos = funders.filter((funder: FunderModel) => get(funder, 'policy.repositories'));
     // List of funders that include this repository
     const fundersWithOurRepo = fundersWithRepos.filter(
-      (funder) => get(funder, 'policy') && funder.get('policy.repositories').includes(repo),
+      (funder: FunderModel) =>
+        get(funder, 'policy') && (funder.get('policy.repositories') as unknown as RepositoryModel[]).includes(repo),
     );
 
     if (fundersWithRepos && fundersWithOurRepo.length > 0) {
       return fundersWithOurRepo
-        .map((funder) => funder.get('name'))
-        .filter((item, index, arr) => arr.indexOf(item) == index)
+        .map((funder: FunderModel) => funder.get('name'))
+        .filter((item: string, index: number, arr: string[]) => arr.indexOf(item) == index)
         .join(', ');
     }
     return '';
@@ -54,7 +59,7 @@ export default class RepositoriesRoute extends CheckSessionRoute {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async requiredRepositories(): Promise<any[]> {
     return Promise.all(
-      this.repositories?.required.map(async (repo) => {
+      this.repositories?.required.map(async (repo: RepositoryModel) => {
         const funders = await this._getFunderNamesForRepo(repo, this.submission);
         return {
           repository: repo,
@@ -67,7 +72,7 @@ export default class RepositoriesRoute extends CheckSessionRoute {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async optionalRepositories(): Promise<any[]> {
     return Promise.all(
-      this.repositories?.optional.map(async (repo) => {
+      this.repositories?.optional.map(async (repo: RepositoryModel) => {
         const funders = await this._getFunderNamesForRepo(repo, this.submission);
 
         return {

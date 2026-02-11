@@ -48,14 +48,14 @@ export default class AutocompleteService extends Service {
       fieldName = [fieldName];
     }
 
-    const query = Object.assign({ filter: {} }, context);
+    const query: Record<string, any> = Object.assign({ filter: {} }, context); // eslint-disable-line @typescript-eslint/no-explicit-any
 
     const suggestFilterPart = fieldName.map((field) => `${field}=ini="*${suggestPrefix}*"`).join(',');
 
     // Append the suggest filter piece to the existing type filter, if it exists
-    query.filter[type] = query.filter[type] ? `${query.filter[type]};${suggestFilterPart}` : suggestFilterPart;
+    query['filter'][type] = query['filter'][type] ? `${query['filter'][type]};${suggestFilterPart}` : suggestFilterPart;
 
-    return this.store.query(type, query).catch((error) => {
+    return this.store.query(type, query).catch((error: unknown) => {
       console.error(`Autocomplete service failed: ${JSON.stringify(error)}`);
     });
   }

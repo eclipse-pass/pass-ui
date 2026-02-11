@@ -9,8 +9,12 @@ import type CurrentUserService from 'pass-ui/services/current-user';
 import type Workflow from 'pass-ui/services/workflow';
 import type SubmissionHandlerService from 'pass-ui/services/submission-handler';
 import type SearchHelperService from 'pass-ui/services/search-helper';
+import type FileModel from 'pass-ui/models/file';
 
 export default class SubmissionsNew extends Controller {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  declare model: any;
+
   queryParams: string[] = ['grant', 'submission', 'covid'];
   @service declare currentUser: CurrentUserService;
   @service declare workflow: Workflow;
@@ -26,8 +30,10 @@ export default class SubmissionsNew extends Controller {
   @tracked comment: string = ''; // Holds the comment that will be added to submissionEvent in the review step.
   @tracked uploading: boolean = false;
   @tracked waitingMessage: string = '';
+  // @ts-expect-error TS2729 - @service creates a prototype getter, available during field init
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @tracked user: any = this.currentUser.user;
+  // @ts-expect-error TS2729 - model available via Ember controller prototype
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @tracked submitter: any = this.model.newSubmission.submitter;
   @tracked covid: string | null = null;
@@ -48,7 +54,7 @@ export default class SubmissionsNew extends Controller {
    */
   @action
   updateCovidSubmission(): void {
-    const selectedCovid = event.target.checked;
+    const selectedCovid = (event?.target as HTMLInputElement | undefined)?.checked;
     const submission = this.model.newSubmission;
     const metadata = submission.metadata ? JSON.parse(submission.metadata) : {};
 
@@ -90,15 +96,11 @@ export default class SubmissionsNew extends Controller {
 
   @action
   async submit(): Promise<void> {
-    let manuscriptFiles = this.workflow
-      .getFiles()
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .filter((file: any) => file && file.fileRole === 'manuscript')
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .filter((file: any) => file.submission.id === this.model.newSubmission.id);
+    let manuscriptFiles = (this.workflow.getFiles() as unknown as FileModel[])
+      .filter((file: FileModel) => file && file.fileRole === 'manuscript')
+      .filter((file: FileModel) => file.submission.id === this.model.newSubmission.id);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    manuscriptFiles = [...new Map(manuscriptFiles.map((file: any) => [file.id, file])).values()];
+    manuscriptFiles = [...new Map(manuscriptFiles.map((file: FileModel) => [file.id, file])).values()];
 
     const submitter = await this.userIsSubmitter();
     if (manuscriptFiles.length == 0 && submitter) {
@@ -136,7 +138,7 @@ export default class SubmissionsNew extends Controller {
           console.error(error.stack);
           this.flashMessages.danger(`Submission failed: ${error.message}`);
 
-          const elements = document.querySelectorAll('.block-user-input');
+          const elements = document.querySelectorAll<HTMLElement>('.block-user-input');
           elements.forEach((el: HTMLElement) => {
             el.style.display = 'none';
           });

@@ -83,7 +83,7 @@ export default class MetadataSchemaService extends Service {
         continue;
       }
 
-      for (const field of repositorySchemas[schema]) {
+      for (const field of repositorySchemas[schema as keyof typeof repositorySchemas]) {
         let element = elementMap.get(field.name);
 
         if (!element) {
@@ -122,17 +122,17 @@ export default class MetadataSchemaService extends Service {
       }
     }
 
-    const schema = {};
-    schema.elements = Array.from(elementMap.values());
+    const schema: Record<string, unknown> = {};
+    schema['elements'] = Array.from(elementMap.values());
 
     // Add toplevel poperties from surveySchema
     for (const key in surveySchema) {
       if (key != 'elements') {
-        schema[key] = surveySchema[key];
+        schema[key] = (surveySchema as Record<string, unknown>)[key];
       }
     }
 
-    return schema;
+    return schema as SurveySchema;
   }
 
   /**
@@ -142,7 +142,7 @@ export default class MetadataSchemaService extends Service {
    * @returns {array} list of unique field keys
    */
   getFields(schema: SurveySchema): string[] {
-    const fields = [];
+    const fields: string[] = [];
 
     schema.elements.forEach((element) => {
       fields.push(element.name);
@@ -166,7 +166,7 @@ export default class MetadataSchemaService extends Service {
    * @param {array} schemas array of schemas
    */
   getFieldTitleMap(schema: SurveySchema): Record<string, string | undefined> {
-    const map = {};
+    const map: Record<string, string | undefined> = {};
 
     schema.elements.forEach((element) => {
       map[element.name] = element.title;
@@ -188,7 +188,7 @@ export default class MetadataSchemaService extends Service {
    * }
    */
   getAgreementsBlob(repositories: RepositoryModel[]): { agreements: Array<Record<string, string>> } {
-    const result = [];
+    const result: Array<Record<string, string>> = [];
 
     repositories
       .filter((repo) => repo.agreementText)
@@ -211,18 +211,18 @@ export default class MetadataSchemaService extends Service {
    */
   _formatComplexMetadataObject(key: string, obj: Record<string, unknown>): Record<string, unknown> {
     if (key === 'issns') {
-      let issn = obj.issn;
+      let issn = obj['issn'];
 
       if ('pubType' in obj) {
-        issn += ` (${obj.pubType})`;
+        issn += ` (${obj['pubType']})`;
       }
 
       return { ISSN: issn };
     } else if (key == 'authors') {
-      let author = obj.author;
+      let author = obj['author'];
 
       if ('orcid' in obj) {
-        author += ` (${obj.orcid})`;
+        author += ` (${obj['orcid']})`;
       }
 
       return { Author: author };
@@ -240,10 +240,10 @@ export default class MetadataSchemaService extends Service {
   _formatMetadata(key: string, val: unknown): unknown {
     if (Array.isArray(val)) {
       return val.map((o) => this._formatComplexMetadataObject(key, o));
-    } else if (key === 'publicationDate' && !isNaN(new Date(val))) {
-      return new Date(val).toLocaleDateString();
+    } else if (key === 'publicationDate' && !isNaN(new Date(val as string).getTime())) {
+      return new Date(val as string).toLocaleDateString();
     } else if (typeof val === 'object') {
-      return this._formatComplexMetadataObject(key, val);
+      return this._formatComplexMetadataObject(key, val as Record<string, unknown>);
     } else if (typeof val === 'string') {
       return val;
     }
@@ -280,7 +280,7 @@ export default class MetadataSchemaService extends Service {
     const titleMap = this.getFieldTitleMap(surveySchema);
     const metadata = JSON.parse(submission.metadata);
 
-    const result = [];
+    const result: MetadataDisplayEntry[] = [];
     if (metadata) {
       whiteList
         .filter((key) => key in metadata)
@@ -290,7 +290,7 @@ export default class MetadataSchemaService extends Service {
 
           if (value) {
             result.push({
-              label: titleMap[key],
+              label: titleMap[key] ?? key,
               value,
               isArray,
             });

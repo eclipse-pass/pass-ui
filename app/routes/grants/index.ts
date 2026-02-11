@@ -2,6 +2,8 @@ import { service } from '@ember/service';
 import CheckSessionRoute from '../check-session-route';
 import { grantsIndexGrantQuery, grantsIndexSubmissionQuery } from '../../util/paginated-query';
 import type CurrentUserService from 'pass-ui/services/current-user';
+import type GrantModel from 'pass-ui/models/grant';
+import type SubmissionModel from 'pass-ui/models/submission';
 
 export default class IndexRoute extends CheckSessionRoute {
   @service('current-user') declare currentUser: CurrentUserService;
@@ -38,12 +40,13 @@ export default class IndexRoute extends CheckSessionRoute {
     const grantQuery = grantsIndexGrantQuery(params, user);
     // First search for all Grants associated with the current user
     const grants = await this.store.query('grant', grantQuery);
-    const results = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const results: { grantMap: Array<{ grant: GrantModel; submissions: SubmissionModel[] }>; meta: any } = {
       grantMap: [],
       meta: grants.meta,
     };
 
-    grants.forEach((grant) => {
+    grants.forEach((grant: GrantModel) => {
       results.grantMap.push({
         grant,
         submissions: [],
@@ -55,9 +58,11 @@ export default class IndexRoute extends CheckSessionRoute {
     // On demand without reloading the list of submissions
     const submissionQuery = grantsIndexSubmissionQuery(user);
     const subs = await this.store.query('submission', submissionQuery);
-    subs.forEach((submission) => {
-      submission.grants.forEach((grant) => {
-        const match = results.grantMap.find((res) => res.grant.id === grant.id);
+    subs.forEach((submission: SubmissionModel) => {
+      submission.grants.forEach((grant: GrantModel) => {
+        const match = results.grantMap.find(
+          (res: { grant: GrantModel; submissions: SubmissionModel[] }) => res.grant.id === grant.id,
+        );
         if (match) {
           match.submissions.push(submission);
         }
