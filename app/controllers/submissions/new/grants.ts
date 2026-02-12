@@ -1,7 +1,5 @@
-/* eslint-disable ember/no-computed-properties-in-native-classes */
 import Controller, { inject as controller } from '@ember/controller';
 import { action } from '@ember/object';
-import { alias } from '@ember/object/computed';
 import { service } from '@ember/service';
 import type SubmissionsNew from 'pass-ui/controllers/submissions/new';
 import type SubmissionModel from 'pass-ui/models/submission';
@@ -9,14 +7,27 @@ import type PublicationModel from 'pass-ui/models/publication';
 import type SubmissionEventModel from 'pass-ui/models/submission-event';
 import type GrantModel from 'pass-ui/models/grant';
 
+interface GrantsModel {
+  newSubmission: SubmissionModel;
+  publication: PublicationModel;
+  submissionEvents: SubmissionEventModel[];
+}
+
 export default class SubmissionsNewGrants extends Controller {
+  declare model: GrantsModel;
   declare preLoadedGrant: GrantModel | null;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare router: any;
 
-  @alias('model.newSubmission') submission!: SubmissionModel;
-  @alias('model.publication') publication!: PublicationModel;
-  @alias('model.submissionEvents') submissionEvents!: SubmissionEventModel[];
+  get submission(): SubmissionModel {
+    return this.model.newSubmission;
+  }
+  get publication(): PublicationModel {
+    return this.model.publication;
+  }
+  get submissionEvents(): SubmissionEventModel[] {
+    return this.model.submissionEvents;
+  }
 
   @controller('submissions.new') declare parent: SubmissionsNew;
 

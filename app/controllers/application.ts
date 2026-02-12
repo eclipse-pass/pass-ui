@@ -1,9 +1,8 @@
-/* eslint-disable ember/no-computed-properties-in-native-classes, ember/no-get */
+/* eslint-disable ember/no-get */
 import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import { get } from '@ember/object';
 import { service } from '@ember/service';
-import { alias } from '@ember/object/computed';
 import config from '../config/environment';
 import ENV from 'pass-ui/config/environment';
 import type CurrentUserService from 'pass-ui/services/current-user';

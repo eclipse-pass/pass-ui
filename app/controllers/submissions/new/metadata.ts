@@ -1,7 +1,5 @@
-/* eslint-disable ember/no-computed-properties-in-native-classes */
 import Controller, { inject as controller } from '@ember/controller';
 import { action } from '@ember/object';
-import { alias } from '@ember/object/computed';
 import { service } from '@ember/service';
 import type SubmissionsNew from 'pass-ui/controllers/submissions/new';
 import type SubmissionModel from 'pass-ui/models/submission';
@@ -9,14 +7,30 @@ import type RepositoryModel from 'pass-ui/models/repository';
 import type PublicationModel from 'pass-ui/models/publication';
 import type SubmissionEventModel from 'pass-ui/models/submission-event';
 
+interface MetadataModel {
+  newSubmission: SubmissionModel;
+  repositories: RepositoryModel[];
+  publication: PublicationModel;
+  submissionEvents: SubmissionEventModel[];
+}
+
 export default class SubmissionsNewMetadata extends Controller {
+  declare model: MetadataModel;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare router: any;
 
-  @alias('model.newSubmission') submission!: SubmissionModel;
-  @alias('model.repositories') repositories!: RepositoryModel[];
-  @alias('model.publication') publication!: PublicationModel;
-  @alias('model.submissionEvents') submissionEvents!: SubmissionEventModel[];
+  get submission(): SubmissionModel {
+    return this.model.newSubmission;
+  }
+  get repositories(): RepositoryModel[] {
+    return this.model.repositories;
+  }
+  get publication(): PublicationModel {
+    return this.model.publication;
+  }
+  get submissionEvents(): SubmissionEventModel[] {
+    return this.model.submissionEvents;
+  }
 
   @controller('submissions.new') declare parent: SubmissionsNew;
 

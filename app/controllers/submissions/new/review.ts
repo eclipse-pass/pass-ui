@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-computed-properties-in-native-classes, ember/no-get */
 import Controller, { inject as controller } from '@ember/controller';
 import { action, computed, get } from '@ember/object';
-import { alias } from '@ember/object/computed';
+
 import { tracked } from '@glimmer/tracking';
 import { service } from '@ember/service';
 import type Workflow from 'pass-ui/services/workflow';
@@ -10,14 +10,28 @@ import type SubmissionModel from 'pass-ui/models/submission';
 import type PublicationModel from 'pass-ui/models/publication';
 import type SubmissionEventModel from 'pass-ui/models/submission-event';
 
+interface ReviewModel {
+  newSubmission: SubmissionModel;
+  publication: PublicationModel;
+  submissionEvents: SubmissionEventModel[];
+}
+
 export default class SubmissionsNewReview extends Controller {
+  declare model: ReviewModel;
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare router: any;
   @service declare workflow: Workflow;
 
-  @alias('model.newSubmission') submission!: SubmissionModel;
-  @alias('model.publication') publication!: PublicationModel;
-  @alias('model.submissionEvents') submissionEvents!: SubmissionEventModel[];
+  get submission(): SubmissionModel {
+    return this.model.newSubmission;
+  }
+  get publication(): PublicationModel {
+    return this.model.publication;
+  }
+  get submissionEvents(): SubmissionEventModel[] {
+    return this.model.submissionEvents;
+  }
 
   @controller('submissions.new') declare parent: SubmissionsNew;
 

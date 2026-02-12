@@ -2,7 +2,7 @@
 import Controller, { inject as controller } from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import { action, computed, get, set } from '@ember/object';
-import { alias } from '@ember/object/computed';
+
 import { service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
 import swal from 'sweetalert2/dist/sweetalert2.js';
@@ -13,16 +13,30 @@ import type SubmissionModel from 'pass-ui/models/submission';
 import type PublicationModel from 'pass-ui/models/publication';
 import type SubmissionEventModel from 'pass-ui/models/submission-event';
 
+interface FilesModel {
+  newSubmission: SubmissionModel;
+  publication: PublicationModel;
+  submissionEvents: SubmissionEventModel[];
+}
+
 export default class SubmissionsNewFiles extends Controller {
+  declare model: FilesModel;
+
   @service declare workflow: Workflow;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare flashMessages: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare router: any;
 
-  @alias('model.newSubmission') submission!: SubmissionModel;
-  @alias('model.publication') publication!: PublicationModel;
-  @alias('model.submissionEvents') submissionEvents!: SubmissionEventModel[];
+  get submission(): SubmissionModel {
+    return this.model.newSubmission;
+  }
+  get publication(): PublicationModel {
+    return this.model.publication;
+  }
+  get submissionEvents(): SubmissionEventModel[] {
+    return this.model.submissionEvents;
+  }
 
   @controller('submissions.new') declare parent: SubmissionsNew;
 

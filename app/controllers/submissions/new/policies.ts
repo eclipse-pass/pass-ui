@@ -1,7 +1,5 @@
-/* eslint-disable ember/no-computed-properties-in-native-classes */
 import Controller, { inject as controller } from '@ember/controller';
 import { action } from '@ember/object';
-import { alias } from '@ember/object/computed';
 import { service } from '@ember/service';
 import type SubmissionsNew from 'pass-ui/controllers/submissions/new';
 import type SubmissionModel from 'pass-ui/models/submission';
@@ -9,14 +7,30 @@ import type PolicyModel from 'pass-ui/models/policy';
 import type PublicationModel from 'pass-ui/models/publication';
 import type SubmissionEventModel from 'pass-ui/models/submission-event';
 
+interface PoliciesModel {
+  newSubmission: SubmissionModel;
+  policies: PolicyModel[];
+  publication: PublicationModel;
+  submissionEvents: SubmissionEventModel[];
+}
+
 export default class SubmissionsNewPolicies extends Controller {
+  declare model: PoliciesModel;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare router: any;
 
-  @alias('model.newSubmission') submission!: SubmissionModel;
-  @alias('model.policies') policies!: PolicyModel[];
-  @alias('model.publication') publication!: PublicationModel;
-  @alias('model.submissionEvents') submissionEvents!: SubmissionEventModel[];
+  get submission(): SubmissionModel {
+    return this.model.newSubmission;
+  }
+  get policies(): PolicyModel[] {
+    return this.model.policies;
+  }
+  get publication(): PublicationModel {
+    return this.model.publication;
+  }
+  get submissionEvents(): SubmissionEventModel[] {
+    return this.model.submissionEvents;
+  }
 
   @controller('submissions.new') declare parent: SubmissionsNew;
 

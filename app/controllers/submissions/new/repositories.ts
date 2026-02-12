@@ -1,8 +1,7 @@
-/* eslint-disable ember/no-computed-properties-in-native-classes, ember/no-get, ember/require-computed-property-dependencies */
+/* eslint-disable ember/no-get */
 import Controller, { inject as controller } from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import { action, get, set } from '@ember/object';
-import { alias } from '@ember/object/computed';
 import { service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
 import swal from 'sweetalert2/dist/sweetalert2.js';
@@ -23,6 +22,9 @@ interface RepositoriesControllerModel {
   requiredRepositories: RepositoryWithFunders[];
   optionalRepositories: RepositoryWithFunders[];
   choiceRepositories: RepositoryWithFunders[][];
+  repositories: RepositoryModel[];
+  publication: PublicationModel;
+  submissionEvents: SubmissionEventModel[];
 }
 
 export default class SubmissionsNewRepositories extends Controller {
@@ -32,10 +34,18 @@ export default class SubmissionsNewRepositories extends Controller {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare router: any;
 
-  @alias('model.newSubmission') submission!: SubmissionModel;
-  @alias('model.repositories') repositories!: RepositoryModel[];
-  @alias('model.publication') publication!: PublicationModel;
-  @alias('model.submissionEvents') submissionEvents!: SubmissionEventModel[];
+  get submission(): SubmissionModel {
+    return this.model.newSubmission;
+  }
+  get repositories(): RepositoryModel[] {
+    return this.model.repositories;
+  }
+  get publication(): PublicationModel {
+    return this.model.publication;
+  }
+  get submissionEvents(): SubmissionEventModel[] {
+    return this.model.submissionEvents;
+  }
 
   @controller('submissions.new') declare parent: SubmissionsNew;
 
