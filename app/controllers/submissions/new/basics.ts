@@ -1,8 +1,6 @@
-/* eslint-disable ember/no-computed-properties-in-native-classes, ember/no-get, ember/use-brace-expansion, ember/require-computed-property-dependencies */
 import Controller, { inject as controller } from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
-import { action, computed, get, set } from '@ember/object';
-import { alias } from '@ember/object/computed';
+import { action } from '@ember/object';
 import { service } from '@ember/service';
 
 import type Workflow from 'pass-ui/services/workflow';
@@ -13,7 +11,15 @@ import type SubmissionEventModel from 'pass-ui/models/submission-event';
 import type JournalModel from 'pass-ui/models/journal';
 import type GrantModel from 'pass-ui/models/grant';
 
+interface BasicsModel {
+  newSubmission: SubmissionModel;
+  publication: PublicationModel;
+  submissionEvents: SubmissionEventModel[];
+  journal: JournalModel;
+}
+
 export default class SubmissionsNewBasics extends Controller {
+  declare model: BasicsModel;
   declare preLoadedGrant: GrantModel | null;
 
   @service declare workflow: Workflow;
@@ -22,12 +28,28 @@ export default class SubmissionsNewBasics extends Controller {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare router: any;
 
-  @alias('model.newSubmission') submission!: SubmissionModel;
-  @alias('model.publication') publication!: PublicationModel;
-  @alias('model.submissionEvents') submissionEvents!: SubmissionEventModel[];
-  @alias('model.journal') journal!: JournalModel;
-
   @controller('submissions.new') declare parent: SubmissionsNew;
+
+  // Dirty flag: incrementing invalidates the publication getter so it
+  // re-reads from the shared model hash after updatePublication mutates it.
+  @tracked _publicationVersion = 0;
+
+  get submission(): SubmissionModel {
+    return this.model.newSubmission;
+  }
+
+  get publication(): PublicationModel {
+    void this._publicationVersion; // tracking tag
+    return this.model.publication;
+  }
+
+  get submissionEvents(): SubmissionEventModel[] {
+    return this.model.submissionEvents;
+  }
+
+  get journal(): JournalModel {
+    return this.model.journal;
+  }
 
   // these errors start as false since you don't want to immediately have all fields turn red
   @tracked titleError: boolean = false;
@@ -43,30 +65,24 @@ export default class SubmissionsNewBasics extends Controller {
     return fields;
   }
 
-  @computed('publication.title')
   get titleIsInvalid(): boolean {
-    return !get(this, 'publication.title');
+    return !this.model.publication?.title;
   }
 
-  @computed('publication.journal.id', 'publication.journal.journalName')
   get journalIsInvalid(): boolean {
-    return !(get(this, 'publication.journal.id') || get(this, 'publication.journal.journalName'));
+    const journal = this.model.publication?.journal;
+    return !(journal?.get?.('id') || journal?.get?.('journalName'));
   }
 
-  @computed('submission.submitter.id', 'submission.submitterEmail', 'submission.submitterName')
   get submitterIsInvalid(): boolean {
-    return (
-      !get(this, 'submission.submitter.id') &&
-      (!get(this, 'submission.submitterEmail') || !get(this, 'submission.submitterName'))
-    );
+    return !this.submission?.submitter?.id && (!this.submission?.submitterEmail || !this.submission?.submitterName);
   }
 
-  @computed('submission.submitterEmailDisplay')
   get submitterEmailIsInvalid(): boolean {
     const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    const email = get(this, 'submission.submitterEmailDisplay') as string | undefined;
+    const email = this.submission?.submitterEmailDisplay;
 
-    return !get(this, 'submission.submitter.id') && (!email || !emailPattern.test(email));
+    return !this.submission?.submitter?.id && (!email || !emailPattern.test(email));
   }
 
   @action
@@ -94,7 +110,7 @@ export default class SubmissionsNewBasics extends Controller {
     if (this.titleIsInvalid) return; // end here
 
     // non proxy submission will always have current user as submitter, so only need to validate this for proxy submission
-    if (get(this, 'submission.isProxySubmission')) {
+    if (this.submission.isProxySubmission) {
       // If there's no submitter or submitter info and the submission is a new proxy submission:
       if (this.submitterIsInvalid) {
         this.flashMessages.warning(
@@ -102,7 +118,7 @@ export default class SubmissionsNewBasics extends Controller {
         );
         return;
       }
-      if (!get(this, 'submission.submitter.id')) {
+      if (!this.submission.submitter?.id) {
         this.submitterEmailError = this.submitterEmailIsInvalid;
         if (this.submitterEmailIsInvalid) {
           this.submitterEmailError = true;
@@ -117,7 +133,7 @@ export default class SubmissionsNewBasics extends Controller {
     // After validation, we can save the publication to the Submission
     const publication = this.publication;
     await publication.save();
-    set(this, 'submission.publication', publication);
+    this.submission.publication = publication;
 
     this.loadTab(gotoRoute);
   }
@@ -144,7 +160,8 @@ export default class SubmissionsNewBasics extends Controller {
 
   @action
   updatePublication(publication: PublicationModel): void {
-    set(this, 'model.publication', publication);
+    this.model.publication = publication;
+    this._publicationVersion++;
   }
 
   @action

@@ -76,7 +76,7 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
     let controller = this.owner.lookup('controller:submissions/new/basics');
     let submission = EmberObject.create({});
     let publication = EmberObject.create({
-      journal: [],
+      journal: EmberObject.create({}),
     });
     let model = {
       newSubmission: submission,
@@ -101,7 +101,7 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
     let controller = this.owner.lookup('controller:submissions/new/basics');
     let submission = EmberObject.create({});
     let publication = EmberObject.create({
-      journal: [],
+      journal: EmberObject.create({}),
     });
     let model = {
       newSubmission: submission,
