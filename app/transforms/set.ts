@@ -1,15 +1,15 @@
-/* eslint-disable ember/no-classic-classes */
 import Transform from '@ember-data/serializer/transform';
 
-export default Transform.extend({
-  deserialize(serialized, options) {
+export default class SetTransform extends Transform {
+  deserialize(serialized: unknown): unknown[] | undefined {
     if (Array.isArray(serialized)) {
       return serialized;
     }
-  },
-  serialize(deserialized, options) {
+  }
+
+  serialize(deserialized: unknown): unknown[] | undefined {
     if (Array.isArray(deserialized)) {
       return deserialized;
     }
-  },
-});
+  }
+}
