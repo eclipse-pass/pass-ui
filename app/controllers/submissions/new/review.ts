@@ -1,6 +1,5 @@
-/* eslint-disable ember/no-computed-properties-in-native-classes, ember/no-get */
 import Controller, { inject as controller } from '@ember/controller';
-import { action, computed, get } from '@ember/object';
+import { action } from '@ember/object';
 
 import { tracked } from '@glimmer/tracking';
 import { service } from '@ember/service';
@@ -35,14 +34,12 @@ export default class SubmissionsNewReview extends Controller {
 
   @controller('submissions.new') declare parent: SubmissionsNew;
 
-  @computed('parent.waitingMessage')
   get waitingMessage(): string {
-    return get(this, 'parent.waitingMessage') as string;
+    return this.parent.waitingMessage;
   }
 
-  @computed('parent', 'parent.uploading')
   get uploading(): boolean {
-    return get(this, 'parent.uploading') as boolean;
+    return this.parent.uploading;
   }
 
   // @ts-expect-error TS2729 - @controller creates a prototype getter, available during field init

@@ -1,7 +1,7 @@
-/* eslint-disable ember/no-computed-properties-in-native-classes, ember/no-get */
+/* eslint-disable ember/no-get */
 import Controller, { inject as controller } from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
-import { action, computed, get, set } from '@ember/object';
+import { action, get } from '@ember/object';
 
 import { service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
@@ -42,19 +42,17 @@ export default class SubmissionsNewFiles extends Controller {
 
   @tracked loadingNext: boolean = false;
 
-  @computed('workflow.maxStep')
   get nextTabIsActive(): boolean {
-    return get(this, 'workflow').getMaxStep() > 6;
+    return this.workflow.getMaxStep() > 6;
   }
 
-  @computed('nextTabIsActive', 'loadingNext')
   get needValidation(): boolean {
     return this.nextTabIsActive || this.loadingNext;
   }
 
   @action
   loadNext(): void {
-    set(this, 'loadingNext', true);
+    this.loadingNext = true;
     this.validateAndLoadTab('submissions.new.review');
   }
 
@@ -67,7 +65,7 @@ export default class SubmissionsNewFiles extends Controller {
   async loadTab(gotoRoute: string): Promise<void> {
     this.updateRelatedData();
     await this.submission.save();
-    set(this, 'loadingNext', false); // reset for next time
+    this.loadingNext = false; // reset for next time
     this.router.transitionTo(gotoRoute);
   }
 

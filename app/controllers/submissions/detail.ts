@@ -1,7 +1,7 @@
-/* eslint-disable ember/no-computed-properties-in-native-classes, ember/no-get, ember/require-computed-property-dependencies, ember/use-brace-expansion, ember/no-side-effects, ember/classic-decorator-no-classic-methods */
+/* eslint-disable ember/no-get, ember/no-side-effects, ember/classic-decorator-no-classic-methods */
 import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
-import { action, get, computed } from '@ember/object';
+import { action, get } from '@ember/object';
 import ENV from 'pass-ui/config/environment';
 import { service } from '@ember/service';
 import { later, scheduleOnce } from '@ember/runloop';
@@ -71,25 +71,25 @@ export default class SubmissionsDetail extends Controller {
     return this.model.files;
   }
 
-  @computed('model.sub', 'model.sub.submitter.firstName')
   get displaySubmitterName(): string {
-    if (get(this, 'model.sub.submitter.displayName')) {
-      return get(this, 'model.sub.submitter.displayName') as string;
-    } else if (get(this, 'model.sub.submitter.firstName')) {
-      return `${get(this, 'model.sub.submitter.firstName') as string} ${get(this, 'model.sub.submitter.lastName') as string}`;
-    } else if (get(this, 'model.sub.submitterName')) {
-      return get(this, 'model.sub.submitterName') as string;
+    const submitter = this.model.sub.submitter;
+    if (submitter?.displayName) {
+      return submitter.displayName;
+    } else if (submitter?.firstName) {
+      return `${submitter.firstName} ${submitter.lastName}`;
+    } else if (this.model.sub.submitterName) {
+      return this.model.sub.submitterName;
     }
 
     return '';
   }
 
-  @computed('model.sub', 'model.sub.submitter.email')
   get displaySubmitterEmail(): string {
-    if (get(this, 'model.sub.submitter.email')) {
-      return get(this, 'model.sub.submitter.email') as string;
-    } else if (get(this, 'model.sub.submitterEmail')) {
-      return get(this, 'model.sub.submitterEmailDisplay') as string;
+    const submitter = this.model.sub.submitter;
+    if (submitter?.email) {
+      return submitter.email;
+    } else if (this.model.sub.submitterEmail) {
+      return this.model.sub.submitterEmailDisplay;
     }
 
     return '';

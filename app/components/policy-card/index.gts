@@ -1,6 +1,5 @@
-/* eslint-disable ember/no-computed-properties-in-native-classes, ember/require-computed-property-dependencies */
 import Component from '@glimmer/component';
-import { action, computed, set } from '@ember/object';
+import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { fn } from '@ember/helper';
 import { on } from '@ember/modifier';
@@ -24,8 +23,7 @@ interface PolicyCardSignature {
 export default class PolicyCard extends Component<PolicyCardSignature> {
   @service declare workflow: Workflow;
 
-  @computed('workflow.pmcPublisherDeposit')
-  get pmcPublisherDeposit() {
+  get pmcPublisherDeposit(): boolean {
     return this.workflow.getPmcPublisherDeposit();
   }
 
@@ -33,8 +31,7 @@ export default class PolicyCard extends Component<PolicyCardSignature> {
     this.workflow.setPmcPublisherDeposit(value);
   }
 
-  @computed('workflow.maxStep')
-  get maxStep() {
+  get maxStep(): number {
     return this.workflow.getMaxStep();
   }
 
@@ -42,13 +39,11 @@ export default class PolicyCard extends Component<PolicyCardSignature> {
     this.workflow.setMaxStep(value);
   }
 
-  @computed('policy.repositories')
   get usesPmcRepository(): boolean {
     const repos = this.args.policy.repositories;
     return repos ? repos.filter((repo: RepositoryModel) => repo.repositoryKey === 'pmc').length > 0 : false;
   }
 
-  @computed('journal')
   get methodAJournal(): boolean {
     const journal = this.args.journal;
     return journal?.get?.('isMethodA');
@@ -61,7 +56,7 @@ export default class PolicyCard extends Component<PolicyCardSignature> {
   @action
   setup() {
     if (this.methodAJournal) {
-      set(this, 'pmcPublisherDeposit', true);
+      this.pmcPublisherDeposit = true;
     }
 
     if (!this.usesPmcRepository || !this.pmcPublisherDeposit) {
@@ -71,8 +66,8 @@ export default class PolicyCard extends Component<PolicyCardSignature> {
 
   @action
   pmcPublisherDepositToggled(choice: boolean) {
-    set(this, 'pmcPublisherDeposit', choice);
-    set(this, 'maxStep', 3);
+    this.pmcPublisherDeposit = choice;
+    this.maxStep = 3;
 
     const policy = this.args.policy;
 
