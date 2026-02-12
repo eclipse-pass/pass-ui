@@ -1,9 +1,7 @@
-/* eslint-disable ember/no-get */
 import { isArray } from '@ember/array';
 import Service, { service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
 import { task } from 'ember-concurrency';
-import { get } from '@ember/object';
 import { fileForSubmissionQuery, submissionsWithPublicationQuery } from '../util/paginated-query';
 import type SubmissionModel from 'pass-ui/models/submission';
 import type PublicationModel from 'pass-ui/models/publication';
@@ -70,43 +68,43 @@ export default class SubmissionHandlerService extends Service {
    * @returns {Promise}          Promise resolves to the updated submission.
    */
   _finishSubmission = task(async (submission: SubmissionModel, comment: string) => {
-    const subEvent = await get(this, 'store').createRecord('submission-event');
+    const subEvent = await this.store.createRecord('submission-event');
 
-    subEvent.set('performedBy', get(this, 'currentUser.user'));
-    subEvent.set('comment', comment);
-    subEvent.set('performedDate', new Date());
-    subEvent.set('submission', submission);
-    subEvent.set('link', this._getSubmissionView(submission));
+    subEvent.performedBy = this.currentUser.user;
+    subEvent.comment = comment;
+    subEvent.performedDate = new Date();
+    subEvent.submission = submission;
+    subEvent.link = this._getSubmissionView(submission);
 
     // If the person clicking submit *is* the submitter, actually submit the submission.
-    if (submission.get('submitter.id') === get(this, 'currentUser.user.id')) {
-      submission.set('submitted', true);
-      submission.set('submissionStatus', 'submitted');
-      submission.set('submittedDate', new Date());
+    if (submission.submitter?.id === this.currentUser.user?.id) {
+      submission.submitted = true;
+      submission.submissionStatus = 'submitted';
+      submission.submittedDate = new Date();
 
       const repos = await submission.repositories;
       // Add agreements metadata
-      const agreemd = get(this, 'schemaService').getAgreementsBlob(repos);
+      const agreemd = this.schemaService.getAgreementsBlob(repos);
 
       if (agreemd) {
-        const md = JSON.parse(submission.get('metadata'));
+        const md = JSON.parse(submission.metadata);
         Object.assign(md, agreemd);
-        submission.set('metadata', JSON.stringify(md));
+        submission.metadata = JSON.stringify(md);
       }
 
-      subEvent.set('performerRole', 'submitter');
-      subEvent.set('eventType', 'submitted');
+      subEvent.performerRole = 'submitter';
+      subEvent.eventType = 'submitted';
     } else {
       // If they *aren't* the submitter, they're the preparer.
-      submission.set('submissionStatus', 'approval-requested');
-      subEvent.set('performerRole', 'preparer');
+      submission.submissionStatus = 'approval-requested';
+      subEvent.performerRole = 'preparer';
 
       // If a submitter is specified, it's a normal "approval-requested" scenario.
-      if (submission.get('submitter.id')) {
-        subEvent.set('eventType', 'approval-requested');
-      } else if (submission.get('submitterName') && submission.get('submitterEmail')) {
+      if (submission.submitter?.id) {
+        subEvent.eventType = 'approval-requested';
+      } else if (submission.submitterName && submission.submitterEmail) {
         // If not specified but a name and email are prsent, create a mailto link.
-        subEvent.set('eventType', 'approval-requested-newuser');
+        subEvent.eventType = 'approval-requested-newuser';
       }
     }
 
@@ -133,13 +131,13 @@ export default class SubmissionHandlerService extends Service {
   submit = task(async (submission: SubmissionModel, publication: PublicationModel, comment: string) => {
     const p = await publication.save();
 
-    submission.set('submitted', false);
-    submission.set('source', 'pass');
-    submission.set('aggregatedDepositStatus', 'not-started');
-    submission.set('publication', p);
+    submission.submitted = false;
+    submission.source = 'pass';
+    submission.aggregatedDepositStatus = 'not-started';
+    submission.publication = p;
 
     const s = await submission.save();
-    await get(this, '_finishSubmission')
+    await this._finishSubmission
       .perform(s, comment)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .catch((e: any) => {
@@ -159,17 +157,17 @@ export default class SubmissionHandlerService extends Service {
    */
   approveSubmission(submission: SubmissionModel, comment: string) {
     // Add agreements metadata
-    const agreemd = this.schemaService.getAgreementsBlob(submission.get('repositories'));
+    const agreemd = this.schemaService.getAgreementsBlob(submission.repositories);
 
     if (agreemd) {
-      const md = JSON.parse(submission.get('metadata'));
+      const md = JSON.parse(submission.metadata);
       Object.assign(md, agreemd);
-      submission.set('metadata', JSON.stringify(md));
+      submission.metadata = JSON.stringify(md);
     }
 
     const se = this.store.createRecord('submission-event', {
       submission,
-      performedBy: get(this, 'currentUser.user'),
+      performedBy: this.currentUser.user,
       performedDate: new Date(),
       comment,
       performerRole: 'submitter',
@@ -178,9 +176,9 @@ export default class SubmissionHandlerService extends Service {
     });
 
     return se.save().then(() => {
-      submission.set('submissionStatus', 'submitted');
-      submission.set('submittedDate', new Date());
-      submission.set('submitted', true);
+      submission.submissionStatus = 'submitted';
+      submission.submittedDate = new Date();
+      submission.submitted = true;
       return submission.save();
     });
   }
@@ -198,7 +196,7 @@ export default class SubmissionHandlerService extends Service {
     const se = this.store.createRecord('submission-event', {
       submission,
       comment,
-      performedBy: submission.get('submitter'),
+      performedBy: submission.submitter,
       performedDate: new Date(),
       performerRole: 'submitter',
       eventType: 'changes-requested',
@@ -206,7 +204,7 @@ export default class SubmissionHandlerService extends Service {
     });
 
     return se.save().then(() => {
-      submission.set('submissionStatus', 'changes-requested');
+      submission.submissionStatus = 'changes-requested';
       return submission.save();
     });
   }
@@ -224,7 +222,7 @@ export default class SubmissionHandlerService extends Service {
     const se = this.store.createRecord('submission-event', {
       submission,
       comment,
-      performedBy: submission.get('submitter'),
+      performedBy: submission.submitter,
       performedDate: new Date(),
       performerRole: 'submitter',
       eventType: 'cancelled',
@@ -232,7 +230,7 @@ export default class SubmissionHandlerService extends Service {
     });
 
     return se.save().then(() => {
-      submission.set('submissionStatus', 'cancelled');
+      submission.submissionStatus = 'cancelled';
       return submission.save();
     });
   }

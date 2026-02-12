@@ -1,10 +1,7 @@
-/* eslint-disable ember/no-get */
 import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
-import { get } from '@ember/object';
 import { service } from '@ember/service';
 import config from '../config/environment';
-import ENV from 'pass-ui/config/environment';
 import type CurrentUserService from 'pass-ui/services/current-user';
 import type AppStaticConfigService from 'pass-ui/services/app-static-config';
 
@@ -19,7 +16,8 @@ export default class ApplicationController extends Controller {
   rootURL: string | undefined = config.rootURL;
 
   @tracked wideRoutes: string[] = ['grants.index', 'grants.detail', 'submissions.index'];
-  @tracked brand = get(this, 'staticConfig.branding');
+  // @ts-expect-error TS2729 - @service creates a prototype getter, available during field init
+  @tracked brand = this.staticConfig?.branding;
   // @ts-expect-error TS2729 - @service creates a prototype getter, available during field init
   @tracked currentRouteName: string = this.router.currentRouteName;
 

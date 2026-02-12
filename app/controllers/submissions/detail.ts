@@ -1,7 +1,7 @@
-/* eslint-disable ember/no-get, ember/no-side-effects, ember/classic-decorator-no-classic-methods */
+/* eslint-disable ember/no-side-effects */
 import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
-import { action, get } from '@ember/object';
+import { action } from '@ember/object';
 import ENV from 'pass-ui/config/environment';
 import { service } from '@ember/service';
 import { later, scheduleOnce } from '@ember/runloop';
@@ -62,8 +62,10 @@ export default class SubmissionsDetail extends Controller {
     if (element) (element as HTMLElement & { tooltip(): void }).tooltip();
   }
 
-  @tracked submitted: boolean = get(this, 'model.sub.submitted') as boolean;
-  @tracked repositories: RepositoryModel[] = get(this, 'model.sub.repositories') as RepositoryModel[];
+  // @ts-expect-error TS2729 - model available via Ember controller prototype
+  @tracked submitted: boolean = this.model?.sub?.submitted ?? false;
+  // @ts-expect-error TS2729 - model available via Ember controller prototype
+  @tracked repositories: RepositoryModel[] = this.model?.sub?.repositories ?? [];
   @tracked externalRepoMap: Record<string, boolean> = {};
   @tracked _hasVisitedWeblink: boolean | null = null;
 
@@ -169,8 +171,8 @@ export default class SubmissionsDetail extends Controller {
 
   get mustVisitWeblink(): boolean {
     const weblinkExists = this.weblinkRepos.length > 0;
-    const isSubmitter = get(this, 'currentUser.user.id') === get(this, 'model.sub.submitter.id');
-    const isProxySubmission = get(this, 'model.sub.isProxySubmission') as boolean;
+    const isSubmitter = this.currentUser.user?.id === this.model.sub.submitter?.id;
+    const isProxySubmission = this.model.sub.isProxySubmission;
     const isSubmitted = this.submitted;
 
     return weblinkExists && isSubmitter && isProxySubmission && !isSubmitted;
@@ -190,9 +192,9 @@ export default class SubmissionsDetail extends Controller {
    */
   get repoMap(): RepoMapEntry[] | null {
     let hasStuff = false;
-    const repos = get(this, 'model.repos') as RepositoryModel[];
-    const deps = get(this, 'model.deposits') as DepositModel[];
-    const repoCopies = get(this, 'model.repoCopies') as RepositoryCopyModel[];
+    const repos = this.model.repos;
+    const deps = this.model.deposits;
+    const repoCopies = this.model.repoCopies;
     if (!repos) {
       return null;
     }
@@ -208,8 +210,8 @@ export default class SubmissionsDetail extends Controller {
     if (deps) {
       deps.forEach((deposit: DepositModel) => {
         hasStuff = true;
-        const repo = get(deposit, 'repository');
-        const repoId = get(repo, 'id') as string;
+        const repo = deposit.repository;
+        const repoId = repo.id as string;
         if (!map.hasOwnProperty(repoId)) {
           map[repoId] = {
             repo,
@@ -218,7 +220,7 @@ export default class SubmissionsDetail extends Controller {
         } else {
           map[repoId] = Object.assign(map[repoId]!, {
             deposit,
-            repositoryCopy: get(deposit, 'repositoryCopy'),
+            repositoryCopy: deposit.repositoryCopy,
           });
         }
       });
@@ -226,8 +228,8 @@ export default class SubmissionsDetail extends Controller {
     if (repoCopies) {
       hasStuff = true;
       repoCopies.forEach((rc: RepositoryCopyModel) => {
-        const repo = rc.get('repository');
-        const repoId = get(repo, 'id') as string;
+        const repo = rc.repository;
+        const repoId = repo.id as string;
         if (!map.hasOwnProperty(repoId)) {
           map[repoId] = {
             repo,
@@ -250,23 +252,23 @@ export default class SubmissionsDetail extends Controller {
   }
 
   get isSubmitter(): boolean {
-    return get(this, 'model.sub.submitter.id') === get(this, 'currentUser.user.id');
+    return this.model.sub.submitter?.id === this.currentUser.user?.id;
   }
 
   get isPreparer(): boolean {
-    return (get(this, 'model.sub.preparers') as UserModel[])
+    return (this.model.sub.preparers as UserModel[])
       .map((x: UserModel) => x.id)
-      .includes(get(this, 'currentUser.user.id') as string | null);
+      .includes(this.currentUser.user?.id ?? null);
   }
 
   get submissionNeedsPreparer(): boolean {
-    return get(this, 'model.sub.submissionStatus') === 'changes-requested';
+    return this.model.sub.submissionStatus === 'changes-requested';
   }
 
   get submissionNeedsSubmitter(): boolean {
     return (
-      get(this, 'model.sub.submissionStatus') === 'approval-requested' ||
-      get(this, 'model.sub.submissionStatus') === 'approval-requested-newuser'
+      this.model.sub.submissionStatus === 'approval-requested' ||
+      this.model.sub.submissionStatus === 'approval-requested-newuser'
     );
   }
 
@@ -300,7 +302,7 @@ export default class SubmissionsDetail extends Controller {
 
   @action
   async requestMoreChanges(): Promise<void> {
-    const sub = get(this, 'model.sub') as SubmissionModel;
+    const sub = this.model.sub;
     const message = this.message;
 
     if (!message) {
@@ -335,7 +337,7 @@ export default class SubmissionsDetail extends Controller {
 
     // Validate manuscript files
     let manuscriptFiles = this.submissionFiles
-      .filter((file: FileModel) => file && file.get('fileRole') === 'manuscript')
+      .filter((file: FileModel) => file && file.fileRole === 'manuscript')
       .filter((file: FileModel) => file.submission.id === this.model.sub.id);
 
     manuscriptFiles = [...new Map(manuscriptFiles.map((file: FileModel) => [file.id, file])).values()];
@@ -356,7 +358,7 @@ export default class SubmissionsDetail extends Controller {
       return;
     }
 
-    const repositories = get(this, 'model.repos') as RepositoryModel[];
+    const repositories = this.model.repos;
     if (repositories.length === 0) {
       // no repositories associated with the submission
       const result = await swal.fire({
@@ -375,26 +377,23 @@ export default class SubmissionsDetail extends Controller {
     }
 
     const reposWithAgreementText = repositories
-      .filter((repo: RepositoryModel) => !get(repo, '_isWebLink') && get(repo, 'agreementText'))
+      .filter((repo: RepositoryModel) => !repo._isWebLink && repo.agreementText)
       .map((repo: RepositoryModel) => ({
-        id: get(repo, 'name'),
-        title: `Deposit requirements for ${get(repo, 'name')}`,
-        html: `<textarea rows="16" cols="40" name="embargo" class="form-control disabled" disabled="" autocomplete="off">${get(
-          repo,
-          'agreementText',
-        )}</textarea>`,
+        id: repo.name,
+        title: `Deposit requirements for ${repo.name}`,
+        html: `<textarea rows="16" cols="40" name="embargo" class="form-control disabled" disabled="" autocomplete="off">${repo.agreementText}</textarea>`,
       }));
 
     const reposWithoutAgreementText = repositories
-      .filter((repo: RepositoryModel) => !get(repo, '_isWebLink') && !get(repo, 'agreementText'))
+      .filter((repo: RepositoryModel) => !repo._isWebLink && !repo.agreementText)
       .map((repo: RepositoryModel) => ({
-        id: get(repo, 'name'),
+        id: repo.name,
       }));
 
     const reposWithWebLink = repositories
-      .filter((repo: RepositoryModel) => get(repo, '_isWebLink'))
+      .filter((repo: RepositoryModel) => repo._isWebLink)
       .map((repo: RepositoryModel) => ({
-        id: get(repo, 'name'),
+        id: repo.name,
       }));
     const reposProgressSteps = reposWithAgreementText.map((_repo, index: number) => index);
     const Queue = swal.mixin({
@@ -456,23 +455,22 @@ export default class SubmissionsDetail extends Controller {
       if (resultConfirm.value) {
         // Update repos to reflect repos that user agreed to deposit.
         // Must keep web-link repos.
-        this.set(
-          'model.sub.repositories',
-          (get(this, 'model.sub.repositories') as RepositoryModel[]).filter((repo: RepositoryModel) => {
-            if (get(repo, '_isWebLink')) {
+        this.model.sub.repositories = (this.model.sub.repositories as RepositoryModel[]).filter(
+          (repo: RepositoryModel) => {
+            if (repo._isWebLink) {
               return true;
             }
-            const temp = reposWithAgreementText.map((x) => x.id).includes(get(repo, 'name'));
+            const temp = reposWithAgreementText.map((x) => x.id).includes(repo.name);
             if (!temp) {
               return true;
-            } else if (reposThatUserAgreedToDeposit.map((r) => r.id).includes(get(repo, 'name'))) {
+            } else if (reposThatUserAgreedToDeposit.map((r) => r.id).includes(repo.name)) {
               return true;
             }
             return false;
-          }),
+          },
         );
 
-        const sub = get(this, 'model.sub') as SubmissionModel;
+        const sub = this.model.sub;
         const message = this.message;
         this.submissionHandler.approveSubmission(sub, message!);
       }
@@ -506,7 +504,7 @@ export default class SubmissionsDetail extends Controller {
   @action
   async cancelSubmission() {
     const message = this.message;
-    const sub = get(this, 'model.sub') as SubmissionModel;
+    const sub = this.model.sub;
 
     if (!message) {
       swal.fire('Comment field empty', 'Please add a comment for your cancellation.', 'warning');
@@ -549,7 +547,7 @@ export default class SubmissionsDetail extends Controller {
         await this.submissionHandler.deleteSubmission(submission);
 
         ignoreList.clearIgnore();
-        ignoreList.ignore(submission.get('id')!);
+        ignoreList.ignore(submission.id!);
         this.router.transitionTo('submissions');
       } catch (e) {
         this.flashMessages.danger(

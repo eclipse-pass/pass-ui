@@ -1,5 +1,4 @@
-/* eslint-disable ember/no-get */
-import { action, get } from '@ember/object';
+import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { hash } from 'rsvp';
 import CheckSessionRoute from '../../check-session-route';
@@ -52,7 +51,7 @@ export default class PoliciesRoute extends CheckSessionRoute {
     this.clearEffectivePolicies(submission);
 
     const policies = await (
-      get(this, 'policyService.getPolicies') as { perform: (s: SubmissionModel) => Promise<PolicyModel[]> }
+      this.policyService.getPolicies as unknown as { perform: (s: SubmissionModel) => Promise<PolicyModel[]> }
     ).perform(submission);
 
     return hash({

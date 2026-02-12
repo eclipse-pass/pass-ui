@@ -43,11 +43,11 @@ export default class DetailRoute extends CheckSessionRoute {
     const sub = await this.store.findRecord('submission', params.submission_id, {
       include: 'publication.journal,repositories,preparers,submitter',
     });
-    const publication = await sub.get('publication');
+    const publication = await sub.publication;
     const repoCopies = await this.store.query('repository-copy', {
       filter: { repositoryCopy: `publication.id==${publication.id}` },
     });
-    const repos = await sub.get('repositories');
+    const repos = await sub.repositories;
     const files = await this.store
       .query('file', fileForSubmissionQuery(params.submission_id))
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

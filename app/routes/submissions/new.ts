@@ -87,7 +87,7 @@ export default class NewRoute extends CheckSessionRoute {
 
       submissionEvents = this.store.query('submission-event', {
         filter: {
-          submissionEvent: `submission.id==${newSubmission.get('id')}`,
+          submissionEvent: `submission.id==${newSubmission.id}`,
         },
         sort: '+performedDate',
       });

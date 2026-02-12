@@ -82,12 +82,12 @@ export default class SubmissionsNewBasics extends Controller {
 
   @action
   async validateAndLoadTab(gotoRoute: string): Promise<void> {
-    set(this, 'titleError', false);
-    set(this, 'journalError', false);
-    set(this, 'submitterEmailError', false);
+    this.titleError = false;
+    this.journalError = false;
+    this.submitterEmailError = false;
 
     if (this.titleIsInvalid) {
-      set(this, 'titleError', true);
+      this.titleError = true;
       this.flashMessages.warning('The title must not be left blank');
     }
 
@@ -103,9 +103,9 @@ export default class SubmissionsNewBasics extends Controller {
         return;
       }
       if (!get(this, 'submission.submitter.id')) {
-        set(this, 'submitterEmailError', this.submitterEmailIsInvalid);
+        this.submitterEmailError = this.submitterEmailIsInvalid;
         if (this.submitterEmailIsInvalid) {
-          set(this, 'submitterEmailError', true);
+          this.submitterEmailError = true;
           this.flashMessages.warning(
             'The email address you entered is invalid. Please verify the value and try again.',
           );
@@ -129,17 +129,17 @@ export default class SubmissionsNewBasics extends Controller {
 
   @action
   validateTitle(): void {
-    set(this, 'titleError', this.titleIsInvalid);
+    this.titleError = this.titleIsInvalid;
   }
 
   @action
   validateJournal(): void {
-    set(this, 'journalError', this.journalIsInvalid);
+    this.journalError = this.journalIsInvalid;
   }
 
   @action
   validateSubmitterEmail(): void {
-    set(this, 'submitterEmailError', this.submitterEmailIsInvalid);
+    this.submitterEmailError = this.submitterEmailIsInvalid;
   }
 
   @action

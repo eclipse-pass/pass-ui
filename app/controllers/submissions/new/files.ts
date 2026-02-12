@@ -1,7 +1,6 @@
-/* eslint-disable ember/no-get */
 import Controller, { inject as controller } from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
-import { action, get } from '@ember/object';
+import { action } from '@ember/object';
 
 import { service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
@@ -75,7 +74,7 @@ export default class SubmissionsNewFiles extends Controller {
     if (needValidation) {
       const manuscriptFiles = this.workflow
         .getFiles()
-        .filter((file) => file && get(file, 'fileRole') === 'manuscript')
+        .filter((file) => file && (file as unknown as FileModel).fileRole === 'manuscript')
         .filter((file) => (file as unknown as FileModel).submission.id === this.submission.id);
 
       const submitter = await this.parent.userIsSubmitter();

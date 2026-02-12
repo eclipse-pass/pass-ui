@@ -1,7 +1,6 @@
-/* eslint-disable ember/no-get */
 import Controller, { inject as controller } from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
-import { action, get, set } from '@ember/object';
+import { action } from '@ember/object';
 import { service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
 import swal from 'sweetalert2/dist/sweetalert2.js';
@@ -54,7 +53,7 @@ export default class SubmissionsNewRepositories extends Controller {
   @tracked loadingNext: boolean = false;
 
   get nextTabIsActive(): boolean {
-    return get(this, 'workflow').getMaxStep() > 6;
+    return this.workflow.getMaxStep() > 6;
   }
 
   get needValidation(): boolean {
@@ -63,7 +62,7 @@ export default class SubmissionsNewRepositories extends Controller {
 
   @action
   loadNext() {
-    set(this, 'loadingNext', true);
+    this.loadingNext = true;
     this.validateAndLoadTab('submissions.new.metadata');
   }
 
@@ -76,13 +75,13 @@ export default class SubmissionsNewRepositories extends Controller {
   async loadTab(gotoRoute: string): Promise<void> {
     await this.submission.save();
     this.router.transitionTo(gotoRoute);
-    set(this, 'loadingNext', false); // reset for next time
+    this.loadingNext = false; // reset for next time
   }
 
   @action
   async validateAndLoadTab(gotoRoute: string): Promise<void> {
     const needValidation = this.needValidation;
-    if (needValidation && get(this, 'submission.repositories.length') == 0) {
+    if (needValidation && (this.submission.repositories as RepositoryModel[]).length == 0) {
       const value = await swal.fire({
         target: ENV.APP.rootElement,
         icon: 'warning',

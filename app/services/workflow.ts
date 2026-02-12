@@ -1,4 +1,3 @@
-/* eslint-disable ember/classic-decorator-no-classic-methods */
 import Service from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import type GrantModel from 'pass-ui/models/grant';
@@ -42,7 +41,7 @@ export default class Workflow extends Service {
   }
 
   setCurrentStep(stepNumber: number): void {
-    this.set('currentStep', stepNumber);
+    this.currentStep = stepNumber;
     if (this.maxStep < stepNumber) {
       this.setMaxStep(stepNumber);
     }
@@ -53,7 +52,7 @@ export default class Workflow extends Service {
   }
 
   setMaxStep(stepNumber: number): void {
-    this.set('maxStep', stepNumber);
+    this.maxStep = stepNumber;
     // This ensures default repo is reloaded
     if (stepNumber < 4) this.setDefaultRepoLoaded(false);
   }
@@ -71,7 +70,7 @@ export default class Workflow extends Service {
   }
 
   setFiles(files: WorkflowFile[]): void {
-    this.set('files', files);
+    this.files = files;
   }
 
   addFile(file: WorkflowFile): void {
@@ -89,7 +88,7 @@ export default class Workflow extends Service {
   }
 
   setDefaultRepoLoaded(defaultRepoLoaded: boolean): void {
-    this.set('defaultRepoLoaded', defaultRepoLoaded);
+    this.defaultRepoLoaded = defaultRepoLoaded;
   }
 
   getReadOnlyProperties(): string[] {
@@ -97,11 +96,11 @@ export default class Workflow extends Service {
   }
 
   setReadOnlyProperties(readOnlyProperties: string[]): void {
-    this.set('readOnlyProperties', readOnlyProperties);
+    this.readOnlyProperties = readOnlyProperties;
   }
 
   setFromCrossref(fromCrossref: boolean): void {
-    this.set('dataFromCrossref', fromCrossref);
+    this.dataFromCrossref = fromCrossref;
   }
 
   isDataFromCrossref(): boolean {

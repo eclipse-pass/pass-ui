@@ -1,7 +1,5 @@
-/* eslint-disable ember/no-get */
 import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
-import { get } from '@ember/object';
 import { service } from '@ember/service';
 import type CurrentUserService from 'pass-ui/services/current-user';
 
@@ -16,7 +14,8 @@ export default class DashboardController extends Controller {
   @service declare flashMessages: any;
   @service declare currentUser: CurrentUserService;
 
-  @tracked roles: string[] = get(this, 'currentUser.user.roles') as string[];
+  // @ts-expect-error TS2729 - @service creates a prototype getter, available during field init
+  @tracked roles: string[] = this.currentUser.user?.roles ?? [];
 
   get isSubmitter(): boolean {
     return this.roles.includes('submitter');

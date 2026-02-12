@@ -1,4 +1,3 @@
-/* eslint-disable ember/classic-decorator-no-classic-methods */
 import Service, { service } from '@ember/service';
 // import { defer } from 'rsvp';
 
@@ -34,7 +33,7 @@ export default class SearchHelperService extends Service {
    * Clear the ignore list.
    */
   clearIgnore(): void {
-    this.set('ignoreList', []);
+    this.ignoreList = [];
   }
 
   /**

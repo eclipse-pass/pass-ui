@@ -1,9 +1,7 @@
-/* eslint-disable ember/no-get */
 import { isArray } from '@ember/array';
 import Service, { service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
 import { task } from 'ember-concurrency';
-import { get } from '@ember/object';
 import type JournalModel from 'pass-ui/models/journal';
 import type PublicationModel from 'pass-ui/models/publication';
 
@@ -68,14 +66,14 @@ export default class DoiService extends Service {
 
     const response = await rawResponse.json();
 
-    const journal = await get(this, 'store').findRecord('journal', response['journal-id']);
+    const journal = await this.store.findRecord('journal', response['journal-id']);
 
     const doiInfo = this._processRawDoi(response.crossref.message);
 
     // Needed by schemas
     doiInfo['journal-title'] = doiInfo['container-title'];
 
-    const publication = get(this, 'store').createRecord('publication', {
+    const publication = this.store.createRecord('publication', {
       doi,
       journal,
       title: Array.isArray(doiInfo.title) ? doiInfo.title.join(', ') : doiInfo.title,

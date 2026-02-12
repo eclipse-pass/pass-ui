@@ -1,7 +1,6 @@
-/* eslint-disable ember/no-get, ember/classic-decorator-no-classic-methods */
 import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
-import { action, get, set } from '@ember/object';
+import { action } from '@ember/object';
 import { service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
 import swal from 'sweetalert2/dist/sweetalert2.js';
@@ -107,7 +106,7 @@ export default class SubmissionsNew extends Controller {
       }
     }
 
-    set(submission, 'metadata', JSON.stringify(metadata));
+    submission.metadata = JSON.stringify(metadata);
   }
 
   @action
@@ -136,20 +135,20 @@ export default class SubmissionsNew extends Controller {
       const pub = this.model.publication;
       const comment = this.comment;
 
-      this.set('uploading', true);
-      this.set('waitingMessage', 'Saving your submission');
+      this.uploading = true;
+      this.waitingMessage = 'Saving your submission';
 
       await this.submissionHandler.submit
         .perform(sub, pub, comment)
         .then(() => {
-          set(this, 'uploading', false);
-          set(this, 'comment', '');
-          set(this, 'workflow.files', []);
+          this.uploading = false;
+          this.comment = '';
+          this.workflow.files = [];
           this.router.transitionTo('thanks', { queryParams: { submission: sub.id } });
         })
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .catch((error: any) => {
-          this.set('uploading', false);
+          this.uploading = false;
 
           console.error(error.stack);
           this.flashMessages.danger(`Submission failed: ${error.message}`);
