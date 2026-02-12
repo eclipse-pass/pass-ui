@@ -15,7 +15,8 @@ Final verification that the 6.8 LTS milestone is complete. This was the original
 
 Issues 08-13 cover the path from 6.8 to 7.0:
 - #8 — Fix typecheck errors (193 remaining)
-- #9 — Legacy pattern cleanup (@alias, @computed, get/set, @observes)
+- #9 — Legacy pattern cleanup (@alias, @computed, get/set, @observes) — **COMPLETE**
+- #9a — Convert remaining .js files to TypeScript (~28 app, ~15 mirage, ~80+ tests)
 - #10 — Remove/replace v1 addons (ember-bootstrap, ember-models-table, etc.)
 - #11 — Ember Data → WarpDrive migration (store.request() + schemas)
 - #12 — Clear deprecations + upgrade to 6.12
