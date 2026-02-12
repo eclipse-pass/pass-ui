@@ -1,7 +1,7 @@
 import { helper } from '@ember/component/helper';
 import { htmlSafe } from '@ember/template';
 
-export function formatOapCompliance([compliance]) {
+export function formatOapCompliance([compliance]: [string]) {
   if (!compliance) {
     return '';
   }

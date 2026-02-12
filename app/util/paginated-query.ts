@@ -2,14 +2,29 @@
  * Centralizing JSON-API queries are formatted using RSQL, which can be a bit awkward to write.
  */
 
+interface QueryParams {
+  page?: number;
+  pageSize?: number;
+  filter?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
+}
+
+interface UserLike {
+  id: string | null;
+  isAdmin?: boolean;
+  isSubmitter?: boolean;
+}
+
 /**
  * Paginated query for the submissions/index route
  *
  * @param {object} params url query params
  * @param {User} user current user
  */
-export function submissionsIndexQuery(params, user) {
-  let query;
+export function submissionsIndexQuery(params: QueryParams, user: UserLike) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let query: any;
 
   if (user.isAdmin) {
     query = {
@@ -49,14 +64,15 @@ export function submissionsIndexQuery(params, user) {
  * @param {string} grantId ID for the Grant
  * @param {User} user current user
  */
-export function grantDetailsQuery(params, grantId, user) {
+export function grantDetailsQuery(params: QueryParams, grantId: string, user: UserLike) {
   /**
    * TODO: TMP restriction - don't show submissions that are in DRAFT status
    * unless you are the submitter OR preparer
    * Show submissions where `submitted===true`, because they are no longer editable
    */
   const userMatch = `submitted==true,(submitter.id==${user.id},preparers.id=in=${user.id})`;
-  const query = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const query: any = {
     filter: {
       submission: `grants.id==${grantId};submissionStatus=out=cancelled;(${userMatch})`,
     },
@@ -77,7 +93,7 @@ export function grantDetailsQuery(params, grantId, user) {
   return query;
 }
 
-export function grantsIndexGrantQuery(params, user) {
+export function grantsIndexGrantQuery(params: QueryParams, user: UserLike) {
   const userId = user.id;
   // default values provided to force these params in the request to the backend
   // TODO: make default pageSize configurable
@@ -101,7 +117,7 @@ export function grantsIndexGrantQuery(params, user) {
   return grantQuery;
 }
 
-export function grantsIndexSubmissionQuery(user) {
+export function grantsIndexSubmissionQuery(user: UserLike) {
   const userMatch = `grants.pi.id==${user.id},grants.coPis.id==${user.id}`;
   return {
     filter: {
@@ -110,7 +126,7 @@ export function grantsIndexSubmissionQuery(user) {
   };
 }
 
-export function fileForSubmissionQuery(submissionId) {
+export function fileForSubmissionQuery(submissionId: string | null) {
   return {
     filter: {
       file: `submission.id==${submissionId}`,
@@ -118,7 +134,7 @@ export function fileForSubmissionQuery(submissionId) {
   };
 }
 
-export function submissionsWithPublicationQuery(publication) {
+export function submissionsWithPublicationQuery(publication: { id: string | null }) {
   return {
     filter: {
       submission: `publication.id==${publication.id}`,
@@ -126,7 +142,7 @@ export function submissionsWithPublicationQuery(publication) {
   };
 }
 
-function filter(value, ...props) {
+function filter(value: string | undefined, ...props: string[]) {
   if (!value) {
     return '';
   }
@@ -137,7 +153,7 @@ function filter(value, ...props) {
  * @param {string} value
  * @returns value surrounded by quotes if necessary
  */
-function filterValue(value) {
+function filterValue(value: string) {
   value = value.trim();
   if (value.search(/\s+/) >= 0) {
     return `"*${value}*"`;

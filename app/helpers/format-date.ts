@@ -1,12 +1,12 @@
 import { helper } from '@ember/component/helper';
 
-export function formatDate(params /*, hash*/) {
+export function formatDate(params: unknown[] /*, hash*/) {
   // eslint-disable-line
-  const date = new Date(params);
+  const date = new Date(params as unknown as string);
   try {
-    let dd = date.getDate();
-    let mm = date.getMonth() + 1;
-    let yyyy = date.getFullYear();
+    let dd: string | number = date.getDate();
+    let mm: string | number = date.getMonth() + 1;
+    const yyyy = date.getFullYear();
     if (dd < 10) {
       dd = `0${dd}`;
     }

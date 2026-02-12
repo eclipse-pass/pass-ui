@@ -4,7 +4,7 @@
  *
  * @param {JSONObject} object
  */
-export default function (object) {
+export default function (object: Record<string, unknown>) {
   Object.keys(object)
     .filter((key) => Array.isArray(object[key]) && object[key].length === 0)
     .forEach((key) => {

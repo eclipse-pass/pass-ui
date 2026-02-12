@@ -1,6 +1,6 @@
 import { helper } from '@ember/component/helper';
 
-export default helper(function intersect([...arrays]) {
+export default helper(function intersect([...arrays]: unknown[][]) {
   if (arrays.length < 2) return [];
   const [first, ...rest] = arrays.filter(Array.isArray);
   if (!first) return [];

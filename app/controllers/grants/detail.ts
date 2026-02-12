@@ -135,7 +135,7 @@ export default class GrantDetailsController extends Controller {
   @action
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   doQuery(params: any) {
-    const query = grantDetailsQuery(params, this.grant.id!, this.currentUser.user);
+    const query = grantDetailsQuery(params, this.grant.id!, this.currentUser.user!);
     // Don't need to re-load the grant
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return this.store.query('submission', query).then((data: any) => {

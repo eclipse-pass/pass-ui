@@ -14,17 +14,19 @@ export default class FileAdapter extends ApplicationAdapter {
    * Will throw errors back to caller if any of the network
    * requests fail, same as default behavior.
    */
-  deleteRecord(store, type, snapshot) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  deleteRecord(store: any, type: any, snapshot: any) {
     // Can't use this.buildURL, as that will append the ember-data File path, which we don't want
     let url = snapshot.attr('uri');
     if (!url.startsWith('/')) {
       url = `/${url}`;
     }
+    const token = document.cookie.match(/XSRF-TOKEN\=([^;]*)/)![1]!;
     return fetch(url, {
       method: 'DELETE',
       credentials: 'same-origin',
       headers: {
-        'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN\=([^;]*)/)['1'],
+        'X-XSRF-TOKEN': token,
       },
     }).then((response) => {
       if (!response.ok) {

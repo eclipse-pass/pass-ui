@@ -184,7 +184,7 @@ export default class SubmissionsIndex extends Controller {
   @action
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   doQuery(params: any): Promise<void> {
-    const query = submissionsIndexQuery(params, this.currentUser.user);
+    const query = submissionsIndexQuery(params, this.currentUser.user!);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return this.store.query('submission', query).then((data: any) => {
       this.queuedModel = {

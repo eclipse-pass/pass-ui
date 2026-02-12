@@ -23,7 +23,7 @@ export default class IndexRoute extends CheckSessionRoute {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async model(params: any): Promise<SubmissionsIndexModel> {
-    const query = submissionsIndexQuery(params, this.currentUser.user);
+    const query = submissionsIndexQuery(params, this.currentUser.user!);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return this.store.query('submission', query).then((data: any) => ({
       submissions: data,

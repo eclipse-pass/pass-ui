@@ -6,19 +6,21 @@ import { service } from '@ember/service';
  * PASS specific extensions for Ember Data's JSON:API adapter
  */
 export default class ApplicationAdapter extends JSONAPIAdapter {
-  @service session;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  @service declare session: any;
 
   namespace = ENV.passApi.namespace;
 
+  // @ts-expect-error JSONAPIAdapter types headers as a property but Ember supports accessor override
   get headers() {
     return {
-      'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN\=([^;]*)/)['1'],
+      'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN\=([^;]*)/)!['1'],
     };
   }
 
   // Camel case instead of pluralize model types for our API
-  pathForType(type) {
-    return type.replace(/[-_\s]+(.)?/g, (_, c) => (c ? c.toUpperCase() : ''));
+  pathForType(type: string) {
+    return type.replace(/[-_\s]+(.)?/g, (_: string, c: string) => (c ? c.toUpperCase() : ''));
   }
 
   /**
@@ -31,9 +33,10 @@ export default class ApplicationAdapter extends JSONAPIAdapter {
     @param {Object} requestData the original request information
     @protected
   */
-  handleResponse(status, headers, payload, requestData) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  handleResponse(status: number, headers: Record<string, string>, payload: any, requestData: any) {
     this.ensureResponseAuthorized(status, headers, payload, requestData);
-    return super.handleResponse(...arguments);
+    return super.handleResponse(status, headers, payload, requestData);
   }
 
   /**
@@ -46,7 +49,12 @@ export default class ApplicationAdapter extends JSONAPIAdapter {
     @param {Any} payload The response body as received from the API
     @param {Object} requestData the original request information
   */
-  async ensureResponseAuthorized(status /* , headers, payload, requestData */) {
+  async ensureResponseAuthorized(
+    status: number,
+    _headers: Record<string, string>,
+    _payload: unknown,
+    _requestData: Record<string, unknown>,
+  ) {
     if ([401, 403].includes(status) && this.session.isAuthenticated) {
       await this.session.invalidate();
     }

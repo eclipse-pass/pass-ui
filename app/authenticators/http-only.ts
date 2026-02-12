@@ -3,7 +3,8 @@ import { service } from '@ember/service';
 import { isEmpty } from '@ember/utils';
 
 export default class HttpOnly extends Base {
-  @service session;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  @service declare session: any;
 
   /**
    Restores the session from a session data object; __will return a resolving
@@ -14,7 +15,7 @@ export default class HttpOnly extends Base {
    @return {Ember.RSVP.Promise} A promise that when it resolves results in the session becoming or remaining authenticated
    @public
    */
-  async restore(data) {
+  async restore(data: Record<string, unknown>) {
     const normalizedData = this.normalizeSessionData(data);
     const dataIsValid = await this._validateData(normalizedData);
 
@@ -32,10 +33,10 @@ export default class HttpOnly extends Base {
    * @param {*} data
    * @returns data
    */
-  normalizeSessionData(data) {
-    if (!data?.id && data?.user?.id) {
+  normalizeSessionData(data: Record<string, unknown>) {
+    if (!data?.['id'] && (data?.['user'] as Record<string, unknown>)?.['id']) {
       return {
-        id: data.user.id,
+        id: (data['user'] as Record<string, unknown>)['id'],
         ...data,
       };
     }
@@ -50,7 +51,7 @@ export default class HttpOnly extends Base {
   async authenticate() {
     const url = `/user/whoami`;
 
-    let response = await fetch(url);
+    const response = await fetch(url);
 
     if (response.ok) {
       const data = await response.json();
@@ -60,23 +61,23 @@ export default class HttpOnly extends Base {
         return resolve(normalizedData);
       });
     } else {
-      let error = await response.text();
+      const error = await response.text();
       throw new Error(error);
     }
   }
 
-  async _validateData(data) {
+  async _validateData(data: Record<string, unknown>) {
     // see https://tools.ietf.org/html/rfc6749#section-4.2.2
-    if (isEmpty(data) || isEmpty(data.id)) return false;
+    if (isEmpty(data) || isEmpty(data['id'])) return false;
 
     const url = `/user/whoami`;
 
-    let response = await fetch(url);
+    const response = await fetch(url);
 
     if (response.ok) {
       const refreshedData = this.normalizeSessionData(await response.json());
 
-      return data.id === refreshedData.id;
+      return data['id'] === refreshedData['id'];
     } else {
       return false;
     }

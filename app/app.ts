@@ -10,6 +10,7 @@ import 'sweetalert2/dist/sweetalert2.css';
 import 'survey-core/survey-core.fontless.min.css';
 import './font-awesome';
 
+// @ts-expect-error no types for @embroider/virtual/compat-modules
 import compatModules from '@embroider/virtual/compat-modules';
 
 export default class App extends Application {
