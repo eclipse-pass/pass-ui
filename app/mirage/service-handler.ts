@@ -9,15 +9,16 @@ function dataPath() {
 }
 
 export default class MockDataFinder {
-  environment;
+  environment: string;
 
-  constructor(environment) {
+  constructor(environment: string) {
     this.environment = environment;
   }
 
-  async findBy(schema, type, filter) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async findBy(schema: any, type: string, filter: Record<string, string>) {
     if (this.environment !== 'test') {
-      const key = Object.keys(filter)[0];
+      const key = Object.keys(filter)[0]!;
       const filterStr = `filter[${type}]=${key}=ini="${filter[key]}"`;
 
       const url = `${dataPath()}/${type}?${filterStr}`;
