@@ -1,13 +1,13 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
-import { action, set } from '@ember/object';
+import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { task, timeout, dropTask } from 'ember-concurrency';
 import type { Task } from 'ember-concurrency';
 import { scheduleOnce } from '@ember/runloop';
 import { fn, concat } from '@ember/helper';
 import { on } from '@ember/modifier';
-import { Input, Textarea } from '@ember/component';
+import { Textarea } from '@ember/component';
 import { LinkTo } from '@ember/routing';
 import ENV from 'pass-ui/config/environment';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -117,7 +117,7 @@ export default class WorkflowBasics extends Component<WorkflowBasicsSignature> {
       !publication.doi ||
       !publication.title ||
       !publication.journal ||
-      !publication.journal?.get?.('journalName')
+      !(publication.journal?.get?.('journalName') ?? publication.journal?.journalName)
     );
   }
 
@@ -202,15 +202,14 @@ export default class WorkflowBasics extends Component<WorkflowBasicsSignature> {
   }
 
   clearPublication(doi?: string) {
-    this.publication.setProperties({
-      doi,
-      title: '',
-      abstract: '',
-      volume: '',
-      issue: '',
-      pmid: '',
-      journal: undefined,
-    });
+    const pub = this.publication;
+    pub.doi = doi;
+    pub.title = '';
+    pub.abstract = '';
+    pub.volume = '';
+    pub.issue = '';
+    pub.pmid = '';
+    pub.journal = undefined;
   }
 
   updateMetadata(metadata: Record<string, unknown>) {
@@ -305,6 +304,33 @@ export default class WorkflowBasics extends Component<WorkflowBasicsSignature> {
   }
 
   @action
+  handleDoiInput(event: Event) {
+    const value = (event.target as HTMLInputElement).value;
+    this.publication.doi = value;
+    this.lookupDOI.perform(true);
+  }
+
+  @action
+  handleSearchInput(event: Event) {
+    this.userSearchTerm = (event.target as HTMLInputElement).value;
+  }
+
+  @action
+  handleEmailInput(event: Event) {
+    this.inputSubmitterEmail = (event.target as HTMLInputElement).value;
+  }
+
+  @action
+  handleNameInput(event: Event) {
+    this.submission.submitterName = (event.target as HTMLInputElement).value;
+  }
+
+  @action
+  handleTitleInput(event: Event) {
+    this.publication.title = (event.target as HTMLTextAreaElement).value;
+  }
+
+  @action
   handleRemoveSubmitter(event: Event) {
     event.preventDefault();
     this.changeSubmitter(this.isProxySubmission, null);
@@ -331,7 +357,7 @@ export default class WorkflowBasics extends Component<WorkflowBasicsSignature> {
         return;
       }
 
-      set(publication, 'doi', doi);
+      publication.doi = doi;
 
       this.flashMessages.info('Please wait while we look up information about your DOI');
 
@@ -346,7 +372,8 @@ export default class WorkflowBasics extends Component<WorkflowBasicsSignature> {
         result.publication.journal,
         this.schemaService.getAllFields(),
       );
-      metadata['journal-title'] = result.publication.journal.get('journalName');
+      metadata['journal-title'] =
+        result.publication.journal?.get?.('journalName') ?? result.publication.journal?.journalName;
       metadata['title'] = this.publication.title;
       this.updateMetadata(metadata);
 
@@ -399,10 +426,12 @@ export default class WorkflowBasics extends Component<WorkflowBasicsSignature> {
             Please indicate on behalf of whom this submission is being completed:
           </p>
           <div class='input-group pb-3'>
-            <Input
+            <input
+              type='text'
               aria-label='Proxy search input'
               {{on 'keydown' this.handleProxySearchEnter}}
-              @value={{this.userSearchTerm}}
+              {{on 'input' this.handleSearchInput}}
+              value={{this.userSearchTerm}}
               class='form-control'
               data-test-proxy-search-input
             />
@@ -443,20 +472,24 @@ export default class WorkflowBasics extends Component<WorkflowBasicsSignature> {
             , please provide their email address and name so we may notify them:
           </p>
           <div class='form-inline'>
-            <Input
+            <input
+              type='text'
               aria-label='Proxy submitter email input'
               class={{concat 'mt-1 mb-3 form-control w-50 ' this.submitterEmailClass}}
               {{on 'keyup' @validateSubmitterEmail}}
+              {{on 'input' this.handleEmailInput}}
               disabled={{@submission.submitter.id}}
-              @value={{this.inputSubmitterEmail}}
+              value={{this.inputSubmitterEmail}}
               placeholder='Email address'
               data-test-proxy-submitter-email-input
             />
-            <Input
+            <input
+              type='text'
               aria-label='Proxy submitter name input'
               class='mt-1 mb-3 form-control w-50'
+              {{on 'input' this.handleNameInput}}
               disabled={{@submission.submitter.id}}
-              @value={{@submission.submitterName}}
+              value={{@submission.submitterName}}
               placeholder='Name'
               data-test-proxy-submitter-name-input
             />
@@ -482,13 +515,14 @@ export default class WorkflowBasics extends Component<WorkflowBasicsSignature> {
         </i>
       </p>
 
-      <Input
+      <input
         id='doi'
+        type='text'
         class={{this.doiClass}}
         placeholder='Leave blank if your manuscript or article has not yet been assigned a DOI'
-        @value={{@publication.doi}}
+        value={{@publication.doi}}
         data-test-doi-input={{true}}
-        {{on 'input' (perform this.lookupDOI true)}}
+        {{on 'input' this.handleDoiInput}}
       />
       <div class='text-danger'>
         {{if (and @publication.doi (not this.isValidDOI)) 'Please provide a valid DOI'}}
@@ -514,6 +548,7 @@ export default class WorkflowBasics extends Component<WorkflowBasicsSignature> {
         cols='100%'
         rows='2'
         {{on 'keyup' @validateTitle}}
+        {{on 'input' this.handleTitleInput}}
         id='title'
         disabled={{this.isValidDOI}}
         data-test-article-title-text-area={{true}}

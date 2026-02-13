@@ -1,0 +1,219 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
+
+module('Unit | Controller | submissions/new/basics', (hooks) => {
+  setupTest(hooks);
+
+  // Replace this with your real tests.
+  test('it exists', function (assert) {
+    const controller = this.owner.lookup('controller:submissions/new/basics');
+    assert.ok(controller);
+  });
+
+  test('ensure email format validation works', function (assert) {
+    const controller: any = this.owner.lookup('controller:submissions/new/basics');
+    const submission: any = {
+      submitterEmailDisplay: 'badtestemail',
+      repositories: [],
+      grants: [],
+    };
+    const model = {
+      newSubmission: submission,
+    };
+    controller.model = model;
+    assert.true(controller.submitterEmailIsInvalid);
+
+    controller.model.newSubmission.submitterEmailDisplay = 'bademail.com';
+    assert.true(controller.submitterEmailIsInvalid);
+
+    controller.model.newSubmission.submitterEmailDisplay = 'bad|#$~email.com';
+    assert.true(controller.submitterEmailIsInvalid);
+
+    controller.model.newSubmission.submitterEmailDisplay = 'mailto:bad@email.com';
+    assert.true(controller.submitterEmailIsInvalid);
+
+    controller.model.newSubmission.submitterEmailDisplay = 'bad@email+com';
+    assert.true(controller.submitterEmailIsInvalid);
+
+    controller.model.newSubmission.submitterEmailDisplay = 'good@email.com';
+    assert.false(controller.submitterEmailIsInvalid);
+
+    controller.model.newSubmission.submitterEmailDisplay = 'good.email@email.co.uk';
+    assert.false(controller.submitterEmailIsInvalid);
+
+    controller.model.newSubmission.submitterEmailDisplay = 'good_email55@ema-il.co.uk';
+    assert.false(controller.submitterEmailIsInvalid);
+  });
+
+  test('check submitter validation', function (assert) {
+    const controller: any = this.owner.lookup('controller:submissions/new/basics');
+    const submission: any = {
+      repositories: [],
+      grants: [],
+    };
+    const submitter = {
+      id: 'https://fake.id',
+    };
+    const model = {
+      newSubmission: submission,
+    };
+    controller.model = model;
+    assert.true(controller.submitterEmailIsInvalid);
+    assert.true(controller.submitterIsInvalid);
+
+    controller.model.newSubmission.submitterName = 'Test Name';
+    controller.model.newSubmission.submitterEmail = 'mailto:good@email.com';
+    assert.false(controller.submitterIsInvalid);
+
+    controller.model.newSubmission.submitterName = null;
+    controller.model.newSubmission.submitterEmailDisplay = null;
+    controller.model.newSubmission.submitter = submitter;
+    assert.false(controller.submitterIsInvalid);
+  });
+
+  test('check title and journal validation', function (assert) {
+    const controller: any = this.owner.lookup('controller:submissions/new/basics');
+    const submission: any = {};
+    const journalData: any = {};
+    const journal: any = {
+      get(key: string) {
+        return journalData[key];
+      },
+    };
+    const publication: any = {
+      journal,
+    };
+    const model = {
+      newSubmission: submission,
+      publication,
+    };
+    controller.model = model;
+    assert.true(controller.journalIsInvalid);
+    assert.true(controller.titleIsInvalid);
+
+    controller.model.publication.title = 'Test title';
+    assert.false(controller.titleIsInvalid);
+
+    journalData.id = 'test:journal_id';
+    assert.false(controller.journalIsInvalid);
+
+    journalData.id = null;
+    journalData.journalName = 'Test journal name';
+    assert.false(controller.journalIsInvalid);
+  });
+
+  test('check validateAndLoadTab rejects empty publication title but not journal title', function (assert) {
+    const controller: any = this.owner.lookup('controller:submissions/new/basics');
+    const submission: any = {};
+    const publication: any = {
+      journal: {},
+    };
+    const model = {
+      newSubmission: submission,
+      publication,
+    };
+    controller.model = model;
+    assert.false(controller.titleError);
+    assert.false(controller.journalError);
+    assert.strictEqual(controller.flaggedFields.indexOf('title'), -1);
+    assert.strictEqual(controller.flaggedFields.indexOf('journal'), -1);
+
+    controller.send('validateAndLoadTab', 'submissions.new.basics');
+
+    assert.true(controller.titleError);
+    assert.false(controller.journalError);
+    assert.ok(controller.flaggedFields.indexOf('title') > -1);
+    assert.strictEqual(controller.flaggedFields.indexOf('journal'), -1);
+  });
+
+  test('check validateAndLoadTab rejects incomplete submitter', function (assert) {
+    assert.expect(9);
+    const controller: any = this.owner.lookup('controller:submissions/new/basics');
+    let loadTabAccessed = false;
+    const submission: any = {
+      isProxySubmission: true,
+    };
+    const publication = {
+      title: 'Test publication title',
+      journal: {
+        id: 'journal:id',
+      },
+    };
+    const model = {
+      newSubmission: submission,
+      publication,
+    };
+    controller.model = model;
+    const routerService: any = this.owner.lookup('service:router');
+    routerService.transitionTo = () => {
+      assert.ok(true);
+      loadTabAccessed = true;
+    };
+
+    // this will error if it proceeds to loadTab.
+    assert.true(controller.model.newSubmission.isProxySubmission);
+    controller.send('validateAndLoadTab', 'submissions.new.basics');
+
+    assert.true(controller.submitterIsInvalid);
+    // no flagged fields in this instance and loadTab not accessed
+    assert.false(controller.titleError);
+    assert.false(controller.journalError);
+    assert.false(controller.submitterEmailError);
+    assert.strictEqual(controller.flaggedFields.indexOf('journal'), -1);
+    assert.strictEqual(controller.flaggedFields.indexOf('title'), -1);
+    assert.strictEqual(controller.flaggedFields.indexOf('submitterEmail'), -1);
+    assert.false(loadTabAccessed);
+  });
+
+  test('check validateAndLoadTab accepts complete information', function (assert) {
+    assert.expect(11);
+
+    let subSaved = false;
+
+    const controller: any = this.owner.lookup('controller:submissions/new/basics');
+    const submission: any = {
+      isProxySubmission: true,
+      submitterName: 'Test Submitter',
+      submitterEmail: 'mailto:test@email.com',
+      submitterEmailDisplay: 'test@email.com',
+      save: () => {
+        assert.ok(true);
+        subSaved = true;
+        return Promise.resolve();
+      },
+    };
+    const publication = {
+      title: 'Test publication title',
+      journal: {
+        id: 'journal:id',
+      },
+      save() {
+        assert.ok(true);
+        return Promise.resolve();
+      },
+    };
+    const model = {
+      newSubmission: submission,
+      publication,
+    };
+
+    controller.model = model;
+    const routerService: any = this.owner.lookup('service:router');
+    routerService.transitionTo = () => {
+      // no errors and loadTab accessed
+      assert.false(controller.submitterIsInvalid);
+      assert.false(controller.titleError);
+      assert.false(controller.journalError);
+      assert.false(controller.submitterEmailError);
+      assert.strictEqual(controller.flaggedFields.indexOf('journal'), -1);
+      assert.strictEqual(controller.flaggedFields.indexOf('title'), -1);
+      assert.strictEqual(controller.flaggedFields.indexOf('submitterEmail'), -1);
+
+      assert.ok(subSaved, 'submission was not saved');
+    };
+
+    assert.true(controller.model.newSubmission.isProxySubmission);
+    controller.send('validateAndLoadTab', 'submissions.new.basics');
+  });
+});

@@ -6,6 +6,7 @@
     "emitDeclarationOnly": false,
     "allowJs": true,
     "checkJs": false,
+    "noPropertyAccessFromIndexSignature": false,
     "types": [
       "ember-source/types",
       "@ember-data-types/model/unstable-preview-types",
@@ -16,11 +17,13 @@
       "@ember-data-types/legacy-compat/unstable-preview-types",
       "@ember-data-types/tracking/unstable-preview-types",
       "@warp-drive-types/core-types/unstable-preview-types",
-      "@types/rsvp"
+      "@types/rsvp",
+      "@types/qunit"
     ],
     "paths": {
       "pass-ui/*": ["./app/*"],
       "pass-ui/config/*": ["./app/config/*"],
+      "pass-ui/tests/*": ["./tests/*"],
       "ember-models-table/components/models-table-server-paginated": ["./types/ember-models-table/models-table-server-paginated"],
       "ember-models-table/components/models-table": ["./types/ember-models-table/models-table"],
       "ember-power-select/components/power-select": ["./types/ember-power-select/power-select"]
