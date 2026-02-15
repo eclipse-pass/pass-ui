@@ -47,14 +47,14 @@ export default class WorkflowRepositories extends Component<WorkflowRepositories
   }
 
   @action
-  async setupRepos() {
+  setupRepos() {
     const args = this.args;
     this.addedRepos = this.getAddedRepositories();
-    const currentRepos = await args.submission.repositories;
+    const currentRepos = args.submission.repositories;
 
-    const opt = await args.optionalRepositories;
-    const req = await args.requiredRepositories;
-    const choice = await args.choiceRepositories;
+    const opt = args.optionalRepositories;
+    const req = args.requiredRepositories;
+    const choice = args.choiceRepositories;
 
     if (currentRepos && currentRepos.length > 0) {
       const validRepos: string[] = [];
@@ -109,10 +109,10 @@ export default class WorkflowRepositories extends Component<WorkflowRepositories
     return this.submissionHandler.getRepositoriesFromGrants(grants);
   }
 
-  async setSelected(repo: RepositoryModel) {
+  setSelected(repo: RepositoryModel) {
     const id = repo.id;
     const addedRepos = this.addedRepos;
-    const currentRepos = await this.args.submission.repositories;
+    const currentRepos = this.args.submission.repositories;
 
     if (addedRepos.some((r: RepositoryModel) => r.id === id)) {
       return;
@@ -145,8 +145,8 @@ export default class WorkflowRepositories extends Component<WorkflowRepositories
     this.args.back();
   }
 
-  async addRepository(repository: RepositoryModel, setMaxStep: boolean) {
-    const repos = await this.args.submission.repositories;
+  addRepository(repository: RepositoryModel, setMaxStep: boolean) {
+    const repos = this.args.submission.repositories;
 
     if (!repos.includes(repository)) {
       this.args.submission.repositories = [repository, ...repos];
@@ -156,8 +156,8 @@ export default class WorkflowRepositories extends Component<WorkflowRepositories
     }
   }
 
-  async removeRepository(repository: RepositoryModel, setMaxStep: boolean) {
-    const repositories = await this.args.submission.repositories;
+  removeRepository(repository: RepositoryModel, setMaxStep: boolean) {
+    const repositories = this.args.submission.repositories;
     this.args.submission.repositories = repositories.filter((r: RepositoryModel) => r.name !== repository.name);
     if (setMaxStep) {
       this.workflow.setMaxStep(4);

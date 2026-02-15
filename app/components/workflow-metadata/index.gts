@@ -70,14 +70,14 @@ export default class WorkflowMetadata extends Component<WorkflowMetadataSignatur
 
   setupSchema = task(async () => {
     if (!this.schema) {
-      const repositories = await this.args.submission.repositories;
+      const repositories = this.args.submission.repositories;
       this.schema = this.metadataSchema.getMetadataSchema(repositories, this.workflow.getReadOnlyProperties());
 
       const requiresJournal =
         this.schema!.elements.findIndex(
           (el: SurveyElement) => el.name === 'journal-title' && 'isRequired' in el && el.isRequired,
         ) !== -1;
-      const journal = await this.args.publication.journal;
+      const journal = this.args.publication.journal;
       this.missingRequiredJournal = requiresJournal && !journal;
     }
   });

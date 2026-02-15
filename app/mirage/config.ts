@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any, ember/avoid-leaking-state-in-ember-objects */
 const camelize = (str: string) => str.replace(/[-_\s]+(.)?/g, (_: string, c: string) => (c ? c.toUpperCase() : ''));
 import { createServer, JSONAPISerializer, Model, Response, belongsTo, hasMany } from 'miragejs';
 import doiJournals from './custom-fixtures/nih-submission/doi-journals';
@@ -82,9 +82,35 @@ export default function (config: any) {
         keyForRelationship: (key: string) => (key ? camelize(key) : null),
         alwaysIncludeLinkageData: true,
       }),
-      policy: JSONAPISerializer.extend({
-        // include: ['repositories']
+      grant: JSONAPISerializer.extend({
+        keyForAttribute: (attr: string) => (attr ? camelize(attr) : null),
+        keyForRelationship: (key: string) => (key ? camelize(key) : null),
         alwaysIncludeLinkageData: true,
+        include: ['primaryFunder', 'directFunder'],
+      }),
+      funder: JSONAPISerializer.extend({
+        keyForAttribute: (attr: string) => (attr ? camelize(attr) : null),
+        keyForRelationship: (key: string) => (key ? camelize(key) : null),
+        alwaysIncludeLinkageData: true,
+        include: ['policy'],
+      }),
+      publication: JSONAPISerializer.extend({
+        keyForAttribute: (attr: string) => (attr ? camelize(attr) : null),
+        keyForRelationship: (key: string) => (key ? camelize(key) : null),
+        alwaysIncludeLinkageData: true,
+        include: ['journal'],
+      }),
+      submission: JSONAPISerializer.extend({
+        keyForAttribute: (attr: string) => (attr ? camelize(attr) : null),
+        keyForRelationship: (key: string) => (key ? camelize(key) : null),
+        alwaysIncludeLinkageData: true,
+        include: ['grants', 'publication', 'submitter', 'repositories', 'preparers', 'effectivePolicies'],
+      }),
+      policy: JSONAPISerializer.extend({
+        keyForAttribute: (attr: string) => (attr ? camelize(attr) : null),
+        keyForRelationship: (key: string) => (key ? camelize(key) : null),
+        alwaysIncludeLinkageData: true,
+        include: ['repositories'],
       }),
     },
     routes(this: any) {
@@ -224,7 +250,6 @@ export default function (config: any) {
         if (!query) {
           return schema.all('submission');
         }
-
         // Find the 'filter[...]' parameter
         let submissionFilter = Object.keys(query)
           .filter((key: string) => key.includes('filter[submission]'))
@@ -234,12 +259,7 @@ export default function (config: any) {
         }
         // Once we know query params includes a submission filter, get its value
         submissionFilter = submissionFilter[0];
-
-        if (submissionFilter.includes('cancelled')) {
-          return schema.all('submission');
-        }
-
-        return schema.none('submission');
+        return submissionFilter.includes('cancelled') ? schema.all('submission') : schema.none('submission');
       });
 
       // Submission Events

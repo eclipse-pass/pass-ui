@@ -29,7 +29,7 @@ export function submissionsIndexQuery(params: QueryParams, user: UserLike) {
   if (user.isAdmin) {
     query = {
       filter: { submission: 'submissionStatus=out=cancelled' },
-      include: 'publication',
+      include: 'publication,grants.primaryFunder,repositories,submitter,preparers',
     };
   } else if (user.isSubmitter) {
     const userMatch = `submitter.id==${user.id},preparers.id=in=${user.id}`;
@@ -38,7 +38,7 @@ export function submissionsIndexQuery(params: QueryParams, user: UserLike) {
         submission: `(${userMatch});submissionStatus=out=cancelled`,
       },
       sort: '-submittedDate',
-      include: ['publication', 'repositories', 'submitter'].join(','),
+      include: 'publication,grants.primaryFunder,repositories,submitter,preparers',
     };
   }
 
@@ -103,6 +103,7 @@ export function grantsIndexGrantQuery(params: QueryParams, user: UserLike) {
       grant: `pi.id==${userId},coPis.id==${userId}`,
     },
     sort: '+awardStatus,-endDate',
+    include: 'primaryFunder,directFunder',
     page: {
       number: page,
       size: pageSize,
@@ -123,6 +124,7 @@ export function grantsIndexSubmissionQuery(user: UserLike) {
     filter: {
       submission: `submissionStatus=out=cancelled;(${userMatch})`,
     },
+    include: 'grants',
   };
 }
 

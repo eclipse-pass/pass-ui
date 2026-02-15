@@ -60,7 +60,7 @@ export default class PoliciesService extends Service {
     return await all(
       data.map((policyInfo: { id: string; type: string }) =>
         this.store.findRecord('policy', policyInfo.id).then((pol: PolicyModel) => {
-          pol.set('_type', policyInfo.type);
+          pol._type = policyInfo.type;
           return pol;
         }),
       ),
@@ -141,7 +141,7 @@ export default class PoliciesService extends Service {
     return await all(
       repos.map((repoInfo) =>
         this.store.findRecord('repository', repoInfo.url).then((repo: RepositoryModel) => {
-          repo.set('_selected', repoInfo.selected);
+          repo._selected = repoInfo.selected;
           return repo;
         }),
       ),

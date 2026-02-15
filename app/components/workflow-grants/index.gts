@@ -126,13 +126,13 @@ export default class WorkflowGrants extends Component<WorkflowGrantsSignature> {
   setup = task(async () => {
     this.contactUrl = this.appStaticConfig?.config?.branding?.pages?.['contactUrl'] ?? null;
 
-    const submitter = await this.args.submission.submitter;
+    const submitter = this.args.submission.submitter;
     if (submitter?.id) {
       await this.updateGrants.perform();
     }
 
     this._selectedGrants = [];
-    let grants = await this.args.submission.grants;
+    let grants = this.args.submission.grants;
     if (this.preLoadedGrant) {
       grants = [this.preLoadedGrant, ...grants];
       this.workflow.addGrant(this.preLoadedGrant);
@@ -141,7 +141,7 @@ export default class WorkflowGrants extends Component<WorkflowGrantsSignature> {
   });
 
   updateGrants = task(async () => {
-    const userId = await this.args.submission.submitter.id;
+    const userId = this.args.submission.submitter.id;
     const grantQuery = {
       filter: {
         grant: `pi.id==${userId},coPis.id==${userId}`,
@@ -167,9 +167,10 @@ export default class WorkflowGrants extends Component<WorkflowGrantsSignature> {
     if (grant) {
       this.addGrant(grant);
     } else if (event && (event.target as HTMLSelectElement).value) {
-      let grant = await this.store.findRecord('grant', (event.target as HTMLSelectElement).value);
+      let grant = await this.store.findRecord('grant', (event.target as HTMLSelectElement).value, {
+        include: 'primaryFunder,directFunder',
+      });
 
-      grant.get('primaryFunder.policy');
       this.addGrant(grant);
       document.querySelectorAll('select')[0]!.selectedIndex = 0;
     }
@@ -196,10 +197,10 @@ export default class WorkflowGrants extends Component<WorkflowGrantsSignature> {
   }
 
   @action
-  async addGrant(grant: GrantModel) {
+  addGrant(grant: GrantModel) {
     const workflow = this.workflow;
     const submission = this.args.submission;
-    const grants = await submission.grants;
+    const grants = submission.grants;
 
     if (!grants.includes(grant)) {
       this.args.submission.grants = [grant, ...grants];
@@ -215,14 +216,14 @@ export default class WorkflowGrants extends Component<WorkflowGrantsSignature> {
   }
 
   @action
-  async removeGrant(grant: GrantModel) {
+  removeGrant(grant: GrantModel) {
     const workflow = this.workflow;
 
     if (grant === this.preLoadedGrant) {
       this.preLoadedGrant = null;
     }
     const submission = this.args.submission;
-    const grants = await submission.grants;
+    const grants = submission.grants;
     this.args.submission.grants = grants.filter((g: GrantModel) => g !== grant);
     workflow.removeGrant(grant);
     this._selectedGrants = this._selectedGrants.filter((g: GrantModel) => g !== grant);

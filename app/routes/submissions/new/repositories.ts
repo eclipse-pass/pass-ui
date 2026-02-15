@@ -1,7 +1,5 @@
-/* eslint-disable ember/no-get */
-import { action, get } from '@ember/object';
+import { action } from '@ember/object';
 import { service } from '@ember/service';
-import { hash } from 'rsvp';
 import CheckSessionRoute from '../../check-session-route';
 import type Workflow from 'pass-ui/services/workflow';
 import type PoliciesService from 'pass-ui/services/policies';
@@ -42,79 +40,61 @@ export default class RepositoriesRoute extends CheckSessionRoute {
 
     this.repositories = await this.policies.getRepositories.perform(this.submission);
 
-    return hash({
+    return {
       newSubmission: this.submission,
       preLoadedGrant: parentModel.preLoadedGrant,
       requiredRepositories: this.requiredRepositories(),
       optionalRepositories: this.optionalRepositories(),
       choiceRepositories: this.choiceRepositories(),
-    });
+    };
   }
 
-  async _getFunderNamesForRepo(repo: RepositoryModel, submission: SubmissionModel): Promise<string> {
-    const grants = await submission.grants;
+  _getFunderNamesForRepo(repo: RepositoryModel, submission: SubmissionModel): string {
+    const grants = submission.grants;
 
-    const funders = grants.map((grant: GrantModel) => get(grant, 'primaryFunder'));
-    const fundersWithRepos = funders.filter((funder: FunderModel) => get(funder, 'policy.repositories'));
+    const funders = grants.map((grant: GrantModel) => grant.primaryFunder);
+    const fundersWithRepos = funders.filter((funder: FunderModel) => funder?.policy?.repositories);
     // List of funders that include this repository
-    const fundersWithOurRepo = fundersWithRepos.filter(
-      (funder: FunderModel) =>
-        get(funder, 'policy') && (funder.get('policy.repositories') as unknown as RepositoryModel[]).includes(repo),
+    const fundersWithOurRepo = fundersWithRepos.filter((funder: FunderModel) =>
+      funder?.policy?.repositories?.includes(repo),
     );
 
     if (fundersWithRepos && fundersWithOurRepo.length > 0) {
       return fundersWithOurRepo
-        .map((funder: FunderModel) => funder.get('name'))
+        .map((funder: FunderModel) => funder.name)
         .filter((item: string, index: number, arr: string[]) => arr.indexOf(item) == index)
         .join(', ');
     }
     return '';
   }
 
-  async requiredRepositories(): Promise<RepositoryWithFunders[]> {
-    return Promise.all(
-      this.repositories?.required?.map(async (repo: RepositoryModel) => {
-        const funders = await this._getFunderNamesForRepo(repo, this.submission!);
-        return {
-          repository: repo,
-          funders,
-        };
-      }) ?? [],
+  requiredRepositories(): RepositoryWithFunders[] {
+    return (
+      this.repositories?.required?.map((repo: RepositoryModel) => ({
+        repository: repo,
+        funders: this._getFunderNamesForRepo(repo, this.submission!),
+      })) ?? []
     );
   }
 
-  async optionalRepositories(): Promise<RepositoryWithFunders[]> {
-    return Promise.all(
-      this.repositories?.optional?.map(async (repo: RepositoryModel) => {
-        const funders = await this._getFunderNamesForRepo(repo, this.submission!);
-
-        return {
-          repository: repo,
-          funders,
-        };
-      }) ?? [],
+  optionalRepositories(): RepositoryWithFunders[] {
+    return (
+      this.repositories?.optional?.map((repo: RepositoryModel) => ({
+        repository: repo,
+        funders: this._getFunderNamesForRepo(repo, this.submission!),
+      })) ?? []
     );
   }
 
-  async choiceRepositories(): Promise<RepositoryWithFunders[][]> {
-    const formattedChoices = [];
+  choiceRepositories(): RepositoryWithFunders[][] {
     const choices = this.repositories?.['one-of'] ?? [];
 
-    for (const group of choices) {
-      const formattedGroup = [];
-      for (const repo of group) {
-        const funders = await this._getFunderNamesForRepo(repo, this.submission!);
-
-        formattedGroup.push({
-          repository: repo,
-          funders,
-        });
-      }
-
-      formattedChoices.push(formattedGroup);
-    }
-
-    return formattedChoices;
+    return choices.map((group) =>
+      group.map((repo) => ({
+        repository: repo,
+        funders: this._getFunderNamesForRepo(repo, this.submission!),
+      })),
+    );
   }
 
   @action

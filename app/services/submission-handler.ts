@@ -1,4 +1,3 @@
-import { isArray } from '@ember/array';
 import Service, { service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
 import { task } from 'ember-concurrency';
@@ -31,14 +30,14 @@ export default class SubmissionHandlerService extends Service {
     const result: any[] = []; // eslint-disable-line @typescript-eslint/no-explicit-any
 
     grants.forEach((grant) => {
-      const directRepos = grant.get('directFunder.policy.repositories');
-      const primaryRepos = grant.get('primaryFunder.policy.repositories');
+      const directRepos = grant.directFunder?.policy?.repositories;
+      const primaryRepos = grant.primaryFunder?.policy?.repositories;
 
-      if (isArray(directRepos)) {
-        result.push((directRepos as RepositoryModel[]).slice());
+      if (Array.isArray(directRepos)) {
+        result.push(directRepos.slice());
       }
-      if (isArray(primaryRepos)) {
-        result.push((primaryRepos as RepositoryModel[]).slice());
+      if (Array.isArray(primaryRepos)) {
+        result.push(primaryRepos.slice());
       }
     });
 
@@ -82,7 +81,7 @@ export default class SubmissionHandlerService extends Service {
       submission.submissionStatus = 'submitted';
       submission.submittedDate = new Date();
 
-      const repos = await submission.repositories;
+      const repos = submission.repositories;
       // Add agreements metadata
       const agreemd = this.schemaService.getAgreementsBlob(repos);
 
@@ -263,7 +262,7 @@ export default class SubmissionHandlerService extends Service {
     const files = await this.store.query('file', fileForSubmissionQuery(submission.id));
     await Promise.all(files.map((file: FileModel) => file.destroyRecord()));
 
-    const publication = await submission.publication;
+    const publication = submission.publication;
 
     // Search for Submissions that reference this publication
     const submissionId = submission.id;

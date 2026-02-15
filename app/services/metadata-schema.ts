@@ -276,7 +276,7 @@ export default class MetadataSchemaService extends Service {
       'volume',
     ];
 
-    const repos = await submission.repositories;
+    const repos = submission.repositories;
     const titleMap = this.getFieldTitleMap(surveySchema);
     const metadata = JSON.parse(submission.metadata);
 

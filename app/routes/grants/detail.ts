@@ -31,7 +31,7 @@ export default class DetailRoute extends CheckSessionRoute {
       return;
     }
 
-    const grant = this.store.findRecord('grant', params.grant_id, { include: 'pi,coPis' });
+    const grant = this.store.findRecord('grant', params.grant_id, { include: 'pi,coPis,primaryFunder,directFunder' });
 
     const submissionQuery = grantDetailsQuery(params, params.grant_id, this.currentUser.user!);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

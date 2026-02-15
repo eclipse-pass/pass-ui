@@ -9,7 +9,7 @@ export default class SubmissionEventModel extends Model {
   @attr('string') declare comment: string;
   @attr('string') declare link: string;
 
-  @belongsTo('submission', { async: true, inverse: '_submissionEvents' }) declare submission: SubmissionModel;
+  @belongsTo('submission', { async: false, inverse: '_submissionEvents' }) declare submission: SubmissionModel;
   @belongsTo('user', { async: false, inverse: null }) declare performedBy: UserModel;
 }
 

@@ -126,8 +126,8 @@ export default class DoiService extends Service {
     doiCopy.issns = [];
 
     if (journal) {
-      if (isArray(journal.get('issns'))) {
-        journal.get('issns').forEach((s) => {
+      if (isArray(journal.issns)) {
+        journal.issns.forEach((s) => {
           const i = s.indexOf(':');
           const value: { issn?: string; pubType?: string } = {};
 
@@ -168,8 +168,8 @@ export default class DoiService extends Service {
     // Misc manual translation
     if (doiCopy.nlmta) {
       doiCopy['journal-NLMTA-ID'] = doiCopy.nlmta;
-    } else if (journal && journal.get('nlmta')) {
-      doiCopy['journal-NLMTA-ID'] = journal.get('nlmta');
+    } else if (journal && journal.nlmta) {
+      doiCopy['journal-NLMTA-ID'] = journal.nlmta;
     }
     if (doiCopy['container-title-short']) {
       doiCopy['journal-title-short'] = doiCopy['container-title-short'];

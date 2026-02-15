@@ -14,7 +14,6 @@ interface Signature {
 <template>
   {{#if (get @record 'publication')}}
     <LinkTo @route='submissions.detail' @model={{@record.id}} class='moo'>
-      {{! @glint-expect-error - get returns unknown for nested path }}
       {{get @record 'publication.title'}}
     </LinkTo>
   {{/if}}

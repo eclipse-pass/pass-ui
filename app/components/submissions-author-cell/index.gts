@@ -12,7 +12,6 @@ interface Signature {
 // prettier-ignore
 <template>
   <a href='javascript:;' title='Click to contact corresponding author'>
-    {{! @glint-expect-error - get with dynamic path returns unknown }}
     {{get @record (concat @column.propertyName '.displayName')}}
   </a>
 </template> satisfies TemplateOnlyComponent<Signature>

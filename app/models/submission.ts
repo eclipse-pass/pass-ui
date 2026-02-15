@@ -25,15 +25,15 @@ export default class SubmissionModel extends Model {
   @attr('number') declare version: number;
 
   @belongsTo('user', { async: false, inverse: null }) declare submitter: UserModel;
-  @belongsTo('publication', { async: true, inverse: null }) declare publication: PublicationModel;
+  @belongsTo('publication', { async: false, inverse: null }) declare publication: PublicationModel;
 
   @hasMany('user', { async: false, inverse: null }) declare preparers: UserModel[];
   @hasMany('repository', { async: false, inverse: null }) declare repositories: RepositoryModel[];
-  @hasMany('policy', { async: true, inverse: null, resetOnRemoteUpdate: false })
+  @hasMany('policy', { async: false, inverse: null, resetOnRemoteUpdate: false })
   declare effectivePolicies: PolicyModel[];
   // not on this model on API
   @hasMany('submission-event', {
-    async: true,
+    async: false,
     inverse: 'submission',
   })
   declare _submissionEvents: SubmissionEventModel[];
@@ -43,7 +43,7 @@ export default class SubmissionModel extends Model {
    * have the same PI. If a grant has a different PI, it should be a separate submission.
    */
   @hasMany('grant', {
-    async: true,
+    async: false,
     inverse: null,
   })
   declare grants: GrantModel[];

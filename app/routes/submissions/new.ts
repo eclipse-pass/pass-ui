@@ -70,7 +70,9 @@ export default class NewRoute extends CheckSessionRoute {
     let journal = null;
 
     if (params.grant) {
-      preLoadedGrant = this.store.findRecord('grant', params.grant);
+      preLoadedGrant = this.store.findRecord('grant', params.grant, {
+        include: 'primaryFunder,directFunder',
+      });
     }
 
     const repositories = this.loadObjects('repository', 0, 500);
@@ -80,10 +82,10 @@ export default class NewRoute extends CheckSessionRoute {
       // Operating on existing submission
 
       newSubmission = await this.store.findRecord('submission', params.submission, {
-        include: 'publication.journal,submitter',
+        include: 'effectivePolicies,grants.primaryFunder,grants.directFunder,publication.journal,submitter',
       });
-      publication = await newSubmission.publication;
-      journal = await publication.journal;
+      publication = newSubmission.publication;
+      journal = publication.journal;
 
       submissionEvents = this.store.query('submission-event', {
         filter: {

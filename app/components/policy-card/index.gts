@@ -16,7 +16,7 @@ interface PolicyCardSignature {
   Args: {
     policy: PolicyModel;
     submission: SubmissionModel;
-    journal: JournalModel;
+    journal: JournalModel | null;
   };
 }
 
@@ -46,7 +46,7 @@ export default class PolicyCard extends Component<PolicyCardSignature> {
 
   get methodAJournal(): boolean {
     const journal = this.args.journal;
-    return journal?.get?.('isMethodA');
+    return journal?.isMethodA ?? false;
   }
 
   get policyIsJHU(): boolean {
@@ -71,7 +71,6 @@ export default class PolicyCard extends Component<PolicyCardSignature> {
 
     const policy = this.args.policy;
 
-    // @ts-expect-error - async method called synchronously (legacy pattern)
     if (this._hasEffectivePolicy(policy.id!)) {
       this._removeEffectivePolicy(policy);
     } else {
@@ -79,21 +78,21 @@ export default class PolicyCard extends Component<PolicyCardSignature> {
     }
   }
 
-  async _addEffectivePolicy(policy: PolicyModel) {
-    const effectivePolicies = await this.args.submission.effectivePolicies;
-    const hasEffectivePolicy = await this._hasEffectivePolicy(policy.id!);
+  _addEffectivePolicy(policy: PolicyModel) {
+    const effectivePolicies = this.args.submission.effectivePolicies;
+    const hasEffectivePolicy = this._hasEffectivePolicy(policy.id!);
     if (!hasEffectivePolicy) {
       this.args.submission.effectivePolicies = [...effectivePolicies, policy];
     }
   }
 
-  async _removeEffectivePolicy(policy: PolicyModel) {
-    const effectivePolicies = await this.args.submission.effectivePolicies;
+  _removeEffectivePolicy(policy: PolicyModel) {
+    const effectivePolicies = this.args.submission.effectivePolicies;
     this.args.submission.effectivePolicies = effectivePolicies.filter((p: PolicyModel) => p.id !== policy.id);
   }
 
-  async _hasEffectivePolicy(policyId: string) {
-    const effectivePolicies = await this.args.submission.effectivePolicies;
+  _hasEffectivePolicy(policyId: string) {
+    const effectivePolicies = this.args.submission.effectivePolicies;
     return !!effectivePolicies && effectivePolicies.some((policy: PolicyModel) => policy.id === policyId);
   }
 

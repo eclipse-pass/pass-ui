@@ -143,7 +143,7 @@ export default class WorkflowReview extends Component<WorkflowReviewSignature> {
       return;
     }
 
-    const repos = await this.args.submission.repositories;
+    const repos = this.args.submission.repositories;
     if (repos.length === 0) {
       swal.fire({
         target: ENV.APP.rootElement,
@@ -242,7 +242,7 @@ export default class WorkflowReview extends Component<WorkflowReviewSignature> {
       });
 
       if (resultConfirm.value) {
-        const repos = await this.args.submission.repositories;
+        const repos = this.args.submission.repositories;
 
         const filteredRepos = repos.filter((repo: RepositoryModel) => {
           if (repo._isWebLink) {
@@ -499,7 +499,6 @@ export default class WorkflowReview extends Component<WorkflowReviewSignature> {
                         </p>
                       {{/unless}}
                       <hr />
-                      {{! @glint-expect-error - submissionEvents is _submissionEvents on model, legacy property access }}
                       <CommentingBlock @submissionEvents={{@submission.submissionEvents}} />
                       <Textarea
                         placeholder='Add comment'

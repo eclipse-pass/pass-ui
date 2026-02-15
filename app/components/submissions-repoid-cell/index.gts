@@ -25,7 +25,7 @@ export default class SubmissionsRepoidCell extends Component<SubmissionsRepoidCe
 
   @action
   async setUpRepoidCell() {
-    const publication = await this.args.record.publication;
+    const publication = this.args.record.publication;
     if (!publication?.id) {
       if (!(this.isDestroyed || this.isDestroying)) {
         this.repoCopies = [];

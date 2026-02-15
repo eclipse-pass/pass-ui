@@ -16,6 +16,6 @@ export default class GrantModel extends Model {
 
   @belongsTo('user', { async: false, inverse: null }) declare pi: UserModel;
   @hasMany('user', { async: false, inverse: null }) declare coPis: UserModel[];
-  @belongsTo('funder', { async: true, inverse: null }) declare primaryFunder: FunderModel;
+  @belongsTo('funder', { async: false, inverse: null }) declare primaryFunder: FunderModel;
   @belongsTo('funder', { async: false, inverse: null }) declare directFunder: FunderModel;
 }

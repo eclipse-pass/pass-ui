@@ -117,7 +117,7 @@ export default class WorkflowBasics extends Component<WorkflowBasicsSignature> {
       !publication.doi ||
       !publication.title ||
       !publication.journal ||
-      !(publication.journal?.get?.('journalName') ?? publication.journal?.journalName)
+      !publication.journal?.journalName
     );
   }
 
@@ -203,13 +203,13 @@ export default class WorkflowBasics extends Component<WorkflowBasicsSignature> {
 
   clearPublication(doi?: string) {
     const pub = this.publication;
-    pub.doi = doi;
+    pub.doi = doi ?? '';
     pub.title = '';
     pub.abstract = '';
     pub.volume = '';
     pub.issue = '';
     pub.pmid = '';
-    pub.journal = undefined;
+    pub.journal = null;
   }
 
   updateMetadata(metadata: Record<string, unknown>) {
@@ -372,8 +372,7 @@ export default class WorkflowBasics extends Component<WorkflowBasicsSignature> {
         result.publication.journal,
         this.schemaService.getAllFields(),
       );
-      metadata['journal-title'] =
-        result.publication.journal?.get?.('journalName') ?? result.publication.journal?.journalName;
+      metadata['journal-title'] = result.publication.journal?.journalName;
       metadata['title'] = this.publication.title;
       this.updateMetadata(metadata);
 

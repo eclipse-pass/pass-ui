@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { setupMirage } from 'pass-ui/tests/test-support/mirage';
@@ -62,9 +61,9 @@ module('Unit | Service | doi', (hooks) => {
   test('check doi data processing', function (assert) {
     const service = this.owner.lookup('service:doi');
     const doiInfo: any = (this as any).mockDoiInfo;
-    const journal = EmberObject.create({
+    const journal = {
       issns: ['odd', 'Print:moo', 'Online:chitter', 'malformed:', ':oddagain', ':'],
-    });
+    };
     const result = service.doiToMetadata(doiInfo, journal);
 
     assert.ok(result, 'No result was returned');
@@ -119,9 +118,9 @@ module('Unit | Service | doi', (hooks) => {
   test('make sure we only get valid fields back', function (assert) {
     const doiInfo: any = (this as any).mockDoiInfo;
     doiInfo.invalid = 'Bad moo';
-    const journal = EmberObject.create({
+    const journal = {
       issns: ['Print:moo'],
-    });
+    };
     const result = this.owner.lookup('service:doi').doiToMetadata(doiInfo, journal, ['authors']);
     assert.ok(result);
     assert.notOk(result.invalid);
@@ -180,9 +179,9 @@ module('Unit | Service | doi', (hooks) => {
   });
 
   test("Make sure we don't choke on journal with no ISSNs", function (assert) {
-    const journal = EmberObject.create({
+    const journal = {
       nlmta: 'NLmooTA',
-    });
+    };
     const doiInfo: any = (this as any).mockDoiInfo;
     const service = this.owner.lookup('service:doi');
 
