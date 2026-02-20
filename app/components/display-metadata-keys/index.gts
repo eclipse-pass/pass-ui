@@ -2,7 +2,7 @@ import Component from '@glimmer/component';
 import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
-import didInsert from '@ember/render-modifiers/modifiers/did-insert';
+import didInsert from 'pass-ui/modifiers/did-insert';
 import type MetadataSchemaService from 'pass-ui/services/metadata-schema';
 import type { MetadataDisplayEntry } from 'pass-ui/services/metadata-schema';
 import type SubmissionModel from 'pass-ui/models/submission';

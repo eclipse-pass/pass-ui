@@ -2,7 +2,7 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
-import didInsert from '@ember/render-modifiers/modifiers/did-insert';
+import didInsert from 'pass-ui/modifiers/did-insert';
 import type SubmissionModel from 'pass-ui/models/submission';
 import type RepositoryCopyModel from 'pass-ui/models/repository-copy';
 

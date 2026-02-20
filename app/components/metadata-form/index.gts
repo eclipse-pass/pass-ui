@@ -1,7 +1,7 @@
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
-import didInsert from '@ember/render-modifiers/modifiers/did-insert';
-import didUpdate from '@ember/render-modifiers/modifiers/did-update';
+import didInsert from 'pass-ui/modifiers/did-insert';
+import didUpdate from 'pass-ui/modifiers/did-update';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { SurveyModel } from 'survey-js-ui';

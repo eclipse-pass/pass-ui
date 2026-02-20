@@ -3,7 +3,7 @@ import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { fn } from '@ember/helper';
 import { on } from '@ember/modifier';
-import didInsert from '@ember/render-modifiers/modifiers/did-insert';
+import didInsert from 'pass-ui/modifiers/did-insert';
 import type Workflow from 'pass-ui/services/workflow';
 import type PolicyModel from 'pass-ui/models/policy';
 import type SubmissionModel from 'pass-ui/models/submission';

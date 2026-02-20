@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import { readdirSync } from 'fs';
+import { existsSync, readdirSync } from 'fs';
 import { defineConfig } from 'vite';
 import { extensions, classicEmberSupport, ember } from '@embroider/vite';
 import { babel } from '@rollup/plugin-babel';
@@ -32,20 +32,30 @@ function emberGetConfigShim() {
 // Embroider-rewritten ESM version. This plugin intercepts those imports.
 function rewrittenV1Addons() {
   const rewrittenDir = resolve('./node_modules/.embroider/rewritten-packages/');
-  const entries = readdirSync(rewrittenDir);
-  const mapping = {};
-  for (const pkg of ['ember-inflector', 'ember-cli-deprecation-workflow']) {
-    const match = entries.find((e) => e.startsWith(pkg + '.'));
-    if (match) {
-      mapping[pkg] = resolve(rewrittenDir, match, 'node_modules', pkg, 'index.js');
+  const packages = ['ember-inflector', 'ember-cli-deprecation-workflow'];
+  let mapping = null;
+
+  function getMapping() {
+    if (mapping) return mapping;
+    if (!existsSync(rewrittenDir)) return null;
+    mapping = {};
+    const entries = readdirSync(rewrittenDir);
+    for (const pkg of packages) {
+      const match = entries.find((e) => e.startsWith(pkg + '.'));
+      if (match) {
+        mapping[pkg] = resolve(rewrittenDir, match, 'node_modules', pkg, 'index.js');
+      }
     }
+    return mapping;
   }
+
   return {
     name: 'rewritten-v1-addons',
     enforce: 'pre',
     resolveId(source) {
-      if (mapping[source]) {
-        return mapping[source];
+      const m = getMapping();
+      if (m && m[source]) {
+        return m[source];
       }
     },
   };
@@ -69,7 +79,14 @@ export default defineConfig({
     // ember-bootstrap: uses `import from 'require'` (AMD) which esbuild can't resolve
     // ember-get-config: uses `window.require()` — our transform plugin must run before bundling
     // ember-basic-dropdown: depends on ember-get-config
-    exclude: ['ember-bootstrap', 'ember-get-config', 'ember-basic-dropdown', '@playwright/test', 'playwright', 'playwright-core'],
+    exclude: [
+      'ember-bootstrap',
+      'ember-get-config',
+      'ember-basic-dropdown',
+      '@playwright/test',
+      'playwright',
+      'playwright-core',
+    ],
   },
   server: {
     watch: {
@@ -83,17 +100,19 @@ export default defineConfig({
       configureServer(server) {
         server.middlewares.use('/app/config.json', (_req, res) => {
           res.setHeader('Content-Type', 'application/json');
-          res.end(JSON.stringify({
-            branding: {
-              homepage: 'https://www.eclipse.org/org/foundation/',
-              logo: '/app/ef/eclipse_foundation_logo_wo/EF_WHT-OR_png.png',
-              favicon: 'favicon.ico',
-              stylesheet: '/app/branding.css',
-              overrides: '/app/branding-overrides.css',
-              pages: { showPagesNavBar: false },
-              error: { icon: '/app/error-icon.png' },
-            },
-          }));
+          res.end(
+            JSON.stringify({
+              branding: {
+                homepage: 'https://www.eclipse.org/org/foundation/',
+                logo: '/app/ef/eclipse_foundation_logo_wo/EF_WHT-OR_png.png',
+                favicon: 'favicon.ico',
+                stylesheet: '/app/branding.css',
+                overrides: '/app/branding-overrides.css',
+                pages: { showPagesNavBar: false },
+                error: { icon: '/app/error-icon.png' },
+              },
+            }),
+          );
         });
       },
     },

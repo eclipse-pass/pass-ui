@@ -6,7 +6,7 @@ import { task } from 'ember-concurrency';
 import { later } from '@ember/runloop';
 import { on } from '@ember/modifier';
 import { Textarea } from '@ember/component';
-import didInsert from '@ember/render-modifiers/modifiers/did-insert';
+import didInsert from 'pass-ui/modifiers/did-insert';
 import ENV from 'pass-ui/config/environment';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore

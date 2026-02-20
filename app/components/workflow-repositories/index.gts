@@ -3,7 +3,7 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { on } from '@ember/modifier';
-import didInsert from '@ember/render-modifiers/modifiers/did-insert';
+import didInsert from 'pass-ui/modifiers/did-insert';
 import RepositoryCard from 'pass-ui/components/repository-card';
 import ChoiceRepositoriesCard from 'pass-ui/components/choice-repositories-card';
 import type SubmissionHandlerService from 'pass-ui/services/submission-handler';

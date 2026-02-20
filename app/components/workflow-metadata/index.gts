@@ -4,7 +4,7 @@ import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { task } from 'ember-concurrency';
 import { on } from '@ember/modifier';
-import didInsert from '@ember/render-modifiers/modifiers/did-insert';
+import didInsert from 'pass-ui/modifiers/did-insert';
 import { LinkTo } from '@ember/routing';
 import MetadataForm from 'pass-ui/components/metadata-form';
 import type Workflow from 'pass-ui/services/workflow';
