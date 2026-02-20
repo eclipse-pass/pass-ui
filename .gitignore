@@ -51,3 +51,8 @@ jsconfig.json
 
 # broccoli-debug
 /DEBUG/
+
+# playwright
+/test-results/
+/playwright-report/
+/tests/visual/
