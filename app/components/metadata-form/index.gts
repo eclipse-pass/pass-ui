@@ -1,7 +1,5 @@
 import Component from '@glimmer/component';
-import { action } from '@ember/object';
-import didInsert from 'pass-ui/modifiers/did-insert';
-import didUpdate from 'pass-ui/modifiers/did-update';
+import { modifier } from 'ember-modifier';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { SurveyModel } from 'survey-js-ui';
@@ -24,10 +22,8 @@ export default class MetadataForm extends Component<MetadataFormSignature> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   survey: any = null;
 
-  @action
-  setupMetadataForm() {
-    const surveySchema = this.args.schema;
-    const surveyData = this.args.data;
+  setupForm = modifier((element: HTMLElement, [schema, data]: [unknown, unknown]) => {
+    if (!schema) return;
 
     const customCss = {
       body: 'pt-4',
@@ -45,12 +41,12 @@ export default class MetadataForm extends Component<MetadataFormSignature> {
       },
     };
 
-    this.survey = new SurveyModel(surveySchema);
+    this.survey = new SurveyModel(schema);
 
     this.survey.css = customCss;
     this.survey.showCompleteButton = false;
 
-    this.survey.mergeData(surveyData);
+    this.survey.mergeData(data);
 
     this.survey.applyTheme(DefaultLightPanelless);
 
@@ -63,7 +59,7 @@ export default class MetadataForm extends Component<MetadataFormSignature> {
         '--sjs-font-family': 'var(--font-bodycopy)',
       },
     });
-    this.survey.render(document.getElementById('metadata-form'));
+    this.survey.render(element);
 
     if (typeof this.args.onSurveyReady === 'function') {
       this.args.onSurveyReady(this.survey);
@@ -73,15 +69,14 @@ export default class MetadataForm extends Component<MetadataFormSignature> {
     this.survey.onComplete.add((_sender: any, _options: any) => {
       this.args.next(this.survey.data);
     });
-  }
+
+    // Teardown: clear element before re-init when args change
+    return () => {
+      element.innerHTML = '';
+    };
+  });
 
   <template>
-    <div
-      id='metadata-form'
-      class='mb-3'
-      data-test-metadata-form
-      {{didInsert this.setupMetadataForm}}
-      {{didUpdate this.setupMetadataForm @schema @data}}
-    ></div>
+    <div id='metadata-form' class='mb-3' data-test-metadata-form {{this.setupForm @schema @data}}></div>
   </template>
 }

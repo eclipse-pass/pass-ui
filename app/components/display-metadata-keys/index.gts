@@ -1,8 +1,7 @@
 import Component from '@glimmer/component';
 import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
-import { action } from '@ember/object';
-import didInsert from 'pass-ui/modifiers/did-insert';
+import type Owner from '@ember/owner';
 import type MetadataSchemaService from 'pass-ui/services/metadata-schema';
 import type { MetadataDisplayEntry } from 'pass-ui/services/metadata-schema';
 import type SubmissionModel from 'pass-ui/models/submission';
@@ -21,7 +20,11 @@ export default class DisplayMetadataKeys extends Component<DisplayMetadataKeysSi
 
   @tracked displayData: MetadataDisplayEntry[] | null = null;
 
-  @action
+  constructor(owner: Owner, args: DisplayMetadataKeysSignature['Args']) {
+    super(owner, args);
+    this.setupDisplayData();
+  }
+
   async setupDisplayData() {
     const schemaService = this.metadataSchema;
     const displayData = await schemaService.displayMetadata(this.args.submission);
@@ -30,7 +33,7 @@ export default class DisplayMetadataKeys extends Component<DisplayMetadataKeysSi
 
   <template>
     {{! template-lint-disable no-triple-curlies }}
-    <ul class='d-flex flex-column list-unstyled gap-3' {{didInsert this.setupDisplayData}}>
+    <ul class='d-flex flex-column list-unstyled gap-3'>
       {{#each this.displayData as |data|}}
         <li>
           {{#if data.isArray}}

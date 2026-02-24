@@ -3,7 +3,8 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { on } from '@ember/modifier';
-import didInsert from 'pass-ui/modifiers/did-insert';
+import { modifier } from 'ember-modifier';
+import { schedule } from '@ember/runloop';
 import RepositoryCard from 'pass-ui/components/repository-card';
 import ChoiceRepositoriesCard from 'pass-ui/components/choice-repositories-card';
 import type SubmissionHandlerService from 'pass-ui/services/submission-handler';
@@ -46,7 +47,12 @@ export default class WorkflowRepositories extends Component<WorkflowRepositories
     return this.args.requiredRepositories.filter((repoInfo: RepoInfo) => repoInfo.repository._isWebLink);
   }
 
-  @action
+  setupReposOnInsert = modifier(() => {
+    schedule('actions', () => {
+      this.setupRepos();
+    });
+  });
+
   setupRepos() {
     const args = this.args;
     this.addedRepos = this.getAddedRepositories();
@@ -165,7 +171,7 @@ export default class WorkflowRepositories extends Component<WorkflowRepositories
   }
 
   <template>
-    <div {{didInsert this.setupRepos}}></div>
+    <div {{this.setupReposOnInsert}}></div>
     {{#if @requiredRepositories}}
       <h3 class='mt-3 font-weight-light' data-test-workflow-repositories-required>
         Required repositories

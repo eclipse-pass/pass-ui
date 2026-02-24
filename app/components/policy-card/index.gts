@@ -3,7 +3,8 @@ import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { fn } from '@ember/helper';
 import { on } from '@ember/modifier';
-import didInsert from 'pass-ui/modifiers/did-insert';
+import { modifier } from 'ember-modifier';
+import { schedule } from '@ember/runloop';
 import type Workflow from 'pass-ui/services/workflow';
 import type PolicyModel from 'pass-ui/models/policy';
 import type SubmissionModel from 'pass-ui/models/submission';
@@ -53,16 +54,17 @@ export default class PolicyCard extends Component<PolicyCardSignature> {
     return this.args.policy.title === 'Johns Hopkins University (JHU) Open Access Policy';
   }
 
-  @action
-  setup() {
-    if (this.methodAJournal) {
-      this.pmcPublisherDeposit = true;
-    }
+  setupOnInsert = modifier(() => {
+    schedule('actions', () => {
+      if (this.methodAJournal) {
+        this.pmcPublisherDeposit = true;
+      }
 
-    if (!this.usesPmcRepository || !this.pmcPublisherDeposit) {
-      this._addEffectivePolicy(this.args.policy);
-    }
-  }
+      if (!this.usesPmcRepository || !this.pmcPublisherDeposit) {
+        this._addEffectivePolicy(this.args.policy);
+      }
+    });
+  });
 
   @action
   pmcPublisherDepositToggled(choice: boolean) {
@@ -98,7 +100,7 @@ export default class PolicyCard extends Component<PolicyCardSignature> {
 
   <template>
     {{! template-lint-disable link-rel-noopener no-triple-curlies require-input-label }}
-    <div class='card w-100 my-2' {{didInsert this.setup}}>
+    <div class='card w-100 my-2' {{this.setupOnInsert}}>
       <div class='card-body'>
         <h3 class='card-title' data-test-policy-title>
           {{@policy.title}}

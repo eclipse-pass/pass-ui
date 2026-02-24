@@ -6,7 +6,7 @@ import { task } from 'ember-concurrency';
 import { later } from '@ember/runloop';
 import { on } from '@ember/modifier';
 import { Textarea } from '@ember/component';
-import didInsert from 'pass-ui/modifiers/did-insert';
+import { modifier } from 'ember-modifier';
 import ENV from 'pass-ui/config/environment';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -281,13 +281,12 @@ export default class WorkflowReview extends Component<WorkflowReviewSignature> {
     }
   });
 
-  @action
-  initializeTooltip() {
+  initTooltip = modifier(() => {
     const el = document.querySelector('[data-toggle="tooltip"]') as (Element & { tooltip?: () => void }) | null;
     if (el && el.tooltip) {
       el.tooltip();
     }
-  }
+  });
 
   @action
   back() {
@@ -301,7 +300,7 @@ export default class WorkflowReview extends Component<WorkflowReviewSignature> {
 
   <template>
     {{! template-lint-disable no-inline-styles require-button-type require-input-label }}
-    <div class='mb-3 row' {{didInsert this.initializeTooltip}}>
+    <div class='mb-3 row' {{this.initTooltip}}>
       {{#each this.flashMessages.queue as |flash|}}
         <div class='flash-message-container'>
           <FlashMessage @flash={{flash}} as |component flash close|>

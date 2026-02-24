@@ -1,8 +1,8 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
-import { action } from '@ember/object';
 import { service } from '@ember/service';
-import didInsert from 'pass-ui/modifiers/did-insert';
+import { modifier } from 'ember-modifier';
+import type Owner from '@ember/owner';
 import type SubmissionModel from 'pass-ui/models/submission';
 import type RepositoryCopyModel from 'pass-ui/models/repository-copy';
 
@@ -23,7 +23,11 @@ export default class SubmissionsRepoidCell extends Component<SubmissionsRepoidCe
 
   @tracked repoCopies: RepositoryCopyModel[] | null = null;
 
-  @action
+  constructor(owner: Owner, args: SubmissionsRepoidCellSignature['Args']) {
+    super(owner, args);
+    this.setUpRepoidCell();
+  }
+
   async setUpRepoidCell() {
     const publication = this.args.record.publication;
     if (!publication?.id) {
@@ -47,8 +51,7 @@ export default class SubmissionsRepoidCell extends Component<SubmissionsRepoidCe
     });
   }
 
-  @action
-  setToolTip() {
+  setupTooltip = modifier(() => {
     if (!document.querySelector('#manuscriptIdTooltip')) {
       const th = document.querySelector('.table-header:nth-child(6)');
       const span = document.createElement('span');
@@ -62,7 +65,7 @@ export default class SubmissionsRepoidCell extends Component<SubmissionsRepoidCe
       span.appendChild(icon);
       th?.appendChild(span);
     }
-  }
+  });
 
   formatId(id: string): string {
     const markers = ['/handle/', '/items/'];
@@ -98,30 +101,30 @@ export default class SubmissionsRepoidCell extends Component<SubmissionsRepoidCe
   }
 
   <template>
-    <div {{didInsert this.setToolTip}}></div>
-    <div {{didInsert this.setUpRepoidCell}}></div>
-    {{#each this.displayIds as |idInfo|}}
-      <ul class='repoid-cell'>
-        {{#if idInfo.url}}
-          {{#each idInfo.ids as |id|}}
-            <a href='{{idInfo.url}}' target='_blank' rel='noopener noreferrer'>
+    <span {{this.setupTooltip}}>
+      {{#each this.displayIds as |idInfo|}}
+        <ul class='repoid-cell'>
+          {{#if idInfo.url}}
+            {{#each idInfo.ids as |id|}}
+              <a href='{{idInfo.url}}' target='_blank' rel='noopener noreferrer'>
+                <li title='{{id.title}}'>
+                  {{id.display}}
+                </li>
+              </a>
+            {{/each}}
+          {{else}}
+            {{#each idInfo.ids as |id|}}
               <li title='{{id.title}}'>
                 {{id.display}}
               </li>
-            </a>
-          {{/each}}
-        {{else}}
-          {{#each idInfo.ids as |id|}}
-            <li title='{{id.title}}'>
-              {{id.display}}
-            </li>
-          {{/each}}
-        {{/if}}
-      </ul>
-    {{else}}
-      <span class='nodata-placeholder'>
-        Not available
-      </span>
-    {{/each}}
+            {{/each}}
+          {{/if}}
+        </ul>
+      {{else}}
+        <span class='nodata-placeholder'>
+          Not available
+        </span>
+      {{/each}}
+    </span>
   </template>
 }

@@ -4,8 +4,7 @@ import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { task } from 'ember-concurrency';
 import { on } from '@ember/modifier';
-import didInsert from 'pass-ui/modifiers/did-insert';
-import didUpdate from 'pass-ui/modifiers/did-update';
+import { modifier } from 'ember-modifier';
 import { LinkTo } from '@ember/routing';
 import type CurrentUserService from 'pass-ui/services/current-user';
 import type AppStaticConfigService from 'pass-ui/services/app-static-config';
@@ -37,12 +36,11 @@ export default class NavBar extends Component<NavBarSignature> {
     return !!this.currentUser.user;
   }
 
-  @action
-  scrollToAnchor() {
+  scrollToAnchor = modifier(() => {
     if (window.location.search.indexOf('anchor=') == -1) {
       window.scrollTo(0, 0);
     }
-  }
+  });
 
   @action
   async logOut() {
@@ -74,12 +72,7 @@ export default class NavBar extends Component<NavBarSignature> {
   }
 
   <template>
-    <nav
-      id='header-navbar'
-      class='navbar navbar-light navbar-fixed-top navbar-expand-md w-100'
-      {{didInsert this.scrollToAnchor}}
-      {{didUpdate this.scrollToAnchor}}
-    >
+    <nav id='header-navbar' class='navbar navbar-light navbar-fixed-top navbar-expand-md w-100' {{this.scrollToAnchor}}>
       <div class={{if @fullWidth 'container-fluid' 'container'}}>
         <div class='col-xs-12 w-100'>
           <button

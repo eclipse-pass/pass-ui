@@ -4,7 +4,8 @@ import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { task } from 'ember-concurrency';
 import { on } from '@ember/modifier';
-import didInsert from 'pass-ui/modifiers/did-insert';
+import { modifier } from 'ember-modifier';
+import { schedule } from '@ember/runloop';
 import { LinkTo } from '@ember/routing';
 import MetadataForm from 'pass-ui/components/metadata-form';
 import type Workflow from 'pass-ui/services/workflow';
@@ -15,14 +16,6 @@ import type DoiService from 'pass-ui/services/doi';
 import type SubmissionModel from 'pass-ui/models/submission';
 import type PublicationModel from 'pass-ui/models/publication';
 import type RepositoryModel from 'pass-ui/models/repository';
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const perform =
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (task: any) =>
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (...args: any[]) =>
-      task.perform(...args);
 
 interface SurveyInstance {
   tryComplete(): void;
@@ -67,6 +60,12 @@ export default class WorkflowMetadata extends Component<WorkflowMetadataSignatur
       this.metadata = {};
     }
   }
+
+  setupSchemaOnInsert = modifier(() => {
+    schedule('actions', () => {
+      this.setupSchema.perform();
+    });
+  });
 
   setupSchema = task(async () => {
     if (!this.schema) {
@@ -140,7 +139,7 @@ export default class WorkflowMetadata extends Component<WorkflowMetadataSignatur
   }
 
   <template>
-    <div {{didInsert (perform this.setupSchema)}}>
+    <div {{this.setupSchemaOnInsert}}>
 
       {{#if this.missingRequiredJournal}}
         <h2>Missing required journal</h2>

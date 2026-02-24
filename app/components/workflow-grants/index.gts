@@ -5,25 +5,18 @@ import { service } from '@ember/service';
 import { task } from 'ember-concurrency';
 import { hash } from '@ember/helper';
 import { on } from '@ember/modifier';
-import didInsert from 'pass-ui/modifiers/did-insert';
-import didUpdate from 'pass-ui/modifiers/did-update';
 import ModelsTable from 'ember-models-table/components/models-table';
 import SubmissionFundingTable from 'pass-ui/components/submission-funding-table';
 import GrantLinkNewtabCell from 'pass-ui/components/grant-link-newtab-cell';
 import SelectRowToggle from 'pass-ui/components/select-row-toggle';
 import DateCell from 'pass-ui/components/date-cell';
+import type Owner from '@ember/owner';
 import type GrantModel from 'pass-ui/models/grant';
 import type SubmissionModel from 'pass-ui/models/submission';
 import type Workflow from 'pass-ui/services/workflow';
 import type AppStaticConfigService from 'pass-ui/services/app-static-config';
 
 const gt = (a: unknown, b: unknown) => Number(a) > Number(b);
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const perform =
-  (task: any) =>
-  (...args: any[]) =>
-    task.perform(...args);
 
 interface WorkflowGrantsSignature {
   Args: {
@@ -46,6 +39,11 @@ export default class WorkflowGrants extends Component<WorkflowGrantsSignature> {
   @service('emt-themes/bootstrap4')
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   declare themeInstance: any;
+
+  constructor(owner: Owner, args: WorkflowGrantsSignature['Args']) {
+    super(owner, args);
+    this.setup.perform();
+  }
 
   @tracked contactUrl: string | null = null;
   @tracked workflowStep = 2;
@@ -264,12 +262,7 @@ export default class WorkflowGrants extends Component<WorkflowGrantsSignature> {
 
   <template>
     {{! template-lint-disable link-href-attributes link-rel-noopener no-invalid-interactive no-invalid-link-text require-button-type }}
-    <p
-      class='lead text-muted'
-      data-test-workflow-grants-lead-text
-      {{didInsert (perform this.setup)}}
-      {{didUpdate (perform this.setup)}}
-    >
+    <p class='lead text-muted' data-test-workflow-grants-lead-text>
       Please select the grant(s)/award(s) that funded this work. This information will help determine which public
       access policies are applicable to your work. If the work you're about to submit was not supported by a grant,
       leave this page blank and go to the next step.
