@@ -26,13 +26,13 @@ function emberGetConfigShim() {
 }
 
 // Redirect v1 addon bare imports to their Embroider-rewritten versions.
-// During `vite build`, Rollup resolves bare `ember-inflector` and
-// `ember-cli-deprecation-workflow` to the original node_modules index.js
-// (broccoli plugin with `require('./package').name`) instead of the
-// Embroider-rewritten ESM version. This plugin intercepts those imports.
+// During `vite build`, Rollup resolves bare `ember-cli-deprecation-workflow`
+// to the original node_modules index.js (broccoli plugin with
+// `require('./package').name`) instead of the Embroider-rewritten ESM version.
+// This plugin intercepts those imports.
 function rewrittenV1Addons() {
   const rewrittenDir = resolve('./node_modules/.embroider/rewritten-packages/');
-  const packages = ['ember-inflector', 'ember-cli-deprecation-workflow'];
+  const packages = ['ember-cli-deprecation-workflow'];
   let mapping = null;
 
   function getMapping() {

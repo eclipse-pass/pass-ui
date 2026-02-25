@@ -48,7 +48,7 @@
     "ember-concurrency": "^5.1.0",
     "ember-data": "~5.3.8",
     "ember-file-upload": "^9.0.0",
-    "ember-inflector": "^4.0.2",
+    "ember-inflector": "^6.0.0",
     "ember-load-initializers": "^3.0.0",
     "ember-modal-dialog": "^4.1.5",
     "ember-models-table": "^5.7.1",
