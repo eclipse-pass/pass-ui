@@ -1,3 +1,3 @@
-import FlashObject from 'ember-cli-flash/flash/object';
+import { disableTimeout } from 'ember-cli-flash/test-support';
 
-FlashObject.reopen({ init() {} });
+disableTimeout();

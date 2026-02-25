@@ -3,12 +3,6 @@ declare module 'htmlbars-inline-precompile' {
   export default function hbs(template: TemplateStringsArray): any;
 }
 
-declare module 'ember-cli-flash/flash/object' {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const FlashObject: any;
-  export default FlashObject;
-}
-
 declare module 'ember-sinon-qunit' {
   export default function setupSinon(): void;
 }
