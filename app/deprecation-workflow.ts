@@ -6,7 +6,7 @@ setupDeprecationWorkflow({
   workflow: [
     // From v1 addon templates (ember-power-select, ember-bootstrap, etc.) — not our code
     { handler: 'silence', matchId: 'template-action' },
-    // From v1 addons (ember-bootstrap, ember-modal-dialog) still using inject as service
+    // From v1 addons (ember-bootstrap) still using inject as service
     { handler: 'silence', matchId: 'importing-inject-from-ember-service' },
     // Barrel imports from v1 addons accessing the Ember global — removed in 7.0.0
     { handler: 'silence', matchId: 'deprecate-import-test-from-ember' },

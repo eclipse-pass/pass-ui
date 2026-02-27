@@ -219,8 +219,20 @@ td {
   white-space: nowrap;
 }
 
-.ember-modal-dialog {
+.pass-modal-dialog {
+  border: none;
   border-radius: 0;
+  background-color: #fff;
+  box-shadow: 0 0 10px #222;
+  padding: 10px;
+}
+
+.pass-modal-dialog::backdrop {
+  background-color: rgb(0 0 0 / 50%);
+}
+
+.pass-modal-translucent::backdrop {
+  background-color: rgb(128 128 128 / 77%);
 }
 
 .steps {
@@ -810,7 +822,7 @@ footer {
   color: var(--grey-dark);
 }
 
-.ember-modal-dialog.user-search-modal {
+.pass-modal-dialog.user-search-modal {
   width: 90%;
   min-width: 20rem;
   max-width: 60rem;

@@ -48,7 +48,7 @@ module('Acceptance | proxy submission', function (hooks) {
     await fillIn('[data-test-proxy-search-input]', 'Staff');
     await click('[data-test-proxy-user-search-button]');
 
-    await waitFor('.ember-modal-dialog');
+    await waitFor('.pass-modal-dialog');
     await waitFor('[data-test-found-proxy-user]');
     await click('[data-test-found-proxy-user]');
 

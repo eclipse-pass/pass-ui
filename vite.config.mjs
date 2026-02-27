@@ -66,13 +66,6 @@ export default defineConfig({
     alias: {
       // Shim for AMD 'require' (loader.js) used by ember-bootstrap/utils/dom.js
       require: resolve('./require-shim.js'),
-      // ember-modal-dialog CSS paths resolve in build mode via compat layer but not in dev mode
-      'ember-modal-dialog/app/styles/ember-modal-dialog/ember-modal-structure.css': resolve(
-        './node_modules/ember-modal-dialog/app/styles/ember-modal-dialog/ember-modal-structure.css',
-      ),
-      'ember-modal-dialog/app/styles/ember-modal-dialog/ember-modal-appearance.css': resolve(
-        './node_modules/ember-modal-dialog/app/styles/ember-modal-dialog/ember-modal-appearance.css',
-      ),
     },
   },
   optimizeDeps: {

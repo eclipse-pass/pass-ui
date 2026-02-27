@@ -2,11 +2,9 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { on } from '@ember/modifier';
+import { modifier } from 'ember-modifier';
 import { Input } from '@ember/component';
 import { Textarea } from '@ember/component';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import ModalDialog from 'ember-modal-dialog/components/modal-dialog';
 
 interface MessageDialogSignature {
   Args: {
@@ -22,6 +20,10 @@ export default class MessageDialog extends Component<MessageDialogSignature> {
   @tracked to = '';
   @tracked subject = '';
   @tracked message = '';
+
+  showModal = modifier((el: HTMLDialogElement) => {
+    el.showModal();
+  });
 
   @action
   toggleModal() {
@@ -41,7 +43,7 @@ export default class MessageDialog extends Component<MessageDialogSignature> {
   <template>
     {{! template-lint-disable require-input-label }}
     {{#if this.show}}
-      <ModalDialog @onClose={{this.toggleModal}} @translucentOverlay={{false}}>
+      <dialog class='pass-modal-dialog' {{this.showModal}} {{on 'close' this.toggleModal}}>
         <form class='dialog-form-width'>
           <div class='mb-3 row'>
             <label class='col-sm-3 col-form-label' for='msg-to'>Recipient:</label>
@@ -71,7 +73,7 @@ export default class MessageDialog extends Component<MessageDialogSignature> {
 
         <button type='button' class='btn btn-primary btm-sm' {{on 'click' this.cancel}}>Cancel</button>
         <button type='button' class='btn btn-primary btm-sm' {{on 'click' this.send}}>Send</button>
-      </ModalDialog>
+      </dialog>
     {{/if}}
   </template>
 }

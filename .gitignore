@@ -56,3 +56,6 @@ jsconfig.json
 /test-results/
 /playwright-report/
 /tests/visual/
+
+# visual diff evidence (before/after screenshots for addon migrations)
+/visual-diff-evidence/

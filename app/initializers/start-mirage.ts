@@ -14,6 +14,12 @@ export function initialize() {
     // Pass environment: 'test' so MirageJS does NOT auto-load fixtures
     // (our config calls server.loadFixtures() explicitly after creating extra records).
     makeServer({});
+
+    // Set the XSRF-TOKEN cookie that the real backend normally provides.
+    // The adapter reads this from document.cookie to send as a header.
+    if (!document.cookie.includes('XSRF-TOKEN')) {
+      document.cookie = 'XSRF-TOKEN=mirage-dev-token; path=/';
+    }
   }
 }
 

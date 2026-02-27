@@ -13,9 +13,7 @@ import ENV from 'pass-ui/config/environment';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import swal from 'sweetalert2/dist/sweetalert2.js';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import ModalDialog from 'ember-modal-dialog/components/modal-dialog';
+import { modifier } from 'ember-modifier';
 import FindJournal from 'pass-ui/components/find-journal';
 import WorkflowBasicsUserSearch from 'pass-ui/components/workflow-basics-user-search';
 
@@ -77,6 +75,10 @@ export default class WorkflowBasics extends Component<WorkflowBasicsSignature> {
   @tracked doiServiceError: unknown = false;
   @tracked isShowingUserSearchModal = false;
   @tracked userSearchTerm = '';
+
+  showModal = modifier((el: HTMLDialogElement) => {
+    el.showModal();
+  });
 
   get publication(): PublicationModel {
     return this.args.publication;
@@ -608,20 +610,17 @@ export default class WorkflowBasics extends Component<WorkflowBasicsSignature> {
       Next
     </button>
     {{#if this.isShowingUserSearchModal}}
-      <div class='user-search-modal'>
-        <ModalDialog
-          @translucentOverlay={{true}}
-          @attachment='top center'
-          @targetAttachment='top center'
-          @containerClass='user-search-modal'
-        >
-          <WorkflowBasicsUserSearch
-            @toggleUserSearchModal={{this.toggleUserSearchModal}}
-            @pickSubmitter={{this.pickSubmitter}}
-            @searchInput={{this.userSearchTerm}}
-          />
-        </ModalDialog>
-      </div>
+      <dialog
+        class='pass-modal-dialog pass-modal-translucent user-search-modal'
+        {{this.showModal}}
+        {{on 'close' this.toggleUserSearchModal}}
+      >
+        <WorkflowBasicsUserSearch
+          @toggleUserSearchModal={{this.toggleUserSearchModal}}
+          @pickSubmitter={{this.pickSubmitter}}
+          @searchInput={{this.userSearchTerm}}
+        />
+      </dialog>
     {{/if}}
   </template>
 }
