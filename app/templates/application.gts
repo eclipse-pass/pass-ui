@@ -3,6 +3,7 @@ import { on } from '@ember/modifier';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import FlashMessage from 'ember-cli-flash/components/flash-message';
+import BasicDropdownWormhole from 'ember-basic-dropdown/components/basic-dropdown-wormhole';
 import config from 'pass-ui/config/environment';
 import NavBar from 'pass-ui/components/nav-bar';
 import NoticeBanner from 'pass-ui/components/notice-banner';
@@ -17,6 +18,7 @@ interface Signature {
 // prettier-ignore
 <template>
   {{! template-lint-disable require-valid-alt-text }}
+  <BasicDropdownWormhole />
   <div id='brand-site-container' class='site' tabindex='-1'>
     <div id='ember-bootstrap-wormhole'></div>
 

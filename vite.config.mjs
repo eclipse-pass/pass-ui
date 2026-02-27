@@ -4,27 +4,6 @@ import { defineConfig } from 'vite';
 import { extensions, classicEmberSupport, ember } from '@embroider/vite';
 import { babel } from '@rollup/plugin-babel';
 
-// Replace ember-get-config (uses AMD require()) with a static ES module import.
-// ember-get-config is a transitive dep of ember-basic-dropdown → ember-power-select.
-// Uses resolveId+load to intercept BEFORE the Embroider resolver handles it.
-function emberGetConfigShim() {
-  const VIRTUAL_ID = '\0ember-get-config-shim';
-  return {
-    name: 'ember-get-config-shim',
-    enforce: 'pre',
-    resolveId(source) {
-      if (source === 'ember-get-config') {
-        return VIRTUAL_ID;
-      }
-    },
-    load(id) {
-      if (id === VIRTUAL_ID) {
-        return `import config from 'pass-ui/config/environment';\nexport default config;\n`;
-      }
-    },
-  };
-}
-
 // Redirect v1 addon bare imports to their Embroider-rewritten versions.
 // During `vite build`, Rollup resolves bare `ember-cli-deprecation-workflow`
 // to the original node_modules index.js (broccoli plugin with
@@ -70,16 +49,7 @@ export default defineConfig({
   },
   optimizeDeps: {
     // ember-bootstrap: uses `import from 'require'` (AMD) which esbuild can't resolve
-    // ember-get-config: uses `window.require()` — our transform plugin must run before bundling
-    // ember-basic-dropdown: depends on ember-get-config
-    exclude: [
-      'ember-bootstrap',
-      'ember-get-config',
-      'ember-basic-dropdown',
-      '@playwright/test',
-      'playwright',
-      'playwright-core',
-    ],
+    exclude: ['ember-bootstrap', '@playwright/test', 'playwright', 'playwright-core'],
   },
   server: {
     watch: {
@@ -111,7 +81,6 @@ export default defineConfig({
     },
     classicEmberSupport(),
     rewrittenV1Addons(),
-    emberGetConfigShim(),
     ember(),
     babel({
       babelHelpers: 'runtime',

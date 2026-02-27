@@ -68,7 +68,7 @@ module('Integration | Component | found-manuscripts', (hooks) => {
   test('Nothing renders when disabled', async function (assert) {
     set(this, 'disabled', true);
     await render(hbs`<FoundManuscripts @doi='test' @disabled={{this.disabled}} />`);
-    assert.strictEqual(this.element.childElementCount, 1);
+    assert.strictEqual(this.element.textContent!.trim(), '');
   });
 
   test('Message should appear if NOT disabled AND no files found', async function (assert) {
