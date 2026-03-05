@@ -875,6 +875,17 @@ footer {
   cursor: pointer;
 }
 
+#grants-selection-table .awardnum-column {
+  white-space: nowrap;
+}
+
+#grants-selection-table .grant-select-btn {
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+}
+
 a.navbar-brand:hover {
   text-decoration: none !important;
 }

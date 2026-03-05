@@ -24,12 +24,6 @@ module.exports = async function (defaults) {
     'ember-test-selectors': {
       strip: false,
     },
-
-    'ember-bootstrap': {
-      bootstrapVersion: 5,
-      importBootstrapCSS: false,
-      insertEmberWormholeElementToDom: false,
-    },
   });
 
   return compatBuild(app, buildOnce, {

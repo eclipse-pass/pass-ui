@@ -45,7 +45,6 @@
     "@glimmer/tracking": "^1.1.2",
     "bootstrap": "5.0.0",
     "ember-basic-dropdown": "^8.0.0",
-    "ember-bootstrap": "^6.3.2",
     "ember-concurrency": "^5.1.0",
     "ember-data": "~5.3.8",
     "ember-file-upload": "^9.0.0",

@@ -20,8 +20,6 @@ interface Signature {
   {{! template-lint-disable require-valid-alt-text }}
   <BasicDropdownWormhole />
   <div id='brand-site-container' class='site' tabindex='-1'>
-    <div id='ember-bootstrap-wormhole'></div>
-
     <header id='brand-header' class='navbar navbar-expand-xs justify-content-center mb-0'>
       <div class={{if @controller.fullWidth 'container-fluid' 'container'}}>
         <a href='/' class='navbar-brand d-none d-sm-block'>

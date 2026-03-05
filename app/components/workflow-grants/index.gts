@@ -260,7 +260,7 @@ export default class WorkflowGrants extends Component<WorkflowGrantsSignature> {
           <table class='table table-striped table-sm'>
             <thead>
               <tr>
-                <th class='awardnum-column' style='white-space:nowrap'>Award Number</th>
+                <th class='awardnum-column'>Award Number</th>
                 <th class='projectname-column'>Project Name</th>
                 <th class='date-column'>Start</th>
                 <th class='date-column'>End</th>
@@ -282,11 +282,7 @@ export default class WorkflowGrants extends Component<WorkflowGrantsSignature> {
                   <td>{{grant.awardStatus}}</td>
                   <td class='funder-column'>{{grant.primaryFunder.name}}</td>
                   <td>
-                    <button
-                      type='button'
-                      style='border:none;background:none;padding:0;cursor:pointer'
-                      {{on 'click' (fn this.toggleGrantFromButton grant)}}
-                    >
+                    <button type='button' class='grant-select-btn' {{on 'click' (fn this.toggleGrantFromButton grant)}}>
                       {{#if (includes this._selectedGrants grant)}}
                         <FaIcon @icon='square-check' @prefix='far' />
                       {{else}}

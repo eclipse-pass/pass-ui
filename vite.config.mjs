@@ -41,15 +41,8 @@ function rewrittenV1Addons() {
 }
 
 export default defineConfig({
-  resolve: {
-    alias: {
-      // Shim for AMD 'require' (loader.js) used by ember-bootstrap/utils/dom.js
-      require: resolve('./require-shim.js'),
-    },
-  },
   optimizeDeps: {
-    // ember-bootstrap: uses `import from 'require'` (AMD) which esbuild can't resolve
-    exclude: ['ember-bootstrap', 'survey-js-ui', '@playwright/test', 'playwright', 'playwright-core'],
+    exclude: ['survey-js-ui', '@playwright/test', 'playwright', 'playwright-core'],
   },
   server: {
     watch: {
