@@ -4,11 +4,9 @@ import setupDeprecationWorkflow from 'ember-cli-deprecation-workflow';
 setupDeprecationWorkflow({
   throwOnUnhandled: true,
   workflow: [
-    // From v1 addon templates (ember-power-select, etc.) — not our code
-    { handler: 'silence', matchId: 'template-action' },
-    // From v1 addons still using inject as service
+    // @ember-data/* 5.3 still uses `inject` instead of `service` — remove after Ember Data upgrade
     { handler: 'silence', matchId: 'importing-inject-from-ember-service' },
-    // Barrel imports from v1 addons accessing the Ember global — removed in 7.0.0
+    // Barrel imports from ember internals and addons — removed in Ember 7.0
     { handler: 'silence', matchId: 'deprecate-import-test-from-ember' },
     { handler: 'silence', matchId: 'deprecate-import-testing-from-ember' },
     { handler: 'silence', matchId: 'deprecate-import-onerror-from-ember' },
