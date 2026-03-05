@@ -22,31 +22,25 @@ module('Unit | Controller | grants/index', (hooks) => {
     controller.currentUser = { user: { id: 0, isAdmin: false, isSubmitter: true } };
   });
 
-  test('properly returns admin roles', function (assert) {
-    controller.currentUser = { user: { id: 0, isAdmin: true, isSubmitter: true } };
-    assert.strictEqual(controller.adminColumns, controller.columns, 'Should return admin columns');
-  });
+  test('handleTableChange updates tracked query params', function (assert) {
+    controller.store = {
+      query: () => Promise.resolve([]),
+    };
 
-  test('properly returns submitter roles', function (assert) {
-    assert.strictEqual(controller.piColumns, controller.columns, 'Should return submitter columns');
-  });
-
-  test('displayAction updates tracked query params', function (assert) {
     assert.equal(controller.page, 1, 'Page param should have default value');
     assert.equal(controller.pageSize, 10, 'Page size param should have default value');
 
-    controller.send('displayAction', { currentPageNumber: 10, pageSize: 2 });
+    controller.handleTableChange({ page: 10, pageSize: 2, filter: '' });
 
     assert.equal(controller.page, 10, 'Page param should be updated');
     assert.equal(controller.pageSize, 2, 'Page size param should be updated');
   });
 
-  test('doQuery', async function (assert) {
+  test('fetchData', async function (assert) {
     assert.expect(8);
 
     controller.store = {
       query: (model: any, query: any) => {
-        // assert.equal(model, 'grant', 'Only grants should be queried');
         switch (model) {
           case 'grant':
             assert.ok(query.page, 'Query should have pagination info');
@@ -66,7 +60,7 @@ module('Unit | Controller | grants/index', (hooks) => {
 
     assert.notOk(controller.queuedModel, 'Queued model should be empty');
 
-    await controller.doQuery({});
+    await controller.fetchData();
 
     const result = controller.queuedModel;
     assert.ok(result.grantMap, 'Grant mapping should exist');

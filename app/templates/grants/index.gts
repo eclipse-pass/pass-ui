@@ -1,6 +1,5 @@
 import type { TemplateOnlyComponent } from '@ember/component/template-only';
-import { hash } from '@ember/helper';
-import ModelsTableServerPaginated from 'ember-models-table/components/models-table-server-paginated';
+import PassTable from 'pass-ui/components/pass-table';
 import GrantLinkCell from 'pass-ui/components/grant-link-cell';
 import PiListCell from 'pass-ui/components/pi-list-cell';
 import GrantSubmissionCell from 'pass-ui/components/grant-submission-cell';
@@ -36,31 +35,71 @@ interface Signature {
   <div class='row justify-content-center grant-table'>
     <div class='col-12 table-container'>
       <div class='grant-table'>
-        <ModelsTableServerPaginated
-          @data={{@controller.queuedModel.grantMap}}
-          @columns={{@controller.columns}}
-          @columnComponents={{hash
-            grantLinkCell=(component GrantLinkCell)
-            piListCell=(component PiListCell)
-            grantSubmissionCell=(component GrantSubmissionCell)
-            grantActionCell=(component GrantActionCell)
-            dateCell=(component DateCell)
-          }}
-          @themeInstance={{@controller.themeInstance}}
-          @showColumnsDropdown={{false}}
-          @useFilteringByColumns={{false}}
-          @filteringIgnoreCase={{true}}
-          @multipleColumnsSorting={{false}}
-          @currentPageNumber={{@controller.page}}
-          @pageSize={{@controller.pageSize}}
-          @pageSizeValues={{@controller.tablePageSizeValues}}
-          @itemsCount={{@controller.itemsCount}}
-          @pagesCount={{@controller.pagesCount}}
-          @filterString={{@controller.filter}}
-          @filterQueryParameters={{@controller.filterQueryParameters}}
-          @doQuery={{@controller.doQuery}}
-          @onDisplayDataChanged={{@controller.displayAction}}
-        />
+        {{#if @controller.currentUser.user.isAdmin}}
+          {{! @glint-expect-error - PassTable yields unknown record, cell components accept specific types }}
+          <PassTable
+            @data={{@controller.queuedModel.grantMap}}
+            @page={{@controller.page}}
+            @pageSize={{@controller.pageSize}}
+            @pageSizeValues={{@controller.tablePageSizeValues}}
+            @totalItems={{@controller.itemsCount}}
+            @totalPages={{@controller.pagesCount}}
+            @filterValue={{@controller.filter}}
+            @onChange={{@controller.handleTableChange}}
+          >
+            <:header>
+              <th class='projectname-column'>Project Name</th>
+              <th class='funder-column'>Funder</th>
+              <th class='awardnum-column'>Award Number</th>
+              <th>PI</th>
+              <th class='date-column'>Start</th>
+              <th class='date-column'>End</th>
+              <th>Status</th>
+              <th>Submissions count</th>
+            </:header>
+            <:row as |record|>
+              <td class='projectname-column'><GrantLinkCell @record={{record}} @value={{record.grant.projectName}} /></td>
+              <td class='funder-column'>{{record.grant.primaryFunder.name}}</td>
+              <td class='awardnum-column'><GrantLinkCell @record={{record}} @value={{record.grant.awardNumber}} /></td>
+              <td><PiListCell @record={{record}} /></td>
+              <td class='date-column'><DateCell @value={{record.grant.startDate}} /></td>
+              <td class='date-column'><DateCell @value={{record.grant.endDate}} /></td>
+              <td>{{record.grant.awardStatus}}</td>
+              <td><GrantLinkCell @record={{record}} @value={{record.submissions.length}} /></td>
+            </:row>
+          </PassTable>
+        {{else if @controller.currentUser.user.isSubmitter}}
+          {{! @glint-expect-error - PassTable yields unknown record, cell components accept specific types }}
+          <PassTable
+            @data={{@controller.queuedModel.grantMap}}
+            @page={{@controller.page}}
+            @pageSize={{@controller.pageSize}}
+            @pageSizeValues={{@controller.tablePageSizeValues}}
+            @totalItems={{@controller.itemsCount}}
+            @totalPages={{@controller.pagesCount}}
+            @filterValue={{@controller.filter}}
+            @onChange={{@controller.handleTableChange}}
+          >
+            <:header>
+              <th class='projectname-column'>Project Name</th>
+              <th class='funder-column'>Funder</th>
+              <th class='awardnum-column'>Award #</th>
+              <th class='date-column'>End Date</th>
+              <th># of Submissions</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </:header>
+            <:row as |record|>
+              <td class='projectname-column'><GrantLinkCell @record={{record}} @value={{record.grant.projectName}} /></td>
+              <td class='funder-column'>{{record.grant.primaryFunder.name}}</td>
+              <td class='awardnum-column'><GrantLinkCell @record={{record}} @value={{record.grant.awardNumber}} /></td>
+              <td class='date-column'><DateCell @value={{record.grant.endDate}} /></td>
+              <td><GrantSubmissionCell @record={{record}} @value={{record.submissions.length}} /></td>
+              <td>{{record.grant.awardStatus}}</td>
+              <td><GrantActionCell @record={{record}} /></td>
+            </:row>
+          </PassTable>
+        {{/if}}
       </div>
     </div>
   </div>

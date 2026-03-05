@@ -51,7 +51,7 @@
     "ember-file-upload": "^9.0.0",
     "ember-inflector": "^6.0.0",
     "ember-load-initializers": "^3.0.0",
-    "ember-models-table": "^5.7.1",
+
     "ember-modifier": "^4.2.0",
     "ember-page-title": "^8.2.3",
     "ember-power-select": "^8.12.1",
@@ -157,8 +157,7 @@
   },
   "pnpm": {
     "overrides": {
-      "babel-plugin-ember-template-compilation": "^2.4.1",
-      "ember-composable-helpers": "npm:@nullvoxpopuli/ember-composable-helpers@^5.3.0"
+      "babel-plugin-ember-template-compilation": "^2.4.1"
     }
   },
   "exports": {

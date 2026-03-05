@@ -3,13 +3,12 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { task } from 'ember-concurrency';
-import { hash } from '@ember/helper';
+import { fn } from '@ember/helper';
 import { on } from '@ember/modifier';
-import ModelsTable from 'ember-models-table/components/models-table';
 import SubmissionFundingTable from 'pass-ui/components/submission-funding-table';
 import GrantLinkNewtabCell from 'pass-ui/components/grant-link-newtab-cell';
-import SelectRowToggle from 'pass-ui/components/select-row-toggle';
 import DateCell from 'pass-ui/components/date-cell';
+import FaIcon from '@fortawesome/ember-fontawesome/components/fa-icon';
 import type Owner from '@ember/owner';
 import type GrantModel from 'pass-ui/models/grant';
 import type SubmissionModel from 'pass-ui/models/submission';
@@ -17,6 +16,7 @@ import type Workflow from 'pass-ui/services/workflow';
 import type AppStaticConfigService from 'pass-ui/services/app-static-config';
 
 const gt = (a: unknown, b: unknown) => Number(a) > Number(b);
+const includes = (arr: unknown[], item: unknown) => arr.includes(item);
 
 interface WorkflowGrantsSignature {
   Args: {
@@ -36,9 +36,6 @@ export default class WorkflowGrants extends Component<WorkflowGrantsSignature> {
   @service declare store: any;
   @service declare workflow: Workflow;
   @service declare appStaticConfig: AppStaticConfigService;
-  @service('emt-themes/bootstrap4')
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  declare themeInstance: any;
 
   constructor(owner: Owner, args: WorkflowGrantsSignature['Args']) {
     super(owner, args);
@@ -55,51 +52,14 @@ export default class WorkflowGrants extends Component<WorkflowGrantsSignature> {
   @tracked totalGrants = 0;
   @tracked _selectedGrants: GrantModel[] = [];
   @tracked preLoadedGrant: GrantModel | null = this.args.preLoadedGrant;
-  @tracked grantColumns = [
-    {
-      propertyName: 'awardNumber',
-      title: 'Award Number',
-      className: 'awardnum-column',
-      component: 'grantLinkNewtabCell',
-      disableSorting: true,
-    },
-    {
-      propertyName: 'projectName',
-      title: 'Project Name',
-      className: 'projectname-column',
-      disableSorting: true,
-    },
-    {
-      propertyName: 'startDate',
-      title: 'Start',
-      className: 'date-column',
-      component: 'dateCell',
-      disableSorting: true,
-    },
-    {
-      propertyName: 'endDate',
-      title: 'End',
-      className: 'date-column',
-      component: 'dateCell',
-      disableSorting: true,
-    },
-    {
-      propertyName: 'awardStatus',
-      title: 'Status',
-      disableSorting: true,
-    },
-    {
-      propertyName: 'primaryFunder.name',
-      title: 'Funder',
-      className: 'funder-column',
-      disableSorting: true,
-    },
-    {
-      title: 'Select',
-      component: 'selectRowToggle',
-      mayBeHidden: false,
-    },
-  ];
+
+  get hasPrevPage(): boolean {
+    return this.pageNumber > 1;
+  }
+
+  get hasNextPage(): boolean {
+    return this.pageNumber < this.pageCount;
+  }
 
   get pageFirstMatchNumber(): number {
     return (this.pageNumber - 1) * this.pageSize + 1;
@@ -230,28 +190,17 @@ export default class WorkflowGrants extends Component<WorkflowGrantsSignature> {
   }
 
   @action
-  dataChange(options: { selectedItems: GrantModel[] }) {
-    const selectedItems = options.selectedItems;
+  toggleGrantFromButton(grant: GrantModel, event: Event) {
+    event.stopPropagation();
+    this.toggleGrant(grant);
+  }
 
-    const previousSelection = this._selectedGrants;
-
-    const curLen = selectedItems.length;
-    const prevLen = previousSelection.length;
-
-    if (curLen > prevLen) {
-      selectedItems
-        .filter((grant: GrantModel) => !previousSelection.includes(grant))
-        .forEach((grant: GrantModel) => this.addGrant(grant));
-    } else if (curLen < prevLen) {
-      previousSelection
-        .filter((grant: GrantModel) => !selectedItems.includes(grant))
-        .forEach((grant: GrantModel) => this.removeGrant(grant));
-    } else if (curLen === 1 && prevLen === 1) {
-      this.addGrant(selectedItems[0]!);
-
-      return;
-    } else if (curLen === 0 && prevLen === 1) {
-      this.removeGrant(selectedItems[0]!);
+  @action
+  toggleGrant(grant: GrantModel) {
+    if (this._selectedGrants.includes(grant)) {
+      this.removeGrant(grant);
+    } else {
+      this.addGrant(grant);
     }
   }
 
@@ -308,26 +257,47 @@ export default class WorkflowGrants extends Component<WorkflowGrantsSignature> {
       {{/if}}
       {{#if this.setup.isIdle}}
         <div id='grants-selection-table' data-test-grants-selection-table>
-          <ModelsTable
-            @data={{this.submitterGrants}}
-            @columns={{this.grantColumns}}
-            @columnComponents={{hash
-              grantLinkNewtabCell=(component GrantLinkNewtabCell)
-              selectRowToggle=(component SelectRowToggle)
-              dateCell=(component DateCell)
-            }}
-            @themeInstance={{this.themeInstance}}
-            @showColumnsDropdown={{false}}
-            @useFilteringByColumns={{false}}
-            @multipleColumnsSorting={{false}}
-            @showComponentFooter={{false}}
-            @showGlobalFilter={{false}}
-            @pageSize={{this.pageSize}}
-            @multipleSelect={{true}}
-            @selectedItems={{this._selectedGrants}}
-            @onDisplayDataChanged={{this.dataChange}}
-            ...attributes
-          />
+          <table class='table table-striped table-sm'>
+            <thead>
+              <tr>
+                <th class='awardnum-column' style='white-space:nowrap'>Award Number</th>
+                <th class='projectname-column'>Project Name</th>
+                <th class='date-column'>Start</th>
+                <th class='date-column'>End</th>
+                <th>Status</th>
+                <th class='funder-column'>Funder</th>
+                <th>Select</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{! template-lint-disable no-invalid-interactive }}
+              {{#each this.submitterGrants as |grant|}}
+                <tr {{on 'click' (fn this.toggleGrant grant)}}>
+                  <td class='awardnum-column'>
+                    <GrantLinkNewtabCell @record={{grant}} @value={{grant.awardNumber}} />
+                  </td>
+                  <td class='projectname-column'>{{grant.projectName}}</td>
+                  <td class='date-column'><DateCell @value={{grant.startDate}} /></td>
+                  <td class='date-column'><DateCell @value={{grant.endDate}} /></td>
+                  <td>{{grant.awardStatus}}</td>
+                  <td class='funder-column'>{{grant.primaryFunder.name}}</td>
+                  <td>
+                    <button
+                      type='button'
+                      style='border:none;background:none;padding:0;cursor:pointer'
+                      {{on 'click' (fn this.toggleGrantFromButton grant)}}
+                    >
+                      {{#if (includes this._selectedGrants grant)}}
+                        <FaIcon @icon='square-check' @prefix='far' />
+                      {{else}}
+                        <FaIcon @icon='square' @prefix='far' />
+                      {{/if}}
+                    </button>
+                  </td>
+                </tr>
+              {{/each}}
+            </tbody>
+          </table>
         </div>
       {{else}}
         <div class='d-flex flex-row align-items justify-content-center my-3'>
@@ -336,13 +306,19 @@ export default class WorkflowGrants extends Component<WorkflowGrantsSignature> {
       {{/if}}
 
       {{#if (gt this.pageCount '1')}}
-        <nav id='grants-selection-nav' aria-label='...'>
+        <nav id='grants-selection-nav' aria-label='Grant pagination'>
           <ul class='pagination justify-content-center'>
-            <li class='page-item active btn'>
-              {{! template-lint-disable no-invalid-interactive }}
-              <a class='fa fa-angle-left' {{on 'click' this.prevPage}}></a>
+            <li class='page-item'>
+              <button
+                type='button'
+                class='page-link'
+                disabled={{if this.hasPrevPage false true}}
+                {{on 'click' this.prevPage}}
+              >
+                <FaIcon @icon='angle-left' />
+              </button>
             </li>
-            <li class='page-item d-flex align-items-center'>
+            <li class='page-item d-flex align-items-center px-3'>
               <span>
                 Page
                 {{this.pageNumber}}
@@ -350,9 +326,15 @@ export default class WorkflowGrants extends Component<WorkflowGrantsSignature> {
                 {{this.pageCount}}
               </span>
             </li>
-            <li class='page-item active btn'>
-              {{! template-lint-disable no-invalid-interactive }}
-              <a class='fa fa-angle-right' {{on 'click' this.nextPage}}></a>
+            <li class='page-item'>
+              <button
+                type='button'
+                class='page-link'
+                disabled={{if this.hasNextPage false true}}
+                {{on 'click' this.nextPage}}
+              >
+                <FaIcon @icon='angle-right' />
+              </button>
             </li>
           </ul>
         </nav>

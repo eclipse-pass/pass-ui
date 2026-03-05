@@ -239,7 +239,7 @@ export default function (config: any) {
         return schema.find('submission', request.params.id).update(attrs);
       });
       // Submission filtering
-      this.get('/data/submission', (schema: any, request: any) => {
+      this.get('/data/submission', function (this: any, schema: any, request: any) {
         /**
          * JSON object with query parameter as key, value as value.
          * ex: ?param1=value1&param2=value2
@@ -247,19 +247,42 @@ export default function (config: any) {
          */
         const query = request.queryParams;
 
+        let result;
         if (!query) {
-          return schema.all('submission');
+          result = schema.all('submission');
+        } else {
+          // Find the 'filter[...]' parameter
+          let submissionFilter = Object.keys(query)
+            .filter((key: string) => key.includes('filter[submission]'))
+            .map((key: string) => query[key]);
+          if (!Array.isArray(submissionFilter) || submissionFilter.length !== 1) {
+            result = schema.none('submission');
+          } else {
+            // Once we know query params includes a submission filter, get its value
+            submissionFilter = submissionFilter[0];
+            result = submissionFilter.includes('cancelled') ? schema.all('submission') : schema.none('submission');
+          }
         }
-        // Find the 'filter[...]' parameter
-        let submissionFilter = Object.keys(query)
-          .filter((key: string) => key.includes('filter[submission]'))
-          .map((key: string) => query[key]);
-        if (!Array.isArray(submissionFilter) || submissionFilter.length !== 1) {
-          return schema.none('submission');
-        }
-        // Once we know query params includes a submission filter, get its value
-        submissionFilter = submissionFilter[0];
-        return submissionFilter.includes('cancelled') ? schema.all('submission') : schema.none('submission');
+
+        // this.serialize() auto-sideloads via the submission serializer's include config
+        const serialized = this.serialize(result);
+        const pageSize = parseInt(query?.['page[size]'] || '10', 10);
+        const pageNumber = parseInt(query?.['page[number]'] || '1', 10);
+        const allData = serialized.data || [];
+        const totalRecords = allData.length;
+        const totalPages = Math.max(1, Math.ceil(totalRecords / pageSize));
+        const start = (pageNumber - 1) * pageSize;
+        const end = start + pageSize;
+        return {
+          ...serialized,
+          data: allData.slice(start, end),
+          meta: {
+            page: {
+              totalRecords,
+              totalPages,
+            },
+          },
+        };
       });
 
       // Submission Events
@@ -288,12 +311,20 @@ export default function (config: any) {
       this.get('/data/grant', function (this: any, schema: any, request: any) {
         const grantsModel = schema.grant.all();
         const grants = this.serialize(grantsModel);
+        const allData = grants.data || [];
+        const totalRecords = allData.length;
+        const pageSize = parseInt(request.queryParams['page[size]'] || '10', 10);
+        const pageNumber = parseInt(request.queryParams['page[number]'] || '1', 10);
+        const totalPages = Math.max(1, Math.ceil(totalRecords / pageSize));
+        const start = (pageNumber - 1) * pageSize;
+        const end = start + pageSize;
         return {
           ...grants,
+          data: allData.slice(start, end),
           meta: {
             page: {
-              totalRecords: 5,
-              totalPages: 1,
+              totalRecords,
+              totalPages,
             },
           },
         };

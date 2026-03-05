@@ -1,6 +1,5 @@
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
-import { get } from '@ember/helper';
 import { on } from '@ember/modifier';
 import { LinkTo } from '@ember/routing';
 import type GrantModel from 'pass-ui/models/grant';
@@ -8,7 +7,7 @@ import type GrantModel from 'pass-ui/models/grant';
 interface Signature {
   Args: {
     record: GrantModel;
-    column: { propertyName?: string; title?: string; className?: string };
+    value: unknown;
   };
 }
 
@@ -26,8 +25,7 @@ export default class GrantLinkNewtabCell extends Component<Signature> {
       rel='noopener noreferrer'
       {{on 'click' this.stopPropagation}}
     >
-      {{! @glint-expect-error - get with dynamic propertyName returns unknown }}
-      {{get @record @column.propertyName}}
+      {{@value}}
     </LinkTo>
   </template>
 }

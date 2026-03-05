@@ -1,7 +1,7 @@
 import type { TemplateOnlyComponent } from '@ember/component/template-only';
 import { LinkTo } from '@ember/routing';
 import { hash } from '@ember/helper';
-import ModelsTableServerPaginated from 'ember-models-table/components/models-table-server-paginated';
+import PassTable from 'pass-ui/components/pass-table';
 import SubmissionsArticleCell from 'pass-ui/components/submissions-article-cell';
 import SubmissionsAwardCell from 'pass-ui/components/submissions-award-cell';
 import SubmissionsRepoCell from 'pass-ui/components/submissions-repo-cell';
@@ -46,34 +46,44 @@ interface Signature {
   <div class='row'>
     <div class='col-12 table-container'>
       <div class='submission-table' data-test-submissions-index-submissions-table>
-        <ModelsTableServerPaginated
+        {{! @glint-expect-error - PassTable yields unknown record, cell components accept specific types }}
+        <PassTable
           @data={{@controller.queuedModel.submissions}}
-          @columns={{@controller.columns}}
-          @columnComponents={{hash
-            submissionsArticleCell=(component SubmissionsArticleCell)
-            submissionsAwardCell=(component SubmissionsAwardCell)
-            submissionsRepoCell=(component SubmissionsRepoCell)
-            submissionsStatusCell=(component SubmissionsStatusCell)
-            submissionsRepoidCell=(component SubmissionsRepoidCell)
-            submissionActionCell=(component SubmissionActionCell)
-            dateCell=(component DateCell)
-          }}
-          @themeInstance={{@controller.themeInstance}}
-          @showColumnsDropdown={{false}}
-          @useFilteringByColumns={{false}}
-          @filteringIgnoreCase={{true}}
-          @multipleColumnsSorting={{false}}
-          @authorSelected='authorclick'
+          @page={{@controller.page}}
           @pageSize={{@controller.pageSize}}
           @pageSizeValues={{@controller.tablePageSizeValues}}
-          @currentPageNumber={{@controller.page}}
-          @itemsCount={{@controller.itemsCount}}
-          @pagesCount={{@controller.pagesCount}}
-          @filterString={{@controller.filter}}
-          @filterQueryParameters={{@controller.filterQueryParameters}}
-          @doQuery={{@controller.doQuery}}
-          @onDisplayDataChanged={{@controller.displayAction}}
-        />
+          @totalItems={{@controller.itemsCount}}
+          @totalPages={{@controller.pagesCount}}
+          @filterValue={{@controller.filter}}
+          @onChange={{@controller.handleTableChange}}
+        >
+          <:header>
+            <th class='title-column'>Article</th>
+            <th class='awardnum-funder-column'>Award Number (Funder)</th>
+            <th class='repositories-column'>Repositories</th>
+            <th class='date-column'>Submitted Date</th>
+            <th class='status-column'>Status</th>
+            <th class='msid-column'>Manuscript IDs
+              <span id='manuscriptIdTooltip' tooltip-position='bottom' tooltip='IDs are assigned to manuscripts by target repositories.'>
+                <i class='fas fa-info-circle d-inline'></i>
+              </span>
+            </th>
+            {{#if @controller.currentUser.user.isSubmitter}}
+              <th class='actions-column'>Actions</th>
+            {{/if}}
+          </:header>
+          <:row as |record|>
+            <td class='title-column'><SubmissionsArticleCell @record={{record}} /></td>
+            <td class='awardnum-funder-column'><SubmissionsAwardCell @record={{record}} /></td>
+            <td class='repositories-column'><SubmissionsRepoCell @record={{record}} /></td>
+            <td class='date-column'><DateCell @value={{record.submittedDate}} /></td>
+            <td class='status-column'><SubmissionsStatusCell @record={{record}} /></td>
+            <td class='msid-column'><SubmissionsRepoidCell @record={{record}} /></td>
+            {{#if @controller.currentUser.user.isSubmitter}}
+              <td class='actions-column'><SubmissionActionCell @record={{record}} /></td>
+            {{/if}}
+          </:row>
+        </PassTable>
       </div>
     </div>
   </div>

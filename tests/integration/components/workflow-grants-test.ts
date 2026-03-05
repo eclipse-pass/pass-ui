@@ -106,8 +106,7 @@ module('Integration | Component | workflow grants', (hooks) => {
 
     const row3 = rows[2];
     await click(row3!);
-    assert.ok(row3!.getAttribute('class')!.includes('selected-row'));
-    assert.ok(row3!.querySelector('.svg-inline--fa.fa-square-check'));
+    assert.ok(row3!.querySelector('.svg-inline--fa.fa-square-check'), 'Clicked row should show check icon');
 
     assert.strictEqual(workflow.getAddedGrants().length, 2, 'Two grants should have been added');
   });

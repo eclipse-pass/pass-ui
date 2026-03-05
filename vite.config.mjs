@@ -49,7 +49,7 @@ export default defineConfig({
   },
   optimizeDeps: {
     // ember-bootstrap: uses `import from 'require'` (AMD) which esbuild can't resolve
-    exclude: ['ember-bootstrap', '@playwright/test', 'playwright', 'playwright-core'],
+    exclude: ['ember-bootstrap', 'survey-js-ui', '@playwright/test', 'playwright', 'playwright-core'],
   },
   server: {
     watch: {
