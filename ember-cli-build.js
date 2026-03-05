@@ -28,18 +28,11 @@ module.exports = async function (defaults) {
 
   return compatBuild(app, buildOnce, {
     extraPublicTrees: [],
-    staticAddonTrees: true,
-    staticAddonTestSupportTrees: true,
     staticHelpers: true,
     staticModifiers: true,
     staticComponents: true,
-    staticEmberSource: true,
     amdCompatibility: {
       es: [],
     },
-    // splitAtRoutes: ['route.name'], // can also be a RegExp
-    // packagerOptions: {
-    //    webpackConfig: { }
-    // }
   });
 };
