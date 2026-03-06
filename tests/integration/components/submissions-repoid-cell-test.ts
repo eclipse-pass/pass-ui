@@ -1,32 +1,34 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, ember/no-classic-classes */
+/* eslint-disable @typescript-eslint/no-explicit-any, ember/no-classic-classes, ember/no-settled-after-test-helper */
 import Service from '@ember/service';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
 import { run } from '@ember/runloop';
-import { render } from '@ember/test-helpers';
+import { render, settled } from '@ember/test-helpers';
 
 module('Integration | Component | submissions repoid cell', (hooks) => {
   setupRenderingTest(hooks);
 
-  // Inject mocked store that on query returns a single user
+  // Inject mocked store that on request returns repository copies
 
   hooks.beforeEach(function () {
     const store = Service.extend({
-      query: (type: any, q: any) =>
-        Promise.resolve([
-          {
-            id: 'test',
-            accessUrl: 'https://dspace.example.com/handle/12345/67890',
-            externalIds: ['https://dspace.example.com/handle/12345/67890'],
-          },
+      request: (req: any) =>
+        Promise.resolve({
+          content: [
+            {
+              id: 'test',
+              accessUrl: 'https://dspace.example.com/handle/12345/67890',
+              externalIds: ['https://dspace.example.com/handle/12345/67890'],
+            },
 
-          {
-            id: 'test2',
-            accessUrl: 'https://dspace.example.com/items/abcde-12345',
-            externalIds: ['https://dspace.example.com/items/abcde-12345'],
-          },
-        ]),
+            {
+              id: 'test2',
+              accessUrl: 'https://dspace.example.com/items/abcde-12345',
+              externalIds: ['https://dspace.example.com/items/abcde-12345'],
+            },
+          ],
+        }),
     });
 
     run(() => {
@@ -51,6 +53,7 @@ module('Integration | Component | submissions repoid cell', (hooks) => {
 <th class='table-header' />
 <SubmissionsRepoidCell @record={{this.record}} />`);
 
+    await settled();
     assert.ok(true);
   });
 
@@ -60,15 +63,6 @@ module('Integration | Component | submissions repoid cell', (hooks) => {
 
   test('it renders with when data is missing', async function (assert) {
     assert.expect(1);
-
-    this.set(
-      'store',
-      Service.extend({
-        query(type: any, q: any) {
-          assert.ok(true);
-        },
-      }),
-    );
 
     const record = {
       publication: {},
@@ -104,6 +98,8 @@ module('Integration | Component | submissions repoid cell', (hooks) => {
 <th class='table-header' />
 <th class='table-header' />
 <SubmissionsRepoidCell @record={{this.record}} />`);
+
+    await settled();
 
     assert.ok(true);
     console.log(this.element);

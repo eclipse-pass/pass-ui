@@ -1,5 +1,6 @@
 import { service } from '@ember/service';
 import CheckSessionRoute from '../check-session-route';
+import { query } from '@ember-data/legacy-compat/builders';
 import { grantsIndexGrantQuery, grantsIndexSubmissionQuery } from '../../util/paginated-query';
 import type CurrentUserService from 'pass-ui/services/current-user';
 import type GrantModel from 'pass-ui/models/grant';
@@ -43,9 +44,9 @@ export default class IndexRoute extends CheckSessionRoute {
       return;
     }
 
-    const grantQuery = grantsIndexGrantQuery(params, user);
+    const grantQueryHash = grantsIndexGrantQuery(params, user);
     // First search for all Grants associated with the current user
-    const grants = await this.store.query('grant', grantQuery);
+    const { content: grants } = await this.store.request(query('grant', grantQueryHash));
     const results: GrantsIndexModel = {
       grantMap: [],
       meta: grants.meta,
@@ -61,8 +62,8 @@ export default class IndexRoute extends CheckSessionRoute {
     // TODO: submissions should be fetched separately from grants
     // We can redo the mapping of submissions onto grants (to get the count)
     // On demand without reloading the list of submissions
-    const submissionQuery = grantsIndexSubmissionQuery(user);
-    const subs = await this.store.query('submission', submissionQuery);
+    const submissionQueryHash = grantsIndexSubmissionQuery(user);
+    const { content: subs } = await this.store.request(query('submission', submissionQueryHash));
     subs.forEach((submission: SubmissionModel) => {
       submission.grants.forEach((grant: GrantModel) => {
         const match = results.grantMap.find(

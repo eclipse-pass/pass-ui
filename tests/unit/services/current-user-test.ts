@@ -22,12 +22,12 @@ module('Unit | Service | current-user', (hooks) => {
     service.session = { data: { authenticated: { id: '000' } } };
 
     service.store = {
-      findRecord(type: any, id: any) {
+      request(req: any) {
         assert.ok(true);
-        assert.strictEqual(type, 'user');
-        assert.strictEqual(id, user.id);
+        assert.strictEqual(req.data.record.type, 'user');
+        assert.strictEqual(req.data.record.id, user.id);
 
-        return new Promise((resolve) => resolve(user));
+        return Promise.resolve({ content: user });
       },
     };
 

@@ -324,21 +324,23 @@ module('Unit | Service | submission-handler', (hooks) => {
       deleteRecord: Sinon.fake.resolves(),
     };
 
-    const query = (model: any, _filter: any) => {
-      switch (model) {
+    const requestHandler = (req: any) => {
+      switch (req.data.type) {
         case 'file':
           // Get files for the submission
-          return Promise.resolve([
-            { name: 'file1', submission: 0, destroyRecord: Sinon.fake.rejects() },
-            { name: 'file2', submission: 0, destroyRecord: Sinon.fake.rejects() },
-          ]);
+          return Promise.resolve({
+            content: [
+              { name: 'file1', submission: 0, destroyRecord: Sinon.fake.rejects() },
+              { name: 'file2', submission: 0, destroyRecord: Sinon.fake.rejects() },
+            ],
+          });
         case 'submission':
-          return Promise.resolve([submission]); // Get submissions that share the same Publication
+          return Promise.resolve({ content: [submission] }); // Get submissions that share the same Publication
         default:
           return Promise.reject();
       }
     };
-    const storeQueryFake = Sinon.replace(store, 'query', Sinon.spy(query));
+    const storeRequestFake = Sinon.replace(store, 'request', Sinon.spy(requestHandler));
     this.owner.register('service:store', store);
 
     await service
@@ -347,7 +349,7 @@ module('Unit | Service | submission-handler', (hooks) => {
       .then(() => assert.ok(false, 'Delete submission is expected to not succeed'))
       .catch((_e: any) => assert.ok(true));
 
-    assert.ok(storeQueryFake.calledOnce, 'Store query should be called only once');
+    assert.ok(storeRequestFake.calledOnce, 'Store request should be called only once');
     assert.equal(submission.deleteRecord.callCount, 0, 'Submission delete should not be called');
     assert.equal(submission.save.callCount, 0, 'Submission should not be saved');
   });
@@ -370,28 +372,30 @@ module('Unit | Service | submission-handler', (hooks) => {
       deleteRecord: Sinon.fake.resolves(),
     };
 
-    const query = (model: any, _filter: any) => {
-      switch (model) {
+    const requestHandler = (req: any) => {
+      switch (req.data.type) {
         case 'file':
           // Get files for the submission
-          return Promise.resolve([
-            { name: 'file1', submission: 0, destroyRecord: Sinon.fake.resolves() },
-            { name: 'file2', submission: 0, destroyRecord: Sinon.fake.resolves() },
-          ]);
+          return Promise.resolve({
+            content: [
+              { name: 'file1', submission: 0, destroyRecord: Sinon.fake.resolves() },
+              { name: 'file2', submission: 0, destroyRecord: Sinon.fake.resolves() },
+            ],
+          });
         case 'submission':
           // 2 submissions use the same Publication
-          return Promise.resolve([submission, { id: 1, publication }]);
+          return Promise.resolve({ content: [submission, { id: 1, publication }] });
         default:
           return Promise.reject();
       }
     };
 
-    const storeQueryFake = Sinon.replace(store, 'query', Sinon.fake(query));
+    const storeRequestFake = Sinon.replace(store, 'request', Sinon.fake(requestHandler));
     this.owner.register('service:store', store);
 
     await service.deleteSubmission(submission);
 
-    assert.equal(storeQueryFake.callCount, 2, 'Store query should be called twice');
+    assert.equal(storeRequestFake.callCount, 2, 'Store request should be called twice');
     assert.ok(submission.deleteRecord.calledOnce, 'Submission delete should be called');
     assert.ok(submission.save.calledOnce, 'Submission should be saved');
     assert.equal(publication.deleteRecord.callCount, 0, 'Publication should not be deleted');
@@ -420,24 +424,24 @@ module('Unit | Service | submission-handler', (hooks) => {
       { name: 'file2', submission, destroyRecord: Sinon.fake.resolves() },
     ];
 
-    const query = (model: any, _filter: any) => {
-      switch (model) {
+    const requestHandler = (req: any) => {
+      switch (req.data.type) {
         case 'file':
           // Get files for the submission
-          return Promise.resolve(files);
+          return Promise.resolve({ content: files });
         case 'submission':
-          return Promise.resolve([]);
+          return Promise.resolve({ content: [] });
         default:
           return Promise.reject();
       }
     };
 
-    const storeQueryFake = Sinon.replace(store, 'query', Sinon.fake(query));
+    const storeRequestFake = Sinon.replace(store, 'request', Sinon.fake(requestHandler));
     this.owner.register('service:store', store);
 
     await service.deleteSubmission(submission);
 
-    assert.equal(storeQueryFake.callCount, 2, 'Store query should be called twice');
+    assert.equal(storeRequestFake.callCount, 2, 'Store request should be called twice');
     assert.ok(submission.deleteRecord.calledOnce, 'Submission delete should be called');
     assert.ok(submission.save.calledOnce, 'Submission should be saved');
     assert.ok(publication.deleteRecord.calledOnce, 'Publication should be deleted');

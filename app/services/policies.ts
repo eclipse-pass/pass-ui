@@ -3,6 +3,7 @@ import Service, { service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
 import { task, all, hash } from 'ember-concurrency';
 import { run } from '@ember/runloop';
+import { findRecord } from '@ember-data/legacy-compat/builders';
 import type PolicyModel from 'pass-ui/models/policy';
 import type RepositoryModel from 'pass-ui/models/repository';
 import type SubmissionModel from 'pass-ui/models/submission';
@@ -59,7 +60,7 @@ export default class PoliciesService extends Service {
 
     return await all(
       data.map((policyInfo: { id: string; type: string }) =>
-        this.store.findRecord('policy', policyInfo.id).then((pol: PolicyModel) => {
+        this.store.request(findRecord('policy', policyInfo.id)).then(({ content: pol }: { content: PolicyModel }) => {
           pol._type = policyInfo.type;
           return pol;
         }),
@@ -140,10 +141,12 @@ export default class PoliciesService extends Service {
   _resolveRepos = task(async (repos: Array<{ url: string; selected: boolean }>) => {
     return await all(
       repos.map((repoInfo) =>
-        this.store.findRecord('repository', repoInfo.url).then((repo: RepositoryModel) => {
-          repo._selected = repoInfo.selected;
-          return repo;
-        }),
+        this.store
+          .request(findRecord('repository', repoInfo.url))
+          .then(({ content: repo }: { content: RepositoryModel }) => {
+            repo._selected = repoInfo.selected;
+            return repo;
+          }),
       ),
     );
   });

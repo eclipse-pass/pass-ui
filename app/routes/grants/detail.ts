@@ -1,6 +1,7 @@
 import { service } from '@ember/service';
 import CheckSessionRoute from '../check-session-route';
 import { hash } from 'rsvp';
+import { query, findRecord } from '@ember-data/legacy-compat/builders';
 import { grantDetailsQuery } from '../../util/paginated-query';
 import type CurrentUserService from 'pass-ui/services/current-user';
 
@@ -25,24 +26,26 @@ export default class DetailRoute extends CheckSessionRoute {
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  model(params: any) {
+  async model(params: any) {
     if (!params || !params.grant_id) {
       this.errorHandler.handleError(new Error('didNotLoadData'));
       return;
     }
 
-    const grant = this.store.findRecord('grant', params.grant_id, { include: 'pi,coPis,primaryFunder,directFunder' });
-
-    const submissionQuery = grantDetailsQuery(params, params.grant_id, this.currentUser.user!);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const submissions = this.store
-      .query('submission', submissionQuery)
+    const grantPromise = this.store
+      .request(findRecord('grant', params.grant_id, { include: 'pi,coPis,primaryFunder,directFunder' }))
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .then((data: any) => ({ data, meta: data.meta }));
+      .then((result: any) => result.content);
+
+    const submissionQueryHash = grantDetailsQuery(params, params.grant_id, this.currentUser.user!);
+    const submissionsPromise = this.store
+      .request(query('submission', submissionQueryHash))
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .then((result: any) => ({ data: result.content, meta: result.content.meta }));
 
     return hash({
-      grant,
-      submissions,
+      grant: grantPromise,
+      submissions: submissionsPromise,
     });
   }
 

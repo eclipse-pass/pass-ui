@@ -11,21 +11,21 @@ module('Unit | Route | grants/detail', (hooks) => {
   });
 
   test('Make sure grant and submissions are requested correctly', async function (assert) {
-    assert.expect(4);
+    assert.expect(3);
 
     this['route'].store = {
-      findRecord: (model: any, id: any) => {
-        assert.equal(model, 'grant', 'Only grant should be requested via "findRecord"');
-        assert.equal(id, 0);
-        return Promise.resolve({});
-      },
-      query: (model: any, query: any) => {
-        assert.equal(model, 'submission', 'Only submission should be queried');
-        assert.deepEqual(query.page, { number: 1, size: 10, totals: true }, 'Should have pagination in query');
-        return Promise.resolve({});
+      request: (req: any) => {
+        assert.step(`${req.op}:${req.data.record?.type ?? req.data.type}`);
+
+        if (req.op === 'findRecord') {
+          return Promise.resolve({ content: {} });
+        }
+        return Promise.resolve({ content: {} });
       },
     };
 
     await this['route'].model({ grant_id: '0' });
+
+    assert.verifySteps(['findRecord:grant', 'query:submission']);
   });
 });

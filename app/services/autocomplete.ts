@@ -1,4 +1,5 @@
 import Service, { service } from '@ember/service';
+import { query as queryBuilder } from '@ember-data/legacy-compat/builders';
 
 export default class AutocompleteService extends Service {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -55,8 +56,14 @@ export default class AutocompleteService extends Service {
     // Append the suggest filter piece to the existing type filter, if it exists
     query['filter'][type] = query['filter'][type] ? `${query['filter'][type]};${suggestFilterPart}` : suggestFilterPart;
 
-    return this.store.query(type, query).catch((error: unknown) => {
-      console.error(`Autocomplete service failed: ${JSON.stringify(error)}`);
-    });
+    return (
+      this.store
+        .request(queryBuilder(type, query))
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .then((result: any) => result.content)
+        .catch((error: unknown) => {
+          console.error(`Autocomplete service failed: ${JSON.stringify(error)}`);
+        })
+    );
   }
 }

@@ -2,6 +2,7 @@ import { isArray } from '@ember/array';
 import Service, { service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
 import { task } from 'ember-concurrency';
+import { findRecord } from '@ember-data/legacy-compat/builders';
 import type JournalModel from 'pass-ui/models/journal';
 import type PublicationModel from 'pass-ui/models/publication';
 
@@ -66,7 +67,7 @@ export default class DoiService extends Service {
 
     const response = await rawResponse.json();
 
-    const journal = await this.store.findRecord('journal', response['journal-id']);
+    const { content: journal } = await this.store.request(findRecord('journal', response['journal-id']));
 
     const doiInfo = this._processRawDoi(response.crossref.message);
 

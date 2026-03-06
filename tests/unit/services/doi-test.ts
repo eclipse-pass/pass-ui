@@ -152,12 +152,12 @@ module('Unit | Service | doi', (hooks) => {
     });
 
     service.store = {
-      findRecord(type: any, id: any) {
+      request(req: any) {
         assert.ok(true);
-        assert.strictEqual(type, 'journal');
+        assert.strictEqual(req.data.record.type, 'journal');
 
         const journal = { id: 'journal' };
-        return new Promise((resolve) => resolve(journal));
+        return Promise.resolve({ content: journal });
       },
 
       createRecord(type: any, values: any) {

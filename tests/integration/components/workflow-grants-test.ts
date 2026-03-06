@@ -51,12 +51,12 @@ module('Integration | Component | workflow grants', (hooks) => {
       this.owner.register(
         'service:store',
         Service.extend({
-          query(type: any, query: any) {
-            return Promise.resolve(grants);
-          },
-
-          findRecord(type: any, id: any) {
-            return Promise.resolve(grants.findBy('id', id));
+          request(req: any) {
+            if (req.op === 'findRecord') {
+              return Promise.resolve({ content: grants.findBy('id', req.data.record.id) });
+            }
+            // query
+            return Promise.resolve({ content: grants });
           },
         }),
       );

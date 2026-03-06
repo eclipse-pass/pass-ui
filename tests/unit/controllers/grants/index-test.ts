@@ -24,7 +24,7 @@ module('Unit | Controller | grants/index', (hooks) => {
 
   test('handleTableChange updates tracked query params', function (assert) {
     controller.store = {
-      query: () => Promise.resolve([]),
+      request: () => Promise.resolve({ content: [] }),
     };
 
     assert.equal(controller.page, 1, 'Page param should have default value');
@@ -40,21 +40,24 @@ module('Unit | Controller | grants/index', (hooks) => {
     assert.expect(8);
 
     controller.store = {
-      query: (model: any, query: any) => {
-        switch (model) {
+      request: (req: any) => {
+        const { type, query } = req.data;
+        switch (type) {
           case 'grant':
             assert.ok(query.page, 'Query should have pagination info');
-            return Promise.resolve([{ id: 10 }, { id: 11 }]);
+            return Promise.resolve({ content: [{ id: 10 }, { id: 11 }] });
           case 'submission':
             assert.notOk(query.page, 'Query should not have pagination info');
-            return Promise.resolve([
-              { id: 20, grants: [{ id: 11 }] },
-              { id: 21, grants: [{ id: 11 }] },
-            ]);
+            return Promise.resolve({
+              content: [
+                { id: 20, grants: [{ id: 11 }] },
+                { id: 21, grants: [{ id: 11 }] },
+              ],
+            });
           default:
             assert.ok(false, 'Only submissions and grants should be queried here');
         }
-        return Promise.resolve({});
+        return Promise.resolve({ content: {} });
       },
     };
 

@@ -2,6 +2,7 @@ import Controller from '@ember/controller';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { service } from '@ember/service';
+import { query } from '@ember-data/legacy-compat/builders';
 import { grantDetailsQuery } from '../../util/paginated-query';
 import type CurrentUserService from 'pass-ui/services/current-user';
 import type GrantModel from 'pass-ui/models/grant';
@@ -64,17 +65,17 @@ export default class GrantDetailsController extends Controller {
   }
 
   fetchData() {
-    const query = grantDetailsQuery(
+    const queryHash = grantDetailsQuery(
       { page: this.page, pageSize: this.pageSize, filter: this.filter },
       this.grant.id!,
       this.currentUser.user!,
     );
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return this.store.query('submission', query).then((data: any) => {
+    return this.store.request(query('submission', queryHash)).then((result: any) => {
       this.queuedModel = {
         submissions: {
-          data,
-          meta: data.meta,
+          data: result.content,
+          meta: result.content.meta,
         },
       };
     });

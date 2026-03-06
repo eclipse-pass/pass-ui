@@ -40,8 +40,7 @@ module('Unit | Route | submissions/new', (hooks) => {
             return Promise.resolve({ ...data });
         }
       },
-      findRecord: (type: any, id: any) => Promise.resolve({}),
-      query: () => Promise.resolve([]),
+      request: () => Promise.resolve({ content: [] }),
     };
 
     const result = await route.model({});
@@ -62,6 +61,8 @@ module('Unit | Route | submissions/new', (hooks) => {
 
     const route: any = this.owner.lookup('route:submissions/new');
 
+    let findRecordCalled = false;
+
     route.store = {
       createRecord(type: any, data: any) {
         switch (type) {
@@ -73,17 +74,14 @@ module('Unit | Route | submissions/new', (hooks) => {
             return Promise.resolve({ ...data });
         }
       },
-      findRecord(type: any, id: any) {
-        switch (type) {
-          case 'submission':
-            assert.ok(true);
-            return Promise.resolve(mockSub);
-          default:
-            assert.ok(false, `unexpected 'createRecord' type found: ${type}`);
-            return Promise.resolve({});
+      request: (req: any) => {
+        if (req.op === 'findRecord') {
+          findRecordCalled = true;
+          return Promise.resolve({ content: mockSub });
         }
+        // loadObjects or file/submission-event queries
+        return Promise.resolve({ content: [] });
       },
-      query: () => Promise.resolve([]),
     };
 
     route.workflow = {
@@ -94,6 +92,7 @@ module('Unit | Route | submissions/new', (hooks) => {
 
     const result = await route.model({ submission: 'moo' });
 
+    assert.ok(findRecordCalled, 'findRecord should have been called for the submission');
     assert.ok(result, 'no model found');
     assert.ok(result.newSubmission.publication, 'There should be a publication on this submission');
     assert.strictEqual(result.newSubmission.publication?.title, 'Test Publication');

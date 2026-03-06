@@ -15,19 +15,22 @@ module('Unit | Route | grants/index', (hooks) => {
   test('Makes two requests', async function (assert) {
     assert.expect(2);
 
+    let requestCount = 0;
     this['route'].store = {
-      query: (model: any, query: any) => {
-        switch (model) {
+      request: (req: any) => {
+        const { type, query } = req.data;
+        requestCount++;
+        switch (type) {
           case 'grant':
             assert.deepEqual(query.page, { number: 1, size: 10, totals: true }, 'Grant query should have pagination');
-            break;
+            return Promise.resolve({ content: [] });
           case 'submission':
             assert.notOk(query.page, 'Submission query should not have pagination');
-            break;
+            return Promise.resolve({ content: [] });
           default:
             assert.ok(false, 'Only "grant" and "submission" requests are expected');
         }
-        return Promise.resolve([]);
+        return Promise.resolve({ content: [] });
       },
     };
     await this['route'].model({});
@@ -35,18 +38,21 @@ module('Unit | Route | grants/index', (hooks) => {
 
   test('Submissions should be mapped to grants', async function (assert) {
     this['route'].store = {
-      query: (model: any, query: any) => {
-        switch (model) {
+      request: (req: any) => {
+        const { type } = req.data;
+        switch (type) {
           case 'grant':
-            return Promise.resolve([{ id: 0 }, { id: 1 }]);
+            return Promise.resolve({ content: [{ id: 0 }, { id: 1 }] });
           case 'submission':
-            return Promise.resolve([
-              { id: 10, grants: [{ id: 0 }] },
-              { id: 11, grants: [{ id: 0 }] },
-            ]);
+            return Promise.resolve({
+              content: [
+                { id: 10, grants: [{ id: 0 }] },
+                { id: 11, grants: [{ id: 0 }] },
+              ],
+            });
           default:
             assert.ok(false);
-            return Promise.resolve([]);
+            return Promise.resolve({ content: [] });
         }
       },
     };

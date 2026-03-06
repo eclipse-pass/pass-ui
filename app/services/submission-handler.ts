@@ -1,6 +1,7 @@
 import Service, { service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
 import { task } from 'ember-concurrency';
+import { query } from '@ember-data/legacy-compat/builders';
 import { fileForSubmissionQuery, submissionsWithPublicationQuery } from '../util/paginated-query';
 import type SubmissionModel from 'pass-ui/models/submission';
 import type PublicationModel from 'pass-ui/models/publication';
@@ -259,7 +260,7 @@ export default class SubmissionHandlerService extends Service {
     }
 
     // Get submissions for this file
-    const files = await this.store.query('file', fileForSubmissionQuery(submission.id));
+    const { content: files } = await this.store.request(query('file', fileForSubmissionQuery(submission.id)));
     await Promise.all(files.map((file: FileModel) => file.destroyRecord()));
 
     const publication = submission.publication;
@@ -269,7 +270,9 @@ export default class SubmissionHandlerService extends Service {
     submission.deleteRecord();
     await submission.save();
 
-    const subsWithThisPublication = await this.store.query('submission', submissionsWithPublicationQuery(publication));
+    const { content: subsWithThisPublication } = await this.store.request(
+      query('submission', submissionsWithPublicationQuery(publication)),
+    );
     if (subsWithThisPublication.length === 0) {
       publication.deleteRecord();
       await publication.save();

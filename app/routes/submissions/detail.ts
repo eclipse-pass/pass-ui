@@ -1,6 +1,7 @@
 import CheckSessionRoute from '../check-session-route';
 import { hash } from 'rsvp';
 import { service } from '@ember/service';
+import { query, findRecord } from '@ember-data/legacy-compat/builders';
 import { fileForSubmissionQuery } from '../../util/paginated-query';
 import type SubmissionModel from 'pass-ui/models/submission';
 import type FileModel from 'pass-ui/models/file';
@@ -30,36 +31,41 @@ export default class DetailRoute extends CheckSessionRoute {
     }
 
     // const querySize = 500; // TODO: Ignore querysize of 500 for now
-    const deposits = this.store.query('deposit', {
-      filter: { deposit: `submission.id==${params.submission_id}` },
-    });
-    const submissionEvents = this.store.query('submission-event', {
-      filter: {
-        submissionEvent: `submission.id==${params.submission_id}`,
-      },
-      // sort: '+performedDate',
-    });
-
-    const sub = await this.store.findRecord('submission', params.submission_id, {
-      include:
-        'effectivePolicies,grants.primaryFunder,grants.directFunder,publication.journal,repositories,preparers,submitter',
-    });
-    const publication = sub.publication;
-    const repoCopies = await this.store.query('repository-copy', {
-      filter: { repositoryCopy: `publication.id==${publication.id}` },
-    });
-    const repos = sub.repositories;
-    const files = await this.store
-      .query('file', fileForSubmissionQuery(params.submission_id))
+    const depositsPromise = this.store
+      .request(query('deposit', { filter: { deposit: `submission.id==${params.submission_id}` } }))
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .then((files: any) => [...files.slice()]);
+      .then((result: any) => result.content);
+    const submissionEventsPromise = this.store
+      .request(
+        query('submission-event', {
+          filter: { submissionEvent: `submission.id==${params.submission_id}` },
+        }),
+      )
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .then((result: any) => result.content);
+
+    const { content: sub } = await this.store.request(
+      findRecord('submission', params.submission_id, {
+        include:
+          'effectivePolicies,grants.primaryFunder,grants.directFunder,publication.journal,repositories,preparers,submitter',
+      }),
+    );
+    const publication = sub.publication;
+    const { content: repoCopies } = await this.store.request(
+      query('repository-copy', { filter: { repositoryCopy: `publication.id==${publication.id}` } }),
+    );
+    const repos = sub.repositories;
+    const { content: fileResults } = await this.store.request(
+      query('file', fileForSubmissionQuery(params.submission_id)),
+    );
+    const files = [...fileResults.slice()];
 
     return hash({
       sub,
       files,
-      deposits,
+      deposits: depositsPromise,
       repoCopies,
-      submissionEvents,
+      submissionEvents: submissionEventsPromise,
       repos,
     });
   }

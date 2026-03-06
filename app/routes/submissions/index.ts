@@ -1,5 +1,6 @@
 import { service } from '@ember/service';
 import CheckSessionRoute from '../check-session-route';
+import { query } from '@ember-data/legacy-compat/builders';
 import { submissionsIndexQuery } from '../../util/paginated-query';
 import type CurrentUserService from 'pass-ui/services/current-user';
 import type SubmissionModel from 'pass-ui/models/submission';
@@ -23,12 +24,12 @@ export default class IndexRoute extends CheckSessionRoute {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async model(params: any): Promise<SubmissionsIndexModel> {
-    const query = submissionsIndexQuery(params, this.currentUser.user!);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return this.store.query('submission', query).then((data: any) => ({
+    const queryHash = submissionsIndexQuery(params, this.currentUser.user!);
+    const { content: data } = await this.store.request(query('submission', queryHash));
+    return {
       submissions: data,
       meta: data.meta,
-    }));
+    };
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -2,6 +2,7 @@ import CheckSessionRoute from '../check-session-route';
 import { service } from '@ember/service';
 import { set } from '@ember/object';
 import { hash } from 'rsvp';
+import { query, findRecord } from '@ember-data/legacy-compat/builders';
 import { fileForSubmissionQuery } from '../../util/paginated-query';
 import type Workflow from 'pass-ui/services/workflow';
 import type { WorkflowFile } from 'pass-ui/services/workflow';
@@ -54,11 +55,10 @@ export default class NewRoute extends CheckSessionRoute {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   loadObjects(type: string, offset: number, count: number): any {
     // TODO: Elide JSON:API filters do not support both page size and page offset
-    return this.store.query(type, {
-      page: {
-        size: count,
-      },
-    });
+    return this.store.request(query(type, { page: { size: count } })).then(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (result: any) => result.content,
+    );
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -70,9 +70,10 @@ export default class NewRoute extends CheckSessionRoute {
     let journal = null;
 
     if (params.grant) {
-      preLoadedGrant = this.store.findRecord('grant', params.grant, {
-        include: 'primaryFunder,directFunder',
-      });
+      preLoadedGrant = this.store
+        .request(findRecord('grant', params.grant, { include: 'primaryFunder,directFunder' }))
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .then((result: any) => result.content);
     }
 
     const repositories = this.loadObjects('repository', 0, 500);
@@ -81,23 +82,29 @@ export default class NewRoute extends CheckSessionRoute {
     if (params.submission) {
       // Operating on existing submission
 
-      newSubmission = await this.store.findRecord('submission', params.submission, {
-        include: 'effectivePolicies,grants.primaryFunder,grants.directFunder,publication.journal,submitter',
-      });
+      const { content: sub } = await this.store.request(
+        findRecord('submission', params.submission, {
+          include: 'effectivePolicies,grants.primaryFunder,grants.directFunder,publication.journal,submitter',
+        }),
+      );
+      newSubmission = sub;
       publication = newSubmission.publication;
       journal = publication.journal;
 
-      submissionEvents = this.store.query('submission-event', {
-        filter: {
-          submissionEvent: `submission.id==${newSubmission.id}`,
-        },
-        sort: '+performedDate',
-      });
-
-      const files = await this.store
-        .query('file', fileForSubmissionQuery(newSubmission.id))
+      submissionEvents = this.store
+        .request(
+          query('submission-event', {
+            filter: { submissionEvent: `submission.id==${newSubmission.id}` },
+            sort: '+performedDate',
+          }),
+        )
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .then((files: any) => [...files.slice()]);
+        .then((result: any) => result.content);
+
+      const { content: fileResults } = await this.store.request(
+        query('file', fileForSubmissionQuery(newSubmission.id)),
+      );
+      const files = [...fileResults.slice()];
       this.workflow.setFiles(files);
     } else {
       // Starting a new submission
