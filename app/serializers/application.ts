@@ -4,7 +4,7 @@ const dasherize = (str: string) =>
     .replace(/[_\s]+/g, '-')
     .replace(/([a-z\d])([A-Z])/g, '$1-$2')
     .toLowerCase();
-import { singularize } from 'ember-inflector';
+import { singularize } from '@warp-drive/utilities/string';
 import JSONAPISerializer from '@ember-data/serializer/json-api';
 
 export default class ApplicationSerializer extends JSONAPISerializer {

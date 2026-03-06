@@ -30,6 +30,9 @@ module.exports = async function (defaults) {
   setConfig(app, __dirname, {
     deprecations: {
       DEPRECATE_TRACKING_PACKAGE: false,
+      DEPRECATE_STORE_EXTENDS_EMBER_OBJECT: false,
+      DEPRECATE_EMBER_INFLECTOR: false,
+      ENABLE_LEGACY_SCHEMA_SERVICE: false,
     },
   });
 
