@@ -3,6 +3,7 @@ import Resolver from 'ember-resolver';
 import loadInitializers from 'ember-load-initializers';
 import config from './config/environment';
 import { setConfig } from 'ember-basic-dropdown/config';
+import '@warp-drive/ember/install';
 import './deprecation-workflow';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'ember-power-select/vendor/ember-power-select.css';

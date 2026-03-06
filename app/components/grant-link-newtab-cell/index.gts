@@ -7,7 +7,7 @@ import type GrantModel from 'pass-ui/models/grant';
 interface Signature {
   Args: {
     record: GrantModel;
-    value: unknown;
+    value: string | number | null;
   };
 }
 

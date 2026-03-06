@@ -4,8 +4,11 @@ import setupDeprecationWorkflow from 'ember-cli-deprecation-workflow';
 setupDeprecationWorkflow({
   throwOnUnhandled: true,
   workflow: [
-    // @ember-data/* 5.3 still uses `inject` instead of `service` — remove after Ember Data upgrade
-    { handler: 'silence', matchId: 'importing-inject-from-ember-service' },
+    // WarpDrive 5.8 legacy method deprecations — resolve with full store.request() migration
+    { handler: 'silence', matchId: 'warp-drive:deprecate-legacy-request-methods' },
+    { handler: 'silence', matchId: 'warp-drive.ember-inflector' },
+    { handler: 'silence', matchId: 'ember-data:deprecate-store-extends-ember-object' },
+    { handler: 'silence', matchId: 'ember-data:schema-service-updates' },
     // Barrel imports from ember internals and addons — removed in Ember 7.0
     { handler: 'silence', matchId: 'deprecate-import-test-from-ember' },
     { handler: 'silence', matchId: 'deprecate-import-testing-from-ember' },

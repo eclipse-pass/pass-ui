@@ -6,7 +6,7 @@ import type SubmissionModel from 'pass-ui/models/submission';
 interface Signature {
   Args: {
     record: { grant: GrantModel; submissions: SubmissionModel[] };
-    value: unknown;
+    value: string | number | null;
   };
 }
 

@@ -13,9 +13,9 @@ export interface TableChangeParams {
   filter: string;
 }
 
-interface PassTableSignature {
+interface PassTableSignature<T = unknown> {
   Args: {
-    data: unknown[];
+    data?: T[];
     page: number;
     pageSize: number;
     pageSizeValues?: number[];
@@ -27,15 +27,15 @@ interface PassTableSignature {
   };
   Blocks: {
     header: [];
-    row: [record: unknown];
+    row: [record: T];
   };
 }
 
-export default class PassTable extends Component<PassTableSignature> {
+export default class PassTable<T = unknown> extends Component<PassTableSignature<T>> {
   @tracked _filterText: string;
   _debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
-  constructor(owner: Owner, args: PassTableSignature['Args']) {
+  constructor(owner: Owner, args: PassTableSignature<T>['Args']) {
     super(owner, args);
     this._filterText = args.filterValue ?? '';
   }
@@ -48,8 +48,8 @@ export default class PassTable extends Component<PassTableSignature> {
     return this.args.pageSizeValues ?? [10, 25, 50];
   }
 
-  get records(): unknown[] {
-    return this.args.data ?? [];
+  get records(): T[] {
+    return this.args.data ?? ([] as T[]);
   }
 
   get totalItemsDisplay(): number {

@@ -36,7 +36,6 @@ interface Signature {
     <div class='col-12 table-container'>
       <div class='grant-table'>
         {{#if @controller.currentUser.user.isAdmin}}
-          {{! @glint-expect-error - PassTable yields unknown record, cell components accept specific types }}
           <PassTable
             @data={{@controller.queuedModel.grantMap}}
             @page={{@controller.page}}
@@ -69,7 +68,6 @@ interface Signature {
             </:row>
           </PassTable>
         {{else if @controller.currentUser.user.isSubmitter}}
-          {{! @glint-expect-error - PassTable yields unknown record, cell components accept specific types }}
           <PassTable
             @data={{@controller.queuedModel.grantMap}}
             @page={{@controller.page}}

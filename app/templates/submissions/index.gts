@@ -46,7 +46,6 @@ interface Signature {
   <div class='row'>
     <div class='col-12 table-container'>
       <div class='submission-table' data-test-submissions-index-submissions-table>
-        {{! @glint-expect-error - PassTable yields unknown record, cell components accept specific types }}
         <PassTable
           @data={{@controller.queuedModel.submissions}}
           @page={{@controller.page}}

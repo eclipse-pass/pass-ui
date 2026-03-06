@@ -110,7 +110,6 @@ interface Signature {
         Submissions for grant
       </h3>
       <div class='submission-table'>
-        {{! @glint-expect-error - PassTable yields unknown record, cell components accept specific types }}
         <PassTable
           @data={{@controller.queuedModel.submissions.data}}
           @page={{@controller.page}}

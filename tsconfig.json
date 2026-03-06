@@ -15,7 +15,6 @@
       "@ember-data-types/store/unstable-preview-types",
       "@ember-data-types/graph/unstable-preview-types",
       "@ember-data-types/legacy-compat/unstable-preview-types",
-      "@ember-data-types/tracking/unstable-preview-types",
       "@warp-drive-types/core-types/unstable-preview-types",
       "@types/rsvp",
       "@types/qunit"

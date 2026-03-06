@@ -5,23 +5,24 @@ import { service } from '@ember/service';
 import { grantDetailsQuery } from '../../util/paginated-query';
 import type CurrentUserService from 'pass-ui/services/current-user';
 import type GrantModel from 'pass-ui/models/grant';
+import type SubmissionModel from 'pass-ui/models/submission';
+
+interface PaginationMeta {
+  page?: { totalRecords?: number; totalPages?: number };
+}
 
 interface GrantDetailModel {
   grant: GrantModel;
   submissions: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    data: any;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    meta: any;
+    data: SubmissionModel[];
+    meta: PaginationMeta;
   };
 }
 
 interface QueuedGrantDetailModel {
   submissions?: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    data: any;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    meta: any;
+    data: SubmissionModel[];
+    meta: PaginationMeta;
   };
 }
 

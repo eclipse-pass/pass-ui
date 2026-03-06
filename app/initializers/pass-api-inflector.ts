@@ -1,5 +1,4 @@
-// @ts-expect-error no types for @ember-data/request-utils/string
-import { uncountable } from '@ember-data/request-utils/string';
+import { uncountable } from '@warp-drive/utilities/string';
 
 const MODEL_NAMES = [
   'deposit',

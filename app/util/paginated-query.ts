@@ -76,7 +76,7 @@ export function grantDetailsQuery(params: QueryParams, grantId: string, user: Us
     filter: {
       submission: `grants.id==${grantId};submissionStatus=out=cancelled;(${userMatch})`,
     },
-    include: 'publication,repositories',
+    include: 'publication,grants.primaryFunder,repositories,submitter,preparers',
   };
 
   if (params.filter) {
