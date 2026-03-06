@@ -14,7 +14,16 @@ importers:
       '@ember-data/adapter':
         specifier: ~5.8.1
         version: 5.8.1(@babel/core@7.24.7)(@glint/template@1.7.4)
+      '@ember-data/json-api':
+        specifier: ~5.8.1
+        version: 5.8.1(@babel/core@7.24.7)(@glint/template@1.7.4)
+      '@ember-data/legacy-compat':
+        specifier: ~5.8.1
+        version: 5.8.1(@babel/core@7.24.7)(@glint/template@1.7.4)
       '@ember-data/model':
+        specifier: ~5.8.1
+        version: 5.8.1(@babel/core@7.24.7)(@glint/template@1.7.4)
+      '@ember-data/request':
         specifier: ~5.8.1
         version: 5.8.1(@babel/core@7.24.7)(@glint/template@1.7.4)
       '@ember-data/request-utils':
@@ -23,6 +32,9 @@ importers:
       '@ember-data/serializer':
         specifier: ~5.8.1
         version: 5.8.1(@babel/core@7.24.7)(@glint/template@1.7.4)
+      '@ember-data/store':
+        specifier: ~5.8.1
+        version: 5.8.1(@babel/core@7.24.7)(@ember-data/tracking@5.8.1(@babel/core@7.24.7)(@ember/test-waiters@4.1.1(@babel/core@7.24.7)(@glint/template@1.7.4))(@glint/template@1.7.4))(@ember/test-waiters@4.1.1(@babel/core@7.24.7)(@glint/template@1.7.4))(@glint/template@1.7.4)
       '@fortawesome/ember-fontawesome':
         specifier: ^3.0.0
         version: 3.0.1(@fortawesome/fontawesome-svg-core@6.7.2)(@glimmer/component@1.1.2(@babel/core@7.24.7))
@@ -120,10 +132,16 @@ importers:
       '@ember-data-types/graph':
         specifier: 5.8.1
         version: 5.8.1
+      '@ember-data-types/json-api':
+        specifier: 5.8.1
+        version: 5.8.1
       '@ember-data-types/legacy-compat':
         specifier: 5.8.1
         version: 5.8.1
       '@ember-data-types/model':
+        specifier: 5.8.1
+        version: 5.8.1
+      '@ember-data-types/request':
         specifier: 5.8.1
         version: 5.8.1
       '@ember-data-types/serializer':
@@ -1240,11 +1258,17 @@ packages:
   '@ember-data-types/graph@5.8.1':
     resolution: {integrity: sha512-WuvhbcBwQbJj5OexpVeqOGk642NUJbHyrCyrqFKwGxnl/gS4l3eSlYRu2KFx6Tifr3Oyb9DNOBvdecc3hWDn9A==}
 
+  '@ember-data-types/json-api@5.8.1':
+    resolution: {integrity: sha512-UNfrg6EAFFXpE5qR/5g0fEYZfF0HzCWxr9dBjrc+4YEgOoxyReH5hWQY+rRPBZR6BNKXncmURLtyxbVHyVHAVQ==}
+
   '@ember-data-types/legacy-compat@5.8.1':
     resolution: {integrity: sha512-7lN0s1rJ74Smov5ytH8BpIVoGNPcW+IZpdfURDMYUKSmCJeNeE8P+SlomaTD3VLMq33LDu8e9/2cpT3DseSHKg==}
 
   '@ember-data-types/model@5.8.1':
     resolution: {integrity: sha512-upbaSUPJnELkefKljs+YKI0eRHWDA6UTSxZLqpe9wFP1ms0OD6CyaF0QsKEJ8DsF/gO8xJ9zwwksTFCW66qg3Q==}
+
+  '@ember-data-types/request@5.8.1':
+    resolution: {integrity: sha512-NXi9gqOds3Fp1kWq9nMI30fbXB7Pr8bI3x8KaMxLLn/icRuZfm2etgeu1zfEsqA20S5h8QaLkNh9vCaqKYkhtA==}
 
   '@ember-data-types/serializer@5.8.1':
     resolution: {integrity: sha512-h1sS5UQKRUCHoMoz5VX1azVKR/o+ZVH62KACA/JXm9Di1iofrgAqkePGjWQlPkWfIBCGKYQM72lei5J7vME75Q==}
@@ -10573,9 +10597,13 @@ snapshots:
 
   '@ember-data-types/graph@5.8.1': {}
 
+  '@ember-data-types/json-api@5.8.1': {}
+
   '@ember-data-types/legacy-compat@5.8.1': {}
 
   '@ember-data-types/model@5.8.1': {}
+
+  '@ember-data-types/request@5.8.1': {}
 
   '@ember-data-types/serializer@5.8.1': {}
 
