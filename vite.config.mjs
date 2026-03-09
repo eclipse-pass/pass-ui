@@ -71,10 +71,7 @@ export default defineConfig({
         const viteOrigin = 'http://localhost:4200';
         return html
           .replace(/src="(\/app\/@vite\/client)"/g, `src="${viteOrigin}$1"`)
-          .replace(
-            /src="(\/app\/index\.html\?html-proxy[^"]*)"/g,
-            `src="${viteOrigin}$1"`,
-          );
+          .replace(/src="(\/app\/index\.html\?html-proxy[^"]*)"/g, `src="${viteOrigin}$1"`);
       },
     },
     // Serve /app/config.json for dev mode (production serves this from the backend)
