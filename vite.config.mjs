@@ -41,15 +41,42 @@ function rewrittenV1Addons() {
 }
 
 export default defineConfig({
+  base: '/app/',
   optimizeDeps: {
     exclude: ['survey-js-ui', '@playwright/test', 'playwright', 'playwright-core'],
   },
   server: {
+    host: true,
+    allowedHosts: ['host.docker.internal'],
     watch: {
       ignored: ['**/tests/visual/**', '**/test-results/**', '**/playwright-report/**'],
     },
+    proxy: {
+      '/data': 'http://localhost:8080',
+      '/user': 'http://localhost:8080',
+      '/schema': 'http://localhost:8080',
+      '/doi': 'http://localhost:8080',
+      '/policy': 'http://localhost:8080',
+      '/file': 'http://localhost:8080',
+    },
   },
   plugins: [
+    // When pass-core reverse-proxies to Vite, it overrides Content-Type headers
+    // based on file extension. Paths like /@vite/client (no extension) get
+    // application/octet-stream, and index.html?html-proxy gets text/html.
+    // Rewrite these to absolute URLs so the browser loads them directly from Vite.
+    {
+      name: 'pass-core-proxy-compat',
+      transformIndexHtml(html) {
+        const viteOrigin = 'http://localhost:4200';
+        return html
+          .replace(/src="(\/app\/@vite\/client)"/g, `src="${viteOrigin}$1"`)
+          .replace(
+            /src="(\/app\/index\.html\?html-proxy[^"]*)"/g,
+            `src="${viteOrigin}$1"`,
+          );
+      },
+    },
     // Serve /app/config.json for dev mode (production serves this from the backend)
     {
       name: 'dev-config-json',
