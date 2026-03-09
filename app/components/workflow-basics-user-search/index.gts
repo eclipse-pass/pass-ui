@@ -6,7 +6,7 @@ import { task } from 'ember-concurrency';
 import { fn } from '@ember/helper';
 import { on } from '@ember/modifier';
 import { Input } from '@ember/component';
-import { query } from '@ember-data/legacy-compat/builders';
+import { query } from 'pass-ui/builders/pass-api';
 import type CurrentUserService from 'pass-ui/services/current-user';
 import type UserModel from 'pass-ui/models/user';
 
@@ -101,10 +101,11 @@ export default class WorkflowBasicsUserSearch extends Component<WorkflowBasicsUs
       },
     };
 
-    const { content: users } = await this.store.request(query('user', queryHash));
+    const { content } = await this.store.request(query('user', queryHash));
+    const users = content.data;
 
-    if (users.meta) {
-      this.numberOfPages = users.meta.page.totalPages;
+    if (content.meta) {
+      this.numberOfPages = content.meta.page.totalPages;
     }
 
     this.matchingUsers = users;

@@ -33,7 +33,7 @@ export default class CheckSessionRouteRoute extends Route {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async error(error: any, transition: any): Promise<void> {
     console.error(error);
-    const errorObject = error?.errors[0] || {};
+    const errorObject = error?.errors?.[0] || {};
 
     if ([401, 403].includes(Number(errorObject.status))) {
       this.session.set('attemptedTransition', transition);

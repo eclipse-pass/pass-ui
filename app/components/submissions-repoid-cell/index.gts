@@ -2,7 +2,7 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { service } from '@ember/service';
 import { modifier } from 'ember-modifier';
-import { query } from '@ember-data/legacy-compat/builders';
+import { query } from 'pass-ui/builders/pass-api';
 import type Owner from '@ember/owner';
 import type SubmissionModel from 'pass-ui/models/submission';
 import type RepositoryCopyModel from 'pass-ui/models/repository-copy';
@@ -47,7 +47,7 @@ export default class SubmissionsRepoidCell extends Component<SubmissionsRepoidCe
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.store.request(query('repository-copy', queryHash)).then((result: any) => {
       if (!(this.isDestroyed || this.isDestroying)) {
-        this.repoCopies = result.content;
+        this.repoCopies = result.content.data;
       }
     });
   }

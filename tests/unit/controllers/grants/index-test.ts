@@ -24,7 +24,7 @@ module('Unit | Controller | grants/index', (hooks) => {
 
   test('handleTableChange updates tracked query params', function (assert) {
     controller.store = {
-      request: () => Promise.resolve({ content: [] }),
+      request: () => Promise.resolve({ content: { data: [] } }),
     };
 
     assert.equal(controller.page, 1, 'Page param should have default value');
@@ -41,23 +41,23 @@ module('Unit | Controller | grants/index', (hooks) => {
 
     controller.store = {
       request: (req: any) => {
-        const { type, query } = req.data;
-        switch (type) {
-          case 'grant':
-            assert.ok(query.page, 'Query should have pagination info');
-            return Promise.resolve({ content: [{ id: 10 }, { id: 11 }] });
-          case 'submission':
-            assert.notOk(query.page, 'Query should not have pagination info');
-            return Promise.resolve({
-              content: [
+        const url = req.url as string;
+        if (url.includes('/data/grant')) {
+          assert.true(url.includes('page'), 'Query should have pagination info'); // eslint-disable-line qunit/no-conditional-assertions
+          return Promise.resolve({ content: { data: [{ id: 10 }, { id: 11 }] } });
+        } else if (url.includes('/data/submission')) {
+          assert.false(url.includes('page'), 'Query should not have pagination info'); // eslint-disable-line qunit/no-conditional-assertions
+          return Promise.resolve({
+            content: {
+              data: [
                 { id: 20, grants: [{ id: 11 }] },
                 { id: 21, grants: [{ id: 11 }] },
               ],
-            });
-          default:
-            assert.ok(false, 'Only submissions and grants should be queried here');
+            },
+          });
         }
-        return Promise.resolve({ content: {} });
+        assert.ok(false, 'Only submissions and grants should be queried here');
+        return Promise.resolve({ content: { data: {} } });
       },
     };
 

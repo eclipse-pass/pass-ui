@@ -325,20 +325,20 @@ module('Unit | Service | submission-handler', (hooks) => {
     };
 
     const requestHandler = (req: any) => {
-      switch (req.data.type) {
-        case 'file':
-          // Get files for the submission
-          return Promise.resolve({
-            content: [
+      if (req.url.includes('/data/file')) {
+        // Get files for the submission
+        return Promise.resolve({
+          content: {
+            data: [
               { name: 'file1', submission: 0, destroyRecord: Sinon.fake.rejects() },
               { name: 'file2', submission: 0, destroyRecord: Sinon.fake.rejects() },
             ],
-          });
-        case 'submission':
-          return Promise.resolve({ content: [submission] }); // Get submissions that share the same Publication
-        default:
-          return Promise.reject();
+          },
+        });
+      } else if (req.url.includes('/data/submission')) {
+        return Promise.resolve({ content: { data: [submission] } }); // Get submissions that share the same Publication
       }
+      return Promise.reject();
     };
     const storeRequestFake = Sinon.replace(store, 'request', Sinon.spy(requestHandler));
     this.owner.register('service:store', store);
@@ -373,21 +373,21 @@ module('Unit | Service | submission-handler', (hooks) => {
     };
 
     const requestHandler = (req: any) => {
-      switch (req.data.type) {
-        case 'file':
-          // Get files for the submission
-          return Promise.resolve({
-            content: [
+      if (req.url.includes('/data/file')) {
+        // Get files for the submission
+        return Promise.resolve({
+          content: {
+            data: [
               { name: 'file1', submission: 0, destroyRecord: Sinon.fake.resolves() },
               { name: 'file2', submission: 0, destroyRecord: Sinon.fake.resolves() },
             ],
-          });
-        case 'submission':
-          // 2 submissions use the same Publication
-          return Promise.resolve({ content: [submission, { id: 1, publication }] });
-        default:
-          return Promise.reject();
+          },
+        });
+      } else if (req.url.includes('/data/submission')) {
+        // 2 submissions use the same Publication
+        return Promise.resolve({ content: { data: [submission, { id: 1, publication }] } });
       }
+      return Promise.reject();
     };
 
     const storeRequestFake = Sinon.replace(store, 'request', Sinon.fake(requestHandler));
@@ -425,15 +425,13 @@ module('Unit | Service | submission-handler', (hooks) => {
     ];
 
     const requestHandler = (req: any) => {
-      switch (req.data.type) {
-        case 'file':
-          // Get files for the submission
-          return Promise.resolve({ content: files });
-        case 'submission':
-          return Promise.resolve({ content: [] });
-        default:
-          return Promise.reject();
+      if (req.url.includes('/data/file')) {
+        // Get files for the submission
+        return Promise.resolve({ content: { data: files } });
+      } else if (req.url.includes('/data/submission')) {
+        return Promise.resolve({ content: { data: [] } });
       }
+      return Promise.reject();
     };
 
     const storeRequestFake = Sinon.replace(store, 'request', Sinon.fake(requestHandler));

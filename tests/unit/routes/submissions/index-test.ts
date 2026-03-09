@@ -22,17 +22,14 @@ module('Unit | Route | submissions/index', (hooks) => {
   test('No params on route still includes pagination in query', async function (assert) {
     this['route'].store = {
       request: (req: any) => {
-        const { type, query } = req.data;
-        assert.equal(type, 'submission', 'Query is requesting "submission" model');
-        assert.ok(query.filter.submission, 'Query has a filter[submission] part');
-        assert.ok(query.filter.submission.includes(`submitter.id==0`), 'Filter includes non-admin user selection');
-        assert.ok(query.page, 'Query has pagination object');
-        assert.deepEqual(
-          query.page,
-          { number: 1, size: 10, totals: true },
-          'Pagination in query should have default values',
-        );
-        return Promise.resolve({ content: {} });
+        const url = decodeURIComponent(req.url as string);
+        assert.true(url.includes('/data/submission'), 'Query is requesting "submission" model');
+        assert.true(url.includes('filter[submission]'), 'Query has a filter[submission] part');
+        assert.true(url.includes('submitter.id==0'), 'Filter includes non-admin user selection');
+        assert.true(url.includes('page[number]=1'), 'Query has default page number');
+        assert.true(url.includes('page[size]=10'), 'Query has default page size');
+        assert.true(url.includes('page[totals]=true'), 'Query has page totals');
+        return Promise.resolve({ content: { data: {} } });
       },
     };
 
@@ -42,19 +39,12 @@ module('Unit | Route | submissions/index', (hooks) => {
   test('Make sure input params are passed to store query', async function (assert) {
     this['route'].store = {
       request: (req: any) => {
-        const { type, query } = req.data;
-        assert.equal(type, 'submission', 'Query is requesting "submission" model');
-        assert.ok(query.page, 'Query has pagination object');
-        assert.deepEqual(
-          query.page,
-          { number: 2, size: 5, totals: true },
-          'Pagination in query should match input params',
-        );
-        assert.ok(
-          query.filter.submission.includes('=ini="*Hello moo!*"'),
-          'Query filter should include input param filter string',
-        );
-        return Promise.resolve({ content: {} });
+        const url = decodeURIComponent(req.url as string);
+        assert.true(url.includes('/data/submission'), 'Query is requesting "submission" model');
+        assert.true(url.includes('page[number]=2'), 'Page number matches input');
+        assert.true(url.includes('page[size]=5'), 'Page size matches input');
+        assert.true(url.includes('=ini="*Hello moo!*"'), 'Query filter should include input param filter string');
+        return Promise.resolve({ content: { data: {} } });
       },
     };
 
@@ -68,9 +58,9 @@ module('Unit | Route | submissions/index', (hooks) => {
   test("Single word input filter isn't surrounded by double quotes", async function (assert) {
     this['route'].store = {
       request: (req: any) => {
-        const { query } = req.data;
-        assert.ok(query.filter.submission.includes('=ini=*Moo*'));
-        return Promise.resolve({ content: {} });
+        const url = decodeURIComponent(req.url as string);
+        assert.true(url.includes('=ini=*Moo*'));
+        return Promise.resolve({ content: { data: {} } });
       },
     };
 
@@ -83,12 +73,9 @@ module('Unit | Route | submissions/index', (hooks) => {
     };
     this['route'].store = {
       request: (req: any) => {
-        const { query } = req.data;
-        assert.notOk(
-          query.filter.submission.includes(`submitter.id==0`),
-          'Filter does not include non-admin user selection',
-        );
-        return Promise.resolve({ content: {} });
+        const url = decodeURIComponent(req.url as string);
+        assert.false(url.includes('submitter.id==0'), 'Filter does not include non-admin user selection');
+        return Promise.resolve({ content: { data: {} } });
       },
     };
 

@@ -1,6 +1,6 @@
 import CheckSessionRoute from './check-session-route';
 import { service } from '@ember/service';
-import { findRecord } from '@ember-data/legacy-compat/builders';
+import { findRecord } from 'pass-ui/builders/pass-api';
 import type SubmissionModel from 'pass-ui/models/submission';
 
 interface ThanksModel {
@@ -12,9 +12,9 @@ export default class ThanksRoute extends CheckSessionRoute {
   @service declare store: any;
 
   async model(params: { submission: string }): Promise<ThanksModel> {
-    const { content: submission } = await this.store.request(
+    const { content } = await this.store.request(
       findRecord('submission', params.submission, { include: 'repositories' }),
     );
-    return { submission };
+    return { submission: content.data };
   }
 }

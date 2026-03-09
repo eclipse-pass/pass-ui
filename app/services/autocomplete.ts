@@ -1,5 +1,5 @@
 import Service, { service } from '@ember/service';
-import { query as queryBuilder } from '@ember-data/legacy-compat/builders';
+import { query as queryBuilder } from 'pass-ui/builders/pass-api';
 
 export default class AutocompleteService extends Service {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -60,7 +60,7 @@ export default class AutocompleteService extends Service {
       this.store
         .request(queryBuilder(type, query))
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .then((result: any) => result.content)
+        .then((result: any) => result.content.data)
         .catch((error: unknown) => {
           console.error(`Autocomplete service failed: ${JSON.stringify(error)}`);
         })

@@ -40,7 +40,7 @@ module('Unit | Route | submissions/new', (hooks) => {
             return Promise.resolve({ ...data });
         }
       },
-      request: () => Promise.resolve({ content: [] }),
+      request: () => Promise.resolve({ content: { data: [] } }),
     };
 
     const result = await route.model({});
@@ -77,10 +77,10 @@ module('Unit | Route | submissions/new', (hooks) => {
       request: (req: any) => {
         if (req.op === 'findRecord') {
           findRecordCalled = true;
-          return Promise.resolve({ content: mockSub });
+          return Promise.resolve({ content: { data: mockSub } });
         }
         // loadObjects or file/submission-event queries
-        return Promise.resolve({ content: [] });
+        return Promise.resolve({ content: { data: [] } });
       },
     };
 

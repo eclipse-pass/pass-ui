@@ -13,12 +13,12 @@ module('Unit | Service | autocomplete', (hooks) => {
 
     class StoreStub extends Service {
       request(req: any) {
-        const { type, query } = req.data;
-        assert.strictEqual(type, TYPE);
-        assert.ok(query);
-        assert.ok('Query object should include the field name somewhere', query.filter[type].includes(FIELD));
-        assert.ok('Query object should include the input value', query.filter[type].includes(INPUT));
-        return Promise.resolve({ content: [] });
+        const url = req.url as string;
+        assert.true(url.includes('/data/myType'), 'URL includes camelCase path');
+        assert.true(url.includes('filter'), 'URL includes filter param');
+        assert.true(url.includes(FIELD), 'URL includes field name');
+        assert.true(url.includes(INPUT), 'URL includes input value');
+        return Promise.resolve({ content: { data: [] } });
       }
     }
 
@@ -37,14 +37,12 @@ module('Unit | Service | autocomplete', (hooks) => {
 
     class StoreStub extends Service {
       request(req: any) {
-        const { type, query } = req.data;
-        assert.strictEqual(type, TYPE);
-        const filter = query.filter[type];
-        assert.ok(filter);
-        assert.ok(filter.startsWith('queryFragment'));
-        assert.ok(filter.includes(FIELD));
-        assert.ok(filter.includes(INPUT));
-        return Promise.resolve({ content: [] });
+        const url = decodeURIComponent(req.url as string);
+        assert.true(url.includes('/data/myType'), 'URL includes camelCase path');
+        assert.true(url.includes('queryFragment'), 'URL includes existing context filter');
+        assert.true(url.includes(FIELD), 'URL includes field name');
+        assert.true(url.includes(INPUT), 'URL includes input value');
+        return Promise.resolve({ content: { data: [] } });
       }
     }
 
@@ -63,16 +61,13 @@ module('Unit | Service | autocomplete', (hooks) => {
 
     class StoreStub extends Service {
       request(req: any) {
-        const { type, query } = req.data;
-        assert.strictEqual(type, TYPE);
+        const url = decodeURIComponent(req.url as string);
+        assert.true(url.includes('/data/myType'), 'URL includes camelCase path');
+        assert.true(url.includes(FIELDS[0]!), 'URL includes first field');
+        assert.true(url.includes(FIELDS[1]!), 'URL includes second field');
+        assert.true(url.includes(INPUT), 'URL includes input value');
 
-        const filter = query.filter[type];
-        assert.ok(filter);
-        assert.ok(filter.includes(FIELDS[0]));
-        assert.ok(filter.includes(FIELDS[1]));
-        assert.ok(filter.includes(INPUT));
-
-        return Promise.resolve({ content: [] });
+        return Promise.resolve({ content: { data: [] } });
       }
     }
 

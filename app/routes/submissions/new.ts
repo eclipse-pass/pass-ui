@@ -2,7 +2,7 @@ import CheckSessionRoute from '../check-session-route';
 import { service } from '@ember/service';
 import { set } from '@ember/object';
 import { hash } from 'rsvp';
-import { query, findRecord } from '@ember-data/legacy-compat/builders';
+import { query, findRecord } from 'pass-ui/builders/pass-api';
 import { fileForSubmissionQuery } from '../../util/paginated-query';
 import type Workflow from 'pass-ui/services/workflow';
 import type { WorkflowFile } from 'pass-ui/services/workflow';
@@ -57,7 +57,7 @@ export default class NewRoute extends CheckSessionRoute {
     // TODO: Elide JSON:API filters do not support both page size and page offset
     return this.store.request(query(type, { page: { size: count } })).then(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (result: any) => result.content,
+      (result: any) => result.content.data,
     );
   }
 
@@ -73,7 +73,7 @@ export default class NewRoute extends CheckSessionRoute {
       preLoadedGrant = this.store
         .request(findRecord('grant', params.grant, { include: 'primaryFunder,directFunder' }))
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .then((result: any) => result.content);
+        .then((result: any) => result.content.data);
     }
 
     const repositories = this.loadObjects('repository', 0, 500);
@@ -82,12 +82,12 @@ export default class NewRoute extends CheckSessionRoute {
     if (params.submission) {
       // Operating on existing submission
 
-      const { content: sub } = await this.store.request(
+      const { content: subContent } = await this.store.request(
         findRecord('submission', params.submission, {
           include: 'effectivePolicies,grants.primaryFunder,grants.directFunder,publication.journal,submitter',
         }),
       );
-      newSubmission = sub;
+      newSubmission = subContent.data;
       publication = newSubmission.publication;
       journal = publication.journal;
 
@@ -99,12 +99,12 @@ export default class NewRoute extends CheckSessionRoute {
           }),
         )
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .then((result: any) => result.content);
+        .then((result: any) => result.content.data);
 
-      const { content: fileResults } = await this.store.request(
+      const { content: fileContent } = await this.store.request(
         query('file', fileForSubmissionQuery(newSubmission.id)),
       );
-      const files = [...fileResults.slice()];
+      const files = [...fileContent.data.slice()];
       this.workflow.setFiles(files);
     } else {
       // Starting a new submission

@@ -2,7 +2,7 @@ import Controller from '@ember/controller';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { service } from '@ember/service';
-import { query } from '@ember-data/legacy-compat/builders';
+import { query } from 'pass-ui/builders/pass-api';
 import { grantsIndexGrantQuery, grantsIndexSubmissionQuery } from '../../util/paginated-query';
 import type CurrentUserService from 'pass-ui/services/current-user';
 import type AppStaticConfigService from 'pass-ui/services/app-static-config';
@@ -83,8 +83,8 @@ export default class GrantsIndexController extends Controller {
         .request(query('grant', grantQueryHash))
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .then((result: any) => {
-          const data = result.content;
-          const meta = data.meta;
+          const data = result.content.data;
+          const meta = result.content.meta;
           const results = data.map((grant: GrantModel) => ({
             grant,
             submissions: [] as SubmissionModel[],
@@ -96,8 +96,8 @@ export default class GrantsIndexController extends Controller {
           };
         })
         .then(async (results: GrantsIndexModel) => {
-          const { content: subs } = await this.store.request(query('submission', submissionQueryHash));
-          subs.forEach((submission: SubmissionModel) => {
+          const { content: subsDoc } = await this.store.request(query('submission', submissionQueryHash));
+          subsDoc.data.forEach((submission: SubmissionModel) => {
             submission.grants.forEach((grant: GrantModel) => {
               const match = results.grantMap.find((res: GrantMapEntry) => res.grant.id === grant.id);
               if (match) {

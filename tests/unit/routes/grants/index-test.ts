@@ -15,22 +15,18 @@ module('Unit | Route | grants/index', (hooks) => {
   test('Makes two requests', async function (assert) {
     assert.expect(2);
 
-    let requestCount = 0;
     this['route'].store = {
       request: (req: any) => {
-        const { type, query } = req.data;
-        requestCount++;
-        switch (type) {
-          case 'grant':
-            assert.deepEqual(query.page, { number: 1, size: 10, totals: true }, 'Grant query should have pagination');
-            return Promise.resolve({ content: [] });
-          case 'submission':
-            assert.notOk(query.page, 'Submission query should not have pagination');
-            return Promise.resolve({ content: [] });
-          default:
-            assert.ok(false, 'Only "grant" and "submission" requests are expected');
+        const url = req.url as string;
+        if (url.includes('/data/grant')) {
+          assert.true(url.includes('page'), 'Grant query should have pagination'); // eslint-disable-line qunit/no-conditional-assertions
+          return Promise.resolve({ content: { data: [] } });
+        } else if (url.includes('/data/submission')) {
+          assert.false(url.includes('page'), 'Submission query should not have pagination'); // eslint-disable-line qunit/no-conditional-assertions
+          return Promise.resolve({ content: { data: [] } });
         }
-        return Promise.resolve({ content: [] });
+        assert.ok(false, 'Only "grant" and "submission" requests are expected');
+        return Promise.resolve({ content: { data: [] } });
       },
     };
     await this['route'].model({});
@@ -39,21 +35,21 @@ module('Unit | Route | grants/index', (hooks) => {
   test('Submissions should be mapped to grants', async function (assert) {
     this['route'].store = {
       request: (req: any) => {
-        const { type } = req.data;
-        switch (type) {
-          case 'grant':
-            return Promise.resolve({ content: [{ id: 0 }, { id: 1 }] });
-          case 'submission':
-            return Promise.resolve({
-              content: [
+        const url = req.url as string;
+        if (url.includes('/data/grant')) {
+          return Promise.resolve({ content: { data: [{ id: 0 }, { id: 1 }] } });
+        } else if (url.includes('/data/submission')) {
+          return Promise.resolve({
+            content: {
+              data: [
                 { id: 10, grants: [{ id: 0 }] },
                 { id: 11, grants: [{ id: 0 }] },
               ],
-            });
-          default:
-            assert.ok(false);
-            return Promise.resolve({ content: [] });
+            },
+          });
         }
+        assert.ok(false);
+        return Promise.resolve({ content: { data: [] } });
       },
     };
 

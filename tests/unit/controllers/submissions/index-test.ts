@@ -27,7 +27,7 @@ module('Unit | Controller | submissions/index', function (hooks) {
    * that URL query params are also updated
    */
   test('handleTableChange updates tracked query params', function (assert) {
-    controller.store = { request: () => Promise.resolve({ content: [] }) };
+    controller.store = { request: () => Promise.resolve({ content: { data: [] } }) };
 
     assert.equal(controller.page, 1, 'Page param should have default value');
     assert.equal(controller.pageSize, 10, 'Page size param should have default value');
@@ -43,10 +43,10 @@ module('Unit | Controller | submissions/index', function (hooks) {
 
     controller.store = {
       request: (req: any) => {
-        const { type, query } = req.data;
-        assert.equal(type, 'submission', 'Only submissions should be queried');
-        assert.ok(query.page, 'Query should have pagination info');
-        return Promise.resolve({ content: {} });
+        const url = req.url as string;
+        assert.true(url.includes('/data/submission'), 'Only submissions should be queried');
+        assert.true(url.includes('page'), 'Query should have pagination info');
+        return Promise.resolve({ content: { data: {} } });
       },
     };
 

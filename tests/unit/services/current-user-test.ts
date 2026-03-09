@@ -24,10 +24,10 @@ module('Unit | Service | current-user', (hooks) => {
     service.store = {
       request(req: any) {
         assert.ok(true);
-        assert.strictEqual(req.data.record.type, 'user');
-        assert.strictEqual(req.data.record.id, user.id);
+        assert.true(req.url.includes('/data/user/'), 'URL includes user path');
+        assert.true(req.url.includes(user.id), 'URL includes user id');
 
-        return Promise.resolve({ content: user });
+        return Promise.resolve({ content: { data: user } });
       },
     };
 

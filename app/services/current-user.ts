@@ -2,7 +2,7 @@
 /* eslint-disable no-debugger */
 import Service, { service } from '@ember/service';
 import { task } from 'ember-concurrency';
-import { findRecord } from '@ember-data/legacy-compat/builders';
+import { findRecord } from 'pass-ui/builders/pass-api';
 import type UserModel from 'pass-ui/models/user';
 
 /**
@@ -27,8 +27,8 @@ export default class CurrentUserService extends Service {
     const userId = this.session.data.authenticated.id;
 
     if (userId) {
-      const { content: user } = await this.store.request(findRecord('user', userId));
-      this.user = user;
+      const { content } = await this.store.request(findRecord('user', userId));
+      this.user = content.data;
     }
 
     return this.user;

@@ -2,7 +2,7 @@ import Controller from '@ember/controller';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { service } from '@ember/service';
-import { query } from '@ember-data/legacy-compat/builders';
+import { query } from 'pass-ui/builders/pass-api';
 import { grantDetailsQuery } from '../../util/paginated-query';
 import type CurrentUserService from 'pass-ui/services/current-user';
 import type GrantModel from 'pass-ui/models/grant';
@@ -74,7 +74,7 @@ export default class GrantDetailsController extends Controller {
     return this.store.request(query('submission', queryHash)).then((result: any) => {
       this.queuedModel = {
         submissions: {
-          data: result.content,
+          data: result.content.data,
           meta: result.content.meta,
         },
       };

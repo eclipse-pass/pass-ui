@@ -31,7 +31,6 @@ module('Integration | Component | workflow grants', (hooks) => {
 
       { id: 4, awardNumber: '4', projectName: 'Moo 4' },
     ]);
-    grants.meta = { page: { totalRecords: 4, totalPages: 1 } };
 
     const mockStaticConfig = Service.extend({
       getStaticConfig: () =>
@@ -53,10 +52,13 @@ module('Integration | Component | workflow grants', (hooks) => {
         Service.extend({
           request(req: any) {
             if (req.op === 'findRecord') {
-              return Promise.resolve({ content: grants.findBy('id', req.data.record.id) });
+              // Extract ID from URL: /data/grant/<id>
+              const idMatch = (req.url as string).match(/\/data\/grant\/(.+?)(?:\?|$)/);
+              const id = idMatch ? idMatch[1] : null;
+              return Promise.resolve({ content: { data: grants.findBy('id', id) } });
             }
             // query
-            return Promise.resolve({ content: grants });
+            return Promise.resolve({ content: { data: grants, meta: { page: { totalRecords: 4, totalPages: 1 } } } });
           },
         }),
       );

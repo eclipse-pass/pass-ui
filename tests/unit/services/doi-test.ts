@@ -154,10 +154,10 @@ module('Unit | Service | doi', (hooks) => {
     service.store = {
       request(req: any) {
         assert.ok(true);
-        assert.strictEqual(req.data.record.type, 'journal');
+        assert.true(req.url.includes('/data/journal/'), 'URL includes journal path');
 
         const journal = { id: 'journal' };
-        return Promise.resolve({ content: journal });
+        return Promise.resolve({ content: { data: journal } });
       },
 
       createRecord(type: any, values: any) {

@@ -9,14 +9,16 @@
  *   - Elide RSQL filter syntax: filter[type]=rsqlExpression
  *   - Elide pagination: page[number], page[size], page[totals]
  *   - Elide sort: sort=+field,-field
+ *   - JSON:API body types use camelCase (e.g., "submissionEvent")
  */
 import ENV from 'pass-ui/config/environment';
+import { recordIdentifierFor } from '@ember-data/store';
 
 const NAMESPACE = ENV.passApi.namespace as string;
-const JSON_API_ACCEPT = 'application/vnd.api+json';
+const JSON_API_CONTENT_TYPE = 'application/vnd.api+json';
 
 /**
- * Convert a dasherized model name to a camelCase resource path.
+ * Convert a dasherized model name to a camelCase resource path/type.
  * e.g., 'repository-copy' → 'repositoryCopy'
  */
 function resourcePathFor(type: string): string {
@@ -74,14 +76,17 @@ export function query(type: string, params: QueryParams = {}) {
   const url = baseURLFor(type);
   const queryString = serializeQueryParams(params);
   const headers = new Headers();
-  headers.append('Accept', JSON_API_ACCEPT);
+  headers.append('Accept', JSON_API_CONTENT_TYPE);
 
   return {
     url: queryString ? `${url}?${queryString}` : url,
     method: 'GET',
     headers,
     op: 'query' as const,
-    cacheOptions: { types: [type] },
+    // Always reload for queries to match legacy adapter behavior.
+    // Without this, the CacheHandler serves stale cached results when
+    // revisiting a page after creating/updating records via legacy .save().
+    cacheOptions: { types: [type], reload: true },
   };
 }
 
@@ -97,7 +102,7 @@ export function findRecord(type: string, id: string, options: QueryParams = {}) 
   const url = `${baseURLFor(type)}/${encodeURIComponent(id)}`;
   const queryString = serializeQueryParams(options);
   const headers = new Headers();
-  headers.append('Accept', JSON_API_ACCEPT);
+  headers.append('Accept', JSON_API_CONTENT_TYPE);
 
   return {
     url: queryString ? `${url}?${queryString}` : url,
@@ -105,5 +110,136 @@ export function findRecord(type: string, id: string, options: QueryParams = {}) 
     headers,
     op: 'findRecord' as const,
     cacheOptions: { types: [type] },
+  };
+}
+
+// -- Mutation builders --
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+interface StoreWithSchema {
+  schema: {
+    fields(identifier: { type: string }): Map<string, { kind: string; type?: string }>;
+  };
+}
+
+/**
+ * Serialize an Ember Data record to a JSON:API resource document.
+ * Uses store.schema.fields() to enumerate attributes and relationships,
+ * reads current values directly from the record.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function serializeRecord(record: any, store: StoreWithSchema): { data: Record<string, unknown> } {
+  const identifier = recordIdentifierFor(record);
+  const apiType = resourcePathFor(identifier.type);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const data: Record<string, any> = { type: apiType };
+
+  // Include id for updates; omit for creates (new records have no id yet)
+  if (identifier.id) {
+    data.id = identifier.id;
+  }
+
+  const fields = store.schema.fields({ type: identifier.type });
+  const attributes: Record<string, unknown> = {};
+  const relationships: Record<string, unknown> = {};
+
+  fields.forEach((field, key) => {
+    if (field.kind === 'attribute') {
+      const value = record[key];
+      if (value !== undefined) {
+        // Serialize Date objects to ISO strings
+        attributes[key] = value instanceof Date ? value.toISOString() : value;
+      }
+    } else if (field.kind === 'belongsTo') {
+      const related = record[key];
+      if (related !== undefined) {
+        if (related === null) {
+          relationships[key] = { data: null };
+        } else {
+          const relIdentifier = recordIdentifierFor(related);
+          relationships[key] = {
+            data: { type: resourcePathFor(relIdentifier.type), id: relIdentifier.id },
+          };
+        }
+      }
+    } else if (field.kind === 'hasMany') {
+      const related = record[key];
+      if (related !== undefined && related !== null) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const relData = (Array.isArray(related) ? related : Array.from(related as Iterable<any>)).map(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (r: any) => {
+            const relIdentifier = recordIdentifierFor(r);
+            return { type: resourcePathFor(relIdentifier.type), id: relIdentifier.id };
+          },
+        );
+        relationships[key] = { data: relData };
+      }
+    }
+  });
+
+  if (Object.keys(attributes).length > 0) {
+    data.attributes = attributes;
+  }
+  if (Object.keys(relationships).length > 0) {
+    data.relationships = relationships;
+  }
+
+  return { data };
+}
+
+/**
+ * Build a saveRecord request (POST for new, PATCH for existing).
+ *
+ * Usage:
+ *   await store.request(saveRecord(record, store));
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function saveRecord(record: any, store: StoreWithSchema) {
+  const identifier = recordIdentifierFor(record);
+  const isNew = !identifier.id;
+  const url = isNew
+    ? baseURLFor(identifier.type)
+    : `${baseURLFor(identifier.type)}/${encodeURIComponent(identifier.id!)}`;
+
+  const headers = new Headers();
+  headers.append('Accept', JSON_API_CONTENT_TYPE);
+  headers.append('Content-Type', JSON_API_CONTENT_TYPE);
+
+  const body = JSON.stringify(serializeRecord(record, store));
+
+  return {
+    url,
+    method: isNew ? 'POST' : 'PATCH',
+    headers,
+    body,
+    op: isNew ? ('createRecord' as const) : ('updateRecord' as const),
+    records: [identifier],
+    cacheOptions: { types: [identifier.type] },
+  };
+}
+
+/**
+ * Build a deleteRecord request.
+ *
+ * Usage:
+ *   await store.request(deleteRecord(record));
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function deleteRecord(record: any) {
+  const identifier = recordIdentifierFor(record);
+  const url = `${baseURLFor(identifier.type)}/${encodeURIComponent(identifier.id!)}`;
+
+  const headers = new Headers();
+  headers.append('Accept', JSON_API_CONTENT_TYPE);
+
+  return {
+    url,
+    method: 'DELETE',
+    headers,
+    op: 'deleteRecord' as const,
+    records: [identifier],
+    cacheOptions: { types: [identifier.type] },
   };
 }

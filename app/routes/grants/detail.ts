@@ -1,7 +1,7 @@
 import { service } from '@ember/service';
 import CheckSessionRoute from '../check-session-route';
 import { hash } from 'rsvp';
-import { query, findRecord } from '@ember-data/legacy-compat/builders';
+import { query, findRecord } from 'pass-ui/builders/pass-api';
 import { grantDetailsQuery } from '../../util/paginated-query';
 import type CurrentUserService from 'pass-ui/services/current-user';
 
@@ -35,13 +35,13 @@ export default class DetailRoute extends CheckSessionRoute {
     const grantPromise = this.store
       .request(findRecord('grant', params.grant_id, { include: 'pi,coPis,primaryFunder,directFunder' }))
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .then((result: any) => result.content);
+      .then((result: any) => result.content.data);
 
     const submissionQueryHash = grantDetailsQuery(params, params.grant_id, this.currentUser.user!);
     const submissionsPromise = this.store
       .request(query('submission', submissionQueryHash))
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .then((result: any) => ({ data: result.content, meta: result.content.meta }));
+      .then((result: any) => ({ data: result.content.data, meta: result.content.meta }));
 
     return hash({
       grant: grantPromise,

@@ -9,7 +9,7 @@ import SubmissionFundingTable from 'pass-ui/components/submission-funding-table'
 import GrantLinkNewtabCell from 'pass-ui/components/grant-link-newtab-cell';
 import DateCell from 'pass-ui/components/date-cell';
 import FaIcon from '@fortawesome/ember-fontawesome/components/fa-icon';
-import { query, findRecord } from '@ember-data/legacy-compat/builders';
+import { query, findRecord } from 'pass-ui/builders/pass-api';
 import type Owner from '@ember/owner';
 import type GrantModel from 'pass-ui/models/grant';
 import type SubmissionModel from 'pass-ui/models/submission';
@@ -112,10 +112,9 @@ export default class WorkflowGrants extends Component<WorkflowGrantsSignature> {
         totals: true,
       },
     };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { content: data } = await this.store.request(query('grant', grantQuery));
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const meta = (data as any).meta;
+    const { content } = await this.store.request(query('grant', grantQuery));
+    const data = content.data;
+    const meta = content.meta;
     this.submitterGrants = data;
     this.totalGrants = meta.page.totalRecords;
     this.pageCount = meta.page.totalPages;
@@ -125,11 +124,11 @@ export default class WorkflowGrants extends Component<WorkflowGrantsSignature> {
     if (grant) {
       this.addGrant(grant);
     } else if (event && (event.target as HTMLSelectElement).value) {
-      const { content: grant } = await this.store.request(
+      const { content: grantDoc } = await this.store.request(
         findRecord('grant', (event.target as HTMLSelectElement).value, { include: 'primaryFunder,directFunder' }),
       );
 
-      this.addGrant(grant);
+      this.addGrant(grantDoc.data);
       document.querySelectorAll('select')[0]!.selectedIndex = 0;
     }
   });

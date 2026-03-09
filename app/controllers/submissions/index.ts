@@ -2,7 +2,7 @@ import Controller from '@ember/controller';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { service } from '@ember/service';
-import { query } from '@ember-data/legacy-compat/builders';
+import { query } from 'pass-ui/builders/pass-api';
 import { submissionsIndexQuery } from '../../util/paginated-query';
 import type CurrentUserService from 'pass-ui/services/current-user';
 import type AppStaticConfigService from 'pass-ui/services/app-static-config';
@@ -69,7 +69,7 @@ export default class SubmissionsIndex extends Controller {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return this.store.request(query('submission', queryHash)).then((result: any) => {
       this.queuedModel = {
-        submissions: result.content,
+        submissions: result.content.data,
         meta: result.content.meta,
       };
     });

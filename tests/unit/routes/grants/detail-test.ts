@@ -15,12 +15,12 @@ module('Unit | Route | grants/detail', (hooks) => {
 
     this['route'].store = {
       request: (req: any) => {
-        assert.step(`${req.op}:${req.data.record?.type ?? req.data.type}`);
+        // Extract resource type from URL path: /data/<type>/...
+        const pathMatch = (req.url as string).match(/\/data\/(\w+)/);
+        const type = pathMatch ? pathMatch[1] : 'unknown';
+        assert.step(`${req.op}:${type}`);
 
-        if (req.op === 'findRecord') {
-          return Promise.resolve({ content: {} });
-        }
-        return Promise.resolve({ content: {} });
+        return Promise.resolve({ content: { data: {} } });
       },
     };
 

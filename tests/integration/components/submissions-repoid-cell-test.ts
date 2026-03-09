@@ -15,19 +15,21 @@ module('Integration | Component | submissions repoid cell', (hooks) => {
     const store = Service.extend({
       request: (req: any) =>
         Promise.resolve({
-          content: [
-            {
-              id: 'test',
-              accessUrl: 'https://dspace.example.com/handle/12345/67890',
-              externalIds: ['https://dspace.example.com/handle/12345/67890'],
-            },
+          content: {
+            data: [
+              {
+                id: 'test',
+                accessUrl: 'https://dspace.example.com/handle/12345/67890',
+                externalIds: ['https://dspace.example.com/handle/12345/67890'],
+              },
 
-            {
-              id: 'test2',
-              accessUrl: 'https://dspace.example.com/items/abcde-12345',
-              externalIds: ['https://dspace.example.com/items/abcde-12345'],
-            },
-          ],
+              {
+                id: 'test2',
+                accessUrl: 'https://dspace.example.com/items/abcde-12345',
+                externalIds: ['https://dspace.example.com/items/abcde-12345'],
+              },
+            ],
+          },
         }),
     });
 

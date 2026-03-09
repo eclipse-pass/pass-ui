@@ -7,6 +7,7 @@ import { LegacyNetworkHandler } from '@ember-data/legacy-compat';
 import { getOwner, setOwner } from '@ember/owner';
 import XSRFHandler from 'pass-ui/handlers/xsrf';
 import AuthHandler from 'pass-ui/handlers/auth';
+import JsonApiNormalizeHandler from 'pass-ui/handlers/json-api-normalize';
 
 /**
  * Custom store that extends ember-data's default store with our
@@ -33,7 +34,7 @@ export default class AppStore extends Store {
     setOwner(authHandler, owner);
 
     this.requestManager = new RequestManager()
-      .use([XSRFHandler, authHandler, LegacyNetworkHandler, Fetch])
+      .use([XSRFHandler, authHandler, LegacyNetworkHandler, JsonApiNormalizeHandler, Fetch])
       .useCache(CacheHandler);
   }
 }
