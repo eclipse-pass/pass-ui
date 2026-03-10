@@ -102,6 +102,7 @@ export default class WorkflowGrants extends Component<WorkflowGrantsSignature> {
   updateGrants = task(async () => {
     const userId = this.args.submission.submitter.id;
     const grantQuery = {
+      include: 'primaryFunder,directFunder',
       filter: {
         grant: `pi.id==${userId},coPis.id==${userId}`,
       },
