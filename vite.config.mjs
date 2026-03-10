@@ -127,9 +127,10 @@ export default defineConfig({
       extensions,
     }),
     // Downlevel ES2022+ syntax (class fields) to ES2021 in build output.
-    // TestCafe's hammerhead proxy uses acorn to parse JS and cannot handle
-    // class fields, causing 500 errors. This will be removed once
-    // pass-acceptance-testing is rewritten in Playwright.
+    // TestCafe's hammerhead proxy (esotope-hammerhead 0.6.9) cannot regenerate
+    // PropertyDefinition AST nodes, causing "ExprGen[itemType] is not a function"
+    // errors. This will be removed once pass-acceptance-testing is rewritten
+    // in Playwright.
     {
       name: 'downlevel',
       apply: 'build',
