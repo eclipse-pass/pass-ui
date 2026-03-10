@@ -43,13 +43,13 @@ type QueryParams = Record<string, any>;
 function serializeQueryParams(params: QueryParams): string {
   const parts: string[] = [];
 
-  for (const key of Object.keys(params).sort()) {
+  for (const key of Object.keys(params).sort((a, b) => a.localeCompare(b))) {
     const value = params[key];
     if (value == null) continue;
 
     if (typeof value === 'object' && !Array.isArray(value)) {
       // Nested object → bracket notation: filter[submission]=..., page[number]=1
-      for (const subKey of Object.keys(value).sort()) {
+      for (const subKey of Object.keys(value).sort((a, b) => a.localeCompare(b))) {
         const subValue = value[subKey];
         if (subValue == null) continue;
         parts.push(`${encodeURIComponent(key)}[${encodeURIComponent(subKey)}]=${encodeURIComponent(String(subValue))}`);

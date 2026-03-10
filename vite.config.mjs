@@ -131,7 +131,7 @@ export default defineConfig({
     // class fields, causing 500 errors. This will be removed once
     // pass-acceptance-testing is rewritten in Playwright.
     {
-      name: 'downlevel-for-testcafe',
+      name: 'downlevel',
       apply: 'build',
       async renderChunk(code, chunk) {
         if (!chunk.fileName.endsWith('.js')) return null;
