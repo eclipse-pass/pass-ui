@@ -14,7 +14,7 @@ const XSRFHandler: Handler = {
     if (match?.[1]) {
       headers.set('X-XSRF-TOKEN', match[1]);
     }
-    return next(Object.assign({}, context.request, { headers }));
+    return next({ ...context.request, headers });
   },
 };
 

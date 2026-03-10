@@ -39,7 +39,8 @@ export default class SubmissionsNewBasics extends Controller {
   }
 
   get publication(): PublicationModel {
-    void this._publicationVersion; // tracking tag
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    this._publicationVersion; // tracking tag
     return this.model.publication;
   }
 

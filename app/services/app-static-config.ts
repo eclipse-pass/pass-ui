@@ -60,7 +60,6 @@ export default class AppStaticConfigService extends Service {
    * @returns {Promise}
    */
   async getStaticConfig(): Promise<StaticConfig | undefined> {
-    // return Promise.resolve(PassEmber);
     const cached = this._config;
     if (cached) {
       return await Promise.resolve(cached);

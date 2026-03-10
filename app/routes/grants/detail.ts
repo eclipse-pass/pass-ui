@@ -27,7 +27,7 @@ export default class DetailRoute extends CheckSessionRoute {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async model(params: any) {
-    if (!params || !params.grant_id) {
+    if (!params?.grant_id) {
       this.errorHandler.handleError(new Error('didNotLoadData'));
       return;
     }

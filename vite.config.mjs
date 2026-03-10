@@ -33,7 +33,7 @@ function rewrittenV1Addons() {
     enforce: 'pre',
     resolveId(source) {
       const m = getMapping();
-      if (m && m[source]) {
+      if (m?.[source]) {
         return m[source];
       }
     },

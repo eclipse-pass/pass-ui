@@ -1,7 +1,6 @@
 import { helper } from '@ember/component/helper';
 
 export function formatDate(params: unknown[] /*, hash*/) {
-  // eslint-disable-line
   const date = new Date(params as unknown as string);
   try {
     let dd: string | number = date.getDate();

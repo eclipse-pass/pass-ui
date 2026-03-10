@@ -41,7 +41,7 @@ export default class PoliciesService extends Service {
     const result = await fetch(url, {
       method: 'GET',
       headers: {
-        'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN\=([^;]*)/)!['1']!,
+        'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN=([^;]*)/)!['1']!,
       },
     });
 
@@ -97,7 +97,7 @@ export default class PoliciesService extends Service {
     const response = await fetch(url, {
       method: 'GET',
       headers: {
-        'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN\=([^;]*)/)!['1']!,
+        'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN=([^;]*)/)!['1']!,
       },
     });
 

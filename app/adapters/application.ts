@@ -14,7 +14,7 @@ export default class ApplicationAdapter extends JSONAPIAdapter {
   // @ts-expect-error JSONAPIAdapter types headers as a property but Ember supports accessor override
   get headers() {
     return {
-      'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN\=([^;]*)/)!['1'],
+      'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN=([^;]*)/)!['1'],
     };
   }
 

@@ -61,7 +61,7 @@ export default class DoiService extends Service {
     const rawResponse = await fetch(url, {
       headers: {
         Accept: 'application/json; charset=utf-8',
-        'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN\=([^;]*)/)!['1']!,
+        'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN=([^;]*)/)!['1']!,
       },
     });
 
@@ -122,7 +122,7 @@ export default class DoiService extends Service {
    * @returns {object} metadata blob seeded with DOI data
    */
   doiToMetadata(doiInfo: DoiInfo, journal: JournalModel | null, validFields?: string[]): Record<string, unknown> {
-    const doiCopy = Object.assign({}, doiInfo);
+    const doiCopy = { ...doiInfo };
 
     // Add issns key in expected format by parsing journal issns.
     doiCopy.issns = [];
@@ -163,20 +163,20 @@ export default class DoiService extends Service {
           author: `${author.given} ${author.family}`,
           orcid: author.ORCID,
         };
-        doiCopy.authors!.push(Object.assign(a, author));
+        doiCopy.authors!.push({ ...author, ...a });
       });
     }
 
     // Misc manual translation
     if (doiCopy.nlmta) {
       doiCopy['journal-NLMTA-ID'] = doiCopy.nlmta;
-    } else if (journal && journal.nlmta) {
+    } else if (journal?.nlmta) {
       doiCopy['journal-NLMTA-ID'] = journal.nlmta;
     }
     if (doiCopy['container-title-short']) {
       doiCopy['journal-title-short'] = doiCopy['container-title-short'];
     }
-    if (doiCopy.issued && doiCopy.issued['date-parts']) {
+    if (doiCopy.issued?.['date-parts']) {
       const parts = doiCopy.issued['date-parts'];
       doiCopy.publicationDate = new Date(parts as unknown as string).toISOString().replace(/T.*/, '');
     }

@@ -44,7 +44,7 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
       loadTabAccessed = true;
     };
     assert.strictEqual(controller.workflow.getFiles().length, 0);
-    const swalStub = Sinon.stub(Swal, 'fire').resolves(() => assert.ok(true));
+    const swalStub = Sinon.stub(Swal, 'fire').resolves({ dismiss: Swal.DismissReason.cancel });
     controller.send('validateAndLoadTab', 'submissions.new.basics');
     assert.false(loadTabAccessed);
     swalStub.restore();
@@ -78,7 +78,7 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
     };
     assert.strictEqual(controller.workflow.getFiles().length, 0);
     // override swal so it doesn't pop up
-    const swalStub = Sinon.stub(Swal, 'fire').resolves(() => assert.ok(true));
+    const swalStub = Sinon.stub(Swal, 'fire').resolves({ dismiss: Swal.DismissReason.cancel });
     controller.send('validateAndLoadTab', 'submissions.new.basics');
     assert.false(loadTabAccessed);
     swalStub.restore();

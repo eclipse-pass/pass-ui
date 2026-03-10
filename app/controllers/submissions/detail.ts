@@ -136,10 +136,10 @@ export default class SubmissionsDetail extends Controller {
   /**
    * Get enough information about 'web-link' repositories to display to a user.
    */
-  async externalSubmissionsMetadata(): Promise<ExternalRepoMetadata[]> {
+  externalSubmissionsMetadata(): ExternalRepoMetadata[] {
     const result: ExternalRepoMetadata[] = [];
 
-    const repos = await this.model.sub.repositories;
+    const repos = this.model.sub.repositories;
     repos
       .filter((repo: RepositoryModel) => repo._isWebLink)
       .forEach((repo: RepositoryModel) => {
@@ -317,27 +317,20 @@ export default class SubmissionsDetail extends Controller {
     }
   }
 
-  @action
-  async approveChanges(): Promise<void> {
-    const baseURL = window.location.href.replace(new RegExp(`${ENV.rootURL}.*`), '');
-    // First, check if user has visited all required weblinks.
-    if (this.disableSubmit) {
-      if (!this.hasVisitedWeblink) {
-        this.submissionHandler.setLinkVisited(false);
+  private _warnWeblinkNotVisited(): void {
+    this.submissionHandler.setLinkVisited(false);
 
-        later(() => {
-          this.submissionHandler.setLinkVisited(true);
-        }, 4000);
-        this.flashMessages.warning(
-          'Please visit the listed web portal(s) to submit your manuscript directly. Metadata displayed on this page can be used to help in the submission process.',
-        );
-      }
-      return;
-    }
+    later(() => {
+      this.submissionHandler.setLinkVisited(true);
+    }, 4000);
+    this.flashMessages.warning(
+      'Please visit the listed web portal(s) to submit your manuscript directly. Metadata displayed on this page can be used to help in the submission process.',
+    );
+  }
 
-    // Validate manuscript files
+  private _validateManuscriptFiles(): FileModel[] | null {
     let manuscriptFiles = this.submissionFiles
-      .filter((file: FileModel) => file && file.fileRole === 'manuscript')
+      .filter((file: FileModel) => file?.fileRole === 'manuscript')
       .filter((file: FileModel) => file.submission.id === this.model.sub.id);
 
     manuscriptFiles = [...new Map(manuscriptFiles.map((file: FileModel) => [file.id, file])).values()];
@@ -348,13 +341,29 @@ export default class SubmissionsDetail extends Controller {
         'At least one manuscript file is required.  Please Edit the submission to add one',
         'warning',
       );
-      return;
+      return null;
     } else if (manuscriptFiles.length > 1) {
       swal.fire(
         'Incorrect manuscript count',
         `Only one file may be designated as the manuscript.  Instead, found ${manuscriptFiles.length}.  Please edit the file list`,
         'warning',
       );
+      return null;
+    }
+
+    return manuscriptFiles;
+  }
+
+  @action
+  async approveChanges(): Promise<void> {
+    if (this.disableSubmit) {
+      if (!this.hasVisitedWeblink) {
+        this._warnWeblinkNotVisited();
+      }
+      return;
+    }
+
+    if (!this._validateManuscriptFiles()) {
       return;
     }
 
@@ -433,21 +442,21 @@ export default class SubmissionsDetail extends Controller {
       if (reposWithoutAgreementText.length > 0 || reposThatUserAgreedToDeposit.length) {
         swalMsg = `${swalMsg}You are about to submit your files to: <pre><code>${JSON.stringify(
           reposThatUserAgreedToDeposit.map((repo) => repo.id),
-        ).replace(/[\[\]']/g, '')}${JSON.stringify(reposWithoutAgreementText.map((repo) => repo.id)).replace(
-          /[\[\]']/g,
+        ).replace(/[[\]']/g, '')}${JSON.stringify(reposWithoutAgreementText.map((repo) => repo.id)).replace(
+          /[[\]']/g,
           '',
         )} </code></pre>`;
       }
       if (reposWithWebLink.length > 0) {
         swalMsg = `${swalMsg}You were prompted to submit to: <code><pre>${JSON.stringify(
           reposWithWebLink.map((repo) => repo.id),
-        ).replace(/[\[\]']/g, '')}</code></pre>`;
+        ).replace(/[[\]']/g, '')}</code></pre>`;
       }
 
       const resultConfirm = await swal.fire({
         target: ENV.APP.rootElement,
         title: 'Confirm submission',
-        html: swalMsg, // eslint-disable-line
+        html: swalMsg, // eslint-disable-line @typescript-eslint/no-unsafe-assignment
         confirmButtonText: 'Confirm',
         showCancelButton: true,
       });
@@ -461,9 +470,7 @@ export default class SubmissionsDetail extends Controller {
               return true;
             }
             const temp = reposWithAgreementText.map((x) => x.id).includes(repo.name);
-            if (!temp) {
-              return true;
-            } else if (reposThatUserAgreedToDeposit.map((r) => r.id).includes(repo.name)) {
+            if (!temp || reposThatUserAgreedToDeposit.map((r) => r.id).includes(repo.name)) {
               return true;
             }
             return false;
@@ -487,7 +494,7 @@ export default class SubmissionsDetail extends Controller {
         html: `You declined to agree to the deposit agreement(s) for ${JSON.stringify(
           reposUserDidNotAgreeToDeposit.map((repo) => repo.id),
         ).replace(
-          /[\[\]']/g,
+          /[[\]']/g,
           '',
         )}. Therefore, this submission cannot be submitted. \n You can either (a) cancel the submission or (b) return to the submission to provide required input and try again.`,
         confirmButtonText: 'Cancel submission',

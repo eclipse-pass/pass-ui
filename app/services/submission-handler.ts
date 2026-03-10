@@ -54,7 +54,8 @@ export default class SubmissionHandlerService extends Service {
   _getSubmissionView(submission: SubmissionModel): string {
     const baseURL = window.location.href.replace(new RegExp(`${ENV.rootURL}.*`), '');
 
-    return `${baseURL}${ENV.rootURL}submissions/${encodeURIComponent(`${submission.id}`)}`;
+    const encodedId = encodeURIComponent(String(submission.id));
+    return `${baseURL}${ENV.rootURL}submissions/${encodedId}`;
   }
 
   /**
@@ -256,7 +257,7 @@ export default class SubmissionHandlerService extends Service {
    */
   async deleteSubmission(submission: SubmissionModel) {
     if (submission.source !== 'pass' || submission.submissionStatus !== 'draft') {
-      return Promise.reject(`Non-DRAFT submissions cannot be deleted`);
+      throw new Error(`Non-DRAFT submissions cannot be deleted`);
     }
 
     // Get submissions for this file
@@ -267,7 +268,6 @@ export default class SubmissionHandlerService extends Service {
     const publication = submission.publication;
 
     // Search for Submissions that reference this publication
-    const submissionId = submission.id;
     submission.deleteRecord();
     await submission.save();
 

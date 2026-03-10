@@ -40,7 +40,7 @@ export default class OAManuscriptService extends Service {
       method: 'GET',
       headers: {
         Accept: 'application/json; charset=utf-8',
-        'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN\=([^;]*)/)!['1']!,
+        'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN=([^;]*)/)!['1']!,
       },
     })
       .then((resp) => {

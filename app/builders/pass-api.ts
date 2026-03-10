@@ -122,6 +122,45 @@ interface StoreWithSchema {
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function serializeAttribute(record: any, key: string, attributes: Record<string, unknown>): void {
+  const value = record[key];
+  if (value !== undefined) {
+    attributes[key] = value instanceof Date ? value.toISOString() : value;
+  }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function serializeBelongsTo(record: any, key: string, relationships: Record<string, unknown>): void {
+  const related = record[key];
+  if (related !== undefined) {
+    if (related === null) {
+      relationships[key] = { data: null };
+    } else {
+      const relIdentifier = recordIdentifierFor(related);
+      relationships[key] = {
+        data: { type: resourcePathFor(relIdentifier.type), id: relIdentifier.id },
+      };
+    }
+  }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function serializeHasMany(record: any, key: string, relationships: Record<string, unknown>): void {
+  const related = record[key];
+  if (related !== undefined && related !== null) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const relData = (Array.isArray(related) ? related : Array.from(related as Iterable<any>)).map(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (r: any) => {
+        const relIdentifier = recordIdentifierFor(r);
+        return { type: resourcePathFor(relIdentifier.type), id: relIdentifier.id };
+      },
+    );
+    relationships[key] = { data: relData };
+  }
+}
+
 /**
  * Serialize an Ember Data record to a JSON:API resource document.
  * Uses store.schema.fields() to enumerate attributes and relationships,
@@ -146,36 +185,11 @@ function serializeRecord(record: any, store: StoreWithSchema): { data: Record<st
 
   fields.forEach((field, key) => {
     if (field.kind === 'attribute') {
-      const value = record[key];
-      if (value !== undefined) {
-        // Serialize Date objects to ISO strings
-        attributes[key] = value instanceof Date ? value.toISOString() : value;
-      }
+      serializeAttribute(record, key, attributes);
     } else if (field.kind === 'belongsTo') {
-      const related = record[key];
-      if (related !== undefined) {
-        if (related === null) {
-          relationships[key] = { data: null };
-        } else {
-          const relIdentifier = recordIdentifierFor(related);
-          relationships[key] = {
-            data: { type: resourcePathFor(relIdentifier.type), id: relIdentifier.id },
-          };
-        }
-      }
+      serializeBelongsTo(record, key, relationships);
     } else if (field.kind === 'hasMany') {
-      const related = record[key];
-      if (related !== undefined && related !== null) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const relData = (Array.isArray(related) ? related : Array.from(related as Iterable<any>)).map(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (r: any) => {
-            const relIdentifier = recordIdentifierFor(r);
-            return { type: resourcePathFor(relIdentifier.type), id: relIdentifier.id };
-          },
-        );
-        relationships[key] = { data: relData };
-      }
+      serializeHasMany(record, key, relationships);
     }
   });
 

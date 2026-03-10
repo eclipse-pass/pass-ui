@@ -42,20 +42,9 @@ export default class MetadataSchemaService extends Service {
    * @param {array} readonly list of properties that should be marked as read-only
    * @returns schema relevant to the given repositories
    */
-  getMetadataSchema(repositories: RepositoryModel[] | null, readonly?: string[]): SurveySchema | null {
-    // Each repository identifies a set of schemas which specify metadata fields for the user to fill out.
-    // The repositorySchemas object contains this mapping and also indicate whether or not the field is
-    // required or conditionally required. The surveySchema object is a SurveyJS schema which contains
-    // every field which could be filled out.
-
-    if (!repositories) {
-      return null;
-    }
-
-    // Get schemas being used for metadata.
+  private _normalizeSchemaKeys(repositories: RepositoryModel[]): string[] {
     let schemas = Array.from(new Set(repositories.flatMap((repo) => repo.schemas)));
 
-    // Try to normalize schema URIs to keys that can be looked up.
     schemas = schemas.map((schema) => {
       const slash_index = schema.lastIndexOf('/');
       const dot_index = schema.lastIndexOf('.');
@@ -67,15 +56,61 @@ export default class MetadataSchemaService extends Service {
       return schema.substring(slash_index + 1, dot_index);
     });
 
-    // Make sure the common schema is first so that fields are in order.
-
     if (schemas.includes('common')) {
       schemas = ['common'].concat(schemas.filter((schema) => schema != 'common'));
     }
 
-    // Map schema field names to elements from surveySchema.
-    // Use Map to preserve order.
-    const elementMap = new Map();
+    return schemas;
+  }
+
+  private _resolveElement(
+    field: { name: string; required?: boolean; requiredIf?: string },
+    elementMap: Map<string, SurveyElement>,
+    readonlyFields?: string[],
+  ): SurveyElement | null {
+    let element = elementMap.get(field.name);
+
+    if (!element) {
+      const source = surveySchema.elements.find((e) => e.name === field.name);
+
+      if (!source) {
+        console.log('Warning: Element %s not found in survey schema', field.name);
+        return null;
+      }
+
+      element = { ...source };
+      elementMap.set(field.name, element);
+
+      if (readonlyFields?.includes(field.name)) {
+        element.readOnly = true;
+      }
+    }
+
+    return element;
+  }
+
+  private _mergeFieldRequirements(
+    field: { name: string; required?: boolean; requiredIf?: string },
+    element: SurveyElement,
+  ): void {
+    if ('required' in field && field.required) {
+      element.isRequired = true;
+      delete element.requiredIf;
+    } else if ('requiredIf' in field) {
+      if ('requiredIf' in element) {
+        console.log('Warning: requireIf merge not supported on %s', field.name);
+      }
+      element.requiredIf = field.requiredIf;
+    }
+  }
+
+  getMetadataSchema(repositories: RepositoryModel[] | null, readonly?: string[]): SurveySchema | null {
+    if (!repositories) {
+      return null;
+    }
+
+    const schemas = this._normalizeSchemaKeys(repositories);
+    const elementMap = new Map<string, SurveyElement>();
 
     for (const schema of schemas) {
       if (!(schema in repositorySchemas)) {
@@ -84,55 +119,22 @@ export default class MetadataSchemaService extends Service {
       }
 
       for (const field of repositorySchemas[schema as keyof typeof repositorySchemas]) {
-        let element = elementMap.get(field.name);
-
-        if (!element) {
-          // Copy element from surveySchema
-
-          element = surveySchema.elements.find((e) => e.name === field.name);
-
-          if (!element) {
-            console.log('Warning: Element %s not found in survey schema', field.name);
-            continue;
-          }
-
-          element = Object.assign({}, element);
-          elementMap.set(field.name, element);
-
-          // Handle readonly fields
-
-          if (readonly && readonly.includes(field.name)) {
-            element.readOnly = true;
-          }
-        }
-
-        // Handle merge of required and requiredIf
-        // Give precendence to required
-
-        if ('required' in field && field.required) {
-          element.isRequired = true;
-          delete element.requiredIf;
-        } else if ('requiredIf' in field) {
-          if ('requiredIf' in element) {
-            console.log('Warning: requireIf merge not supported on %s', field.name);
-          }
-
-          element.requiredIf = field.requiredIf;
-        }
+        const element = this._resolveElement(field, elementMap, readonly);
+        if (!element) continue;
+        this._mergeFieldRequirements(field, element);
       }
     }
 
-    const schema: Record<string, unknown> = {};
-    schema['elements'] = Array.from(elementMap.values());
+    const result: Record<string, unknown> = {};
+    result['elements'] = Array.from(elementMap.values());
 
-    // Add toplevel poperties from surveySchema
     for (const key in surveySchema) {
       if (key != 'elements') {
-        schema[key] = (surveySchema as Record<string, unknown>)[key];
+        result[key] = (surveySchema as Record<string, unknown>)[key];
       }
     }
 
-    return schema as SurveySchema;
+    return result as SurveySchema;
   }
 
   /**
@@ -276,7 +278,6 @@ export default class MetadataSchemaService extends Service {
       'volume',
     ];
 
-    const repos = submission.repositories;
     const titleMap = this.getFieldTitleMap(surveySchema);
     const metadata = JSON.parse(submission.metadata);
 

@@ -1,4 +1,3 @@
-// import { metaDataSchemas } from 'pass-ui/mirage/custom-fixtures/schemas';
 import metaDataSchemas from '../custom-fixtures/schemas';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

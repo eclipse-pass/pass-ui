@@ -53,8 +53,8 @@ export default class SubmissionsNew extends Controller {
   @tracked submitter: UserModel = this.model.newSubmission.submitter;
   @tracked covid: string | null = null;
 
-  async userIsSubmitter(): Promise<boolean> {
-    const submitter = await this.model.newSubmission.submitter;
+  userIsSubmitter(): boolean {
+    const submitter = this.model.newSubmission.submitter;
     return submitter?.id === this.user?.id;
   }
 
@@ -67,6 +67,32 @@ export default class SubmissionsNew extends Controller {
    * validation on the details step) there is not additional metadata validation
    * that occurs prior to submission.
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private _addCovidHint(metadata: Record<string, any>): boolean {
+    if ('hints' in metadata) {
+      const tags = metadata.hints['collection-tags'];
+      if (tags.includes('covid')) return false;
+      metadata.hints['collection-tags'].push('covid');
+    } else {
+      metadata.hints = { 'collection-tags': ['covid'] };
+    }
+    return true;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private _removeCovidHint(metadata: Record<string, any>): boolean {
+    if (!('hints' in metadata)) return false;
+
+    const tags = metadata.hints['collection-tags'];
+    if (tags.length > 1) {
+      metadata.hints['collection-tags'] = tags.filter((tag: string) => tag != 'covid');
+    }
+    if (tags.length === 1) {
+      delete metadata.hints;
+    }
+    return true;
+  }
+
   @action
   updateCovidSubmission(): void {
     const selectedCovid = (event?.target as HTMLInputElement | undefined)?.checked;
@@ -74,36 +100,11 @@ export default class SubmissionsNew extends Controller {
     const metadata = submission.metadata ? JSON.parse(submission.metadata) : {};
 
     if (selectedCovid && !submission.isCovid) {
-      const covidHint = {
-        'collection-tags': ['covid'],
-      };
-
-      if ('hints' in metadata) {
-        const tags = metadata.hints['collection-tags'];
-
-        if (tags.includes('covid')) return;
-
-        metadata.hints['collection-tags'].push('covid');
-      } else {
-        metadata.hints = covidHint;
-      }
+      if (!this._addCovidHint(metadata)) return;
     }
 
     if (!selectedCovid && submission.isCovid) {
-      if ('hints' in metadata) {
-        const tags = metadata.hints['collection-tags'];
-
-        if (tags.length > 1) {
-          const tagsWithoutCovid = tags.filter((tag: string) => tag != 'covid');
-          metadata.hints['collection-tags'] = tagsWithoutCovid;
-        }
-
-        if (tags.length === 1) {
-          delete metadata.hints;
-        }
-      } else {
-        return;
-      }
+      if (!this._removeCovidHint(metadata)) return;
     }
 
     submission.metadata = JSON.stringify(metadata);
@@ -112,12 +113,12 @@ export default class SubmissionsNew extends Controller {
   @action
   async submit(): Promise<void> {
     let manuscriptFiles = (this.workflow.getFiles() as unknown as FileModel[])
-      .filter((file: FileModel) => file && file.fileRole === 'manuscript')
+      .filter((file: FileModel) => file?.fileRole === 'manuscript')
       .filter((file: FileModel) => file.submission.id === this.model.newSubmission.id);
 
     manuscriptFiles = [...new Map(manuscriptFiles.map((file: FileModel) => [file.id, file])).values()];
 
-    const submitter = await this.userIsSubmitter();
+    const submitter = this.userIsSubmitter();
     if (manuscriptFiles.length == 0 && submitter) {
       swal.fire(
         'Manuscript Is Missing',

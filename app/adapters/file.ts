@@ -21,7 +21,7 @@ export default class FileAdapter extends ApplicationAdapter {
     if (!url.startsWith('/')) {
       url = `/${url}`;
     }
-    const token = document.cookie.match(/XSRF-TOKEN\=([^;]*)/)![1]!;
+    const token = document.cookie.match(/XSRF-TOKEN=([^;]*)/)![1]!;
     return fetch(url, {
       method: 'DELETE',
       credentials: 'same-origin',

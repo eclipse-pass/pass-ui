@@ -25,12 +25,11 @@ export default class DetailRoute extends CheckSessionRoute {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async model(params: any): Promise<DetailModel | void> {
-    if (!params || !params.submission_id) {
+    if (!params?.submission_id) {
       this.errorHandler.handleError(new Error('didNotLoadData'));
       return;
     }
 
-    // const querySize = 500; // TODO: Ignore querysize of 500 for now
     const depositsPromise = this.store
       .request(query('deposit', { filter: { deposit: `submission.id==${params.submission_id}` } }))
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

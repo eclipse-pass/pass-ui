@@ -77,7 +77,7 @@ export default class SubmissionsNewFiles extends Controller {
         .filter((file) => file && (file as unknown as FileModel).fileRole === 'manuscript')
         .filter((file) => (file as unknown as FileModel).submission.id === this.submission.id);
 
-      const submitter = await this.parent.userIsSubmitter();
+      const submitter = this.parent.userIsSubmitter();
 
       if (manuscriptFiles.length === 0 && !submitter) {
         const result = await swal.fire({

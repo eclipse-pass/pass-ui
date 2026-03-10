@@ -49,7 +49,7 @@ export default class AutocompleteService extends Service {
       fieldName = [fieldName];
     }
 
-    const query: Record<string, any> = Object.assign({ filter: {} }, context); // eslint-disable-line @typescript-eslint/no-explicit-any
+    const query: Record<string, any> = { filter: {}, ...context }; // eslint-disable-line @typescript-eslint/no-explicit-any
 
     const suggestFilterPart = fieldName.map((field) => `${field}=ini="*${suggestPrefix}*"`).join(',');
 

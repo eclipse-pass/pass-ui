@@ -148,7 +148,8 @@ function filter(value: string | undefined, ...props: string[]) {
   if (!value) {
     return '';
   }
-  return `(${props.map((prop) => `${prop}=ini=${filterValue(value)}`).join(',')})`;
+  const parts = props.map((prop) => `${prop}=ini=${filterValue(value)}`).join(',');
+  return `(${parts})`;
 }
 
 /**

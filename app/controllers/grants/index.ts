@@ -67,6 +67,17 @@ export default class GrantsIndexController extends Controller {
     this.fetchData();
   }
 
+  private _mapSubmissionsToGrants(submissions: SubmissionModel[], grantMap: GrantMapEntry[]): void {
+    submissions.forEach((submission: SubmissionModel) => {
+      submission.grants.forEach((grant: GrantModel) => {
+        const match = grantMap.find((res: GrantMapEntry) => res.grant.id === grant.id);
+        if (match) {
+          match.submissions.push(submission);
+        }
+      });
+    });
+  }
+
   fetchData() {
     const user = this.currentUser.user;
     if (!user) {
@@ -97,14 +108,7 @@ export default class GrantsIndexController extends Controller {
         })
         .then(async (results: GrantsIndexModel) => {
           const { content: subsDoc } = await this.store.request(query('submission', submissionQueryHash));
-          subsDoc.data.forEach((submission: SubmissionModel) => {
-            submission.grants.forEach((grant: GrantModel) => {
-              const match = results.grantMap.find((res: GrantMapEntry) => res.grant.id === grant.id);
-              if (match) {
-                match.submissions.push(submission);
-              }
-            });
-          });
+          this._mapSubmissionsToGrants(subsDoc.data, results.grantMap);
           return results;
         })
         .then((results: GrantsIndexModel) => {
