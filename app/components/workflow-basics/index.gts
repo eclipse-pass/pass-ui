@@ -611,7 +611,7 @@ export default class WorkflowBasics extends Component<WorkflowBasicsSignature> {
     </button>
     {{#if this.isShowingUserSearchModal}}
       <dialog
-        class='pass-modal-dialog pass-modal-translucent user-search-modal'
+        class='ember-modal-dialog pass-modal-translucent user-search-modal'
         {{this.showModal}}
         {{on 'close' this.toggleUserSearchModal}}
       >

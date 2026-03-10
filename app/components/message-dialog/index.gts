@@ -43,7 +43,7 @@ export default class MessageDialog extends Component<MessageDialogSignature> {
   <template>
     {{! template-lint-disable require-input-label }}
     {{#if this.show}}
-      <dialog class='pass-modal-dialog' {{this.showModal}} {{on 'close' this.toggleModal}}>
+      <dialog class='ember-modal-dialog' {{this.showModal}} {{on 'close' this.toggleModal}}>
         <form class='dialog-form-width'>
           <div class='mb-3 row'>
             <label class='col-sm-3 col-form-label' for='msg-to'>Recipient:</label>
