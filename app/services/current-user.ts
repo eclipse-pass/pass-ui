@@ -1,5 +1,3 @@
-/* eslint-disable ember/no-get, ember/classic-decorator-no-classic-methods */
-/* eslint-disable no-debugger */
 import Service, { service } from '@ember/service';
 import { task } from 'ember-concurrency';
 import { findRecord } from 'pass-ui/builders/pass-api';

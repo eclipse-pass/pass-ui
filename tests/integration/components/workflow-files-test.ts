@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, ember/no-classic-classes */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { selectFiles } from 'ember-file-upload/test-support';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';

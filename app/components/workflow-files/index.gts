@@ -125,7 +125,6 @@ export default class WorkflowFiles extends Component<WorkflowFilesSignature> {
     try {
       const response = await FileUpload.upload(ENV.fileServicePath, {
         headers: {
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN\=([^;]*)/)!['1'],
         },
       });

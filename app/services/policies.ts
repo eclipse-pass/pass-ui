@@ -1,4 +1,3 @@
-/* eslint-disable ember/classic-decorator-no-classic-methods, ember/no-get */
 import Service, { service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
 import { task, all, hash } from 'ember-concurrency';

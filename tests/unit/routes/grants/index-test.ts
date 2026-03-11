@@ -19,10 +19,10 @@ module('Unit | Route | grants/index', (hooks) => {
       request: (req: any) => {
         const url = req.url as string;
         if (url.includes('/data/grant')) {
-          assert.true(url.includes('page'), 'Grant query should have pagination'); // eslint-disable-line qunit/no-conditional-assertions
+          assert.true(url.includes('page'), 'Grant query should have pagination');
           return Promise.resolve({ content: { data: [] } });
         } else if (url.includes('/data/submission')) {
-          assert.false(url.includes('page'), 'Submission query should not have pagination'); // eslint-disable-line qunit/no-conditional-assertions
+          assert.false(url.includes('page'), 'Submission query should not have pagination');
           return Promise.resolve({ content: { data: [] } });
         }
         assert.ok(false, 'Only "grant" and "submission" requests are expected');

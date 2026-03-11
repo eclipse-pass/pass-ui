@@ -1,4 +1,3 @@
-/* eslint-disable ember/no-get */
 import CheckSessionRoute from './check-session-route';
 import { service } from '@ember/service';
 import { action } from '@ember/object';

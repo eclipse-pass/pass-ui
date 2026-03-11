@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, ember/no-classic-classes, ember/avoid-leaking-state-in-ember-objects, ember/no-settled-after-test-helper */
+/* eslint-disable ember/no-classic-classes, ember/avoid-leaking-state-in-ember-objects, ember/no-settled-after-test-helper */
 import { A } from '@ember/array';
 import Service from '@ember/service';
 import { setupRenderingTest } from 'ember-qunit';

@@ -11,11 +11,13 @@ import type CurrentUserService from 'pass-ui/services/current-user';
 import type UserModel from 'pass-ui/models/user';
 
 const eq = (a: unknown, b: unknown) => a === b;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 const perform =
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (task: any, ...curried: any[]) =>
-  (...args: any[]) =>
-    task.perform(...curried, ...args);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (...args: any[]) =>
+      task.perform(...curried, ...args);
 
 interface WorkflowBasicsUserSearchSignature {
   Args: {
@@ -76,7 +78,7 @@ export default class WorkflowBasicsUserSearch extends Component<WorkflowBasicsUs
   }
 
   searchForUsers = task(async (page: number) => {
-    let input = this.args.searchInput.replace(/\W+/g, ' ').trim();
+    const input = this.args.searchInput.replace(/\W+/g, ' ').trim();
 
     if (input.length == 0) {
       return;

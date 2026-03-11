@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, ember/no-classic-classes, ember/avoid-leaking-state-in-ember-objects */
+/* eslint-disable ember/no-classic-classes, ember/avoid-leaking-state-in-ember-objects */
 import Service from '@ember/service';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';

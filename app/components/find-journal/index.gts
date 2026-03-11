@@ -8,11 +8,13 @@ import type AutocompleteService from 'pass-ui/services/autocomplete';
 import type JournalModel from 'pass-ui/models/journal';
 
 const eq = (a: unknown, b: unknown) => a === b;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 const perform =
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (task: any) =>
-  (...args: any[]) =>
-    task.perform(...args);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (...args: any[]) =>
+      task.perform(...args);
 
 const DEBOUNCE_MS = 750;
 

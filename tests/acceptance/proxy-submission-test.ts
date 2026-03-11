@@ -1,4 +1,3 @@
-/* eslint-disable ember/no-classic-classes, ember/prefer-ember-test-helpers */
 import Service from '@ember/service';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
@@ -52,7 +51,7 @@ module('Acceptance | proxy submission', function (hooks) {
     await waitFor('[data-test-found-proxy-user]');
     await click('[data-test-found-proxy-user]');
 
-    await walkThroughSubmissionFlow(assert, true); // eslint-disable-line no-use-before-define
+    await walkThroughSubmissionFlow(assert, true);
 
     assert.dom('[data-test-submission-detail-submitter]').includesText('Staff Hasgrants');
     assert.dom('[data-test-submission-detail-submitter]').includesText('( staffWithGrants@jhu.edu )');
@@ -72,7 +71,7 @@ module('Acceptance | proxy submission', function (hooks) {
     await fillIn('[data-test-proxy-submitter-email-input]', 'nopass@account.com');
     await fillIn('[data-test-proxy-submitter-name-input]', 'John Moo');
 
-    await walkThroughSubmissionFlow(assert, false); // eslint-disable-line no-use-before-define
+    await walkThroughSubmissionFlow(assert, false);
 
     assert.dom('[data-test-submission-detail-submitter]').includesText('John Moo');
     assert.dom('[data-test-submission-detail-submitter]').includesText('( nopass@account.com )');

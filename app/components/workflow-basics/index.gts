@@ -31,7 +31,7 @@ import type UserModel from 'pass-ui/models/user';
 const or = (...args: unknown[]) => args.some(Boolean);
 const not = (a: unknown) => !a;
 const and = (...args: unknown[]) => args.every(Boolean);
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 const perform =
   (task: Task<unknown, unknown[]>, ...curried: unknown[]) =>
   (...args: unknown[]) =>
@@ -369,7 +369,7 @@ export default class WorkflowBasics extends Component<WorkflowBasicsSignature> {
         this.args.updatePublication(result.publication);
       }
 
-      let metadata = this.doiService.doiToMetadata(
+      const metadata = this.doiService.doiToMetadata(
         result.doiInfo,
         result.publication.journal,
         this.schemaService.getAllFields(),

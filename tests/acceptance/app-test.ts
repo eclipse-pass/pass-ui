@@ -1,4 +1,3 @@
-/* eslint-disable ember/no-classic-classes, ember/prefer-ember-test-helpers, ember/require-valid-css-selector-in-test-helpers */
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
 import { visit } from '@ember/test-helpers';

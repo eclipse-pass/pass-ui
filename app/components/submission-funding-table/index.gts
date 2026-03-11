@@ -14,12 +14,12 @@ interface Signature {
   };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const queue =
-  (...fns: Array<(...args: any[]) => void>) =>
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (...args: any[]) =>
-    fns.forEach((f) => f(...args));
+  (...fns: Array<(...args: any[]) => void>) =>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (...args: any[]) =>
+      fns.forEach((f) => f(...args));
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const perform = (task: any) => () => task.perform();

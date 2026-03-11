@@ -33,11 +33,13 @@ interface ReviewFile extends WorkflowFile {
 }
 
 const eq = (a: unknown, b: unknown) => a === b;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 const perform =
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (task: any) =>
-  (...args: any[]) =>
-    task.perform(...args);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (...args: any[]) =>
+      task.perform(...args);
 
 interface RepoAgreementStep {
   id: string;
@@ -155,7 +157,7 @@ export default class WorkflowReview extends Component<WorkflowReviewSignature> {
       return;
     }
 
-    let reposWithAgreementText: RepoAgreementStep[] = repos
+    const reposWithAgreementText: RepoAgreementStep[] = repos
       .filter((repo: RepositoryModel) => !repo._isWebLink && repo.agreementText)
       .map((repo: RepositoryModel) => ({
         id: repo.name,
@@ -163,13 +165,13 @@ export default class WorkflowReview extends Component<WorkflowReviewSignature> {
         html: `<div class="form-control deposit-agreement-content py-4 mt-4">${repo.agreementText}</div>`,
       }));
 
-    let reposWithoutAgreementText: RepoAgreementStep[] = repos
+    const reposWithoutAgreementText: RepoAgreementStep[] = repos
       .filter((repo: RepositoryModel) => !repo._isWebLink && !repo.agreementText)
       .map((repo: RepositoryModel) => ({
         id: repo.name,
       }));
 
-    let reposWithWebLink: RepoAgreementStep[] = repos
+    const reposWithWebLink: RepoAgreementStep[] = repos
       .filter((repo: RepositoryModel) => repo._isWebLink)
       .map((repo: RepositoryModel) => ({
         id: repo.name,
@@ -208,7 +210,7 @@ export default class WorkflowReview extends Component<WorkflowReviewSignature> {
       this.unblockUserInput();
       return;
     }
-    let reposThatUserAgreedToDeposit = reposWithAgreementText.filter((_repo: RepoAgreementStep, index: number) => {
+    const reposThatUserAgreedToDeposit = reposWithAgreementText.filter((_repo: RepoAgreementStep, index: number) => {
       if (result.value[index] === 'agree') {
         return true;
       }
@@ -248,7 +250,7 @@ export default class WorkflowReview extends Component<WorkflowReviewSignature> {
           if (repo._isWebLink) {
             return true;
           }
-          let temp = reposWithAgreementText.map((x: RepoAgreementStep) => x.id).includes(repo.name);
+          const temp = reposWithAgreementText.map((x: RepoAgreementStep) => x.id).includes(repo.name);
           if (!temp) {
             return true;
           } else if (reposThatUserAgreedToDeposit.map((r: RepoAgreementStep) => r.id).includes(repo.name)) {
@@ -264,7 +266,7 @@ export default class WorkflowReview extends Component<WorkflowReviewSignature> {
         this.unblockUserInput();
       }
     } else {
-      let reposUserDidNotAgreeToDeposit = reposWithAgreementText.filter((repo: RepoAgreementStep) => {
+      const reposUserDidNotAgreeToDeposit = reposWithAgreementText.filter((repo: RepoAgreementStep) => {
         if (!reposThatUserAgreedToDeposit.includes(repo)) {
           return true;
         }

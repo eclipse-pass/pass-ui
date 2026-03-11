@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-classes, ember/no-get */
+/* eslint-disable ember/no-classic-classes */
 import Service from '@ember/service';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';

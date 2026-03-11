@@ -50,7 +50,7 @@ export default class NavBar extends Component<NavBarSignature> {
       headers: {
         Accept: 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
         'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN\=([^;]*)/)![1]!,
       },
     });

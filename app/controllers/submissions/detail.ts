@@ -456,7 +456,7 @@ export default class SubmissionsDetail extends Controller {
       const resultConfirm = await swal.fire({
         target: ENV.APP.rootElement,
         title: 'Confirm submission',
-        html: swalMsg, // eslint-disable-line @typescript-eslint/no-unsafe-assignment
+        html: swalMsg,
         confirmButtonText: 'Confirm',
         showCancelButton: true,
       });

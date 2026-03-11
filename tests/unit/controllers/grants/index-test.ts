@@ -43,10 +43,10 @@ module('Unit | Controller | grants/index', (hooks) => {
       request: (req: any) => {
         const url = req.url as string;
         if (url.includes('/data/grant')) {
-          assert.true(url.includes('page'), 'Query should have pagination info'); // eslint-disable-line qunit/no-conditional-assertions
+          assert.true(url.includes('page'), 'Query should have pagination info');
           return Promise.resolve({ content: { data: [{ id: 10 }, { id: 11 }] } });
         } else if (url.includes('/data/submission')) {
-          assert.false(url.includes('page'), 'Query should not have pagination info'); // eslint-disable-line qunit/no-conditional-assertions
+          assert.false(url.includes('page'), 'Query should not have pagination info');
           return Promise.resolve({
             content: {
               data: [

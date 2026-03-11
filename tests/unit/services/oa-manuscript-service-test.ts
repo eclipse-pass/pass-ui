@@ -1,4 +1,3 @@
-/* eslint-disable no-global-assign */
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 

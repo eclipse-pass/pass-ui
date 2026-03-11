@@ -1,4 +1,3 @@
-/* eslint-disable ember/no-get */
 import Controller from '@ember/controller';
 import type { StaticConfig } from 'pass-ui/services/app-static-config';
 

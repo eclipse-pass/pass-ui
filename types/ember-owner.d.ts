@@ -1,7 +1,6 @@
 import '@ember/owner';
 
 declare module '@ember/owner' {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   export default interface Owner {
     /**
      * More permissive lookup overload. Ember's default returns `unknown` for
