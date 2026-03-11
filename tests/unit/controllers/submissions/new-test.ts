@@ -30,23 +30,20 @@ module('Unit | Controller | submissions/new', (hooks) => {
     submissionSaved = false;
     submissionEventSaved = false;
     publicationSaved = false;
-    submissionEvent = {
-      save() {
-        submissionEventSaved = true;
-        return new Promise((resolve) => resolve(this));
-      },
-    };
+    submissionEvent = {};
     submissionHandler.store = {
       createRecord() {
         return submissionEvent;
       },
+      persistRecord(record: any) {
+        if (record === submissionEvent) submissionEventSaved = true;
+        else if (record?.id === 'pub:0') publicationSaved = true;
+        else submissionSaved = true;
+        return Promise.resolve({ content: {} });
+      },
     };
     publication = {
       id: 'pub:0',
-      save() {
-        publicationSaved = true;
-        return new Promise((resolve) => resolve(this));
-      },
     };
     comment = 'moo';
   });
@@ -54,10 +51,6 @@ module('Unit | Controller | submissions/new', (hooks) => {
   const setUpSubmissionModel = (submissionArg: any) => {
     submission = {
       ...submissionArg,
-      save() {
-        submissionSaved = true;
-        return new Promise((resolve) => resolve(this));
-      },
     };
     model = {
       newSubmission: submission,

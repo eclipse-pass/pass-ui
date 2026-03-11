@@ -24,6 +24,8 @@ export default class SubmissionsNewBasics extends Controller {
 
   @service declare workflow: Workflow;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  @service declare store: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare flashMessages: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare router: any;
@@ -93,7 +95,7 @@ export default class SubmissionsNewBasics extends Controller {
     metadata.title = this.publication.title;
     this.submission.metadata = JSON.stringify(metadata);
 
-    await this.submission.save();
+    await this.store.persistRecord(this.submission);
     this.router.transitionTo(gotoRoute);
   }
 
@@ -133,7 +135,7 @@ export default class SubmissionsNewBasics extends Controller {
 
     // After validation, we can save the publication to the Submission
     const publication = this.publication;
-    await publication.save();
+    await this.store.persistRecord(publication);
     this.submission.publication = publication;
 
     this.loadTab(gotoRoute);

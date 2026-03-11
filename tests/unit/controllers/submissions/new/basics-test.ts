@@ -177,20 +177,11 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
       submitterName: 'Test Submitter',
       submitterEmail: 'mailto:test@email.com',
       submitterEmailDisplay: 'test@email.com',
-      save: () => {
-        assert.ok(true);
-        subSaved = true;
-        return Promise.resolve();
-      },
     };
     const publication = {
       title: 'Test publication title',
       journal: {
         id: 'journal:id',
-      },
-      save() {
-        assert.ok(true);
-        return Promise.resolve();
       },
     };
     const model = {
@@ -199,6 +190,16 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
     };
 
     controller.model = model;
+
+    const store: any = this.owner.lookup('service:store');
+    store.persistRecord = (record: any) => {
+      assert.ok(true);
+      if (record === submission) {
+        subSaved = true;
+      }
+      return Promise.resolve({ content: {} });
+    };
+
     const routerService: any = this.owner.lookup('service:router');
     routerService.transitionTo = () => {
       // no errors and loadTab accessed

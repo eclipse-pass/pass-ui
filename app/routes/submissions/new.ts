@@ -1,6 +1,5 @@
 import CheckSessionRoute from '../check-session-route';
 import { service } from '@ember/service';
-import { set } from '@ember/object';
 import { hash } from 'rsvp';
 import { query, findRecord } from 'pass-ui/builders/pass-api';
 import { fileForSubmissionQuery } from '../../util/paginated-query';
@@ -125,7 +124,7 @@ export default class NewRoute extends CheckSessionRoute {
           },
         };
 
-        set(newSubmission, 'metadata', JSON.stringify(covidHint));
+        newSubmission.metadata = JSON.stringify(covidHint);
       }
     }
 

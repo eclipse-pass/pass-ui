@@ -55,40 +55,48 @@ module('Integration | Component | workflow files', (hooks) => {
    */
 
   test("Files removed from UI should call the file's `destroyRecord`", async function (assert) {
-    const store = this.owner.lookup('service:store');
+    const store: any = this.owner.lookup('service:store');
     const submission = store.createRecord('submission');
 
     const file = store.createRecord('file', {
       name: 'File-for-test',
       fileRole: 'manuscript',
       submission,
+      uri: '/file/test-uuid/File-for-test',
     });
-    const deleteStub = sinon.stub().returns(Promise.resolve());
-    file.destroyRecord = deleteStub;
+
+    // deleteFileWithBytes calls fetch() then store.destroyRecord()
+    document.cookie = 'XSRF-TOKEN=test-token';
+    const fetchStub = sinon.stub(globalThis, 'fetch').resolves(new globalThis.Response(null, { status: 200 }));
+    const destroyStub = sinon.stub(store, 'destroyRecord').returns(Promise.resolve());
 
     const workflow = this.owner.lookup('service:workflow');
     workflow.setFiles([file]);
 
-    await render(hbs`<WorkflowFiles
+    try {
+      await render(hbs`<WorkflowFiles
   @submission={{this.submission}}
   @next={{this.fakeAction}}
   @back={{this.fakeAction}}
   @abort={{this.fakeAction}}
 />`);
 
-    const btn = this.element.querySelector('button');
-    assert.ok(btn);
-    assert.ok(btn!.textContent!.includes('Remove'));
+      const btn = this.element.querySelector('button');
+      assert.ok(btn);
+      assert.ok(btn!.textContent!.includes('Remove'));
 
-    await click(btn!);
+      await click(btn!);
 
-    const sweetAlertBtn = document.querySelector('.swal2-container button.swal2-confirm');
-    assert.ok(sweetAlertBtn);
-    await click(sweetAlertBtn!);
+      const sweetAlertBtn = document.querySelector('.swal2-container button.swal2-confirm');
+      assert.ok(sweetAlertBtn);
+      await click(sweetAlertBtn!);
 
-    const workflowFiles = workflow.getFiles();
-    assert.strictEqual(workflowFiles.length, 0, 'Should have 0 files tracked');
-    assert.ok(deleteStub.calledOnce, 'File destroyRecord() should be called');
+      const workflowFiles = workflow.getFiles();
+      assert.strictEqual(workflowFiles.length, 0, 'Should have 0 files tracked');
+      assert.ok(destroyStub.calledOnce, 'store.destroyRecord() should be called');
+    } finally {
+      fetchStub.restore();
+    }
   });
 
   /**
@@ -154,15 +162,20 @@ module('Integration | Component | workflow files', (hooks) => {
   });
 
   test('Destroy record error displays error message', async function (assert) {
-    const store = this.owner.lookup('service:store');
+    const store: any = this.owner.lookup('service:store');
     const submission = store.createRecord('submission');
 
     const file = store.createRecord('file', {
       name: 'File-for-test',
       fileRole: 'manuscript',
       submission,
+      uri: '/file/test-uuid/File-for-test',
     });
-    file.destroyRecord = () => Promise.reject();
+
+    // deleteFileWithBytes calls fetch() then store.destroyRecord() — make destroyRecord fail
+    document.cookie = 'XSRF-TOKEN=test-token';
+    const fetchStub = sinon.stub(globalThis, 'fetch').resolves(new globalThis.Response(null, { status: 200 }));
+    sinon.stub(store, 'destroyRecord').rejects(new Error('destroy failed'));
 
     const workflow = this.owner.lookup('service:workflow');
     workflow.setFiles([file]);
@@ -170,7 +183,8 @@ module('Integration | Component | workflow files', (hooks) => {
     // Need to make sure the flash message service is initialized
     this.flashMessages = this.owner.lookup('service:flash-messages');
 
-    await render(hbs`{{#each this.flashMessages.queue as |flash|}}
+    try {
+      await render(hbs`{{#each this.flashMessages.queue as |flash|}}
   <div class='flash-message-container'>
     <FlashMessage @flash={{flash}} as |component flash close|>
       <div class='d-flex justify-content-between'>
@@ -189,21 +203,24 @@ module('Integration | Component | workflow files', (hooks) => {
   @abort={{this.fakeAction}}
 />`);
 
-    const btn = this.element.querySelector('button');
-    assert.ok(btn);
-    assert.ok(btn!.textContent!.includes('Remove'));
+      const btn = this.element.querySelector('button');
+      assert.ok(btn);
+      assert.ok(btn!.textContent!.includes('Remove'));
 
-    await click(btn!);
+      await click(btn!);
 
-    const sweetAlertBtn = document.querySelector('.swal2-container button.swal2-confirm');
-    assert.ok(sweetAlertBtn);
-    await click(sweetAlertBtn!);
+      const sweetAlertBtn = document.querySelector('.swal2-container button.swal2-confirm');
+      assert.ok(sweetAlertBtn);
+      await click(sweetAlertBtn!);
 
-    // Make sure the Flash Message error message appears in the UI
-    await waitFor('.flash-message.alert-danger');
-    assert.dom('.flash-message.alert-danger').includesText('We encountered an error when removing this file');
-    // Make sure the file row hasn't been removed
-    assert.dom('[data-test-added-manuscript-row]').exists();
-    assert.dom('[data-test-added-manuscript-row]').includesText('File-for-test');
+      // Make sure the Flash Message error message appears in the UI
+      await waitFor('.flash-message.alert-danger');
+      assert.dom('.flash-message.alert-danger').includesText('We encountered an error when removing this file');
+      // Make sure the file row hasn't been removed
+      assert.dom('[data-test-added-manuscript-row]').exists();
+      assert.dom('[data-test-added-manuscript-row]').includesText('File-for-test');
+    } finally {
+      fetchStub.restore();
+    }
   });
 });

@@ -17,6 +17,8 @@ export default class SubmissionsNewGrants extends Controller {
   declare model: GrantsModel;
   declare preLoadedGrant: GrantModel | null;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  @service declare store: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare router: any;
 
   get submission(): SubmissionModel {
@@ -43,8 +45,7 @@ export default class SubmissionsNewGrants extends Controller {
 
   @action
   async loadTab(gotoRoute: string): Promise<void> {
-    // add validation, processing
-    await this.submission.save();
+    await this.store.persistRecord(this.submission);
     this.router.transitionTo(gotoRoute);
   }
 

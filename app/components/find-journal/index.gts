@@ -3,6 +3,7 @@ import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { dropTask, timeout } from 'ember-concurrency';
 import PowerSelect from 'ember-power-select/components/power-select';
+import { findRecord } from 'pass-ui/builders/pass-api';
 import type AutocompleteService from 'pass-ui/services/autocomplete';
 import type JournalModel from 'pass-ui/models/journal';
 
@@ -39,8 +40,9 @@ export default class FindJournal extends Component<FindJournalSignature> {
   });
 
   @action
-  onSelect(selected: JournalModel) {
-    this.store.findRecord('journal', selected.id).then((journal: JournalModel) => this.args.selectJournal(journal));
+  async onSelect(selected: JournalModel) {
+    const { content } = await this.store.request(findRecord('journal', selected.id!));
+    this.args.selectJournal(content.data as JournalModel);
   }
 
   <template>

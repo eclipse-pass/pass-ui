@@ -17,6 +17,8 @@ interface MetadataModel {
 export default class SubmissionsNewMetadata extends Controller {
   declare model: MetadataModel;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  @service declare store: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare router: any;
 
   get submission(): SubmissionModel {
@@ -46,8 +48,7 @@ export default class SubmissionsNewMetadata extends Controller {
 
   @action
   async loadTab(gotoRoute: string): Promise<void> {
-    // add validation, processing
-    await this.submission.save();
+    await this.store.persistRecord(this.submission);
     this.router.transitionTo(gotoRoute);
   }
 

@@ -31,6 +31,8 @@ export default class SubmissionsNewRepositories extends Controller {
 
   @service declare workflow: Workflow;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  @service declare store: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare router: any;
 
   get submission(): SubmissionModel {
@@ -73,7 +75,7 @@ export default class SubmissionsNewRepositories extends Controller {
 
   @action
   async loadTab(gotoRoute: string): Promise<void> {
-    await this.submission.save();
+    await this.store.persistRecord(this.submission);
     this.router.transitionTo(gotoRoute);
     this.loadingNext = false; // reset for next time
   }

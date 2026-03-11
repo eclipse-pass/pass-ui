@@ -85,24 +85,19 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
   });
 
   test('Multiple manuscript files stops transition', function (assert) {
-    const storeService: any = this.owner.lookup('service:store');
-
-    const submission = storeService.createRecord('submission', {
-      save: () => {
-        return Promise.resolve();
-      },
-    });
     const controller: any = this.owner.lookup('controller:submissions/new/files');
 
     let loadTabAccessed = false;
 
-    const file = storeService.createRecord('file', {
+    const submission = { id: 'sub:1' };
+    const file1 = {
       fileRole: 'manuscript',
       submission,
-      save: () => {
-        return Promise.resolve();
-      },
-    });
+    };
+    const file2 = {
+      fileRole: 'manuscript',
+      submission,
+    };
 
     this.owner.register(
       'controller:submissions.new',
@@ -114,21 +109,20 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
       'service:workflow',
       EmberObject.extend({
         getFiles() {
-          return [file];
+          return [file1, file2];
         },
         getMaxStep() {
           return 7;
         },
       }),
     );
-    const files = [file];
-    const model = { files, newSubmission: submission };
+    const model = { newSubmission: submission };
     controller.model = model;
     const routerService: any = this.owner.lookup('service:router');
-    routerService.transitionTo = (name: any) => {
+    routerService.transitionTo = () => {
       loadTabAccessed = true;
     };
-    assert.strictEqual(controller.workflow.getFiles().length, 1);
+    assert.strictEqual(controller.workflow.getFiles().length, 2);
     controller.send('validateAndLoadTab', 'submissions.new.basics');
     assert.false(loadTabAccessed);
   });
@@ -143,18 +137,10 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
       }),
     );
     let subSaved = false;
-    const submission = {
-      save: () => {
-        subSaved = true;
-        return Promise.resolve();
-      },
-    };
+    const submission = {};
     const file = {
       fileRole: 'manuscript',
       submission,
-      save: () => {
-        return Promise.resolve();
-      },
     };
     this.owner.register(
       'service:workflow',
@@ -171,6 +157,14 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
       newSubmission: submission,
     };
     controller.model = model;
+
+    const store: any = this.owner.lookup('service:store');
+    store.persistRecord = (record: any) => {
+      if (record === submission) {
+        subSaved = true;
+      }
+      return Promise.resolve({ content: {} });
+    };
 
     const routerService: any = this.owner.lookup('service:router');
     routerService.transitionTo = () => {

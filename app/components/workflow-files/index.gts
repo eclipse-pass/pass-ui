@@ -12,6 +12,7 @@ import swal from 'sweetalert2/dist/sweetalert2.js';
 // @ts-ignore
 import fileQueue from 'ember-file-upload/helpers/file-queue';
 import FoundManuscripts from 'pass-ui/components/found-manuscripts';
+import { deleteFileWithBytes } from 'pass-ui/builders/pass-api';
 import type Workflow from 'pass-ui/services/workflow';
 import type { WorkflowFile } from 'pass-ui/services/workflow';
 import type SubmissionHandlerService from 'pass-ui/services/submission-handler';
@@ -131,7 +132,7 @@ export default class WorkflowFiles extends Component<WorkflowFilesSignature> {
 
       const file = await response.json();
 
-      const newFile = await this.store.createRecord('file', {
+      const newFile = this.store.createRecord('file', {
         name: file.fileName,
         mimeType: file.mimeType,
         description: '',
@@ -142,8 +143,8 @@ export default class WorkflowFiles extends Component<WorkflowFilesSignature> {
       if (!this.hasManuscript) {
         newFile.fileRole = 'manuscript';
       }
-      const savedFile = await newFile.save();
-      this.workflow.addFile(savedFile);
+      await this.store.persistRecord(newFile);
+      this.workflow.addFile(newFile);
     } catch (error) {
       FileUpload.file.state = 'aborted';
       console.error(error);
@@ -159,18 +160,16 @@ export default class WorkflowFiles extends Component<WorkflowFilesSignature> {
     }
 
     const deletedFileId = file.id!;
-    return await file
-      .destroyRecord()
-      .then(() => {
-        this.workflow.removeFile(deletedFileId);
-        return true;
-      })
-      .catch((error: unknown) => {
-        console.error('[Workflow Files] Failed to delete file');
-        console.error(error);
-        this.flashMessages.danger('We encountered an error when removing this file');
-        return false;
-      });
+    try {
+      await deleteFileWithBytes(file, this.store);
+      this.workflow.removeFile(deletedFileId);
+      return true;
+    } catch (error: unknown) {
+      console.error('[Workflow Files] Failed to delete file');
+      console.error(error);
+      this.flashMessages.danger('We encountered an error when removing this file');
+      return false;
+    }
   }
 
   @action

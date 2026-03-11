@@ -17,15 +17,17 @@ module('Unit | Controller | submissions/new/metadata', (hooks) => {
     let subSaved = false;
 
     const model = {
-      newSubmission: {
-        save: () => {
-          subSaved = true;
-          return Promise.resolve();
-        },
-      },
+      newSubmission: {},
     };
 
     controller.model = model;
+
+    const store: any = this.owner.lookup('service:store');
+    store.persistRecord = () => {
+      subSaved = true;
+      return Promise.resolve({ content: {} });
+    };
+
     const routerService: any = this.owner.lookup('service:router');
     routerService.transitionTo = function (route: any) {
       assert.ok(subSaved, 'submission was not saved');
@@ -39,15 +41,16 @@ module('Unit | Controller | submissions/new/metadata', (hooks) => {
 
     let subSaved = false;
     const model = {
-      newSubmission: {
-        save: () => {
-          subSaved = true;
-          return Promise.resolve();
-        },
-      },
+      newSubmission: {},
     };
 
     controller.model = model;
+
+    const store: any = this.owner.lookup('service:store');
+    store.persistRecord = () => {
+      subSaved = true;
+      return Promise.resolve({ content: {} });
+    };
 
     const routerService: any = this.owner.lookup('service:router');
     routerService.transitionTo = function (route: any) {

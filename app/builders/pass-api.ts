@@ -184,6 +184,9 @@ function serializeRecord(record: any, store: StoreWithSchema): { data: Record<st
   const relationships: Record<string, unknown> = {};
 
   fields.forEach((field, key) => {
+    // Skip private/client-only fields (e.g., _submissionEvents)
+    if (key.startsWith('_')) return;
+
     if (field.kind === 'attribute') {
       serializeAttribute(record, key, attributes);
     } else if (field.kind === 'belongsTo') {
@@ -256,4 +259,30 @@ export function deleteRecord(record: any) {
     records: [identifier],
     cacheOptions: { types: [identifier.type] },
   };
+}
+
+/**
+ * Delete a file record: first delete file bytes from the file service,
+ * then delete the metadata record from the JSON:API backend.
+ * Replicates the two-step deletion from the legacy FileAdapter.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function deleteFileWithBytes(file: any, store: { destroyRecord: (r: any) => Promise<any> }) {
+  let uri: string = file.uri;
+  if (!uri.startsWith('/')) {
+    uri = `/${uri}`;
+  }
+  const token = document.cookie.match(/XSRF-TOKEN=([^;]*)/)![1]!;
+
+  const response = await fetch(uri, {
+    method: 'DELETE',
+    credentials: 'same-origin',
+    headers: { 'X-XSRF-TOKEN': token },
+  });
+
+  if (!response.ok) {
+    throw new Error('Delete request to the file service failed');
+  }
+
+  await store.destroyRecord(file);
 }

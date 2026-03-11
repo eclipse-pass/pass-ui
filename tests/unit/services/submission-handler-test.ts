@@ -25,13 +25,11 @@ module('Unit | Service | submission-handler', (hooks) => {
     service.store = {
       createRecord(type: any, values: any) {
         submissionEvent = { ...values };
-
-        submissionEvent.save = () => {
-          assert.ok(true);
-          return new Promise((resolve) => resolve(this));
-        };
-
         return submissionEvent;
+      },
+      persistRecord() {
+        assert.ok(true);
+        return Promise.resolve({ content: {} });
       },
     };
 
@@ -46,18 +44,10 @@ module('Unit | Service | submission-handler', (hooks) => {
       },
       metadata: '{}',
       repositories: A([repo1, repo2]),
-      save() {
-        assert.ok(true);
-        return new Promise((resolve) => resolve(this));
-      },
     };
 
     const publication = {
       id: '1',
-      save() {
-        assert.ok(true);
-        return new Promise((resolve) => resolve(this));
-      },
     };
 
     const comment = 'blarg';
@@ -96,13 +86,11 @@ module('Unit | Service | submission-handler', (hooks) => {
     service.store = {
       createRecord(type: any, values: any) {
         submissionEvent = { ...values };
-
-        submissionEvent.save = () => {
-          assert.ok(true);
-          return new Promise((resolve) => resolve(this));
-        };
-
         return submissionEvent;
+      },
+      persistRecord() {
+        assert.ok(true);
+        return Promise.resolve({ content: {} });
       },
     };
 
@@ -116,18 +104,10 @@ module('Unit | Service | submission-handler', (hooks) => {
       },
       metadata: '{}',
       repositories: A([repo1, repo2]),
-      save() {
-        assert.ok(true);
-        return new Promise((resolve) => resolve(this));
-      },
     };
 
     const publication = {
       id: '1',
-      save() {
-        assert.ok(true);
-        return new Promise((resolve) => resolve(this));
-      },
     };
 
     const comment = 'blarg';
@@ -158,13 +138,11 @@ module('Unit | Service | submission-handler', (hooks) => {
     service.store = {
       createRecord(type: any, values: any) {
         submissionEvent = { ...values };
-
-        submissionEvent.save = () => {
-          assert.ok(true);
-          return new Promise((resolve) => resolve(this));
-        };
-
         return submissionEvent;
+      },
+      persistRecord() {
+        assert.ok(true);
+        return Promise.resolve({ content: {} });
       },
     };
 
@@ -178,10 +156,6 @@ module('Unit | Service | submission-handler', (hooks) => {
       },
       metadata: '{}',
       repositories: A([repo1, repo2]),
-      save() {
-        assert.ok(true);
-        return new Promise((resolve) => resolve(this));
-      },
     };
 
     const comment = 'blarg';
@@ -213,13 +187,11 @@ module('Unit | Service | submission-handler', (hooks) => {
     service.store = {
       createRecord(type: any, values: any) {
         submissionEvent = { ...values };
-
-        submissionEvent.save = () => {
-          assert.ok(true);
-          return new Promise((resolve) => resolve(this));
-        };
-
         return submissionEvent;
+      },
+      persistRecord() {
+        assert.ok(true);
+        return Promise.resolve({ content: {} });
       },
     };
 
@@ -229,10 +201,6 @@ module('Unit | Service | submission-handler', (hooks) => {
         id: 'submitter:test-id',
       },
       repositories: A(),
-      save() {
-        assert.ok(true);
-        return new Promise((resolve) => resolve(this));
-      },
     };
 
     const comment = 'blarg';
@@ -257,13 +225,11 @@ module('Unit | Service | submission-handler', (hooks) => {
     service.store = {
       createRecord(type: any, values: any) {
         submissionEvent = { ...values };
-
-        submissionEvent.save = () => {
-          assert.ok(true);
-          return new Promise((resolve) => resolve(this));
-        };
-
         return submissionEvent;
+      },
+      persistRecord() {
+        assert.ok(true);
+        return Promise.resolve({ content: {} });
       },
     };
 
@@ -273,10 +239,6 @@ module('Unit | Service | submission-handler', (hooks) => {
         id: 'submitter:test-id',
       },
       repositories: A(),
-      save() {
-        assert.ok(true);
-        return new Promise((resolve) => resolve(this));
-      },
     };
 
     const comment = 'blarg';
@@ -297,7 +259,6 @@ module('Unit | Service | submission-handler', (hooks) => {
     const submission = {
       submissionStatus: 'not-draft',
       publication: { title: 'Moo title' },
-      save: () => Promise.resolve(),
     };
 
     const service = this.owner.lookup('service:submission-handler');
@@ -317,11 +278,7 @@ module('Unit | Service | submission-handler', (hooks) => {
       submissionStatus: 'draft',
       publication: {
         title: 'Moo Title',
-        save: Sinon.fake.resolves(),
-        deleteRecord: Sinon.fake.resolves(),
       },
-      save: Sinon.fake.resolves(),
-      deleteRecord: Sinon.fake.resolves(),
     };
 
     const requestHandler = (req: any) => {
@@ -330,8 +287,8 @@ module('Unit | Service | submission-handler', (hooks) => {
         return Promise.resolve({
           content: {
             data: [
-              { name: 'file1', submission: 0, destroyRecord: Sinon.fake.rejects() },
-              { name: 'file2', submission: 0, destroyRecord: Sinon.fake.rejects() },
+              { name: 'file1', submission: 0, uri: '/file/test1' },
+              { name: 'file2', submission: 0, uri: '/file/test2' },
             ],
           },
         });
@@ -341,6 +298,7 @@ module('Unit | Service | submission-handler', (hooks) => {
       return Promise.reject();
     };
     const storeRequestFake = Sinon.replace(store, 'request', Sinon.spy(requestHandler));
+    const storeDestroyFake = Sinon.replace(store, 'destroyRecord', Sinon.fake.rejects('destroy failed'));
     this.owner.register('service:store', store);
 
     await service
@@ -350,26 +308,26 @@ module('Unit | Service | submission-handler', (hooks) => {
       .catch((_e: any) => assert.ok(true));
 
     assert.ok(storeRequestFake.calledOnce, 'Store request should be called only once');
-    assert.equal(submission.deleteRecord.callCount, 0, 'Submission delete should not be called');
-    assert.equal(submission.save.callCount, 0, 'Submission should not be saved');
+    assert.equal(storeDestroyFake.callCount, 0, 'Store destroyRecord should not be called (fetch fails first)');
   });
 
   test('Publication not deleted if multiple submissions reference it', async function (assert) {
     const service = this.owner.lookup('service:submission-handler');
     const store = this.owner.lookup('service:store');
 
+    // Stub fetch and cookie for deleteFileWithBytes
+    const originalCookie = document.cookie;
+    document.cookie = 'XSRF-TOKEN=test-token';
+    const fetchStub = Sinon.stub(globalThis, 'fetch').resolves(new Response(null, { status: 200 }));
+
     const publication = {
       title: 'Moo Title',
-      save: Sinon.fake.resolves(),
-      deleteRecord: Sinon.fake.resolves(),
     };
     const submission = {
       id: 0,
       source: 'pass',
       submissionStatus: 'draft',
       publication,
-      save: Sinon.fake.resolves(),
-      deleteRecord: Sinon.fake.resolves(),
     };
 
     const requestHandler = (req: any) => {
@@ -378,8 +336,8 @@ module('Unit | Service | submission-handler', (hooks) => {
         return Promise.resolve({
           content: {
             data: [
-              { name: 'file1', submission: 0, destroyRecord: Sinon.fake.resolves() },
-              { name: 'file2', submission: 0, destroyRecord: Sinon.fake.resolves() },
+              { name: 'file1', submission: 0, uri: '/file/test1' },
+              { name: 'file2', submission: 0, uri: '/file/test2' },
             ],
           },
         });
@@ -391,37 +349,53 @@ module('Unit | Service | submission-handler', (hooks) => {
     };
 
     const storeRequestFake = Sinon.replace(store, 'request', Sinon.fake(requestHandler));
+    const storeDestroyFake = Sinon.replace(store, 'destroyRecord', Sinon.fake.resolves());
     this.owner.register('service:store', store);
 
-    await service.deleteSubmission(submission);
+    try {
+      await service.deleteSubmission(submission);
 
-    assert.equal(storeRequestFake.callCount, 2, 'Store request should be called twice');
-    assert.ok(submission.deleteRecord.calledOnce, 'Submission delete should be called');
-    assert.ok(submission.save.calledOnce, 'Submission should be saved');
-    assert.equal(publication.deleteRecord.callCount, 0, 'Publication should not be deleted');
-    assert.equal(publication.save.callCount, 0, 'Publication should not be re-persisted');
+      assert.equal(storeRequestFake.callCount, 2, 'Store request should be called twice');
+      // destroyRecord called for: file1, file2, submission = 3 times (no publication since other subs reference it)
+      assert.equal(
+        storeDestroyFake.callCount,
+        3,
+        'Store destroyRecord should be called 3 times (2 files + submission)',
+      );
+      // Verify the submission was destroyed
+      assert.ok(storeDestroyFake.calledWith(submission), 'Submission should be destroyed');
+      // Verify publication was NOT destroyed
+      assert.notOk(storeDestroyFake.calledWith(publication), 'Publication should not be destroyed');
+    } finally {
+      fetchStub.restore();
+      document.cookie = `XSRF-TOKEN=; expires=${new Date(0).toUTCString()}`;
+      if (originalCookie) {
+        document.cookie = originalCookie;
+      }
+    }
   });
 
   test('Submission, publication, and files are deleted', async function (assert) {
     const service = this.owner.lookup('service:submission-handler');
     const store = this.owner.lookup('service:store');
 
+    // Stub fetch and cookie for deleteFileWithBytes
+    const originalCookie = document.cookie;
+    document.cookie = 'XSRF-TOKEN=test-token';
+    const fetchStub = Sinon.stub(globalThis, 'fetch').resolves(new Response(null, { status: 200 }));
+
     const publication = {
       title: 'Moo Title',
-      save: Sinon.fake.resolves(),
-      deleteRecord: Sinon.fake.resolves(),
     };
     const submission = {
       id: 0,
       source: 'pass',
       submissionStatus: 'draft',
       publication,
-      save: Sinon.fake.resolves(),
-      deleteRecord: Sinon.fake.resolves(),
     };
     const files = [
-      { name: 'file1', submission, destroyRecord: Sinon.fake.resolves() },
-      { name: 'file2', submission, destroyRecord: Sinon.fake.resolves() },
+      { name: 'file1', submission, uri: '/file/test1' },
+      { name: 'file2', submission, uri: '/file/test2' },
     ];
 
     const requestHandler = (req: any) => {
@@ -435,18 +409,32 @@ module('Unit | Service | submission-handler', (hooks) => {
     };
 
     const storeRequestFake = Sinon.replace(store, 'request', Sinon.fake(requestHandler));
+    const storeDestroyFake = Sinon.replace(store, 'destroyRecord', Sinon.fake.resolves());
     this.owner.register('service:store', store);
 
-    await service.deleteSubmission(submission);
+    try {
+      await service.deleteSubmission(submission);
 
-    assert.equal(storeRequestFake.callCount, 2, 'Store request should be called twice');
-    assert.ok(submission.deleteRecord.calledOnce, 'Submission delete should be called');
-    assert.ok(submission.save.calledOnce, 'Submission should be saved');
-    assert.ok(publication.deleteRecord.calledOnce, 'Publication should be deleted');
-    assert.ok(publication.save.calledOnce, 'Publication deletion should be persisted');
-    assert.ok(
-      files.map((f) => f.destroyRecord).every((func) => func.calledOnce),
-      'All files should be destroyed',
-    );
+      assert.equal(storeRequestFake.callCount, 2, 'Store request should be called twice');
+      // destroyRecord called for: file1, file2, submission, publication = 4 times
+      assert.equal(
+        storeDestroyFake.callCount,
+        4,
+        'Store destroyRecord should be called 4 times (2 files + submission + publication)',
+      );
+      // Verify each object was destroyed
+      assert.ok(storeDestroyFake.calledWith(submission), 'Submission should be destroyed');
+      assert.ok(storeDestroyFake.calledWith(publication), 'Publication should be destroyed');
+      assert.ok(
+        files.every((f) => storeDestroyFake.calledWith(f)),
+        'All files should be destroyed',
+      );
+    } finally {
+      fetchStub.restore();
+      document.cookie = `XSRF-TOKEN=; expires=${new Date(0).toUTCString()}`;
+      if (originalCookie) {
+        document.cookie = originalCookie;
+      }
+    }
   });
 });

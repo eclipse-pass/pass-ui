@@ -23,6 +23,8 @@ export default class SubmissionsNewFiles extends Controller {
 
   @service declare workflow: Workflow;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  @service declare store: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare flashMessages: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare router: any;
@@ -63,7 +65,7 @@ export default class SubmissionsNewFiles extends Controller {
   @action
   async loadTab(gotoRoute: string): Promise<void> {
     this.updateRelatedData();
-    await this.submission.save();
+    await this.store.persistRecord(this.submission);
     this.loadingNext = false; // reset for next time
     this.router.transitionTo(gotoRoute);
   }
@@ -112,7 +114,7 @@ export default class SubmissionsNewFiles extends Controller {
     const allFiles = this.workflow.getFiles();
     if (allFiles.length > 0) {
       allFiles.forEach((file) => {
-        (file as unknown as FileModel).save();
+        this.store.persistRecord(file);
       });
     }
   }

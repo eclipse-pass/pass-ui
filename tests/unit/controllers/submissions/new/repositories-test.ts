@@ -66,10 +66,15 @@ module('Unit | Controller | submissions/new/repositories', (hooks) => {
     const model = {
       newSubmission: {
         repositories: A([repository]),
-        save: () => Promise.resolve(assert.ok(true)),
       },
     };
     controller.model = model;
+
+    const store: any = this.owner.lookup('service:store');
+    store.persistRecord = () => {
+      assert.ok(true);
+      return Promise.resolve({ content: {} });
+    };
 
     const routerService: any = this.owner.lookup('service:router');
     routerService.transitionTo = function (route: any) {
@@ -118,14 +123,17 @@ module('Unit | Controller | submissions/new/repositories', (hooks) => {
     const model = {
       newSubmission: {
         repositories,
-        save: () => {
-          subSaved = true;
-          return Promise.resolve();
-        },
       },
     };
 
     controller.model = model;
+
+    const store: any = this.owner.lookup('service:store');
+    store.persistRecord = () => {
+      subSaved = true;
+      return Promise.resolve({ content: {} });
+    };
+
     const routerService: any = this.owner.lookup('service:router');
     routerService.transitionTo = function (route: string) {
       assert.ok(['submissions.new.metadata', 'submissions.new.policies'].includes(route));

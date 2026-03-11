@@ -16,12 +16,16 @@ module('Unit | Controller | submissions/new/grants', (hooks) => {
 
     const controller: any = this.owner.lookup('controller:submissions/new/grants');
     const model = {
-      newSubmission: {
-        save: () => Promise.resolve(assert.ok(true)),
-      },
+      newSubmission: {},
     };
 
     controller.model = model;
+
+    const store: any = this.owner.lookup('service:store');
+    store.persistRecord = () => {
+      assert.ok(true);
+      return Promise.resolve({ content: {} });
+    };
 
     const routerService: any = this.owner.lookup('service:router');
     routerService.transitionTo = function (route: any) {
@@ -35,12 +39,16 @@ module('Unit | Controller | submissions/new/grants', (hooks) => {
 
     const controller: any = this.owner.lookup('controller:submissions/new/grants');
     const model = {
-      newSubmission: {
-        save: () => Promise.resolve(assert.ok(true)),
-      },
+      newSubmission: {},
     };
 
     controller.model = model;
+
+    const store: any = this.owner.lookup('service:store');
+    store.persistRecord = () => {
+      assert.ok(true);
+      return Promise.resolve({ content: {} });
+    };
 
     const routerService: any = this.owner.lookup('service:router');
     routerService.transitionTo = function (route: any) {
@@ -58,12 +66,17 @@ module('Unit | Controller | submissions/new/grants', (hooks) => {
 
     const controller: any = this.owner.lookup('controller:submissions/new/grants');
     const model = {
-      newSubmission: {
-        save: () => Promise.resolve(assert.ok(true)),
-      },
+      newSubmission: {},
     };
 
     controller.model = model;
+
+    const store: any = this.owner.lookup('service:store');
+    store.persistRecord = () => {
+      assert.ok(true);
+      return Promise.resolve({ content: {} });
+    };
+
     const routerService: any = this.owner.lookup('service:router');
     routerService.transitionTo = () => {};
 

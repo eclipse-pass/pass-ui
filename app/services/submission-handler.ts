@@ -1,7 +1,7 @@
 import Service, { service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
 import { task } from 'ember-concurrency';
-import { query } from 'pass-ui/builders/pass-api';
+import { query, deleteFileWithBytes } from 'pass-ui/builders/pass-api';
 import { fileForSubmissionQuery, submissionsWithPublicationQuery } from '../util/paginated-query';
 import type SubmissionModel from 'pass-ui/models/submission';
 import type PublicationModel from 'pass-ui/models/publication';
@@ -110,8 +110,8 @@ export default class SubmissionHandlerService extends Service {
     }
 
     // Save the updated submission, then save the submissionEvent
-    await subEvent.save();
-    await submission.save();
+    await this.store.persistRecord(subEvent);
+    await this.store.persistRecord(submission);
   });
 
   /**
@@ -130,16 +130,16 @@ export default class SubmissionHandlerService extends Service {
    * @returns {Promise}                Promise to perform the operation.
    */
   submit = task(async (submission: SubmissionModel, publication: PublicationModel, comment: string) => {
-    const p = await publication.save();
+    await this.store.persistRecord(publication);
 
     submission.submitted = false;
     submission.source = 'pass';
     submission.aggregatedDepositStatus = 'not-started';
-    submission.publication = p;
+    submission.publication = publication;
 
-    const s = await submission.save();
+    await this.store.persistRecord(submission);
     await this._finishSubmission
-      .perform(s, comment)
+      .perform(submission, comment)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .catch((e: any) => {
         throw e;
@@ -156,7 +156,7 @@ export default class SubmissionHandlerService extends Service {
    * @param  {string} comment  Comment is added to SubmissionEvent.
    * @returns {Promise}        Promise which performs the operation.
    */
-  approveSubmission(submission: SubmissionModel, comment: string) {
+  async approveSubmission(submission: SubmissionModel, comment: string) {
     // Add agreements metadata
     const agreemd = this.schemaService.getAgreementsBlob(submission.repositories);
 
@@ -176,12 +176,11 @@ export default class SubmissionHandlerService extends Service {
       link: this._getSubmissionView(submission),
     });
 
-    return se.save().then(() => {
-      submission.submissionStatus = 'submitted';
-      submission.submittedDate = new Date();
-      submission.submitted = true;
-      return submission.save();
-    });
+    await this.store.persistRecord(se);
+    submission.submissionStatus = 'submitted';
+    submission.submittedDate = new Date();
+    submission.submitted = true;
+    await this.store.persistRecord(submission);
   }
 
   /**
@@ -193,7 +192,7 @@ export default class SubmissionHandlerService extends Service {
    * @param  {string} comment    Comment is added to submission event.
    * @returns {Promise}          Promise which performs the operation.
    */
-  requestSubmissionChanges(submission: SubmissionModel, comment: string) {
+  async requestSubmissionChanges(submission: SubmissionModel, comment: string) {
     const se = this.store.createRecord('submission-event', {
       submission,
       comment,
@@ -204,10 +203,9 @@ export default class SubmissionHandlerService extends Service {
       link: this._getSubmissionView(submission),
     });
 
-    return se.save().then(() => {
-      submission.submissionStatus = 'changes-requested';
-      return submission.save();
-    });
+    await this.store.persistRecord(se);
+    submission.submissionStatus = 'changes-requested';
+    await this.store.persistRecord(submission);
   }
 
   /**
@@ -219,7 +217,7 @@ export default class SubmissionHandlerService extends Service {
    * @param  {string} comment      Comment is added to SubmissionEvent.
    * @returns {Promise}            Promise which performs the operation.
    */
-  cancelSubmission(submission: SubmissionModel, comment: string) {
+  async cancelSubmission(submission: SubmissionModel, comment: string) {
     const se = this.store.createRecord('submission-event', {
       submission,
       comment,
@@ -230,10 +228,9 @@ export default class SubmissionHandlerService extends Service {
       link: this._getSubmissionView(submission),
     });
 
-    return se.save().then(() => {
-      submission.submissionStatus = 'cancelled';
-      return submission.save();
-    });
+    await this.store.persistRecord(se);
+    submission.submissionStatus = 'cancelled';
+    await this.store.persistRecord(submission);
   }
 
   /**
@@ -260,23 +257,22 @@ export default class SubmissionHandlerService extends Service {
       throw new Error(`Non-DRAFT submissions cannot be deleted`);
     }
 
-    // Get submissions for this file
+    // Delete all files (bytes + metadata records)
     const { content: filesDoc } = await this.store.request(query('file', fileForSubmissionQuery(submission.id)));
     const files = filesDoc.data;
-    await Promise.all(files.map((file: FileModel) => file.destroyRecord()));
+    await Promise.all(files.map((file: FileModel) => deleteFileWithBytes(file, this.store)));
 
     const publication = submission.publication;
 
-    // Search for Submissions that reference this publication
-    submission.deleteRecord();
-    await submission.save();
+    // Delete the submission record
+    await this.store.destroyRecord(submission);
 
+    // Delete publication if no other submissions reference it
     const { content: subsDoc } = await this.store.request(
       query('submission', submissionsWithPublicationQuery(publication)),
     );
     if (subsDoc.data.length === 0) {
-      publication.deleteRecord();
-      await publication.save();
+      await this.store.destroyRecord(publication);
     }
   }
 
