@@ -7,11 +7,11 @@ import { submissionsIndexQuery } from '../../util/paginated-query';
 import type CurrentUserService from 'pass-ui/services/current-user';
 import type AppStaticConfigService from 'pass-ui/services/app-static-config';
 import type SubmissionModel from 'pass-ui/models/submission';
+import type { PaginationMeta, JsonApiDocument } from 'pass-ui/types/json-api';
 
 interface SubmissionsIndexModel {
   submissions: SubmissionModel[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  meta: any;
+  meta: PaginationMeta | undefined;
 }
 
 export default class SubmissionsIndex extends Controller {
@@ -66,8 +66,7 @@ export default class SubmissionsIndex extends Controller {
       { page: this.page, pageSize: this.pageSize, filter: this.filter },
       this.currentUser.user!,
     );
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return this.store.request(query('submission', queryHash)).then((result: any) => {
+    return this.store.request(query('submission', queryHash)).then((result: JsonApiDocument<SubmissionModel[]>) => {
       this.queuedModel = {
         submissions: result.content.data,
         meta: result.content.meta,

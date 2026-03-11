@@ -4,11 +4,18 @@ import { query } from 'pass-ui/builders/pass-api';
 import { submissionsIndexQuery } from '../../util/paginated-query';
 import type CurrentUserService from 'pass-ui/services/current-user';
 import type SubmissionModel from 'pass-ui/models/submission';
+import type SubmissionsIndexController from 'pass-ui/controllers/submissions/index';
+import type { PaginationMeta, JsonApiDocument } from 'pass-ui/types/json-api';
 
 interface SubmissionsIndexModel {
   submissions: SubmissionModel[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  meta: any;
+  meta: PaginationMeta | undefined;
+}
+
+interface SubmissionsIndexParams {
+  page?: number;
+  pageSize?: number;
+  filter?: string;
 }
 
 export default class IndexRoute extends CheckSessionRoute {
@@ -22,18 +29,16 @@ export default class IndexRoute extends CheckSessionRoute {
     filter: {},
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async model(params: any): Promise<SubmissionsIndexModel> {
+  async model(params: SubmissionsIndexParams): Promise<SubmissionsIndexModel> {
     const queryHash = submissionsIndexQuery(params, this.currentUser.user!);
-    const { content } = await this.store.request(query('submission', queryHash));
+    const { content }: JsonApiDocument<SubmissionModel[]> = await this.store.request(query('submission', queryHash));
     return {
       submissions: content.data,
       meta: content.meta,
     };
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  setupController(controller: any, model: any): void {
+  setupController(controller: SubmissionsIndexController, model: SubmissionsIndexModel): void {
     super.setupController(controller, model);
     controller.queuedModel = model;
   }

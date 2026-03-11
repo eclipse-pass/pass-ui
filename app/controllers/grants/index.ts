@@ -8,6 +8,7 @@ import type CurrentUserService from 'pass-ui/services/current-user';
 import type AppStaticConfigService from 'pass-ui/services/app-static-config';
 import type GrantModel from 'pass-ui/models/grant';
 import type SubmissionModel from 'pass-ui/models/submission';
+import type { PaginationMeta, JsonApiDocument } from 'pass-ui/types/json-api';
 
 interface GrantMapEntry {
   grant: GrantModel;
@@ -16,8 +17,7 @@ interface GrantMapEntry {
 
 interface GrantsIndexModel {
   grantMap: GrantMapEntry[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  meta: any;
+  meta: PaginationMeta | undefined;
 }
 
 export default class GrantsIndexController extends Controller {
@@ -89,31 +89,30 @@ export default class GrantsIndexController extends Controller {
     );
     const submissionQueryHash = grantsIndexSubmissionQuery(user);
 
-    return (
-      this.store
-        .request(query('grant', grantQueryHash))
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .then((result: any) => {
-          const data = result.content.data;
-          const meta = result.content.meta;
-          const results = data.map((grant: GrantModel) => ({
-            grant,
-            submissions: [] as SubmissionModel[],
-          }));
+    return this.store
+      .request(query('grant', grantQueryHash))
+      .then((result: JsonApiDocument<GrantModel[]>) => {
+        const data = result.content.data;
+        const meta = result.content.meta;
+        const results = data.map((grant: GrantModel) => ({
+          grant,
+          submissions: [] as SubmissionModel[],
+        }));
 
-          return {
-            grantMap: results,
-            meta,
-          };
-        })
-        .then(async (results: GrantsIndexModel) => {
-          const { content: subsDoc } = await this.store.request(query('submission', submissionQueryHash));
-          this._mapSubmissionsToGrants(subsDoc.data, results.grantMap);
-          return results;
-        })
-        .then((results: GrantsIndexModel) => {
-          this.queuedModel = results;
-        })
-    );
+        return {
+          grantMap: results,
+          meta,
+        };
+      })
+      .then(async (results: GrantsIndexModel) => {
+        const { content: subsDoc }: JsonApiDocument<SubmissionModel[]> = await this.store.request(
+          query('submission', submissionQueryHash),
+        );
+        this._mapSubmissionsToGrants(subsDoc.data, results.grantMap);
+        return results;
+      })
+      .then((results: GrantsIndexModel) => {
+        this.queuedModel = results;
+      });
   }
 }

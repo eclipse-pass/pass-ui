@@ -5,11 +5,18 @@ import { grantsIndexGrantQuery, grantsIndexSubmissionQuery } from '../../util/pa
 import type CurrentUserService from 'pass-ui/services/current-user';
 import type GrantModel from 'pass-ui/models/grant';
 import type SubmissionModel from 'pass-ui/models/submission';
+import type GrantsIndexController from 'pass-ui/controllers/grants/index';
+import type { PaginationMeta, JsonApiDocument } from 'pass-ui/types/json-api';
 
 interface GrantsIndexModel {
   grantMap: Array<{ grant: GrantModel; submissions: SubmissionModel[] }>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  meta: any;
+  meta: PaginationMeta | undefined;
+}
+
+interface GrantsIndexParams {
+  page?: number;
+  pageSize?: number;
+  filter?: string;
 }
 
 export default class IndexRoute extends CheckSessionRoute {
@@ -37,8 +44,7 @@ export default class IndexRoute extends CheckSessionRoute {
    *    ...
    *  ]
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async model(params: any) {
+  async model(params: GrantsIndexParams): Promise<GrantsIndexModel | undefined> {
     const user = this.currentUser.user;
     if (!user) {
       return;
@@ -46,7 +52,9 @@ export default class IndexRoute extends CheckSessionRoute {
 
     const grantQueryHash = grantsIndexGrantQuery(params, user);
     // First search for all Grants associated with the current user
-    const { content: grantContent } = await this.store.request(query('grant', grantQueryHash));
+    const { content: grantContent }: JsonApiDocument<GrantModel[]> = await this.store.request(
+      query('grant', grantQueryHash),
+    );
     const grants = grantContent.data;
     const results: GrantsIndexModel = {
       grantMap: [],
@@ -64,7 +72,9 @@ export default class IndexRoute extends CheckSessionRoute {
     // We can redo the mapping of submissions onto grants (to get the count)
     // On demand without reloading the list of submissions
     const submissionQueryHash = grantsIndexSubmissionQuery(user);
-    const { content: subContent } = await this.store.request(query('submission', submissionQueryHash));
+    const { content: subContent }: JsonApiDocument<SubmissionModel[]> = await this.store.request(
+      query('submission', submissionQueryHash),
+    );
     const subs = subContent.data;
     subs.forEach((submission: SubmissionModel) => {
       submission.grants.forEach((grant: GrantModel) => {
@@ -80,8 +90,7 @@ export default class IndexRoute extends CheckSessionRoute {
     return results;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  setupController(controller: any, model: any) {
+  setupController(controller: GrantsIndexController, model: GrantsIndexModel): void {
     super.setupController(controller, model);
     controller.queuedModel = model;
   }

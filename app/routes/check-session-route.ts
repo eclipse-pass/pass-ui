@@ -1,9 +1,14 @@
 import { service } from '@ember/service';
 import Route from '@ember/routing/route';
 import { action } from '@ember/object';
-import type { AppError } from 'pass-ui/services/error-handler';
 import type CurrentUserService from 'pass-ui/services/current-user';
 import type ErrorHandlerService from 'pass-ui/services/error-handler';
+import type { AppError } from 'pass-ui/services/error-handler';
+
+interface ErrorWithStatus {
+  errors?: Array<{ status?: number | string }>;
+  message?: string;
+}
 
 export default class CheckSessionRouteRoute extends Route {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -30,16 +35,15 @@ export default class CheckSessionRouteRoute extends Route {
 
   @action
   // @ts-expect-error async error handler override with different return type
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async error(error: any, transition: any): Promise<void> {
+  async error(error: unknown, transition: unknown): Promise<void> {
     console.error(error);
-    const errorObject = error?.errors?.[0] || {};
+    const errorObject = (error as ErrorWithStatus)?.errors?.[0] || {};
 
     if ([401, 403].includes(Number(errorObject.status))) {
       this.session.set('attemptedTransition', transition);
       await this.session.invalidate();
     } else {
-      this.errorHandler.handleError(error);
+      this.errorHandler.handleError(error as AppError);
     }
   }
 }

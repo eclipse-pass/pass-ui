@@ -4,6 +4,12 @@ import { service } from '@ember/service';
 import { action } from '@ember/object';
 import type AppStaticConfigService from 'pass-ui/services/app-static-config';
 
+interface RouteTransition {
+  to: {
+    queryParams: Record<string, string | undefined>;
+  };
+}
+
 export default class ApplicationRoute extends CheckSessionRoute {
   @service('app-static-config') declare staticConfig: AppStaticConfigService;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -19,8 +25,7 @@ export default class ApplicationRoute extends CheckSessionRoute {
   }
 
   @action
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  transitionTo(route: string, model: any) {
+  transitionTo(route: string, model: unknown) {
     this.router.transitionTo(route, model);
   }
 
@@ -29,8 +34,7 @@ export default class ApplicationRoute extends CheckSessionRoute {
    * to ensure objects are updated in the backend before any queries are done.
    */
   // @ts-expect-error beforeModel override uses transition parameter
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async beforeModel(transition: any) {
+  async beforeModel(transition: RouteTransition) {
     const userToken = transition.to.queryParams.userToken;
 
     if (!this.staticConfig.config) {
@@ -45,8 +49,7 @@ export default class ApplicationRoute extends CheckSessionRoute {
   /**
    * Add styling from static branding. TODO: Should this be moved to an initializer or something?
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async afterModel(_model: any, _transition: any) {
+  async afterModel(_model: unknown, _transition: unknown) {
     const loader = document.getElementById('initial-loader');
     if (loader) {
       loader.style.display = 'none';

@@ -7,23 +7,20 @@ import { grantDetailsQuery } from '../../util/paginated-query';
 import type CurrentUserService from 'pass-ui/services/current-user';
 import type GrantModel from 'pass-ui/models/grant';
 import type SubmissionModel from 'pass-ui/models/submission';
-
-interface PaginationMeta {
-  page?: { totalRecords?: number; totalPages?: number };
-}
+import type { PaginationMeta, JsonApiDocument } from 'pass-ui/types/json-api';
 
 interface GrantDetailModel {
   grant: GrantModel;
   submissions: {
     data: SubmissionModel[];
-    meta: PaginationMeta;
+    meta: PaginationMeta | undefined;
   };
 }
 
 interface QueuedGrantDetailModel {
   submissions?: {
     data: SubmissionModel[];
-    meta: PaginationMeta;
+    meta: PaginationMeta | undefined;
   };
 }
 
@@ -70,8 +67,7 @@ export default class GrantDetailsController extends Controller {
       this.grant.id!,
       this.currentUser.user!,
     );
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return this.store.request(query('submission', queryHash)).then((result: any) => {
+    return this.store.request(query('submission', queryHash)).then((result: JsonApiDocument<SubmissionModel[]>) => {
       this.queuedModel = {
         submissions: {
           data: result.content.data,

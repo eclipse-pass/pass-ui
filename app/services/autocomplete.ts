@@ -1,5 +1,6 @@
 import Service, { service } from '@ember/service';
 import { query as queryBuilder } from 'pass-ui/builders/pass-api';
+import type { JsonApiDocument } from 'pass-ui/types/json-api';
 
 export default class AutocompleteService extends Service {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -32,8 +33,12 @@ export default class AutocompleteService extends Service {
    *                                    Ember data store query
    * @returns {array} array of model objects
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  suggest(type: string, fieldName: string | string[], suggestPrefix: string, context: Record<string, any> = {}) {
+  suggest(
+    type: string,
+    fieldName: string | string[],
+    suggestPrefix: string,
+    context: Record<string, Record<string, string>> = {},
+  ) {
     if (!type) {
       return Promise.reject(new Error('No model type provided to the autocomplete service'));
     }
@@ -49,21 +54,20 @@ export default class AutocompleteService extends Service {
       fieldName = [fieldName];
     }
 
-    const query: Record<string, any> = { filter: {}, ...context }; // eslint-disable-line @typescript-eslint/no-explicit-any
+    const query: Record<string, Record<string, string>> = { filter: {}, ...context };
 
     const suggestFilterPart = fieldName.map((field) => `${field}=ini="*${suggestPrefix}*"`).join(',');
 
     // Append the suggest filter piece to the existing type filter, if it exists
-    query['filter'][type] = query['filter'][type] ? `${query['filter'][type]};${suggestFilterPart}` : suggestFilterPart;
+    const filterObj = query['filter'] ?? {};
+    filterObj[type] = filterObj[type] ? `${filterObj[type]};${suggestFilterPart}` : suggestFilterPart;
+    query['filter'] = filterObj;
 
-    return (
-      this.store
-        .request(queryBuilder(type, query))
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .then((result: any) => result.content.data)
-        .catch((error: unknown) => {
-          console.error(`Autocomplete service failed: ${JSON.stringify(error)}`);
-        })
-    );
+    return this.store
+      .request(queryBuilder(type, query))
+      .then((result: JsonApiDocument<unknown[]>) => result.content.data)
+      .catch((error: unknown) => {
+        console.error(`Autocomplete service failed: ${JSON.stringify(error)}`);
+      });
   }
 }
