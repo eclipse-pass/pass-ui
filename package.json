@@ -78,7 +78,7 @@
     "@ember-data-types/serializer": "5.8.1",
     "@ember-data-types/store": "5.8.1",
     "@ember/optional-features": "^2.1.0",
-    "@ember/test-helpers": "^4.0.0",
+    "@ember/test-helpers": "^5.4.1",
     "@ember/test-waiters": "^4.0.0",
     "@embroider/compat": "^4.0.3",
     "@embroider/config-meta-loader": "^1.0.0",
