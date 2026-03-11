@@ -1,6 +1,6 @@
 import { resolve } from 'path';
 import { existsSync, readdirSync } from 'fs';
-import { defineConfig, transformWithEsbuild } from 'vite';
+import { defineConfig } from 'vite';
 import { extensions, classicEmberSupport, ember } from '@embroider/vite';
 import { babel } from '@rollup/plugin-babel';
 
@@ -126,25 +126,5 @@ export default defineConfig({
       babelHelpers: 'runtime',
       extensions,
     }),
-    // Downlevel ES2022+ syntax (class fields) to ES2021 in build output.
-    // TestCafe's hammerhead proxy (esotope-hammerhead 0.6.9) cannot regenerate
-    // PropertyDefinition AST nodes, causing "ExprGen[itemType] is not a function"
-    // errors. This will be removed once pass-acceptance-testing is rewritten
-    // in Playwright.
-    {
-      name: 'downlevel',
-      apply: 'build',
-      async renderChunk(code, chunk) {
-        if (!chunk.fileName.endsWith('.js')) return null;
-        // Skip SurveyJS — it publishes ES2015 (no class fields) and
-        // esbuild transforms break its native date input rendering.
-        if (chunk.fileName.includes('vendor-survey-')) return null;
-        const result = await transformWithEsbuild(code, chunk.fileName, {
-          target: 'es2021',
-          minify: false,
-        });
-        return { code: result.code, map: result.map };
-      },
-    },
   ],
 });
