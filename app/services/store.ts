@@ -1,4 +1,5 @@
 import Store, { CacheHandler } from '@ember-data/store';
+import type { CacheCapabilitiesManager, SchemaService } from '@ember-data/store/types';
 import RequestManager from '@ember-data/request';
 import Fetch from '@ember-data/request/fetch';
 import JSONAPICache from '@ember-data/json-api';
@@ -8,7 +9,11 @@ import { getOwner, setOwner } from '@ember/owner';
 import XSRFHandler from 'pass-ui/handlers/xsrf';
 import AuthHandler from 'pass-ui/handlers/auth';
 import JsonApiNormalizeHandler from 'pass-ui/handlers/json-api-normalize';
-import { saveRecord as buildSaveRequest, deleteRecord as buildDeleteRequest } from 'pass-ui/builders/pass-api';
+import {
+  saveRecord as buildSaveRequest,
+  deleteRecord as buildDeleteRequest,
+  type StoreWithSchema,
+} from 'pass-ui/builders/pass-api';
 
 /**
  * Custom WarpDrive store using the modern (non-legacy) configuration.
@@ -40,28 +45,24 @@ export default class AppStore extends Store {
 
   // -- Model (Ember Only) hooks --
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  createSchemaService(): any {
-    return buildSchema(this);
+  createSchemaService(): SchemaService {
+    return buildSchema(this as unknown as Store);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  createCache(capabilities: any) {
+  createCache(capabilities: CacheCapabilitiesManager) {
     return new JSONAPICache(capabilities);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  instantiateRecord(key: any, createRecordArgs: Record<string, unknown>) {
-    return instantiateRecord.call(this, key, createRecordArgs);
+  instantiateRecord(key: { type: string; id: string | null; lid: string }, createRecordArgs: Record<string, unknown>) {
+    return instantiateRecord.call(this as unknown as Store, key, createRecordArgs);
   }
 
   teardownRecord(record: unknown): void {
     return teardownRecord.call(this, record as Model);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  modelFor(type: string): any {
-    return modelFor.call(this, type) || super.modelFor(type);
+  override modelFor(type: string) {
+    return (modelFor.call(this, type) || super.modelFor(type)) as ReturnType<Store['modelFor']>;
   }
 
   // -- Convenience methods --
@@ -70,19 +71,17 @@ export default class AppStore extends Store {
    * Persist a record to the server (POST for new, PATCH for existing).
    * Wraps the saveRecord builder for easy mocking in tests.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async persistRecord(record: any): Promise<any> {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return this.request(buildSaveRequest(record, this) as any);
+  async persistRecord(record: Model) {
+    return this.request(
+      buildSaveRequest(record, this as unknown as StoreWithSchema) as Parameters<Store['request']>[0],
+    );
   }
 
   /**
    * Delete a record from the server (sends DELETE request).
    * Named differently from Store.deleteRecord() which only unloads from cache.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async destroyRecord(record: any): Promise<any> {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return this.request(buildDeleteRequest(record) as any);
+  async destroyRecord(record: Model) {
+    return this.request(buildDeleteRequest(record) as Parameters<Store['request']>[0]);
   }
 }

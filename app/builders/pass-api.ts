@@ -13,6 +13,8 @@
  */
 import ENV from 'pass-ui/config/environment';
 import { recordIdentifierFor } from '@ember-data/store';
+import type Model from '@ember-data/model';
+import type FileModel from 'pass-ui/models/file';
 
 const NAMESPACE = ENV.passApi.namespace as string;
 const JSON_API_CONTENT_TYPE = 'application/vnd.api+json';
@@ -33,8 +35,8 @@ function baseURLFor(type: string): string {
   return `/${NAMESPACE}/${resourcePathFor(type)}`;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type QueryParams = Record<string, any>;
+type QueryParamValue = string | number | boolean | null | undefined;
+type QueryParams = Record<string, QueryParamValue | Record<string, QueryParamValue>>;
 
 /**
  * Serialize Elide-style query params to a URL search string.
@@ -115,24 +117,21 @@ export function findRecord(type: string, id: string, options: QueryParams = {}) 
 
 // -- Mutation builders --
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-interface StoreWithSchema {
+export interface StoreWithSchema {
   schema: {
     fields(identifier: { type: string }): Map<string, { kind: string; type?: string }>;
   };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function serializeAttribute(record: any, key: string, attributes: Record<string, unknown>): void {
-  const value = record[key];
+function serializeAttribute(record: Model, key: string, attributes: Record<string, unknown>): void {
+  const value = (record as Record<string, unknown>)[key];
   if (value !== undefined) {
     attributes[key] = value instanceof Date ? value.toISOString() : value;
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function serializeBelongsTo(record: any, key: string, relationships: Record<string, unknown>): void {
-  const related = record[key];
+function serializeBelongsTo(record: Model, key: string, relationships: Record<string, unknown>): void {
+  const related = (record as Record<string, unknown>)[key] as Model | null | undefined;
   if (related !== undefined) {
     if (related === null) {
       relationships[key] = { data: null };
@@ -145,18 +144,13 @@ function serializeBelongsTo(record: any, key: string, relationships: Record<stri
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function serializeHasMany(record: any, key: string, relationships: Record<string, unknown>): void {
-  const related = record[key];
+function serializeHasMany(record: Model, key: string, relationships: Record<string, unknown>): void {
+  const related = (record as Record<string, unknown>)[key] as Iterable<Model> | null | undefined;
   if (related !== undefined && related !== null) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const relData = (Array.isArray(related) ? related : Array.from(related as Iterable<any>)).map(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (r: any) => {
-        const relIdentifier = recordIdentifierFor(r);
-        return { type: resourcePathFor(relIdentifier.type), id: relIdentifier.id };
-      },
-    );
+    const relData = Array.from(related).map((r: Model) => {
+      const relIdentifier = recordIdentifierFor(r);
+      return { type: resourcePathFor(relIdentifier.type), id: relIdentifier.id };
+    });
     relationships[key] = { data: relData };
   }
 }
@@ -166,13 +160,11 @@ function serializeHasMany(record: any, key: string, relationships: Record<string
  * Uses store.schema.fields() to enumerate attributes and relationships,
  * reads current values directly from the record.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function serializeRecord(record: any, store: StoreWithSchema): { data: Record<string, unknown> } {
+function serializeRecord(record: Model, store: StoreWithSchema): { data: Record<string, unknown> } {
   const identifier = recordIdentifierFor(record);
   const apiType = resourcePathFor(identifier.type);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const data: Record<string, any> = { type: apiType };
+  const data: Record<string, unknown> = { type: apiType };
 
   // Include id for updates; omit for creates (new records have no id yet)
   if (identifier.id) {
@@ -212,8 +204,7 @@ function serializeRecord(record: any, store: StoreWithSchema): { data: Record<st
  * Usage:
  *   await store.request(saveRecord(record, store));
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function saveRecord(record: any, store: StoreWithSchema) {
+export function saveRecord(record: Model, store: StoreWithSchema) {
   const identifier = recordIdentifierFor(record);
   const isNew = !identifier.id;
   const url = isNew
@@ -243,8 +234,7 @@ export function saveRecord(record: any, store: StoreWithSchema) {
  * Usage:
  *   await store.request(deleteRecord(record));
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function deleteRecord(record: any) {
+export function deleteRecord(record: Model) {
   const identifier = recordIdentifierFor(record);
   const url = `${baseURLFor(identifier.type)}/${encodeURIComponent(identifier.id!)}`;
 
@@ -266,8 +256,7 @@ export function deleteRecord(record: any) {
  * then delete the metadata record from the JSON:API backend.
  * Replicates the two-step deletion from the legacy FileAdapter.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function deleteFileWithBytes(file: any, store: { destroyRecord: (r: any) => Promise<any> }) {
+export async function deleteFileWithBytes(file: FileModel, store: { destroyRecord: (r: Model) => Promise<unknown> }) {
   let uri: string = file.uri;
   if (!uri.startsWith('/')) {
     uri = `/${uri}`;

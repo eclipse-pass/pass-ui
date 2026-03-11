@@ -2,6 +2,19 @@ import type { Handler, NextFn, RequestContext } from '@ember-data/request';
 import { singularize } from '@warp-drive/utilities/string';
 
 /**
+ * A loosely-typed JSON:API node for recursive type normalization.
+ * This intentionally allows indexing by string since we mutate
+ * arbitrary JSON:API response shapes from the API.
+ */
+interface JsonApiNode {
+  type?: string;
+  data?: JsonApiNode | JsonApiNode[];
+  included?: JsonApiNode[];
+  relationships?: Record<string, JsonApiNode>;
+  [key: string]: unknown;
+}
+
+/**
  * Dasherize a camelCase or PascalCase string.
  * e.g., 'submissionEvent' → 'submission-event'
  */
@@ -15,8 +28,7 @@ function dasherize(str: string): string {
  * dasherized model names (e.g., "submission-event") that match
  * Ember Data's schema registry.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function normalizeTypes(obj: any): void {
+function normalizeTypes(obj: JsonApiNode | JsonApiNode[]): void {
   if (!obj || typeof obj !== 'object') return;
 
   if (Array.isArray(obj)) {
@@ -34,7 +46,7 @@ function normalizeTypes(obj: any): void {
 
   // Recurse into data (single resource or array)
   if (obj.data !== undefined) {
-    normalizeTypes(obj.data);
+    normalizeTypes(obj.data as JsonApiNode | JsonApiNode[]);
   }
 
   // Recurse into included
@@ -62,12 +74,11 @@ const JsonApiNormalizeHandler: Handler = {
   async request<T>(context: RequestContext, next: NextFn<T>) {
     // next() returns a StructuredDocument: { content: <JSON:API doc>, response, request }
     // We need to normalize types on the inner .content, not the wrapper.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const doc = (await next(context.request)) as any;
-    const content = doc?.content;
+    const doc = await next(context.request);
+    const content = (doc as { content?: unknown }).content;
 
     if (content && typeof content === 'object') {
-      normalizeTypes(content);
+      normalizeTypes(content as JsonApiNode);
     }
 
     return doc;

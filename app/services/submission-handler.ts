@@ -26,9 +26,8 @@ export default class SubmissionHandlerService extends Service {
    * @param {EmberArray} grant list of Grants
    * @returns EmberArray with repositories
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getRepositoriesFromGrants(grants: GrantModel[]): RepositoryModel[] {
-    const result: any[] = []; // eslint-disable-line @typescript-eslint/no-explicit-any
+    const result: RepositoryModel[][] = [];
 
     grants.forEach((grant) => {
       const directRepos = grant.directFunder?.policy?.repositories;
@@ -42,7 +41,14 @@ export default class SubmissionHandlerService extends Service {
       }
     });
 
-    return [...new Map(result.filter(Boolean).map((x: any) => [x.id, x])).values()]; // eslint-disable-line @typescript-eslint/no-explicit-any
+    return [
+      ...new Map(
+        result
+          .flat()
+          .filter(Boolean)
+          .map((x: RepositoryModel) => [x.id, x]),
+      ).values(),
+    ];
   }
 
   /**
@@ -138,12 +144,9 @@ export default class SubmissionHandlerService extends Service {
     submission.publication = publication;
 
     await this.store.persistRecord(submission);
-    await this._finishSubmission
-      .perform(submission, comment)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .catch((e: any) => {
-        throw e;
-      });
+    await this._finishSubmission.perform(submission, comment).catch((e: unknown) => {
+      throw e;
+    });
   });
 
   /**
