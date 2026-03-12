@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 
@@ -12,8 +11,8 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
   });
 
   test('ensure email format validation works', function (assert) {
-    const controller: any = this.owner.lookup('controller:submissions/new/basics');
-    const submission: any = {
+    const controller = this.owner.lookup('controller:submissions/new/basics');
+    const submission = {
       submitterEmailDisplay: 'badtestemail',
       repositories: [],
       grants: [],
@@ -47,8 +46,8 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
   });
 
   test('check submitter validation', function (assert) {
-    const controller: any = this.owner.lookup('controller:submissions/new/basics');
-    const submission: any = {
+    const controller = this.owner.lookup('controller:submissions/new/basics');
+    const submission = {
       repositories: [],
       grants: [],
     };
@@ -73,15 +72,15 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
   });
 
   test('check title and journal validation', function (assert) {
-    const controller: any = this.owner.lookup('controller:submissions/new/basics');
-    const submission: any = {};
-    const journalData: any = {};
-    const journal: any = {
+    const controller = this.owner.lookup('controller:submissions/new/basics');
+    const submission = {};
+    const journalData: Record<string, string | null> = {};
+    const journal = {
       get(key: string) {
         return journalData[key];
       },
     };
-    const publication: any = {
+    const publication = {
       journal,
     };
     const model = {
@@ -104,9 +103,9 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
   });
 
   test('check validateAndLoadTab rejects empty publication title but not journal title', function (assert) {
-    const controller: any = this.owner.lookup('controller:submissions/new/basics');
-    const submission: any = {};
-    const publication: any = {
+    const controller = this.owner.lookup('controller:submissions/new/basics');
+    const submission = {};
+    const publication = {
       journal: {},
     };
     const model = {
@@ -129,9 +128,9 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
 
   test('check validateAndLoadTab rejects incomplete submitter', function (assert) {
     assert.expect(9);
-    const controller: any = this.owner.lookup('controller:submissions/new/basics');
+    const controller = this.owner.lookup('controller:submissions/new/basics');
     let loadTabAccessed = false;
-    const submission: any = {
+    const submission = {
       isProxySubmission: true,
     };
     const publication = {
@@ -145,7 +144,7 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
       publication,
     };
     controller.model = model;
-    const routerService: any = this.owner.lookup('service:router');
+    const routerService = this.owner.lookup('service:router');
     routerService.transitionTo = () => {
       assert.ok(true);
       loadTabAccessed = true;
@@ -171,8 +170,8 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
 
     let subSaved = false;
 
-    const controller: any = this.owner.lookup('controller:submissions/new/basics');
-    const submission: any = {
+    const controller = this.owner.lookup('controller:submissions/new/basics');
+    const submission = {
       isProxySubmission: true,
       submitterName: 'Test Submitter',
       submitterEmail: 'mailto:test@email.com',
@@ -191,8 +190,8 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
 
     controller.model = model;
 
-    const store: any = this.owner.lookup('service:store');
-    store.persistRecord = (record: any) => {
+    const store = this.owner.lookup('service:store');
+    store.persistRecord = (record: unknown) => {
       assert.ok(true);
       if (record === submission) {
         subSaved = true;
@@ -200,7 +199,7 @@ module('Unit | Controller | submissions/new/basics', (hooks) => {
       return Promise.resolve({ content: {} });
     };
 
-    const routerService: any = this.owner.lookup('service:router');
+    const routerService = this.owner.lookup('service:router');
     routerService.transitionTo = () => {
       // no errors and loadTab accessed
       assert.false(controller.submitterIsInvalid);

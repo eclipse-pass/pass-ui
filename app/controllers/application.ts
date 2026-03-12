@@ -2,15 +2,16 @@ import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import { service } from '@ember/service';
 import config from '../config/environment';
+import type Owner from '@ember/owner';
+import type RouterService from '@ember/routing/router-service';
 import type CurrentUserService from 'pass-ui/services/current-user';
 import type AppStaticConfigService from 'pass-ui/services/app-static-config';
+import type { FlashMessageService } from 'pass-ui/types/ember-cli-flash';
 
 export default class ApplicationController extends Controller {
   @service declare currentUser: CurrentUserService;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare router: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare flashMessages: any;
+  @service declare router: RouterService;
+  @service declare flashMessages: FlashMessageService;
   @service('app-static-config') declare staticConfig: AppStaticConfigService;
 
   rootURL: string | undefined = config.rootURL;
@@ -25,9 +26,8 @@ export default class ApplicationController extends Controller {
   declare assetsUri: string;
   declare showNoticeBanner: boolean;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  constructor(...args: any[]) {
-    super(...args);
+  constructor(owner: Owner) {
+    super(owner);
 
     this.showNoticeBanner = true;
   }

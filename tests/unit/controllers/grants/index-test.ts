@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import Service from '@ember/service';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
@@ -13,6 +12,7 @@ class MockConfigService extends Service {
 module('Unit | Controller | grants/index', (hooks) => {
   setupTest(hooks);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- owner.lookup() returns untyped controller instance
   let controller: any;
 
   hooks.beforeEach(function () {
@@ -40,8 +40,8 @@ module('Unit | Controller | grants/index', (hooks) => {
     assert.expect(8);
 
     controller.store = {
-      request: (req: any) => {
-        const url = req.url as string;
+      request: (req: { url: string }) => {
+        const url = req.url;
         if (url.includes('/data/grant')) {
           assert.true(url.includes('page'), 'Query should have pagination info');
           return Promise.resolve({ content: { data: [{ id: 10 }, { id: 11 }] } });

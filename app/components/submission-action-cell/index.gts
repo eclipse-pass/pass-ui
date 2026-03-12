@@ -13,6 +13,7 @@ import type CurrentUserService from 'pass-ui/services/current-user';
 import type SubmissionHandlerService from 'pass-ui/services/submission-handler';
 import type SubmissionModel from 'pass-ui/models/submission';
 import type UserModel from 'pass-ui/models/user';
+import type { FlashMessageService } from 'pass-ui/types/ember-cli-flash';
 
 const eq = (a: unknown, b: unknown) => a === b;
 const and = (...args: unknown[]) => args.every(Boolean);
@@ -26,8 +27,7 @@ interface SubmissionActionCellSignature {
 export default class SubmissionActionCell extends Component<SubmissionActionCellSignature> {
   @service declare currentUser: CurrentUserService;
   @service declare submissionHandler: SubmissionHandlerService;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare flashMessages: any;
+  @service declare flashMessages: FlashMessageService;
 
   get isPreparer(): boolean {
     const userId = this.currentUser.user?.id;
@@ -53,8 +53,7 @@ export default class SubmissionActionCell extends Component<SubmissionActionCell
         confirmButtonColor: '#DC3545',
         showCancelButton: true,
       })
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .then((result: any) => {
+      .then((result) => {
         if (result.value) {
           this.do_delete(submission);
         }

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 
@@ -13,11 +12,11 @@ module('Unit | Route | submissions/new', (hooks) => {
     this.set('journal', { journalName: 'International Moonthly' });
     this.set('publication', {
       title: 'Test Publication',
-      journal: (this as any)['journal'],
+      journal: this['journal'],
     });
     this.set('submission', {
       submissionStatus: 'draft',
-      publication: (this as any)['publication'],
+      publication: this['publication'],
       metadata: '{ "moo": "This is a moo" }',
     });
   });
@@ -25,10 +24,10 @@ module('Unit | Route | submissions/new', (hooks) => {
   test('fresh submission returned by model() when no ID is provided', async function (assert) {
     assert.expect(4);
 
-    const route: any = this.owner.lookup('route:submissions/new');
+    const route = this.owner.lookup('route:submissions/new');
 
     route.store = {
-      createRecord(type: any, data: any) {
+      createRecord(type: string, data: Record<string, unknown>) {
         switch (type) {
           case 'publication':
             assert.ok(true);
@@ -57,14 +56,14 @@ module('Unit | Route | submissions/new', (hooks) => {
   test("The mock submission returned from model() when it's ID is included", async function (assert) {
     assert.expect(5);
 
-    const mockSub = (this as any)['submission'];
+    const mockSub = this['submission'];
 
-    const route: any = this.owner.lookup('route:submissions/new');
+    const route = this.owner.lookup('route:submissions/new');
 
     let findRecordCalled = false;
 
     route.store = {
-      createRecord(type: any, data: any) {
+      createRecord(type: string, data: Record<string, unknown>) {
         switch (type) {
           case 'publication':
             assert.ok(false, 'should not create a publication');
@@ -74,7 +73,7 @@ module('Unit | Route | submissions/new', (hooks) => {
             return Promise.resolve({ ...data });
         }
       },
-      request: (req: any) => {
+      request: (req: { op: string }) => {
         if (req.op === 'findRecord') {
           findRecordCalled = true;
           return Promise.resolve({ content: { data: mockSub } });
@@ -85,7 +84,7 @@ module('Unit | Route | submissions/new', (hooks) => {
     };
 
     route.workflow = {
-      setFiles(files: any) {
+      setFiles(files: unknown) {
         assert.ok(files);
       },
     };

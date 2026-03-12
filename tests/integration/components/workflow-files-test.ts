@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { selectFiles } from 'ember-file-upload/test-support';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
@@ -8,6 +7,7 @@ import { setupMirage } from 'pass-ui/tests/test-support/mirage';
 import { Response } from 'miragejs';
 // @ts-expect-error no declaration file for sinon
 import sinon from 'sinon';
+import type AppStore from 'pass-ui/services/store';
 
 module('Integration | Component | workflow files', (hooks) => {
   setupRenderingTest(hooks);
@@ -55,8 +55,8 @@ module('Integration | Component | workflow files', (hooks) => {
    */
 
   test("Files removed from UI should call the file's `destroyRecord`", async function (assert) {
-    const store: any = this.owner.lookup('service:store');
-    const submission = store.createRecord('submission');
+    const store = this.owner.lookup('service:store') as AppStore;
+    const submission = store.createRecord('submission', {});
 
     const file = store.createRecord('file', {
       name: 'File-for-test',
@@ -162,8 +162,8 @@ module('Integration | Component | workflow files', (hooks) => {
   });
 
   test('Destroy record error displays error message', async function (assert) {
-    const store: any = this.owner.lookup('service:store');
-    const submission = store.createRecord('submission');
+    const store = this.owner.lookup('service:store') as AppStore;
+    const submission = store.createRecord('submission', {});
 
     const file = store.createRecord('file', {
       name: 'File-for-test',

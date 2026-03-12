@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { module, skip, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 
@@ -21,8 +20,8 @@ module('Unit | Route | submissions/index', (hooks) => {
 
   test('No params on route still includes pagination in query', async function (assert) {
     this['route'].store = {
-      request: (req: any) => {
-        const url = decodeURIComponent(req.url as string);
+      request: (req: { url: string }) => {
+        const url = decodeURIComponent(req.url);
         assert.true(url.includes('/data/submission'), 'Query is requesting "submission" model');
         assert.true(url.includes('filter[submission]'), 'Query has a filter[submission] part');
         assert.true(url.includes('submitter.id==0'), 'Filter includes non-admin user selection');
@@ -38,8 +37,8 @@ module('Unit | Route | submissions/index', (hooks) => {
 
   test('Make sure input params are passed to store query', async function (assert) {
     this['route'].store = {
-      request: (req: any) => {
-        const url = decodeURIComponent(req.url as string);
+      request: (req: { url: string }) => {
+        const url = decodeURIComponent(req.url);
         assert.true(url.includes('/data/submission'), 'Query is requesting "submission" model');
         assert.true(url.includes('page[number]=2'), 'Page number matches input');
         assert.true(url.includes('page[size]=5'), 'Page size matches input');
@@ -57,8 +56,8 @@ module('Unit | Route | submissions/index', (hooks) => {
 
   test("Single word input filter isn't surrounded by double quotes", async function (assert) {
     this['route'].store = {
-      request: (req: any) => {
-        const url = decodeURIComponent(req.url as string);
+      request: (req: { url: string }) => {
+        const url = decodeURIComponent(req.url);
         assert.true(url.includes('=ini=*Moo*'));
         return Promise.resolve({ content: { data: {} } });
       },
@@ -72,8 +71,8 @@ module('Unit | Route | submissions/index', (hooks) => {
       user: { id: 0, isAdmin: true, isSubmitter: true },
     };
     this['route'].store = {
-      request: (req: any) => {
-        const url = decodeURIComponent(req.url as string);
+      request: (req: { url: string }) => {
+        const url = decodeURIComponent(req.url);
         assert.false(url.includes('submitter.id==0'), 'Filter does not include non-admin user selection');
         return Promise.resolve({ content: { data: {} } });
       },

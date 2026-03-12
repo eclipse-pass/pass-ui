@@ -9,10 +9,8 @@ module('Integration | Component | workflow basics user search', (hooks) => {
   test('it renders', async function (assert) {
     this.set('userSearchTerm', '');
     // pass in actions that do nothing
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.set('pickSubmitter', (actual: any) => {});
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.set('toggleUserSearchModal', (actual: any) => {});
+    this.set('pickSubmitter', () => {});
+    this.set('toggleUserSearchModal', () => {});
 
     await render(hbs`<WorkflowBasicsUserSearch
   @toggleUserSearchModal={{this.toggleUserSearchModal}}

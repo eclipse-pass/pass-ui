@@ -8,6 +8,8 @@ import { modifier } from 'ember-modifier';
 import { LinkTo } from '@ember/routing';
 import type CurrentUserService from 'pass-ui/services/current-user';
 import type AppStaticConfigService from 'pass-ui/services/app-static-config';
+import type SessionService from 'ember-simple-auth/services/session';
+import type Owner from '@ember/owner';
 
 interface NavBarSignature {
   Args: {
@@ -18,16 +20,14 @@ interface NavBarSignature {
 export default class NavBar extends Component<NavBarSignature> {
   @service declare currentUser: CurrentUserService;
   @service declare appStaticConfig: AppStaticConfigService;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare session: any;
+  @service declare session: SessionService;
 
   @tracked aboutUrl: string | null = null;
   @tracked contactUrl: string | null = null;
   @tracked faqUrl: string | null = null;
   @tracked isUserMenuOpen = false;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  constructor(owner: any, args: NavBarSignature['Args']) {
+  constructor(owner: Owner, args: NavBarSignature['Args']) {
     super(owner, args);
     this._setupAppStaticConfig.perform();
   }

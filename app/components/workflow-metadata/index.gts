@@ -8,6 +8,7 @@ import { modifier } from 'ember-modifier';
 import { schedule } from '@ember/runloop';
 import { LinkTo } from '@ember/routing';
 import MetadataForm from 'pass-ui/components/metadata-form';
+import type RouterService from '@ember/routing/router-service';
 import type Workflow from 'pass-ui/services/workflow';
 import type CurrentUserService from 'pass-ui/services/current-user';
 import type MetadataSchemaService from 'pass-ui/services/metadata-schema';
@@ -16,6 +17,7 @@ import type DoiService from 'pass-ui/services/doi';
 import type SubmissionModel from 'pass-ui/models/submission';
 import type PublicationModel from 'pass-ui/models/publication';
 import type RepositoryModel from 'pass-ui/models/repository';
+import type Owner from '@ember/owner';
 
 interface SurveyInstance {
   tryComplete(): void;
@@ -38,8 +40,7 @@ interface WorkflowMetadataSignature {
 
 export default class WorkflowMetadata extends Component<WorkflowMetadataSignature> {
   @service declare currentUser: CurrentUserService;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare router: any;
+  @service declare router: RouterService;
   @service declare workflow: Workflow;
   @service declare metadataSchema: MetadataSchemaService;
   @service declare doi: DoiService;
@@ -49,8 +50,7 @@ export default class WorkflowMetadata extends Component<WorkflowMetadataSignatur
   @tracked missingRequiredJournal = false;
   @tracked surveyInstance: SurveyInstance | null = null;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  constructor(owner: any, args: WorkflowMetadataSignature['Args']) {
+  constructor(owner: Owner, args: WorkflowMetadataSignature['Args']) {
     super(owner, args);
 
     try {

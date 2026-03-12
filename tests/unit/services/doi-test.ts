@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { setupMirage } from 'pass-ui/tests/test-support/mirage';
@@ -60,7 +59,7 @@ module('Unit | Service | doi', (hooks) => {
   // Test DOI object here based on CrossRef data
   test('check doi data processing', function (assert) {
     const service = this.owner.lookup('service:doi');
-    const doiInfo: any = (this as any).mockDoiInfo;
+    const doiInfo = this.mockDoiInfo;
     const journal = {
       issns: ['odd', 'Print:moo', 'Online:chitter', 'malformed:', ':oddagain', ':'],
     };
@@ -116,7 +115,7 @@ module('Unit | Service | doi', (hooks) => {
   });
 
   test('make sure we only get valid fields back', function (assert) {
-    const doiInfo: any = (this as any).mockDoiInfo;
+    const doiInfo = this.mockDoiInfo;
     doiInfo.invalid = 'Bad moo';
     const journal = {
       issns: ['Print:moo'],
@@ -127,7 +126,7 @@ module('Unit | Service | doi', (hooks) => {
   });
 
   test('should stringify array values', function (assert) {
-    const doiInfo: any = (this as any).mockDoiInfo2;
+    const doiInfo = this.mockDoiInfo2;
 
     const result = this.owner.lookup('service:doi')._processRawDoi(doiInfo);
     assert.ok(result);
@@ -139,10 +138,10 @@ module('Unit | Service | doi', (hooks) => {
 
   test('resolve DOI', function (assert) {
     const service = this.owner.lookup('service:doi');
-    const doiInfo: any = (this as any).mockDoiInfo2;
+    const doiInfo = this.mockDoiInfo2;
     const journalId = 'blah';
 
-    this.server.get('/journal', (schema: any, request: any) => {
+    this.server.get('/journal', () => {
       const result = {
         crossref: { message: doiInfo },
         'journal-id': journalId,
@@ -152,7 +151,7 @@ module('Unit | Service | doi', (hooks) => {
     });
 
     service.store = {
-      request(req: any) {
+      request(req: { url: string }) {
         assert.ok(true);
         assert.true(req.url.includes('/data/journal/'), 'URL includes journal path');
 
@@ -160,7 +159,7 @@ module('Unit | Service | doi', (hooks) => {
         return Promise.resolve({ content: { data: journal } });
       },
 
-      createRecord(type: any, values: any) {
+      createRecord(type: string, values: Record<string, unknown>) {
         assert.strictEqual(type, 'publication');
 
         return { ...values };
@@ -169,20 +168,22 @@ module('Unit | Service | doi', (hooks) => {
 
     assert.expect(7);
 
-    return service.resolveDOI.perform(doiInfo.DOI).then((result: any) => {
-      assert.ok(result.publication);
-      assert.ok(result.doiInfo);
+    return service.resolveDOI
+      .perform(doiInfo.DOI)
+      .then((result: { publication: { doi: string }; doiInfo: { DOI: string } }) => {
+        assert.ok(result.publication);
+        assert.ok(result.doiInfo);
 
-      assert.strictEqual(doiInfo.DOI, result.publication.doi);
-      assert.strictEqual(doiInfo.DOI, result.doiInfo.DOI);
-    });
+        assert.strictEqual(doiInfo.DOI, result.publication.doi);
+        assert.strictEqual(doiInfo.DOI, result.doiInfo.DOI);
+      });
   });
 
   test("Make sure we don't choke on journal with no ISSNs", function (assert) {
     const journal = {
       nlmta: 'NLmooTA',
     };
-    const doiInfo: any = (this as any).mockDoiInfo;
+    const doiInfo = this.mockDoiInfo;
     const service = this.owner.lookup('service:doi');
 
     const result = service.doiToMetadata(doiInfo, journal);

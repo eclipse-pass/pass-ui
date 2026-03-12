@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, ember/no-classic-classes, ember/no-settled-after-test-helper */
+/* eslint-disable ember/no-classic-classes, ember/no-settled-after-test-helper */
 import Service from '@ember/service';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
@@ -13,7 +13,7 @@ module('Integration | Component | submissions repoid cell', (hooks) => {
 
   hooks.beforeEach(function () {
     const store = Service.extend({
-      request: (req: any) =>
+      request: (_req: unknown) =>
         Promise.resolve({
           content: {
             data: [

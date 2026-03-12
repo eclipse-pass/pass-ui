@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, ember/no-classic-classes, ember/no-settled-after-test-helper */
+/* eslint-disable ember/no-classic-classes, ember/no-settled-after-test-helper */
 import { A } from '@ember/array';
 import Service from '@ember/service';
 import { setupRenderingTest } from 'ember-qunit';
@@ -26,9 +26,9 @@ module('Integration | Component | workflow basics', (hooks) => {
     };
     const preLoadedGrant = {};
 
-    const flaggedFields: any[] = [];
+    const flaggedFields: unknown[] = [];
 
-    const doiInfo: any[] = [];
+    const doiInfo: unknown[] = [];
     this.set('submission', submission);
     this.set('publication', publication);
     this.set('preLoadedGrant', preLoadedGrant);
@@ -36,20 +36,20 @@ module('Integration | Component | workflow basics', (hooks) => {
     this.set('flaggedFields', '[]');
     // pass in actions that do nothing
 
-    this.set('validateTitle', (actual: any) => {});
+    this.set('validateTitle', () => {});
 
-    this.set('validateJournal', (actual: any) => {});
+    this.set('validateJournal', () => {});
 
-    this.set('validateSubmitterEmail', (actual: any) => {});
+    this.set('validateSubmitterEmail', () => {});
 
-    this.set('loadNext', (actual: any) => {});
+    this.set('loadNext', () => {});
 
-    this.set('updatePublication', (publication: any) => this.set('publication', publication));
+    this.set('updatePublication', (publication: unknown) => this.set('publication', publication));
 
-    this.set('updateDoiInfo', (doiInfo: any) => this.set('doiInfo', doiInfo));
+    this.set('updateDoiInfo', (doiInfo: unknown) => this.set('doiInfo', doiInfo));
 
     class MockDoiService extends Service {
-      resolveDOI = task(async (doi: any) => {
+      resolveDOI = task(async (_doi: string) => {
         return await Promise.resolve({
           doiInfo: {
             publisher: 'Royal Society of Chemistry (RSC)',
@@ -90,7 +90,7 @@ module('Integration | Component | workflow basics', (hooks) => {
         });
       });
 
-      formatDOI(doi: any) {
+      formatDOI(_doi: string) {
         return 'moo';
       }
       isValidDOI() {
@@ -100,7 +100,7 @@ module('Integration | Component | workflow basics', (hooks) => {
         return 'moo-title';
       }
 
-      doiToMetadata(doiInfo: any, journal: any, validFields: any) {
+      doiToMetadata(doiInfo: unknown, _journal: unknown, _validFields: unknown) {
         console.log('grr');
         return doiInfo;
       }
@@ -108,7 +108,7 @@ module('Integration | Component | workflow basics', (hooks) => {
     const mockDoiService = MockDoiService;
 
     const mockStore = Service.extend({
-      query(type: any, query: any) {
+      query(_type: string, _query: unknown) {
         return Promise.resolve(A());
       },
       createRecord() {
@@ -183,9 +183,9 @@ module('Integration | Component | workflow basics', (hooks) => {
    */
 
   test('Info is filled in when a submission is provided with a publication and DOI', async function (assert) {
-    const publication: any = this.publication;
+    const publication = this.publication as { doi: string; title?: string; journal?: { journalName: string } };
 
-    const submission: any = this.submission;
+    const submission = this.submission as { publication?: unknown };
 
     publication.title = 'Moo title';
 
@@ -274,7 +274,7 @@ module('Integration | Component | workflow basics', (hooks) => {
 
     assert.ok(this.element);
 
-    const publication: any = this.publication;
+    const publication = this.publication as { title: string; journal: { journalName: string } };
     assert.ok(publication, 'No publication found');
     assert.strictEqual(publication.title, 'Moo title', 'Unexpected publication title found');
     assert.strictEqual(publication.journal.journalName, 'Moo Journal', 'Unexpected journal title found');
@@ -304,7 +304,7 @@ module('Integration | Component | workflow basics', (hooks) => {
    */
 
   test('Submission metadata and other UI fields should be reset if a DOI is removed', async function (assert) {
-    const publication: any = {
+    const publication: { doi: string; title: string; journal: { journalName: string } } = {
       doi: 'moo',
       title: 'Moo title',
       journal: {
@@ -313,7 +313,7 @@ module('Integration | Component | workflow basics', (hooks) => {
     };
     this.set('publication', publication);
 
-    const submission: any = {
+    const submission: { publication: typeof publication; metadata: string } = {
       publication,
       metadata: JSON.stringify({
         title: 'this is a moo, please ignore',
@@ -332,15 +332,15 @@ module('Integration | Component | workflow basics', (hooks) => {
         });
       });
 
-      isValidDOI(doi: any) {
+      isValidDOI(doi: string) {
         return !!doi;
       }
 
-      formatDOI(doi: any) {
+      formatDOI(doi: string) {
         return doi;
       }
 
-      doiToMetadata(doiInfo: any, journal: any, validFields: any) {
+      doiToMetadata(doiInfo: unknown, _journal: unknown, _validFields: unknown) {
         return doiInfo;
       }
     }
@@ -375,7 +375,7 @@ module('Integration | Component | workflow basics', (hooks) => {
     const inputs = this.element.querySelectorAll('input');
     assert.strictEqual(inputs.length, 1, 'There should be one text input');
 
-    inputs.forEach((input: any) => assert.notOk(input.hasAttribute('readonly')));
+    inputs.forEach((input) => assert.notOk(input.hasAttribute('readonly')));
 
     const titleIn = this.element.querySelector('textarea');
     assert.ok(titleIn);

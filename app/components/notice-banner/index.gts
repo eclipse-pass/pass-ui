@@ -1,5 +1,6 @@
 import Component from '@glimmer/component';
 import { service } from '@ember/service';
+import type Owner from '@ember/owner';
 import { tracked } from '@glimmer/tracking';
 import { task } from 'ember-concurrency';
 import type AppStaticConfigService from 'pass-ui/services/app-static-config';
@@ -15,8 +16,7 @@ export default class NoticeBanner extends Component<NoticeBannerSignature> {
   @tracked contactUrl: string | null = null;
   @tracked instructionsUrl: string | null = null;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  constructor(owner: any, args: NoticeBannerSignature['Args']) {
+  constructor(owner: Owner, args: NoticeBannerSignature['Args']) {
     super(owner, args);
     this._setupAppStaticConfig.perform();
   }

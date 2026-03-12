@@ -38,8 +38,7 @@ module('Integration | Component | found-manuscripts', (hooks) => {
   test('An OA MS is displayed', async function (assert) {
     // Mock the download service
     const mockMsService = Service.extend({
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      lookup(doi: any) {
+      lookup(doi: unknown) {
         assert.ok(doi, 'DOI needs to be present');
         return Promise.resolve([
           {
@@ -78,8 +77,7 @@ module('Integration | Component | found-manuscripts', (hooks) => {
     this.owner.register(
       'service:oa-manuscript-service',
       Service.extend({
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        lookup(doi: any) {
+        lookup(doi: unknown) {
           assert.ok(doi, 'DOI still needs to be present');
           return Promise.resolve([]);
         },

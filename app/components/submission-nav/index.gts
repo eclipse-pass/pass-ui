@@ -8,6 +8,7 @@ import ENV from 'pass-ui/config/environment';
 import CovidSelectionBanner from 'pass-ui/components/covid-selection-banner';
 import type Workflow from 'pass-ui/services/workflow';
 import type SubmissionModel from 'pass-ui/models/submission';
+import type Owner from '@ember/owner';
 
 const eq = (a: unknown, b: unknown) => a === b;
 const gt = (a: unknown, b: unknown) => Number(a) > Number(b);
@@ -27,8 +28,7 @@ export default class SubmissionNav extends Component<SubmissionNavSignature> {
   @tracked maxStep!: number;
   @tracked covidSelectionBanner = false;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  constructor(owner: any, args: SubmissionNavSignature['Args']) {
+  constructor(owner: Owner, args: SubmissionNavSignature['Args']) {
     super(owner, args);
     this.step = this.workflow.getCurrentStep();
     this.maxStep = this.workflow.getMaxStep();

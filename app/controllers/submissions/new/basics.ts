@@ -3,6 +3,7 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
 
+import type RouterService from '@ember/routing/router-service';
 import type Workflow from 'pass-ui/services/workflow';
 import type SubmissionsNew from 'pass-ui/controllers/submissions/new';
 import type SubmissionModel from 'pass-ui/models/submission';
@@ -11,6 +12,7 @@ import type SubmissionEventModel from 'pass-ui/models/submission-event';
 import type JournalModel from 'pass-ui/models/journal';
 import type GrantModel from 'pass-ui/models/grant';
 import type AppStore from 'pass-ui/services/store';
+import type { FlashMessageService } from 'pass-ui/types/ember-cli-flash';
 
 interface BasicsModel {
   newSubmission: SubmissionModel;
@@ -25,10 +27,8 @@ export default class SubmissionsNewBasics extends Controller {
 
   @service declare workflow: Workflow;
   @service declare store: AppStore;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare flashMessages: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare router: any;
+  @service declare flashMessages: FlashMessageService;
+  @service declare router: RouterService;
 
   @controller('submissions.new') declare parent: SubmissionsNew;
 

@@ -21,6 +21,7 @@
     ],
     "paths": {
       "pass-ui/*": ["./app/*"],
+      "pass-ui/types/*": ["./app/types/*", "./types/*"],
       "pass-ui/config/*": ["./app/config/*"],
       "pass-ui/tests/*": ["./tests/*"],
       "ember-power-select/components/power-select": ["./types/ember-power-select/power-select"]

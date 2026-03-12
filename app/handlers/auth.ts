@@ -1,5 +1,6 @@
 import type { NextFn, RequestContext } from '@ember-data/request';
 import { service } from '@ember/service';
+import type SessionService from 'ember-simple-auth/services/session';
 
 /**
  * Request handler that checks responses for 401/403 status codes
@@ -13,8 +14,7 @@ import { service } from '@ember/service';
  * RequestManager.
  */
 export default class AuthHandler {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare session: any;
+  @service declare session: SessionService;
 
   async request<T>(context: RequestContext, next: NextFn<T>) {
     try {

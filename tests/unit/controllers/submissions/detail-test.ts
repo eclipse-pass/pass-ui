@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 // @ts-expect-error no declaration file for sinon
@@ -22,7 +21,7 @@ module('Unit | Controller | submissions/detail', (hooks) => {
 
     const submission = {};
 
-    const controller: any = this.owner.lookup('controller:submissions/detail');
+    const controller = this.owner.lookup('controller:submissions/detail');
     assert.ok(controller, 'controller not found');
 
     controller.submissionHandler = {
@@ -42,7 +41,7 @@ module('Unit | Controller | submissions/detail', (hooks) => {
     // Mock global SweetAlert. Mocks a user clicking OK on the popup
     const swalStub = Sinon.stub(Swal, 'fire').resolves({ value: true });
 
-    const controller: any = this.owner.lookup('controller:submissions/detail');
+    const controller = this.owner.lookup('controller:submissions/detail');
     const routerService = this.owner.lookup('service:router');
     const transitionFake = Sinon.replace(routerService, 'transitionTo', Sinon.fake());
 

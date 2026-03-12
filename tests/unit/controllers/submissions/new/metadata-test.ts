@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 
@@ -12,7 +11,7 @@ module('Unit | Controller | submissions/new/metadata', (hooks) => {
   });
 
   test('loadPrevious triggers transition', function (assert) {
-    const controller: any = this.owner.lookup('controller:submissions/new/metadata');
+    const controller = this.owner.lookup('controller:submissions/new/metadata');
 
     let subSaved = false;
 
@@ -22,14 +21,14 @@ module('Unit | Controller | submissions/new/metadata', (hooks) => {
 
     controller.model = model;
 
-    const store: any = this.owner.lookup('service:store');
+    const store = this.owner.lookup('service:store');
     store.persistRecord = () => {
       subSaved = true;
       return Promise.resolve({ content: {} });
     };
 
-    const routerService: any = this.owner.lookup('service:router');
-    routerService.transitionTo = function (route: any) {
+    const routerService = this.owner.lookup('service:router');
+    routerService.transitionTo = function (route: string) {
       assert.ok(subSaved, 'submission was not saved');
       assert.strictEqual(route, 'submissions.new.repositories');
     };
@@ -37,7 +36,7 @@ module('Unit | Controller | submissions/new/metadata', (hooks) => {
   });
 
   test('loadNext triggers transition', function (assert) {
-    const controller: any = this.owner.lookup('controller:submissions/new/metadata');
+    const controller = this.owner.lookup('controller:submissions/new/metadata');
 
     let subSaved = false;
     const model = {
@@ -46,14 +45,14 @@ module('Unit | Controller | submissions/new/metadata', (hooks) => {
 
     controller.model = model;
 
-    const store: any = this.owner.lookup('service:store');
+    const store = this.owner.lookup('service:store');
     store.persistRecord = () => {
       subSaved = true;
       return Promise.resolve({ content: {} });
     };
 
-    const routerService: any = this.owner.lookup('service:router');
-    routerService.transitionTo = function (route: any) {
+    const routerService = this.owner.lookup('service:router');
+    routerService.transitionTo = function (route: string) {
       assert.ok(subSaved, 'submission was not saved');
       assert.strictEqual(route, 'submissions.new.files');
     };

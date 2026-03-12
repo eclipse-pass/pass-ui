@@ -3,6 +3,7 @@ import { action } from '@ember/object';
 
 import { tracked } from '@glimmer/tracking';
 import { service } from '@ember/service';
+import type RouterService from '@ember/routing/router-service';
 import type Workflow from 'pass-ui/services/workflow';
 import type SubmissionsNew from 'pass-ui/controllers/submissions/new';
 import type SubmissionModel from 'pass-ui/models/submission';
@@ -18,8 +19,7 @@ interface ReviewModel {
 export default class SubmissionsNewReview extends Controller {
   declare model: ReviewModel;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare router: any;
+  @service declare router: RouterService;
   @service declare workflow: Workflow;
 
   get submission(): SubmissionModel {

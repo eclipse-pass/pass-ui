@@ -4,6 +4,7 @@ import { action } from '@ember/object';
 import { service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
 import swal from 'sweetalert2/dist/sweetalert2.js';
+import type RouterService from '@ember/routing/router-service';
 import type Workflow from 'pass-ui/services/workflow';
 import type SubmissionsNew from 'pass-ui/controllers/submissions/new';
 import type SubmissionModel from 'pass-ui/models/submission';
@@ -32,8 +33,7 @@ export default class SubmissionsNewRepositories extends Controller {
 
   @service declare workflow: Workflow;
   @service declare store: AppStore;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare router: any;
+  @service declare router: RouterService;
 
   get submission(): SubmissionModel {
     return this.model.newSubmission;

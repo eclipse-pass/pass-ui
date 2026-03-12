@@ -5,6 +5,7 @@ import { action } from '@ember/object';
 import { service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
 import swal from 'sweetalert2/dist/sweetalert2.js';
+import type RouterService from '@ember/routing/router-service';
 import type Model from '@ember-data/model';
 import type Workflow from 'pass-ui/services/workflow';
 import type SubmissionsNew from 'pass-ui/controllers/submissions/new';
@@ -13,6 +14,7 @@ import type SubmissionModel from 'pass-ui/models/submission';
 import type PublicationModel from 'pass-ui/models/publication';
 import type SubmissionEventModel from 'pass-ui/models/submission-event';
 import type AppStore from 'pass-ui/services/store';
+import type { FlashMessageService } from 'pass-ui/types/ember-cli-flash';
 
 interface FilesModel {
   newSubmission: SubmissionModel;
@@ -25,10 +27,8 @@ export default class SubmissionsNewFiles extends Controller {
 
   @service declare workflow: Workflow;
   @service declare store: AppStore;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare flashMessages: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare router: any;
+  @service declare flashMessages: FlashMessageService;
+  @service declare router: RouterService;
 
   get submission(): SubmissionModel {
     return this.model.newSubmission;

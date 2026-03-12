@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 
@@ -14,9 +13,9 @@ module('Unit | Route | grants/detail', (hooks) => {
     assert.expect(3);
 
     this['route'].store = {
-      request: (req: any) => {
+      request: (req: { url: string; op: string }) => {
         // Extract resource type from URL path: /data/<type>/...
-        const pathMatch = (req.url as string).match(/\/data\/(\w+)/);
+        const pathMatch = req.url.match(/\/data\/(\w+)/);
         const type = pathMatch ? pathMatch[1] : 'unknown';
         assert.step(`${req.op}:${type}`);
 

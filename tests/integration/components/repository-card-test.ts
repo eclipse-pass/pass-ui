@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
@@ -51,7 +50,7 @@ module('Integration | Component | repository card', (hooks) => {
     const repo = { name: 'Moo-pository', _selected: false };
     this.set('repository', repo);
 
-    this.set('toggleRepository', (repository: any, selected: any, _type: any) => {
+    this.set('toggleRepository', (repository: unknown, selected: boolean, _type: unknown) => {
       assert.strictEqual(repository, repo, 'Repository matches');
       assert.true(selected, 'Status is selected');
 

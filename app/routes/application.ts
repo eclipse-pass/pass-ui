@@ -1,6 +1,7 @@
 import CheckSessionRoute from './check-session-route';
 import { service } from '@ember/service';
 import { action } from '@ember/object';
+import type RouterService from '@ember/routing/router-service';
 import type AppStaticConfigService from 'pass-ui/services/app-static-config';
 
 interface RouteTransition {
@@ -11,8 +12,7 @@ interface RouteTransition {
 
 export default class ApplicationRoute extends CheckSessionRoute {
   @service('app-static-config') declare staticConfig: AppStaticConfigService;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare router: any;
+  @service declare router: RouterService;
 
   // @ts-expect-error legacy queryParams array format
   queryParams = ['userToken'];

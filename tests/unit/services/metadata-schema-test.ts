@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { setupMirage } from 'pass-ui/tests/test-support/mirage';
@@ -30,7 +29,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
     assert.ok(result, 'No result found');
 
     for (const field of readonly) {
-      const element = result.elements.find((e: any) => e.name === field);
+      const element = result.elements.find((e: { name: string; readOnly?: boolean }) => e.name === field);
 
       assert.ok(element, `Field ${field} should be found`);
       assert.ok(element.readOnly, `Field ${field} should be readonly`);
@@ -81,7 +80,7 @@ module('Unit | Service | metadata-schema', (hooks) => {
     };
 
     const result = await service.displayMetadata(submission);
-    const expected: any[] = [];
+    const expected: unknown[] = [];
 
     assert.deepEqual(result, expected);
   });

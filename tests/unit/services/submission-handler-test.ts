@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable ember/no-classic-classes, ember/avoid-leaking-state-in-ember-objects */
 import { A } from '@ember/array';
 import EmberObject from '@ember/object';
@@ -6,6 +5,28 @@ import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 // @ts-expect-error no declaration file for sinon
 import Sinon from 'sinon';
+
+interface MockSubmission {
+  id: string | number;
+  version?: number;
+  submitted?: boolean;
+  submissionStatus?: string;
+  submitter: { id: string };
+  metadata?: string;
+  repositories?: { id: string; integrationType: string }[];
+  publication?: { title: string };
+  source?: string;
+}
+
+interface MockSubmissionEvent {
+  eventType?: string;
+  performerRole?: string;
+  performedBy?: { id: string };
+  comment?: string;
+  submission?: { id: string | number };
+  link?: string;
+  [key: string]: unknown;
+}
 
 module('Unit | Service | submission-handler', (hooks) => {
   setupTest(hooks);
@@ -20,10 +41,10 @@ module('Unit | Service | submission-handler', (hooks) => {
       }),
     );
 
-    let submissionEvent: any = {};
+    let submissionEvent: MockSubmissionEvent = {};
 
     service.store = {
-      createRecord(type: any, values: any) {
+      createRecord(_type: string, values: Record<string, unknown>) {
         submissionEvent = { ...values };
         return submissionEvent;
       },
@@ -36,7 +57,7 @@ module('Unit | Service | submission-handler', (hooks) => {
     const repo1 = { id: 'test:repo1', integrationType: 'full' };
     const repo2 = { id: 'test:repo2', integrationType: 'web-link' };
 
-    const submission: any = {
+    const submission: MockSubmission = {
       id: '0',
       version: 3,
       submitter: {
@@ -60,14 +81,14 @@ module('Unit | Service | submission-handler', (hooks) => {
       assert.strictEqual(submission.version, 3);
 
       // web-link repo should not be removed
-      assert.strictEqual(submission.repositories.length, 2);
+      assert.strictEqual(submission.repositories!.length, 2);
 
       assert.strictEqual(submissionEvent.eventType, 'approval-requested');
       assert.strictEqual(submissionEvent.performerRole, 'preparer');
-      assert.strictEqual(submissionEvent.performedBy.id, 'proxy-user-id');
+      assert.strictEqual(submissionEvent.performedBy!.id, 'proxy-user-id');
       assert.strictEqual(submissionEvent.comment, comment);
-      assert.strictEqual(submissionEvent.submission.id, submission.id);
-      assert.ok(submissionEvent.link.includes(submission.id));
+      assert.strictEqual(submissionEvent.submission!.id, submission.id);
+      assert.ok(submissionEvent.link!.includes(String(submission.id)));
     });
   });
 
@@ -81,10 +102,10 @@ module('Unit | Service | submission-handler', (hooks) => {
       }),
     );
 
-    let submissionEvent: any = {};
+    let submissionEvent: MockSubmissionEvent = {};
 
     service.store = {
-      createRecord(type: any, values: any) {
+      createRecord(_type: string, values: Record<string, unknown>) {
         submissionEvent = { ...values };
         return submissionEvent;
       },
@@ -97,7 +118,7 @@ module('Unit | Service | submission-handler', (hooks) => {
     const repo1 = { id: 'test:repo1', integrationType: 'full' };
     const repo2 = { id: 'test:repo2', integrationType: 'web-link' };
 
-    const submission: any = {
+    const submission: MockSubmission = {
       id: '0',
       submitter: {
         id: 'submitter:test-id',
@@ -119,24 +140,24 @@ module('Unit | Service | submission-handler', (hooks) => {
       assert.strictEqual(submission.submissionStatus, 'submitted');
 
       // web-link repo should NOT be removed
-      assert.strictEqual(submission.repositories.length, 2);
-      assert.strictEqual(submission.repositories[0]!.id, repo1.id);
+      assert.strictEqual(submission.repositories!.length, 2);
+      assert.strictEqual(submission.repositories![0]!.id, repo1.id);
 
       assert.strictEqual(submissionEvent.eventType, 'submitted');
       assert.strictEqual(submissionEvent.performerRole, 'submitter');
       assert.strictEqual(submissionEvent.comment, comment);
-      assert.strictEqual(submissionEvent.submission.id, submission.id);
-      assert.ok(submissionEvent.link.includes(submission.id));
+      assert.strictEqual(submissionEvent.submission!.id, submission.id);
+      assert.ok(submissionEvent.link!.includes(String(submission.id)));
     });
   });
 
   test('approve submission', function (assert) {
     const service = this.owner.lookup('service:submission-handler');
 
-    let submissionEvent: any = {};
+    let submissionEvent: MockSubmissionEvent = {};
 
     service.store = {
-      createRecord(type: any, values: any) {
+      createRecord(_type: string, values: Record<string, unknown>) {
         submissionEvent = { ...values };
         return submissionEvent;
       },
@@ -149,7 +170,7 @@ module('Unit | Service | submission-handler', (hooks) => {
     const repo1 = { id: 'test:repo1', integrationType: 'full' };
     const repo2 = { id: 'test:repo2', integrationType: 'web-link' };
 
-    const submission: any = {
+    const submission: MockSubmission = {
       id: '0',
       submitter: {
         id: 'submitter:test-id',
@@ -167,25 +188,25 @@ module('Unit | Service | submission-handler', (hooks) => {
       assert.strictEqual(submission.submissionStatus, 'submitted');
 
       // web-link repo should NOT be removed and external-submissions added not on metadata
-      assert.strictEqual(submission.repositories.length, 2);
-      assert.strictEqual(submission.repositories[0]!.id, repo1.id);
-      assert.notOk(submission.metadata.includes('external-submissions'));
+      assert.strictEqual(submission.repositories!.length, 2);
+      assert.strictEqual(submission.repositories![0]!.id, repo1.id);
+      assert.notOk(submission.metadata!.includes('external-submissions'));
 
       assert.strictEqual(submissionEvent.eventType, 'submitted');
       assert.strictEqual(submissionEvent.performerRole, 'submitter');
       assert.strictEqual(submissionEvent.comment, comment);
-      assert.strictEqual(submissionEvent.submission.id, submission.id);
-      assert.ok(submissionEvent.link.includes(submission.id));
+      assert.strictEqual(submissionEvent.submission!.id, submission.id);
+      assert.ok(submissionEvent.link!.includes(String(submission.id)));
     });
   });
 
   test('cancel submission', function (assert) {
     const service = this.owner.lookup('service:submission-handler');
 
-    let submissionEvent: any = {};
+    let submissionEvent: MockSubmissionEvent = {};
 
     service.store = {
-      createRecord(type: any, values: any) {
+      createRecord(_type: string, values: Record<string, unknown>) {
         submissionEvent = { ...values };
         return submissionEvent;
       },
@@ -195,7 +216,7 @@ module('Unit | Service | submission-handler', (hooks) => {
       },
     };
 
-    const submission: any = {
+    const submission: MockSubmission = {
       id: '0',
       submitter: {
         id: 'submitter:test-id',
@@ -212,18 +233,18 @@ module('Unit | Service | submission-handler', (hooks) => {
       assert.strictEqual(submissionEvent.eventType, 'cancelled');
       assert.strictEqual(submissionEvent.performerRole, 'submitter');
       assert.strictEqual(submissionEvent.comment, comment);
-      assert.strictEqual(submissionEvent.submission.id, submission.id);
-      assert.ok(submissionEvent.link.includes(submission.id));
+      assert.strictEqual(submissionEvent.submission!.id, submission.id);
+      assert.ok(submissionEvent.link!.includes(String(submission.id)));
     });
   });
 
   test('request changes', function (assert) {
     const service = this.owner.lookup('service:submission-handler');
 
-    let submissionEvent: any = {};
+    let submissionEvent: MockSubmissionEvent = {};
 
     service.store = {
-      createRecord(type: any, values: any) {
+      createRecord(_type: string, values: Record<string, unknown>) {
         submissionEvent = { ...values };
         return submissionEvent;
       },
@@ -233,7 +254,7 @@ module('Unit | Service | submission-handler', (hooks) => {
       },
     };
 
-    const submission: any = {
+    const submission: MockSubmission = {
       id: '0',
       submitter: {
         id: 'submitter:test-id',
@@ -250,8 +271,8 @@ module('Unit | Service | submission-handler', (hooks) => {
       assert.strictEqual(submissionEvent.eventType, 'changes-requested');
       assert.strictEqual(submissionEvent.performerRole, 'submitter');
       assert.strictEqual(submissionEvent.comment, comment);
-      assert.strictEqual(submissionEvent.submission.id, submission.id);
-      assert.ok(submissionEvent.link.includes(submission.id));
+      assert.strictEqual(submissionEvent.submission!.id, submission.id);
+      assert.ok(submissionEvent.link!.includes(String(submission.id)));
     });
   });
 
@@ -265,8 +286,8 @@ module('Unit | Service | submission-handler', (hooks) => {
 
     service
       .deleteSubmission(submission)
-      .then((_: any) => assert.ok(false, 'Deletion should throw an error'))
-      .catch((_e: any) => assert.ok(true));
+      .then(() => assert.ok(false, 'Deletion should throw an error'))
+      .catch(() => assert.ok(true));
   });
 
   test('File deletion failure kills the submission deletion process', async function (assert) {
@@ -281,7 +302,7 @@ module('Unit | Service | submission-handler', (hooks) => {
       },
     };
 
-    const requestHandler = (req: any) => {
+    const requestHandler = (req: { url: string }) => {
       if (req.url.includes('/data/file')) {
         // Get files for the submission
         return Promise.resolve({
@@ -305,7 +326,7 @@ module('Unit | Service | submission-handler', (hooks) => {
       .deleteSubmission(submission)
       // Fail test on positive return
       .then(() => assert.ok(false, 'Delete submission is expected to not succeed'))
-      .catch((_e: any) => assert.ok(true));
+      .catch(() => assert.ok(true));
 
     assert.ok(storeRequestFake.calledOnce, 'Store request should be called only once');
     assert.equal(storeDestroyFake.callCount, 0, 'Store destroyRecord should not be called (fetch fails first)');
@@ -330,7 +351,7 @@ module('Unit | Service | submission-handler', (hooks) => {
       publication,
     };
 
-    const requestHandler = (req: any) => {
+    const requestHandler = (req: { url: string }) => {
       if (req.url.includes('/data/file')) {
         // Get files for the submission
         return Promise.resolve({
@@ -398,7 +419,7 @@ module('Unit | Service | submission-handler', (hooks) => {
       { name: 'file2', submission, uri: '/file/test2' },
     ];
 
-    const requestHandler = (req: any) => {
+    const requestHandler = (req: { url: string }) => {
       if (req.url.includes('/data/file')) {
         // Get files for the submission
         return Promise.resolve({ content: { data: files } });

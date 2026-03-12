@@ -4,6 +4,7 @@ import { action } from '@ember/object';
 import { service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
 import swal from 'sweetalert2/dist/sweetalert2.js';
+import type RouterService from '@ember/routing/router-service';
 import type CurrentUserService from 'pass-ui/services/current-user';
 import type Workflow from 'pass-ui/services/workflow';
 import type SubmissionHandlerService from 'pass-ui/services/submission-handler';
@@ -18,6 +19,7 @@ import type JournalModel from 'pass-ui/models/journal';
 import type SubmissionEventModel from 'pass-ui/models/submission-event';
 import type UserModel from 'pass-ui/models/user';
 import type AppStore from 'pass-ui/services/store';
+import type { FlashMessageService } from 'pass-ui/types/ember-cli-flash';
 
 interface NewSubmissionModel {
   newSubmission: SubmissionModel;
@@ -38,10 +40,8 @@ export default class SubmissionsNew extends Controller {
   @service declare workflow: Workflow;
   @service declare submissionHandler: SubmissionHandlerService;
   @service declare searchHelper: SearchHelperService;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare flashMessages: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare router: any;
+  @service declare flashMessages: FlashMessageService;
+  @service declare router: RouterService;
   @service declare store: AppStore;
 
   @tracked comment: string = ''; // Holds the comment that will be added to submissionEvent in the review step.
@@ -67,9 +67,8 @@ export default class SubmissionsNew extends Controller {
    * validation on the details step) there is not additional metadata validation
    * that occurs prior to submission.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private _addCovidHint(metadata: Record<string, any>): boolean {
-    if ('hints' in metadata) {
+  private _addCovidHint(metadata: Record<string, unknown> & { hints?: { 'collection-tags': string[] } }): boolean {
+    if ('hints' in metadata && metadata.hints) {
       const tags = metadata.hints['collection-tags'];
       if (tags.includes('covid')) return false;
       metadata.hints['collection-tags'].push('covid');
@@ -79,9 +78,8 @@ export default class SubmissionsNew extends Controller {
     return true;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private _removeCovidHint(metadata: Record<string, any>): boolean {
-    if (!('hints' in metadata)) return false;
+  private _removeCovidHint(metadata: Record<string, unknown> & { hints?: { 'collection-tags': string[] } }): boolean {
+    if (!('hints' in metadata) || !metadata.hints) return false;
 
     const tags = metadata.hints['collection-tags'];
     if (tags.length > 1) {
@@ -147,8 +145,7 @@ export default class SubmissionsNew extends Controller {
           this.workflow.files = [];
           this.router.transitionTo('thanks', { queryParams: { submission: sub.id } });
         })
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .catch((error: any) => {
+        .catch((error: Error) => {
           this.uploading = false;
 
           console.error(error.stack);

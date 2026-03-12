@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, ember/no-classic-classes, ember/avoid-leaking-state-in-ember-objects */
+/* eslint-disable ember/no-classic-classes, ember/avoid-leaking-state-in-ember-objects */
 import { A } from '@ember/array';
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
@@ -7,21 +7,36 @@ import Swal from 'sweetalert2/dist/sweetalert2.js';
 // @ts-expect-error no declaration file for sinon
 import Sinon from 'sinon';
 
+interface MockSubmission {
+  id?: string;
+  submitted?: boolean;
+  submissionStatus?: string;
+  submitter?: { id: string };
+  submitterName?: string;
+  submitterEmail?: string;
+  metadata?: string;
+  repositories?: { id: string; integrationType: string }[];
+  [key: string]: unknown;
+}
+
 module('Unit | Controller | submissions/new', (hooks) => {
   setupTest(hooks);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- owner.lookup() returns untyped service instances
   let controller: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- owner.lookup() returns untyped service instances
   let submissionHandler: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- owner.lookup() returns untyped service instances
   let workflowService: any;
-  let submissionEvent: any;
+  let submissionEvent: Record<string, unknown>;
   let submissionSaved = false;
   let submissionEventSaved = false;
   let publicationSaved = false;
 
-  let submission: any;
-  let publication: any;
-  let model: any;
-  let comment: any;
+  let submission: MockSubmission;
+  let publication: { id: string };
+  let model: { newSubmission: MockSubmission; publication: { id: string } };
+  let comment: string;
 
   hooks.beforeEach(function () {
     controller = this.owner.lookup('controller:submissions/new');
@@ -35,7 +50,7 @@ module('Unit | Controller | submissions/new', (hooks) => {
       createRecord() {
         return submissionEvent;
       },
-      persistRecord(record: any) {
+      persistRecord(record: Record<string, unknown>) {
         if (record === submissionEvent) submissionEventSaved = true;
         else if (record?.id === 'pub:0') publicationSaved = true;
         else submissionSaved = true;
@@ -48,7 +63,7 @@ module('Unit | Controller | submissions/new', (hooks) => {
     comment = 'moo';
   });
 
-  const setUpSubmissionModel = (submissionArg: any) => {
+  const setUpSubmissionModel = (submissionArg: MockSubmission) => {
     submission = {
       ...submissionArg,
     };
@@ -103,8 +118,8 @@ module('Unit | Controller | submissions/new', (hooks) => {
     // After the route transition to thanks, all promises should be resolved handler
     // and tests can be run.
 
-    const routerService: any = this.owner.lookup('service:router');
-    routerService.transitionTo = (name: any) => {
+    const routerService = this.owner.lookup('service:router');
+    routerService.transitionTo = (name: string) => {
       assert.strictEqual(name, 'thanks');
 
       assert.true(publicationSaved);
@@ -115,16 +130,16 @@ module('Unit | Controller | submissions/new', (hooks) => {
       assert.strictEqual(submission.submissionStatus, 'submitted');
 
       // check web-linked repo is NOT removed
-      assert.strictEqual(submission.repositories.length, 2);
-      assert.strictEqual(submission.repositories[0].id, 'test:repo1');
+      assert.strictEqual(submission.repositories!.length, 2);
+      assert.strictEqual(submission.repositories![0]!.id, 'test:repo1');
 
-      assert.strictEqual(submissionEvent.submission.submitter.id, 'submitter:test-id');
-      assert.strictEqual(submissionEvent.performedBy.id, 'submitter:test-id');
+      assert.strictEqual((submissionEvent.submission as MockSubmission).submitter!.id, 'submitter:test-id');
+      assert.strictEqual((submissionEvent.performedBy as { id: string }).id, 'submitter:test-id');
       assert.strictEqual(submissionEvent.performerRole, 'submitter');
       assert.strictEqual(submissionEvent.comment, comment);
       assert.strictEqual(submissionEvent.eventType, 'submitted');
 
-      const md = JSON.parse(submission.metadata);
+      const md = JSON.parse(submission.metadata!);
       assert.ok(md.agreements);
       assert.strictEqual(md.agreements.length, 1);
       assert.deepEqual(md.agreements[0], {
@@ -160,8 +175,8 @@ module('Unit | Controller | submissions/new', (hooks) => {
 
     // After the route transition to thanks, all promises should be resolved handler
     // and tests can be run.
-    const routerService: any = this.owner.lookup('service:router');
-    routerService.transitionTo = (name: any) => {
+    const routerService = this.owner.lookup('service:router');
+    routerService.transitionTo = (name: string) => {
       assert.strictEqual(name, 'thanks');
 
       assert.true(publicationSaved);
@@ -169,9 +184,9 @@ module('Unit | Controller | submissions/new', (hooks) => {
       assert.true(submissionEventSaved);
 
       assert.strictEqual(submission.submissionStatus, 'approval-requested');
-      assert.strictEqual(submission.repositories.length, 1);
-      assert.strictEqual(submissionEvent.submission.submitter.id, 'submitter:test-id');
-      assert.strictEqual(submissionEvent.performedBy.id, 'submitter:test-proxy-id');
+      assert.strictEqual(submission.repositories!.length, 1);
+      assert.strictEqual((submissionEvent.submission as MockSubmission).submitter!.id, 'submitter:test-id');
+      assert.strictEqual((submissionEvent.performedBy as { id: string }).id, 'submitter:test-proxy-id');
       assert.strictEqual(submissionEvent.performerRole, 'preparer');
       assert.strictEqual(submissionEvent.eventType, 'approval-requested');
       assert.strictEqual(submissionEvent.comment, comment);
@@ -204,8 +219,8 @@ module('Unit | Controller | submissions/new', (hooks) => {
 
     // After the route transition to thanks, all promises should be resolved handler
     // and tests can be run.
-    const routerService: any = this.owner.lookup('service:router');
-    routerService.transitionTo = (name: any) => {
+    const routerService = this.owner.lookup('service:router');
+    routerService.transitionTo = (name: string) => {
       assert.strictEqual(name, 'thanks');
 
       assert.true(publicationSaved);
@@ -216,8 +231,8 @@ module('Unit | Controller | submissions/new', (hooks) => {
       assert.strictEqual(submission.submitterName, 'test name');
       assert.strictEqual(submission.submitterEmail, 'mailto:test@email.com');
       assert.strictEqual(submission.submissionStatus, 'approval-requested');
-      assert.strictEqual(submission.repositories.length, 1);
-      assert.strictEqual(submissionEvent.performedBy.id, 'submitter:test-proxy-id');
+      assert.strictEqual(submission.repositories!.length, 1);
+      assert.strictEqual((submissionEvent.performedBy as { id: string }).id, 'submitter:test-proxy-id');
       assert.strictEqual(submissionEvent.performerRole, 'preparer');
       assert.strictEqual(submissionEvent.eventType, 'approval-requested-newuser');
       assert.strictEqual(submissionEvent.comment, comment);
@@ -261,13 +276,13 @@ module('Unit | Controller | submissions/new', (hooks) => {
 
     // Having this mocked function run shows that the service will delete the submission
     controller.submissionHandler = {
-      deleteSubmission(sub: any) {
+      deleteSubmission(sub: unknown) {
         assert.ok(sub);
         return Promise.resolve();
       },
     };
     controller.router = {
-      transitionTo: (name: any) => {
+      transitionTo: (name: string) => {
         assert.strictEqual(name, 'submissions', 'unexpected transition was named');
       },
     };
@@ -301,13 +316,13 @@ module('Unit | Controller | submissions/new', (hooks) => {
 
     // Having this mocked function run shows that the service will delete the submission
     controller.submissionHandler = {
-      deleteSubmission(_sub: any) {
+      deleteSubmission(_sub: unknown) {
         deleteSubmissionCalled = true;
         return Promise.resolve();
       },
     };
     controller.router = {
-      transitionTo: (name: any) => {
+      transitionTo: (name: string) => {
         assert.false(deleteSubmissionCalled);
         assert.strictEqual(name, 'submissions', 'unexpected transition was named');
       },

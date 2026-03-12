@@ -3,6 +3,7 @@ import { task } from 'ember-concurrency';
 import { findRecord } from 'pass-ui/builders/pass-api';
 import type UserModel from 'pass-ui/models/user';
 import type AppStore from 'pass-ui/services/store';
+import type SessionService from 'ember-simple-auth/services/session';
 
 /**
  * Service which returns information about the logged in user.
@@ -10,8 +11,7 @@ import type AppStore from 'pass-ui/services/store';
 
 export default class CurrentUserService extends Service {
   @service declare store: AppStore;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare session: any;
+  @service declare session: SessionService;
 
   user: UserModel | null = null;
 

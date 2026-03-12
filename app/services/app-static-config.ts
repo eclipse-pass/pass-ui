@@ -1,6 +1,7 @@
 import Service from '@ember/service';
 import { service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
+import type { FlashMessageService } from 'pass-ui/types/ember-cli-flash';
 
 export interface BrandingConfig {
   stylesheet?: string;
@@ -18,8 +19,7 @@ export interface StaticConfig {
 }
 
 export default class AppStaticConfigService extends Service {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare flashMessages: any;
+  @service declare flashMessages: FlashMessageService;
 
   configUrl: string | null = null;
 

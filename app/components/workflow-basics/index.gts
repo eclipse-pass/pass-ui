@@ -28,6 +28,8 @@ import type JournalModel from 'pass-ui/models/journal';
 import type GrantModel from 'pass-ui/models/grant';
 import type UserModel from 'pass-ui/models/user';
 import type AppStore from 'pass-ui/services/store';
+import type Owner from '@ember/owner';
+import type { FlashMessageService } from 'pass-ui/types/ember-cli-flash';
 
 const or = (...args: unknown[]) => args.some(Boolean);
 const not = (a: unknown) => !a;
@@ -68,8 +70,7 @@ export default class WorkflowBasics extends Component<WorkflowBasicsSignature> {
   @service('metadata-schema')
   declare schemaService: MetadataSchemaService;
   @service declare appStaticConfig: AppStaticConfigService;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare flashMessages: any;
+  @service declare flashMessages: FlashMessageService;
 
   @tracked contactUrl: string | null = null;
   @tracked doiServiceError: unknown = false;
@@ -123,8 +124,7 @@ export default class WorkflowBasics extends Component<WorkflowBasicsSignature> {
     );
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  constructor(owner: any, args: WorkflowBasicsSignature['Args']) {
+  constructor(owner: Owner, args: WorkflowBasicsSignature['Args']) {
     super(owner, args);
 
     this.setupConfig();

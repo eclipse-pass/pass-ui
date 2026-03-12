@@ -2,6 +2,7 @@ import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { dropTask, timeout } from 'ember-concurrency';
+import type { Task } from 'ember-concurrency';
 import PowerSelect from 'ember-power-select/components/power-select';
 import { findRecord } from 'pass-ui/builders/pass-api';
 import type AutocompleteService from 'pass-ui/services/autocomplete';
@@ -11,11 +12,9 @@ import type AppStore from 'pass-ui/services/store';
 const eq = (a: unknown, b: unknown) => a === b;
 
 const perform =
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (task: any) =>
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (...args: any[]) =>
-      task.perform(...args);
+  (task: Task<unknown, unknown[]>) =>
+  (...args: unknown[]) =>
+    task.perform(...args);
 
 const DEBOUNCE_MS = 750;
 

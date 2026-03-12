@@ -13,6 +13,7 @@ import swal from 'sweetalert2/dist/sweetalert2.js';
 import fileQueue from 'ember-file-upload/helpers/file-queue';
 import FoundManuscripts from 'pass-ui/components/found-manuscripts';
 import { deleteFileWithBytes } from 'pass-ui/builders/pass-api';
+import type { UploadFile } from 'ember-file-upload';
 import type Workflow from 'pass-ui/services/workflow';
 import type { WorkflowFile } from 'pass-ui/services/workflow';
 import type SubmissionHandlerService from 'pass-ui/services/submission-handler';
@@ -20,6 +21,8 @@ import type CurrentUserService from 'pass-ui/services/current-user';
 import type SubmissionModel from 'pass-ui/models/submission';
 import type FileModel from 'pass-ui/models/file';
 import type AppStore from 'pass-ui/services/store';
+import type Owner from '@ember/owner';
+import type { FlashMessageService } from 'pass-ui/types/ember-cli-flash';
 
 interface WorkflowFileWithDetails extends WorkflowFile {
   submission: { id: string };
@@ -45,13 +48,11 @@ export default class WorkflowFiles extends Component<WorkflowFilesSignature> {
   @service declare workflow: Workflow;
   @service declare submissionHandler: SubmissionHandlerService;
   @service declare currentUser: CurrentUserService;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare flashMessages: any;
+  @service declare flashMessages: FlashMessageService;
 
   @tracked doi: string | null = null;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  constructor(owner: any, args: WorkflowFilesSignature['Args']) {
+  constructor(owner: Owner, args: WorkflowFilesSignature['Args']) {
     super(owner, args);
     this.doi = this.args.doi;
   }
@@ -98,8 +99,7 @@ export default class WorkflowFiles extends Component<WorkflowFilesSignature> {
         confirmButtonText: 'I Agree',
         cancelButtonText: 'Never mind',
       })
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .then(async (result: any) => {
+      .then(async (result) => {
         if (result.value) {
           const deleted = await this.deleteFile(file);
           if (deleted) {
@@ -120,8 +120,7 @@ export default class WorkflowFiles extends Component<WorkflowFilesSignature> {
   }
 
   @action
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async uploadFile(FileUpload: any) {
+  async uploadFile(FileUpload: UploadFile) {
     try {
       const response = await FileUpload.upload(ENV.fileServicePath, {
         headers: {

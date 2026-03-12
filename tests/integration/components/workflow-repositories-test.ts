@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
@@ -129,7 +128,7 @@ module('Integration | Component | workflow repositories', (hooks) => {
     let repos = await this.submission.repositories;
     assert.strictEqual(repos.length, 2, 'expected number of repositories attached to the submission');
 
-    assert.ok(repos.some((repo: any) => repo.name === 'Moo-pository XYZ'));
+    assert.ok(repos.some((repo: { name?: string }) => repo.name === 'Moo-pository XYZ'));
 
     const checkboxes = this.element.querySelectorAll('input[type="checkbox"]');
     assert.strictEqual(checkboxes.length, 3, 'expected number of checkboxes found');
@@ -141,7 +140,7 @@ module('Integration | Component | workflow repositories', (hooks) => {
     repos = await this.submission.repositories;
     assert.strictEqual(repos.length, 3, 'expected number of repositories attached to submission');
 
-    assert.ok(repos.some((repo: any) => repo.name === 'Moo-pository 00'));
+    assert.ok(repos.some((repo: { name?: string }) => repo.name === 'Moo-pository 00'));
     assert.notOk(repos.includes(undefined), 'there should be no "undefined" entries');
     assert.dom(checkboxes[2]).isChecked();
   });
@@ -171,7 +170,7 @@ module('Integration | Component | workflow repositories', (hooks) => {
     assert.strictEqual(repos.length, 3, 'unexpected number of repositories attached to submission');
     assert.notOk(repos.includes(undefined), 'should be no undefined items');
     assert.ok(
-      repos.some((repo: any) => repo.name === 'Moo-pository 00'),
+      repos.some((repo: { name?: string }) => repo.name === 'Moo-pository 00'),
       'The optional repo should be present',
     );
 
@@ -185,7 +184,7 @@ module('Integration | Component | workflow repositories', (hooks) => {
     repos = await this.submission.repositories;
     assert.strictEqual(repos.length, 2, 'expected number of repositories attached to the submission');
 
-    assert.notOk(repos.some((repo: any) => repo.name === 'Moo-pository 00'));
+    assert.notOk(repos.some((repo: { name?: string }) => repo.name === 'Moo-pository 00'));
     assert.dom(checkboxes[2]!).isNotChecked();
   });
 

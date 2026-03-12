@@ -1,6 +1,7 @@
 import Controller, { inject as controller } from '@ember/controller';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
+import type RouterService from '@ember/routing/router-service';
 import type SubmissionsNew from 'pass-ui/controllers/submissions/new';
 import type SubmissionModel from 'pass-ui/models/submission';
 import type PolicyModel from 'pass-ui/models/policy';
@@ -18,8 +19,7 @@ interface PoliciesModel {
 export default class SubmissionsNewPolicies extends Controller {
   declare model: PoliciesModel;
   @service declare store: AppStore;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare router: any;
+  @service declare router: RouterService;
 
   get submission(): SubmissionModel {
     return this.model.newSubmission;

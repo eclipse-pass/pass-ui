@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 
@@ -14,21 +13,21 @@ module('Unit | Controller | submissions/new/grants', (hooks) => {
   test('loadPrevious triggers transition', function (assert) {
     assert.expect(2);
 
-    const controller: any = this.owner.lookup('controller:submissions/new/grants');
+    const controller = this.owner.lookup('controller:submissions/new/grants');
     const model = {
       newSubmission: {},
     };
 
     controller.model = model;
 
-    const store: any = this.owner.lookup('service:store');
+    const store = this.owner.lookup('service:store');
     store.persistRecord = () => {
       assert.ok(true);
       return Promise.resolve({ content: {} });
     };
 
-    const routerService: any = this.owner.lookup('service:router');
-    routerService.transitionTo = function (route: any) {
+    const routerService = this.owner.lookup('service:router');
+    routerService.transitionTo = function (route: string) {
       assert.strictEqual(route, 'submissions.new.basics');
     };
     controller.send('loadPrevious');
@@ -37,21 +36,21 @@ module('Unit | Controller | submissions/new/grants', (hooks) => {
   test('loadNext triggers transition', function (assert) {
     assert.expect(2);
 
-    const controller: any = this.owner.lookup('controller:submissions/new/grants');
+    const controller = this.owner.lookup('controller:submissions/new/grants');
     const model = {
       newSubmission: {},
     };
 
     controller.model = model;
 
-    const store: any = this.owner.lookup('service:store');
+    const store = this.owner.lookup('service:store');
     store.persistRecord = () => {
       assert.ok(true);
       return Promise.resolve({ content: {} });
     };
 
-    const routerService: any = this.owner.lookup('service:router');
-    routerService.transitionTo = function (route: any) {
+    const routerService = this.owner.lookup('service:router');
+    routerService.transitionTo = function (route: string) {
       assert.strictEqual(route, 'submissions.new.policies');
     };
     controller.send('loadNext');
@@ -64,20 +63,20 @@ module('Unit | Controller | submissions/new/grants', (hooks) => {
   test('transitions to other workflow steps saves the in progress submission', function (assert) {
     assert.expect(2);
 
-    const controller: any = this.owner.lookup('controller:submissions/new/grants');
+    const controller = this.owner.lookup('controller:submissions/new/grants');
     const model = {
       newSubmission: {},
     };
 
     controller.model = model;
 
-    const store: any = this.owner.lookup('service:store');
+    const store = this.owner.lookup('service:store');
     store.persistRecord = () => {
       assert.ok(true);
       return Promise.resolve({ content: {} });
     };
 
-    const routerService: any = this.owner.lookup('service:router');
+    const routerService = this.owner.lookup('service:router');
     routerService.transitionTo = () => {};
 
     controller.send('loadNext');

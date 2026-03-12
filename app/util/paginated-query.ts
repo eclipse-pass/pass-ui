@@ -6,14 +6,25 @@ interface QueryParams {
   page?: number;
   pageSize?: number;
   filter?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any;
+  grant_id?: string;
 }
 
 interface UserLike {
   id: string | null;
   isAdmin?: boolean;
   isSubmitter?: boolean;
+}
+
+interface ElideQuery {
+  filter: Record<string, string>;
+  include?: string;
+  sort?: string;
+  page?: {
+    number: number;
+    size: number;
+    totals: boolean;
+  };
+  [key: string]: string | Record<string, string> | { number: number; size: number; totals: boolean } | undefined;
 }
 
 /**
@@ -23,8 +34,7 @@ interface UserLike {
  * @param {User} user current user
  */
 export function submissionsIndexQuery(params: QueryParams, user: UserLike) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let query: any;
+  let query: ElideQuery;
 
   if (user.isAdmin) {
     query = {
@@ -38,6 +48,11 @@ export function submissionsIndexQuery(params: QueryParams, user: UserLike) {
         submission: `(${userMatch});submissionStatus=out=cancelled`,
       },
       sort: '-submittedDate',
+      include: 'publication,grants.primaryFunder,repositories,submitter,preparers',
+    };
+  } else {
+    query = {
+      filter: { submission: 'submissionStatus=out=cancelled' },
       include: 'publication,grants.primaryFunder,repositories,submitter,preparers',
     };
   }
@@ -71,8 +86,7 @@ export function grantDetailsQuery(params: QueryParams, grantId: string, user: Us
    * Show submissions where `submitted===true`, because they are no longer editable
    */
   const userMatch = `submitted==true,(submitter.id==${user.id},preparers.id=in=${user.id})`;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const query: any = {
+  const query: ElideQuery = {
     filter: {
       submission: `grants.id==${grantId};submissionStatus=out=cancelled;(${userMatch})`,
     },

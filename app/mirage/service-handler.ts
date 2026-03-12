@@ -1,4 +1,5 @@
 import ENV from '../config/environment';
+import type { Server } from 'miragejs';
 
 function dataPath() {
   let path = ENV.passApi.PASS_API_NAMESPACE || 'data';
@@ -15,8 +16,7 @@ export default class MockDataFinder {
     this.environment = environment;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async findBy(schema: any, type: string, filter: Record<string, string>) {
+  async findBy(schema: Server['schema'], type: string, filter: Record<string, string>) {
     if (this.environment !== 'test') {
       const key = Object.keys(filter)[0]!;
       const filterStr = `filter[${type}]=${key}=ini="${filter[key]}"`;

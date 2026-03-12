@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
@@ -93,7 +92,7 @@ module('Integration | Component | display-metadata-keys', (hooks) => {
 
     this.set('submission', submission);
 
-    this.owner.lookup('service:metadata-schema').displayMetadata = (submission: any) => [
+    this.owner.lookup('service:metadata-schema').displayMetadata = (_submission: unknown) => [
       { label: 'Journal nlmta-id', value: 'MOO-ID', isArray: false },
       {
         label: 'Authors',

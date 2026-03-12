@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable ember/no-classic-classes */
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
@@ -15,7 +14,7 @@ module('Unit | Controller | submissions/new/review', (hooks) => {
   });
 
   test('loadPrevious triggers transition', function (assert) {
-    const controller: any = this.owner.lookup('controller:submissions/new/review');
+    const controller = this.owner.lookup('controller:submissions/new/review');
     const model = {
       newSubmission: {
         save: () => Promise.resolve(assert.ok(true)),
@@ -25,8 +24,8 @@ module('Unit | Controller | submissions/new/review', (hooks) => {
     controller.model = model;
 
     let loadTabAccessed = false;
-    const routerService: any = this.owner.lookup('service:router');
-    routerService.transitionTo = function (route: any) {
+    const routerService = this.owner.lookup('service:router');
+    routerService.transitionTo = function (route: string) {
       loadTabAccessed = true;
       assert.strictEqual(route, 'submissions.new.files');
     };
@@ -35,7 +34,7 @@ module('Unit | Controller | submissions/new/review', (hooks) => {
   });
 
   test('parent properties are retrieved', function (assert) {
-    const controller: any = this.owner.lookup('controller:submissions/new/review');
+    const controller = this.owner.lookup('controller:submissions/new/review');
     run(() => {
       this.owner.register(
         'controller:submissions/new',

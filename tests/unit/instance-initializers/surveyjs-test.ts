@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import Application from '@ember/application';
 
 import config from 'pass-ui/config/environment';
@@ -9,7 +8,7 @@ import compatModules from '@embroider/virtual/compat-modules';
 import { run } from '@ember/runloop';
 
 module('Unit | Instance Initializer | surveyjs', function (hooks) {
-  hooks.beforeEach(function (this: any) {
+  hooks.beforeEach(function () {
     this.TestApplication = class TestApplication extends Application {
       modulePrefix = config.modulePrefix;
       podModulePrefix = config.podModulePrefix;
@@ -28,13 +27,13 @@ module('Unit | Instance Initializer | surveyjs', function (hooks) {
     this.instance = this.application.buildInstance();
   });
 
-  hooks.afterEach(function (this: any) {
+  hooks.afterEach(function () {
     run(this.instance, 'destroy');
     run(this.application, 'destroy');
   });
 
   // TODO: Replace this with your real tests.
-  test('it works', async function (this: any, assert) {
+  test('it works', async function (assert) {
     await this.instance.boot();
 
     assert.ok(true);

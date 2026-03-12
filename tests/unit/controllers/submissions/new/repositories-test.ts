@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable ember/no-classic-classes */
 import { A } from '@ember/array';
 import EmberObject from '@ember/object';
@@ -18,7 +17,7 @@ module('Unit | Controller | submissions/new/repositories', (hooks) => {
   });
 
   test('transition aborted if no repositories', function (assert) {
-    const controller: any = this.owner.lookup('controller:submissions/new/repositories');
+    const controller = this.owner.lookup('controller:submissions/new/repositories');
     this.owner.register(
       'service:workflow',
       EmberObject.extend({
@@ -35,8 +34,8 @@ module('Unit | Controller | submissions/new/repositories', (hooks) => {
     };
     controller.model = model;
     let loadTabAccessed = false;
-    const routerService: any = this.owner.lookup('service:router');
-    routerService.transitionTo = function (route: any) {
+    const routerService = this.owner.lookup('service:router');
+    routerService.transitionTo = function (_route: string) {
       loadTabAccessed = true;
     };
     // override swal so it doesn't pop up
@@ -49,7 +48,7 @@ module('Unit | Controller | submissions/new/repositories', (hooks) => {
   test('transition if there are repositories', function (assert) {
     assert.ok(2);
 
-    const controller: any = this.owner.lookup('controller:submissions/new/repositories');
+    const controller = this.owner.lookup('controller:submissions/new/repositories');
     this.owner.register(
       'service:workflow',
       EmberObject.extend({
@@ -70,14 +69,14 @@ module('Unit | Controller | submissions/new/repositories', (hooks) => {
     };
     controller.model = model;
 
-    const store: any = this.owner.lookup('service:store');
+    const store = this.owner.lookup('service:store');
     store.persistRecord = () => {
       assert.ok(true);
       return Promise.resolve({ content: {} });
     };
 
-    const routerService: any = this.owner.lookup('service:router');
-    routerService.transitionTo = function (route: any) {
+    const routerService = this.owner.lookup('service:router');
+    routerService.transitionTo = function (_route: string) {
       assert.ok(true);
     };
     controller.send('validateAndLoadTab');
@@ -112,7 +111,7 @@ module('Unit | Controller | submissions/new/repositories', (hooks) => {
 
     let subSaved = false;
 
-    const controller: any = this.owner.lookup('controller:submissions/new/repositories');
+    const controller = this.owner.lookup('controller:submissions/new/repositories');
 
     const repositories = A([
       {
@@ -128,13 +127,13 @@ module('Unit | Controller | submissions/new/repositories', (hooks) => {
 
     controller.model = model;
 
-    const store: any = this.owner.lookup('service:store');
+    const store = this.owner.lookup('service:store');
     store.persistRecord = () => {
       subSaved = true;
       return Promise.resolve({ content: {} });
     };
 
-    const routerService: any = this.owner.lookup('service:router');
+    const routerService = this.owner.lookup('service:router');
     routerService.transitionTo = function (route: string) {
       assert.ok(['submissions.new.metadata', 'submissions.new.policies'].includes(route));
     };

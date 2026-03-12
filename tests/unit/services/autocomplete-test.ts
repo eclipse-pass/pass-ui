@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import Service from '@ember/service';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
@@ -12,7 +11,7 @@ module('Unit | Service | autocomplete', (hooks) => {
     const INPUT = 'text';
 
     class StoreStub extends Service {
-      request(req: any) {
+      request(req: { url: string }) {
         const url = req.url as string;
         assert.true(url.includes('/data/myType'), 'URL includes camelCase path');
         assert.true(url.includes('filter'), 'URL includes filter param');
@@ -24,7 +23,7 @@ module('Unit | Service | autocomplete', (hooks) => {
 
     const service = this.owner.lookup('service:autocomplete');
     service.store = new StoreStub();
-    service.suggest(TYPE, FIELD, INPUT).then((res: any) => {
+    service.suggest(TYPE, FIELD, INPUT).then(() => {
       assert.ok('Suggest service resolves');
     });
   });
@@ -36,7 +35,7 @@ module('Unit | Service | autocomplete', (hooks) => {
     const CONTEXT = { filter: { [TYPE]: 'queryFragment' } };
 
     class StoreStub extends Service {
-      request(req: any) {
+      request(req: { url: string }) {
         const url = decodeURIComponent(req.url as string);
         assert.true(url.includes('/data/myType'), 'URL includes camelCase path');
         assert.true(url.includes('queryFragment'), 'URL includes existing context filter');
@@ -60,7 +59,7 @@ module('Unit | Service | autocomplete', (hooks) => {
     const INPUT = 'text';
 
     class StoreStub extends Service {
-      request(req: any) {
+      request(req: { url: string }) {
         const url = decodeURIComponent(req.url as string);
         assert.true(url.includes('/data/myType'), 'URL includes camelCase path');
         assert.true(url.includes(FIELDS[0]!), 'URL includes first field');

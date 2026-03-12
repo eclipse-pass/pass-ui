@@ -3,6 +3,7 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { task } from 'ember-concurrency';
+import type { Task } from 'ember-concurrency';
 import { later } from '@ember/runloop';
 import { on } from '@ember/modifier';
 import { Textarea } from '@ember/component';
@@ -25,6 +26,7 @@ import type PublicationModel from 'pass-ui/models/publication';
 import type RepositoryModel from 'pass-ui/models/repository';
 import type { WorkflowFile } from 'pass-ui/services/workflow';
 import type AppStore from 'pass-ui/services/store';
+import type { FlashMessageService } from 'pass-ui/types/ember-cli-flash';
 
 interface ReviewFile extends WorkflowFile {
   submission: { id: string };
@@ -36,11 +38,9 @@ interface ReviewFile extends WorkflowFile {
 const eq = (a: unknown, b: unknown) => a === b;
 
 const perform =
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (task: any) =>
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (...args: any[]) =>
-      task.perform(...args);
+  (task: Task<unknown, unknown[]>) =>
+  (...args: unknown[]) =>
+    task.perform(...args);
 
 interface RepoAgreementStep {
   id: string;
@@ -65,8 +65,7 @@ export default class WorkflowReview extends Component<WorkflowReviewSignature> {
   @service declare store: AppStore;
   @service declare workflow: Workflow;
   @service declare currentUser: CurrentUserService;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare flashMessages: any;
+  @service declare flashMessages: FlashMessageService;
   @service declare submissionHandler: SubmissionHandlerService;
 
   @tracked isValidated: unknown[] = [];

@@ -1,6 +1,7 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { service } from '@ember/service';
+import type Owner from '@ember/owner';
 import { task } from 'ember-concurrency';
 import type OAManuscriptService from 'pass-ui/services/oa-manuscript-service';
 import type { ManuscriptInfo } from 'pass-ui/services/oa-manuscript-service';
@@ -31,8 +32,7 @@ export default class FoundManuscriptsComponent extends Component<FoundManuscript
   @tracked selectedManuscript: ManuscriptInfo | null = null;
   @tracked contactUrl: string | undefined;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  constructor(owner: any, args: FoundManuscriptsSignature['Args']) {
+  constructor(owner: Owner, args: FoundManuscriptsSignature['Args']) {
     super(owner, args);
     this.getAppConfig.perform();
     this.setupManuscripts.perform();

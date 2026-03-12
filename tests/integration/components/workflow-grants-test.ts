@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, ember/no-classic-classes, ember/no-settled-after-test-helper */
+/* eslint-disable ember/no-classic-classes, ember/no-settled-after-test-helper */
 import Service from '@ember/service';
 import { A } from '@ember/array';
 import { setupRenderingTest } from 'ember-qunit';
@@ -13,9 +13,9 @@ module('Integration | Component | workflow grants', (hooks) => {
   const knownGrant = { id: 2, awardNumber: '2', projectName: 'Moo 2' };
 
   hooks.beforeEach(function () {
-    this.set('loadPrevious', (actual: any) => {});
+    this.set('loadPrevious', () => {});
 
-    this.set('loadNext', (actual: any) => {});
+    this.set('loadNext', () => {});
 
     const submission = {
       grants: A(),
@@ -23,7 +23,7 @@ module('Integration | Component | workflow grants', (hooks) => {
     };
     this.set('submission', submission);
 
-    const grants: any = A([
+    const grants = A([
       { id: 1, awardNumber: '1', projectName: 'Moo 1' },
       knownGrant,
 
@@ -50,7 +50,7 @@ module('Integration | Component | workflow grants', (hooks) => {
       this.owner.register(
         'service:store',
         Service.extend({
-          request(req: any) {
+          request(req: { op: string; url: string }) {
             if (req.op === 'findRecord') {
               // Extract ID from URL: /data/grant/<id>
               const idMatch = (req.url as string).match(/\/data\/grant\/(.+?)(?:\?|$)/);
@@ -118,13 +118,13 @@ module('Integration | Component | workflow grants', (hooks) => {
 
     this.set('preLoadedGrant', undefined);
 
-    let list: any[] = [];
+    let list: unknown[] = [];
     this.owner.register(
       'service:workflow',
       Service.extend({
-        setMaxStep: (step: any) => {},
+        setMaxStep: () => {},
 
-        addGrant(grant: any) {
+        addGrant(grant: unknown) {
           assert.ok(grant);
           list = [grant, ...list];
         },
@@ -168,7 +168,7 @@ module('Integration | Component | workflow grants', (hooks) => {
   test('Clicking on a selected grant will remove it', async function (assert) {
     assert.expect(6);
 
-    let list: any[] = [];
+    let list: { id: number }[] = [];
     this.owner.register(
       'service:workflow',
       Service.extend({
@@ -178,11 +178,11 @@ module('Integration | Component | workflow grants', (hooks) => {
         },
         getAddedGrants: () => list,
 
-        addGrant: (grant: any) => {
+        addGrant: (grant: { id: number }) => {
           list = [grant, ...list];
         },
 
-        removeGrant(grant: any) {
+        removeGrant(grant: { id: number }) {
           assert.ok(true);
           list = list.filter((g) => g.id !== grant.id);
         },

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, ember/no-classic-classes, ember/avoid-leaking-state-in-ember-objects */
+/* eslint-disable ember/no-classic-classes, ember/avoid-leaking-state-in-ember-objects */
 import { A } from '@ember/array';
 import EmberObject from '@ember/object';
 import { setupRenderingTest } from 'ember-qunit';
@@ -17,7 +17,7 @@ module('Integration | Component | workflow review', (hooks) => {
   setupMirage(hooks);
 
   hooks.beforeEach(async function () {
-    this.server.post('https://pass.local/schemaservice?merge=true', (_schema: any, _request: any) => true);
+    this.server.post('https://pass.local/schemaservice?merge=true', () => true);
 
     const flashMessages = this.owner.lookup('service:flash-messages');
     const typesUsed = ['info'];
@@ -83,7 +83,7 @@ module('Integration | Component | workflow review', (hooks) => {
     this.set('submission', submission);
     this.set('publication', publication);
 
-    this.set('submit', (actual: any) => {
+    this.set('submit', () => {
       submitted = true;
     });
     this.set('files', files);
@@ -146,7 +146,7 @@ module('Integration | Component | workflow review', (hooks) => {
     this.set('submission', submission);
     this.set('publication', publication);
 
-    this.set('submit', (actual: any) => {
+    this.set('submit', () => {
       submitted = true;
     });
     this.set('files', files);
@@ -281,7 +281,7 @@ module('Integration | Component | workflow review', (hooks) => {
       metadata: '[]',
     };
 
-    let submitted: any = false;
+    let submitted = false;
 
     this.submission = submission;
     this.publication = {};
@@ -353,7 +353,7 @@ module('Integration | Component | workflow review', (hooks) => {
     this.set('submission', submission);
     this.set('publication', publication);
 
-    this.set('submit', (actual: any) => {
+    this.set('submit', () => {
       submitted = true;
     });
     this.set('files', files);

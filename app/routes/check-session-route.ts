@@ -4,6 +4,7 @@ import { action } from '@ember/object';
 import type CurrentUserService from 'pass-ui/services/current-user';
 import type ErrorHandlerService from 'pass-ui/services/error-handler';
 import type { AppError } from 'pass-ui/services/error-handler';
+import type SessionService from 'ember-simple-auth/services/session';
 
 interface ErrorWithStatus {
   errors?: Array<{ status?: number | string }>;
@@ -11,8 +12,7 @@ interface ErrorWithStatus {
 }
 
 export default class CheckSessionRouteRoute extends Route {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare session: any;
+  @service declare session: SessionService;
   @service declare currentUser: CurrentUserService;
 
   @service('error-handler') declare errorHandler: ErrorHandlerService;

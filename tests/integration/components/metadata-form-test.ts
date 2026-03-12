@@ -43,8 +43,7 @@ module('Integration | Component | metadata-form', (hooks) => {
       six: {},
       seven: { moo: [] },
     };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const result: any = stripEmptyArrays(obj);
+    const result = stripEmptyArrays(obj);
 
     assert.notOk('one' in result);
     assert.ok('two' in result);
@@ -53,6 +52,6 @@ module('Integration | Component | metadata-form', (hooks) => {
     assert.ok('five' in result);
     assert.ok('six' in result);
     assert.ok('seven' in result);
-    assert.ok('moo' in result.seven);
+    assert.ok('moo' in (result.seven as Record<string, unknown>));
   });
 });

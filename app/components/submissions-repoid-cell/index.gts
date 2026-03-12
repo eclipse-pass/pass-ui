@@ -44,10 +44,9 @@ export default class SubmissionsRepoidCell extends Component<SubmissionsRepoidCe
       },
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.store.request(query('repository-copy', queryHash)).then((result: any) => {
+    this.store.request(query('repository-copy', queryHash)).then((result) => {
       if (!(this.isDestroyed || this.isDestroying)) {
-        this.repoCopies = result.content.data;
+        this.repoCopies = (result.content as { data: RepositoryCopyModel[] }).data;
       }
     });
   }

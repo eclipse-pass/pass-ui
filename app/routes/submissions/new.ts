@@ -3,6 +3,7 @@ import { service } from '@ember/service';
 import { hash } from 'rsvp';
 import { query, findRecord } from 'pass-ui/builders/pass-api';
 import { fileForSubmissionQuery } from '../../util/paginated-query';
+import type RouterService from '@ember/routing/router-service';
 import type Workflow from 'pass-ui/services/workflow';
 import type { WorkflowFile } from 'pass-ui/services/workflow';
 import type CurrentUserService from 'pass-ui/services/current-user';
@@ -37,8 +38,7 @@ interface NewSubmissionParams {
 export default class NewRoute extends CheckSessionRoute {
   @service('workflow') declare workflow: Workflow;
   @service declare store: AppStore;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare router: any;
+  @service declare router: RouterService;
 
   @service('current-user')
   declare currentUser: CurrentUserService;

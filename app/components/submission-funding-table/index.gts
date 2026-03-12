@@ -4,25 +4,22 @@ import { on } from '@ember/modifier';
 import { LinkTo } from '@ember/routing';
 import formatDate from 'pass-ui/helpers/format-date';
 import type GrantModel from 'pass-ui/models/grant';
+import type { Task } from 'ember-concurrency';
 
 interface Signature {
   Args: {
     grants: GrantModel[];
     remove?: (grant: GrantModel) => void;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    setup?: any;
+    setup?: (() => void) | undefined;
   };
 }
 
 const queue =
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (...fns: Array<(...args: any[]) => void>) =>
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (...args: any[]) =>
-      fns.forEach((f) => f(...args));
+  (...fns: Array<(...args: unknown[]) => void>) =>
+  (...args: unknown[]) =>
+    fns.forEach((f) => f(...args));
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const perform = (task: any) => () => task.perform();
+const perform = (task: Task<unknown, unknown[]>) => () => task.perform();
 
 // prettier-ignore
 <template>

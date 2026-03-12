@@ -4,6 +4,8 @@ import { tracked } from '@glimmer/tracking';
 import { service } from '@ember/service';
 import { query } from 'pass-ui/builders/pass-api';
 import { grantsIndexGrantQuery, grantsIndexSubmissionQuery } from '../../util/paginated-query';
+import type Owner from '@ember/owner';
+import type RouterService from '@ember/routing/router-service';
 import type CurrentUserService from 'pass-ui/services/current-user';
 import type AppStaticConfigService from 'pass-ui/services/app-static-config';
 import type GrantModel from 'pass-ui/models/grant';
@@ -24,13 +26,11 @@ interface GrantsIndexModel {
 export default class GrantsIndexController extends Controller {
   @service declare currentUser: CurrentUserService;
   @service('app-static-config') declare staticConfig: AppStaticConfigService;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare router: any;
+  @service declare router: RouterService;
   @service declare store: AppStore;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  constructor(...args: any[]) {
-    super(...args);
+  constructor(owner: Owner) {
+    super(owner);
 
     this.faqUrl = this.staticConfig.config?.branding?.pages?.['faqUrl'] ?? null;
   }

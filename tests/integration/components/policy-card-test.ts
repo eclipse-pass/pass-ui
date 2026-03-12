@@ -99,8 +99,7 @@ module('Integration | Component | policy card', (hooks) => {
       const effectivePolicies = await this.submission.effectivePolicies;
 
       assert.strictEqual(effectivePolicies.length, 1, 'Should be ONE effective policy on submission');
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      assert.ok(effectivePolicies.some((p: any) => p.title === 'Moo title'));
+      assert.ok(effectivePolicies.some((p: { title?: string }) => p.title === 'Moo title'));
     });
 
     test('PMC non-type A can be removed', async function (assert) {

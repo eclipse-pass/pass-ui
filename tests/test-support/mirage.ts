@@ -1,8 +1,7 @@
 import { setupMirage as _setupMirage } from 'ember-mirage/test-support';
 import mirageConfig from 'pass-ui/mirage/config';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function setupMirage(hooks: any) {
+export function setupMirage(hooks: NestedHooks) {
   // Set a fake XSRF-TOKEN cookie before mirage routes are hit.
   // The application adapter reads this cookie to build request headers.
   hooks.beforeEach(function () {

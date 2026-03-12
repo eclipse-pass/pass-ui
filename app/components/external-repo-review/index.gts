@@ -8,6 +8,7 @@ import ENV from 'pass-ui/config/environment';
 // @ts-ignore
 import swal from 'sweetalert2/dist/sweetalert2.js';
 import type RepositoryModel from 'pass-ui/models/repository';
+import type Owner from '@ember/owner';
 
 interface ExternalRepoReviewSignature {
   Args: {
@@ -29,8 +30,7 @@ class VisitableRepo {
 export default class ExternalRepoReviewComponent extends Component<ExternalRepoReviewSignature> {
   @tracked repoList: VisitableRepo[] = [];
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  constructor(owner: any, args: ExternalRepoReviewSignature['Args']) {
+  constructor(owner: Owner, args: ExternalRepoReviewSignature['Args']) {
     super(owner, args);
     this.repoList = this.args.repos.map((repo: RepositoryModel) => new VisitableRepo(repo, false));
   }
@@ -65,8 +65,7 @@ export default class ExternalRepoReviewComponent extends Component<ExternalRepoR
         cancelButtonText: 'Cancel',
         confirmButtonText: 'Open new tab',
       })
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .then((value: any) => {
+      .then((value) => {
         if (value.dismiss) {
           return;
         }

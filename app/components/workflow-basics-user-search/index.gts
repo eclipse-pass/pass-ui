@@ -3,6 +3,7 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { task } from 'ember-concurrency';
+import type { Task } from 'ember-concurrency';
 import { fn } from '@ember/helper';
 import { on } from '@ember/modifier';
 import { Input } from '@ember/component';
@@ -10,15 +11,14 @@ import { query } from 'pass-ui/builders/pass-api';
 import type CurrentUserService from 'pass-ui/services/current-user';
 import type UserModel from 'pass-ui/models/user';
 import type AppStore from 'pass-ui/services/store';
+import type Owner from '@ember/owner';
 
 const eq = (a: unknown, b: unknown) => a === b;
 
 const perform =
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (task: any, ...curried: any[]) =>
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (...args: any[]) =>
-      task.perform(...curried, ...args);
+  (task: Task<unknown, unknown[]>, ...curried: unknown[]) =>
+  (...args: unknown[]) =>
+    task.perform(...curried, ...args);
 
 interface WorkflowBasicsUserSearchSignature {
   Args: {
@@ -54,8 +54,7 @@ export default class WorkflowBasicsUserSearch extends Component<WorkflowBasicsUs
     return users.filter((u: UserModel) => u.id !== this.currentUser.user?.id);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  constructor(owner: any, args: WorkflowBasicsUserSearchSignature['Args']) {
+  constructor(owner: Owner, args: WorkflowBasicsUserSearchSignature['Args']) {
     super(owner, args);
 
     if (this.args.searchInput) {

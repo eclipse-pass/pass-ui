@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 
@@ -16,8 +15,8 @@ module('Unit | Route | grants/index', (hooks) => {
     assert.expect(2);
 
     this['route'].store = {
-      request: (req: any) => {
-        const url = req.url as string;
+      request: (req: { url: string }) => {
+        const url = req.url;
         if (url.includes('/data/grant')) {
           assert.true(url.includes('page'), 'Grant query should have pagination');
           return Promise.resolve({ content: { data: [] } });
@@ -34,8 +33,8 @@ module('Unit | Route | grants/index', (hooks) => {
 
   test('Submissions should be mapped to grants', async function (assert) {
     this['route'].store = {
-      request: (req: any) => {
-        const url = req.url as string;
+      request: (req: { url: string }) => {
+        const url = req.url;
         if (url.includes('/data/grant')) {
           return Promise.resolve({ content: { data: [{ id: 0 }, { id: 1 }] } });
         } else if (url.includes('/data/submission')) {

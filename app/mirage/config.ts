@@ -1,6 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, ember/avoid-leaking-state-in-ember-objects */
+/* eslint-disable ember/avoid-leaking-state-in-ember-objects */
 const camelize = (str: string) => str.replace(/[-_\s]+(.)?/g, (_: string, c: string) => (c ? c.toUpperCase() : ''));
 import { createServer, JSONAPISerializer, Model, Response, belongsTo, hasMany } from 'miragejs';
+import type { Server, Request } from 'miragejs';
 import doiJournals from './custom-fixtures/nih-submission/doi-journals';
 import ENV from 'pass-ui/config/environment';
 import MockDataFinder from './service-handler';
@@ -22,7 +23,22 @@ import repositoryFixtures from './fixtures/repository';
 import submissionFixtures from './fixtures/submission';
 import userFixtures from './fixtures/user';
 
-export default function (config: any) {
+/**
+ * Mirage route handlers using `function` syntax get a special `this` context
+ * with `normalizedRequestAttrs()` and `serialize()` injected at runtime.
+ * These are NOT on the Server type, so we define them here.
+ */
+interface MirageRouteHandler {
+  normalizedRequestAttrs(modelName?: string): Record<string, unknown>;
+  serialize(resource: unknown): { data: unknown[]; included?: unknown[] };
+}
+
+interface PolicyRepoEntry {
+  url: string;
+  selected: boolean;
+}
+
+export default function (config: Record<string, unknown> & { models?: Record<string, unknown> }) {
   const dataFinder = new MockDataFinder(ENV.environment);
 
   const finalConfig = {
@@ -113,8 +129,8 @@ export default function (config: any) {
         include: ['repositories'],
       }),
     },
-    routes(this: any) {
-      this.get('/app/config.json', (_schema: any, _request: any) => {
+    routes(this: Server) {
+      this.get('/app/config.json', () => {
         return {
           branding: {
             homepage: 'https://www.eclipse.org/org/foundation/',
@@ -133,12 +149,12 @@ export default function (config: any) {
       });
 
       /** User Service */
-      this.get('/user/whoami', (_schema: any, _request: any) => {
+      this.get('/user/whoami', () => {
         return { user: { id: '0' } };
       });
 
       /** Download service */
-      this.get('/doi/manuscript', (schema: any, request: any) => ({
+      this.get('/doi/manuscript', () => ({
         manuscripts: [
           {
             url: 'https://dash.harvard.edu/bitstream/1/12285462/1/Nanometer-Scale%20Thermometry.pdf',
@@ -170,76 +186,84 @@ export default function (config: any) {
        * ################################################################
        */
       // File Service
-      this.get('/file/:id', (schema: any, request: any) => schema.find('file', request.params.id));
-      this.post('/file', function (this: any, schema: any, _request: any) {
+      this.get('/file/:id', (schema, request) => schema.find('file', request.params.id!));
+      this.post('/file', function (this: MirageRouteHandler) {
         return {
           fileName: 'my-submission.pdf',
           mimeType: 'application/pdf',
           uuid: '12abc34xE999',
         };
       });
-      this.delete('/file/:id/:name', function (this: any, schema: any, request: any) {
+      this.delete('/file/:id/:name', function () {
         return new Response(200);
       });
       // File API
-      this.get('/data/file', (schema: any, request: any) => {
+      this.get('/data/file', (schema, request) => {
         console.log(`[MirageJS] GET /file | query ${JSON.stringify(request.queryParams)}`);
         return schema.none('file');
       });
       this.patch('/data/file/:id');
-      this.post('/data/file', function (this: any, schema: any, _request: any) {
+      this.post('/data/file', function (this: MirageRouteHandler, schema) {
         const attrs = this.normalizedRequestAttrs();
 
         return schema.create('file', attrs);
       });
-      this.delete('/data/file/:id', (_schema: any, _request: any) => {
+      this.delete('/data/file/:id', () => {
         return new Response(204);
       });
 
       // Users
-      this.get('/data/user/:id', (schema: any, request: any) => schema.find('user', request.params.id));
-      this.get('/data/user', (schema: any, request: any) => schema.where('user', { displayName: 'Staff Hasgrants' }));
+      this.get('/data/user/:id', (schema, request) => schema.find('user', request.params.id!));
+      this.get('/data/user', (schema) =>
+        schema.where('user', { displayName: 'Staff Hasgrants' } as Record<string, unknown>),
+      );
 
       // Journals
-      this.get('/data/journal/:id', (schema: any, request: any) => schema.find('journal', request.params.id));
+      this.get('/data/journal/:id', (schema, request) => schema.find('journal', request.params.id!));
       // We could make it generic for the autocomplete service, but not much
       // reason just for tests
-      this.get('/data/journal', (schema: any, request: any) => schema.where('journal', { journalName: 'The Analyst' }));
+      this.get('/data/journal', (schema) =>
+        schema.where('journal', { journalName: 'The Analyst' } as Record<string, unknown>),
+      );
 
       // Policies
-      this.get('/data/policy', (schema: any, request: any) => schema.all('policy'));
-      this.get('/data/policy/:id', (schema: any, request: any) => schema.find('policy', request.params.id));
+      this.get('/data/policy', (schema) => schema.all('policy'));
+      this.get('/data/policy/:id', (schema, request) => schema.find('policy', request.params.id!));
 
       // Funders
-      this.get('/data/funder/:id', (schema: any, request: any) => schema.find('funder', request.params.id));
+      this.get('/data/funder/:id', (schema, request) => schema.find('funder', request.params.id!));
 
       // Repositories
-      this.get('/data/repository', (schema: any, request: any) => schema.all('repository'));
-      this.get('/data/repository/:id', (schema: any, request: any) => schema.find('repository', request.params.id));
+      this.get('/data/repository', (schema) => schema.all('repository'));
+      this.get('/data/repository/:id', (schema, request) => schema.find('repository', request.params.id!));
 
       // Publications
-      this.get('/data/publication/:id', (schema: any, request: any) => schema.find('publication', request.params.id));
-      this.post('/data/publication', function (this: any, schema: any, request: any) {
+      this.get('/data/publication/:id', (schema, request) => schema.find('publication', request.params.id!));
+      this.post('/data/publication', function (this: MirageRouteHandler, schema) {
         const attrs = this.normalizedRequestAttrs();
         return schema.create('publication', attrs);
       });
-      this.patch('/data/publication/:id', function (this: any, schema: any, request: any) {
+      this.patch('/data/publication/:id', function (this: MirageRouteHandler, schema, request) {
         const attrs = this.normalizedRequestAttrs('publication');
-        return schema.find('publication', request.params.id).update(attrs);
+        const pub = schema.find('publication', request.params.id!);
+        pub!.update(attrs);
+        return pub;
       });
 
       // Submissions
-      this.get('/data/submission/:id', (schema: any, request: any) => schema.find('submission', request.params.id));
-      this.post('/data/submission', function (this: any, schema: any, request: any) {
+      this.get('/data/submission/:id', (schema, request) => schema.find('submission', request.params.id!));
+      this.post('/data/submission', function (this: MirageRouteHandler, schema) {
         const attrs = this.normalizedRequestAttrs('submission');
         return schema.create('submission', attrs);
       });
-      this.patch('/data/submission/:id', function (this: any, schema: any, request: any) {
+      this.patch('/data/submission/:id', function (this: MirageRouteHandler, schema, request) {
         const attrs = this.normalizedRequestAttrs('submission');
-        return schema.find('submission', request.params.id).update(attrs);
+        const sub = schema.find('submission', request.params.id!);
+        sub!.update(attrs);
+        return sub;
       });
       // Submission filtering
-      this.get('/data/submission', function (this: any, schema: any, request: any) {
+      this.get('/data/submission', function (this: MirageRouteHandler, schema, request: Request) {
         /**
          * JSON object with query parameter as key, value as value.
          * ex: ?param1=value1&param2=value2
@@ -252,7 +276,7 @@ export default function (config: any) {
           result = schema.all('submission');
         } else {
           // Find the 'filter[...]' parameter
-          let submissionFilter = Object.keys(query)
+          let submissionFilter: unknown = Object.keys(query)
             .filter((key: string) => key.includes('filter[submission]'))
             .map((key: string) => query[key]);
           if (!Array.isArray(submissionFilter) || submissionFilter.length !== 1) {
@@ -260,14 +284,16 @@ export default function (config: any) {
           } else {
             // Once we know query params includes a submission filter, get its value
             submissionFilter = submissionFilter[0];
-            result = submissionFilter.includes('cancelled') ? schema.all('submission') : schema.none('submission');
+            result = (submissionFilter as string).includes('cancelled')
+              ? schema.all('submission')
+              : schema.none('submission');
           }
         }
 
         // this.serialize() auto-sideloads via the submission serializer's include config
         const serialized = this.serialize(result);
-        const pageSize = parseInt(query?.['page[size]'] || '10', 10);
-        const pageNumber = parseInt(query?.['page[number]'] || '1', 10);
+        const pageSize = parseInt((query?.['page[size]'] as string) || '10', 10);
+        const pageNumber = parseInt((query?.['page[number]'] as string) || '1', 10);
         const allData = serialized.data || [];
         const totalRecords = allData.length;
         const totalPages = Math.max(1, Math.ceil(totalRecords / pageSize));
@@ -286,35 +312,33 @@ export default function (config: any) {
       });
 
       // Submission Events
-      this.post('/data/submissionEvent', function (this: any, schema: any, request: any) {
-        const attrs = this.normalizedRequestAttrs('submission-event');
+      this.post('/data/submissionEvent', function (this: MirageRouteHandler, schema) {
+        const attrs = this.normalizedRequestAttrs('submission-event') as Record<string, unknown>;
         const se = schema.create('submission-event', attrs);
 
         try {
-          const submission = schema.find('submission', attrs.submissionId);
-          submission.submissionStatus =
+          const submission = schema.find('submission', attrs.submissionId as string)!;
+          (submission as unknown as Record<string, unknown>).submissionStatus =
             attrs.eventType === 'approval-requested-newuser' ? 'approval-requested' : attrs.eventType;
-          submission.save();
+          (submission as unknown as { save(): void }).save();
         } catch (e) {
           console.log(e);
         }
 
         return se;
       });
-      this.get('/data/submissionEvent/:id', (schema: any, request: any) =>
-        schema.find('submission-event', request.params.id),
-      );
-      this.get('/data/submissionEvent', (schema: any, request: any) => schema.none('submission-event'));
+      this.get('/data/submissionEvent/:id', (schema, request) => schema.find('submission-event', request.params.id!));
+      this.get('/data/submissionEvent', (schema) => schema.none('submission-event'));
 
       // Grants
-      this.get('/data/grant/:id', (schema: any, request: any) => schema.find('grant', request.params.id));
-      this.get('/data/grant', function (this: any, schema: any, request: any) {
-        const grantsModel = schema.grant.all();
+      this.get('/data/grant/:id', (schema, request) => schema.find('grant', request.params.id!));
+      this.get('/data/grant', function (this: MirageRouteHandler, schema, request: Request) {
+        const grantsModel = schema.all('grant');
         const grants = this.serialize(grantsModel);
         const allData = grants.data || [];
         const totalRecords = allData.length;
-        const pageSize = parseInt(request.queryParams['page[size]'] || '10', 10);
-        const pageNumber = parseInt(request.queryParams['page[number]'] || '1', 10);
+        const pageSize = parseInt((request.queryParams['page[size]'] as string) || '10', 10);
+        const pageNumber = parseInt((request.queryParams['page[number]'] as string) || '1', 10);
         const totalPages = Math.max(1, Math.ceil(totalRecords / pageSize));
         const start = (pageNumber - 1) * pageSize;
         const end = start + pageSize;
@@ -330,16 +354,14 @@ export default function (config: any) {
         };
       });
 
-      this.get('/data/repositoryCopy/:id', (schema: any, request: any) =>
-        schema.find('repository-copy', request.params.id),
-      );
-      this.get('/data/repositoryCopy', (schema: any, request: any) => schema.none('repository-copy'));
+      this.get('/data/repositoryCopy/:id', (schema, request) => schema.find('repository-copy', request.params.id!));
+      this.get('/data/repositoryCopy', (schema) => schema.none('repository-copy'));
 
-      this.get('/data/deposit/:id', (schema: any, request: any) => schema.find('deposit', request.params.id));
-      this.get('/data/deposit', (schema: any, request: any) => schema.none('deposit'));
+      this.get('/data/deposit/:id', (schema, request) => schema.find('deposit', request.params.id!));
+      this.get('/data/deposit', (schema) => schema.none('deposit'));
 
       /** DOI Service */
-      this.get('/doi/journal', (schema: any, request: any) => {
+      this.get('/doi/journal', (_schema, request) => {
         console.log(`[MirageJS] GET /journal | query: ${JSON.stringify(request.queryParams)}`);
         return {
           'journal-id': doiJournals['journal-id'],
@@ -348,41 +370,52 @@ export default function (config: any) {
       });
 
       /** Policy Service */
-      this.get('/policy/policies', async (schema: any, request: any) => {
-        const { id } = schema.policy.findBy({ title: 'Johns Hopkins University (JHU) Open Access Policy' });
-        const policies = [{ id, type: 'institution' }];
-        const seenIds = new Set([id]);
+      this.get('/policy/policies', async (schema, request) => {
+        const jhuPolicy = schema.findBy('policy', {
+          title: 'Johns Hopkins University (JHU) Open Access Policy',
+        } as Record<string, unknown>)!;
+        const policies: Array<{ id: string; type: string }> = [{ id: jhuPolicy.id!, type: 'institution' }];
+        const seenIds = new Set([jhuPolicy.id!]);
 
-        schema.submission.find(request.queryParams.submission).grants.models.forEach((grant: any) => {
-          const { policyId } = schema.funder.find(grant.primaryFunder.id);
-          const { id } = schema.policy.find(policyId);
+        const submission = schema.find('submission', request.queryParams.submission as string)!;
+        const grants = (submission as unknown as { grants: { models: Array<{ primaryFunder: { id: string } }> } })
+          .grants;
+        grants.models.forEach((grant) => {
+          const funder = schema.find('funder', grant.primaryFunder.id)!;
+          const policyId = (funder as unknown as { policyId: string }).policyId;
+          const policy = schema.find('policy', policyId)!;
 
-          if (id && !seenIds.has(id)) {
-            seenIds.add(id);
-            policies.push({ id, type: 'funder' });
+          if (policy.id && !seenIds.has(policy.id)) {
+            seenIds.add(policy.id);
+            policies.push({ id: policy.id, type: 'funder' });
           }
         });
 
         return policies;
       });
       // Return NIH (required) and J10p (optional, selected)
-      this.get('/policy/repositories', async (schema: any, request: any) => {
-        const submissionId = request.queryParams.submission;
-        const publicationId = schema.submission.find(submissionId).attrs.publicationId;
-        const publication = schema.publication.find(publicationId);
+      this.get('/policy/repositories', async (schema, request) => {
+        const submissionId = request.queryParams.submission as string;
+        const submission = schema.find('submission', submissionId)!;
+        const publicationId = (submission as unknown as { attrs: { publicationId: string } }).attrs.publicationId;
+        const publication = schema.find('publication', publicationId)!;
 
         const j10p = await dataFinder.findBy(schema, 'repository', { repositoryKey: 'jscholarship' });
         const pmc = await dataFinder.findBy(schema, 'repository', { repositoryKey: 'pmc' });
 
-        const payload: any = {
+        const payload: {
+          required: PolicyRepoEntry[];
+          'one-of': PolicyRepoEntry[][];
+          optional: PolicyRepoEntry[];
+        } = {
           required: [],
           'one-of': [[{ url: j10p.id, selected: true }]],
           optional: [{ url: j10p.id, selected: true }],
         };
 
-        if (publication.journalId) {
+        if ((publication as unknown as { journalId: string | null }).journalId) {
           payload.required.push({ url: pmc.id, selected: false });
-          payload['one-of'][0].push({ url: pmc.id, selected: false });
+          payload['one-of'][0]!.push({ url: pmc.id, selected: false });
         }
 
         return payload;
@@ -422,7 +455,7 @@ export default function (config: any) {
     journalName: 'The Analyst',
     nlmta: 'Analyst',
     pmcParticipation: 'B',
-  });
+  } as Record<string, unknown>);
 
   return server;
 }

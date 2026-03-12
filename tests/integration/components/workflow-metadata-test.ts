@@ -29,8 +29,7 @@ module('Integration | Component | workflow-metadata', (hooks) => {
   };
 
   hooks.beforeEach(async function () {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const repositories: any[] = [];
+    const repositories: unknown[] = [];
     const journal = {
       issns: [],
     };

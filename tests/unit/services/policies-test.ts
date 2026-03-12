@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { setupTest } from 'ember-qunit';
 import { setupMirage } from 'pass-ui/tests/test-support/mirage';
 import { module, test } from 'qunit';
@@ -45,12 +44,12 @@ module('Unit | Service | policies', (hooks) => {
     assert.strictEqual(rules['one-of'].length, 1, 'Unexpected number of choice groups');
     assert.strictEqual(rules['one-of'][0].length, 2, 'Unexpected number of repos in choice group 1');
 
-    rules.required.forEach((repo: any) =>
+    rules.required.forEach((repo: { name: string }) =>
       assert.strictEqual(repo.name, 'PubMed Central - NATIONAL INSTITUTE OF HEALTH'),
     );
-    rules.optional.forEach((repo: any) => assert.strictEqual(repo.name, 'JScholarship'));
+    rules.optional.forEach((repo: { name: string }) => assert.strictEqual(repo.name, 'JScholarship'));
     assert.ok(
-      rules['one-of'][0].some((repo: any) => {
+      rules['one-of'][0].some((repo: { name: string }) => {
         return repo.name === 'JScholarship' || repo.name === 'PubMed Central - NATIONAL INSTITUTE OF HEALTH';
       }),
     );

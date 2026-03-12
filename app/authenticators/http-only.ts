@@ -1,10 +1,10 @@
 import Base from 'ember-simple-auth/authenticators/base';
 import { service } from '@ember/service';
 import { isEmpty } from '@ember/utils';
+import type SessionService from 'ember-simple-auth/services/session';
 
 export default class HttpOnly extends Base {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare session: any;
+  @service declare session: SessionService;
 
   /**
    Restores the session from a session data object; __will return a resolving

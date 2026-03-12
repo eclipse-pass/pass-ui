@@ -6,6 +6,7 @@ import ENV from 'pass-ui/config/environment';
 import { service } from '@ember/service';
 import { later, scheduleOnce } from '@ember/runloop';
 import swal from 'sweetalert2/dist/sweetalert2.js';
+import type RouterService from '@ember/routing/router-service';
 import type CurrentUserService from 'pass-ui/services/current-user';
 import type SubmissionHandlerService from 'pass-ui/services/submission-handler';
 import type SearchHelperService from 'pass-ui/services/search-helper';
@@ -16,7 +17,9 @@ import type RepositoryCopyModel from 'pass-ui/models/repository-copy';
 import type UserModel from 'pass-ui/models/user';
 import type FileModel from 'pass-ui/models/file';
 import type SubmissionEventModel from 'pass-ui/models/submission-event';
+import type Owner from '@ember/owner';
 import type AppStore from 'pass-ui/services/store';
+import type { FlashMessageService } from 'pass-ui/types/ember-cli-flash';
 
 interface ExternalRepoMetadata {
   message: string;
@@ -46,17 +49,14 @@ export default class SubmissionsDetail extends Controller {
   @service declare store: AppStore;
   @service declare submissionHandler: SubmissionHandlerService;
   @service declare searchHelper: SearchHelperService;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare flashMessages: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare router: any;
+  @service declare flashMessages: FlashMessageService;
+  @service declare router: RouterService;
 
   md: ExternalRepoMetadata[] | undefined;
   message: string | undefined;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  constructor(...args: any[]) {
-    super(...args);
+  constructor(owner: Owner) {
+    super(owner);
 
     const element = document.querySelector('[data-toggle="tooltip"]') as HTMLElement | null;
     if (element) (element as HTMLElement & { tooltip(): void }).tooltip();

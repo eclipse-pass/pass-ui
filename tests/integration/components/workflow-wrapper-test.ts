@@ -14,10 +14,8 @@ module('Integration | Component | workflow wrapper', (hooks) => {
     this.set('submission', submission);
     this.set('publication', publication);
     this.set('submissionEvents', [submissionEvent]);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.set('validateAndLoadTab', (actual: any) => {});
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.set('updateCovidSubmission', (actual: any) => {});
+    this.set('validateAndLoadTab', () => {});
+    this.set('updateCovidSubmission', () => {});
 
     await render(hbs`<WorkflowWrapper
   @submission={{this.submission}}

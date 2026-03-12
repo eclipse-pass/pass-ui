@@ -2,10 +2,10 @@
 import { isTesting } from '@ember/debug';
 import { setOnerror } from '@ember/-internals/error-handling';
 import { on } from 'rsvp';
+import type ApplicationInstance from '@ember/application/instance';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function initialize(app: any) {
-  const errorHandler = app.lookup('service:error-handler');
+export function initialize(app: ApplicationInstance) {
+  const errorHandler = app.lookup('service:error-handler') as { handleError(error: Error | unknown): void };
 
   setOnerror((error: Error) => {
     if (isTesting()) {

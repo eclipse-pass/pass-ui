@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable ember/no-classic-classes */
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
@@ -17,7 +16,7 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
   });
 
   test('No manuscript files, user is submitter, stops transition', async function (assert) {
-    const controller: any = this.owner.lookup('controller:submissions/new/files');
+    const controller = this.owner.lookup('controller:submissions/new/files');
     let loadTabAccessed = false;
     this.owner.register(
       'controller:submissions.new',
@@ -39,8 +38,8 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
     const model = { files: [] };
     controller.model = model;
     controller.loadingNext = true;
-    const routerService: any = this.owner.lookup('service:router');
-    routerService.transitionTo = (name: any) => {
+    const routerService = this.owner.lookup('service:router');
+    routerService.transitionTo = (_name: string) => {
       loadTabAccessed = true;
     };
     assert.strictEqual(controller.workflow.getFiles().length, 0);
@@ -51,7 +50,7 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
   });
 
   test('No manuscript files, user not submitter, warns before transition', function (assert) {
-    const controller: any = this.owner.lookup('controller:submissions/new/files');
+    const controller = this.owner.lookup('controller:submissions/new/files');
     let loadTabAccessed = false;
     this.owner.register(
       'controller:submissions.new',
@@ -72,8 +71,8 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
     );
     const model = { files: [] };
     controller.model = model;
-    const routerService: any = this.owner.lookup('service:router');
-    routerService.transitionTo = (name: any) => {
+    const routerService = this.owner.lookup('service:router');
+    routerService.transitionTo = (_name: string) => {
       loadTabAccessed = true;
     };
     assert.strictEqual(controller.workflow.getFiles().length, 0);
@@ -85,7 +84,7 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
   });
 
   test('Multiple manuscript files stops transition', function (assert) {
-    const controller: any = this.owner.lookup('controller:submissions/new/files');
+    const controller = this.owner.lookup('controller:submissions/new/files');
 
     let loadTabAccessed = false;
 
@@ -118,7 +117,7 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
     );
     const model = { newSubmission: submission };
     controller.model = model;
-    const routerService: any = this.owner.lookup('service:router');
+    const routerService = this.owner.lookup('service:router');
     routerService.transitionTo = () => {
       loadTabAccessed = true;
     };
@@ -128,7 +127,7 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
   });
 
   test('Valid files page does transition', function (assert) {
-    const controller: any = this.owner.lookup('controller:submissions/new/files');
+    const controller = this.owner.lookup('controller:submissions/new/files');
 
     this.owner.register(
       'controller:submissions.new',
@@ -158,15 +157,15 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
     };
     controller.model = model;
 
-    const store: any = this.owner.lookup('service:store');
-    store.persistRecord = (record: any) => {
+    const store = this.owner.lookup('service:store');
+    store.persistRecord = (record: unknown) => {
       if (record === submission) {
         subSaved = true;
       }
       return Promise.resolve({ content: {} });
     };
 
-    const routerService: any = this.owner.lookup('service:router');
+    const routerService = this.owner.lookup('service:router');
     routerService.transitionTo = () => {
       assert.ok(subSaved, 'Submission was not saved');
       assert.strictEqual(controller.workflow.getFiles().length, 1);
