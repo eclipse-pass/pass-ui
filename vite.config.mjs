@@ -45,26 +45,6 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['survey-js-ui', '@playwright/test', 'playwright', 'playwright-core'],
   },
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (id.includes('node_modules')) {
-            // With pnpm, real paths are under .pnpm/; extract the package name
-            // from the last node_modules/ segment in the resolved path.
-            // Keeps chunks small enough for TestCafe's instrumentation proxy.
-            const parts = id.split('node_modules/');
-            const pkg = parts[parts.length - 1];
-            const match = pkg.match(/^((?:@[^/]+\/)?[^/]+)/);
-            if (match) {
-              return `vendor-${match[1].replace(/[@/]/g, '_')}`;
-            }
-            return 'vendor';
-          }
-        },
-      },
-    },
-  },
   preview: {
     allowedHosts: ['host.docker.internal'],
   },
