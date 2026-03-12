@@ -82,7 +82,7 @@ export function query(type: string, params: QueryParams = {}) {
 
   return {
     url: queryString ? `${url}?${queryString}` : url,
-    method: 'GET',
+    method: 'GET' as const,
     headers,
     op: 'query' as const,
     // Always reload for queries to match legacy adapter behavior.
@@ -108,7 +108,7 @@ export function findRecord(type: string, id: string, options: QueryParams = {}) 
 
   return {
     url: queryString ? `${url}?${queryString}` : url,
-    method: 'GET',
+    method: 'GET' as const,
     headers,
     op: 'findRecord' as const,
     cacheOptions: { types: [type] },
@@ -219,7 +219,7 @@ export function saveRecord(record: Model, store: StoreWithSchema) {
 
   return {
     url,
-    method: isNew ? 'POST' : 'PATCH',
+    method: (isNew ? 'POST' : 'PATCH') as 'POST' | 'PATCH',
     headers,
     body,
     op: isNew ? ('createRecord' as const) : ('updateRecord' as const),
@@ -243,7 +243,7 @@ export function deleteRecord(record: Model) {
 
   return {
     url,
-    method: 'DELETE',
+    method: 'DELETE' as const,
     headers,
     op: 'deleteRecord' as const,
     records: [identifier],

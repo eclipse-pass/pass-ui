@@ -15,6 +15,7 @@ import type GrantModel from 'pass-ui/models/grant';
 import type SubmissionModel from 'pass-ui/models/submission';
 import type Workflow from 'pass-ui/services/workflow';
 import type AppStaticConfigService from 'pass-ui/services/app-static-config';
+import type AppStore from 'pass-ui/services/store';
 
 const gt = (a: unknown, b: unknown) => Number(a) > Number(b);
 const includes = (arr: unknown[], item: unknown) => arr.includes(item);
@@ -33,8 +34,7 @@ interface WorkflowGrantsSignature {
 }
 
 export default class WorkflowGrants extends Component<WorkflowGrantsSignature> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare store: any;
+  @service declare store: AppStore;
   @service declare workflow: Workflow;
   @service declare appStaticConfig: AppStaticConfigService;
 
@@ -114,11 +114,10 @@ export default class WorkflowGrants extends Component<WorkflowGrantsSignature> {
       },
     };
     const { content } = await this.store.request(query('grant', grantQuery));
-    const data = content.data;
-    const meta = content.meta;
-    this.submitterGrants = data;
-    this.totalGrants = meta.page.totalRecords;
-    this.pageCount = meta.page.totalPages;
+    const doc = content as { data: GrantModel[]; meta: { page: { totalRecords: number; totalPages: number } } };
+    this.submitterGrants = doc.data;
+    this.totalGrants = doc.meta.page.totalRecords;
+    this.pageCount = doc.meta.page.totalPages;
   });
 
   initialAddGrant = task(async (grant: GrantModel | null, event?: Event) => {
@@ -129,7 +128,7 @@ export default class WorkflowGrants extends Component<WorkflowGrantsSignature> {
         findRecord('grant', (event.target as HTMLSelectElement).value, { include: 'primaryFunder,directFunder' }),
       );
 
-      this.addGrant(grantDoc.data);
+      this.addGrant((grantDoc as { data: GrantModel }).data);
       document.querySelectorAll('select')[0]!.selectedIndex = 0;
     }
   });

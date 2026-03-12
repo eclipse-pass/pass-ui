@@ -9,7 +9,7 @@ import type DepositModel from 'pass-ui/models/deposit';
 import type RepositoryCopyModel from 'pass-ui/models/repository-copy';
 import type SubmissionEventModel from 'pass-ui/models/submission-event';
 import type RepositoryModel from 'pass-ui/models/repository';
-import type { JsonApiDocument } from 'pass-ui/types/json-api';
+import type AppStore from 'pass-ui/services/store';
 
 interface DetailModel {
   sub: SubmissionModel;
@@ -25,8 +25,7 @@ interface SubmissionDetailParams {
 }
 
 export default class DetailRoute extends CheckSessionRoute {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare store: any;
+  @service declare store: AppStore;
 
   async model(params: SubmissionDetailParams): Promise<DetailModel | void> {
     if (!params?.submission_id) {
@@ -36,32 +35,32 @@ export default class DetailRoute extends CheckSessionRoute {
 
     const depositsPromise = this.store
       .request(query('deposit', { filter: { deposit: `submission.id==${params.submission_id}` } }))
-      .then((result: JsonApiDocument<DepositModel[]>) => result.content.data);
+      .then((result) => (result.content as { data: DepositModel[] }).data);
     const submissionEventsPromise = this.store
       .request(
         query('submission-event', {
           filter: { submissionEvent: `submission.id==${params.submission_id}` },
         }),
       )
-      .then((result: JsonApiDocument<SubmissionEventModel[]>) => result.content.data);
+      .then((result) => (result.content as { data: SubmissionEventModel[] }).data);
 
-    const { content: subContent }: JsonApiDocument<SubmissionModel> = await this.store.request(
+    const { content: subContent } = await this.store.request(
       findRecord('submission', params.submission_id, {
         include:
           'effectivePolicies,grants.primaryFunder,grants.directFunder,publication.journal,repositories,preparers,submitter',
       }),
     );
-    const sub = subContent.data;
+    const sub = (subContent as { data: SubmissionModel }).data;
     const publication = sub.publication;
-    const { content: repoCopyContent }: JsonApiDocument<RepositoryCopyModel[]> = await this.store.request(
+    const { content: repoCopyContent } = await this.store.request(
       query('repository-copy', { filter: { repositoryCopy: `publication.id==${publication.id}` } }),
     );
-    const repoCopies = repoCopyContent.data;
+    const repoCopies = (repoCopyContent as { data: RepositoryCopyModel[] }).data;
     const repos = sub.repositories;
-    const { content: fileContent }: JsonApiDocument<FileModel[]> = await this.store.request(
+    const { content: fileContent } = await this.store.request(
       query('file', fileForSubmissionQuery(params.submission_id)),
     );
-    const files = [...fileContent.data.slice()];
+    const files = [...(fileContent as { data: FileModel[] }).data.slice()];
 
     return hash({
       sub,

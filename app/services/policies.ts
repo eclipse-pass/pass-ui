@@ -6,6 +6,7 @@ import { findRecord } from 'pass-ui/builders/pass-api';
 import type PolicyModel from 'pass-ui/models/policy';
 import type RepositoryModel from 'pass-ui/models/repository';
 import type SubmissionModel from 'pass-ui/models/submission';
+import type AppStore from 'pass-ui/services/store';
 
 export interface RepoDslResult {
   required?: RepositoryModel[];
@@ -18,8 +19,7 @@ export interface RepoDslResult {
  */
 
 export default class PoliciesService extends Service {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare store: any;
+  @service declare store: AppStore;
 
   /**
    * Get a list of applicable policies for a given submission.
@@ -59,13 +59,11 @@ export default class PoliciesService extends Service {
 
     return await all(
       data.map((policyInfo: { id: string; type: string }) =>
-        this.store
-          .request(findRecord('policy', policyInfo.id))
-          .then(({ content }: { content: { data: PolicyModel } }) => {
-            const pol = content.data;
-            pol._type = policyInfo.type;
-            return pol;
-          }),
+        this.store.request(findRecord('policy', policyInfo.id)).then((result) => {
+          const pol = (result.content as { data: PolicyModel }).data;
+          pol._type = policyInfo.type;
+          return pol;
+        }),
       ),
     );
   });
@@ -143,13 +141,11 @@ export default class PoliciesService extends Service {
   _resolveRepos = task(async (repos: Array<{ url: string; selected: boolean }>) => {
     return await all(
       repos.map((repoInfo) =>
-        this.store
-          .request(findRecord('repository', repoInfo.url))
-          .then(({ content }: { content: { data: RepositoryModel } }) => {
-            const repo = content.data;
-            repo._selected = repoInfo.selected;
-            return repo;
-          }),
+        this.store.request(findRecord('repository', repoInfo.url)).then((result) => {
+          const repo = (result.content as { data: RepositoryModel }).data;
+          repo._selected = repoInfo.selected;
+          return repo;
+        }),
       ),
     );
   });

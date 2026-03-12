@@ -1,10 +1,9 @@
 import Service, { service } from '@ember/service';
 import { query as queryBuilder } from 'pass-ui/builders/pass-api';
-import type { JsonApiDocument } from 'pass-ui/types/json-api';
+import type AppStore from 'pass-ui/services/store';
 
 export default class AutocompleteService extends Service {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare store: any;
+  @service declare store: AppStore;
 
   /**
    * Get suggestions for autocomplete possibilities based on the given
@@ -65,7 +64,7 @@ export default class AutocompleteService extends Service {
 
     return this.store
       .request(queryBuilder(type, query))
-      .then((result: JsonApiDocument<unknown[]>) => result.content.data)
+      .then((result) => (result.content as { data: unknown[] }).data)
       .catch((error: unknown) => {
         console.error(`Autocomplete service failed: ${JSON.stringify(error)}`);
       });

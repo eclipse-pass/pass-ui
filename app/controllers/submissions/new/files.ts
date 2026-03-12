@@ -5,12 +5,14 @@ import { action } from '@ember/object';
 import { service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
 import swal from 'sweetalert2/dist/sweetalert2.js';
+import type Model from '@ember-data/model';
 import type Workflow from 'pass-ui/services/workflow';
 import type SubmissionsNew from 'pass-ui/controllers/submissions/new';
 import type FileModel from 'pass-ui/models/file';
 import type SubmissionModel from 'pass-ui/models/submission';
 import type PublicationModel from 'pass-ui/models/publication';
 import type SubmissionEventModel from 'pass-ui/models/submission-event';
+import type AppStore from 'pass-ui/services/store';
 
 interface FilesModel {
   newSubmission: SubmissionModel;
@@ -22,8 +24,7 @@ export default class SubmissionsNewFiles extends Controller {
   declare model: FilesModel;
 
   @service declare workflow: Workflow;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare store: any;
+  @service declare store: AppStore;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare flashMessages: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -114,7 +115,7 @@ export default class SubmissionsNewFiles extends Controller {
     const allFiles = this.workflow.getFiles();
     if (allFiles.length > 0) {
       allFiles.forEach((file) => {
-        this.store.persistRecord(file);
+        this.store.persistRecord(file as unknown as Model);
       });
     }
   }

@@ -16,7 +16,7 @@ import type SubmissionEventModel from 'pass-ui/models/submission-event';
 import type FileModel from 'pass-ui/models/file';
 import type SubmissionsNewController from 'pass-ui/controllers/submissions/new';
 import type SubmissionsNewGrantsController from 'pass-ui/controllers/submissions/new/grants';
-import type { JsonApiDocument } from 'pass-ui/types/json-api';
+import type AppStore from 'pass-ui/services/store';
 
 interface NewSubmissionModel {
   repositories: RepositoryModel[];
@@ -36,8 +36,7 @@ interface NewSubmissionParams {
 
 export default class NewRoute extends CheckSessionRoute {
   @service('workflow') declare workflow: Workflow;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare store: any;
+  @service declare store: AppStore;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare router: any;
 
@@ -53,7 +52,7 @@ export default class NewRoute extends CheckSessionRoute {
     // Explicitly clear the 'grant' query parameter when reloading this route
     if (isExiting) {
       controller.queryParams.forEach((param: string) => controller.set(param, null));
-      this.store.peekAll('submission').forEach((s: SubmissionModel) => s.rollbackAttributes());
+      (this.store.peekAll('submission') as SubmissionModel[]).forEach((s: SubmissionModel) => s.rollbackAttributes());
     }
   }
 
@@ -62,7 +61,7 @@ export default class NewRoute extends CheckSessionRoute {
     // TODO: Elide JSON:API filters do not support both page size and page offset
     return this.store
       .request(query(type, { page: { size: count } }))
-      .then((result: JsonApiDocument<T[]>) => result.content.data);
+      .then((result) => (result.content as { data: T[] }).data);
   }
 
   async model(params: NewSubmissionParams): Promise<NewSubmissionModel> {
@@ -75,7 +74,7 @@ export default class NewRoute extends CheckSessionRoute {
     if (params.grant) {
       preLoadedGrant = this.store
         .request(findRecord('grant', params.grant, { include: 'primaryFunder,directFunder' }))
-        .then((result: JsonApiDocument<GrantModel>) => result.content.data);
+        .then((result) => (result.content as { data: GrantModel }).data);
     }
 
     const repositories = this.loadObjects<RepositoryModel>('repository', 0, 500);
@@ -84,12 +83,12 @@ export default class NewRoute extends CheckSessionRoute {
     if (params.submission) {
       // Operating on existing submission
 
-      const { content: subContent }: JsonApiDocument<SubmissionModel> = await this.store.request(
+      const { content: subContent } = await this.store.request(
         findRecord('submission', params.submission, {
           include: 'effectivePolicies,grants.primaryFunder,grants.directFunder,publication.journal,submitter',
         }),
       );
-      newSubmission = subContent.data;
+      newSubmission = (subContent as { data: SubmissionModel }).data;
       publication = newSubmission.publication;
       journal = publication.journal;
 
@@ -100,21 +99,21 @@ export default class NewRoute extends CheckSessionRoute {
             sort: '+performedDate',
           }),
         )
-        .then((result: JsonApiDocument<SubmissionEventModel[]>) => result.content.data);
+        .then((result) => (result.content as { data: SubmissionEventModel[] }).data);
 
-      const { content: fileContent }: JsonApiDocument<FileModel[]> = await this.store.request(
+      const { content: fileContent } = await this.store.request(
         query('file', fileForSubmissionQuery(newSubmission.id)),
       );
-      const files = [...fileContent.data.slice()] as unknown as WorkflowFile[];
+      const files = [...(fileContent as { data: FileModel[] }).data.slice()] as unknown as WorkflowFile[];
       this.workflow.setFiles(files);
     } else {
       // Starting a new submission
 
-      publication = this.store.createRecord('publication');
+      publication = this.store.createRecord('publication', {}) as PublicationModel;
 
       newSubmission = this.store.createRecord('submission', {
         submissionStatus: 'draft',
-      });
+      }) as SubmissionModel;
 
       const files: WorkflowFile[] = [];
       this.workflow.setFiles(files);

@@ -6,6 +6,7 @@ import { query } from 'pass-ui/builders/pass-api';
 import type Owner from '@ember/owner';
 import type SubmissionModel from 'pass-ui/models/submission';
 import type RepositoryCopyModel from 'pass-ui/models/repository-copy';
+import type AppStore from 'pass-ui/services/store';
 
 interface DisplayIdInfo {
   url: string;
@@ -19,8 +20,7 @@ interface SubmissionsRepoidCellSignature {
 }
 
 export default class SubmissionsRepoidCell extends Component<SubmissionsRepoidCellSignature> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare store: any;
+  @service declare store: AppStore;
 
   @tracked repoCopies: RepositoryCopyModel[] | null = null;
 

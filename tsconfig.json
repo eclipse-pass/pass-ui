@@ -15,7 +15,7 @@
       "@ember-data-types/graph/unstable-preview-types",
       "@ember-data-types/request/unstable-preview-types",
       "@ember-data-types/json-api/unstable-preview-types",
-      "@warp-drive-types/core-types/unstable-preview-types",
+      "@warp-drive/core-types/unstable-preview-types",
       "@types/rsvp",
       "@types/qunit"
     ],

@@ -8,7 +8,8 @@ import type CurrentUserService from 'pass-ui/services/current-user';
 import type AppStaticConfigService from 'pass-ui/services/app-static-config';
 import type GrantModel from 'pass-ui/models/grant';
 import type SubmissionModel from 'pass-ui/models/submission';
-import type { PaginationMeta, JsonApiDocument } from 'pass-ui/types/json-api';
+import type { PaginationMeta } from 'pass-ui/types/json-api';
+import type AppStore from 'pass-ui/services/store';
 
 interface GrantMapEntry {
   grant: GrantModel;
@@ -25,8 +26,7 @@ export default class GrantsIndexController extends Controller {
   @service('app-static-config') declare staticConfig: AppStaticConfigService;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare router: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare store: any;
+  @service declare store: AppStore;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   constructor(...args: any[]) {
@@ -91,9 +91,8 @@ export default class GrantsIndexController extends Controller {
 
     return this.store
       .request(query('grant', grantQueryHash))
-      .then((result: JsonApiDocument<GrantModel[]>) => {
-        const data = result.content.data;
-        const meta = result.content.meta;
+      .then((result) => {
+        const { data, meta } = result.content as { data: GrantModel[]; meta: PaginationMeta | undefined };
         const results = data.map((grant: GrantModel) => ({
           grant,
           submissions: [] as SubmissionModel[],
@@ -105,10 +104,8 @@ export default class GrantsIndexController extends Controller {
         };
       })
       .then(async (results: GrantsIndexModel) => {
-        const { content: subsDoc }: JsonApiDocument<SubmissionModel[]> = await this.store.request(
-          query('submission', submissionQueryHash),
-        );
-        this._mapSubmissionsToGrants(subsDoc.data, results.grantMap);
+        const { content: subsDoc } = await this.store.request(query('submission', submissionQueryHash));
+        this._mapSubmissionsToGrants((subsDoc as { data: SubmissionModel[] }).data, results.grantMap);
         return results;
       })
       .then((results: GrantsIndexModel) => {

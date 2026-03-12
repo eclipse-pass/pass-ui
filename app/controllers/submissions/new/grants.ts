@@ -6,6 +6,7 @@ import type SubmissionModel from 'pass-ui/models/submission';
 import type PublicationModel from 'pass-ui/models/publication';
 import type SubmissionEventModel from 'pass-ui/models/submission-event';
 import type GrantModel from 'pass-ui/models/grant';
+import type AppStore from 'pass-ui/services/store';
 
 interface GrantsModel {
   newSubmission: SubmissionModel;
@@ -16,8 +17,7 @@ interface GrantsModel {
 export default class SubmissionsNewGrants extends Controller {
   declare model: GrantsModel;
   declare preLoadedGrant: GrantModel | null;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare store: any;
+  @service declare store: AppStore;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare router: any;
 

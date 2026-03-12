@@ -6,6 +6,7 @@ import type CurrentUserService from 'pass-ui/services/current-user';
 import type SubmissionModel from 'pass-ui/models/submission';
 import type SubmissionsIndexController from 'pass-ui/controllers/submissions/index';
 import type { PaginationMeta, JsonApiDocument } from 'pass-ui/types/json-api';
+import type AppStore from 'pass-ui/services/store';
 
 interface SubmissionsIndexModel {
   submissions: SubmissionModel[];
@@ -20,8 +21,7 @@ interface SubmissionsIndexParams {
 
 export default class IndexRoute extends CheckSessionRoute {
   @service('current-user') declare currentUser: CurrentUserService;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare store: any;
+  @service declare store: AppStore;
 
   queryParams = {
     page: {},

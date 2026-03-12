@@ -24,6 +24,7 @@ import type SubmissionModel from 'pass-ui/models/submission';
 import type PublicationModel from 'pass-ui/models/publication';
 import type RepositoryModel from 'pass-ui/models/repository';
 import type { WorkflowFile } from 'pass-ui/services/workflow';
+import type AppStore from 'pass-ui/services/store';
 
 interface ReviewFile extends WorkflowFile {
   submission: { id: string };
@@ -61,8 +62,7 @@ interface WorkflowReviewSignature {
 }
 
 export default class WorkflowReview extends Component<WorkflowReviewSignature> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare store: any;
+  @service declare store: AppStore;
   @service declare workflow: Workflow;
   @service declare currentUser: CurrentUserService;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

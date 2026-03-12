@@ -7,7 +7,8 @@ import { submissionsIndexQuery } from '../../util/paginated-query';
 import type CurrentUserService from 'pass-ui/services/current-user';
 import type AppStaticConfigService from 'pass-ui/services/app-static-config';
 import type SubmissionModel from 'pass-ui/models/submission';
-import type { PaginationMeta, JsonApiDocument } from 'pass-ui/types/json-api';
+import type { PaginationMeta } from 'pass-ui/types/json-api';
+import type AppStore from 'pass-ui/services/store';
 
 interface SubmissionsIndexModel {
   submissions: SubmissionModel[];
@@ -19,8 +20,7 @@ export default class SubmissionsIndex extends Controller {
   @service('app-static-config') declare staticConfig: AppStaticConfigService;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare router: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare store: any;
+  @service declare store: AppStore;
 
   @tracked faqUrl: string | null = null;
   // Bound to message dialog.
@@ -66,10 +66,11 @@ export default class SubmissionsIndex extends Controller {
       { page: this.page, pageSize: this.pageSize, filter: this.filter },
       this.currentUser.user!,
     );
-    return this.store.request(query('submission', queryHash)).then((result: JsonApiDocument<SubmissionModel[]>) => {
+    return this.store.request(query('submission', queryHash)).then((result) => {
+      const { data, meta } = result.content as { data: SubmissionModel[]; meta: PaginationMeta | undefined };
       this.queuedModel = {
-        submissions: result.content.data,
-        meta: result.content.meta,
+        submissions: data,
+        meta,
       };
     });
   }

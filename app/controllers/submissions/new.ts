@@ -17,6 +17,7 @@ import type GrantModel from 'pass-ui/models/grant';
 import type JournalModel from 'pass-ui/models/journal';
 import type SubmissionEventModel from 'pass-ui/models/submission-event';
 import type UserModel from 'pass-ui/models/user';
+import type AppStore from 'pass-ui/services/store';
 
 interface NewSubmissionModel {
   newSubmission: SubmissionModel;
@@ -41,8 +42,7 @@ export default class SubmissionsNew extends Controller {
   @service declare flashMessages: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare router: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare store: any;
+  @service declare store: AppStore;
 
   @tracked comment: string = ''; // Holds the comment that will be added to submissionEvent in the review step.
   @tracked uploading: boolean = false;

@@ -2,14 +2,14 @@ import Service, { service } from '@ember/service';
 import { task } from 'ember-concurrency';
 import { findRecord } from 'pass-ui/builders/pass-api';
 import type UserModel from 'pass-ui/models/user';
+import type AppStore from 'pass-ui/services/store';
 
 /**
  * Service which returns information about the logged in user.
  */
 
 export default class CurrentUserService extends Service {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare store: any;
+  @service declare store: AppStore;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare session: any;
 
@@ -26,7 +26,7 @@ export default class CurrentUserService extends Service {
 
     if (userId) {
       const { content } = await this.store.request(findRecord('user', userId));
-      this.user = content.data;
+      this.user = (content as { data: UserModel }).data;
     }
 
     return this.user;

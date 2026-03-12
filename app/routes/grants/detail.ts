@@ -7,7 +7,8 @@ import type CurrentUserService from 'pass-ui/services/current-user';
 import type GrantModel from 'pass-ui/models/grant';
 import type SubmissionModel from 'pass-ui/models/submission';
 import type GrantDetailsController from 'pass-ui/controllers/grants/detail';
-import type { PaginationMeta, JsonApiDocument } from 'pass-ui/types/json-api';
+import type { PaginationMeta } from 'pass-ui/types/json-api';
+import type AppStore from 'pass-ui/services/store';
 
 /**
  * Grant details route: `grant/:id`
@@ -35,8 +36,7 @@ interface GrantDetailParams {
 
 export default class DetailRoute extends CheckSessionRoute {
   @service('current-user') declare currentUser: CurrentUserService;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare store: any;
+  @service declare store: AppStore;
 
   queryParams = {
     page: {},
@@ -52,15 +52,13 @@ export default class DetailRoute extends CheckSessionRoute {
 
     const grantPromise = this.store
       .request(findRecord('grant', params.grant_id, { include: 'pi,coPis,primaryFunder,directFunder' }))
-      .then((result: JsonApiDocument<GrantModel>) => result.content.data);
+      .then((result) => (result.content as { data: GrantModel }).data);
 
     const submissionQueryHash = grantDetailsQuery(params, params.grant_id, this.currentUser.user!);
-    const submissionsPromise = this.store
-      .request(query('submission', submissionQueryHash))
-      .then((result: JsonApiDocument<SubmissionModel[]>) => ({
-        data: result.content.data,
-        meta: result.content.meta,
-      }));
+    const submissionsPromise = this.store.request(query('submission', submissionQueryHash)).then((result) => {
+      const { data, meta } = result.content as { data: SubmissionModel[]; meta: PaginationMeta | undefined };
+      return { data, meta };
+    });
 
     return hash({
       grant: grantPromise,

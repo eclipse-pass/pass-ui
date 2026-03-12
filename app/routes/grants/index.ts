@@ -7,6 +7,7 @@ import type GrantModel from 'pass-ui/models/grant';
 import type SubmissionModel from 'pass-ui/models/submission';
 import type GrantsIndexController from 'pass-ui/controllers/grants/index';
 import type { PaginationMeta, JsonApiDocument } from 'pass-ui/types/json-api';
+import type AppStore from 'pass-ui/services/store';
 
 interface GrantsIndexModel {
   grantMap: Array<{ grant: GrantModel; submissions: SubmissionModel[] }>;
@@ -21,8 +22,7 @@ interface GrantsIndexParams {
 
 export default class IndexRoute extends CheckSessionRoute {
   @service('current-user') declare currentUser: CurrentUserService;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare store: any;
+  @service declare store: AppStore;
 
   queryParams = {
     page: {},

@@ -1,4 +1,5 @@
 import Service, { service } from '@ember/service';
+import type AppStore from 'pass-ui/services/store';
 
 /**
  * This service can be referenced by components that rely on Elasticsearch query results
@@ -17,8 +18,7 @@ import Service, { service } from '@ember/service';
  */
 
 export default class SearchHelperService extends Service {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare store: any;
+  @service declare store: AppStore;
 
   /** List of object IDs to ignore */
   ignoreList: string[] = [];

@@ -19,6 +19,7 @@ import type SubmissionHandlerService from 'pass-ui/services/submission-handler';
 import type CurrentUserService from 'pass-ui/services/current-user';
 import type SubmissionModel from 'pass-ui/models/submission';
 import type FileModel from 'pass-ui/models/file';
+import type AppStore from 'pass-ui/services/store';
 
 interface WorkflowFileWithDetails extends WorkflowFile {
   submission: { id: string };
@@ -40,8 +41,7 @@ interface WorkflowFilesSignature {
 }
 
 export default class WorkflowFiles extends Component<WorkflowFilesSignature> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare store: any;
+  @service declare store: AppStore;
   @service declare workflow: Workflow;
   @service declare submissionHandler: SubmissionHandlerService;
   @service declare currentUser: CurrentUserService;
@@ -138,12 +138,12 @@ export default class WorkflowFiles extends Component<WorkflowFilesSignature> {
         fileRole: 'supplemental',
         uri: `/file/${file.uuid}/${encodeURIComponent(file.fileName)}`,
         submission: this.args.submission,
-      });
+      }) as FileModel;
       if (!this.hasManuscript) {
         newFile.fileRole = 'manuscript';
       }
       await this.store.persistRecord(newFile);
-      this.workflow.addFile(newFile);
+      this.workflow.addFile(newFile as unknown as WorkflowFile);
     } catch (error) {
       FileUpload.file.state = 'aborted';
       console.error(error);

@@ -8,15 +8,16 @@ import type PublicationModel from 'pass-ui/models/publication';
 import type GrantModel from 'pass-ui/models/grant';
 import type RepositoryModel from 'pass-ui/models/repository';
 import type FileModel from 'pass-ui/models/file';
+import type SubmissionEventModel from 'pass-ui/models/submission-event';
 import type CurrentUserService from 'pass-ui/services/current-user';
 import type MetadataSchemaService from 'pass-ui/services/metadata-schema';
+import type AppStore from 'pass-ui/services/store';
 
 /**
  * Service to manage submissions.
  */
 export default class SubmissionHandlerService extends Service {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare store: any;
+  @service declare store: AppStore;
   @service declare currentUser: CurrentUserService;
   @service('metadata-schema') declare schemaService: MetadataSchemaService;
 
@@ -75,9 +76,9 @@ export default class SubmissionHandlerService extends Service {
    * @returns {Promise}          Promise resolves to the updated submission.
    */
   _finishSubmission = task(async (submission: SubmissionModel, comment: string) => {
-    const subEvent = await this.store.createRecord('submission-event');
+    const subEvent = this.store.createRecord('submission-event', {}) as SubmissionEventModel;
 
-    subEvent.performedBy = this.currentUser.user;
+    subEvent.performedBy = this.currentUser.user!;
     subEvent.comment = comment;
     subEvent.performedDate = new Date();
     subEvent.submission = submission;
@@ -177,7 +178,7 @@ export default class SubmissionHandlerService extends Service {
       performerRole: 'submitter',
       eventType: 'submitted',
       link: this._getSubmissionView(submission),
-    });
+    }) as SubmissionEventModel;
 
     await this.store.persistRecord(se);
     submission.submissionStatus = 'submitted';
@@ -204,7 +205,7 @@ export default class SubmissionHandlerService extends Service {
       performerRole: 'submitter',
       eventType: 'changes-requested',
       link: this._getSubmissionView(submission),
-    });
+    }) as SubmissionEventModel;
 
     await this.store.persistRecord(se);
     submission.submissionStatus = 'changes-requested';
@@ -229,7 +230,7 @@ export default class SubmissionHandlerService extends Service {
       performerRole: 'submitter',
       eventType: 'cancelled',
       link: this._getSubmissionView(submission),
-    });
+    }) as SubmissionEventModel;
 
     await this.store.persistRecord(se);
     submission.submissionStatus = 'cancelled';
@@ -262,7 +263,7 @@ export default class SubmissionHandlerService extends Service {
 
     // Delete all files (bytes + metadata records)
     const { content: filesDoc } = await this.store.request(query('file', fileForSubmissionQuery(submission.id)));
-    const files = filesDoc.data;
+    const { data: files } = filesDoc as { data: FileModel[] };
     await Promise.all(files.map((file: FileModel) => deleteFileWithBytes(file, this.store)));
 
     const publication = submission.publication;
@@ -274,7 +275,8 @@ export default class SubmissionHandlerService extends Service {
     const { content: subsDoc } = await this.store.request(
       query('submission', submissionsWithPublicationQuery(publication)),
     );
-    if (subsDoc.data.length === 0) {
+    const { data: subsData } = subsDoc as { data: SubmissionModel[] };
+    if (subsData.length === 0) {
       await this.store.destroyRecord(publication);
     }
   }

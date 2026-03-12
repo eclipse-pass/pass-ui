@@ -6,6 +6,7 @@ import PowerSelect from 'ember-power-select/components/power-select';
 import { findRecord } from 'pass-ui/builders/pass-api';
 import type AutocompleteService from 'pass-ui/services/autocomplete';
 import type JournalModel from 'pass-ui/models/journal';
+import type AppStore from 'pass-ui/services/store';
 
 const eq = (a: unknown, b: unknown) => a === b;
 
@@ -30,8 +31,7 @@ interface FindJournalSignature {
 }
 
 export default class FindJournal extends Component<FindJournalSignature> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare store: any;
+  @service declare store: AppStore;
 
   @service('autocomplete')
   declare autocomplete: AutocompleteService;
@@ -44,7 +44,7 @@ export default class FindJournal extends Component<FindJournalSignature> {
   @action
   async onSelect(selected: JournalModel) {
     const { content } = await this.store.request(findRecord('journal', selected.id!));
-    this.args.selectJournal(content.data as JournalModel);
+    this.args.selectJournal((content as { data: JournalModel }).data);
   }
 
   <template>

@@ -5,6 +5,7 @@ import { task } from 'ember-concurrency';
 import { findRecord } from 'pass-ui/builders/pass-api';
 import type JournalModel from 'pass-ui/models/journal';
 import type PublicationModel from 'pass-ui/models/publication';
+import type AppStore from 'pass-ui/services/store';
 
 export interface DoiInfo {
   [key: string]: unknown;
@@ -43,8 +44,7 @@ export interface DoiResolution {
  */
 
 export default class DoiService extends Service {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare store: any;
+  @service declare store: AppStore;
 
   /**
    * resolveDOI - Lookup information about a DOI using the PASS doi service. Return that information along
@@ -68,7 +68,7 @@ export default class DoiService extends Service {
     const response = await rawResponse.json();
 
     const { content: journalDoc } = await this.store.request(findRecord('journal', response['journal-id']));
-    const journal = journalDoc.data;
+    const journal = (journalDoc as { data: JournalModel }).data;
 
     const doiInfo = this._processRawDoi(response.crossref.message);
 
@@ -84,7 +84,7 @@ export default class DoiService extends Service {
       issue: doiInfo.issue,
       volume: doiInfo.volume,
       publicationAbstract: doiInfo.abstract,
-    });
+    }) as PublicationModel;
 
     return {
       publication,

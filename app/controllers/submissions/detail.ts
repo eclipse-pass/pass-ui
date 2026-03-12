@@ -16,6 +16,7 @@ import type RepositoryCopyModel from 'pass-ui/models/repository-copy';
 import type UserModel from 'pass-ui/models/user';
 import type FileModel from 'pass-ui/models/file';
 import type SubmissionEventModel from 'pass-ui/models/submission-event';
+import type AppStore from 'pass-ui/services/store';
 
 interface ExternalRepoMetadata {
   message: string;
@@ -42,8 +43,7 @@ export default class SubmissionsDetail extends Controller {
   declare model: DetailModel;
 
   @service declare currentUser: CurrentUserService;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare store: any;
+  @service declare store: AppStore;
   @service declare submissionHandler: SubmissionHandlerService;
   @service declare searchHelper: SearchHelperService;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

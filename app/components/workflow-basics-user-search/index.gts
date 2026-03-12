@@ -9,6 +9,7 @@ import { Input } from '@ember/component';
 import { query } from 'pass-ui/builders/pass-api';
 import type CurrentUserService from 'pass-ui/services/current-user';
 import type UserModel from 'pass-ui/models/user';
+import type AppStore from 'pass-ui/services/store';
 
 const eq = (a: unknown, b: unknown) => a === b;
 
@@ -28,8 +29,7 @@ interface WorkflowBasicsUserSearchSignature {
 }
 
 export default class WorkflowBasicsUserSearch extends Component<WorkflowBasicsUserSearchSignature> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare store: any;
+  @service declare store: AppStore;
   @service declare currentUser: CurrentUserService;
 
   @tracked matchingUsers: UserModel[] = [];
@@ -104,10 +104,11 @@ export default class WorkflowBasicsUserSearch extends Component<WorkflowBasicsUs
     };
 
     const { content } = await this.store.request(query('user', queryHash));
-    const users = content.data;
+    const doc = content as { data: UserModel[]; meta?: { page: { totalPages: number } } };
+    const users = doc.data;
 
-    if (content.meta) {
-      this.numberOfPages = content.meta.page.totalPages;
+    if (doc.meta) {
+      this.numberOfPages = doc.meta.page.totalPages;
     }
 
     this.matchingUsers = users;

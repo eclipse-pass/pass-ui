@@ -6,6 +6,7 @@ import type SubmissionModel from 'pass-ui/models/submission';
 import type RepositoryModel from 'pass-ui/models/repository';
 import type PublicationModel from 'pass-ui/models/publication';
 import type SubmissionEventModel from 'pass-ui/models/submission-event';
+import type AppStore from 'pass-ui/services/store';
 
 interface MetadataModel {
   newSubmission: SubmissionModel;
@@ -16,8 +17,7 @@ interface MetadataModel {
 
 export default class SubmissionsNewMetadata extends Controller {
   declare model: MetadataModel;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare store: any;
+  @service declare store: AppStore;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @service declare router: any;
 

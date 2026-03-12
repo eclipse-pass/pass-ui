@@ -27,6 +27,7 @@ import type PublicationModel from 'pass-ui/models/publication';
 import type JournalModel from 'pass-ui/models/journal';
 import type GrantModel from 'pass-ui/models/grant';
 import type UserModel from 'pass-ui/models/user';
+import type AppStore from 'pass-ui/services/store';
 
 const or = (...args: unknown[]) => args.some(Boolean);
 const not = (a: unknown) => !a;
@@ -59,8 +60,7 @@ interface WorkflowBasicsSignature {
 }
 
 export default class WorkflowBasics extends Component<WorkflowBasicsSignature> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare store: any;
+  @service declare store: AppStore;
   @service declare workflow: Workflow;
   @service declare currentUser: CurrentUserService;
   @service('doi')

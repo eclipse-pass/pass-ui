@@ -4,11 +4,11 @@ import { query } from 'pass-ui/builders/pass-api';
 import type CurrentUserService from 'pass-ui/services/current-user';
 import type SubmissionModel from 'pass-ui/models/submission';
 import type { JsonApiDocument } from 'pass-ui/types/json-api';
+import type AppStore from 'pass-ui/services/store';
 
 export default class DashboardRoute extends CheckSessionRoute {
   @service('current-user') declare currentUser: CurrentUserService;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @service declare store: any;
+  @service declare store: AppStore;
 
   headers = { 'Content-Type': 'application/json; charset=utf-8' };
 
