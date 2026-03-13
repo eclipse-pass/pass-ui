@@ -2,6 +2,8 @@ import { setupTest } from 'ember-qunit';
 import { setupMirage } from 'pass-ui/tests/test-support/mirage';
 import { module, test } from 'qunit';
 import { Response } from 'miragejs';
+import type PoliciesService from 'pass-ui/services/policies';
+import type SubmissionModel from 'pass-ui/models/submission';
 
 module('Unit | Service | policies', (hooks) => {
   setupTest(hooks);
@@ -10,10 +12,10 @@ module('Unit | Service | policies', (hooks) => {
   test('good response returns array of Promises of Policy objects', async function (assert) {
     assert.expect(5);
 
-    const service = this.owner.lookup('service:policies');
+    const service = this.owner.lookup('service:policies') as PoliciesService;
     assert.ok(service, 'service exists');
 
-    const sub = { id: '0' };
+    const sub = { id: '0' } as unknown as SubmissionModel;
 
     const policies = await service.getPolicies.perform(sub);
 
@@ -27,10 +29,10 @@ module('Unit | Service | policies', (hooks) => {
   test('good response to getRepositories returns object with Repository promises by DSL rules', async function (assert) {
     assert.expect(11);
 
-    const service = this.owner.lookup('service:policies');
+    const service = this.owner.lookup('service:policies') as PoliciesService;
     assert.ok(service, 'service found');
 
-    const sub = { id: '0' };
+    const sub = { id: '0' } as unknown as SubmissionModel;
 
     const rules = await service.getRepositories.perform(sub);
 
@@ -38,18 +40,18 @@ module('Unit | Service | policies', (hooks) => {
     assert.ok(Array.isArray(rules.optional), 'rules.optional should be an array');
     assert.ok(Array.isArray(rules['one-of']), "rules['one-of'] should be an array");
 
-    assert.strictEqual(rules.required.length, 1, 'Unexpected number of required repos');
-    assert.strictEqual(rules.optional.length, 1, 'Unexpected number of optional repos');
+    assert.strictEqual(rules.required!.length, 1, 'Unexpected number of required repos');
+    assert.strictEqual(rules.optional!.length, 1, 'Unexpected number of optional repos');
 
-    assert.strictEqual(rules['one-of'].length, 1, 'Unexpected number of choice groups');
-    assert.strictEqual(rules['one-of'][0].length, 2, 'Unexpected number of repos in choice group 1');
+    assert.strictEqual(rules['one-of']!.length, 1, 'Unexpected number of choice groups');
+    assert.strictEqual(rules['one-of']![0]!.length, 2, 'Unexpected number of repos in choice group 1');
 
-    rules.required.forEach((repo: { name: string }) =>
+    rules.required!.forEach((repo: { name: string }) =>
       assert.strictEqual(repo.name, 'PubMed Central - NATIONAL INSTITUTE OF HEALTH'),
     );
-    rules.optional.forEach((repo: { name: string }) => assert.strictEqual(repo.name, 'JScholarship'));
+    rules.optional!.forEach((repo: { name: string }) => assert.strictEqual(repo.name, 'JScholarship'));
     assert.ok(
-      rules['one-of'][0].some((repo: { name: string }) => {
+      rules['one-of']![0]!.some((repo: { name: string }) => {
         return repo.name === 'JScholarship' || repo.name === 'PubMed Central - NATIONAL INSTITUTE OF HEALTH';
       }),
     );
@@ -64,9 +66,9 @@ module('Unit | Service | policies', (hooks) => {
 
     this.server.get('/policy/policies', () => new Response(404));
 
-    const service = this.owner.lookup('service:policies');
+    const service = this.owner.lookup('service:policies') as PoliciesService;
 
-    const sub = { id: 'moo' };
+    const sub = { id: 'moo' } as unknown as SubmissionModel;
 
     try {
       await service.getPolicies.perform(sub);
@@ -84,9 +86,9 @@ module('Unit | Service | policies', (hooks) => {
 
     this.server.get('/policy/repositories', () => new Response(404));
 
-    const service = this.owner.lookup('service:policies');
+    const service = this.owner.lookup('service:policies') as PoliciesService;
 
-    const sub = { id: 'moo' };
+    const sub = { id: 'moo' } as unknown as SubmissionModel;
 
     try {
       await service.getRepositories.perform(sub);

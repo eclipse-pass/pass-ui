@@ -1,5 +1,7 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
+import type NewRoute from 'pass-ui/routes/submissions/new';
+import type Workflow from 'pass-ui/services/workflow';
 
 module('Unit | Route | submissions/new', (hooks) => {
   setupTest(hooks);
@@ -24,28 +26,28 @@ module('Unit | Route | submissions/new', (hooks) => {
   test('fresh submission returned by model() when no ID is provided', async function (assert) {
     assert.expect(4);
 
-    const route = this.owner.lookup('route:submissions/new');
+    const route = this.owner.lookup('route:submissions/new') as NewRoute;
 
     route.store = {
       createRecord(type: string, data: Record<string, unknown>) {
         switch (type) {
           case 'publication':
             assert.ok(true);
-            return Promise.resolve({ title: 'MockMoo' });
+            return { title: 'MockMoo' };
           case 'submission': // Submission - fall through to default
             assert.ok(true);
           // eslint-disable-next-line no-fallthrough
           default:
-            return Promise.resolve({ ...data });
+            return { ...data };
         }
       },
-      request: () => Promise.resolve({ content: { data: [] } }),
-    };
+      request: (() => Promise.resolve({ content: { data: [] } })) as unknown as typeof route.store.request,
+    } as unknown as typeof route.store;
 
     const result = await route.model({});
 
     assert.ok(result, 'no model found');
-    assert.notOk(result.newSubmission.publication, 'There should be no publication on this submission');
+    assert.notOk(result.newSubmission!.publication, 'There should be no publication on this submission');
   });
 
   /**
@@ -58,7 +60,7 @@ module('Unit | Route | submissions/new', (hooks) => {
 
     const mockSub = this['submission'];
 
-    const route = this.owner.lookup('route:submissions/new');
+    const route = this.owner.lookup('route:submissions/new') as NewRoute;
 
     let findRecordCalled = false;
 
@@ -67,33 +69,33 @@ module('Unit | Route | submissions/new', (hooks) => {
         switch (type) {
           case 'publication':
             assert.ok(false, 'should not create a publication');
-            return Promise.resolve({ title: 'MockMoo' });
+            return { title: 'MockMoo' };
           default:
             assert.ok(false, `unexpected 'createRecord' type found: ${type}`);
-            return Promise.resolve({ ...data });
+            return { ...data };
         }
       },
-      request: (req: { op: string }) => {
+      request: ((req: { op: string }) => {
         if (req.op === 'findRecord') {
           findRecordCalled = true;
           return Promise.resolve({ content: { data: mockSub } });
         }
         // loadObjects or file/submission-event queries
         return Promise.resolve({ content: { data: [] } });
-      },
-    };
+      }) as unknown as typeof route.store.request,
+    } as unknown as typeof route.store;
 
     route.workflow = {
       setFiles(files: unknown) {
         assert.ok(files);
       },
-    };
+    } as unknown as Workflow;
 
     const result = await route.model({ submission: 'moo' });
 
     assert.ok(findRecordCalled, 'findRecord should have been called for the submission');
     assert.ok(result, 'no model found');
-    assert.ok(result.newSubmission.publication, 'There should be a publication on this submission');
-    assert.strictEqual(result.newSubmission.publication?.title, 'Test Publication');
+    assert.ok(result.newSubmission!.publication, 'There should be a publication on this submission');
+    assert.strictEqual(result.newSubmission!.publication?.title, 'Test Publication');
   });
 });

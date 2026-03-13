@@ -1,6 +1,8 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { setupMirage } from 'pass-ui/tests/test-support/mirage';
+import type DoiService from 'pass-ui/services/doi';
+import type JournalModel from 'pass-ui/models/journal';
 
 module('Unit | Service | doi', (hooks) => {
   setupTest(hooks);
@@ -58,11 +60,11 @@ module('Unit | Service | doi', (hooks) => {
 
   // Test DOI object here based on CrossRef data
   test('check doi data processing', function (assert) {
-    const service = this.owner.lookup('service:doi');
+    const service = this.owner.lookup('service:doi') as DoiService;
     const doiInfo = this.mockDoiInfo;
     const journal = {
       issns: ['odd', 'Print:moo', 'Online:chitter', 'malformed:', ':oddagain', ':'],
-    };
+    } as unknown as JournalModel;
     const result = service.doiToMetadata(doiInfo, journal);
 
     assert.ok(result, 'No result was returned');
@@ -119,8 +121,8 @@ module('Unit | Service | doi', (hooks) => {
     doiInfo.invalid = 'Bad moo';
     const journal = {
       issns: ['Print:moo'],
-    };
-    const result = this.owner.lookup('service:doi').doiToMetadata(doiInfo, journal, ['authors']);
+    } as unknown as JournalModel;
+    const result = (this.owner.lookup('service:doi') as DoiService).doiToMetadata(doiInfo, journal, ['authors']);
     assert.ok(result);
     assert.notOk(result.invalid);
   });
@@ -128,7 +130,7 @@ module('Unit | Service | doi', (hooks) => {
   test('should stringify array values', function (assert) {
     const doiInfo = this.mockDoiInfo2;
 
-    const result = this.owner.lookup('service:doi')._processRawDoi(doiInfo);
+    const result = (this.owner.lookup('service:doi') as DoiService)._processRawDoi(doiInfo);
     assert.ok(result);
     assert.strictEqual(typeof result['journal-title'], 'string', '"journal-title" should be a string');
     assert.strictEqual(typeof result.title, 'string', '"title" should be a string');
@@ -137,7 +139,7 @@ module('Unit | Service | doi', (hooks) => {
   });
 
   test('resolve DOI', function (assert) {
-    const service = this.owner.lookup('service:doi');
+    const service = this.owner.lookup('service:doi') as DoiService;
     const doiInfo = this.mockDoiInfo2;
     const journalId = 'blah';
 
@@ -164,32 +166,30 @@ module('Unit | Service | doi', (hooks) => {
 
         return { ...values };
       },
-    };
+    } as unknown as typeof service.store;
 
     assert.expect(7);
 
-    return service.resolveDOI
-      .perform(doiInfo.DOI)
-      .then((result: { publication: { doi: string }; doiInfo: { DOI: string } }) => {
-        assert.ok(result.publication);
-        assert.ok(result.doiInfo);
+    return service.resolveDOI.perform(doiInfo.DOI).then((result) => {
+      assert.ok(result.publication);
+      assert.ok(result.doiInfo);
 
-        assert.strictEqual(doiInfo.DOI, result.publication.doi);
-        assert.strictEqual(doiInfo.DOI, result.doiInfo.DOI);
-      });
+      assert.strictEqual(doiInfo.DOI, result.publication.doi);
+      assert.strictEqual(doiInfo.DOI, result.doiInfo.DOI);
+    });
   });
 
   test("Make sure we don't choke on journal with no ISSNs", function (assert) {
     const journal = {
       nlmta: 'NLmooTA',
-    };
+    } as unknown as JournalModel;
     const doiInfo = this.mockDoiInfo;
-    const service = this.owner.lookup('service:doi');
+    const service = this.owner.lookup('service:doi') as DoiService;
 
     const result = service.doiToMetadata(doiInfo, journal);
 
     assert.ok(result);
-    assert.strictEqual(result.issns.length, 0);
+    assert.strictEqual((result.issns as unknown[]).length, 0);
     assert.strictEqual(result['journal-NLMTA-ID'], 'NLmooTA');
   });
 });

@@ -5,6 +5,9 @@ import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 // @ts-expect-error no declaration file for sinon
 import Sinon from 'sinon';
+import type SubmissionHandlerService from 'pass-ui/services/submission-handler';
+import type SubmissionModel from 'pass-ui/models/submission';
+import type PublicationModel from 'pass-ui/models/publication';
 
 interface MockSubmission {
   id: string | number;
@@ -32,7 +35,7 @@ module('Unit | Service | submission-handler', (hooks) => {
   setupTest(hooks);
 
   test('prepare submission', function (assert) {
-    const service = this.owner.lookup('service:submission-handler');
+    const service = this.owner.lookup('service:submission-handler') as SubmissionHandlerService;
 
     this.owner.register(
       'service:current-user',
@@ -50,9 +53,9 @@ module('Unit | Service | submission-handler', (hooks) => {
       },
       persistRecord() {
         assert.ok(true);
-        return Promise.resolve({ content: {} });
+        return Promise.resolve({ content: {} }) as ReturnType<typeof service.store.persistRecord>;
       },
-    };
+    } as unknown as typeof service.store;
 
     const repo1 = { id: 'test:repo1', integrationType: 'full' };
     const repo2 = { id: 'test:repo2', integrationType: 'web-link' };
@@ -75,25 +78,27 @@ module('Unit | Service | submission-handler', (hooks) => {
 
     assert.expect(14);
 
-    return service.submit.perform(submission, publication, comment).then(() => {
-      assert.false(submission.submitted);
-      assert.strictEqual(submission.submissionStatus, 'approval-requested');
-      assert.strictEqual(submission.version, 3);
+    return service.submit
+      .perform(submission as unknown as SubmissionModel, publication as unknown as PublicationModel, comment)
+      .then(() => {
+        assert.false(submission.submitted);
+        assert.strictEqual(submission.submissionStatus, 'approval-requested');
+        assert.strictEqual(submission.version, 3);
 
-      // web-link repo should not be removed
-      assert.strictEqual(submission.repositories!.length, 2);
+        // web-link repo should not be removed
+        assert.strictEqual(submission.repositories!.length, 2);
 
-      assert.strictEqual(submissionEvent.eventType, 'approval-requested');
-      assert.strictEqual(submissionEvent.performerRole, 'preparer');
-      assert.strictEqual(submissionEvent.performedBy!.id, 'proxy-user-id');
-      assert.strictEqual(submissionEvent.comment, comment);
-      assert.strictEqual(submissionEvent.submission!.id, submission.id);
-      assert.ok(submissionEvent.link!.includes(String(submission.id)));
-    });
+        assert.strictEqual(submissionEvent.eventType, 'approval-requested');
+        assert.strictEqual(submissionEvent.performerRole, 'preparer');
+        assert.strictEqual(submissionEvent.performedBy!.id, 'proxy-user-id');
+        assert.strictEqual(submissionEvent.comment, comment);
+        assert.strictEqual(submissionEvent.submission!.id, submission.id);
+        assert.ok(submissionEvent.link!.includes(String(submission.id)));
+      });
   });
 
   test('submit', function (assert) {
-    const service = this.owner.lookup('service:submission-handler');
+    const service = this.owner.lookup('service:submission-handler') as SubmissionHandlerService;
 
     this.owner.register(
       'service:current-user',
@@ -111,9 +116,9 @@ module('Unit | Service | submission-handler', (hooks) => {
       },
       persistRecord() {
         assert.ok(true);
-        return Promise.resolve({ content: {} });
+        return Promise.resolve({ content: {} }) as ReturnType<typeof service.store.persistRecord>;
       },
-    };
+    } as unknown as typeof service.store;
 
     const repo1 = { id: 'test:repo1', integrationType: 'full' };
     const repo2 = { id: 'test:repo2', integrationType: 'web-link' };
@@ -135,24 +140,26 @@ module('Unit | Service | submission-handler', (hooks) => {
 
     assert.expect(13);
 
-    return service.submit.perform(submission, publication, comment).then(() => {
-      assert.true(submission.submitted);
-      assert.strictEqual(submission.submissionStatus, 'submitted');
+    return service.submit
+      .perform(submission as unknown as SubmissionModel, publication as unknown as PublicationModel, comment)
+      .then(() => {
+        assert.true(submission.submitted);
+        assert.strictEqual(submission.submissionStatus, 'submitted');
 
-      // web-link repo should NOT be removed
-      assert.strictEqual(submission.repositories!.length, 2);
-      assert.strictEqual(submission.repositories![0]!.id, repo1.id);
+        // web-link repo should NOT be removed
+        assert.strictEqual(submission.repositories!.length, 2);
+        assert.strictEqual(submission.repositories![0]!.id, repo1.id);
 
-      assert.strictEqual(submissionEvent.eventType, 'submitted');
-      assert.strictEqual(submissionEvent.performerRole, 'submitter');
-      assert.strictEqual(submissionEvent.comment, comment);
-      assert.strictEqual(submissionEvent.submission!.id, submission.id);
-      assert.ok(submissionEvent.link!.includes(String(submission.id)));
-    });
+        assert.strictEqual(submissionEvent.eventType, 'submitted');
+        assert.strictEqual(submissionEvent.performerRole, 'submitter');
+        assert.strictEqual(submissionEvent.comment, comment);
+        assert.strictEqual(submissionEvent.submission!.id, submission.id);
+        assert.ok(submissionEvent.link!.includes(String(submission.id)));
+      });
   });
 
   test('approve submission', function (assert) {
-    const service = this.owner.lookup('service:submission-handler');
+    const service = this.owner.lookup('service:submission-handler') as SubmissionHandlerService;
 
     let submissionEvent: MockSubmissionEvent = {};
 
@@ -163,9 +170,9 @@ module('Unit | Service | submission-handler', (hooks) => {
       },
       persistRecord() {
         assert.ok(true);
-        return Promise.resolve({ content: {} });
+        return Promise.resolve({ content: {} }) as ReturnType<typeof service.store.persistRecord>;
       },
-    };
+    } as unknown as typeof service.store;
 
     const repo1 = { id: 'test:repo1', integrationType: 'full' };
     const repo2 = { id: 'test:repo2', integrationType: 'web-link' };
@@ -183,7 +190,7 @@ module('Unit | Service | submission-handler', (hooks) => {
 
     assert.expect(12);
 
-    return service.approveSubmission(submission, comment).then(() => {
+    return service.approveSubmission(submission as unknown as SubmissionModel, comment).then(() => {
       assert.true(submission.submitted);
       assert.strictEqual(submission.submissionStatus, 'submitted');
 
@@ -201,7 +208,7 @@ module('Unit | Service | submission-handler', (hooks) => {
   });
 
   test('cancel submission', function (assert) {
-    const service = this.owner.lookup('service:submission-handler');
+    const service = this.owner.lookup('service:submission-handler') as SubmissionHandlerService;
 
     let submissionEvent: MockSubmissionEvent = {};
 
@@ -212,9 +219,9 @@ module('Unit | Service | submission-handler', (hooks) => {
       },
       persistRecord() {
         assert.ok(true);
-        return Promise.resolve({ content: {} });
+        return Promise.resolve({ content: {} }) as ReturnType<typeof service.store.persistRecord>;
       },
-    };
+    } as unknown as typeof service.store;
 
     const submission: MockSubmission = {
       id: '0',
@@ -228,7 +235,7 @@ module('Unit | Service | submission-handler', (hooks) => {
 
     assert.expect(8);
 
-    return service.cancelSubmission(submission, comment).then(() => {
+    return service.cancelSubmission(submission as unknown as SubmissionModel, comment).then(() => {
       assert.strictEqual(submission.submissionStatus, 'cancelled');
       assert.strictEqual(submissionEvent.eventType, 'cancelled');
       assert.strictEqual(submissionEvent.performerRole, 'submitter');
@@ -239,7 +246,7 @@ module('Unit | Service | submission-handler', (hooks) => {
   });
 
   test('request changes', function (assert) {
-    const service = this.owner.lookup('service:submission-handler');
+    const service = this.owner.lookup('service:submission-handler') as SubmissionHandlerService;
 
     let submissionEvent: MockSubmissionEvent = {};
 
@@ -250,9 +257,9 @@ module('Unit | Service | submission-handler', (hooks) => {
       },
       persistRecord() {
         assert.ok(true);
-        return Promise.resolve({ content: {} });
+        return Promise.resolve({ content: {} }) as ReturnType<typeof service.store.persistRecord>;
       },
-    };
+    } as unknown as typeof service.store;
 
     const submission: MockSubmission = {
       id: '0',
@@ -266,7 +273,7 @@ module('Unit | Service | submission-handler', (hooks) => {
 
     assert.expect(8);
 
-    return service.requestSubmissionChanges(submission, comment).then(() => {
+    return service.requestSubmissionChanges(submission as unknown as SubmissionModel, comment).then(() => {
       assert.strictEqual(submission.submissionStatus, 'changes-requested');
       assert.strictEqual(submissionEvent.eventType, 'changes-requested');
       assert.strictEqual(submissionEvent.performerRole, 'submitter');
@@ -280,9 +287,9 @@ module('Unit | Service | submission-handler', (hooks) => {
     const submission = {
       submissionStatus: 'not-draft',
       publication: { title: 'Moo title' },
-    };
+    } as unknown as SubmissionModel;
 
-    const service = this.owner.lookup('service:submission-handler');
+    const service = this.owner.lookup('service:submission-handler') as SubmissionHandlerService;
 
     service
       .deleteSubmission(submission)
@@ -291,8 +298,8 @@ module('Unit | Service | submission-handler', (hooks) => {
   });
 
   test('File deletion failure kills the submission deletion process', async function (assert) {
-    const service = this.owner.lookup('service:submission-handler');
-    const store = this.owner.lookup('service:store');
+    const service = this.owner.lookup('service:submission-handler') as SubmissionHandlerService;
+    const store = this.owner.lookup('service:store') as NonNullable<ReturnType<typeof this.owner.lookup>>;
 
     const submission = {
       source: 'pass',
@@ -300,7 +307,7 @@ module('Unit | Service | submission-handler', (hooks) => {
       publication: {
         title: 'Moo Title',
       },
-    };
+    } as unknown as SubmissionModel;
 
     const requestHandler = (req: { url: string }) => {
       if (req.url.includes('/data/file')) {
@@ -333,8 +340,8 @@ module('Unit | Service | submission-handler', (hooks) => {
   });
 
   test('Publication not deleted if multiple submissions reference it', async function (assert) {
-    const service = this.owner.lookup('service:submission-handler');
-    const store = this.owner.lookup('service:store');
+    const service = this.owner.lookup('service:submission-handler') as SubmissionHandlerService;
+    const store = this.owner.lookup('service:store') as NonNullable<ReturnType<typeof this.owner.lookup>>;
 
     // Stub fetch and cookie for deleteFileWithBytes
     const originalCookie = document.cookie;
@@ -349,7 +356,7 @@ module('Unit | Service | submission-handler', (hooks) => {
       source: 'pass',
       submissionStatus: 'draft',
       publication,
-    };
+    } as unknown as SubmissionModel;
 
     const requestHandler = (req: { url: string }) => {
       if (req.url.includes('/data/file')) {
@@ -397,8 +404,8 @@ module('Unit | Service | submission-handler', (hooks) => {
   });
 
   test('Submission, publication, and files are deleted', async function (assert) {
-    const service = this.owner.lookup('service:submission-handler');
-    const store = this.owner.lookup('service:store');
+    const service = this.owner.lookup('service:submission-handler') as SubmissionHandlerService;
+    const store = this.owner.lookup('service:store') as NonNullable<ReturnType<typeof this.owner.lookup>>;
 
     // Stub fetch and cookie for deleteFileWithBytes
     const originalCookie = document.cookie;
@@ -413,7 +420,7 @@ module('Unit | Service | submission-handler', (hooks) => {
       source: 'pass',
       submissionStatus: 'draft',
       publication,
-    };
+    } as unknown as SubmissionModel;
     const files = [
       { name: 'file1', submission, uri: '/file/test1' },
       { name: 'file2', submission, uri: '/file/test2' },

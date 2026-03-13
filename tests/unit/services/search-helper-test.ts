@@ -1,5 +1,6 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
+import type SearchHelperService from 'pass-ui/services/search-helper';
 
 module('Unit | Service | search helper', (hooks) => {
   setupTest(hooks);
@@ -8,7 +9,7 @@ module('Unit | Service | search helper', (hooks) => {
    * Actually a bad test because it exercises 3 different service functions :)
    */
   test('unignore an ID', function (assert) {
-    const service = this.owner.lookup('service:search-helper');
+    const service = this.owner.lookup('service:search-helper') as SearchHelperService;
 
     const ignore = ['ID-1', 'ID-2', 'ID-3', 'ID-4'];
     ignore.forEach((id: string) => service.ignore(id));

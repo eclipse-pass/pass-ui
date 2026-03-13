@@ -6,6 +6,9 @@ import { setupTest } from 'ember-qunit';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 // @ts-expect-error no declaration file for sinon
 import Sinon from 'sinon';
+import type SubmissionHandlerService from 'pass-ui/services/submission-handler';
+import type Workflow from 'pass-ui/services/workflow';
+import type SubmissionsNewController from 'pass-ui/controllers/submissions/new';
 
 interface MockSubmission {
   id?: string;
@@ -22,12 +25,9 @@ interface MockSubmission {
 module('Unit | Controller | submissions/new', (hooks) => {
   setupTest(hooks);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- owner.lookup() returns untyped service instances
-  let controller: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- owner.lookup() returns untyped service instances
-  let submissionHandler: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- owner.lookup() returns untyped service instances
-  let workflowService: any;
+  let controller: SubmissionsNewController;
+  let submissionHandler: SubmissionHandlerService;
+  let workflowService: Workflow;
   let submissionEvent: Record<string, unknown>;
   let submissionSaved = false;
   let submissionEventSaved = false;
@@ -39,9 +39,9 @@ module('Unit | Controller | submissions/new', (hooks) => {
   let comment: string;
 
   hooks.beforeEach(function () {
-    controller = this.owner.lookup('controller:submissions/new');
-    submissionHandler = this.owner.lookup('service:submission-handler');
-    workflowService = this.owner.lookup('service:workflow');
+    controller = this.owner.lookup('controller:submissions/new') as SubmissionsNewController;
+    submissionHandler = this.owner.lookup('service:submission-handler') as SubmissionHandlerService;
+    workflowService = this.owner.lookup('service:workflow') as Workflow;
     submissionSaved = false;
     submissionEventSaved = false;
     publicationSaved = false;
@@ -54,9 +54,9 @@ module('Unit | Controller | submissions/new', (hooks) => {
         if (record === submissionEvent) submissionEventSaved = true;
         else if (record?.id === 'pub:0') publicationSaved = true;
         else submissionSaved = true;
-        return Promise.resolve({ content: {} });
+        return Promise.resolve({ content: {} }) as ReturnType<typeof submissionHandler.store.persistRecord>;
       },
-    };
+    } as unknown as typeof submissionHandler.store;
     publication = {
       id: 'pub:0',
     };
@@ -75,7 +75,7 @@ module('Unit | Controller | submissions/new', (hooks) => {
       fileRole: 'manuscript',
       submission,
     };
-    workflowService.setFiles([file]);
+    workflowService.setFiles([file] as never);
   };
 
   // Replace this with your real tests.
@@ -119,7 +119,7 @@ module('Unit | Controller | submissions/new', (hooks) => {
     // and tests can be run.
 
     const routerService = this.owner.lookup('service:router');
-    routerService.transitionTo = (name: string) => {
+    routerService.transitionTo = ((name: string) => {
       assert.strictEqual(name, 'thanks');
 
       assert.true(publicationSaved);
@@ -145,9 +145,9 @@ module('Unit | Controller | submissions/new', (hooks) => {
       assert.deepEqual(md.agreements[0], {
         moo: 'Milk cows',
       });
-    };
+    }) as typeof routerService.transitionTo;
 
-    controller.model = model;
+    controller.model = model as unknown as typeof controller.model;
     controller.comment = comment;
 
     controller.send('submit');
@@ -176,7 +176,7 @@ module('Unit | Controller | submissions/new', (hooks) => {
     // After the route transition to thanks, all promises should be resolved handler
     // and tests can be run.
     const routerService = this.owner.lookup('service:router');
-    routerService.transitionTo = (name: string) => {
+    routerService.transitionTo = ((name: string) => {
       assert.strictEqual(name, 'thanks');
 
       assert.true(publicationSaved);
@@ -190,9 +190,9 @@ module('Unit | Controller | submissions/new', (hooks) => {
       assert.strictEqual(submissionEvent.performerRole, 'preparer');
       assert.strictEqual(submissionEvent.eventType, 'approval-requested');
       assert.strictEqual(submissionEvent.comment, comment);
-    };
+    }) as typeof routerService.transitionTo;
 
-    controller.model = model;
+    controller.model = model as unknown as typeof controller.model;
     controller.comment = comment;
 
     controller.send('submit');
@@ -220,7 +220,7 @@ module('Unit | Controller | submissions/new', (hooks) => {
     // After the route transition to thanks, all promises should be resolved handler
     // and tests can be run.
     const routerService = this.owner.lookup('service:router');
-    routerService.transitionTo = (name: string) => {
+    routerService.transitionTo = ((name: string) => {
       assert.strictEqual(name, 'thanks');
 
       assert.true(publicationSaved);
@@ -236,9 +236,9 @@ module('Unit | Controller | submissions/new', (hooks) => {
       assert.strictEqual(submissionEvent.performerRole, 'preparer');
       assert.strictEqual(submissionEvent.eventType, 'approval-requested-newuser');
       assert.strictEqual(submissionEvent.comment, comment);
-    };
+    }) as typeof routerService.transitionTo;
 
-    controller.model = model;
+    controller.model = model as unknown as typeof controller.model;
     controller.comment = comment;
 
     controller.send('submit');
@@ -264,7 +264,7 @@ module('Unit | Controller | submissions/new', (hooks) => {
       newSubmission: submission,
     };
 
-    controller.model = model;
+    controller.model = model as unknown as typeof controller.model;
 
     // Mock global 'swal' for this test
     const swalStub = Sinon.stub(Swal, 'fire').callsFake(() => {
@@ -280,12 +280,12 @@ module('Unit | Controller | submissions/new', (hooks) => {
         assert.ok(sub);
         return Promise.resolve();
       },
-    };
+    } as unknown as typeof controller.submissionHandler;
     controller.router = {
       transitionTo: (name: string) => {
         assert.strictEqual(name, 'submissions', 'unexpected transition was named');
       },
-    };
+    } as typeof controller.router;
 
     controller.send('abort');
     swalStub.restore();
@@ -302,7 +302,7 @@ module('Unit | Controller | submissions/new', (hooks) => {
       newSubmission: submission,
     };
 
-    controller.model = model;
+    controller.model = model as unknown as typeof controller.model;
 
     // Mock global 'swal' for this test
     const swalStub = Sinon.stub(Swal, 'fire').callsFake(() => {
@@ -320,13 +320,13 @@ module('Unit | Controller | submissions/new', (hooks) => {
         deleteSubmissionCalled = true;
         return Promise.resolve();
       },
-    };
+    } as unknown as typeof controller.submissionHandler;
     controller.router = {
       transitionTo: (name: string) => {
         assert.false(deleteSubmissionCalled);
         assert.strictEqual(name, 'submissions', 'unexpected transition was named');
       },
-    };
+    } as typeof controller.router;
 
     controller.send('abort');
     swalStub.restore();

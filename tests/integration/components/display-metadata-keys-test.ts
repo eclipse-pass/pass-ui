@@ -2,6 +2,7 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
+import type MetadataSchemaService from 'pass-ui/services/metadata-schema';
 
 module('Integration | Component | display-metadata-keys', (hooks) => {
   setupRenderingTest(hooks);
@@ -92,7 +93,8 @@ module('Integration | Component | display-metadata-keys', (hooks) => {
 
     this.set('submission', submission);
 
-    this.owner.lookup('service:metadata-schema').displayMetadata = (_submission: unknown) => [
+    const metadataSchema = this.owner.lookup('service:metadata-schema') as MetadataSchemaService;
+    metadataSchema.displayMetadata = async (_submission) => [
       { label: 'Journal nlmta-id', value: 'MOO-ID', isArray: false },
       {
         label: 'Authors',

@@ -6,6 +6,7 @@ import hbs from 'htmlbars-inline-precompile';
 import { module, test } from 'qunit';
 import { render, settled, click, findAll } from '@ember/test-helpers';
 import { run } from '@ember/runloop';
+import type Workflow from 'pass-ui/services/workflow';
 
 module('Integration | Component | workflow grants', (hooks) => {
   setupRenderingTest(hooks);
@@ -84,7 +85,7 @@ module('Integration | Component | workflow grants', (hooks) => {
   });
 
   test('Pre-loaded grant is selected on render', async function (assert) {
-    const workflow = this.owner.lookup('service:workflow');
+    const workflow = this.owner.lookup('service:workflow') as Workflow;
     workflow.resetWorkflow();
 
     this.set('preLoadedGrant', knownGrant);

@@ -6,18 +6,20 @@ import { setupTest } from 'ember-qunit';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 // @ts-expect-error no declaration file for sinon
 import Sinon from 'sinon';
+import type SubmissionsNewRepositories from 'pass-ui/controllers/submissions/new/repositories';
+import type AppStore from 'pass-ui/services/store';
 
 module('Unit | Controller | submissions/new/repositories', (hooks) => {
   setupTest(hooks);
 
   // Replace this with your real tests.
   test('it exists', function (assert) {
-    const controller = this.owner.lookup('controller:submissions/new/repositories');
+    const controller = this.owner.lookup('controller:submissions/new/repositories') as SubmissionsNewRepositories;
     assert.ok(controller);
   });
 
   test('transition aborted if no repositories', function (assert) {
-    const controller = this.owner.lookup('controller:submissions/new/repositories');
+    const controller = this.owner.lookup('controller:submissions/new/repositories') as SubmissionsNewRepositories;
     this.owner.register(
       'service:workflow',
       EmberObject.extend({
@@ -32,12 +34,12 @@ module('Unit | Controller | submissions/new/repositories', (hooks) => {
     const model = {
       newSubmission: submission,
     };
-    controller.model = model;
+    controller.model = model as unknown as typeof controller.model;
     let loadTabAccessed = false;
     const routerService = this.owner.lookup('service:router');
-    routerService.transitionTo = function (_route: string) {
+    routerService.transitionTo = ((_route: string) => {
       loadTabAccessed = true;
-    };
+    }) as typeof routerService.transitionTo;
     // override swal so it doesn't pop up
     const swalStub = Sinon.stub(Swal, 'fire').resolves(() => assert.ok(true));
     controller.send('validateAndLoadTab');
@@ -48,7 +50,7 @@ module('Unit | Controller | submissions/new/repositories', (hooks) => {
   test('transition if there are repositories', function (assert) {
     assert.ok(2);
 
-    const controller = this.owner.lookup('controller:submissions/new/repositories');
+    const controller = this.owner.lookup('controller:submissions/new/repositories') as SubmissionsNewRepositories;
     this.owner.register(
       'service:workflow',
       EmberObject.extend({
@@ -67,18 +69,18 @@ module('Unit | Controller | submissions/new/repositories', (hooks) => {
         repositories: A([repository]),
       },
     };
-    controller.model = model;
+    controller.model = model as unknown as typeof controller.model;
 
-    const store = this.owner.lookup('service:store');
-    store.persistRecord = () => {
+    const store = this.owner.lookup('service:store') as AppStore;
+    store.persistRecord = (() => {
       assert.ok(true);
-      return Promise.resolve({ content: {} });
-    };
+      return Promise.resolve({ content: {} }) as ReturnType<typeof store.persistRecord>;
+    }) as typeof store.persistRecord;
 
     const routerService = this.owner.lookup('service:router');
-    routerService.transitionTo = function (_route: string) {
+    routerService.transitionTo = ((_route: string) => {
       assert.ok(true);
-    };
+    }) as typeof routerService.transitionTo;
     controller.send('validateAndLoadTab');
   });
 
@@ -111,7 +113,7 @@ module('Unit | Controller | submissions/new/repositories', (hooks) => {
 
     let subSaved = false;
 
-    const controller = this.owner.lookup('controller:submissions/new/repositories');
+    const controller = this.owner.lookup('controller:submissions/new/repositories') as SubmissionsNewRepositories;
 
     const repositories = A([
       {
@@ -125,18 +127,18 @@ module('Unit | Controller | submissions/new/repositories', (hooks) => {
       },
     };
 
-    controller.model = model;
+    controller.model = model as unknown as typeof controller.model;
 
-    const store = this.owner.lookup('service:store');
-    store.persistRecord = () => {
+    const store = this.owner.lookup('service:store') as AppStore;
+    store.persistRecord = (() => {
       subSaved = true;
-      return Promise.resolve({ content: {} });
-    };
+      return Promise.resolve({ content: {} }) as ReturnType<typeof store.persistRecord>;
+    }) as typeof store.persistRecord;
 
     const routerService = this.owner.lookup('service:router');
-    routerService.transitionTo = function (route: string) {
+    routerService.transitionTo = ((route: string) => {
       assert.ok(['submissions.new.metadata', 'submissions.new.policies'].includes(route));
-    };
+    }) as typeof routerService.transitionTo;
 
     controller.send('loadNext');
     assert.ok(subSaved);

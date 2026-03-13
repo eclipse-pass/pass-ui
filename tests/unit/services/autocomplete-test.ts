@@ -1,6 +1,7 @@
 import Service from '@ember/service';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
+import type AutocompleteService from 'pass-ui/services/autocomplete';
 
 module('Unit | Service | autocomplete', (hooks) => {
   setupTest(hooks);
@@ -21,8 +22,8 @@ module('Unit | Service | autocomplete', (hooks) => {
       }
     }
 
-    const service = this.owner.lookup('service:autocomplete');
-    service.store = new StoreStub();
+    const service = this.owner.lookup('service:autocomplete') as AutocompleteService;
+    service.store = new StoreStub() as unknown as typeof service.store;
     service.suggest(TYPE, FIELD, INPUT).then(() => {
       assert.ok('Suggest service resolves');
     });
@@ -45,8 +46,8 @@ module('Unit | Service | autocomplete', (hooks) => {
       }
     }
 
-    const service = this.owner.lookup('service:autocomplete');
-    service.store = new StoreStub();
+    const service = this.owner.lookup('service:autocomplete') as AutocompleteService;
+    service.store = new StoreStub() as unknown as typeof service.store;
 
     service.suggest(TYPE, FIELD, INPUT, CONTEXT).then(() => {
       assert.ok('Resolves fine');
@@ -70,8 +71,8 @@ module('Unit | Service | autocomplete', (hooks) => {
       }
     }
 
-    const service = this.owner.lookup('service:autocomplete');
-    service.store = new StoreStub();
+    const service = this.owner.lookup('service:autocomplete') as AutocompleteService;
+    service.store = new StoreStub() as unknown as typeof service.store;
 
     service.suggest(TYPE, FIELDS, INPUT).then(() => {
       assert.ok('Suggest function resolves');

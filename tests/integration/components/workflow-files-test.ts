@@ -8,13 +8,16 @@ import { Response } from 'miragejs';
 // @ts-expect-error no declaration file for sinon
 import sinon from 'sinon';
 import type AppStore from 'pass-ui/services/store';
+import type Workflow from 'pass-ui/services/workflow';
+import type { WorkflowFile } from 'pass-ui/services/workflow';
+import type AppStaticConfigService from 'pass-ui/services/app-static-config';
 
 module('Integration | Component | workflow files', (hooks) => {
   setupRenderingTest(hooks);
   setupMirage(hooks);
 
   hooks.beforeEach(function () {
-    const store = this.owner.lookup('service:store');
+    const store = this.owner.lookup('service:store') as AppStore;
     this.submission = store.createRecord('submission', {
       repositoriers: [],
       grants: [],
@@ -23,7 +26,7 @@ module('Integration | Component | workflow files', (hooks) => {
     // Bogus action so component actions don't complain
     this.fakeAction = sinon.fake();
 
-    const staticConfig = this.owner.lookup('service:app-static-config');
+    const staticConfig = this.owner.lookup('service:app-static-config') as AppStaticConfigService;
     sinon.replace(
       staticConfig,
       'getStaticConfig',
@@ -33,7 +36,7 @@ module('Integration | Component | workflow files', (hooks) => {
     this.owner.register('service:app-static-config', staticConfig);
 
     this.msServiceFake = sinon.replace(
-      this.owner.lookup('service:oa-manuscript-service'),
+      this.owner.lookup('service:oa-manuscript-service') as object,
       'lookup',
       sinon.fake.returns(Promise.resolve([{ name: 'This is a moo', url: 'http://example.com/moo.pdf' }])),
     );
@@ -70,8 +73,8 @@ module('Integration | Component | workflow files', (hooks) => {
     const fetchStub = sinon.stub(globalThis, 'fetch').resolves(new globalThis.Response(null, { status: 200 }));
     const destroyStub = sinon.stub(store, 'destroyRecord').returns(Promise.resolve());
 
-    const workflow = this.owner.lookup('service:workflow');
-    workflow.setFiles([file]);
+    const workflow = this.owner.lookup('service:workflow') as Workflow;
+    workflow.setFiles([file as unknown as WorkflowFile]);
 
     try {
       await render(hbs`<WorkflowFiles
@@ -116,8 +119,8 @@ module('Integration | Component | workflow files', (hooks) => {
       submission: this.submission,
     });
 
-    const workflow = this.owner.lookup('service:workflow');
-    workflow.setFiles([ms]);
+    const workflow = this.owner.lookup('service:workflow') as Workflow;
+    workflow.setFiles([ms as unknown as WorkflowFile]);
 
     await render(hbs`<WorkflowFiles
   @submission={{this.submission}}
@@ -177,8 +180,8 @@ module('Integration | Component | workflow files', (hooks) => {
     const fetchStub = sinon.stub(globalThis, 'fetch').resolves(new globalThis.Response(null, { status: 200 }));
     sinon.stub(store, 'destroyRecord').rejects(new Error('destroy failed'));
 
-    const workflow = this.owner.lookup('service:workflow');
-    workflow.setFiles([file]);
+    const workflow = this.owner.lookup('service:workflow') as Workflow;
+    workflow.setFiles([file as unknown as WorkflowFile]);
 
     // Need to make sure the flash message service is initialized
     this.flashMessages = this.owner.lookup('service:flash-messages');

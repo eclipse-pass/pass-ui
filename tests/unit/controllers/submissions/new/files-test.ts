@@ -5,18 +5,20 @@ import { setupTest } from 'ember-qunit';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 // @ts-expect-error no declaration file for sinon
 import Sinon from 'sinon';
+import type SubmissionsNewFiles from 'pass-ui/controllers/submissions/new/files';
+import type AppStore from 'pass-ui/services/store';
 
 module('Unit | Controller | submissions/new/files', (hooks) => {
   setupTest(hooks);
 
   // Replace this with your real tests.
   test('it exists', function (assert) {
-    const controller = this.owner.lookup('controller:submissions/new/files');
+    const controller = this.owner.lookup('controller:submissions/new/files') as SubmissionsNewFiles;
     assert.ok(controller);
   });
 
   test('No manuscript files, user is submitter, stops transition', async function (assert) {
-    const controller = this.owner.lookup('controller:submissions/new/files');
+    const controller = this.owner.lookup('controller:submissions/new/files') as SubmissionsNewFiles;
     let loadTabAccessed = false;
     this.owner.register(
       'controller:submissions.new',
@@ -36,12 +38,12 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
       }),
     );
     const model = { files: [] };
-    controller.model = model;
+    controller.model = model as unknown as typeof controller.model;
     controller.loadingNext = true;
     const routerService = this.owner.lookup('service:router');
-    routerService.transitionTo = (_name: string) => {
+    routerService.transitionTo = ((_name: string) => {
       loadTabAccessed = true;
-    };
+    }) as typeof routerService.transitionTo;
     assert.strictEqual(controller.workflow.getFiles().length, 0);
     const swalStub = Sinon.stub(Swal, 'fire').resolves({ dismiss: Swal.DismissReason.cancel });
     controller.send('validateAndLoadTab', 'submissions.new.basics');
@@ -50,7 +52,7 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
   });
 
   test('No manuscript files, user not submitter, warns before transition', function (assert) {
-    const controller = this.owner.lookup('controller:submissions/new/files');
+    const controller = this.owner.lookup('controller:submissions/new/files') as SubmissionsNewFiles;
     let loadTabAccessed = false;
     this.owner.register(
       'controller:submissions.new',
@@ -70,11 +72,11 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
       }),
     );
     const model = { files: [] };
-    controller.model = model;
+    controller.model = model as unknown as typeof controller.model;
     const routerService = this.owner.lookup('service:router');
-    routerService.transitionTo = (_name: string) => {
+    routerService.transitionTo = ((_name: string) => {
       loadTabAccessed = true;
-    };
+    }) as typeof routerService.transitionTo;
     assert.strictEqual(controller.workflow.getFiles().length, 0);
     // override swal so it doesn't pop up
     const swalStub = Sinon.stub(Swal, 'fire').resolves({ dismiss: Swal.DismissReason.cancel });
@@ -84,7 +86,7 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
   });
 
   test('Multiple manuscript files stops transition', function (assert) {
-    const controller = this.owner.lookup('controller:submissions/new/files');
+    const controller = this.owner.lookup('controller:submissions/new/files') as SubmissionsNewFiles;
 
     let loadTabAccessed = false;
 
@@ -116,18 +118,18 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
       }),
     );
     const model = { newSubmission: submission };
-    controller.model = model;
+    controller.model = model as unknown as typeof controller.model;
     const routerService = this.owner.lookup('service:router');
-    routerService.transitionTo = () => {
+    routerService.transitionTo = (() => {
       loadTabAccessed = true;
-    };
+    }) as typeof routerService.transitionTo;
     assert.strictEqual(controller.workflow.getFiles().length, 2);
     controller.send('validateAndLoadTab', 'submissions.new.basics');
     assert.false(loadTabAccessed);
   });
 
   test('Valid files page does transition', function (assert) {
-    const controller = this.owner.lookup('controller:submissions/new/files');
+    const controller = this.owner.lookup('controller:submissions/new/files') as SubmissionsNewFiles;
 
     this.owner.register(
       'controller:submissions.new',
@@ -155,21 +157,21 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
     const model = {
       newSubmission: submission,
     };
-    controller.model = model;
+    controller.model = model as unknown as typeof controller.model;
 
-    const store = this.owner.lookup('service:store');
-    store.persistRecord = (record: unknown) => {
+    const store = this.owner.lookup('service:store') as AppStore;
+    store.persistRecord = ((record: unknown) => {
       if (record === submission) {
         subSaved = true;
       }
-      return Promise.resolve({ content: {} });
-    };
+      return Promise.resolve({ content: {} }) as ReturnType<typeof store.persistRecord>;
+    }) as typeof store.persistRecord;
 
     const routerService = this.owner.lookup('service:router');
-    routerService.transitionTo = () => {
+    routerService.transitionTo = (() => {
       assert.ok(subSaved, 'Submission was not saved');
       assert.strictEqual(controller.workflow.getFiles().length, 1);
-    };
+    }) as typeof routerService.transitionTo;
 
     controller.send('validateAndLoadTab', 'submissions.new.basics');
   });

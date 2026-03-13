@@ -3,6 +3,8 @@ import { setupTest } from 'ember-qunit';
 // @ts-expect-error no declaration file for sinon
 import Sinon from 'sinon';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
+import type SubmissionModel from 'pass-ui/models/submission';
+import type SubmissionsDetailController from 'pass-ui/controllers/submissions/detail';
 
 module('Unit | Controller | submissions/detail', (hooks) => {
   setupTest(hooks);
@@ -19,9 +21,9 @@ module('Unit | Controller | submissions/detail', (hooks) => {
     // Mock the global SweetAlert object to always return immediately
     const swalStub = Sinon.stub(Swal, 'fire').resolves({ value: true });
 
-    const submission = {};
+    const submission = {} as unknown as SubmissionModel;
 
-    const controller = this.owner.lookup('controller:submissions/detail');
+    const controller = this.owner.lookup('controller:submissions/detail') as SubmissionsDetailController;
     assert.ok(controller, 'controller not found');
 
     controller.submissionHandler = {
@@ -29,26 +31,28 @@ module('Unit | Controller | submissions/detail', (hooks) => {
         assert.ok(true);
         return Promise.resolve();
       },
-    };
+    } as unknown as typeof controller.submissionHandler;
 
     controller.send('deleteSubmission', submission);
     swalStub.restore();
   });
 
   test('error message shown on submission deletion error', async function (assert) {
-    const submission = {};
+    const submission = {} as unknown as SubmissionModel;
 
     // Mock global SweetAlert. Mocks a user clicking OK on the popup
     const swalStub = Sinon.stub(Swal, 'fire').resolves({ value: true });
 
-    const controller = this.owner.lookup('controller:submissions/detail');
+    const controller = this.owner.lookup('controller:submissions/detail') as SubmissionsDetailController;
     const routerService = this.owner.lookup('service:router');
     const transitionFake = Sinon.replace(routerService, 'transitionTo', Sinon.fake());
 
-    controller.submissionHandler = this.owner.lookup('service:submission-handler');
+    controller.submissionHandler = this.owner.lookup(
+      'service:submission-handler',
+    ) as typeof controller.submissionHandler;
     const deleteFake = Sinon.replace(controller.submissionHandler, 'deleteSubmission', Sinon.fake.rejects());
 
-    controller.flashMessages = this.owner.lookup('service:flash-messages');
+    controller.flashMessages = this.owner.lookup('service:flash-messages') as typeof controller.flashMessages;
     const flashFake = Sinon.replace(controller.flashMessages, 'danger', Sinon.fake());
 
     // Note: using controller.send resolves immediately

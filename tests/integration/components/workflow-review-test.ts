@@ -19,7 +19,9 @@ module('Integration | Component | workflow review', (hooks) => {
   hooks.beforeEach(async function () {
     this.server.post('https://pass.local/schemaservice?merge=true', () => true);
 
-    const flashMessages = this.owner.lookup('service:flash-messages');
+    const flashMessages = this.owner.lookup('service:flash-messages') as {
+      registerTypes: (types: string[]) => void;
+    };
     const typesUsed = ['info'];
     flashMessages.registerTypes(typesUsed);
   });
