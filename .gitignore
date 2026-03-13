@@ -59,3 +59,10 @@ jsconfig.json
 
 # visual diff evidence (before/after screenshots for addon migrations)
 /visual-diff-evidence/
+
+# claude code
+.claude/
+CLAUDE.md
+
+# upgrade tracking (local only)
+.github/upgrade-issues/
