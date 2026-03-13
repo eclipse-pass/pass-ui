@@ -13,7 +13,7 @@ import swal from 'sweetalert2/dist/sweetalert2.js';
 import fileQueue from 'ember-file-upload/helpers/file-queue';
 import FoundManuscripts from 'pass-ui/components/found-manuscripts';
 import { deleteFileWithBytes } from 'pass-ui/builders/pass-api';
-import type { UploadFile } from 'ember-file-upload';
+import { FileState, type UploadFile } from 'ember-file-upload';
 import type Workflow from 'pass-ui/services/workflow';
 import type { WorkflowFile } from 'pass-ui/services/workflow';
 import type SubmissionHandlerService from 'pass-ui/services/submission-handler';
@@ -124,7 +124,7 @@ export default class WorkflowFiles extends Component<WorkflowFilesSignature> {
     try {
       const response = await FileUpload.upload(ENV.fileServicePath, {
         headers: {
-          'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN\=([^;]*)/)!['1'],
+          'X-XSRF-TOKEN': document.cookie.match(/XSRF-TOKEN\=([^;]*)/)![1] as string,
         },
       });
 
@@ -144,7 +144,7 @@ export default class WorkflowFiles extends Component<WorkflowFilesSignature> {
       await this.store.persistRecord(newFile);
       this.workflow.addFile(newFile as unknown as WorkflowFile);
     } catch (error) {
-      FileUpload.file.state = 'aborted';
+      FileUpload.state = FileState.Aborted;
       console.error(error);
     }
 

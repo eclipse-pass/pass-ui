@@ -10,7 +10,7 @@ interface Signature {
   Args: {
     grants: GrantModel[];
     remove?: (grant: GrantModel) => void;
-    setup?: (() => void) | undefined;
+    setup?: Task<unknown, unknown[]>;
   };
 }
 
@@ -19,7 +19,7 @@ const queue =
   (...args: unknown[]) =>
     fns.forEach((f) => f(...args));
 
-const perform = (task: Task<unknown, unknown[]>) => () => task.perform();
+const perform = (task: Task<unknown, unknown[]> | undefined) => () => task?.perform();
 
 // prettier-ignore
 <template>
