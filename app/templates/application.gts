@@ -79,7 +79,7 @@ interface Signature {
           </small>
         {{/if}}
         <br />
-        <small>
+        <small data-test-footer-version>
           rev.&nbsp;{{config.APP.version}}
         </small>
       </div>

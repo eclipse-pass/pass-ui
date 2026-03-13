@@ -1,5 +1,7 @@
 'use strict';
 
+const pkg = require('../package.json');
+
 module.exports = function (environment) {
   let ENV = {
     modulePrefix: 'pass-ui',
@@ -36,6 +38,7 @@ module.exports = function (environment) {
     APP: {
       // This is available in the app by calling PassEmber.varName
       staticConfigUri: process.env.STATIC_CONFIG_URL || '/app/config.json',
+      version: pkg.version,
     },
   };
 

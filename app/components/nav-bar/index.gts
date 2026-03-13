@@ -25,6 +25,7 @@ export default class NavBar extends Component<NavBarSignature> {
   @tracked aboutUrl: string | null = null;
   @tracked contactUrl: string | null = null;
   @tracked faqUrl: string | null = null;
+  @tracked isNavCollapsed = true;
   @tracked isUserMenuOpen = false;
 
   constructor(owner: Owner, args: NavBarSignature['Args']) {
@@ -67,6 +68,11 @@ export default class NavBar extends Component<NavBarSignature> {
   });
 
   @action
+  toggleNav() {
+    this.isNavCollapsed = !this.isNavCollapsed;
+  }
+
+  @action
   toggleUserMenu() {
     this.isUserMenuOpen = !this.isUserMenuOpen;
   }
@@ -78,15 +84,15 @@ export default class NavBar extends Component<NavBarSignature> {
           <button
             class='navbar-toggler text-center border-none'
             type='button'
-            data-toggle='collapse'
-            data-target='#navbar-supported-content'
             aria-controls='navbar-supported-content'
-            aria-expanded='false'
+            aria-expanded={{if this.isNavCollapsed 'false' 'true'}}
             aria-label='Toggle navigation'
+            data-test-nav-toggle
+            {{on 'click' this.toggleNav}}
           >
             <span class='navbar-toggler-icon'></span>
           </button>
-          <div class='collapse navbar-collapse' id='navbar-supported-content'>
+          <div class='navbar-collapse {{if this.isNavCollapsed "collapse"}}' id='navbar-supported-content'>
             <ul class='navbar-nav w-75'>
               <li class='nav-item'>
                 <LinkTo @route='dashboard' class='nav-link pl-0 ml-0'>
