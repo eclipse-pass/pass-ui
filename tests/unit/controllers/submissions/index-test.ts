@@ -1,6 +1,7 @@
 import Service from '@ember/service';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
+import type SubmissionsIndex from 'pass-ui/controllers/submissions/index';
 
 class MockConfigService extends Service {
   get config() {
@@ -12,14 +13,15 @@ class MockConfigService extends Service {
 module('Unit | Controller | submissions/index', function (hooks) {
   setupTest(hooks);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- owner.lookup() returns untyped controller instance
-  let controller: any;
+  let controller: SubmissionsIndex;
 
   hooks.beforeEach(function () {
     this.owner.register('service:app-static-config', MockConfigService);
 
-    controller = this.owner.lookup('controller:submissions/index');
-    controller.currentUser = { user: { id: 0, isAdmin: false, isSubmitter: true } };
+    controller = this.owner.lookup('controller:submissions/index') as SubmissionsIndex;
+    controller.currentUser = {
+      user: { id: 0, isAdmin: false, isSubmitter: true },
+    } as unknown as typeof controller.currentUser;
   });
 
   /**
@@ -27,7 +29,9 @@ module('Unit | Controller | submissions/index', function (hooks) {
    * that URL query params are also updated
    */
   test('handleTableChange updates tracked query params', function (assert) {
-    controller.store = { request: () => Promise.resolve({ content: { data: [] } }) };
+    controller.store = {
+      request: () => Promise.resolve({ content: { data: [] } }),
+    } as unknown as typeof controller.store;
 
     assert.equal(controller.page, 1, 'Page param should have default value');
     assert.equal(controller.pageSize, 10, 'Page size param should have default value');
@@ -48,12 +52,16 @@ module('Unit | Controller | submissions/index', function (hooks) {
         assert.true(url.includes('page'), 'Query should have pagination info');
         return Promise.resolve({ content: { data: {} } });
       },
-    };
+    } as unknown as typeof controller.store;
 
     // Not called from a route's model hook, so no queued model
     assert.notOk(controller.queuedModel, 'Queued model undefined');
     await controller.fetchData();
 
-    assert.deepEqual(controller.queuedModel, { submissions: {}, meta: undefined }, 'Queued model updated');
+    assert.deepEqual(
+      controller.queuedModel,
+      { submissions: {}, meta: undefined } as unknown as typeof controller.queuedModel,
+      'Queued model updated',
+    );
   });
 });

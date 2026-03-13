@@ -1,6 +1,7 @@
 import Service from '@ember/service';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
+import type GrantsIndexController from 'pass-ui/controllers/grants/index';
 
 class MockConfigService extends Service {
   get config() {
@@ -12,20 +13,21 @@ class MockConfigService extends Service {
 module('Unit | Controller | grants/index', (hooks) => {
   setupTest(hooks);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- owner.lookup() returns untyped controller instance
-  let controller: any;
+  let controller: GrantsIndexController;
 
   hooks.beforeEach(function () {
     this.owner.register('service:app-static-config', MockConfigService);
 
-    controller = this.owner.lookup('controller:grants/index');
-    controller.currentUser = { user: { id: 0, isAdmin: false, isSubmitter: true } };
+    controller = this.owner.lookup('controller:grants/index') as GrantsIndexController;
+    controller.currentUser = {
+      user: { id: 0, isAdmin: false, isSubmitter: true },
+    } as unknown as typeof controller.currentUser;
   });
 
   test('handleTableChange updates tracked query params', function (assert) {
     controller.store = {
       request: () => Promise.resolve({ content: { data: [] } }),
-    };
+    } as unknown as typeof controller.store;
 
     assert.equal(controller.page, 1, 'Page param should have default value');
     assert.equal(controller.pageSize, 10, 'Page size param should have default value');
@@ -59,17 +61,17 @@ module('Unit | Controller | grants/index', (hooks) => {
         assert.ok(false, 'Only submissions and grants should be queried here');
         return Promise.resolve({ content: { data: {} } });
       },
-    };
+    } as unknown as typeof controller.store;
 
     assert.notOk(controller.queuedModel, 'Queued model should be empty');
 
     await controller.fetchData();
 
-    const result = controller.queuedModel;
+    const result = controller.queuedModel!;
     assert.ok(result.grantMap, 'Grant mapping should exist');
     assert.notOk(result.meta, 'No paging info present due to mocking');
-    assert.equal(result.grantMap.length, 2, 'grantMap should have 2 grants');
-    assert.equal(result.grantMap[0].submissions.length, 0, 'First grant should have 0 submissions');
-    assert.equal(result.grantMap[1].submissions.length, 2, 'Second grant should have 2 submissions');
+    assert.equal(result.grantMap!.length, 2, 'grantMap should have 2 grants');
+    assert.equal(result.grantMap![0]!.submissions.length, 0, 'First grant should have 0 submissions');
+    assert.equal(result.grantMap![1]!.submissions.length, 2, 'Second grant should have 2 submissions');
   });
 });
