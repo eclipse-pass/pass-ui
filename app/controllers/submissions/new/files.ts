@@ -53,19 +53,19 @@ export default class SubmissionsNewFiles extends Controller {
   }
 
   @action
-  loadNext(): void {
+  async loadNext(): Promise<void> {
     this.loadingNext = true;
-    this.validateAndLoadTab('submissions.new.review');
+    await this.validateAndLoadTab('submissions.new.review');
   }
 
   @action
-  loadPrevious(): void {
-    this.validateAndLoadTab('submissions.new.metadata');
+  async loadPrevious(): Promise<void> {
+    await this.validateAndLoadTab('submissions.new.metadata');
   }
 
   @action
   async loadTab(gotoRoute: string): Promise<void> {
-    this.updateRelatedData();
+    await this.updateRelatedData();
     await this.store.persistRecord(this.submission);
     this.loadingNext = false; // reset for next time
     this.router.transitionTo(gotoRoute);
@@ -94,7 +94,7 @@ export default class SubmissionsNewFiles extends Controller {
         });
 
         if (!result.dismiss) {
-          this.loadTab(gotoTab);
+          await this.loadTab(gotoTab);
         }
       } else if (manuscriptFiles.length === 0) {
         this.flashMessages.warning('At least one manuscript file is required');
@@ -103,20 +103,18 @@ export default class SubmissionsNewFiles extends Controller {
           `Only one file may be designated as the manuscript.  Instead, found ${manuscriptFiles.length}`,
         );
       } else {
-        this.loadTab(gotoTab);
+        await this.loadTab(gotoTab);
       }
     } else {
-      this.loadTab(gotoTab);
+      await this.loadTab(gotoTab);
     }
   }
 
   @action
-  updateRelatedData(): void {
+  async updateRelatedData(): Promise<void> {
     const allFiles = this.workflow.getFiles();
     if (allFiles.length > 0) {
-      allFiles.forEach((file) => {
-        this.store.persistRecord(file as unknown as Model);
-      });
+      await Promise.all(allFiles.map((file) => this.store.persistRecord(file as unknown as Model)));
     }
   }
 

@@ -128,7 +128,7 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
     assert.false(loadTabAccessed);
   });
 
-  test('Valid files page does transition', function (assert) {
+  test('Valid files page does transition', async function (assert) {
     const controller = this.owner.lookup('controller:submissions/new/files') as SubmissionsNewFiles;
 
     this.owner.register(
@@ -168,11 +168,11 @@ module('Unit | Controller | submissions/new/files', (hooks) => {
     }) as typeof store.persistRecord;
 
     const routerService = this.owner.lookup('service:router');
-    routerService.transitionTo = (() => {
-      assert.ok(subSaved, 'Submission was not saved');
-      assert.strictEqual(controller.workflow.getFiles().length, 1);
-    }) as typeof routerService.transitionTo;
+    routerService.transitionTo = (() => {}) as typeof routerService.transitionTo;
 
-    controller.send('validateAndLoadTab', 'submissions.new.basics');
+    await controller.validateAndLoadTab('submissions.new.basics');
+
+    assert.ok(subSaved, 'Submission was not saved');
+    assert.strictEqual(controller.workflow.getFiles().length, 1);
   });
 });
