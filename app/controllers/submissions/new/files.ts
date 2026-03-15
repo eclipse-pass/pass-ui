@@ -65,8 +65,15 @@ export default class SubmissionsNewFiles extends Controller {
 
   @action
   async loadTab(gotoRoute: string): Promise<void> {
-    await this.updateRelatedData();
-    await this.store.persistRecord(this.submission);
+    try {
+      await this.updateRelatedData();
+      await this.store.persistRecord(this.submission);
+    } catch (error) {
+      this.loadingNext = false;
+      console.error('[Files] Failed to save before transition:', error);
+      this.flashMessages.danger('An error occurred while saving. Please try again.');
+      return;
+    }
     this.loadingNext = false; // reset for next time
     this.router.transitionTo(gotoRoute);
   }
