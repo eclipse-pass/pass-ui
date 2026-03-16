@@ -138,7 +138,8 @@ export function grantsIndexSubmissionQuery(user: UserLike) {
     filter: {
       submission: `submissionStatus=out=cancelled;(${userMatch})`,
     },
-    include: 'grants',
+    // grants are already cached from the first query — relationship linkage
+    // data in the response is sufficient for WarpDrive to resolve them
   };
 }
 
