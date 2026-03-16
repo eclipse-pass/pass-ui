@@ -258,6 +258,7 @@ module('Unit | Controller | submissions/new', (hooks) => {
 
     const submission = {
       id: 'sub:0',
+      isDraft: true,
     };
 
     const model = {
