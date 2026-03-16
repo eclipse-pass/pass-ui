@@ -15,8 +15,8 @@ module('Integration | Component | notice-banner', (hooks) => {
         branding: {
           stylesheet: '',
           pages: {
-            contactUrl: 'http://test-contact/',
-            instructionsUrl: 'http://test-instructions/',
+            contactUrl: 'https://test-contact/',
+            instructionsUrl: 'https://test-instructions/',
           },
         },
       },
@@ -28,12 +28,12 @@ module('Integration | Component | notice-banner', (hooks) => {
     await render(hbs`<NoticeBanner />`);
     assert.equal(
       this.element.querySelector('.instructions-url')!.getAttribute('href'),
-      'http://test-instructions/',
+      'https://test-instructions/',
       'instruction url populated',
     );
     assert.equal(
       this.element.querySelector('.contact-us-url')!.getAttribute('href'),
-      'http://test-contact/',
+      'https://test-contact/',
       'contact us url populated',
     );
   });

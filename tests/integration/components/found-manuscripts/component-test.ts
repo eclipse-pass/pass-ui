@@ -43,7 +43,7 @@ module('Integration | Component | found-manuscripts', (hooks) => {
         return Promise.resolve([
           {
             name: 'This is a moo',
-            url: 'http://moo.example.com',
+            url: 'https://moo.example.com',
           },
         ]);
       },
@@ -61,7 +61,7 @@ module('Integration | Component | found-manuscripts', (hooks) => {
 
     await render(hbs`<FoundManuscripts @doi='test' />`);
 
-    assert.ok(this.element.textContent!.includes('http://moo.example.com'));
+    assert.ok(this.element.textContent!.includes('https://moo.example.com'));
   });
 
   test('Nothing renders when disabled', async function (assert) {

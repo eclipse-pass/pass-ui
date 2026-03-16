@@ -39,7 +39,7 @@ module('Unit | Service | doi', (hooks) => {
       DOI: '10.1039/c7an01256j',
       type: 'journal-article',
       page: '311-322',
-      'update-policy': 'http://dx.doi.org/10.1039/rsc_crossmark_policy',
+      'update-policy': 'https://dx.doi.org/10.1039/rsc_crossmark_policy',
       source: 'Crossref',
       'is-referenced-by-count': 5,
       title: [

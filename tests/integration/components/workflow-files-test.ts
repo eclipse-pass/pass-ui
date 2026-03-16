@@ -38,7 +38,7 @@ module('Integration | Component | workflow files', (hooks) => {
     this.msServiceFake = sinon.replace(
       this.owner.lookup('service:oa-manuscript-service') as object,
       'lookup',
-      sinon.fake.returns(Promise.resolve([{ name: 'This is a moo', url: 'http://example.com/moo.pdf' }])),
+      sinon.fake.returns(Promise.resolve([{ name: 'This is a moo', url: 'https://example.com/moo.pdf' }])),
     );
     this.owner.register('service:oa-manuscript-service', this.msServiceFake);
 
