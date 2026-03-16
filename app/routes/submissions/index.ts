@@ -24,9 +24,9 @@ export default class IndexRoute extends CheckSessionRoute {
   @service declare store: AppStore;
 
   queryParams = {
-    page: {},
-    pageSize: {},
-    filter: {},
+    page: { refreshModel: true },
+    pageSize: { refreshModel: true },
+    filter: { refreshModel: true },
   };
 
   async model(params: SubmissionsIndexParams): Promise<SubmissionsIndexModel> {
