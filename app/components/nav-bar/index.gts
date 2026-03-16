@@ -73,7 +73,8 @@ export default class NavBar extends Component<NavBarSignature> {
   }
 
   @action
-  toggleUserMenu() {
+  toggleUserMenu(event: Event) {
+    event.preventDefault();
     this.isUserMenuOpen = !this.isUserMenuOpen;
   }
 
