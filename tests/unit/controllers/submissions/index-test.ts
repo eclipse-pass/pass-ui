@@ -7,7 +7,9 @@ class MockConfigService extends Service {
   get config() {
     return { branding: { stylesheet: '', pages: { faqUrl: '' } } };
   }
-  addCss() {}
+  addCss() {
+    /* stub — real service loads CSS dynamically */
+  }
 }
 
 module('Unit | Controller | submissions/index', function (hooks) {

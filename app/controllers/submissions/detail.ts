@@ -354,6 +354,71 @@ export default class SubmissionsDetail extends Controller {
     return manuscriptFiles;
   }
 
+  private _categorizeRepositories(repositories: RepositoryModel[]) {
+    const withAgreement = repositories
+      .filter((repo: RepositoryModel) => !repo._isWebLink && repo.agreementText)
+      .map((repo: RepositoryModel) => ({
+        id: repo.name,
+        title: `Deposit requirements for ${repo.name}`,
+        html: `<textarea rows="16" cols="40" name="embargo" class="form-control disabled" disabled="" autocomplete="off">${repo.agreementText}</textarea>`,
+      }));
+
+    const withoutAgreement = repositories
+      .filter((repo: RepositoryModel) => !repo._isWebLink && !repo.agreementText)
+      .map((repo: RepositoryModel) => ({ id: repo.name }));
+
+    const withWebLink = repositories
+      .filter((repo: RepositoryModel) => repo._isWebLink)
+      .map((repo: RepositoryModel) => ({ id: repo.name }));
+
+    return { withAgreement, withoutAgreement, withWebLink };
+  }
+
+  private async _collectAgreements(
+    reposWithAgreement: { id: string; title: string; html: string }[],
+  ): Promise<{ agreed: { id: string }[]; cancelled: boolean }> {
+    const steps = reposWithAgreement.map((_repo, index: number) => index);
+    const Queue = swal.mixin({
+      target: ENV.APP.rootElement,
+      input: 'checkbox',
+      inputPlaceholder: "I agree to the above statement on today's date ",
+      confirmButtonText: 'Next &rarr;',
+      showCancelButton: true,
+      progressSteps: steps.map((index) => '' + (index + 1)),
+    });
+
+    const values: (number | undefined)[] = [];
+    for (const step of steps) {
+      const repoState = reposWithAgreement[step]!;
+      const repoResult = await Queue.fire({
+        currentProgressStep: step,
+        title: repoState.title,
+        html: repoState.html,
+      });
+      values.push(repoResult.value);
+    }
+
+    const cancelled = !values.some((v) => v !== undefined) && reposWithAgreement.length > 0;
+    const agreed = reposWithAgreement.filter((_repo, i) => values[i] === 1);
+    return { agreed, cancelled };
+  }
+
+  private _buildConfirmationMessage(
+    agreed: { id: string }[],
+    withoutAgreement: { id: string }[],
+    withWebLink: { id: string }[],
+  ): string {
+    let msg = 'Once you click confirm you will no longer be able to edit this submission or add repositories.<br/>';
+    if (withoutAgreement.length > 0 || agreed.length > 0) {
+      const names = [...agreed, ...withoutAgreement].map((r) => r.id);
+      msg += `You are about to submit your files to: <pre><code>${JSON.stringify(names).replace(/[[\]']/g, '')} </code></pre>`;
+    }
+    if (withWebLink.length > 0) {
+      msg += `You were prompted to submit to: <code><pre>${JSON.stringify(withWebLink.map((r) => r.id)).replace(/[[\]']/g, '')}</code></pre>`;
+    }
+    return msg;
+  }
+
   @action
   async approveChanges(): Promise<void> {
     if (this.disableSubmit) {
@@ -369,7 +434,6 @@ export default class SubmissionsDetail extends Controller {
 
     const repositories = this.model.repos;
     if (repositories.length === 0) {
-      // no repositories associated with the submission
       const result = await swal.fire({
         target: ENV.APP.rootElement,
         title: 'Your submission cannot be submitted.',
@@ -378,81 +442,21 @@ export default class SubmissionsDetail extends Controller {
         showCancelButton: true,
         cancelButtonText: 'Go back to edit information',
       });
-
       if (result.value) {
         this.cancelSubmission();
       }
       return;
     }
 
-    const reposWithAgreementText = repositories
-      .filter((repo: RepositoryModel) => !repo._isWebLink && repo.agreementText)
-      .map((repo: RepositoryModel) => ({
-        id: repo.name,
-        title: `Deposit requirements for ${repo.name}`,
-        html: `<textarea rows="16" cols="40" name="embargo" class="form-control disabled" disabled="" autocomplete="off">${repo.agreementText}</textarea>`,
-      }));
+    const { withAgreement, withoutAgreement, withWebLink } = this._categorizeRepositories(repositories);
+    const { agreed, cancelled } = await this._collectAgreements(withAgreement);
 
-    const reposWithoutAgreementText = repositories
-      .filter((repo: RepositoryModel) => !repo._isWebLink && !repo.agreementText)
-      .map((repo: RepositoryModel) => ({
-        id: repo.name,
-      }));
-
-    const reposWithWebLink = repositories
-      .filter((repo: RepositoryModel) => repo._isWebLink)
-      .map((repo: RepositoryModel) => ({
-        id: repo.name,
-      }));
-    const reposProgressSteps = reposWithAgreementText.map((_repo, index: number) => index);
-    const Queue = swal.mixin({
-      target: ENV.APP.rootElement,
-      input: 'checkbox',
-      inputPlaceholder: "I agree to the above statement on today's date ",
-      confirmButtonText: 'Next &rarr;',
-      showCancelButton: true,
-      progressSteps: reposProgressSteps.map((index) => '' + (index + 1)),
-    });
-    const result: { value: (number | undefined)[] } = { value: [] };
-    for (const repoStep of reposProgressSteps) {
-      const repoState = reposWithAgreementText[repoStep]!;
-      const repoResult = await Queue.fire({
-        currentProgressStep: repoStep,
-        title: repoState.title,
-        html: repoState.html,
-      });
-      result.value.push(repoResult.value);
-    }
-    const validResults = result.value.some((agree) => agree !== undefined);
-    if (!validResults && reposWithAgreementText.length > 0) {
+    if (cancelled) {
       return;
     }
-    const reposThatUserAgreedToDeposit = reposWithAgreementText.filter((repo, index) => {
-      if (result.value[index] === 1) {
-        return repo;
-      }
-    });
-    if (
-      reposWithoutAgreementText.length > 0 ||
-      reposThatUserAgreedToDeposit.length > 0 ||
-      reposWithWebLink.length > 0
-    ) {
-      let swalMsg =
-        'Once you click confirm you will no longer be able to edit this submission or add repositories.<br/>';
-      if (reposWithoutAgreementText.length > 0 || reposThatUserAgreedToDeposit.length) {
-        swalMsg = `${swalMsg}You are about to submit your files to: <pre><code>${JSON.stringify(
-          reposThatUserAgreedToDeposit.map((repo) => repo.id),
-        ).replace(/[[\]']/g, '')}${JSON.stringify(reposWithoutAgreementText.map((repo) => repo.id)).replace(
-          /[[\]']/g,
-          '',
-        )} </code></pre>`;
-      }
-      if (reposWithWebLink.length > 0) {
-        swalMsg = `${swalMsg}You were prompted to submit to: <code><pre>${JSON.stringify(
-          reposWithWebLink.map((repo) => repo.id),
-        ).replace(/[[\]']/g, '')}</code></pre>`;
-      }
 
+    if (withoutAgreement.length > 0 || agreed.length > 0 || withWebLink.length > 0) {
+      const swalMsg = this._buildConfirmationMessage(agreed, withoutAgreement, withWebLink);
       const resultConfirm = await swal.fire({
         target: ENV.APP.rootElement,
         title: 'Confirm submission',
@@ -462,46 +466,24 @@ export default class SubmissionsDetail extends Controller {
       });
 
       if (resultConfirm.value) {
-        // Update repos to reflect repos that user agreed to deposit.
-        // Must keep web-link repos.
+        const agreedIds = agreed.map((r) => r.id);
+        const agreementIds = withAgreement.map((r) => r.id);
         this.model.sub.repositories = (this.model.sub.repositories as RepositoryModel[]).filter(
-          (repo: RepositoryModel) => {
-            if (repo._isWebLink) {
-              return true;
-            }
-            const temp = reposWithAgreementText.map((x) => x.id).includes(repo.name);
-            if (!temp || reposThatUserAgreedToDeposit.map((r) => r.id).includes(repo.name)) {
-              return true;
-            }
-            return false;
-          },
+          (repo: RepositoryModel) =>
+            repo._isWebLink || !agreementIds.includes(repo.name) || agreedIds.includes(repo.name),
         );
-
-        const sub = this.model.sub;
-        const message = this.message;
-        this.submissionHandler.approveSubmission(sub, message!);
+        this.submissionHandler.approveSubmission(this.model.sub, this.message!);
       }
     } else {
-      // there were repositories, but the user didn't sign any of the agreements
-      const reposUserDidNotAgreeToDeposit = reposWithAgreementText.filter((repo) => {
-        if (!reposThatUserAgreedToDeposit.includes(repo)) {
-          return true;
-        }
-      });
+      const declined = withAgreement.filter((r) => !agreed.includes(r));
       const result = await swal.fire({
         target: ENV.APP.rootElement,
         title: 'Your submission cannot be submitted.',
-        html: `You declined to agree to the deposit agreement(s) for ${JSON.stringify(
-          reposUserDidNotAgreeToDeposit.map((repo) => repo.id),
-        ).replace(
-          /[[\]']/g,
-          '',
-        )}. Therefore, this submission cannot be submitted. \n You can either (a) cancel the submission or (b) return to the submission to provide required input and try again.`,
+        html: `You declined to agree to the deposit agreement(s) for ${JSON.stringify(declined.map((r) => r.id)).replace(/[[\]']/g, '')}. Therefore, this submission cannot be submitted. \n You can either (a) cancel the submission or (b) return to the submission to provide required input and try again.`,
         confirmButtonText: 'Cancel submission',
         showCancelButton: true,
         cancelButtonText: 'Go back to edit information',
       });
-
       if (result.value) {
         this.cancelSubmission();
       }
