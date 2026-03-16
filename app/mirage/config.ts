@@ -164,14 +164,14 @@ export default function (config: Record<string, unknown> & { models?: Record<str
             name: 'Nanometer-Scale Thermometry.pdf',
           },
           {
-            url: 'http://europepmc.org/articles/pmc4221854?pdf=render',
+            url: 'https://europepmc.org/articles/pmc4221854?pdf=render',
             repositoryLabel: 'pubmedcentral.nih.gov',
             type: 'application/pdf',
             source: 'Unpaywall',
             name: 'pmc4221854?pdf=render',
           },
           {
-            url: 'http://arxiv.org/pdf/1304.1068',
+            url: 'https://arxiv.org/pdf/1304.1068',
             repositoryLabel: 'arXiv.org',
             type: 'application/pdf',
             source: 'Unpaywall',

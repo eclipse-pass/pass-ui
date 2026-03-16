@@ -18,7 +18,7 @@ jobs:
         with:
           node-version: 24
       - name: Install pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@5b4374b04084dc1f9032b52464284b769ac5059e # v4
         with:
           version: 9
       - name: Install Dependencies
@@ -38,7 +38,7 @@ jobs:
         with:
           node-version: 24
       - name: Install pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@5b4374b04084dc1f9032b52464284b769ac5059e # v4
         with:
           version: 9
       - name: Install Dependencies
@@ -63,7 +63,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@5b4374b04084dc1f9032b52464284b769ac5059e # v4
         with:
           version: 9
       - name: Install Dependencies
