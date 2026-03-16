@@ -1,0 +1,303 @@
+import Service, { service } from '@ember/service';
+import ENV from 'pass-ui/config/environment';
+import surveySchema from './schema/surveyjs.json';
+import repositorySchemas from './schema/repository.json';
+import type RepositoryModel from 'pass-ui/models/repository';
+import type SubmissionModel from 'pass-ui/models/submission';
+
+export interface SurveyElement {
+  name: string;
+  title?: string;
+  isRequired?: boolean;
+  requiredIf?: string;
+  readOnly?: boolean;
+  [key: string]: unknown;
+}
+
+export interface SurveySchema {
+  elements: SurveyElement[];
+  [key: string]: unknown;
+}
+
+export interface MetadataDisplayEntry {
+  label: string;
+  value: unknown;
+  isArray: boolean;
+}
+
+/**
+ * Service to manipulate metadata formschemas
+ */
+
+export default class MetadataSchemaService extends Service {
+  constructor() {
+    super();
+  }
+
+  /**
+   * Return SurveyJS schema for the given repositories.
+   *
+   * @param {array} repositories list of repository URIs
+   * @param {array} readonly list of properties that should be marked as read-only
+   * @returns schema relevant to the given repositories
+   */
+  private _normalizeSchemaKeys(repositories: RepositoryModel[]): string[] {
+    let schemas = Array.from(new Set(repositories.flatMap((repo) => repo.schemas)));
+
+    schemas = schemas.map((schema) => {
+      const slash_index = schema.lastIndexOf('/');
+      const dot_index = schema.lastIndexOf('.');
+
+      if (slash_index == -1 || dot_index == -1) {
+        return schema;
+      }
+
+      return schema.substring(slash_index + 1, dot_index);
+    });
+
+    if (schemas.includes('common')) {
+      schemas = ['common'].concat(schemas.filter((schema) => schema != 'common'));
+    }
+
+    return schemas;
+  }
+
+  private _resolveElement(
+    field: { name: string; required?: boolean; requiredIf?: string },
+    elementMap: Map<string, SurveyElement>,
+    readonlyFields?: string[],
+  ): SurveyElement | null {
+    let element = elementMap.get(field.name);
+
+    if (!element) {
+      const source = surveySchema.elements.find((e) => e.name === field.name);
+
+      if (!source) {
+        console.log('Warning: Element %s not found in survey schema', field.name);
+        return null;
+      }
+
+      element = { ...source };
+      elementMap.set(field.name, element);
+
+      if (readonlyFields?.includes(field.name)) {
+        element.readOnly = true;
+      }
+    }
+
+    return element;
+  }
+
+  private _mergeFieldRequirements(
+    field: { name: string; required?: boolean; requiredIf?: string },
+    element: SurveyElement,
+  ): void {
+    if ('required' in field && field.required) {
+      element.isRequired = true;
+      delete element.requiredIf;
+    } else if ('requiredIf' in field) {
+      if ('requiredIf' in element) {
+        console.log('Warning: requireIf merge not supported on %s', field.name);
+      }
+      element.requiredIf = field.requiredIf;
+    }
+  }
+
+  getMetadataSchema(repositories: RepositoryModel[] | null, readonly?: string[]): SurveySchema | null {
+    if (!repositories) {
+      return null;
+    }
+
+    const schemas = this._normalizeSchemaKeys(repositories);
+    const elementMap = new Map<string, SurveyElement>();
+
+    for (const schema of schemas) {
+      if (!(schema in repositorySchemas)) {
+        console.log('Warning: Schema %s not found', schema);
+        continue;
+      }
+
+      for (const field of repositorySchemas[schema as keyof typeof repositorySchemas]) {
+        const element = this._resolveElement(field, elementMap, readonly);
+        if (!element) continue;
+        this._mergeFieldRequirements(field, element);
+      }
+    }
+
+    const result: Record<string, unknown> = {};
+    result['elements'] = Array.from(elementMap.values());
+
+    for (const key in surveySchema) {
+      if (key != 'elements') {
+        result[key] = (surveySchema as Record<string, unknown>)[key];
+      }
+    }
+
+    return result as SurveySchema;
+  }
+
+  /**
+   * Get all field names of a SurveyJS schema.
+   *
+   * @param {object}  schema
+   * @returns {array} list of unique field keys
+   */
+  getFields(schema: SurveySchema): string[] {
+    const fields: string[] = [];
+
+    schema.elements.forEach((element) => {
+      fields.push(element.name);
+    });
+
+    return fields;
+  }
+
+  /**
+   * Get all possible field names.
+   *
+   * @returns {array} list of all field keys in the survey schema
+   */
+  getAllFields(): string[] {
+    return this.getFields(surveySchema);
+  }
+
+  /**
+   * Return map from field key to field title.
+   *
+   * @param {array} schemas array of schemas
+   */
+  getFieldTitleMap(schema: SurveySchema): Record<string, string | undefined> {
+    const map: Record<string, string | undefined> = {};
+
+    schema.elements.forEach((element) => {
+      map[element.name] = element.title;
+    });
+
+    return map;
+  }
+
+  /**
+   * Get a metadata blob containing information about repository agreements.
+   *
+   * @param {object} repositories list of Repository model objects
+   * @returns {
+   *    'agreements': [
+   *      {
+   *        Repository.name: Repository.agreementText
+   *      }
+   *    ]
+   * }
+   */
+  getAgreementsBlob(repositories: RepositoryModel[]): { agreements: Array<Record<string, string>> } {
+    const result: Array<Record<string, string>> = [];
+
+    repositories
+      .filter((repo) => repo.agreementText)
+      .forEach((repo) =>
+        result.push({
+          [repo.name]: repo.agreementText,
+        }),
+      );
+
+    return {
+      agreements: result,
+    };
+  }
+
+  /**
+   * Return metadata object as a set of label, string entries for display.
+   *
+   * @param {*} key
+   * @param {*} obj
+   */
+  _formatComplexMetadataObject(key: string, obj: Record<string, unknown>): Record<string, unknown> {
+    if (key === 'issns') {
+      let issn = obj['issn'];
+
+      if ('pubType' in obj) {
+        issn += ` (${obj['pubType']})`;
+      }
+
+      return { ISSN: issn };
+    } else if (key == 'authors') {
+      let author = obj['author'];
+
+      if ('orcid' in obj) {
+        author += ` (${obj['orcid']})`;
+      }
+
+      return { Author: author };
+    }
+
+    return obj;
+  }
+
+  /**
+   * Return metadata value for display.
+   *
+   * @param {*} key
+   * @param {*} obj
+   */
+  _formatMetadata(key: string, val: unknown): unknown {
+    if (Array.isArray(val)) {
+      return val.map((o) => this._formatComplexMetadataObject(key, o));
+    } else if (key === 'publicationDate' && !isNaN(new Date(val as string).getTime())) {
+      return new Date(val as string).toLocaleDateString();
+    } else if (typeof val === 'object') {
+      return this._formatComplexMetadataObject(key, val as Record<string, unknown>);
+    } else if (typeof val === 'string') {
+      return val;
+    }
+
+    return null;
+  }
+
+  /**
+   * Returns an array of values suitable to display the metadata asscoiated with a
+   * submission.
+   *
+   * @param {*} submission
+   * @returns [{label, value, isArray}]
+   */
+  async displayMetadata(submission: SubmissionModel): Promise<MetadataDisplayEntry[]> {
+    // Metadata keys to display and the order to display them in.
+    const whiteList = [
+      'authors',
+      'abstract',
+      'doi',
+      'Embargo-end-date',
+      'journal-NLMTA-ID',
+      'journal-title',
+      'journal-title-short',
+      'issue',
+      'issns',
+      'publisher',
+      'publicationDate',
+      'title',
+      'volume',
+    ];
+
+    const titleMap = this.getFieldTitleMap(surveySchema);
+    const metadata = JSON.parse(submission.metadata);
+
+    const result: MetadataDisplayEntry[] = [];
+    if (metadata) {
+      whiteList
+        .filter((key) => key in metadata)
+        .forEach((key) => {
+          const value = this._formatMetadata(key, metadata[key]);
+          const isArray = Array.isArray(value);
+
+          if (value) {
+            result.push({
+              label: titleMap[key] ?? key,
+              value,
+              isArray,
+            });
+          }
+        });
+    }
+
+    return result;
+  }
+}

@@ -1,0 +1,77 @@
+import Controller from '@ember/controller';
+import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
+import { service } from '@ember/service';
+import { query } from 'pass-ui/builders/pass-api';
+import { submissionsIndexQuery } from '../../util/paginated-query';
+import type Owner from '@ember/owner';
+import type RouterService from '@ember/routing/router-service';
+import type CurrentUserService from 'pass-ui/services/current-user';
+import type AppStaticConfigService from 'pass-ui/services/app-static-config';
+import type SubmissionModel from 'pass-ui/models/submission';
+import type { PaginationMeta } from 'pass-ui/types/json-api';
+import type AppStore from 'pass-ui/services/store';
+
+interface SubmissionsIndexModel {
+  submissions: SubmissionModel[];
+  meta: PaginationMeta | undefined;
+}
+
+export default class SubmissionsIndex extends Controller {
+  @service declare currentUser: CurrentUserService;
+  @service('app-static-config') declare staticConfig: AppStaticConfigService;
+  @service declare router: RouterService;
+  @service declare store: AppStore;
+
+  @tracked faqUrl: string | null = null;
+  // Bound to message dialog.
+  @tracked messageShow: boolean = false;
+  @tracked messageTo: string = '';
+  @tracked messageSubject: string = '';
+  @tracked messageText: string = '';
+
+  @tracked queuedModel: SubmissionsIndexModel | undefined;
+
+  queryParams: string[] = ['page', 'pageSize', 'filter'];
+
+  @tracked page: number = 1;
+  @tracked pageSize: number = 10;
+  tablePageSizeValues: number[] = [10, 25, 50];
+  @tracked filter: string | undefined;
+
+  constructor(owner: Owner) {
+    super(owner);
+
+    this.faqUrl = this.staticConfig.config?.branding?.pages?.['faqUrl'] ?? null;
+  }
+
+  get itemsCount(): number | undefined {
+    return this.queuedModel?.meta?.page?.totalRecords;
+  }
+
+  get pagesCount(): number | undefined {
+    return this.queuedModel?.meta?.page?.totalPages;
+  }
+
+  @action
+  handleTableChange({ page, pageSize, filter }: { page: number; pageSize: number; filter: string }): void {
+    this.page = page;
+    this.pageSize = pageSize;
+    this.filter = filter || undefined;
+    this.fetchData();
+  }
+
+  fetchData() {
+    const queryHash = submissionsIndexQuery(
+      { page: this.page, pageSize: this.pageSize, filter: this.filter },
+      this.currentUser.user!,
+    );
+    return this.store.request(query('submission', queryHash)).then((result) => {
+      const { data, meta } = result.content as { data: SubmissionModel[]; meta: PaginationMeta | undefined };
+      this.queuedModel = {
+        submissions: data,
+        meta,
+      };
+    });
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "extends": "@tsconfig/ember/tsconfig.json",
+  "compilerOptions": {
+    "declaration": false,
+    "declarationMap": false,
+    "emitDeclarationOnly": false,
+    "allowJs": true,
+    "checkJs": false,
+    "noPropertyAccessFromIndexSignature": false,
+    "types": [
+      "ember-source/types",
+      "@ember-data-types/model/unstable-preview-types",
+      "@ember-data-types/serializer/unstable-preview-types",
+      "@ember-data-types/store/unstable-preview-types",
+      "@ember-data-types/graph/unstable-preview-types",
+      "@ember-data-types/request/unstable-preview-types",
+      "@ember-data-types/json-api/unstable-preview-types",
+      "@warp-drive/core-types/unstable-preview-types",
+      "@types/rsvp",
+      "@types/qunit"
+    ],
+    "paths": {
+      "pass-ui/*": ["./app/*"],
+      "pass-ui/types/*": ["./app/types/*", "./types/*"],
+      "pass-ui/config/*": ["./app/config/*"],
+      "pass-ui/tests/*": ["./tests/*"],
+      "ember-power-select/components/power-select": ["./types/ember-power-select/power-select"]
+    }
+  },
+  "include": ["app/**/*", "tests/**/*", "types/**/*"]
+}

@@ -1,0 +1,80 @@
+import Controller from '@ember/controller';
+import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
+import { service } from '@ember/service';
+import { query } from 'pass-ui/builders/pass-api';
+import { grantDetailsQuery } from '../../util/paginated-query';
+import type CurrentUserService from 'pass-ui/services/current-user';
+import type GrantModel from 'pass-ui/models/grant';
+import type SubmissionModel from 'pass-ui/models/submission';
+import type { PaginationMeta } from 'pass-ui/types/json-api';
+import type AppStore from 'pass-ui/services/store';
+
+interface GrantDetailModel {
+  grant: GrantModel;
+  submissions: {
+    data: SubmissionModel[];
+    meta: PaginationMeta | undefined;
+  };
+}
+
+interface QueuedGrantDetailModel {
+  submissions?: {
+    data: SubmissionModel[];
+    meta: PaginationMeta | undefined;
+  };
+}
+
+export default class GrantDetailsController extends Controller {
+  @service declare currentUser: CurrentUserService;
+  @service declare store: AppStore;
+
+  declare model: GrantDetailModel;
+
+  get grant(): GrantModel {
+    return this.model.grant;
+  }
+
+  @tracked queuedModel: QueuedGrantDetailModel | undefined;
+
+  queryParams: string[] = ['page', 'pageSize', 'filter'];
+
+  @tracked page: number = 1;
+  @tracked pageSize: number = 10;
+  @tracked filter: string | undefined;
+
+  tablePageSizeValues: number[] = [10, 25, 50];
+
+  get itemsCount(): number | undefined {
+    return this.queuedModel?.submissions?.meta?.page?.totalRecords;
+  }
+
+  get pagesCount(): number | undefined {
+    return this.queuedModel?.submissions?.meta?.page?.totalPages;
+  }
+
+  @action
+  handleTableChange({ page, pageSize, filter }: { page: number; pageSize: number; filter: string }): void {
+    this.page = page;
+    this.pageSize = pageSize;
+    this.filter = filter || undefined;
+    this.fetchData();
+  }
+
+  fetchData() {
+    const queryHash = grantDetailsQuery(
+      { page: this.page, pageSize: this.pageSize, filter: this.filter },
+      this.grant.id!,
+      this.currentUser.user!,
+    );
+    return this.store.request(query('submission', queryHash)).then((result) => {
+      const { data, meta } = result.content as { data: SubmissionModel[]; meta: PaginationMeta | undefined };
+      this.queuedModel = {
+        submissions: {
+          data,
+          meta,
+        },
+      };
+    });
+  }
+}

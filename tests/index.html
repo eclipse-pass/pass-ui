@@ -8,10 +8,10 @@
 
     {{content-for "head"}} {{content-for "test-head"}}
 
-    <link rel="stylesheet" href="{{rootURL}}assets/vendor.css" />
-    <link rel="stylesheet" href="{{rootURL}}assets/pass-ui.css" />
-    <link rel="stylesheet" href="{{rootURL}}assets/test-support.css" />
-    <link rel="icon" href="{{rootURL}}favicon.png" />
+    <link rel="stylesheet" href="/@embroider/virtual/vendor.css" />
+    <link rel="stylesheet" href="/@embroider/virtual/app.css" />
+    <link rel="stylesheet" href="/@embroider/virtual/test-support.css" />
+    <link rel="icon" href="/favicon.png" />
 
     {{content-for "head-footer"}} {{content-for "test-head-footer"}}
   </head>
@@ -26,24 +26,16 @@
     </div>
 
     <script src="/testem.js" integrity="" data-embroider-ignore></script>
-    <script src="{{rootURL}}assets/vendor.js"></script>
-    <script src="{{rootURL}}assets/test-support.js"></script>
-    <script src="{{rootURL}}assets/pass-ui.js"></script>
-    <script src="{{rootURL}}assets/tests.js"></script>
+    <script src="/@embroider/virtual/vendor.js"></script>
+    <script src="/@embroider/virtual/test-support.js"></script>
+    
+    <script type="module">import "ember-testing";</script>
+    <script type="module">
+      import { start } from './test-helper';
+      import.meta.glob(["./**/*.{js,ts,gjs,gts}", "!./visual/**"], { eager: true });
+      start();
+    </script>
 
-    <script type="text/javascript" src="{{rootURL}}js/fuzzyset.js"></script>
-    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
-      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-      crossorigin="anonymous"
-    ></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.js"></script>
-    <script type="text/javascript" src="//code.cloudcms.com/alpaca/1.5.24/bootstrap/alpaca.min.js"></script>
-    <script
-      type="text/javascript"
-      src="https://cdn.jsdelivr.net/npm/sweetalert2@7.26.10/dist/sweetalert2.all.min.js"
-    ></script>
-    {{content-for "body-footer"}} {{content-for "test-body-footer"}}
+    {{content-for "body-footer"}}
   </body>
 </html>

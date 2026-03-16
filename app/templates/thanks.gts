@@ -1,0 +1,49 @@
+import type { TemplateOnlyComponent } from '@ember/component/template-only';
+import { LinkTo } from '@ember/routing';
+import type ThanksController from 'pass-ui/controllers/thanks';
+
+const eq = (a: unknown, b: unknown) => a === b;
+
+interface Signature {
+  Args: {
+    controller: ThanksController;
+  };
+}
+
+// prettier-ignore
+<template>
+  {{outlet}}
+  <h1 data-test-workflow-thanks-thank-you>Thank you!</h1>
+  <p>
+    A detailed summary of the submission and its current status can be seen
+    <LinkTo @route='submissions.detail' @model={{@controller.submission}} class='btn-link-underlined'>here</LinkTo>. A
+    list of all submissions associated with your account can be found on the
+    <LinkTo
+      @route='submissions.index'
+      class='btn-link-underlined'
+      data-test-workflow-thanks-link-to-submissions
+    >Submissions page</LinkTo>.
+  </p>
+
+  {{#each @controller.model.submission.repositories as |repo|}}
+    {{#if (eq repo.repositoryKey 'pmc')}}
+      <p>
+        PASS has submitted your document(s) to NIHMS. Per the NIHMS Manuscript Submission Process, Steps 1 &amp; 2
+        have been completed. Step 3 is handled by NIHMS staff and will send an e-mail notification to the Reviewer if
+        they determine that adjustments are required or when the record is available for final review.
+      </p>
+      <p>
+        Please note that at Step 4, you will need to log into the NIHMS system for final approval and to complete
+        manuscript processing in NIHMS. Once this is completed, then you will receive the PMCID. Once the PMCID has
+        been issued it will be available in both NIHMS and PASS.
+      </p>
+    {{/if}}
+  {{/each}}
+
+  {{#if @controller.userGuideUrl}}
+    <p>
+      To learn more about what to expect from each repository after submitting through PASS,
+      <a href='{{@controller.userGuideUrl}}' target='_blank' rel='noopener noreferrer'>visit the User Guide</a>.
+    </p>
+  {{/if}}
+</template> satisfies TemplateOnlyComponent<Signature>

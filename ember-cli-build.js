@@ -1,25 +1,13 @@
-/* eslint-env node */
-
 'use strict';
-
 const EmberApp = require('ember-cli/lib/broccoli/ember-app');
-const stringHash = require('string-hash');
 
-module.exports = function (defaults) {
+const { compatBuild } = require('@embroider/compat');
+
+module.exports = async function (defaults) {
+  const { buildOnce } = await import('@embroider/vite');
+  const { setConfig } = await import('@warp-drive/build-config');
+
   let app = new EmberApp(defaults, {
-    // Add options here
-    inlineContent: {
-      'initial-state': './initial-state.html',
-    },
-
-    'ember-composable-helpers': {
-      only: ['queue', 'compute', 'invoke', 'includes'],
-    },
-
-    autoImport: {
-      forbidEval: true,
-    },
-
     '@embroider/macros': {
       setConfig: {
         '@ember-data/store': {
@@ -35,43 +23,24 @@ module.exports = function (defaults) {
     'ember-test-selectors': {
       strip: false,
     },
+  });
 
-    'ember-bootstrap': {
-      bootstrapVersion: 5,
-      importBootstrapCSS: false,
-      insertEmberWormholeElementToDom: false,
+  setConfig(app, __dirname, {
+    deprecations: {
+      DEPRECATE_TRACKING_PACKAGE: false,
+      DEPRECATE_STORE_EXTENDS_EMBER_OBJECT: false,
+      DEPRECATE_EMBER_INFLECTOR: false,
+      ENABLE_LEGACY_SCHEMA_SERVICE: false,
     },
   });
 
-  // Use `app.import` to add additional libraries to the generated
-  // output files.
-  //
-  // If you need to use different assets in different
-  // environments, specify an object as the first parameter. That
-  // object's keys should be the environment name and the values
-  // should be the asset to use in that environment.
-  //
-  // If the library that you are including contains AMD or ES6
-  // modules that you would like to import into your application
-  // please specify an object with the list of modules as keys
-  // along with the exports of each module as its value.
-
-  const { Webpack } = require('@embroider/webpack');
-
-  return require('@embroider/compat').compatBuild(app, Webpack, {
+  return compatBuild(app, buildOnce, {
     extraPublicTrees: [],
-    staticAddonTrees: true,
-    staticAddonTestSupportTrees: true,
     staticHelpers: true,
     staticModifiers: true,
     staticComponents: true,
-    staticEmberSource: true,
     amdCompatibility: {
       es: [],
     },
-    // splitAtRoutes: ['route.name'], // can also be a RegExp
-    // packagerOptions: {
-    //    webpackConfig: { }
-    // }
   });
 };
