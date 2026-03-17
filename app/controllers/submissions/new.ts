@@ -175,7 +175,7 @@ export default class SubmissionsNew extends Controller {
 
     if (result.value) {
       ignoreList.clearIgnore();
-      if (submission.id) {
+      if (submission.id && submission.isDraft) {
         await this.submissionHandler.deleteSubmission(submission);
         ignoreList.ignore(submission.id);
       }

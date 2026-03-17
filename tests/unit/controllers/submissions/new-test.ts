@@ -258,6 +258,7 @@ module('Unit | Controller | submissions/new', (hooks) => {
 
     const submission = {
       id: 'sub:0',
+      isDraft: true,
     };
 
     const model = {
@@ -325,6 +326,46 @@ module('Unit | Controller | submissions/new', (hooks) => {
       transitionTo: (name: string) => {
         assert.false(deleteSubmissionCalled);
         assert.strictEqual(name, 'submissions', 'unexpected transition was named');
+      },
+    } as typeof controller.router;
+
+    controller.send('abort');
+    swalStub.restore();
+  });
+
+  test('abort on a proxy submission should not delete non-draft submission but should still transition', async function (assert) {
+    assert.expect(3);
+
+    const submission = {
+      id: 'sub:0',
+      isDraft: false,
+    };
+
+    const model = {
+      newSubmission: submission,
+    };
+
+    controller.model = model as unknown as typeof controller.model;
+
+    const swalStub = Sinon.stub(Swal, 'fire').callsFake(() => {
+      assert.ok(true, 'swal dialog was shown');
+      return Promise.resolve({
+        value: 'moo',
+      });
+    });
+
+    let deleteSubmissionCalled = false;
+
+    controller.submissionHandler = {
+      deleteSubmission(_sub: unknown) {
+        deleteSubmissionCalled = true;
+        return Promise.resolve();
+      },
+    } as unknown as typeof controller.submissionHandler;
+    controller.router = {
+      transitionTo: (name: string) => {
+        assert.false(deleteSubmissionCalled, 'deleteSubmission should not be called for non-draft');
+        assert.strictEqual(name, 'submissions', 'should transition to submissions');
       },
     } as typeof controller.router;
 
