@@ -65,6 +65,20 @@ export default class DoiService extends Service {
       },
     });
 
+    if (rawResponse.status === 404) {
+      throw new Error('DOI not found.');
+    }
+
+    if (rawResponse.status === 422) {
+      throw new Error(
+        'Unable to find a journal associated with the DOI. The DOI must resolve to an article or manuscript.',
+      );
+    }
+
+    if (rawResponse.status === 500) {
+      throw new Error('Error accessing DOI service.');
+    }
+
     const response = await rawResponse.json();
 
     const { content: journalDoc } = await this.store.request(findRecord('journal', response['journal-id']));
