@@ -526,12 +526,12 @@ export default class WorkflowBasics extends Component<WorkflowBasicsSignature> {
         {{on 'input' this.handleDoiInput}}
       />
       <div class='text-danger'>
-        {{if (and @publication.doi (not this.isValidDOI)) 'Please provide a valid DOI'}}
+        {{if (and @publication.doi (not this.isValidDOI) (not this.doiServiceError)) 'Please provide a valid DOI'}}
       </div>
       {{#if this.doiServiceError}}
         <div class='text-danger'>
           {{! @glint-expect-error - doiServiceError is unknown but rendered as HTML }}
-          {{{this.doiServiceError}}}
+          {{{this.doiServiceError.message}}}
         </div>
       {{/if}}
     </div>
