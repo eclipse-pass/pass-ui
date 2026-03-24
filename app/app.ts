@@ -10,6 +10,7 @@ import 'ember-power-select/vendor/ember-power-select.css';
 import 'ember-basic-dropdown/vendor/ember-basic-dropdown.css';
 import 'sweetalert2/dist/sweetalert2.css';
 import 'survey-core/survey-core.fontless.min.css';
+import './styles/app.css';
 import './font-awesome';
 
 // ember-basic-dropdown v8.9+ requires explicit config instead of reading from config:environment

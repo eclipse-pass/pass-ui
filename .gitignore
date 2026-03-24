@@ -66,3 +66,5 @@ CLAUDE.md
 
 # upgrade tracking (local only)
 .github/upgrade-issues/
+
+/docs/
