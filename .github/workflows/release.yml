@@ -20,7 +20,7 @@ jobs:
       DOCKER_IMAGE_NAME: ghcr.io/eclipse-pass/pass-ui
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Config git user
         run: |
@@ -28,7 +28,7 @@ jobs:
           git config user.email "${{ github.actor }}@users.noreply.github.com"
 
       - name: Setup Node & pnpm
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
           node-version: 20
 
@@ -52,7 +52,7 @@ jobs:
           env_path: ${{ github.workspace }}/.env
 
       - name: Login to GHCR
-        uses: docker/login-action@v2
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3.7.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
