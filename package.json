@@ -161,8 +161,8 @@
   "pnpm": {
     "overrides": {
       "babel-plugin-ember-template-compilation": "^2.4.1",
-      "brace-expansion@^1": ">=1.1.12",
-      "brace-expansion@^2": ">=2.0.2",
+      "brace-expansion@^1": "^1.1.12",
+      "brace-expansion@^2": "^2.0.2",
       "handlebars": ">=4.7.9"
     }
   },
