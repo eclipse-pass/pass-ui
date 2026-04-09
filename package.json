@@ -100,7 +100,6 @@
     "babel-plugin-ember-template-compilation": "^2.3.0",
     "clean-css": "^5.3.3",
     "concurrently": "^8.2.2",
-    "coveralls": "^3.1.1",
     "decorator-transforms": "^2.3.0",
     "ember-auto-import": "^2.7.4",
     "ember-cli": "~6.8.0",
@@ -161,7 +160,10 @@
   },
   "pnpm": {
     "overrides": {
-      "babel-plugin-ember-template-compilation": "^2.4.1"
+      "babel-plugin-ember-template-compilation": "^2.4.1",
+      "brace-expansion@^1": ">=1.1.12",
+      "brace-expansion@^2": ">=2.0.2",
+      "handlebars": ">=4.7.9"
     }
   },
   "exports": {
