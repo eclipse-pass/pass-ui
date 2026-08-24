@@ -173,9 +173,9 @@ export default class WorkflowRepositories extends Component<WorkflowRepositories
   <template>
     <div {{this.setupReposOnInsert}}></div>
     {{#if @requiredRepositories}}
-      <h3 class='mt-3 font-weight-light' data-test-workflow-repositories-required>
+      <h2 class='section-title mt-3 font-weight-light' data-test-workflow-repositories-required>
         Required repositories
-      </h3>
+      </h2>
       <p class='lead text-muted'>
         Based on the grant and journal information provided, you are required to submit your manuscript to the
         repositories below. PASS will help you to create submissions for these in the following steps:
@@ -212,9 +212,9 @@ export default class WorkflowRepositories extends Component<WorkflowRepositories
     {{/if}}
 
     {{#if @optionalRepositories}}
-      <h4 class='mt-3 font-weight-light'>
+      <h2 class='subsection-title mt-3 font-weight-light'>
         Optional repositories
-      </h4>
+      </h2>
       <p class='lead text-muted'>
         Choose whether you want to submit to zero or more of the following repositories. Selecting the repositories
         below is optional.

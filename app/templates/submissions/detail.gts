@@ -70,9 +70,9 @@ interface Signature {
         <div href='#' class='list-group-item flex-column align-items-start'>
           <div class='submission-details-title border-bottom d-flex flex-column w-100'>
             <div class='d-flex w-100 justify-content-between'>
-              <h5 class='mb-1'>
+              <h2 class='block-title mb-1'>
                 {{@controller.model.sub.publication.title}}
-              </h5>
+              </h2>
               {{#if @controller.model.sub.submittedDate}}
                 <small class='text-muted text-end'>
                   Submitted

@@ -36,9 +36,9 @@ export default class WorkflowWrapper extends Component<WorkflowWrapperSignature>
         <div class='lds-dual-ring mx-auto'></div>
       </div>
       <div class='row justify-content-center mb-2'>
-        <h2 class='font-weight-light col-12 mb-0'>
+        <h1 class='page-heading font-weight-light col-12 mb-0'>
           New Submission
-        </h2>
+        </h1>
         <div class='font-weight-light col-12 publication-title'>
           {{@publication.title}}
         </div>
@@ -59,9 +59,9 @@ export default class WorkflowWrapper extends Component<WorkflowWrapperSignature>
       {{#if (and @submissionEvents @submission.isProxySubmission)}}
         {{#if @submission.id}}
           <div class='alert alert-info mt-3'>
-            <h3 class='mt-3 mb-0'>
+            <h2 class='section-title mt-3 mb-0'>
               Comments
-            </h3>
+            </h2>
             <hr class='mt-0' />
             <CommentingBlock @submissionEvents={{@submissionEvents}} />
           </div>

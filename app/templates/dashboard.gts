@@ -16,9 +16,9 @@ interface Signature {
     <div class='col-md-6 mt-4 mb-4'>
       <div class='card'>
         <div class='card-body'>
-          <h2 class='card-title font-weight-light'>
+          <h1 class='card-title font-weight-light'>
             Manage Publication Submissions
-          </h2>
+          </h1>
           <p class='card-text'>
             The submissions view allows you to:
           </p>
@@ -51,9 +51,9 @@ interface Signature {
     <div class='col-md-6 mb-4 mt-4'>
       <div class='card'>
         <div class='card-body'>
-          <h2 class='card-title font-weight-light'>
+          <h1 class='card-title font-weight-light'>
             Manage Grants Compliance
-          </h2>
+          </h1>
           <p class='card-text'>
             The grants view allows you to:
           </p>

@@ -106,9 +106,9 @@ interface Signature {
   </div>
   <div class='row'>
     <div class='col-12 table-container'>
-      <h3 class='font-weight-light'>
+      <h2 class='section-title font-weight-light'>
         Submissions for grant
-      </h3>
+      </h2>
       <div class='submission-table'>
         <PassTable
           @data={{@controller.queuedModel.submissions.data}}

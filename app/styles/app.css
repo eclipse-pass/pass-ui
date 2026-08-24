@@ -14,6 +14,50 @@
   height: 100%;
 }
 
+/* Site name is a span */
+.brand-header-title {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 1.3rem !important;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.page-heading {
+  font-size: 1.4rem !important;
+  line-height: 1.2;
+}
+
+#dashboard-container .card-title {
+  font-size: 1.4rem !important;
+}
+
+/*
+ * Look of a section heading, independent of the semantic tag.
+ */
+.section-title {
+  font-size: 1.3rem !important;
+  line-height: 1.2;
+  color: inherit;
+}
+
+.subsection-title {
+  font-size: 1.5rem !important;
+  line-height: 1.2;
+  color: inherit;
+}
+
+.block-title {
+  font-size: 1.25rem !important;
+  line-height: 1.2;
+  color: inherit;
+}
+
+h2.card-title {
+  color: inherit;
+  font-size: 1.3rem !important;
+}
+
 .error-text {
   font-size: 2em !important;
   margin-bottom: 0;
@@ -157,13 +201,13 @@ th.table-header > i:not(.fa-sort-asc, .fa-sort-desc)::before {
   padding-left: 35px;
 }
 
-.policies-list h6 {
-  margin-bottom: 0.5em;
-  font-weight: bold;
+.card-subtitle {
+  font-size: 1.1em !important;
 }
 
-h6.card-subtitle {
-  font-size: 1.1em;
+.policies-list .card-subtitle {
+  margin-bottom: 0.5em;
+  font-weight: bold;
 }
 
 .line-height-45 {

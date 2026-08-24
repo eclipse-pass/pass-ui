@@ -102,20 +102,20 @@ export default class PolicyCard extends Component<PolicyCardSignature> {
     {{! template-lint-disable link-rel-noopener no-triple-curlies require-input-label }}
     <div class='card w-100 my-2' {{this.setupOnInsert}}>
       <div class='card-body'>
-        <h3 class='card-title' data-test-policy-title>
+        <h2 class='card-title' data-test-policy-title>
           {{@policy.title}}
-        </h3>
+        </h2>
         {{#if this.policyIsJHU}}
-          <h6 class='card-subtitle mb-2' data-test-jhu-policy-deposit-expectation>
+          <h3 class='card-subtitle mb-2' data-test-jhu-policy-deposit-expectation>
             Expects deposit into an open access repository
-          </h6>
+          </h3>
         {{else}}
-          <h6 class='card-subtitle mb-2' data-test-policy-deposit-expectation>
+          <h3 class='card-subtitle mb-2' data-test-policy-deposit-expectation>
             Requires deposit into
             {{#each @policy.repositories as |repo index|}}
               {{if index ', '}}{{repo.name}}
             {{/each}}
-          </h6>
+          </h3>
         {{/if}}
         <p class='card-text mt-2' data-test-policy-description>
           {{{@policy.description}}}
