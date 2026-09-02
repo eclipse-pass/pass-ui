@@ -87,7 +87,7 @@
     "@embroider/core": "^4.4.7",
     "@embroider/vite": "^1.7.2",
     "@eslint/js": "^9.37.0",
-    "@faker-js/faker": "^8.4.1",
+    "@faker-js/faker": "^10.5.0",
     "@glint/ember-tsc": "^1.1.1",
     "@glint/template": "^1.7.4",
     "@playwright/test": "^1.58.2",
