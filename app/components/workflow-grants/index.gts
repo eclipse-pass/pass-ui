@@ -217,9 +217,9 @@ export default class WorkflowGrants extends Component<WorkflowGrantsSignature> {
     </p>
 
     {{#if this._selectedGrants}}
-      <h5>
+      <h2 class='block-title'>
         Grants added to submission
-      </h5>
+      </h2>
       <SubmissionFundingTable @grants={{this._selectedGrants}} @remove={{this.removeGrant}} @setup={{this.setup}} />
       <button class='btn btn-outline-primary' type='button' {{on 'click' @back}}>
         Back
@@ -232,9 +232,9 @@ export default class WorkflowGrants extends Component<WorkflowGrantsSignature> {
     {{/if}}
 
     {{#if @submission.submitter.id}}
-      <h4>
+      <h2 class='subsection-title'>
         Available grants
-      </h4>
+      </h2>
 
       <p>
         {{#if this.contactUrl}}
