@@ -36,7 +36,7 @@ export default class WorkflowWrapper extends Component<WorkflowWrapperSignature>
         <div class='lds-dual-ring mx-auto'></div>
       </div>
       <div class='row justify-content-center mb-2'>
-        <h1 class='page-heading font-weight-light col-12 mb-0'>
+        <h1 class='font-weight-light col-12 mb-0'>
           New Submission
         </h1>
         <div class='font-weight-light col-12 publication-title'>

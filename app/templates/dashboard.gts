@@ -12,13 +12,14 @@ interface Signature {
 
 // prettier-ignore
 <template>
+  <h1 class='visually-hidden'>Dashboard</h1>
   <div id='dashboard-container' class='row row-eq-height'>
     <div class='col-md-6 mt-4 mb-4'>
       <div class='card'>
         <div class='card-body'>
-          <h1 class='card-title font-weight-light'>
+          <h2 class='card-title font-weight-light'>
             Manage Publication Submissions
-          </h1>
+          </h2>
           <p class='card-text'>
             The submissions view allows you to:
           </p>
@@ -51,9 +52,9 @@ interface Signature {
     <div class='col-md-6 mb-4 mt-4'>
       <div class='card'>
         <div class='card-body'>
-          <h1 class='card-title font-weight-light'>
+          <h2 class='card-title font-weight-light'>
             Manage Grants Compliance
-          </h1>
+          </h2>
           <p class='card-text'>
             The grants view allows you to:
           </p>
