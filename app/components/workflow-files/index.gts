@@ -4,7 +4,7 @@ import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { fn } from '@ember/helper';
 import { on } from '@ember/modifier';
-import { schedule } from '@ember/runloop';
+import { next, schedule } from '@ember/runloop';
 import ENV from 'pass-ui/config/environment';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -89,13 +89,14 @@ export default class WorkflowFiles extends Component<WorkflowFilesSignature> {
 
   @action
   deleteExistingFile(file: FileModel) {
+    const triggerId = file.id ? `file-remove-${file.id}` : '';
     const files = this.manuscript ? [this.manuscript, ...this.supplementalFiles] : this.supplementalFiles;
     const currentIndex = files.findIndex((f) => f.id === file.id);
-    let fallbackSelector = '#file-multiple-input';
+    let fallbackId = 'file-multiple-input';
     if (files.length > 1) {
       const adjacent = files[currentIndex + 1] ?? files[currentIndex - 1];
       if (adjacent?.id) {
-        fallbackSelector = `#file-remove-${adjacent.id}`;
+        fallbackId = `file-remove-${adjacent.id}`;
       }
     }
 
@@ -117,13 +118,18 @@ export default class WorkflowFiles extends Component<WorkflowFilesSignature> {
           const fileName = file.name;
           const deleted = await this.deleteFile(file);
           if (deleted) {
-            const input = document.querySelector<HTMLInputElement>('#file-multiple-input');
+            const input = document.getElementById('file-multiple-input') as HTMLInputElement | null;
             if (input) {
               input.value = '';
             }
-            this.statusMessage = `${fileName} removed.`;
-            this.focusSelector(fallbackSelector);
+            this.announce(`${fileName} removed.`);
+            this.focusElementId(fallbackId);
+          } else {
+            this.announce('We encountered an error when removing this file');
+            this.focusElementId(triggerId);
           }
+        } else {
+          this.focusElementId(triggerId);
         }
       });
   }
@@ -162,8 +168,10 @@ export default class WorkflowFiles extends Component<WorkflowFilesSignature> {
       }
       await this.store.persistRecord(newFile);
       this.workflow.addFile(newFile as unknown as WorkflowFile);
-      this.statusMessage = `${newFile.name} uploaded successfully.`;
-      this.focusSelector(`#file-description-${newFile.id}`);
+      this.announce(`${newFile.name} uploaded successfully.`);
+      if (this.shouldMoveFocus() && newFile.id) {
+        this.focusElementId(`file-description-${newFile.id}`);
+      }
     } catch (error) {
       FileUpload.state = FileState.Aborted;
       console.error(error);
@@ -196,9 +204,24 @@ export default class WorkflowFiles extends Component<WorkflowFilesSignature> {
     this.args.abort();
   }
 
-  focusSelector(selector: string) {
+  announce(message: string) {
+    this.statusMessage = '';
+    next(this, () => {
+      this.statusMessage = message;
+    });
+  }
+
+  shouldMoveFocus(): boolean {
+    const active = document.activeElement;
+    return !active || active === document.body || active.id === 'file-multiple-input';
+  }
+
+  focusElementId(id: string) {
+    if (!id) {
+      return;
+    }
     schedule('afterRender', () => {
-      document.querySelector<HTMLElement>(selector)?.focus();
+      document.getElementById(id)?.focus();
     });
   }
 
