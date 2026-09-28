@@ -226,4 +226,174 @@ module('Integration | Component | workflow files', (hooks) => {
       fetchStub.restore();
     }
   });
+
+  test('Uploading a file moves focus to the newly added file description input', async function (assert) {
+    await render(hbs`<WorkflowFiles
+  @submission={{this.submission}}
+  @next={{this.fakeAction}}
+  @back={{this.fakeAction}}
+  @abort={{this.fakeAction}}
+/>`);
+
+    const submissionFile = new Blob(['content'], { type: 'application/pdf' });
+    Object.defineProperty(submissionFile, 'name', { value: 'focus-test-file.pdf' });
+
+    await selectFiles('input[type=file]', submissionFile);
+
+    assert.dom('[data-test-added-manuscript-row]').exists();
+    assert.dom('[data-test-file-description-input]').isFocused();
+    assert.dom('[aria-live="polite"]').includesText('uploaded successfully.');
+  });
+
+  test('Removing a file when others exist moves focus to adjacent file remove button', async function (assert) {
+    const store = this.owner.lookup('service:store') as AppStore;
+    const file1 = store.createRecord('file', {
+      id: 'file-1',
+      name: 'First-file.pdf',
+      fileRole: 'manuscript',
+      submission: this.submission,
+      uri: '/file/uuid1/First-file.pdf',
+    });
+    const file2 = store.createRecord('file', {
+      id: 'file-2',
+      name: 'Second-file.pdf',
+      fileRole: 'supplemental',
+      submission: this.submission,
+      uri: '/file/uuid2/Second-file.pdf',
+    });
+
+    document.cookie = 'XSRF-TOKEN=test-token';
+    const fetchStub = sinon.stub(globalThis, 'fetch').resolves(new globalThis.Response(null, { status: 200 }));
+    sinon.stub(store, 'destroyRecord').returns(Promise.resolve());
+
+    const workflow = this.owner.lookup('service:workflow') as Workflow;
+    workflow.setFiles([file1 as unknown as WorkflowFile, file2 as unknown as WorkflowFile]);
+
+    try {
+      await render(hbs`<WorkflowFiles
+  @submission={{this.submission}}
+  @next={{this.fakeAction}}
+  @back={{this.fakeAction}}
+  @abort={{this.fakeAction}}
+/>`);
+
+      await click('#file-remove-file-1');
+
+      const sweetAlertBtn = document.querySelector('.swal2-container button.swal2-confirm');
+      assert.ok(sweetAlertBtn);
+      await click(sweetAlertBtn!);
+
+      assert.dom('#file-remove-file-2').isFocused();
+      assert.dom('[aria-live="polite"]').hasText('First-file.pdf removed.');
+    } finally {
+      fetchStub.restore();
+    }
+  });
+
+  test('Removing the only file moves focus to file upload input', async function (assert) {
+    const store = this.owner.lookup('service:store') as AppStore;
+    const file1 = store.createRecord('file', {
+      id: 'file-only',
+      name: 'Only-file.pdf',
+      fileRole: 'manuscript',
+      submission: this.submission,
+      uri: '/file/uuid-only/Only-file.pdf',
+    });
+
+    document.cookie = 'XSRF-TOKEN=test-token';
+    const fetchStub = sinon.stub(globalThis, 'fetch').resolves(new globalThis.Response(null, { status: 200 }));
+    sinon.stub(store, 'destroyRecord').returns(Promise.resolve());
+
+    const workflow = this.owner.lookup('service:workflow') as Workflow;
+    workflow.setFiles([file1 as unknown as WorkflowFile]);
+
+    try {
+      await render(hbs`<WorkflowFiles
+  @submission={{this.submission}}
+  @next={{this.fakeAction}}
+  @back={{this.fakeAction}}
+  @abort={{this.fakeAction}}
+/>`);
+
+      await click('#file-remove-file-only');
+
+      const sweetAlertBtn = document.querySelector('.swal2-container button.swal2-confirm');
+      assert.ok(sweetAlertBtn);
+      await click(sweetAlertBtn!);
+
+      assert.dom('#file-multiple-input').isFocused();
+      assert.dom('[aria-live="polite"]').hasText('Only-file.pdf removed.');
+    } finally {
+      fetchStub.restore();
+    }
+  });
+
+  test('Cancelling file removal restores focus to the Remove button', async function (assert) {
+    const store = this.owner.lookup('service:store') as AppStore;
+    const file1 = store.createRecord('file', {
+      id: 'file-keep',
+      name: 'Keep-file.pdf',
+      fileRole: 'manuscript',
+      submission: this.submission,
+      uri: '/file/uuid-keep/Keep-file.pdf',
+    });
+
+    const workflow = this.owner.lookup('service:workflow') as Workflow;
+    workflow.setFiles([file1 as unknown as WorkflowFile]);
+
+    await render(hbs`<WorkflowFiles
+  @submission={{this.submission}}
+  @next={{this.fakeAction}}
+  @back={{this.fakeAction}}
+  @abort={{this.fakeAction}}
+/>`);
+
+    await click('#file-remove-file-keep');
+
+    const cancelBtn = document.querySelector('.swal2-container button.swal2-cancel');
+    assert.ok(cancelBtn);
+    await click(cancelBtn!);
+
+    assert.dom('#file-remove-file-keep').isFocused();
+    assert.dom('[data-test-added-manuscript-row]').exists();
+  });
+
+  test('Failed file removal restores focus to the Remove button', async function (assert) {
+    const store = this.owner.lookup('service:store') as AppStore;
+    const file1 = store.createRecord('file', {
+      id: 'file-fail',
+      name: 'Fail-file.pdf',
+      fileRole: 'manuscript',
+      submission: this.submission,
+      uri: '/file/uuid-fail/Fail-file.pdf',
+    });
+
+    document.cookie = 'XSRF-TOKEN=test-token';
+    const fetchStub = sinon.stub(globalThis, 'fetch').resolves(new globalThis.Response(null, { status: 200 }));
+    sinon.stub(store, 'destroyRecord').rejects(new Error('destroy failed'));
+
+    const workflow = this.owner.lookup('service:workflow') as Workflow;
+    workflow.setFiles([file1 as unknown as WorkflowFile]);
+
+    try {
+      await render(hbs`<WorkflowFiles
+  @submission={{this.submission}}
+  @next={{this.fakeAction}}
+  @back={{this.fakeAction}}
+  @abort={{this.fakeAction}}
+/>`);
+
+      await click('#file-remove-file-fail');
+
+      const sweetAlertBtn = document.querySelector('.swal2-container button.swal2-confirm');
+      assert.ok(sweetAlertBtn);
+      await click(sweetAlertBtn!);
+
+      assert.dom('#file-remove-file-fail').isFocused();
+      assert.dom('[data-test-added-manuscript-row]').exists();
+      assert.dom('[aria-live="polite"]').includesText('error when removing this file');
+    } finally {
+      fetchStub.restore();
+    }
+  });
 });

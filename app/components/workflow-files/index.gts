@@ -4,6 +4,7 @@ import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { fn } from '@ember/helper';
 import { on } from '@ember/modifier';
+import { next, schedule } from '@ember/runloop';
 import ENV from 'pass-ui/config/environment';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -51,6 +52,7 @@ export default class WorkflowFiles extends Component<WorkflowFilesSignature> {
   @service declare flashMessages: FlashMessageService;
 
   @tracked doi: string | null = null;
+  @tracked statusMessage: string = '';
 
   constructor(owner: Owner, args: WorkflowFilesSignature['Args']) {
     super(owner, args);
@@ -87,6 +89,17 @@ export default class WorkflowFiles extends Component<WorkflowFilesSignature> {
 
   @action
   deleteExistingFile(file: FileModel) {
+    const triggerId = file.id ? `file-remove-${file.id}` : '';
+    const files = this.manuscript ? [this.manuscript, ...this.supplementalFiles] : this.supplementalFiles;
+    const currentIndex = files.findIndex((f) => f.id === file.id);
+    let fallbackId = 'file-multiple-input';
+    if (files.length > 1) {
+      const adjacent = files[currentIndex + 1] ?? files[currentIndex - 1];
+      if (adjacent?.id) {
+        fallbackId = `file-remove-${adjacent.id}`;
+      }
+    }
+
     swal
       .fire({
         target: ENV.APP.rootElement,
@@ -98,13 +111,25 @@ export default class WorkflowFiles extends Component<WorkflowFilesSignature> {
         cancelButtonColor: '#d33',
         confirmButtonText: 'I Agree',
         cancelButtonText: 'Never mind',
+        returnFocus: false,
       })
       .then(async (result) => {
         if (result.value) {
+          const fileName = file.name;
           const deleted = await this.deleteFile(file);
           if (deleted) {
-            (document.querySelector('#file-multiple-input') as HTMLInputElement).value = '';
+            const input = document.getElementById('file-multiple-input') as HTMLInputElement | null;
+            if (input) {
+              input.value = '';
+            }
+            this.announce(`${fileName} removed.`);
+            this.focusElementId(fallbackId);
+          } else {
+            this.announce('We encountered an error when removing this file');
+            this.focusElementId(triggerId);
           }
+        } else {
+          this.focusElementId(triggerId);
         }
       });
   }
@@ -143,6 +168,10 @@ export default class WorkflowFiles extends Component<WorkflowFilesSignature> {
       }
       await this.store.persistRecord(newFile);
       this.workflow.addFile(newFile as unknown as WorkflowFile);
+      this.announce(`${newFile.name} uploaded successfully.`);
+      if (this.shouldMoveFocus() && newFile.id) {
+        this.focusElementId(`file-description-${newFile.id}`);
+      }
     } catch (error) {
       FileUpload.state = FileState.Aborted;
       console.error(error);
@@ -175,8 +204,32 @@ export default class WorkflowFiles extends Component<WorkflowFilesSignature> {
     this.args.abort();
   }
 
+  announce(message: string) {
+    this.statusMessage = '';
+    next(this, () => {
+      this.statusMessage = message;
+    });
+  }
+
+  shouldMoveFocus(): boolean {
+    const active = document.activeElement;
+    return !active || active === document.body || active.id === 'file-multiple-input';
+  }
+
+  focusElementId(id: string) {
+    if (!id) {
+      return;
+    }
+    schedule('afterRender', () => {
+      document.getElementById(id)?.focus();
+    });
+  }
+
   <template>
     {{! template-lint-disable link-rel-noopener require-button-type require-input-label }}
+    <div class='visually-hidden' aria-live='polite' aria-atomic='true'>
+      {{this.statusMessage}}
+    </div>
     {{#each @submission.repositories as |repo|}}
       {{#if (eq repo.repositoryKey 'pmc')}}
         <p class='lead text-muted'>
@@ -243,6 +296,8 @@ export default class WorkflowFiles extends Component<WorkflowFilesSignature> {
                       aria-label='Manuscript description input'
                       class='form-control file-description-width'
                       value={{this.manuscript.description}}
+                      id='file-description-{{this.manuscript.id}}'
+                      data-test-file-description-input
                       {{on 'change' (fn this.updateFileDescription this.manuscript)}}
                     />
                   </td>
@@ -250,6 +305,7 @@ export default class WorkflowFiles extends Component<WorkflowFilesSignature> {
                     <button
                       type='button'
                       class='btn btn-outline-danger'
+                      id='file-remove-{{this.manuscript.id}}'
                       data-test-remove-file-button
                       {{on 'click' (fn this.deleteExistingFile this.manuscript)}}
                     >
@@ -287,6 +343,8 @@ export default class WorkflowFiles extends Component<WorkflowFilesSignature> {
                       aria-label='File description input'
                       class='form-control file-description-width'
                       value={{file.description}}
+                      id='file-description-{{file.id}}'
+                      data-test-file-description-input
                       {{on 'change' (fn this.updateFileDescription file)}}
                     />
                   </td>
@@ -294,6 +352,7 @@ export default class WorkflowFiles extends Component<WorkflowFilesSignature> {
                     <button
                       type='button'
                       class='btn btn-outline-danger'
+                      id='file-remove-{{file.id}}'
                       data-test-remove-file-button
                       {{on 'click' (fn this.deleteExistingFile file)}}
                     >
