@@ -245,6 +245,26 @@ module('Integration | Component | workflow files', (hooks) => {
     assert.dom('[aria-live="polite"]').includesText('uploaded successfully.');
   });
 
+  test('Uploading several files at once announces them together', async function (assert) {
+    await render(hbs`<WorkflowFiles
+  @submission={{this.submission}}
+  @next={{this.fakeAction}}
+  @back={{this.fakeAction}}
+  @abort={{this.fakeAction}}
+/>`);
+
+    const first = new Blob(['content'], { type: 'application/pdf' });
+    Object.defineProperty(first, 'name', { value: 'first-upload.pdf' });
+    const second = new Blob(['content'], { type: 'application/pdf' });
+    Object.defineProperty(second, 'name', { value: 'second-upload.pdf' });
+
+    await selectFiles('input[type=file]', first, second);
+
+    // The mock file service echoes the same name for every upload, so only
+    // check that both uploads produced a single combined announcement.
+    assert.dom('[aria-live="polite"]').includesText('2 files uploaded successfully:');
+  });
+
   test('Removing a file when others exist moves focus to adjacent file remove button', async function (assert) {
     const store = this.owner.lookup('service:store') as AppStore;
     const file1 = store.createRecord('file', {

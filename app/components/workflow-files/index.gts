@@ -4,7 +4,7 @@ import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { fn } from '@ember/helper';
 import { on } from '@ember/modifier';
-import { next, schedule } from '@ember/runloop';
+import { cancel, debounce, next, schedule } from '@ember/runloop';
 import ENV from 'pass-ui/config/environment';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -53,6 +53,12 @@ export default class WorkflowFiles extends Component<WorkflowFilesSignature> {
 
   @tracked doi: string | null = null;
   @tracked statusMessage: string = '';
+
+  // Uploads from one multi-select finish at different times. Collect their
+  // names and announce them once, so a later upload doesn't replace an
+  // earlier announcement before the screen reader reads it.
+  pendingUploadNames: string[] = [];
+  uploadAnnouncementTimer: ReturnType<typeof debounce> | null = null;
 
   constructor(owner: Owner, args: WorkflowFilesSignature['Args']) {
     super(owner, args);
@@ -168,7 +174,7 @@ export default class WorkflowFiles extends Component<WorkflowFilesSignature> {
       }
       await this.store.persistRecord(newFile);
       this.workflow.addFile(newFile as unknown as WorkflowFile);
-      this.announce(`${newFile.name} uploaded successfully.`);
+      this.queueUploadAnnouncement(newFile.name);
       if (this.shouldMoveFocus() && newFile.id) {
         this.focusElementId(`file-description-${newFile.id}`);
       }
@@ -209,6 +215,29 @@ export default class WorkflowFiles extends Component<WorkflowFilesSignature> {
     next(this, () => {
       this.statusMessage = message;
     });
+  }
+
+  queueUploadAnnouncement(fileName: string) {
+    this.pendingUploadNames.push(fileName);
+    this.uploadAnnouncementTimer = debounce(this, this.flushUploadAnnouncement, 300);
+  }
+
+  flushUploadAnnouncement() {
+    const names = this.pendingUploadNames;
+    this.pendingUploadNames = [];
+    this.uploadAnnouncementTimer = null;
+    if (names.length === 1) {
+      this.announce(`${names[0]} uploaded successfully.`);
+    } else if (names.length > 1) {
+      this.announce(`${names.length} files uploaded successfully: ${names.join(', ')}.`);
+    }
+  }
+
+  willDestroy(): void {
+    super.willDestroy();
+    if (this.uploadAnnouncementTimer) {
+      cancel(this.uploadAnnouncementTimer);
+    }
   }
 
   shouldMoveFocus(): boolean {
