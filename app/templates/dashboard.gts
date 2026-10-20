@@ -12,6 +12,7 @@ interface Signature {
 
 // prettier-ignore
 <template>
+  <h1 class='visually-hidden'>Dashboard</h1>
   <div id='dashboard-container' class='row row-eq-height'>
     <div class='col-md-6 mt-4 mb-4'>
       <div class='card'>

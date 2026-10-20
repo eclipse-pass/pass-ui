@@ -15,7 +15,7 @@ interface Signature {
       <img src='{{@controller.icon}}' alt='Error icon' />
     </div>
     <div class='col my-auto'>
-      <h2>404: Page not found</h2>
+      <h1>404: Page not found</h1>
       <p class='helpful-text'>
         Looks like the page you're looking for does not exist. If you think there is a problem with the site, please
         {{#if @controller.contactUrl}}

@@ -320,9 +320,9 @@ export default class WorkflowReview extends Component<WorkflowReviewSignature> {
           <div href='#' class='list-group-item flex-column align-items-start'>
             <div class='review-step-title d-flex flex-column w-100 border-bottom pb-2'>
               <div class='d-flex flex-row w-100 justify-content-between'>
-                <h4 class='mb-1' data-test-workflow-review-title>
+                <h2 class='subsection-title mb-1' data-test-workflow-review-title>
                   {{@publication.title}}
-                </h4>
+                </h2>
                 <small class='text-muted'>
                   {{! @glint-ignore - dateSubmitted is a legacy template property }}
                   {{@submission.dateSubmitted.date-time}}<br />

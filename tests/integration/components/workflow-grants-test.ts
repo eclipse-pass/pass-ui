@@ -99,7 +99,7 @@ module('Integration | Component | workflow grants', (hooks) => {
 
     await settled();
 
-    const selectedRows = this.element.querySelector('h5')!.nextElementSibling!.querySelectorAll('tbody tr');
+    const selectedRows = this.element.querySelector('h2.block-title')!.nextElementSibling!.querySelectorAll('tbody tr');
     assert.strictEqual(selectedRows.length, 1, 'Should be 1 grant in this table');
     assert.ok(selectedRows[0]!.textContent!.includes('Remove'), 'Should have a "Remove" button');
     assert.ok(selectedRows[0]!.textContent!.includes('Moo 2'));
@@ -152,7 +152,7 @@ module('Integration | Component | workflow grants', (hooks) => {
 
     await click(rows[0]!);
 
-    const selectedRows = this.element.querySelector('h5')!.nextElementSibling!.querySelectorAll('tbody tr');
+    const selectedRows = this.element.querySelector('h2.block-title')!.nextElementSibling!.querySelectorAll('tbody tr');
     assert.strictEqual(selectedRows.length, 1);
     assert.ok(selectedRows[0]!.textContent!.includes('Moo 1'), 'Only "Moo 1" should be selected');
 
@@ -202,7 +202,7 @@ module('Integration | Component | workflow grants', (hooks) => {
 
     await click('#grants-selection-table table tbody tr:nth-child(2)');
 
-    const selectedRows = this.element.querySelector('h5')!.nextElementSibling!.querySelectorAll('tbody tr');
+    const selectedRows = this.element.querySelector('h2.block-title')!.nextElementSibling!.querySelectorAll('tbody tr');
     assert.ok(selectedRows[0]!.textContent!.includes('Moo 2'));
 
     assert.strictEqual(this.submission.grants.length, 1, 'There should be one grant attached to the submission');

@@ -14,6 +14,27 @@
   height: 100%;
 }
 
+/* Site chrome is a span, not a heading; keep the old h3 size and headline font. */
+.brand-header-title {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 1.3rem !important;
+  font-weight: 500;
+  line-height: 1.2;
+  font-family: var(--font-headline);
+}
+
+/*
+ * branding.css colors h1/h2. These were h3–h5, so keep their previous color
+ * after the semantic retag. Size comes from the global h1/h2/h3 scale.
+ */
+.section-title,
+.subsection-title,
+.block-title,
+h2.card-title {
+  color: inherit;
+}
+
 .error-text {
   font-size: 2em !important;
   margin-bottom: 0;
@@ -157,13 +178,14 @@ th.table-header > i:not(.fa-sort-asc, .fa-sort-desc)::before {
   padding-left: 35px;
 }
 
-.policies-list h6 {
-  margin-bottom: 0.5em;
-  font-weight: bold;
+.card-subtitle {
+  font-size: 1.1em !important;
+  font-family: var(--font-bodycopy);
 }
 
-h6.card-subtitle {
-  font-size: 1.1em;
+.policies-list .card-subtitle {
+  margin-bottom: 0.5em;
+  font-weight: bold;
 }
 
 .line-height-45 {
