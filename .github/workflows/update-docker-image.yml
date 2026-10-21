@@ -2,15 +2,18 @@ name: Update UI Docker image
 
 on:
   workflow_dispatch:
-  pull_request:
-    types:
-      - closed
+  push:
+    branches:
+      - main
 
 jobs:
   build:
-    if:  github.repository == 'eclipse-pass/pass-ui' && (github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch')
+    if: github.repository == 'eclipse-pass/pass-ui'
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    permissions:
+      contents: read
+      packages: write
 
     env:
       ENV_FILE: https://raw.githubusercontent.com/eclipse-pass/pass-docker/main/.env
