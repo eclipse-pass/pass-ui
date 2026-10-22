@@ -1,8 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
 
 :root {
-  --primary-500: #f88d2b;
-  --primary-600: #e37108;
+  /*
+   * Sample orange darkened so link text and white text on .btn-primary meet 4.5:1
+   * (WCAG 1.4.3). Was #f88d2b (2.38:1) and #e37108 (3.17:1).
+   */
+  --primary-500: #b35400; /* 5.02:1 on white, and white on it */
+  --primary-600: #8a3f00; /* 7.52:1 on white, and white on it */
   --secondary-500: #3d3935;
   --font-headline: 'Roboto', san serif;
   --font-subhead: 'Roboto', san serif;

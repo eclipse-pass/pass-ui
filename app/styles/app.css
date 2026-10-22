@@ -664,8 +664,8 @@ div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-cancel):foc
     background-color 0.15s ease-in-out,
     border-color 0.15s ease-in-out,
     box-shadow 0.15s ease-in-out;
-  background-color: #418fde !important;
-  border-color: #418fde !important;
+  background-color: var(--primary-600, #1e40af) !important;
+  border-color: var(--primary-600, #1e40af) !important;
   color: white !important;
 }
 
