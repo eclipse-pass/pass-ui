@@ -5,7 +5,7 @@ import { action } from '@ember/object';
 import ENV from 'pass-ui/config/environment';
 import { service } from '@ember/service';
 import { later, scheduleOnce } from '@ember/runloop';
-import swal from 'sweetalert2/dist/sweetalert2.js';
+import swal from 'pass-ui/util/swal';
 import type RouterService from '@ember/routing/router-service';
 import type CurrentUserService from 'pass-ui/services/current-user';
 import type SubmissionHandlerService from 'pass-ui/services/submission-handler';

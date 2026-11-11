@@ -4,7 +4,7 @@ import { action } from '@ember/object';
 
 import { service } from '@ember/service';
 import ENV from 'pass-ui/config/environment';
-import swal from 'sweetalert2/dist/sweetalert2.js';
+import swal from 'pass-ui/util/swal';
 import type RouterService from '@ember/routing/router-service';
 import type Model from '@ember-data/model';
 import type Workflow from 'pass-ui/services/workflow';
