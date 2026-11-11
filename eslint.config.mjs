@@ -79,6 +79,25 @@ export default ts.config(
     },
   },
   {
+    // Dialogs go through pass-ui/util/swal, which registers the SweetAlert2 accessibility fixes
+    files: ['app/**/*.{js,ts,gjs,gts}'],
+    ignores: ['app/util/swal.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          // Every sweetalert2 entry point (the main export and each dist bundle), but not its stylesheet
+          patterns: [
+            {
+              regex: '^sweetalert2(/(?!.*\\.css$).*)?$',
+              message: "Import swal from 'pass-ui/util/swal' instead, so dialogs get its accessibility fixes.",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     files: ['tests/**/*-test.{js,gjs,ts,gts}'],
     plugins: {
       qunit,

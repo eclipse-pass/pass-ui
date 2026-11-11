@@ -1,5 +1,8 @@
 :root {
   --primary-500: #2563eb;
+
+  /* Buttons, including the dialog confirm button, put white text on --primary-600. An overlay that
+     changes it must keep that at 4.5:1 or more (WCAG 1.4.3). */
   --primary-600: #1e40af;
   --secondary-500: #374151;
   --bg-primary: white;
