@@ -1,6 +1,6 @@
 import Service from '@ember/service';
 import ENV from 'pass-ui/config/environment';
-import swal from 'sweetalert2/dist/sweetalert2.js';
+import swal from 'pass-ui/util/swal';
 
 export interface AppError {
   name?: string;

@@ -3,7 +3,7 @@ import { A } from '@ember/array';
 import EmberObject from '@ember/object';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import Swal from 'sweetalert2/dist/sweetalert2.js';
+import Swal from 'pass-ui/util/swal';
 // @ts-expect-error no declaration file for sinon
 import Sinon from 'sinon';
 import type SubmissionsNewRepositories from 'pass-ui/controllers/submissions/new/repositories';

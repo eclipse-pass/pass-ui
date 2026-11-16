@@ -10,9 +10,7 @@ import { on } from '@ember/modifier';
 import { Textarea } from '@ember/component';
 import { LinkTo } from '@ember/routing';
 import ENV from 'pass-ui/config/environment';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import swal from 'sweetalert2/dist/sweetalert2.js';
+import swal from 'pass-ui/util/swal';
 import { modifier } from 'ember-modifier';
 import FindJournal from 'pass-ui/components/find-journal';
 import WorkflowBasicsUserSearch from 'pass-ui/components/workflow-basics-user-search';

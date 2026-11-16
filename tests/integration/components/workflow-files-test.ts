@@ -90,6 +90,11 @@ module('Integration | Component | workflow files', (hooks) => {
 
       await click(btn!);
 
+      // The confirm dialog is announced by its title, and the warning icon is decorative
+      assert.dom('.swal2-popup', document.body).hasAttribute('role', 'dialog');
+      assert.dom('.swal2-popup', document.body).doesNotHaveAttribute('aria-live');
+      assert.dom('.swal2-icon.swal2-warning', document.body).hasAttribute('aria-hidden', 'true');
+
       const sweetAlertBtn = document.querySelector('.swal2-container button.swal2-confirm');
       assert.ok(sweetAlertBtn);
       await click(sweetAlertBtn!);
