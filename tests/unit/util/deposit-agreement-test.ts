@@ -8,6 +8,11 @@ module('Unit | Utility | deposit-agreement', (hooks) => {
   setupTest(hooks);
 
   hooks.afterEach(function () {
+    // With the hide animation off, close() removes the popup right away, so it can't outlive the test
+    document.querySelectorAll<HTMLElement>('.swal2-popup').forEach((popup) => {
+      popup.style.animation = 'none';
+      popup.style.transition = 'none';
+    });
     swal.close();
   });
 

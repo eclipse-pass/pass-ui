@@ -8,8 +8,22 @@ import type RepositoryModel from 'pass-ui/models/repository';
 import type SubmissionModel from 'pass-ui/models/submission';
 import type SubmissionsDetailController from 'pass-ui/controllers/submissions/detail';
 
+// Close any SweetAlert popup now: with the hide animation off, close() removes it right away
+// instead of after the animation, so a popup can't outlive its test.
+function closeSwal(): void {
+  document.querySelectorAll<HTMLElement>('.swal2-popup').forEach((popup) => {
+    popup.style.animation = 'none';
+    popup.style.transition = 'none';
+  });
+  Swal.close();
+}
+
 module('Unit | Controller | submissions/detail', (hooks) => {
   setupTest(hooks);
+
+  hooks.afterEach(function () {
+    closeSwal();
+  });
 
   // Replace this with your real tests.
   test('it exists', function (assert) {
@@ -91,7 +105,7 @@ module('Unit | Controller | submissions/detail', (hooks) => {
     assert.dom(region, document.body).hasText('NON-EXCLUSIVE LICENSE');
     assert.dom('.swal2-popup textarea[disabled]', document.body).doesNotExist('no disabled textarea');
 
-    Swal.close();
+    closeSwal();
     assert.true((await collected).cancelled);
   });
 });
