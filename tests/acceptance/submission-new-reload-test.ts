@@ -41,8 +41,9 @@ module('Acceptance | submissions/new direct load', function (hooks) {
     assert.strictEqual(currentURL(), '/submissions/new/basics');
   });
 
+  // The drafts have no DOI, so Basics doesn't look one up and replace the title while the test runs
   test('loading Basics for a draft keeps the submission query param and loads the draft', async function (assert) {
-    const publication = this.server.create('publication', { title: 'A draft reloaded on Basics' });
+    const publication = this.server.create('publication', { title: 'A draft reloaded on Basics', doi: null });
     const submission = this.server.create('submission', {
       submissionStatus: 'draft',
       submitterId: '0',
@@ -67,7 +68,7 @@ module('Acceptance | submissions/new direct load', function (hooks) {
   });
 
   test('loading a later step for a draft keeps the submission query param', async function (assert) {
-    const publication = this.server.create('publication', { title: 'A draft reloaded on Grants' });
+    const publication = this.server.create('publication', { title: 'A draft reloaded on Grants', doi: null });
     const submission = this.server.create('submission', {
       submissionStatus: 'draft',
       submitterId: '0',
