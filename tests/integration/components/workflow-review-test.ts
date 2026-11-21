@@ -169,6 +169,13 @@ module('Integration | Component | workflow review', (hooks) => {
     // Click on submit
     await click('.submit');
 
+    // The agreement can be reached and scrolled from the keyboard
+    await waitFor('.swal2-popup [data-test-deposit-agreement]');
+    assert.dom('.swal2-popup[role="dialog"] [data-test-deposit-agreement]').hasAttribute('role', 'region');
+    assert.dom('[data-test-deposit-agreement]').hasAttribute('tabindex', '0');
+    assert.dom('[data-test-deposit-agreement]').hasAttribute('aria-label', 'Deposit agreement for repo1');
+    assert.dom('[data-test-deposit-agreement]').hasText('Cows are the best');
+
     await click('.swal2-confirm');
 
     await waitFor('.swal2-validation-message');

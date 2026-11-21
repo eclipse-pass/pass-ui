@@ -10,6 +10,7 @@ import { Textarea } from '@ember/component';
 import { modifier } from 'ember-modifier';
 import ENV from 'pass-ui/config/environment';
 import swal from 'pass-ui/util/swal';
+import { depositAgreementHtml } from 'pass-ui/util/deposit-agreement';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import FlashMessage from 'ember-cli-flash/components/flash-message';
@@ -159,7 +160,7 @@ export default class WorkflowReview extends Component<WorkflowReviewSignature> {
       .map((repo: RepositoryModel) => ({
         id: repo.name,
         title: `Deposit requirements for ${repo.name}`,
-        html: `<div class="form-control deposit-agreement-content py-4 mt-4">${repo.agreementText}</div>`,
+        html: depositAgreementHtml(repo.name, repo.agreementText),
       }));
 
     const reposWithoutAgreementText: RepoAgreementStep[] = repos
