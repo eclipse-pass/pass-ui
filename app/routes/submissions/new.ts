@@ -4,6 +4,7 @@ import { hash } from 'rsvp';
 import { query, findRecord } from 'pass-ui/builders/pass-api';
 import { fileForSubmissionQuery } from '../../util/paginated-query';
 import type RouterService from '@ember/routing/router-service';
+import type Transition from '@ember/routing/transition';
 import type Workflow from 'pass-ui/services/workflow';
 import type { WorkflowFile } from 'pass-ui/services/workflow';
 import type CurrentUserService from 'pass-ui/services/current-user';
@@ -43,9 +44,13 @@ export default class NewRoute extends CheckSessionRoute {
   @service('current-user')
   declare currentUser: CurrentUserService;
 
-  async beforeModel(): Promise<void> {
+  async beforeModel(transition?: Transition): Promise<void> {
     this.workflow.resetWorkflow();
-    this.router.transitionTo('submissions.new.basics');
+    // Redirecting to the route already being entered (e.g. reloading Basics) starts a
+    // query-param-only transition mid-resolve, which crashes Ember's router.
+    if (transition?.to?.name !== 'submissions.new.basics') {
+      this.router.transitionTo('submissions.new.basics');
+    }
   }
 
   resetController(controller: SubmissionsNewController, isExiting: boolean): void {
