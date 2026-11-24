@@ -67,7 +67,7 @@ module('Acceptance | submissions/new direct load', function (hooks) {
     assert.strictEqual(currentURL(), '/submissions/new/basics?grant=0');
   });
 
-  test('loading a later step for a draft keeps the submission query param', async function (assert) {
+  test('loading a later step for a draft keeps the submission query param and loads the draft', async function (assert) {
     const publication = this.server.create('publication', { title: 'A draft reloaded on Grants', doi: null });
     const submission = this.server.create('submission', {
       submissionStatus: 'draft',
@@ -80,5 +80,6 @@ module('Acceptance | submissions/new direct load', function (hooks) {
     await waitFor('[data-test-workflow-basics-next]');
     assert.strictEqual(currentRouteName(), 'submissions.new.basics');
     assert.strictEqual(currentURL(), `/submissions/new/basics?submission=${submission.id}`);
+    assert.dom('[data-test-article-title-text-area]').hasValue('A draft reloaded on Grants');
   });
 });
